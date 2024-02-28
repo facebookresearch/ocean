@@ -873,7 +873,7 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkippingByCostMask(const u
 				constexpr bool applyInitialMapping = true;
 
 				performance.startIf(performanceIteration);
-					CV::Synthesis::Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator, LegacyFrame(skippingMask, LegacyFrame::FCM_USE_IF_POSSIBLE)).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
+					CV::Synthesis::Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator, skippingMask).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
 				performance.stopIf(performanceIteration);
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))

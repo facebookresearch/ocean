@@ -42,7 +42,7 @@ class Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1 :
 		 * @param randomGenerator Random number generator
 		 * @param skippingMask Mask defining synthesis pixels that can be skipped during optimization as these pixels are almost static
 		 */
-		inline Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1(LayerI1& layer, RandomGenerator& randomGenerator, const LegacyFrame& skippingMask);
+		inline Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1(LayerI1& layer, RandomGenerator& randomGenerator, const Frame& skippingMask);
 
 	private:
 
@@ -79,11 +79,11 @@ class Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1 :
 		LayerI1& layerI1_;
 
 		/// Mask defining synthesis pixels that can be skipped during optimization as these pixels are almost static.
-		const LegacyFrame& skippingMask_;
+		const Frame& skippingMask_;
 };
 
 template <unsigned int tWeightFactor, unsigned int tBorderFactor, bool tUpdateFrame>
-inline Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1<tWeightFactor, tBorderFactor, tUpdateFrame>::Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1(LayerI1& layer, RandomGenerator& randomGenerator, const LegacyFrame& skippingMask) :
+inline Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1<tWeightFactor, tBorderFactor, tUpdateFrame>::Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1(LayerI1& layer, RandomGenerator& randomGenerator, const Frame& skippingMask) :
 	Optimizer(layer),
 	OptimizerI(layer),
 	OptimizerSubset(layer, randomGenerator),
@@ -337,6 +337,7 @@ void Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1<tWeightFactor, tB
 
 			const uint8_t* maskRow = layerMask.constrow<uint8_t>(y) + xEnd - 1u;
 			const uint8_t* skippingRow = skippingMask_.constrow<uint8_t>(y) + xEnd - 1u;
+
 			PixelPosition* positionRow = layerMapping.row(y) + xEnd - 1u;
 
 			for (unsigned int x = xEnd - 1u; x != xStart - 1u; --x)
