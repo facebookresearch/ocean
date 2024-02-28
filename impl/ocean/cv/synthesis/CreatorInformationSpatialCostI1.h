@@ -108,8 +108,8 @@ void CreatorInformationSpatialCostI1<tNeighborhood, tOnlyCenterPixels>::createSu
 
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
-		uint8_t* const targetRow = target_.row<uint8_t>(y);
-		const uint8_t* maskPixel = layerI_.legacyMask().template constrow<uint8_t>(y);
+		uint8_t* targetRow = target_.row<uint8_t>(y) + firstColumn;
+		const uint8_t* maskPixel = layerI_.legacyMask().template constrow<uint8_t>(y) + firstColumn;
 
 		for (unsigned int x = firstColumn; x < firstColumn + numberColumns; ++x)
 		{
@@ -174,14 +174,15 @@ void CreatorInformationSpatialCostI1<tNeighborhood, tOnlyCenterPixels>::createSu
 
 				if (counter >= tNeighborhood)
 				{
-					targetRow[x] = 0x80u;
+					*targetRow = 0x80u;
 				}
 				else
 				{
-					targetRow[x] = 0x00u;
+					*targetRow = 0x00u;
 				}
 			}
 
+			++targetRow;
 			++maskPixel;
 		}
 	}

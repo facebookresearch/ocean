@@ -6,6 +6,8 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
+#include "ocean/cv/MaskAnalyzer.h"
+
 #include "ocean/cv/segmentation/MaskAnalyzer.h"
 
 #include "ocean/cv/synthesis/CreatorInpaintingContentI1.h"
@@ -192,9 +194,16 @@ bool TestCreatorI1::testInpaintingContent(const unsigned int width, const unsign
 
 				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
 
+				CV::PixelBoundingBox boundingBox;
+				if (RandomI::random(randomGenerator, 1u) == 0u)
+				{
+					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
+					ocean_assert(boundingBox.isValid());
+				}
+
 				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
 
-				CV::Synthesis::LayerI1 layer(frame, legacyMask);
+				CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
 
 				// we create a random mapping
 
@@ -331,9 +340,16 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 
 					const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
 
+					CV::PixelBoundingBox boundingBox;
+					if (RandomI::random(randomGenerator, 1u) == 0u)
+					{
+						boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
+						ocean_assert(boundingBox.isValid());
+					}
+
 					LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
 
-					CV::Synthesis::LayerI1 layer(frame, legacyMask);
+					CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
 
 					// we create a random mapping
 
@@ -624,13 +640,20 @@ bool TestCreatorI1::testInformationCost4Neighborhood(const unsigned int width, c
 
 				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
 
+				CV::PixelBoundingBox boundingBox;
+				if (RandomI::random(randomGenerator, 1u) == 0u)
+				{
+					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
+					ocean_assert(boundingBox.isValid());
+				}
+
 				constexpr unsigned int patchSize = 5u;
 
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
 
 				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
 
-				CV::Synthesis::LayerI1 layer(frame, legacyMask);
+				CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
 
 				// we create a random mapping
 
