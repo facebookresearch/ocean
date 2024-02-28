@@ -22,7 +22,7 @@ namespace Synthesis
  * This initializer creates an initial mapping by the adaption of an already existing mapping of a coarser synthesis layer.<br>
  * The initializer supports mapping with float accuracy.<br>
  * The coarser mapping is upsampled and adjusted to the synthesis mask.<br>
- * @tparam tFactor Defines the dimension increase factor between the synthesis layer and the given coarser layer. A factor of 2 means that the width and height of the synthesis layer is two times larger than the width and height of the given coarser layer.
+ * @tparam tFactor Defines the dimension increase factor between the synthesis layer and the given coarser layer. A factor of 2 means that the width and height of the synthesis layer is two times larger than the width and height of the given coarser layer, with range [0, infinity)
  * @see MappingF, LayerF1, InitializerCoarserMappingAdaptionI1.
  * @ingroup cvsynthesis
  */
@@ -55,7 +55,7 @@ class InitializerCoarserMappingAdaptionF1 :
 	private:
 
 		/// Coarser layer that has to be adopted.
-		const LayerF1& coarserLayer_;
+		const LayerF1& coarserLayerF_;
 };
 
 template <unsigned int tFactor>
@@ -65,102 +65,88 @@ inline InitializerCoarserMappingAdaptionF1<tFactor>::InitializerCoarserMappingAd
 	InitializerRandomized(layer, randomGenerator),
 	InitializerSubset(layer),
 	Initializer1(layer),
-	coarserLayer_(coarserLayer)
+	coarserLayerF_(coarserLayer)
 {
 	// nothing to do here
 }
 
 template <unsigned int tFactor>
-void InitializerCoarserMappingAdaptionF1<tFactor>::initializeSubset(const unsigned int /*firstColumn*/, const unsigned int /*numberColumns*/, const unsigned int /*firstRow*/, const unsigned int /*numberRows*/) const
+inline void InitializerCoarserMappingAdaptionF1<tFactor>::initializeSubset(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows) const
 {
-	static_assert(oceanFalse<tFactor>(), "Not implemented for this increase factor!");
-}
+	static_assert(tFactor >= 2u, "Invalid factor!");
 
-// **TODO** validate
-template <>
-inline void InitializerCoarserMappingAdaptionF1<2u>::initializeSubset(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows) const
-{
-	const unsigned int layerWidth = layerF_.width();
-	const unsigned int layerHeight = layerF_.height();
+	const unsigned int width = layerF_.width();
+	const unsigned int height = layerF_.height();
 
-	ocean_assert(layerWidth / 2u == coarserLayer_.width());
-	ocean_assert(layerHeight / 2u == coarserLayer_.height());
+	const unsigned int coarserWidth = coarserLayerF_.width();
+	const unsigned int coarserHeight = coarserLayerF_.height();
 
-	MappingF& layerMapping = layerF_.mapping();
-	const MappingF1& coarserLayerMapping = coarserLayer_.mapping();
+	ocean_assert(width / tFactor == coarserWidth);
+	ocean_assert(height / tFactor == coarserHeight);
 
-	const uint8_t* const layerMaskData = layerF_.legacyMask().constdata<uint8_t>();
-	const uint8_t* const coarserLayerMaskData = coarserLayer_.legacyMask().constdata<uint8_t>();
-
-	const unsigned int coarserLayerWidth = coarserLayer_.width();
-	const unsigned int coarserLayerHeight = coarserLayer_.height();
+	MappingF& mapping = layerF_.mapping();
+	const MappingF& coarserMapping = coarserLayerF_.mapping();
 
 	RandomGenerator randomGenerator(randomGenerator_);
 
-	const unsigned int xStart = firstColumn;
-	const unsigned int yStart = firstRow;
-	const unsigned int xEnd = firstColumn + numberColumns;
-	const unsigned int yEnd = firstRow + numberRows;
+	const uint8_t* const mask = layerF_.legacyMask().template constdata<uint8_t>();
+	const uint8_t* const coarserMask = coarserLayerF_.legacyMask().template constdata<uint8_t>();
 
-	for (unsigned int y = yStart; y < yEnd; ++y)
+	const unsigned int maskStrideElements = layerF_.legacyMask().width() + layerF_.legacyMask().paddingElements(); // **TODO** replace with Frame::strideElements() once switched to Frame
+	const unsigned int coarserMaskStrideElements = coarserLayerF_.legacyMask().width() + coarserLayerF_.legacyMask().paddingElements();
+
+	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
-		const unsigned int yLow = min(y >> 1u, coarserLayerHeight - 1u);
-		ocean_assert(yLow < coarserLayerHeight);
+		const uint8_t* maskRow = mask + y * maskStrideElements;
+		Vector2* positionRow = mapping.row(y);
 
-		const uint8_t* layerPointer = layerMaskData + y * layerWidth + xStart - 1;
-		const uint8_t* const coarserLayerPointerRow = coarserLayerMaskData + yLow * coarserLayerWidth;
+		const unsigned int yCoarser = min(y / tFactor, coarserHeight - 1u);
 
-		Vector2* pixelPosition = layerMapping() + y * layerWidth + xStart;
-		const Vector2* const coarserPixelPositionRow = coarserLayerMapping() + yLow * coarserLayerWidth;
+		const uint8_t* coarserMaskRow = coarserMask + yCoarser * coarserMaskStrideElements;
+		const Vector2* coarserPositionRow = coarserMapping.row(yCoarser);
 
-		for (unsigned int x = xStart; x < xEnd; ++x)
+		for (unsigned int x = firstColumn; x < firstColumn + numberColumns; ++x)
 		{
-			ocean_assert(*(layerPointer + 1) == layerMaskData[y * layerWidth + x]);
-
-			// if the high layer pixel is a mask pixel
-			if (*++layerPointer != 0xFF)
+			if (maskRow[x] != 0xFFu)
 			{
-				const unsigned int xLow = min(x >> 1u, coarserLayerWidth - 1);
-				ocean_assert(xLow < coarserLayerWidth);
+				const unsigned int xCoarser = min(x / tFactor, coarserWidth - 1u);
 
-				// if the corresponding low layer pixel is a mask pixel
-				ocean_assert_and_suppress_unused(coarserLayerPointerRow[xLow] != 0xFF, coarserLayerPointerRow);
-
-				const Vector2& positionLow = coarserPixelPositionRow[xLow];
-				ocean_assert(positionLow.x() < Scalar(coarserLayerWidth));
-				ocean_assert(positionLow.y() < Scalar(coarserLayerHeight));
-
-				const Scalar highAbsoluteX = Scalar(x) + (positionLow.x() - Scalar(xLow)) * 2;
-				const Scalar highAbsoluteY = Scalar(y) + (positionLow.y() - Scalar(yLow)) * 2;
-
-				ocean_assert(highAbsoluteX >= 0 && highAbsoluteX < Scalar(int(layerWidth)));
-				ocean_assert(highAbsoluteY >= 0 && highAbsoluteY < Scalar(int(layerHeight)));
-
-				if (layerMaskData[Numeric::round32(highAbsoluteY) * layerWidth + Numeric::round32(highAbsoluteX)] == 0xFF)
+				// if the corresponding coarser layer pixel is a mask pixel
+				if (coarserMaskRow[xCoarser] != 0xFFu)
 				{
-					ocean_assert(layerMaskData[Numeric::round32(highAbsoluteY) * layerWidth + Numeric::round32(highAbsoluteX)] == 0xFF);
+					const Vector2& coarserPosition = coarserPositionRow[xCoarser];
+					ocean_assert(coarserPosition.x() < Scalar(coarserLayerF_.width()));
+					ocean_assert(coarserPosition.y() < Scalar(coarserLayerF_.height()));
 
-					ocean_assert(pixelPosition == &layerMapping.position(x, y));
-					*pixelPosition = Vector2(highAbsoluteX, highAbsoluteY);
-				}
-				else
-				{
-					while (true)
+					const Scalar candidateX = Scalar(x) + (coarserPosition.x() - Scalar(xCoarser)) * Scalar(tFactor);
+					const Scalar candidateY = Scalar(y) + (coarserPosition.y() - Scalar(yCoarser)) * Scalar(tFactor);
+
+					const unsigned int intCandidateX = (unsigned int)(Numeric::round32(candidateX));
+					const unsigned int intCandidateY = (unsigned int)(Numeric::round32(candidateY));
+
+					if (mask[intCandidateY * maskStrideElements + intCandidateX] == 0xFFu)
 					{
-						const Scalar localHighAbsoluteX = Random::scalar(randomGenerator, Scalar(2u), Scalar(layerWidth - 3u));
-						const Scalar localHighAbsoluteY = Random::scalar(randomGenerator, Scalar(2u), Scalar(layerHeight - 3u));
+						positionRow[x] = Vector2(candidateX, candidateY);
+						continue;
+					}
+				}
 
-						if (layerMaskData[Numeric::round32(localHighAbsoluteY) * layerWidth + Numeric::round32(localHighAbsoluteX)] == 0xFF)
-						{
-							ocean_assert(pixelPosition == &layerMapping.position(x, y));
-							*pixelPosition = Vector2(localHighAbsoluteX, localHighAbsoluteY);
-							break;
-						}
+				Vector2 candidate;
+
+				while (true)
+				{
+					candidate = Random::vector2(randomGenerator, Scalar(2u), Scalar(width - 3u), Scalar(2u), Scalar(height - 3u));
+
+					const unsigned int intCandidateX = (unsigned int)(Numeric::round32(candidate.x()));
+					const unsigned int intCandidateY = (unsigned int)(Numeric::round32(candidate.y()));
+
+					if (mask[intCandidateY * maskStrideElements + intCandidateX] == 0xFFu)
+					{
+						positionRow[x] = candidate;
+						break;
 					}
 				}
 			}
-
-			++pixelPosition;
 		}
 	}
 }

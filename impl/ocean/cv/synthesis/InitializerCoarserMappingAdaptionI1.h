@@ -22,7 +22,7 @@ namespace Synthesis
  * This initializer creates an initial mapping by the adaption of an already existing mapping of a coarser synthesis layer.<br>
  * The initializer supports mapping with integer accuracy.<br>
  * The coarser mapping is upsampled and adjusted to the synthesis mask.
- * @tparam tFactor The template parameter defines the dimension increase factor between the synthesis layer and the given coarser layer. A factor of 2 means that the width and height of the synthesis layer is two times larger than the width and height of the given coarser layer, with range (2, infinity)
+ * @tparam tFactor The template parameter defines the dimension increase factor between the synthesis layer and the given coarser layer. A factor of 2 means that the width and height of the synthesis layer is two times larger than the width and height of the given coarser layer, with range [2, infinity)
  * @see MappingI, LayerI1, InitializerCoarserMappingAdaptionF1, InitializerAreaConstrainedCoarserMappingAdaptionI1.
  * @ingroup cvsynthesis
  */
