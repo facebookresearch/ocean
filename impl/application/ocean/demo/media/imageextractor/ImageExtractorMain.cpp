@@ -378,7 +378,7 @@ PluginScope::~PluginScope()
 
 	if (outputValue.isString())
 	{
-		frameHandler.outputDirectoryAndBaseFilename_ = outputValue.isString();
+		frameHandler.outputDirectoryAndBaseFilename_ = outputValue.stringValue();
 		frameHandler.image_suffix_.clear();
 	}
 	else
