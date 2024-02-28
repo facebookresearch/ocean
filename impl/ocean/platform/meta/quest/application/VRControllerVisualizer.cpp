@@ -319,11 +319,8 @@ bool VRControllerVisualizer::loadModels(const Device::DeviceType deviceType, con
 		case Device::DT_QUEST_PRO:
 		case Device::DT_QUEST_3:
 		case Device::DT_VENTURA:
-			Log::warning() << "Using wrong contoller model for device '" << Device::deviceName(deviceType) << "', using controllers of Quest2 instead";
-
-			// VRShell currently uses controller models of Quest2 (99% identical), so use them here as well; This can be updated once the appropriate model files are available.
-			leftRenderModelFile = renderModelDirectory + IO::File("miramar_controller_left.obj");
-			rightRenderModelFile = renderModelDirectory + IO::File("miramar_controller_right.obj");
+			leftRenderModelFile = renderModelDirectory + IO::File("crystal_controller_left.obj");
+			rightRenderModelFile = renderModelDirectory + IO::File("crystal_controller_right.obj");
 			break;
 
 		case Device::DT_UNKNOWN:

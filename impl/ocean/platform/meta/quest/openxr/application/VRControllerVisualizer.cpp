@@ -54,7 +54,6 @@ void VRControllerVisualizer::visualizeControllersInWorld(const TrackedController
 			}
 			else if (deviceType_ == Device::DT_QUEST_3)
 			{
-				// workaround: the offset is defined for the Quest2 controller, similar to the Quest Pro case above
 				translationOffset = Vector3(0, 0, Scalar(0.055));
 			}
 
