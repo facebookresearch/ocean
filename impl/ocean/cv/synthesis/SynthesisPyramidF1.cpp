@@ -70,10 +70,10 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 		{
 			Frame frame(synthesisFramePyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 			const Frame mask = Frame(synthesisMaskPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			const LegacyFrame* filter = synthesisFilterPyramid_.isValid() ? &(synthesisFilterPyramid_[layerIndex]) : nullptr;
+			const Frame filter = synthesisFilterPyramid_.isValid() ? Frame(synthesisFilterPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT) : Frame();
 
 			ocean_assert(frame.isValid() && mask.isValid() && FrameType(frame, mask.pixelFormat()) == mask.frameType());
-			ocean_assert(filter == nullptr || filter->frameType() == mask.frameType());
+			ocean_assert(!filter.isValid() || filter.frameType() == mask.frameType());
 
 			const PixelBoundingBox& boundingBox = synthesisBoundingBoxes_[layerIndex];
 
@@ -84,7 +84,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 			{
 				case IT_APPEARANCE:
 				{
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerAppearanceMappingF1<1u, 100u>(layer, randomGenerator).invoke(worker);
 
 					break;
@@ -94,9 +94,9 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 				{
 					LayerI1 layerI(frame, mask, boundingBox);
 
-					if (filter != nullptr)
+					if (filter.isValid())
 					{
-						InitializerRandomMappingAreaConstrainedI1(layerI, randomGenerator, Frame(*filter, Frame::temporary_ACM_USE_KEEP_LAYOUT)).invoke(worker);
+						InitializerRandomMappingAreaConstrainedI1(layerI, randomGenerator, filter).invoke(worker);
 					}
 					else
 					{
@@ -112,9 +112,9 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 				{
 					LayerI1 layerI(frame, mask, boundingBox);
 
-					if (filter != nullptr)
+					if (filter.isValid())
 					{
-						InitializerShrinkingErosionI1(layerI, randomGenerator, InitializerAppearanceMappingAreaConstrainedI1<1u, 75u>(layerI, randomGenerator, Frame(*filter, Frame::temporary_ACM_USE_KEEP_LAYOUT))).invoke(worker);
+						InitializerShrinkingErosionI1(layerI, randomGenerator, InitializerAppearanceMappingAreaConstrainedI1<1u, 75u>(layerI, randomGenerator, filter)).invoke(worker);
 					}
 					else
 					{
@@ -130,9 +130,9 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 				{
 					LayerI1 layerI(frame, mask, boundingBox);
 
-					if (filter != nullptr)
+					if (filter.isValid())
 					{
-						InitializerShrinkingErosionRandomizedI1(layerI, randomGenerator, InitializerAppearanceMappingAreaConstrainedI1<1u, 75u>(layerI, randomGenerator, Frame(*filter, Frame::temporary_ACM_USE_KEEP_LAYOUT))).invoke(worker);
+						InitializerShrinkingErosionRandomizedI1(layerI, randomGenerator, InitializerAppearanceMappingAreaConstrainedI1<1u, 75u>(layerI, randomGenerator, filter)).invoke(worker);
 					}
 					else
 					{
@@ -148,9 +148,9 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 				{
 					LayerI1 layerI(frame, mask, boundingBox);
 
-					if (filter != nullptr)
+					if (filter.isValid())
 					{
-						InitializerContourMappingI1(layerI, randomGenerator, InitializerAppearanceMappingAreaConstrainedI1<1u, 75u>(layerI, randomGenerator, Frame(*filter, Frame::temporary_ACM_USE_KEEP_LAYOUT))).invoke(worker);
+						InitializerContourMappingI1(layerI, randomGenerator, InitializerAppearanceMappingAreaConstrainedI1<1u, 75u>(layerI, randomGenerator, filter)).invoke(worker);
 					}
 					else
 					{
@@ -166,7 +166,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 				{
 					LayerI1 layerI(frame, mask, boundingBox);
 
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerShrinkingPatchMatchingI1(layerI, randomGenerator, 1u, false, (unsigned int)(-1)).invoke(worker);
 
 					InitializerConvertMappingF1(layer, layerI).invoke(worker);
@@ -178,7 +178,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 				{
 					LayerI1 layerI(frame, mask, boundingBox);
 
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerShrinkingPatchMatchingI1(layerI, randomGenerator, 2u, false, (unsigned int)(-1)).invoke(worker);
 
 					InitializerConvertMappingF1(layer, layerI).invoke(worker);
@@ -190,7 +190,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 				{
 					LayerI1 layerI(frame, mask, boundingBox);
 
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerShrinkingPatchMatchingI1(layerI, randomGenerator, 1u, false, 30u).invoke(worker);
 
 					InitializerConvertMappingF1(layer, layerI).invoke(worker);
@@ -202,7 +202,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 				{
 					LayerI1 layerI(frame, mask, boundingBox);
 
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerShrinkingPatchMatchingI1(layerI, randomGenerator, 2u, false, 30u).invoke(worker);
 
 					InitializerConvertMappingF1(layer, layerI).invoke(worker);
@@ -214,7 +214,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 				{
 					LayerI1 layerI(frame, mask, boundingBox);
 
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerShrinkingPatchMatchingI1(layerI, randomGenerator, 1u, true, (unsigned int)(-1)).invoke(worker);
 
 					InitializerConvertMappingF1(layer, layerI).invoke(worker);
@@ -226,7 +226,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 				{
 					LayerI1 layerI(frame, mask, boundingBox);
 
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerShrinkingPatchMatchingI1(layerI, randomGenerator, 2u, true, (unsigned int)(-1)).invoke(worker);
 
 					InitializerConvertMappingF1(layer, layerI).invoke(worker);
@@ -235,7 +235,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 				}
 			}
 
-			ocean_assert(filter == nullptr && "Not yet implemented!");
+			ocean_assert(!filter.isValid() && "Not yet implemented!");
 			Optimizer4NeighborhoodHighPerformanceF1<5u, 25u, true>(layer, randomGenerator).invoke(5u, 4u, maxSpatialCostLayer, worker, true);
 		}
 		else
@@ -244,10 +244,10 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 
 			Frame frame(synthesisFramePyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 			const Frame mask(synthesisMaskPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			const LegacyFrame* filter = synthesisFilterPyramid_.isValid() ? &(synthesisFilterPyramid_[layerIndex]) : nullptr;
+			const Frame filter = synthesisFilterPyramid_.isValid() ? Frame(synthesisFilterPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT) : Frame();
 
 			ocean_assert(frame.isValid() && mask.isValid() && FrameType(frame, mask.pixelFormat()) == mask.frameType());
-			ocean_assert(filter == nullptr || filter->frameType() == mask.frameType());
+			ocean_assert(!filter.isValid() || filter.frameType() == mask.frameType());
 
 			const PixelBoundingBox& boundingBox = synthesisBoundingBoxes_[layerIndex];
 
@@ -261,7 +261,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 
 			layersReversedOrder_.emplace_back(frameToUse, mask, boundingBox);
 
-			ocean_assert_and_suppress_unused(filter == nullptr && "Not yet implemented!", filter);
+			ocean_assert_and_suppress_unused(!filter.isValid() && "Not yet implemented!", filter);
 			InitializerCoarserMappingAdaptionF1<2u>(layersReversedOrder_.back(), randomGenerator, layersReversedOrder_[layersReversedOrder_.size() - 2]).invoke(worker);
 
 			ocean_assert_and_suppress_unused(skippingLayers == 0u && "Not yet implemented!", skippingLayers);
