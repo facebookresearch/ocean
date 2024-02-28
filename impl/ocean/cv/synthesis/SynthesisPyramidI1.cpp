@@ -21,12 +21,6 @@
 #include "ocean/cv/synthesis/Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h"
 #include "ocean/cv/synthesis/Optimizer4NeighborhoodStructuralConstrainedI1.h"
 
-// #define WINDOWS_DEBUG_DESKTOP_OUTPUT
-
-#if defined(WINDOWS_DEBUG_DESKTOP_OUTPUT) && defined(_WINDOWS)
-	#include "ocean/platform/win/Utilities.h"
-#endif
-
 namespace Ocean
 {
 
@@ -200,19 +194,6 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 			{
 				Optimizer4NeighborhoodHighPerformanceI1<5u, 25u, true>(layer, randomGenerator).invoke(5u, 4u, maxSpatialCostLayer, worker, true);
 			}
-
-#ifdef WINDOWS_DEBUG_DESKTOP_OUTPUT
-			{
-				LegacyFrame frameCopy(layer.frame(), true);
-				Platform::Win::Utilities::desktopFrameOutput(0, 0, frameCopy.width() * 4, frameCopy.height() * 4, frameCopy);
-				Sleep(200u);
-
-				CreatorInpaintingContentI1(layer, frameCopy).invoke(worker);
-				Platform::Win::Utilities::desktopFrameOutput(0, 0, frameCopy.width() * 4, frameCopy.height() * 4, frameCopy);
-				Sleep(200u);
-			}
-#endif // WINDOWS_DEBUG_DESKTOP_OUTPUT
-
 		}
 		else
 		{
@@ -280,30 +261,6 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 
 #endif
 
-
-#ifdef WINDOWS_DEBUG_DESKTOP_OUTPUT
-
-			{
-				uint64_t layerCost = 0ull;
-				CreatorInformationCost4NeighborhoodI1<5u, 25u>(synthesisLayersReversedOrder.back(), layerCost).invoke(worker);
-
-				LegacyFrame frameCopy(synthesisLayersReversedOrder.back().frame(), true);
-				CreatorInpaintingContentI1(synthesisLayersReversedOrder.back(), frameCopy).invoke(worker);
-				Platform::Win::Utilities::desktopFrameOutput(0, 0, frameCopy.width() * 2, frameCopy.height() * 2, frameCopy);
-				Sleep(200);
-			}
-
-			{
-				LegacyFrame frameCopy(FrameType(synthesisLayersReversedOrder.back().frame(), FrameType::FORMAT_Y8));
-				memset(frameCopy.data<uint8_t>(), 0xFF, frameCopy.size());
-
-				CreatorInformationSpatialCostI1<4u, false>(synthesisLayersReversedOrder.back(), frameCopy).invoke(worker);
-				Platform::Win::Utilities::desktopFrameOutput(0, 0, frameCopy);
-				Sleep(200);
-			}
-
-#endif // WINDOWS_DEBUG_DESKTOP_OUTPUT
-
 		}
 	}
 
@@ -363,14 +320,6 @@ bool SynthesisPyramidI1::applyInpainting(const Constraints& constraints, RandomG
 
 			const Constraints scaledConstraints(constraints, Numeric::pow(Scalar(0.5), Scalar(layerIndex)));
 			Optimizer4NeighborhoodStructuralConstrainedI1<5u, 25u, true>(layer, randomGenerator, scaledConstraints).invoke(5u, 4u, maxSpatialCostLayer, worker, true);
-
-#ifdef WINDOWS_DEBUG_DESKTOP_OUTPUT
-			{
-				LegacyFrame frameCopy(layer.frame(), true);
-				CreatorInpaintingContentI1(layer, frameCopy).invoke(worker);
-				Platform::Win::Utilities::desktopFrameOutput(0, 0, frameCopy.width() * 4, frameCopy.height() * 4, frameCopy);
-			}
-#endif // WINDOWS_DEBUG_DESKTOP_OUTPUT
 		}
 		else
 		{
@@ -394,14 +343,6 @@ bool SynthesisPyramidI1::applyInpainting(const Constraints& constraints, RandomG
 				const Constraints scaledConstraints(constraints, Numeric::pow(Scalar(0.5), Scalar(layerIndex)));
 				Optimizer4NeighborhoodStructuralConstrainedI1<5u, 25u, true>(layersReversedOrder_.back(), randomGenerator, scaledConstraints).invoke(5u, optimizationIterations, maxSpatialCostLayer, worker, true);
 			}
-
-#ifdef WINDOWS_DEBUG_DESKTOP_OUTPUT
-			{
-				LegacyFrame frameCopy(synthesisLayersReversedOrder.back().frame(), true);
-				CreatorInpaintingContentI1(synthesisLayersReversedOrder.back(), frameCopy).invoke(worker);
-				Platform::Win::Utilities::desktopFrameOutput(0, 0, frameCopy.width() * 2, frameCopy.height() * 2, frameCopy);
-			}
-#endif // WINDOWS_DEBUG_DESKTOP_OUTPUT
 		}
 	}
 

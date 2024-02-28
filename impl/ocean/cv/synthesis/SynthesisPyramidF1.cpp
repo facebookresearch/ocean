@@ -18,12 +18,6 @@
 #include "ocean/cv/synthesis/InitializerShrinkingPatchMatchingI1.h"
 #include "ocean/cv/synthesis/Optimizer4NeighborhoodHighPerformanceF1.h"
 
-// #define WINDOWS_DEBUG_DESKTOP_OUTPUT
-
-#if defined(WINDOWS_DEBUG_DESKTOP_OUTPUT) && defined(_WINDOWS)
-	#include "ocean/platform/win/Utilities.h"
-#endif
-
 namespace Ocean
 {
 
@@ -243,19 +237,6 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 
 			ocean_assert(filter == nullptr && "Not yet implemented!");
 			Optimizer4NeighborhoodHighPerformanceF1<5u, 25u, true>(layer, randomGenerator).invoke(5u, 4u, maxSpatialCostLayer, worker, true);
-
-#ifdef WINDOWS_DEBUG_DESKTOP_OUTPUT
-			{
-				LegacyFrame frameCopy(layer.frame(), true);
-				Platform::Win::Utilities::desktopFrameOutput(0, 0, frameCopy.width() * 4, frameCopy.height() * 4, frameCopy);
-				Sleep(200u);
-
-				CreatorInpaintingContentF1(layer, frameCopy).invoke(worker);
-				Platform::Win::Utilities::desktopFrameOutput(0, 0, frameCopy.width() * 4, frameCopy.height() * 4, frameCopy);
-				Sleep(200u);
-			}
-#endif // WINDOWS_DEBUG_DESKTOP_OUTPUT
-
 		}
 		else
 		{
