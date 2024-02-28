@@ -39,7 +39,7 @@ class Optimizer4NeighborhoodAreaConstrainedI1 :
 		 * @param randomGenerator Random number generator
 		 * @param filter The filter frame that is used during the optimization
 		 */
-		inline Optimizer4NeighborhoodAreaConstrainedI1(LayerI1& layer, RandomGenerator& randomGenerator, const LegacyFrame& filter);
+		inline Optimizer4NeighborhoodAreaConstrainedI1(LayerI1& layer, RandomGenerator& randomGenerator, const Frame& filter);
 
 	private:
 
@@ -76,11 +76,11 @@ class Optimizer4NeighborhoodAreaConstrainedI1 :
 		LayerI1& layerI1_;
 
 		/// Filter frame that is used during the optimization.
-		const LegacyFrame& filter_;
+		const Frame& filter_;
 };
 
 template <unsigned int tWeightFactor, unsigned int tBorderFactor, bool tUpdateFrame>
-Optimizer4NeighborhoodAreaConstrainedI1<tWeightFactor, tBorderFactor, tUpdateFrame>::Optimizer4NeighborhoodAreaConstrainedI1(LayerI1& layer, RandomGenerator& randomGenerator, const LegacyFrame& filter) :
+Optimizer4NeighborhoodAreaConstrainedI1<tWeightFactor, tBorderFactor, tUpdateFrame>::Optimizer4NeighborhoodAreaConstrainedI1(LayerI1& layer, RandomGenerator& randomGenerator, const Frame& filter) :
 	Optimizer(layer),
 	OptimizerI(layer),
 	OptimizerSubset(layer, randomGenerator),
@@ -151,7 +151,7 @@ void Optimizer4NeighborhoodAreaConstrainedI1<tWeightFactor, tBorderFactor, tUpda
 	const unsigned int layerFramePaddingElements = layerFrame.paddingElements();
 	const unsigned int layerMaskPaddingElements = layerMask.paddingElements();
 	const unsigned int layerMaskStrideElements = layerMask.strideElements();
-	const unsigned int layerFilterStrideElements = filter_.width() + filter_.paddingElements(); // **TODO** switch to Frame::strideElements() once possible
+	const unsigned int layerFilterStrideElements = filter_.strideElements();
 
 #ifdef OCEAN_DEBUG
 	const PixelBoundingBox& debugLayerBoundingBox = layerI1_.boundingBox();

@@ -79,10 +79,10 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 		{
 			Frame frame(synthesisFramePyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 			const Frame mask(synthesisMaskPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			const LegacyFrame* filter = synthesisFilterPyramid_.isValid() ? &(synthesisFilterPyramid_[layerIndex]) : nullptr;
+			const Frame filter = synthesisFilterPyramid_.isValid() ? Frame(synthesisFilterPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT) : Frame();
 
 			ocean_assert(frame.isValid() && mask.isValid() && FrameType(frame, mask.pixelFormat()) == mask.frameType());
-			ocean_assert(filter == nullptr || filter->frameType() == mask.frameType());
+			ocean_assert(!filter.isValid() || filter.frameType() == mask.frameType());
 
 			const PixelBoundingBox& boundingBox = synthesisBoundingBoxes_[layerIndex];
 
@@ -93,9 +93,9 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 			{
 				case IT_APPEARANCE:
 				{
-					if (filter != nullptr)
+					if (filter.isValid())
 					{
-						InitializerAppearanceMappingAreaConstrainedI1<1u, 100u>(layer, randomGenerator, Frame(*filter, Frame::temporary_ACM_USE_KEEP_LAYOUT)).invoke(worker);
+						InitializerAppearanceMappingAreaConstrainedI1<1u, 100u>(layer, randomGenerator, filter).invoke(worker);
 					}
 					else
 					{
@@ -107,9 +107,9 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 
 				case IT_RANDOM:
 				{
-					if (filter != nullptr)
+					if (filter.isValid())
 					{
-						InitializerRandomMappingAreaConstrainedI1(layer, randomGenerator, Frame(*filter, Frame::temporary_ACM_USE_KEEP_LAYOUT)).invoke(worker);
+						InitializerRandomMappingAreaConstrainedI1(layer, randomGenerator, filter).invoke(worker);
 					}
 					else
 					{
@@ -121,9 +121,9 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 
 				case IT_EROSION:
 				{
-					if (filter != nullptr)
+					if (filter.isValid())
 					{
-						InitializerShrinkingErosionI1(layer, randomGenerator, InitializerAppearanceMappingAreaConstrainedI1<1u, 75u>(layer, randomGenerator, Frame(*filter, Frame::temporary_ACM_USE_KEEP_LAYOUT))).invoke(worker);
+						InitializerShrinkingErosionI1(layer, randomGenerator, InitializerAppearanceMappingAreaConstrainedI1<1u, 75u>(layer, randomGenerator, filter)).invoke(worker);
 					}
 					else
 					{
@@ -135,9 +135,9 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 
 				case IT_RANDOM_EROSION:
 				{
-					if (filter != nullptr)
+					if (filter.isValid())
 					{
-						InitializerShrinkingErosionRandomizedI1(layer, randomGenerator, InitializerAppearanceMappingAreaConstrainedI1<1u, 75u>(layer, randomGenerator, Frame(*filter, Frame::temporary_ACM_USE_KEEP_LAYOUT))).invoke(worker);
+						InitializerShrinkingErosionRandomizedI1(layer, randomGenerator, InitializerAppearanceMappingAreaConstrainedI1<1u, 75u>(layer, randomGenerator, filter)).invoke(worker);
 					}
 					else
 					{
@@ -149,9 +149,9 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 
 				case IT_CONTOUR_MAPPING:
 				{
-					if (filter != nullptr)
+					if (filter.isValid())
 					{
-						InitializerContourMappingI1(layer, randomGenerator, InitializerAppearanceMappingAreaConstrainedI1<1u, 75u>(layer, randomGenerator, Frame(*filter, Frame::temporary_ACM_USE_KEEP_LAYOUT))).invoke(worker);
+						InitializerContourMappingI1(layer, randomGenerator, InitializerAppearanceMappingAreaConstrainedI1<1u, 75u>(layer, randomGenerator, filter)).invoke(worker);
 					}
 					else
 					{
@@ -162,39 +162,39 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 				}
 
 				case IT_PATCH_FULL_AREA_1:
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerShrinkingPatchMatchingI1(layer, randomGenerator, 1u, false, (unsigned int)(-1)).invoke(worker);
 					break;
 
 				case IT_PATCH_FULL_AREA_2:
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerShrinkingPatchMatchingI1(layer, randomGenerator, 2u, false, (unsigned int)(-1)).invoke(worker);
 					break;
 
 				case IT_PATCH_SUB_REGION_1:
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerShrinkingPatchMatchingI1(layer, randomGenerator, 1u, false, 30u).invoke(worker);
 					break;
 
 				case IT_PATCH_SUB_REGION_2:
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerShrinkingPatchMatchingI1(layer, randomGenerator, 2u, false, 30u).invoke(worker);
 					break;
 
 				case IT_PATCH_FULL_AREA_HEURISTIC_1:
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerShrinkingPatchMatchingI1(layer, randomGenerator, 1u, true, (unsigned int)(-1)).invoke(worker);
 					break;
 
 				case IT_PATCH_FULL_AREA_HEURISTIC_2:
-					ocean_assert(filter == nullptr && "Not yet implemented!");
+					ocean_assert(!filter.isValid() && "Not yet implemented!");
 					InitializerShrinkingPatchMatchingI1(layer, randomGenerator, 2u, true, (unsigned int)(-1)).invoke(worker);
 					break;
 			}
 
-			if (filter)
+			if (filter.isValid())
 			{
-				Optimizer4NeighborhoodAreaConstrainedI1<5u, 25u, true>(layer, randomGenerator, *filter).invoke(5u, 4u, maxSpatialCostLayer, worker, true);
+				Optimizer4NeighborhoodAreaConstrainedI1<5u, 25u, true>(layer, randomGenerator, filter).invoke(5u, 4u, maxSpatialCostLayer, worker, true);
 			}
 			else
 			{
@@ -220,10 +220,10 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 
 			Frame frame(synthesisFramePyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 			const Frame mask(synthesisMaskPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			const LegacyFrame* filter = synthesisFilterPyramid_.isValid() ? &(synthesisFilterPyramid_[layerIndex]) : nullptr;
+			const Frame filter = synthesisFilterPyramid_.isValid() ? Frame(synthesisFilterPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT) : Frame();
 
 			ocean_assert(frame.isValid() && mask.isValid() && FrameType(frame, mask.pixelFormat()) == mask.frameType());
-			ocean_assert(filter == nullptr || filter->frameType() == mask.frameType());
+			ocean_assert(!filter.isValid() || filter.frameType() == mask.frameType());
 
 			const PixelBoundingBox& boundingBox = synthesisBoundingBoxes_[layerIndex];
 
@@ -237,9 +237,9 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 
 			layersReversedOrder_.emplace_back(frameToUse, mask, boundingBox);
 
-			if (filter != nullptr)
+			if (filter.isValid())
 			{
-				InitializerCoarserMappingAdaptionAreaConstrainedI1<2u>(layersReversedOrder_.back(), randomGenerator, layersReversedOrder_[layersReversedOrder_.size() - 2], Frame(*filter, Frame::temporary_ACM_USE_KEEP_LAYOUT)).invoke(worker);
+				InitializerCoarserMappingAdaptionAreaConstrainedI1<2u>(layersReversedOrder_.back(), randomGenerator, layersReversedOrder_[layersReversedOrder_.size() - 2], filter).invoke(worker);
 			}
 			else
 			{
@@ -248,9 +248,9 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 
 #if 1
 
-			if (filter != nullptr)
+			if (filter.isValid())
 			{
-				Optimizer4NeighborhoodAreaConstrainedI1<5u, 25u, true>(layersReversedOrder_.back(), randomGenerator, *filter).invoke(5u, optimizationIterations, maxSpatialCostLayer, worker, true);
+				Optimizer4NeighborhoodAreaConstrainedI1<5u, 25u, true>(layersReversedOrder_.back(), randomGenerator, filter).invoke(5u, optimizationIterations, maxSpatialCostLayer, worker, true);
 			}
 			else
 			{
@@ -266,17 +266,17 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 
 #else
 
-			LegacyFrame costMask;
+			Frame costMask;
 			if (layerIndex == 0)
 			{
-				InitializerCoarserMappingAdaptionSpatialCostMaskI1<2u, 1u>(synthesisLayersReversedOrder.back(), randomGenerator, synthesisLayersReversedOrder[synthesisLayersReversedOrder.size() - 2], costMask).invoke(worker);
+				InitializerCoarserMappingAdaptionSpatialCostMaskI1<2u, 1u>(layersReversedOrder_.back(), randomGenerator, layersReversedOrder_[layersReversedOrder_.size() - 2], costMask).invoke(worker);
 			}
 			else
 			{
-				InitializerCoarserMappingAdaptionSpatialCostMaskI1<2u, 9u>(synthesisLayersReversedOrder.back(), randomGenerator, synthesisLayersReversedOrder[synthesisLayersReversedOrder.size() - 2], costMask).invoke(worker);
+				InitializerCoarserMappingAdaptionSpatialCostMaskI1<2u, 9u>(layersReversedOrder_.back(), randomGenerator, layersReversedOrder_[layersReversedOrder_.size() - 2], costMask).invoke(worker);
 			}
 
-			Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1<5u, 25u, true>(synthesisLayersReversedOrder.back(), randomGenerator, costMask).invoke(5u, optimizationIterations, maxSpatialCostLayer, worker, true);
+			Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1<5u, 25u, true>(layersReversedOrder_.back(), randomGenerator, LegacyFrame(costMask, LegacyFrame::FCM_USE_IF_POSSIBLE)).invoke(5u, optimizationIterations, maxSpatialCostLayer, worker, true);
 
 #endif
 

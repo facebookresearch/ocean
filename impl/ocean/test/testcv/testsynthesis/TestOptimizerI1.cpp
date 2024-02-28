@@ -325,7 +325,7 @@ bool TestOptimizerI1::testAreaConstrained4Neighborhood(const unsigned int width,
 				constexpr bool applyInitialMapping = true;
 
 				performance.startIf(performanceIteration);
-					CV::Synthesis::Optimizer4NeighborhoodAreaConstrainedI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator, LegacyFrame(filterMask, LegacyFrame::FCM_USE_IF_POSSIBLE)).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
+					CV::Synthesis::Optimizer4NeighborhoodAreaConstrainedI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator, filterMask).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
 				performance.stopIf(performanceIteration);
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
