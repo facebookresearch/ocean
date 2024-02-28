@@ -11,18 +11,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\media\videopreview\win\VideoPreviewMainWindow.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\win\VideoPreviewMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\media\videopreview\win\VideoPreviewMain.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\win\VideoPreviewMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\media\videopreview\win\VideoPreviewMain.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\win\VideoPreviewMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\media\videopreview\win\VideoPreviewMainWindow.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\win\VideoPreviewMainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

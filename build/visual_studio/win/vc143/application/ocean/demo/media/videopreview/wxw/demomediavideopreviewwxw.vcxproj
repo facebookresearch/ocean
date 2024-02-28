@@ -51,13 +51,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\media\videopreview\wxw\VideoPreviewApplication.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\media\videopreview\wxw\VideoPreviewMainWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\wxw\VideoPreviewApplication.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\wxw\VideoPreviewMainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\media\videopreview\wxw\VideoPreviewApplication.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\media\videopreview\wxw\VideoPreview.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\media\videopreview\wxw\VideoPreviewMainWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\wxw\VideoPreviewApplication.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\wxw\VideoPreview.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\wxw\VideoPreviewMainWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8EB32A30-B6B4-4D50-8C95-B787BC79F291}</ProjectGuid>

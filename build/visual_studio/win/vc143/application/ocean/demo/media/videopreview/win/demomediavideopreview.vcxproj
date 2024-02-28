@@ -51,12 +51,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\media\videopreview\win\VideoPreviewMain.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\media\videopreview\win\VideoPreviewMainWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\win\VideoPreviewMain.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\win\VideoPreviewMainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\media\videopreview\win\VideoPreviewMain.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\media\videopreview\win\VideoPreviewMainWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\win\VideoPreviewMain.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\videopreview\win\VideoPreviewMainWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{21C4AF8B-68F2-4257-84C4-2975AE52549A}</ProjectGuid>
