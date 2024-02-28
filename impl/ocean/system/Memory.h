@@ -135,38 +135,38 @@ class OCEAN_SYSTEM_EXPORT Memory
 	public:
 
 		/**
-		 * Returns the current system memory load in percent, with range [0, 100].
+		 * Returns the current system memory load in percent, with range [0, 100], -1 if not available
 		 * @return Current memory load
 		 */
-		static unsigned int memoryLoad();
+		static int memoryLoad();
 
 		/**
 		 * Returns the amount of virtual memory used by the calling process.
-		 * @return The virtual memory use by the process, in bytes
+		 * @return The virtual memory use by the process, in bytes, 0 if not available
 		 */
 		static uint64_t processVirtualMemory();
 
 		/**
 		 * Returns the system-wide total amount of actual physical memory in bytes.
-		 * @return Physical memory in bytes
+		 * @return Physical memory in bytes, 0 if not available
 		 */
 		static uint64_t totalPhysicalMemory();
 
 		/**
 		 * Returns the system-wide total amount of virtual memory in bytes.
-		 * @return Virtual memory in bytes
+		 * @return Virtual memory in bytes, 0 if not available
 		 */
 		static uint64_t totalVirtualMemory();
 
 		/**
 		 * Returns the system-wide available amount of physical memory in bytes.
-		 * @return Available physical memory in bytes
+		 * @return Available physical memory in bytes, 0 if not available
 		 */
 		static uint64_t availablePhysicalMemory();
 
 		/**
 		 * Returns the system-wide available amount of virtual memory in bytes.
-		 * @return Available virtual memory in bytes
+		 * @return Available virtual memory in bytes, 0 if not available
 		 */
 		static uint64_t availableVirtualMemory();
 };

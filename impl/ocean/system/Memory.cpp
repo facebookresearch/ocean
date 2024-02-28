@@ -7,14 +7,6 @@
 	#include <windows.h>
 	#include <Psapi.h>
 #elif defined(__APPLE__)
-	#include <sys/types.h>
-	#include <sys/sysctl.h>
-	#include <sys/param.h>
-	#include <sys/mount.h>
-	#include <mach/vm_statistics.h>
-	#include <mach/mach_types.h>
-	#include <mach/mach_init.h>
-	#include <mach/mach_host.h>
 	#include <mach/mach.h>
 #elif defined(__linux__)
 	#include <fstream>
@@ -164,7 +156,7 @@ void Memory::MemoryMeasurement::threadRun()
 	}
 }
 
-unsigned int Memory::memoryLoad()
+int Memory::memoryLoad()
 {
 
 #ifdef _WINDOWS
@@ -174,13 +166,12 @@ unsigned int Memory::memoryLoad()
 
 	GlobalMemoryStatusEx(&status);
 	ocean_assert(status.dwMemoryLoad >= 0 && status.dwMemoryLoad <= 100);
-	return (unsigned int)(status.dwMemoryLoad);
+	return int(status.dwMemoryLoad);
 
 #elif defined(__APPLE__)
 
-	// there is no way to determine a percentage value for the virtual mem usage on mac
-	// so only the physical memory is taken into account
-	return (unsigned int)(100ull - (100ull * availablePhysicalMemory()) / totalPhysicalMemory());
+	// not available on Apple platforms due to the need of "Describing use of required reason API"
+	return -1;
 
 #else
 
@@ -288,16 +279,8 @@ uint64_t Memory::totalPhysicalMemory()
 
 #elif defined(__APPLE__)
 
-	int64_t physicalMemory;
-	int mib[2];
-
-	mib[0] = CTL_HW;
-	mib[1] = HW_MEMSIZE;
-
-	size_t length = sizeof(int64_t);
-	sysctl(mib, 2, &physicalMemory, &length, NULL, 0);
-
-	return uint64_t(physicalMemory);
+	// not available on Apple platforms due to the need of "Describing use of required reason API"
+	return 0ull;
 
 #else
 
@@ -327,17 +310,8 @@ uint64_t Memory::totalVirtualMemory()
 
 #elif defined(__APPLE__)
 
-	// mac operation systems don't have a preallocated virtual memory file
-	// instead the free space left on boot partition can be used as virtual memory
-	struct statfs stats;
-	uint64_t freeSwap=0;
-
-	if (0 == statfs("/", &stats))
-	{
-		freeSwap = uint64_t(stats.f_bsize) * stats.f_bfree;
-	}
-
-	return (uint64_t)freeSwap;
+	// not available on Apple platforms due to the need of "Describing use of required reason API"
+	return 0ull;
 
 #else
 
@@ -367,22 +341,8 @@ uint64_t Memory::availablePhysicalMemory()
 
 #elif defined(__APPLE__)
 
-	vm_size_t pageSize;
-	mach_port_t machPort;
-
-	mach_msg_type_number_t count;
-	vm_statistics_data_t vmStats;
-	int64_t freeMem = 0;
-
-	machPort = mach_host_self();
-	count = sizeof(vmStats) / sizeof(natural_t);
-
-	if (KERN_SUCCESS == host_page_size(machPort, &pageSize) && KERN_SUCCESS == host_statistics(machPort, HOST_VM_INFO, (host_info_t)&vmStats, &count))
-	{
-		freeMem = int64_t(vmStats.free_count - vmStats.speculative_count) * (int64_t)pageSize;
-	}
-
-	return uint64_t(freeMem);
+	// not available on Apple platforms due to the need of "Describing use of required reason API"
+	return 0ull;
 
 #else
 
@@ -412,17 +372,8 @@ uint64_t Memory::availableVirtualMemory()
 
 #elif defined(__APPLE__)
 
-	// mac operation systems don't have a preallocated virtual memory file
-	// instead the free space left on boot partition can be used as virtual memory
-	struct statfs stats;
-	uint64_t freeSwap = 0;
-
-	if (0 == statfs("/", &stats))
-	{
-		freeSwap = uint64_t(stats.f_bsize) * stats.f_bfree;
-	}
-
-	return uint64_t(freeSwap);
+	// not available on Apple platforms due to the need of "Describing use of required reason API"
+	return 0ull;
 
 #else
 
