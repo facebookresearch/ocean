@@ -6,6 +6,8 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
+#include "ocean/cv/MaskAnalyzer.h"
+
 #include "ocean/cv/segmentation/MaskAnalyzer.h"
 
 #include "ocean/cv/synthesis/CreatorInpaintingContentF1.h"
@@ -148,9 +150,16 @@ bool TestCreatorF1::testInpaintingContent(const unsigned int width, const unsign
 
 				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
 
+				CV::PixelBoundingBox boundingBox;
+				if (RandomI::random(randomGenerator, 1u) == 0u)
+				{
+					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
+					ocean_assert(boundingBox.isValid());
+				}
+
 				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
 
-				CV::Synthesis::LayerF1 layer(frame, legacyMask);
+				CV::Synthesis::LayerF1 layer(frame, legacyMask, boundingBox);
 
 				// we create a random mapping
 

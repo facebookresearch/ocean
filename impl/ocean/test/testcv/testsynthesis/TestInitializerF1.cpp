@@ -7,6 +7,7 @@
 #include "ocean/base/RandomI.h"
 
 #include "ocean/cv/CVUtilities.h"
+#include "ocean/cv/MaskAnalyzer.h"
 
 #include "ocean/cv/advanced/AdvancedSumSquareDifferences.h"
 
@@ -150,11 +151,18 @@ bool TestInitializerF1::testAppearanceMapping(const unsigned int width, const un
 
 				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
 
+				CV::PixelBoundingBox boundingBox;
+				if (RandomI::random(randomGenerator, 1u) == 0u)
+				{
+					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
+					ocean_assert(boundingBox.isValid());
+				}
+
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), 4u, false /*assignFinal*/, CV::PixelBoundingBox());
 
 				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
 
-				CV::Synthesis::LayerF1 layer(frame, legacyMask);
+				CV::Synthesis::LayerF1 layer(frame, legacyMask, boundingBox);
 
 				CV::Synthesis::MappingF1& mapping = layer.mappingF1();
 
