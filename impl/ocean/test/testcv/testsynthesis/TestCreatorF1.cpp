@@ -148,7 +148,7 @@ bool TestCreatorF1::testInpaintingContent(const unsigned int width, const unsign
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
+				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
 				if (RandomI::random(randomGenerator, 1u) == 0u)
@@ -157,9 +157,7 @@ bool TestCreatorF1::testInpaintingContent(const unsigned int width, const unsign
 					ocean_assert(boundingBox.isValid());
 				}
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerF1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerF1 layer(frame, mask, boundingBox);
 
 				// we create a random mapping
 

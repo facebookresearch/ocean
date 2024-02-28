@@ -31,7 +31,7 @@ LayerI1::LayerI1(LayerI1&& layer) noexcept :
 	// nothing to do here
 }
 
-LayerI1::LayerI1(Frame& frame, const LegacyFrame& mask, const PixelBoundingBox& boundingBox) :
+LayerI1::LayerI1(Frame& frame, const Frame& mask, const PixelBoundingBox& boundingBox) :
 	LayerI(frame, mask, boundingBox),
 	mapping_(frame.width(), frame.height())
 {

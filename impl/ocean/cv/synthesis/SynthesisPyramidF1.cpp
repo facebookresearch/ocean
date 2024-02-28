@@ -75,7 +75,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 		if (iterationIndex == 0u)
 		{
 			Frame frame(synthesisFramePyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			const LegacyFrame& mask = synthesisMaskPyramid_[layerIndex];
+			const Frame mask = Frame(synthesisMaskPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 			const LegacyFrame* filter = synthesisFilterPyramid_.isValid() ? &(synthesisFilterPyramid_[layerIndex]) : nullptr;
 
 			ocean_assert(frame.isValid() && mask.isValid() && FrameType(frame, mask.pixelFormat()) == mask.frameType());
@@ -262,7 +262,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 			// now as we have a synthesis information from the previous (coarser layer) we can propagate the information to this current layer
 
 			Frame frame(synthesisFramePyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			const LegacyFrame& mask = synthesisMaskPyramid_[layerIndex];
+			const Frame mask(synthesisMaskPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 			const LegacyFrame* filter = synthesisFilterPyramid_.isValid() ? &(synthesisFilterPyramid_[layerIndex]) : nullptr;
 
 			ocean_assert(frame.isValid() && mask.isValid() && FrameType(frame, mask.pixelFormat()) == mask.frameType());

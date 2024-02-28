@@ -104,12 +104,14 @@ void CreatorInformationSpatialCostI1<tNeighborhood, tOnlyCenterPixels>::createSu
 
 	const MappingI& layerMapping = layerI_.mapping();
 
-	const unsigned int maskStrideElements = layerI_.legacyMask().width() + layerI_.legacyMask().paddingElements(); // TODO use layerI_.mask().strideElements() once layerI_.mask() is a Frame
+	const Frame& layerMask = layerI_.mask();
+
+	const unsigned int maskStrideElements = layerMask.strideElements();
 
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
 		uint8_t* targetRow = target_.row<uint8_t>(y) + firstColumn;
-		const uint8_t* maskPixel = layerI_.legacyMask().template constrow<uint8_t>(y) + firstColumn;
+		const uint8_t* maskPixel = layerI_.mask().template constrow<uint8_t>(y) + firstColumn;
 
 		for (unsigned int x = firstColumn; x < firstColumn + numberColumns; ++x)
 		{

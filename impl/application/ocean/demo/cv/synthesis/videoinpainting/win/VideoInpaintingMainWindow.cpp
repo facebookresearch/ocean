@@ -553,7 +553,7 @@ bool VideoInpaintingMainWindow::coreInpainting(const SquareMatrix3& currentHomog
 
 		// we initialize the sub-pixel accurate synthesis pyramid
 		Frame copyCurrentFrame(currentFrame_, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
-		CV::Synthesis::LayerF1 newSynthesisPixelLayer(copyCurrentFrame, LegacyFrame(currentMask_, true), maskBoundingBox); // **TODO** remove frame copy
+		CV::Synthesis::LayerF1 newSynthesisPixelLayer(copyCurrentFrame, Frame(currentMask_, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT), maskBoundingBox); // **TODO** remove frame copy
 
 		// we adopt the synthesis mapping from the previous frame
 		CV::Synthesis::InitializerHomographyMappingAdaptionF1(newSynthesisPixelLayer, previousMapping_, randomGenerator_, previousHomographyCurrent).invoke(&worker_);

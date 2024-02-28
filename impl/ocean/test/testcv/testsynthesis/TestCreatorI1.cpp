@@ -192,7 +192,7 @@ bool TestCreatorI1::testInpaintingContent(const unsigned int width, const unsign
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
+				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
 				if (RandomI::random(randomGenerator, 1u) == 0u)
@@ -201,9 +201,7 @@ bool TestCreatorI1::testInpaintingContent(const unsigned int width, const unsign
 					ocean_assert(boundingBox.isValid());
 				}
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 
 				// we create a random mapping
 
@@ -338,7 +336,7 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 
 					const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-					const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+					const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 					CV::PixelBoundingBox boundingBox;
 					if (RandomI::random(randomGenerator, 1u) == 0u)
@@ -347,9 +345,7 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 						ocean_assert(boundingBox.isValid());
 					}
 
-					LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-					CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+					CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 
 					// we create a random mapping
 
@@ -638,7 +634,7 @@ bool TestCreatorI1::testInformationCost4Neighborhood(const unsigned int width, c
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
 				if (RandomI::random(randomGenerator, 1u) == 0u)
@@ -651,9 +647,7 @@ bool TestCreatorI1::testInformationCost4Neighborhood(const unsigned int width, c
 
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 
 				// we create a random mapping
 

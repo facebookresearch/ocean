@@ -596,7 +596,7 @@ bool TestInitializerI1::testAppearanceMappingAreaConstrained(const unsigned int 
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
 				if (RandomI::random(randomGenerator, 1u) == 0u)
@@ -605,13 +605,11 @@ bool TestInitializerI1::testAppearanceMappingAreaConstrained(const unsigned int 
 					ocean_assert(boundingBox.isValid());
 				}
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 
 				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
 
-				const Frame filterMask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				const Frame filterMask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				constexpr unsigned int patchSize = 1u;
 				constexpr unsigned int iterations = 100u;
@@ -798,7 +796,7 @@ bool TestInitializerI1::testAppearanceMapping(const unsigned int width, const un
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
 				if (RandomI::random(randomGenerator, 1u) == 0u)
@@ -807,9 +805,7 @@ bool TestInitializerI1::testAppearanceMapping(const unsigned int width, const un
 					ocean_assert(boundingBox.isValid());
 				}
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 
 				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
 
@@ -997,7 +993,7 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
 				if (RandomI::random(randomGenerator, 1u) == 0u)
@@ -1006,9 +1002,7 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 					ocean_assert(boundingBox.isValid());
 				}
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
 
 				constexpr unsigned int factor = 2u;
@@ -1020,11 +1014,9 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 
 				Frame coarserFrame = CV::CVUtilities::randomizedFrame(FrameType(frame, coarserTestWidth, coarserTestHeight), false, &randomGenerator);
 
-				const Frame coarserMask = Utilities::randomizedInpaintingMaskWithoutPadding(coarserTestWidth, coarserTestHeight, 0x00u, randomGenerator);
+				const Frame coarserMask = Utilities::randomizedInpaintingMask(coarserTestWidth, coarserTestHeight, 0x00u, randomGenerator);
 
-				const LegacyFrame legacyCoarserMask(coarserMask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 coarserLayer(coarserFrame, legacyCoarserMask);
+				CV::Synthesis::LayerI1 coarserLayer(coarserFrame, coarserMask);
 				CV::Synthesis::MappingI1& coarserMapping = coarserLayer.mappingI1();
 
 				for (unsigned int y = 0u; y < coarserMask.height(); ++y)
@@ -1228,7 +1220,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
 				if (RandomI::random(randomGenerator, 1u) == 0u)
@@ -1237,9 +1229,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 					ocean_assert(boundingBox.isValid());
 				}
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
 
 				constexpr unsigned int factor = 2u;
@@ -1251,11 +1241,9 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 
 				Frame coarserFrame = CV::CVUtilities::randomizedFrame(FrameType(frame, coarserTestWidth, coarserTestHeight), false, &randomGenerator);
 
-				const Frame coarserMask = Utilities::randomizedInpaintingMaskWithoutPadding(coarserTestWidth, coarserTestHeight, 0x00u, randomGenerator);
+				const Frame coarserMask = Utilities::randomizedInpaintingMask(coarserTestWidth, coarserTestHeight, 0x00u, randomGenerator);
 
-				const LegacyFrame legacyCoarserMask(coarserMask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 coarserLayer(coarserFrame, legacyCoarserMask);
+				CV::Synthesis::LayerI1 coarserLayer(coarserFrame, coarserMask);
 				CV::Synthesis::MappingI1& coarserMapping = coarserLayer.mappingI1();
 
 				for (unsigned int y = 0u; y < coarserMask.height(); ++y)
@@ -1280,7 +1268,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 					}
 				}
 
-				const Frame filterMask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				const Frame filterMask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				const unsigned int randomSeed = randomGenerator.seed();
 
@@ -1463,7 +1451,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
 				if (RandomI::random(randomGenerator, 1u) == 0u)
@@ -1472,9 +1460,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 					ocean_assert(boundingBox.isValid());
 				}
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
 
 				constexpr unsigned int factor = 2u;
@@ -1486,11 +1472,9 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 
 				Frame coarserFrame = CV::CVUtilities::randomizedFrame(FrameType(frame, coarserTestWidth, coarserTestHeight), false, &randomGenerator);
 
-				const Frame coarserMask = Utilities::randomizedInpaintingMaskWithoutPadding(coarserTestWidth, coarserTestHeight, 0x00u, randomGenerator);
+				const Frame coarserMask = Utilities::randomizedInpaintingMask(coarserTestWidth, coarserTestHeight, 0x00u, randomGenerator);
 
-				const LegacyFrame legacyCoarserMask(coarserMask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 coarserLayer(coarserFrame, legacyCoarserMask);
+				CV::Synthesis::LayerI1 coarserLayer(coarserFrame, coarserMask);
 				CV::Synthesis::MappingI1& coarserMapping = coarserLayer.mappingI1();
 
 				for (unsigned int y = 0u; y < coarserMask.height(); ++y)
@@ -1574,19 +1558,19 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 					allSucceeded = false;
 				}
 
-				LegacyFrame legacyCostMask;
+				Frame costMask;
 
 				performance.startIf(performanceIteration);
 					if (neighborhood == 1u)
 					{
-						if (!CV::Synthesis::InitializerCoarserMappingAdaptionSpatialCostMaskI1<factor, 1u>(layer, randomGenerator, coarserLayer, legacyCostMask).invoke(useWorker))
+						if (!CV::Synthesis::InitializerCoarserMappingAdaptionSpatialCostMaskI1<factor, 1u>(layer, randomGenerator, coarserLayer, costMask).invoke(useWorker))
 						{
 							allSucceeded = false;
 						}
 					}
 					else if (neighborhood == 9u)
 					{
-						if (!CV::Synthesis::InitializerCoarserMappingAdaptionSpatialCostMaskI1<factor, 9u>(layer, randomGenerator, coarserLayer, legacyCostMask).invoke(useWorker))
+						if (!CV::Synthesis::InitializerCoarserMappingAdaptionSpatialCostMaskI1<factor, 9u>(layer, randomGenerator, coarserLayer, costMask).invoke(useWorker))
 						{
 							allSucceeded = false;
 						}
@@ -1604,7 +1588,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 					return false;
 				}
 
-				if (!legacyCostMask.isValid())
+				if (!costMask.isValid())
 				{
 					ocean_assert(false && "This should never happen!");
 					return false;
@@ -1641,7 +1625,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 											allSucceeded = false;
 										}
 
-										const uint8_t costValue = legacyCostMask.constpixel<uint8_t>(x, y)[0];
+										const uint8_t costValue = costMask.constpixel<uint8_t>(x, y)[0];
 
 										if (allValueSame(coarserLayerSpatialCost, xCoarser, yCoarser, 0x80u, neighborhood))
 										{
@@ -1755,7 +1739,7 @@ bool TestInitializerI1::testRandomMapping(const double testDuration, Worker& wor
 
 			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-			const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+			const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 			CV::PixelBoundingBox boundingBox;
 			if (RandomI::random(randomGenerator, 1u) == 0u)
@@ -1764,9 +1748,7 @@ bool TestInitializerI1::testRandomMapping(const double testDuration, Worker& wor
 				ocean_assert(boundingBox.isValid());
 			}
 
-			const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-			CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+			CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 
 			if (!CV::Synthesis::InitializerRandomMappingI1(layer, randomGenerator).invoke(useWorker))
 			{
@@ -1844,8 +1826,8 @@ bool TestInitializerI1::testRandomMappingAreaConstrained(const double testDurati
 
 			while (true)
 			{
-				mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
-				filter = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+				filter = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				// we need to ensure that there is at least one valid mask pixel with valid filter pixel
 
@@ -1876,9 +1858,7 @@ bool TestInitializerI1::testRandomMappingAreaConstrained(const double testDurati
 				ocean_assert(boundingBox.isValid());
 			}
 
-			const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-			CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+			CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 
 			if (!CV::Synthesis::InitializerRandomMappingAreaConstrainedI1(layer, randomGenerator, filter).invoke(useWorker))
 			{
@@ -1997,7 +1977,7 @@ bool TestInitializerI1::testShrinkingErosion(const unsigned int width, const uns
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 				const Frame copyMask(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				CV::PixelBoundingBox boundingBox;
@@ -2007,9 +1987,7 @@ bool TestInitializerI1::testShrinkingErosion(const unsigned int width, const uns
 					ocean_assert(boundingBox.isValid());
 				}
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 
 				CV::Synthesis::InitializerAppearanceMappingI1<1u, 100u> appearanceInitializer(layer, randomGenerator);
 
@@ -2159,7 +2137,7 @@ bool TestInitializerI1::testShrinkingErosionRandomized(const unsigned int width,
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 				const Frame copyMask(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				CV::PixelBoundingBox boundingBox;
@@ -2169,9 +2147,7 @@ bool TestInitializerI1::testShrinkingErosionRandomized(const unsigned int width,
 					ocean_assert(boundingBox.isValid());
 				}
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 
 				CV::Synthesis::InitializerAppearanceMappingI1<1u, 100u> appearanceInitializer(layer, randomGenerator);
 
@@ -2323,7 +2299,7 @@ bool TestInitializerI1::testShrinkingPatchMatching(const unsigned int width, con
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 				const Frame copyMask(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				CV::PixelBoundingBox boundingBox;
@@ -2333,9 +2309,7 @@ bool TestInitializerI1::testShrinkingPatchMatching(const unsigned int width, con
 					ocean_assert(boundingBox.isValid());
 				}
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerI1 layer(frame, mask, boundingBox);
 				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
 
 				const unsigned int initializationIterations = RandomI::random(randomGenerator, 1u, 2u);

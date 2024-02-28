@@ -89,11 +89,11 @@ inline void InitializerCoarserMappingAdaptionF1<tFactor>::initializeSubset(const
 
 	RandomGenerator randomGenerator(randomGenerator_);
 
-	const uint8_t* const mask = layerF_.legacyMask().template constdata<uint8_t>();
-	const uint8_t* const coarserMask = coarserLayerF_.legacyMask().template constdata<uint8_t>();
+	const uint8_t* const mask = layerF_.mask().template constdata<uint8_t>();
+	const uint8_t* const coarserMask = coarserLayerF_.mask().template constdata<uint8_t>();
 
-	const unsigned int maskStrideElements = layerF_.legacyMask().width() + layerF_.legacyMask().paddingElements(); // **TODO** replace with Frame::strideElements() once switched to Frame
-	const unsigned int coarserMaskStrideElements = coarserLayerF_.legacyMask().width() + coarserLayerF_.legacyMask().paddingElements();
+	const unsigned int maskStrideElements = layerF_.mask().strideElements();
+	const unsigned int coarserMaskStrideElements = coarserLayerF_.mask().strideElements();
 
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{

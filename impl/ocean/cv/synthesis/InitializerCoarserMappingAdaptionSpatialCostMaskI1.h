@@ -44,7 +44,7 @@ class InitializerCoarserMappingAdaptionSpatialCostMaskI1 :
 		 * @param coarserLayer The coarser synthesis layer from that the mapping will be adapted
 		 * @param costMask Resulting cost mask for the finer layer
 		 */
-		inline InitializerCoarserMappingAdaptionSpatialCostMaskI1(LayerI1& layer, RandomGenerator& randomGenerator, const LayerI1& coarserLayer, LegacyFrame& costMask);
+		inline InitializerCoarserMappingAdaptionSpatialCostMaskI1(LayerI1& layer, RandomGenerator& randomGenerator, const LayerI1& coarserLayer, Frame& costMask);
 
 		/**
 		 * Invokes the initialization process.
@@ -66,14 +66,14 @@ class InitializerCoarserMappingAdaptionSpatialCostMaskI1 :
 		const LayerI1& coarserLayerI_;
 
 		/// Resulting cost map for the finer layer.
-		LegacyFrame& costMask_;
+		Frame& costMask_;
 
 		/// Temporal spatial cost mask for the coarser layer.
-		mutable LegacyFrame coarserCostMask_;
+		mutable Frame coarserCostMask_;
 };
 
 template <unsigned int tFactor, const unsigned int tNeighborhood>
-inline InitializerCoarserMappingAdaptionSpatialCostMaskI1<tFactor, tNeighborhood>::InitializerCoarserMappingAdaptionSpatialCostMaskI1(LayerI1& layer, RandomGenerator& randomGenerator, const LayerI1& coarserLayer, LegacyFrame& costMask) :
+inline InitializerCoarserMappingAdaptionSpatialCostMaskI1<tFactor, tNeighborhood>::InitializerCoarserMappingAdaptionSpatialCostMaskI1(LayerI1& layer, RandomGenerator& randomGenerator, const LayerI1& coarserLayer, Frame& costMask) :
 	Initializer(layer),
 	InitializerI(layer),
 	InitializerRandomized(layer, randomGenerator),
@@ -91,13 +91,9 @@ bool InitializerCoarserMappingAdaptionSpatialCostMaskI1<tFactor, tNeighborhood>:
 {
 	static_assert(tNeighborhood == 1u || tNeighborhood == 9u, "Invalid neighborhood!");
 
-	costMask_ = LegacyFrame(layer_.legacyMask(), true);
-	ocean_assert(costMask_.isOwner());
+	costMask_ = Frame(layer_.mask(), Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
-	Frame tmpFrame(coarserCostMask_, Frame::temporary_ACM_USE_KEEP_LAYOUT);
-	ocean_assert(!tmpFrame.isOwner());
-
-	if (!CreatorInformationSpatialCostI1<4u, true>(coarserLayerI_, tmpFrame).invoke(worker))
+	if (!CreatorInformationSpatialCostI1<4u, true>(coarserLayerI_, coarserCostMask_).invoke(worker))
 	{
 		return false;
 	}
@@ -125,15 +121,15 @@ void InitializerCoarserMappingAdaptionSpatialCostMaskI1<tFactor, tNeighborhood>:
 
 	RandomGenerator randomGenerator(randomGenerator_);
 
-	const uint8_t* const mask = layerI_.legacyMask().template constdata<uint8_t>();
-	const uint8_t* const coarserMask = coarserLayerI_.legacyMask().template constdata<uint8_t>();
+	const uint8_t* const mask = layerI_.mask().template constdata<uint8_t>();
+	const uint8_t* const coarserMask = coarserLayerI_.mask().template constdata<uint8_t>();
 	uint8_t* const costMask = costMask_.data<uint8_t>();
 	const uint8_t* const coarserCostMask = coarserCostMask_.constdata<uint8_t>();
 
-	const unsigned int maskStrideElements = layerI_.legacyMask().width() + layerI_.legacyMask().paddingElements(); // **TODO** replace with Frame::strideElements() once switched to Frame
-	const unsigned int coarserMaskStrideElements = coarserLayerI_.legacyMask().width() + coarserLayerI_.legacyMask().paddingElements();
-	const unsigned int costMaskStrideElements = costMask_.width() + costMask_.paddingElements();
-	const unsigned int coarserCostMaskStrideElements = coarserCostMask_.width() + coarserCostMask_.paddingElements();
+	const unsigned int maskStrideElements = layerI_.mask().strideElements();
+	const unsigned int coarserMaskStrideElements = coarserLayerI_.mask().strideElements();
+	const unsigned int costMaskStrideElements = costMask_.strideElements();
+	const unsigned int coarserCostMaskStrideElements = coarserCostMask_.strideElements();
 
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{

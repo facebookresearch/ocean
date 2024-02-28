@@ -90,7 +90,7 @@ inline Optimizer4NeighborhoodStructuralConstrainedI1<tWeightFactor, tBorderFacto
 {
 	if (!constraints_.isEmpty())
 	{
-		constraints_.initializeDecisions(layer.legacyMask().constdata<uint8_t>(), layer.legacyMask().width(), layer.legacyMask().height(), layer.legacyMask().paddingElements());
+		constraints_.initializeDecisions(layer.mask().constdata<uint8_t>(), layer.mask().width(), layer.mask().height(), layer.mask().paddingElements());
 	}
 }
 
@@ -133,7 +133,7 @@ void Optimizer4NeighborhoodStructuralConstrainedI1<tWeightFactor, tBorderFactor,
 	const std::vector<int> searchRadii(calculateSearchRadii(radii, layerWidth, layerHeight));
 
 	Frame& layerFrame = layerI1_.frame();
-	const LegacyFrame& layerMask = layerI1_.legacyMask();
+	const Frame& layerMask = layerI1_.mask();
 	MappingI1& layerMapping = layerI1_.mapping();
 
 	ocean_assert(FrameType::formatIsGeneric(layerFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, tChannels));
@@ -149,7 +149,7 @@ void Optimizer4NeighborhoodStructuralConstrainedI1<tWeightFactor, tBorderFactor,
 
 	const unsigned int layerFramePaddingElements = layerFrame.paddingElements();
 	const unsigned int layerMaskPaddingElements = layerMask.paddingElements();
-	const unsigned int layerMaskStrideElements = layerMask.width() + layerMask.paddingElements(); // **TODO** replace with Frame::strideElements() once switched to Frame
+	const unsigned int layerMaskStrideElements = layerMask.strideElements();
 
 #ifdef OCEAN_DEBUG
 	const PixelBoundingBox& debugLayerBoundingBox = layerI1_.boundingBox();

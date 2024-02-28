@@ -18,7 +18,7 @@ namespace Synthesis
 
 bool InitializerContourMappingI1::invoke(Worker* worker) const
 {
-	const Frame mask(layerI_.legacyMask(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+	const Frame& mask = layerI_.mask();
 	Frame& frame = layerI_.frame();
 
 	if (mask.pixelFormat() != FrameType::FORMAT_Y8 || frame.pixelOrigin() != mask.pixelOrigin())

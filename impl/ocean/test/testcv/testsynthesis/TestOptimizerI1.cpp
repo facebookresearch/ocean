@@ -278,15 +278,13 @@ bool TestOptimizerI1::testAreaConstrained4Neighborhood(const unsigned int width,
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				constexpr unsigned int patchSize = 5u;
 
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask);
+				CV::Synthesis::LayerI1 layer(frame, mask);
 				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
 
 				for (unsigned int y = 0u; y < mask.height(); ++y)
@@ -313,7 +311,7 @@ bool TestOptimizerI1::testAreaConstrained4Neighborhood(const unsigned int width,
 
 				CV::Synthesis::MappingI1 copyMapping(mapping);
 
-				const Frame filterMask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				const Frame filterMask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				const unsigned int randomSeed = randomGenerator.seed();
 
@@ -464,15 +462,13 @@ bool TestOptimizerI1::testHighPerformance4Neighborhood(const unsigned int width,
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				constexpr unsigned int patchSize = 5u;
 
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask);
+				CV::Synthesis::LayerI1 layer(frame, mask);
 				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
 
 				for (unsigned int y = 0u; y < mask.height(); ++y)
@@ -648,15 +644,13 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkipping(const unsigned in
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				constexpr unsigned int patchSize = 5u;
 
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask);
+				CV::Synthesis::LayerI1 layer(frame, mask);
 				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
 
 				for (unsigned int y = 0u; y < mask.height(); ++y)
@@ -832,15 +826,13 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkippingByCostMask(const u
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				constexpr unsigned int patchSize = 5u;
 
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask);
+				CV::Synthesis::LayerI1 layer(frame, mask);
 				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
 
 				for (unsigned int y = 0u; y < mask.height(); ++y)
@@ -867,7 +859,7 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkippingByCostMask(const u
 
 				CV::Synthesis::MappingI1 copyMapping(mapping);
 
-				const Frame skippingMask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				const Frame skippingMask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				const unsigned int randomSeed = randomGenerator.seed();
 
@@ -1018,15 +1010,13 @@ bool TestOptimizerI1::testStructuralConstrained4Neighborhood(const unsigned int 
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				constexpr unsigned int patchSize = 5u;
 
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerI1 layer(frame, legacyMask);
+				CV::Synthesis::LayerI1 layer(frame, mask);
 				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
 
 				for (unsigned int y = 0u; y < mask.height(); ++y)

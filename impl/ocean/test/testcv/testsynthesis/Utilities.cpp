@@ -93,14 +93,6 @@ Frame Utilities::randomizedInpaintingMask(const unsigned int width, const unsign
 	}
 }
 
-Frame Utilities::randomizedInpaintingMaskWithoutPadding(const unsigned int width, const unsigned int height, const uint8_t maskValue, RandomGenerator& randomGenerator)
-{
-	Frame mask = randomizedInpaintingMask(width, height, maskValue, randomGenerator);
-	mask.makeContinuous();
-
-	return mask;
-}
-
 }
 
 }

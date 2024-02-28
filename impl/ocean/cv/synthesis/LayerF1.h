@@ -62,7 +62,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT LayerF1 : public LayerF
 		 * @param mask The mask of the synthesis layer, must have the same frame dimension as the frame
 		 * @param boundingBox Optional bounding box to focus the computation
 		 */
-		LayerF1(Frame& frame, const LegacyFrame& mask, const PixelBoundingBox& boundingBox = PixelBoundingBox());
+		LayerF1(Frame& frame, const Frame& mask, const PixelBoundingBox& boundingBox = PixelBoundingBox());
 
 		/**
 		 * Returns the mapping of this layer.

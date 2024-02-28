@@ -182,7 +182,7 @@ bool TestOptimizerF1::testHighPerformance4Neighborhood(const unsigned int width,
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				// adding a 2-pixel border not including any mask pixel
 				mask.subFrame(0u, 0u, mask.width(), 2u).setValue(0xFFu);
@@ -195,9 +195,7 @@ bool TestOptimizerF1::testHighPerformance4Neighborhood(const unsigned int width,
 
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerF1 layer(frame, legacyMask);
+				CV::Synthesis::LayerF1 layer(frame, mask);
 				CV::Synthesis::MappingF1& mapping = layer.mappingF1();
 
 				for (unsigned int y = 0u; y < mask.height(); ++y)
@@ -400,7 +398,7 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				// adding a 2-pixel border not including any mask pixel
 				mask.subFrame(0u, 0u, mask.width(), 2u).setValue(0xFFu);
@@ -414,9 +412,8 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
 
 				LegacyFrame legacyReferenceFrame(referenceFrame, LegacyFrame::FCM_USE_IF_POSSIBLE);
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
 
-				CV::Synthesis::LayerF1 layer(frame, legacyMask);
+				CV::Synthesis::LayerF1 layer(frame, mask);
 				CV::Synthesis::MappingF1& mapping = layer.mappingF1();
 
 				for (unsigned int y = 0u; y < mask.height(); ++y)

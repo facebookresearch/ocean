@@ -131,25 +131,26 @@ void InitializerAppearanceMappingAreaConstrainedI1<tPatchSize, tIterations>::ini
 	MappingI& layerMapping = layerI_.mapping();
 
 	const Frame& frame = layerI_.frame();
+	const Frame& mask = layerI_.mask();
 
-	ocean_assert(frame.isValid() && layerI_.legacyMask().isValid());
+	ocean_assert(frame.isValid() && mask.isValid());
 
 	ocean_assert(frame.numberPlanes() == 1u && frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 	ocean_assert(frame.width() == width);
 	ocean_assert(frame.height() == height);
 
-	ocean_assert(frame.isFrameTypeCompatible(FrameType(layerI_.legacyMask(), frame.pixelFormat()), false));
-	ocean_assert(layerI_.legacyMask().isFrameTypeCompatible(filter_, false));
+	ocean_assert(frame.isFrameTypeCompatible(FrameType(mask, frame.pixelFormat()), false));
+	ocean_assert(mask.isFrameTypeCompatible(filter_, false));
 
 	RandomGenerator randomGenerator(randomGenerator_);
 
 	const uint8_t* const frameData = frame.constdata<uint8_t>();
-	const uint8_t* const mask = layerI_.legacyMask().template constdata<uint8_t>();
-	const uint8_t* const filter = filter_.template constdata<uint8_t>();
+	const uint8_t* const maskData = mask.constdata<uint8_t>();
+	const uint8_t* const filterData = filter_.template constdata<uint8_t>();
 
 	const unsigned int framePaddingElements = frame.paddingElements();
 
-	const unsigned int maskStrideElements = layerI_.legacyMask().width() + layerI_.legacyMask().paddingElements(); // **TODO** replace with Frame::strideElements() once switched to Frame
+	const unsigned int maskStrideElements = mask.strideElements();
 	const unsigned int filterStrideElements = filter_.strideElements();
 
 #ifdef OCEAN_DEBUG
@@ -165,7 +166,7 @@ void InitializerAppearanceMappingAreaConstrainedI1<tPatchSize, tIterations>::ini
 
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
-		const uint8_t* maskRow = mask + y * maskStrideElements + firstColumn;
+		const uint8_t* maskRow = maskData + y * maskStrideElements + firstColumn;
 		PixelPosition* position = layerMapping.row(y) + firstColumn;
 
 		for (unsigned int x = firstColumn; x < firstColumn + numberColumns; ++x)
@@ -179,7 +180,7 @@ void InitializerAppearanceMappingAreaConstrainedI1<tPatchSize, tIterations>::ini
 					bestX = RandomI::random(randomGenerator, tPatchSize_2, width - tPatchSize_2 - 1u);
 					bestY = RandomI::random(randomGenerator, tPatchSize_2, height - tPatchSize_2 - 1u);
 				}
-				while (mask[bestY * maskStrideElements + bestX] != 0xFF || filter[bestY * filterStrideElements + bestX] != 0xFF);
+				while (maskData[bestY * maskStrideElements + bestX] != 0xFF || filterData[bestY * filterStrideElements + bestX] != 0xFF);
 
 				unsigned int bestSSD = CV::SumSquareDifferences::patch8BitPerChannel<tChannels, tPatchSize>(frameData, frameData, width, width, x, y, bestX, bestY, framePaddingElements, framePaddingElements);
 
@@ -188,7 +189,7 @@ void InitializerAppearanceMappingAreaConstrainedI1<tPatchSize, tIterations>::ini
 					const unsigned int candidateX = RandomI::random(randomGenerator, tPatchSize_2, width - tPatchSize_2 - 1u);
 					const unsigned int candidateY = RandomI::random(randomGenerator, tPatchSize_2, height - tPatchSize_2 - 1u);
 
-					if (mask[candidateY * maskStrideElements + candidateX] != 0xFF || filter[candidateY * filterStrideElements + candidateX] != 0xFF)
+					if (maskData[candidateY * maskStrideElements + candidateX] != 0xFF || filterData[candidateY * filterStrideElements + candidateX] != 0xFF)
 					{
 						continue;
 					}

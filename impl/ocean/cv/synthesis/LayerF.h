@@ -61,7 +61,7 @@ class LayerF : public Layer
 		 * @param mask Inpainting mask of this layer
 		 * @param boundingBox Optional inpainting bounding box covering all mask pixels, if defined
 		 */
-		inline LayerF(Frame& frame, const LegacyFrame& mask, const PixelBoundingBox& boundingBox = PixelBoundingBox());
+		inline LayerF(Frame& frame, const Frame& mask, const PixelBoundingBox& boundingBox = PixelBoundingBox());
 
 		/**
 		 * Assign operator.
@@ -96,7 +96,7 @@ inline LayerF::LayerF(LayerF&& layer) noexcept :
 	// nothing to do here
 }
 
-inline LayerF::LayerF(Frame& frame, const LegacyFrame& mask, const PixelBoundingBox& boundingBox) :
+inline LayerF::LayerF(Frame& frame, const Frame& mask, const PixelBoundingBox& boundingBox) :
 	Layer(frame, mask, boundingBox)
 {
 	// nothing to do here

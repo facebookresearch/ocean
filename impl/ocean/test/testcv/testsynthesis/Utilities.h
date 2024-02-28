@@ -37,18 +37,6 @@ class OCEAN_TEST_CV_SYNTHESIS_EXPORT Utilities
 		 * @return The resulting mask
 		 */
 		static Frame randomizedInpaintingMask(const unsigned int width, const unsigned int height, const uint8_t maskValue, RandomGenerator& randomGenerator);
-
-		/**
-		 * Deprecated.
-		 *
-		 * Returns a randomized binary mask for inpainting not containing any padding at the end of each row.
-		 * @param width The width of the mask, in pixel, with range [1, infinity)
-		 * @param height The height of the mask, in pixel, with range [1, infinity)
-		 * @param maskValue The mask value to be used, with range [0, 255]
-		 * @param randomGenerator The random generator to be used
-		 * @return The resulting mask
-		 */
-		static Frame randomizedInpaintingMaskWithoutPadding(const unsigned int width, const unsigned int height, const uint8_t maskValue, RandomGenerator& randomGenerator);
 };
 
 }

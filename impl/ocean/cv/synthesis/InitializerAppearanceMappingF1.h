@@ -130,23 +130,23 @@ void InitializerAppearanceMappingF1<tPatchSize, tIterations>::initializeSubsetCh
 	MappingF& layerMapping = layerF_.mapping();
 
 	const Frame& frame = layerF_.frame();
+	const Frame& mask = layerF_.mask();
 
-	ocean_assert(frame.isValid() && layerF_.legacyMask().isValid());
+	ocean_assert(frame.isValid() && mask.isValid());
 
 	ocean_assert(frame.numberPlanes() == 1u && frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 	ocean_assert(frame.width() == width);
 	ocean_assert(frame.height() == height);
 
-	ocean_assert(frame.isFrameTypeCompatible(FrameType(layerF_.legacyMask(), frame.pixelFormat()), false));
+	ocean_assert(frame.isFrameTypeCompatible(FrameType(mask, frame.pixelFormat()), false));
 
 	RandomGenerator randomGenerator(randomGenerator_);
 
 	const uint8_t* const frameData = frame.constdata<uint8_t>();
-	const uint8_t* const mask = layerF_.legacyMask().template constdata<uint8_t>();
+	const uint8_t* const maskData = mask.constdata<uint8_t>();
 
 	const unsigned int framePaddingElements = frame.paddingElements();
-
-	const unsigned int maskStrideElements = layerF_.legacyMask().width() + layerF_.legacyMask().paddingElements(); // **TODO** replace with Frame::strideElements() once switched to Frame
+	const unsigned int maskStrideElements = mask.strideElements();
 
 #ifdef OCEAN_DEBUG
 	const PixelBoundingBox& debugLayerBoundingBox = layerF_.boundingBox();
@@ -164,7 +164,7 @@ void InitializerAppearanceMappingF1<tPatchSize, tIterations>::initializeSubsetCh
 
 	for (unsigned int y = firstRow; y < std::min(firstRow + numberRows, height - 1u); ++y)
 	{
-		const uint8_t* maskRow = mask + y * maskStrideElements + firstColumn;
+		const uint8_t* maskRow = maskData + y * maskStrideElements + firstColumn;
 		Vector2* position = layerMapping.row(y) + firstColumn;
 
 		for (unsigned int x = firstColumn; x < std::min(firstColumn + numberColumns, width - 1u); ++x)
@@ -178,7 +178,7 @@ void InitializerAppearanceMappingF1<tPatchSize, tIterations>::initializeSubsetCh
 					bestX = Random::scalar(randomGenerator, Scalar(tPatchSize_2), xLocationMax);
 					bestY = Random::scalar(randomGenerator, Scalar(tPatchSize_2), yLocationMax);
 				}
-				while (mask[Numeric::round32(bestY) * int(maskStrideElements) + Numeric::round32(bestX)] != 0xFF);
+				while (maskData[Numeric::round32(bestY) * int(maskStrideElements) + Numeric::round32(bestX)] != 0xFF);
 
 				unsigned int bestSSD = Advanced::AdvancedSumSquareDifferences::patch8BitPerChannel<tChannels, tPatchSize>(frameData, frameData, width, width, Scalar(x), Scalar(y), bestX, bestY, framePaddingElements, framePaddingElements)
 														+ (unsigned int)(sqrDistance(Scalar(x), Scalar(bestX)) + sqrDistance(Scalar(y), Scalar(bestY))) / 2u;
@@ -188,7 +188,7 @@ void InitializerAppearanceMappingF1<tPatchSize, tIterations>::initializeSubsetCh
 					const Scalar candidateX = Random::scalar(randomGenerator, Scalar(tPatchSize_2), xLocationMax);
 					const Scalar candidateY = Random::scalar(randomGenerator, Scalar(tPatchSize_2), yLocationMax);
 
-					if (mask[Numeric::round32(candidateY) * int(maskStrideElements) + Numeric::round32(candidateX)] != 0xFF)
+					if (maskData[Numeric::round32(candidateY) * int(maskStrideElements) + Numeric::round32(candidateX)] != 0xFF)
 					{
 						continue;
 					}

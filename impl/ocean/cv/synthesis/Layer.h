@@ -58,13 +58,13 @@ class OCEAN_CV_SYNTHESIS_EXPORT Layer
 		 * Returns the mask of this layer.
 		 * @return Layer mask
 		 */
-		inline const LegacyFrame& legacyMask() const;
+		inline const Frame& mask() const;
 
 		/**
 		 * Returns the mask of this layer.
 		 * @return Layer mask
 		 */
-		inline LegacyFrame& legacyMask();
+		inline Frame& mask();
 
 		/**
 		 * Returns the optional bounding box of this layer.
@@ -116,7 +116,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT Layer
 		 * @param mask Inpainting mask of this layer
 		 * @param boundingBox Optional inpainting bounding box covering all mask pixels, if defined
 		 */
-		Layer(Frame& frame, const LegacyFrame& mask, const PixelBoundingBox& boundingBox = PixelBoundingBox());
+		Layer(Frame& frame, const Frame& mask, const PixelBoundingBox& boundingBox = PixelBoundingBox());
 
 		/**
 		 * Destructs the inpainting layer.
@@ -150,7 +150,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT Layer
 		Frame frame_;
 
 		/// Mask of the inpainting layer, with same dimension and pixel origin as the defined frame, always owning the memory.
-		LegacyFrame legacyMask_;
+		Frame mask_;
 
 		/// Optional bounding box covering all mask pixels, if defined.
 		PixelBoundingBox boundingBox_;
@@ -176,14 +176,14 @@ inline Frame& Layer::frame()
 	return frame_;
 }
 
-inline const LegacyFrame& Layer::legacyMask() const
+inline const Frame& Layer::mask() const
 {
-	return legacyMask_;
+	return mask_;
 }
 
-inline LegacyFrame& Layer::legacyMask()
+inline Frame& Layer::mask()
 {
-	return legacyMask_;
+	return mask_;
 }
 
 inline const PixelBoundingBox& Layer::boundingBox() const

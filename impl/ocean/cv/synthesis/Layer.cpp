@@ -15,7 +15,7 @@ Layer::Layer(const Layer& layer) :
 	width_(layer.width_),
 	height_(layer.height_),
 	frame_(layer.frame_, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT),
-	legacyMask_(layer.legacyMask_, true),
+	mask_(layer.mask_, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT),
 	boundingBox_(layer.boundingBox_)
 {
 	// nothing to do here
@@ -28,16 +28,16 @@ Layer::Layer(Layer&& layer) noexcept :
 	*this = std::move(layer);
 }
 
-Layer::Layer(Frame& frame, const LegacyFrame& mask, const PixelBoundingBox& boundingBox) :
+Layer::Layer(Frame& frame, const Frame& mask, const PixelBoundingBox& boundingBox) :
 	width_(0u),
 	height_(0u),
 	frame_(frame, Frame::ACM_USE_KEEP_LAYOUT),
-	legacyMask_(mask, true),
+	mask_(mask, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT),
 	boundingBox_(boundingBox)
 {
 	ocean_assert(!boundingBox.isValid() || (boundingBox.right() < frame_.width() && boundingBox.bottom() < frame_.height()));
 
-	if ((frame_.width() == legacyMask_.width() && frame_.height() == legacyMask_.height() && frame_.pixelOrigin() == legacyMask_.pixelOrigin())
+	if ((frame_.width() == mask_.width() && frame_.height() == mask_.height() && frame_.pixelOrigin() == mask_.pixelOrigin())
 		&& (!boundingBox_ || (boundingBox_.right() < frame_.width() && boundingBox_.bottom() < frame_.height())))
 	{
 		width_ = frame_.width();
@@ -56,7 +56,7 @@ Layer& Layer::operator=(const Layer& layer)
 	height_ = layer.height_;
 
 	frame_ = Frame(layer.frame_, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
-	legacyMask_ = LegacyFrame(layer.legacyMask_, true);
+	mask_ = Frame(layer.mask_, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
 	boundingBox_ = layer.boundingBox_;
 
@@ -74,7 +74,7 @@ Layer& Layer::operator=(Layer&& layer) noexcept
 		layer.height_ = 0u;
 
 		frame_ = std::move(layer.frame_);
-		legacyMask_ = std::move(layer.legacyMask_);
+		mask_ = std::move(layer.mask_);
 
 		boundingBox_ = layer.boundingBox_;
 		layer.boundingBox_ = PixelBoundingBox();

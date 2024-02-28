@@ -59,7 +59,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT LayerI1 : public LayerI
 		 * @param mask Inpainting mask with same frame type as the given inpainting frame
 		 * @param boundingBox Optional inpainting bounding box to speed up the process
 		 */
-		LayerI1(Frame& frame, const LegacyFrame& mask, const PixelBoundingBox& boundingBox = PixelBoundingBox());
+		LayerI1(Frame& frame, const Frame& mask, const PixelBoundingBox& boundingBox = PixelBoundingBox());
 
 		/**
 		 * Returns the mapping of this synthesis layer.

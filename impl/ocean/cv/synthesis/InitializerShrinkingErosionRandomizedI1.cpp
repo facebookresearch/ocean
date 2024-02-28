@@ -15,7 +15,7 @@ namespace Synthesis
 
 bool InitializerShrinkingErosionRandomizedI1::invoke(Worker* worker) const
 {
-	Frame copyMask(layerI_.legacyMask(), Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+	Frame copyMask(layerI_.mask(), Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
 	constexpr unsigned int randomNoise = 3u;
 	FrameFilterErosion::Comfort::shrinkMaskRandom(layerI_.frame(), copyMask, CV::FrameFilterErosion::MF_SQUARE_3, randomNoise, RandomI::random32(randomGenerator_));

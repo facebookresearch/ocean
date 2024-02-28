@@ -31,7 +31,7 @@ LayerF1::LayerF1(LayerF1&& layer) noexcept :
 	ocean_assert(!layer.mapping_);
 }
 
-LayerF1::LayerF1(Frame& frame, const LegacyFrame& mask, const PixelBoundingBox& boundingBox) :
+LayerF1::LayerF1(Frame& frame, const Frame& mask, const PixelBoundingBox& boundingBox) :
 	LayerF(frame, mask, boundingBox),
 	mapping_(frame.width(), frame.height())
 {
@@ -64,7 +64,7 @@ LayerF1& LayerF1::operator=(const LayerI1& layer)
 	height_ = layer.height();
 
 	frame_ = Frame(layer.frame(), Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
-	legacyMask_ = LegacyFrame(layer.legacyMask(), true);
+	mask_ = Frame(layer.mask(),Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
 	boundingBox_ = layer.boundingBox();
 

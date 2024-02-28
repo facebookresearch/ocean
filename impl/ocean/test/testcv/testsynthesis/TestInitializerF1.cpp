@@ -181,7 +181,7 @@ bool TestInitializerF1::testAppearanceMapping(const unsigned int width, const un
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
 				if (RandomI::random(randomGenerator, 1u) == 0u)
@@ -192,9 +192,7 @@ bool TestInitializerF1::testAppearanceMapping(const unsigned int width, const un
 
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), 4u, false /*assignFinal*/, CV::PixelBoundingBox());
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerF1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerF1 layer(frame, mask, boundingBox);
 
 				CV::Synthesis::MappingF1& mapping = layer.mappingF1();
 
@@ -397,7 +395,7 @@ bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, con
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00, randomGenerator);
 
 				CV::PixelBoundingBox boundingBox;
 				if (RandomI::random(randomGenerator, 1u) == 0u)
@@ -415,7 +413,8 @@ bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, con
 
 				Frame coarserFrame = CV::CVUtilities::randomizedFrame(FrameType(frame, coarserTestWidth, coarserTestHeight), false, &randomGenerator);
 
-				constexpr unsigned int coarserMaskPaddingElements = 0u;
+				const unsigned int coarserMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+					;
 
 				// creating a coarser mask which has a mask pixel whenever the corresponding finder mask has a mask pixel
 
@@ -452,14 +451,10 @@ bool TestInitializerF1::testCoarserMappingAdaption(const unsigned int width, con
 					}
 				}
 
-				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerF1 layer(frame, legacyMask, boundingBox);
+				CV::Synthesis::LayerF1 layer(frame, mask, boundingBox);
 				CV::Synthesis::MappingF1& mapping = layer.mappingF1();
 
-				const LegacyFrame legacyCoarserMask(coarserMask, LegacyFrame::FCM_USE_IF_POSSIBLE);
-
-				CV::Synthesis::LayerF1 coarserLayer(coarserFrame, legacyCoarserMask);
+				CV::Synthesis::LayerF1 coarserLayer(coarserFrame, coarserMask);
 				CV::Synthesis::MappingF1& coarserMapping = coarserLayer.mappingF1();
 
 				for (unsigned int y = 0u; y < coarserMask.height(); ++y)

@@ -88,7 +88,7 @@ void CreatorInpaintingContentI1::createSubsetChannels(const unsigned int firstCo
 	{
 		PixelType* targetRow = target_.row<PixelType>(y);
 
-		const uint8_t* maskRow = layerI_.legacyMask().constrow<uint8_t>(y);
+		const uint8_t* maskRow = layerI_.mask().constrow<uint8_t>(y);
 		const PixelPosition* mappingRow = layerI_.mapping().row(y);
 
 		for (unsigned int x = firstColumn; x < firstColumn + numberColumns; ++x)
@@ -98,7 +98,7 @@ void CreatorInpaintingContentI1::createSubsetChannels(const unsigned int firstCo
 				const PixelPosition& mapping = mappingRow[x];
 
 				ocean_assert(mapping.isValid() && mapping.x() < layerI_.width() && mapping.y() < layerI_.height());
-				ocean_assert(layerI_.legacyMask().constpixel<uint8_t>(mapping.x(), mapping.y())[0] == 0xFFu);
+				ocean_assert(layerI_.mask().constpixel<uint8_t>(mapping.x(), mapping.y())[0] == 0xFFu);
 
 				targetRow[x] = *((const PixelType*)(targetData + mapping.y() * targetStrideElements) + mapping.x());
 			}

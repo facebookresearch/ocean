@@ -29,7 +29,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 {
 	ocean_assert(sourceMappingF1_);
 
-	const uint8_t* const maskData = layerF_.legacyMask().constdata<uint8_t>();
+	const uint8_t* const maskData = layerF_.mask().constdata<uint8_t>();
 	const SquareMatrix3 invertedHomography(homography_.inverted());
 
 	const unsigned int layerWidth = layerF_.width();
@@ -40,6 +40,8 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 
 	RandomGenerator generator(randomGenerator_);
 
+	const unsigned int maskStrideElements = layerF_.mask().strideElements();
+
 	const Vector2* sourceMapping = (*sourceMappingF1_)();
 	Vector2* mapping = layerF_.mapping()();
 
@@ -47,7 +49,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 	{
 		for (unsigned int x = firstColumn; x < firstColumn + numberColumns; ++x)
 		{
-			if (maskData[y * layerWidth + x] != 0xFF)
+			if (maskData[y * maskStrideElements + x] != 0xFF)
 			{
 				const Vector2 currentPosition = Vector2(Scalar(x), Scalar(y));
 				const Vector2 previousPosition(homography_ * currentPosition);
@@ -205,7 +207,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 
 						if (newPosition.x() >= 2 && newPosition.x() < Scalar(layerWidth - 3) && newPosition.y() >= 2 && newPosition.y() < Scalar(layerHeight - 3))
 						{
-							if (maskData[Numeric::round32(newPosition.y()) * layerWidth + Numeric::round32(newPosition.x())] == 0xFF)
+							if (maskData[Numeric::round32(newPosition.y()) * maskStrideElements + Numeric::round32(newPosition.x())] == 0xFF)
 							{
 								mapping[y * layerWidth + x] = newPosition;
 								continue;
@@ -225,7 +227,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 					const int roundedX = Numeric::round32(px);
 					const int roundedY = Numeric::round32(py);
 
-					if (maskData[roundedY * layerWidth + roundedX] == 0xFF)
+					if (maskData[roundedY * maskStrideElements + roundedX] == 0xFF)
 					{
 						mapping[y * layerWidth + x] = Vector2(px, py);
 						break;
@@ -236,21 +238,19 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 	}
 
 #ifdef OCEAN_DEBUG
-
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
 		for (unsigned int x = 0u; x < layerWidth; ++x)
 		{
-			if (maskData[y * layerWidth + x] != 0xFF)
+			if (layerF_.mask().constpixel<uint8_t>(x, y)[0] != 0xFFu)
 			{
-				ocean_assert(mapping[y * layerWidth + x].x() >= 0);
-				ocean_assert(mapping[y * layerWidth + x].x() < Scalar(layerWidth));
-				ocean_assert(mapping[y * layerWidth + x].y() >= 0);
-				ocean_assert(mapping[y * layerWidth + x].y() < Scalar(layerHeight));
+				const Vector2& position = layerF_.mapping().position(x, y);
+
+				ocean_assert(position.x() >= 0 && position.x() < Scalar(layerWidth));
+				ocean_assert(position.y() >= 0 && position.y() < Scalar(layerHeight));
 			}
 		}
 	}
-
 #endif // OCEAN_DEBUG
 }
 
@@ -259,7 +259,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 {
 	ocean_assert(sourceMappingI1_);
 
-	const uint8_t* const maskData = layerF_.legacyMask().constdata<uint8_t>();
+	const uint8_t* const maskData = layerF_.mask().constdata<uint8_t>();
 	const SquareMatrix3 invertedHomography(homography_.inverted());
 
 	const unsigned int layerWidth = layerF_.width();
@@ -270,6 +270,8 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 	ocean_assert_and_suppress_unused(firstColumn + numberColumns <= layerWidth, numberColumns);
 	ocean_assert(firstRow + numberRows <= layerHeight);
 
+	const unsigned int maskStrideElements = layerF_.mask().strideElements();
+
 	const PixelPosition* sourceMapping = (*sourceMappingI1_)();
 	Vector2* mapping = layerF_.mapping()();
 
@@ -277,7 +279,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 	{
 		for (unsigned int x = firstColumn; x < firstColumn + numberRows; ++x)
 		{
-			if (maskData[y * layerWidth + x] != 0xFF)
+			if (maskData[y * maskStrideElements + x] != 0xFF)
 			{
 				const Vector2 previousMaskPosition(homography_ * Vector2(Scalar(x), Scalar(y)));
 
@@ -323,7 +325,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 
 					if (mainX == left && mainY == top)
 					{
-						// position 0 is main postion
+						// position 0 is main position
 
 						// 0 1
 						// 2 3
@@ -431,7 +433,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 					}
 					else if (mainX == right && mainY == top)
 					{
-						// position 1 is main postion
+						// position 1 is main position
 
 						// 0 1
 						// 2 3
@@ -539,7 +541,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 					}
 					else if (mainX == left && mainY == bottom)
 					{
-						// position 2 is main postion
+						// position 2 is main position
 
 						// 0 1
 						// 2 3
@@ -649,7 +651,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 					{
 						ocean_assert(mainX == right && mainY == bottom);
 
-						// position 3 is main postion
+						// position 3 is main position
 
 						// 0 1
 						// 2 3
@@ -754,11 +756,13 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 					}
 
 					if (newPosition.x() >= 2 && newPosition.x() < Scalar(layerWidth - 3) && newPosition.y() >= 2 && newPosition.y() < Scalar(layerHeight - 3))
-						if (maskData[Numeric::round32(newPosition.y()) * layerWidth + Numeric::round32(newPosition.x())] == 0xFF)
+					{
+						if (maskData[Numeric::round32(newPosition.y()) * maskStrideElements + Numeric::round32(newPosition.x())] == 0xFF)
 						{
 							mapping[y * layerWidth + x] = newPosition;
 							continue;
 						}
+					}
 
 					mapping[y * layerWidth + x] = Vector2(4, 4);
 					continue;
@@ -772,7 +776,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 					const int roundedX = Numeric::round32(px);
 					const int roundedY = Numeric::round32(py);
 
-					if (maskData[roundedY * layerWidth + roundedX] == 0xFF)
+					if (maskData[roundedY * maskStrideElements + roundedX] == 0xFF)
 					{
 						mapping[y * layerWidth + x] = Vector2(px, py);
 						break;
@@ -783,21 +787,19 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetI1(const unsigned i
 	}
 
 #ifdef OCEAN_DEBUG
-
 	for (unsigned int y = 0u; y < layerHeight; ++y)
 	{
 		for (unsigned int x = 0u; x < layerWidth; ++x)
 		{
-			if (maskData[y * layerWidth + x] != 0xFF)
+			if (layerF_.mask().constpixel<uint8_t>(x, y)[0] != 0xFFu)
 			{
-				ocean_assert(mapping[y * layerWidth + x].x() >= 0);
-				ocean_assert(mapping[y * layerWidth + x].x() < Scalar(layerWidth));
-				ocean_assert(mapping[y * layerWidth + x].y() >= 0);
-				ocean_assert(mapping[y * layerWidth + x].y() < Scalar(layerHeight));
+				const Vector2& position = layerF_.mapping().position(x, y);
+
+				ocean_assert(position.x() >= 0 && position.x() < Scalar(layerWidth));
+				ocean_assert(position.y() >= 0 && position.y() < Scalar(layerHeight));
 			}
 		}
 	}
-
 #endif // OCEAN_DEBUG
 }
 

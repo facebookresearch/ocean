@@ -76,8 +76,8 @@ void CreatorInpaintingContentF1::createSubsetChannels(const unsigned int firstCo
 	const unsigned int layerWidth = layerF_.width();
 	const unsigned int layerHeight = layerF_.height();
 
-	ocean_assert(layerF_.legacyMask().width() == layerWidth);
-	ocean_assert(layerF_.legacyMask().height() == layerHeight);
+	ocean_assert(layerF_.mask().width() == layerWidth);
+	ocean_assert(layerF_.mask().height() == layerHeight);
 
 	uint8_t* const frameData = target_.data<uint8_t>();
 
@@ -86,7 +86,7 @@ void CreatorInpaintingContentF1::createSubsetChannels(const unsigned int firstCo
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
 		uint8_t* framePixel = target_.pixel<uint8_t>(firstColumn, y);
-		const uint8_t* maskPixel = layerF_.legacyMask().constpixel<uint8_t>(firstColumn, y);
+		const uint8_t* maskPixel = layerF_.mask().constpixel<uint8_t>(firstColumn, y);
 		const Vector2* mappingPixel = layerF_.mapping()() + y * layerWidth + firstColumn;
 
 		for (unsigned int x = firstColumn; x < firstColumn + numberColumns; ++x)

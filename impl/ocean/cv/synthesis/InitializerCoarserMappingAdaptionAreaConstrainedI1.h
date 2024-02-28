@@ -95,22 +95,22 @@ void InitializerCoarserMappingAdaptionAreaConstrainedI1<tFactor>::initializeSubs
 
 	RandomGenerator randomGenerator(randomGenerator_);
 
-	const uint8_t* const mask = layerI_.legacyMask().template constdata<uint8_t>();
-	const uint8_t* const filter = filter_.constdata<uint8_t>();
-	const uint8_t* const coarserMask = coarserLayerI_.legacyMask().template constdata<uint8_t>();
+	const uint8_t* const maskData = layerI_.mask().template constdata<uint8_t>();
+	const uint8_t* const filterData = filter_.constdata<uint8_t>();
+	const uint8_t* const coarserMaskData = coarserLayerI_.mask().template constdata<uint8_t>();
 
-	const unsigned int maskStrideElements = layerI_.legacyMask().width() + layerI_.legacyMask().paddingElements(); // **TODO** replace with Frame::strideElements() once switched to Frame
+	const unsigned int maskStrideElements = layerI_.mask().strideElements();
 	const unsigned int filterStrideElements = filter_.strideElements();
-	const unsigned int coarserMaskStrideElements = coarserLayerI_.legacyMask().width() + coarserLayerI_.legacyMask().paddingElements();
+	const unsigned int coarserMaskStrideElements = coarserLayerI_.mask().strideElements();
 
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
-		const uint8_t* maskRow = mask + y * maskStrideElements;
+		const uint8_t* maskRow = maskData + y * maskStrideElements;
 		PixelPosition* positionRow = mapping.row(y);
 
 		const unsigned int yCoarser = min(y / tFactor, coarserHeight - 1u);
 
-		const uint8_t* coarserMaskRow = coarserMask + yCoarser * coarserMaskStrideElements;
+		const uint8_t* coarserMaskRow = coarserMaskData + yCoarser * coarserMaskStrideElements;
 		const PixelPosition* coarserPositionRow = coarserMapping.row(yCoarser);
 
 		for (unsigned int x = firstColumn; x < firstColumn + numberColumns; ++x)
@@ -132,7 +132,7 @@ void InitializerCoarserMappingAdaptionAreaConstrainedI1<tFactor>::initializeSubs
 					ocean_assert(candidateX < width);
 					ocean_assert(candidateY < height);
 
-					if (mask[candidateY * maskStrideElements + candidateX] == 0xFFu && filter[candidateY * filterStrideElements + candidateX] == 0xFFu)
+					if (maskData[candidateY * maskStrideElements + candidateX] == 0xFFu && filterData[candidateY * filterStrideElements + candidateX] == 0xFFu)
 					{
 						positionRow[x] = CV::PixelPosition(candidateX, candidateY);
 						continue;
@@ -145,7 +145,7 @@ void InitializerCoarserMappingAdaptionAreaConstrainedI1<tFactor>::initializeSubs
 					candidateX = RandomI::random(randomGenerator, width - 1u);
 					candidateY = RandomI::random(randomGenerator, height - 1u);
 				}
-				while (mask[candidateY * maskStrideElements + candidateX] != 0xFFu || filter[candidateY * filterStrideElements + candidateX] != 0xFFu);
+				while (maskData[candidateY * maskStrideElements + candidateX] != 0xFFu || filterData[candidateY * filterStrideElements + candidateX] != 0xFFu);
 
 				positionRow[x] = CV::PixelPosition(candidateX, candidateY);
 			}

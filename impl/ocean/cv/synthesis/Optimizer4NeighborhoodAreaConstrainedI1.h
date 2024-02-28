@@ -130,7 +130,7 @@ void Optimizer4NeighborhoodAreaConstrainedI1<tWeightFactor, tBorderFactor, tUpda
 	const std::vector<int> searchRadii(calculateSearchRadii(radii, layerWidth, layerHeight));
 
 	Frame& layerFrame = layerI1_.frame();
-	const LegacyFrame& layerMask = layerI1_.legacyMask();
+	const Frame& layerMask = layerI1_.mask();
 	MappingI1& layerMapping = layerI1_.mapping();
 
 	ocean_assert(layerFrame.width() == layerWidth);
@@ -150,8 +150,8 @@ void Optimizer4NeighborhoodAreaConstrainedI1<tWeightFactor, tBorderFactor, tUpda
 
 	const unsigned int layerFramePaddingElements = layerFrame.paddingElements();
 	const unsigned int layerMaskPaddingElements = layerMask.paddingElements();
-	const unsigned int layerMaskStrideElements = layerMask.width() + layerMask.paddingElements(); // **TODO** switch to Frame::strideElements() once possible
-	const unsigned int layerFilterStrideElements = filter_.width() + filter_.paddingElements();
+	const unsigned int layerMaskStrideElements = layerMask.strideElements();
+	const unsigned int layerFilterStrideElements = filter_.width() + filter_.paddingElements(); // **TODO** switch to Frame::strideElements() once possible
 
 #ifdef OCEAN_DEBUG
 	const PixelBoundingBox& debugLayerBoundingBox = layerI1_.boundingBox();

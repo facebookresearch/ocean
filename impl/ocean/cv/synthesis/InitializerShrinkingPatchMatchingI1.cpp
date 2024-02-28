@@ -88,7 +88,7 @@ bool InitializerShrinkingPatchMatchingI1::invoke(Worker* worker) const
 
 	RandomGenerator randomGenerator(randomGenerator_);
 
-	if (!patchInitializationIteration5x5<tChannels, SSDWrapperMask>(sobelResponse, Frame(layer_.legacyMask(), Frame::temporary_ACM_USE_KEEP_LAYOUT), randomGenerator))
+	if (!patchInitializationIteration5x5<tChannels, SSDWrapperMask>(sobelResponse, layer_.mask(), randomGenerator))
 	{
 		return false;
 	}
@@ -96,7 +96,7 @@ bool InitializerShrinkingPatchMatchingI1::invoke(Worker* worker) const
 	ocean_assert(iterations_ >= 1);
 	for (unsigned int i = 1u; i < iterations_; ++i)
 	{
-		if (!patchInitializationIteration5x5<tChannels, SSDWrapper>(sobelResponse, Frame(layer_.legacyMask(), Frame::temporary_ACM_USE_KEEP_LAYOUT), randomGenerator))
+		if (!patchInitializationIteration5x5<tChannels, SSDWrapper>(sobelResponse, layer_.mask(), randomGenerator))
 		{
 			return false;
 		}

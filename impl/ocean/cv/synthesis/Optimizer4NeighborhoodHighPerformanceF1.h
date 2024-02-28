@@ -120,12 +120,13 @@ void Optimizer4NeighborhoodHighPerformanceF1<tWeightFactor, tBorderFactor, tUpda
 {
 	const unsigned int layerWidth = layerF1_.width();
 	const unsigned int layerHeight = layerF1_.height();
-	ocean_assert(layerWidth != 0 && layerHeight != 0);
+
+	ocean_assert(layerWidth != 0u && layerHeight != 0u);
 
 	const std::vector<Scalar> searchRadii(calculateSearchRadii(radii, layerWidth, layerHeight));
 
 	Frame& layerFrame = layerF1_.frame();
-	const LegacyFrame& layerMask = layerF1_.legacyMask();
+	const Frame& layerMask = layerF1_.mask();
 	MappingF1& layerMapping = layerF1_.mapping();
 
 	ocean_assert(FrameType::formatIsGeneric(layerFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, tChannels));
@@ -143,7 +144,7 @@ void Optimizer4NeighborhoodHighPerformanceF1<tWeightFactor, tBorderFactor, tUpda
 	const unsigned int layerFrameStrideElements = layerFrame.strideElements();
 
 	const unsigned int layerMaskPaddingElements = layerMask.paddingElements();
-	const unsigned int layerMaskStrideElements = layerMask.width() + layerMask.paddingElements(); // **TODO** switch to Frame::strideElements() once possible
+	const unsigned int layerMaskStrideElements = layerMask.strideElements();
 
 #ifdef OCEAN_DEBUG
 	const PixelBoundingBox& debugLayerBoundingBox = layerF1_.boundingBox();

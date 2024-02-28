@@ -23,37 +23,33 @@ void InitializerRandomMappingAreaConstrainedI1::initializeSubset(const unsigned 
 
 	RandomGenerator generator(randomGenerator_);
 
-	const uint8_t* const mask = layerI_.legacyMask().constdata<uint8_t>();
+	const uint8_t* const maskData = layerI_.mask().constdata<uint8_t>();
+	const unsigned int maskStrideElements = layerI_.mask().strideElements();
+
 	const uint8_t* const filter = filter_.constdata<uint8_t>();
+	const unsigned int filterStrideElements = filter_.strideElements();
 
 	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
 	{
-		PixelPosition* mapping = layerI_.mapping()() + y * layerWidth + firstColumn;
-		const uint8_t* maskPtr = mask + y * layerWidth + firstColumn;
-		const uint8_t* const maskPtrEnd = maskPtr + numberColumns;
+		PixelPosition* mappingRow = layerI_.mapping().row(y);
 
-		unsigned int randomX, randomY, randomIndex;
+		const uint8_t* maskRow = layerI_.mask().constrow<uint8_t>(y);
 
-		while (maskPtr != maskPtrEnd)
+		unsigned int randomX, randomY;
+
+		for (unsigned int x = firstColumn; x < firstColumn + numberColumns; ++x)
 		{
-			ocean_assert(maskPtr < maskPtrEnd);
-
-			if (*maskPtr != 0xFF)
+			if (maskRow[x] != 0xFFu)
 			{
 				do
 				{
 					randomX = RandomI::random(generator, layerWidth - 1u);
 					randomY = RandomI::random(generator, layerHeight - 1u);
-
-					randomIndex = randomY * layerWidth + randomX;
 				}
-				while (mask[randomIndex] != 0xFF || filter[randomIndex] != 0xFF);
+				while (maskData[randomY * maskStrideElements + randomX] != 0xFF || filter[randomY * filterStrideElements + randomX] != 0xFF);
 
-				*mapping = PixelPosition(randomX, randomY);
+				mappingRow[x] = PixelPosition(randomX, randomY);
 			}
-
-			++maskPtr;
-			++mapping;
 		}
 	}
 }

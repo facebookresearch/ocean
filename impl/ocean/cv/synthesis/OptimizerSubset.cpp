@@ -31,7 +31,7 @@ bool OptimizerSubset::invoke(const unsigned int radii, const unsigned int iterat
 
 	if (applyInitialMapping)
 	{
-		layer_.mapping().applyMapping(layer_.frame(), Frame(layer_.legacyMask(), Frame::temporary_ACM_USE_KEEP_LAYOUT), firstColumn, numberColumns, firstRow, numberRows, worker);
+		layer_.mapping().applyMapping(layer_.frame(), layer_.mask(), firstColumn, numberColumns, firstRow, numberRows, worker);
 	}
 
 	bool downIsMain = true;
