@@ -773,7 +773,7 @@
                BlueprintIdentifier = "5DD0C0981BD5539500ABBC5B"
                BuildableName = "testcvosx"
                BlueprintName = "testcvosx x64 (Shared)"
-               ReferencedContainer = "container:application/ocean/test/cv/testcv/osx/testcvosx.xcodeproj">
+               ReferencedContainer = "container:application/ocean/test/cv/testcv/macos/testcvosx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

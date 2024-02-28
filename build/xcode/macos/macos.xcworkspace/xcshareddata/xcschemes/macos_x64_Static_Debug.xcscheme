@@ -801,7 +801,7 @@
                BlueprintIdentifier = "5D9C339C1B91E3FE00D6B89A"
                BuildableName = "testbaseosx"
                BlueprintName = "testbaseosx x64 (Static)"
-               ReferencedContainer = "container:application/ocean/test/base/testbase/osx/testbaseosx.xcodeproj">
+               ReferencedContainer = "container:application/ocean/test/base/testbase/macos/testbaseosx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -815,7 +815,7 @@
                BlueprintIdentifier = "5DB3A2F01BAB38C50000B274"
                BuildableName = "testmath"
                BlueprintName = "testmath x64 (Static)"
-               ReferencedContainer = "container:application/ocean/test/math/testmath/osx/testmath.xcodeproj">
+               ReferencedContainer = "container:application/ocean/test/math/testmath/macos/testmath.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -829,7 +829,7 @@
                BlueprintIdentifier = "5DB3A2551BAB28EA0000B274"
                BuildableName = "testgeometryosx"
                BlueprintName = "testgeometryosx x64 (Static)"
-               ReferencedContainer = "container:application/ocean/test/geometry/testgeometry/osx/testgeometryosx.xcodeproj">
+               ReferencedContainer = "container:application/ocean/test/geometry/testgeometry/macos/testgeometryosx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -843,7 +843,7 @@
                BlueprintIdentifier = "5DD0C01B1BD52AC100ABBC5B"
                BuildableName = "testio"
                BlueprintName = "testio x64 (Static)"
-               ReferencedContainer = "container:application/ocean/test/io/testio/osx/testio.xcodeproj">
+               ReferencedContainer = "container:application/ocean/test/io/testio/macos/testio.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -857,7 +857,7 @@
                BlueprintIdentifier = "5D67D44C1B939A1300138225"
                BuildableName = "testcvosx"
                BlueprintName = "testcvosx x64 (Static)"
-               ReferencedContainer = "container:application/ocean/test/cv/testcv/osx/testcvosx.xcodeproj">
+               ReferencedContainer = "container:application/ocean/test/cv/testcv/macos/testcvosx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -871,7 +871,7 @@
                BlueprintIdentifier = "5D63F58F1B9744B100E2498E"
                BuildableName = "testmedia"
                BlueprintName = "testmedia x64 (Static)"
-               ReferencedContainer = "container:application/ocean/test/media/testmedia/osx/testmedia.xcodeproj">
+               ReferencedContainer = "container:application/ocean/test/media/testmedia/macos/testmedia.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -885,7 +885,7 @@
                BlueprintIdentifier = "5D3FAE341C64A8EF00C9644A"
                BuildableName = "testcvadvanced"
                BlueprintName = "testcvadvanced x64 (Static)"
-               ReferencedContainer = "container:application/ocean/test/cv/testcv/testcvadvanced/osx/testcvadvanced.xcodeproj">
+               ReferencedContainer = "container:application/ocean/test/cv/testcv/testcvadvanced/macos/testcvadvanced.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -899,7 +899,7 @@
                BlueprintIdentifier = "5DDE17AD1C69FDB200325BD2"
                BuildableName = "testcvdetectorosx"
                BlueprintName = "testcvdetectorosx x64 (Static)"
-               ReferencedContainer = "container:application/ocean/test/cv/testcv/testcvdetector/osx/testcvdetectorosx.xcodeproj">
+               ReferencedContainer = "container:application/ocean/test/cv/testcv/testcvdetector/macos/testcvdetectorosx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -913,7 +913,7 @@
                BlueprintIdentifier = "5DEAE9841C875DA70035D95A"
                BuildableName = "testcvsegmentation"
                BlueprintName = "testcvsegmentation x64 (Static)"
-               ReferencedContainer = "container:application/ocean/test/cv/testcv/testcvsegmentation/osx/testcvsegmentation.xcodeproj">
+               ReferencedContainer = "container:application/ocean/test/cv/testcv/testcvsegmentation/macos/testcvsegmentation.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -927,7 +927,7 @@
                BlueprintIdentifier = "5D273BFC1C638B5900301196"
                BuildableName = "testocean"
                BlueprintName = "testocean x64 (Static)"
-               ReferencedContainer = "container:application/ocean/test/testocean/osx/testocean.xcodeproj">
+               ReferencedContainer = "container:application/ocean/test/testocean/macos/testocean.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -941,7 +941,7 @@
                BlueprintIdentifier = "5DB732A21BAAD6C600360EA0"
                BuildableName = "democonsole"
                BlueprintName = "democonsole x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/console/osx/democonsole.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/console/macos/democonsole.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -955,7 +955,7 @@
                BlueprintIdentifier = "5D936F7F1BC6BA840046ACD4"
                BuildableName = "demobasesharedmemoryclient"
                BlueprintName = "demobasesharedmemoryclient x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/base/sharedmemory/client/osx/demobasesharedmemoryclient.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/base/sharedmemory/client/macos/demobasesharedmemoryclient.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -969,7 +969,7 @@
                BlueprintIdentifier = "5D936F971BC6BE3C0046ACD4"
                BuildableName = "demobasesharedmemoryserver"
                BlueprintName = "demobasesharedmemoryserver x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/base/sharedmemory/server/osx/demobasesharedmemoryserver.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/base/sharedmemory/server/macos/demobasesharedmemoryserver.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -997,7 +997,7 @@
                BlueprintIdentifier = "5D01409A1C16E55B00C5E27F"
                BuildableName = "demonetowkrtcpserver"
                BlueprintName = "demonetworktcpserver x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/network/tcpserver/osx/demonetworktcpserver.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/network/tcpserver/macos/demonetworktcpserver.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -1011,7 +1011,7 @@
                BlueprintIdentifier = "5D936EC11BC6805F0046ACD4"
                BuildableName = "demonetworkmaintenancereceiver"
                BlueprintName = "demonetworkmaintenancereceiver x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/network/maintenancereceiver/osx/demonetworkmaintenancereceiver.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/network/maintenancereceiver/macos/demonetworkmaintenancereceiver.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -1025,7 +1025,7 @@
                BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
                BuildableName = "demoplatformosxobjc.app"
                BlueprintName = "demoplatformosxobjc x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/platform/osxobjc/osx/demoplatformosxobjc.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/platform/osxobjc/macos/demoplatformosxobjc.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -1039,7 +1039,7 @@
                BlueprintIdentifier = "5DCC56C01BB2E02200661170"
                BuildableName = "demoplatformosxswift.app"
                BlueprintName = "demoplatformosxswift x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/platform/osxswift/osx/demoplatformosxswift.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/platform/osxswift/macos/demoplatformosxswift.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -1053,7 +1053,7 @@
                BlueprintIdentifier = "5DCC56C01BB2E02200661170"
                BuildableName = "demomathlookup.app"
                BlueprintName = "demomathlookup x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/math/lookup/osx/demomathlookup.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/math/lookup/macos/demomathlookup.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -1081,7 +1081,7 @@
                BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
                BuildableName = "demomediavideopreviewosx.app"
                BlueprintName = "demomediavideopreviewosx x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/media/videopreview/osx/demomediavideopreviewosx.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/media/videopreview/macos/demomediavideopreviewosx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -1095,7 +1095,7 @@
                BlueprintIdentifier = "5D01409A1C16E55B00C5E27F"
                BuildableName = "demotrackingrepresentativefeaturemap"
                BlueprintName = "demotrackingrepresentativefeaturemap x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/tracking/representativefeaturemap/osx/demotrackingrepresentativefeaturemap.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/tracking/representativefeaturemap/macos/demotrackingrepresentativefeaturemap.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -1109,7 +1109,7 @@
                BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
                BuildableName = "demotrackingfeaturetrackerosx.app"
                BlueprintName = "demotrackingfeaturetrackerosx x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/tracking/featuretracker/osx/demotrackingfeaturetrackerosx.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/tracking/featuretracker/macos/demotrackingfeaturetrackerosx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -1123,7 +1123,7 @@
                BlueprintIdentifier = "5D01409A1C16E55B00C5E27F"
                BuildableName = "democvadvancedpanoramaextractor"
                BlueprintName = "democvadvancedpanoramaextractor x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/cv/advanced/panoramaextractor/osx/democvadvancedpanoramaextractor.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/cv/advanced/panoramaextractor/macos/democvadvancedpanoramaextractor.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -1137,7 +1137,7 @@
                BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
                BuildableName = "demotrackinghomographyimagealignerosx.app"
                BlueprintName = "demotrackinghomographyimagealignerosx x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/tracking/homographyimagealigner/osx/demotrackinghomographyimagealignerosx.xcodeproj">
+               ReferencedContainer = "container:application/ocean/demo/tracking/homographyimagealigner/macos/demotrackinghomographyimagealignerosx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -1153,7 +1153,7 @@
             BlueprintIdentifier = "5D9C339C1B91E3FE00D6B89A"
             BuildableName = "testbaseosx"
             BlueprintName = "testbaseosx x64 (Static)"
-            ReferencedContainer = "container:application/ocean/test/base/testbase/osx/testbaseosx.xcodeproj">
+            ReferencedContainer = "container:application/ocean/test/base/testbase/macos/testbaseosx.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -1177,7 +1177,7 @@
             BlueprintIdentifier = "5D9C339C1B91E3FE00D6B89A"
             BuildableName = "testbaseosx"
             BlueprintName = "testbaseosx x64 (Static)"
-            ReferencedContainer = "container:application/ocean/test/base/testbase/osx/testbaseosx.xcodeproj">
+            ReferencedContainer = "container:application/ocean/test/base/testbase/macos/testbaseosx.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>

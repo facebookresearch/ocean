@@ -17,7 +17,7 @@
                   location = "container:"
                   name = "advanced">
                   <FileRef
-                     location = "group:application/ocean/demo/cv/advanced/panoramaextractor/osx/democvadvancedpanoramaextractor.xcodeproj">
+                     location = "group:application/ocean/demo/cv/advanced/panoramaextractor/macos/democvadvancedpanoramaextractor.xcodeproj">
                   </FileRef>
                </Group>
                <Group
@@ -27,7 +27,7 @@
                      location = "container:"
                      name = "barcodes">
                      <FileRef
-                        location = "group:application/ocean/demo/cv/detector/barcodes/detector2d/osx/democvdetectorbarcodesdetector2dosx.xcodeproj">
+                        location = "group:application/ocean/demo/cv/detector/barcodes/detector2d/macos/democvdetectorbarcodesdetector2dosx.xcodeproj">
                      </FileRef>
                   </Group>
                   <Group
@@ -37,7 +37,7 @@
                         location = "group:application/ocean/demo/cv/detector/qrcodes/detector/ios/democvdetectorqrcodeasdetectorios.xcodeproj">
                      </FileRef>
                      <FileRef
-                        location = "group:application/ocean/demo/cv/detector/qrcodes/detector/osx/democvdetectorqrcodesdetectorosx.xcodeproj">
+                        location = "group:application/ocean/demo/cv/detector/qrcodes/detector/macos/democvdetectorqrcodesdetectorosx.xcodeproj">
                      </FileRef>
                   </Group>
                   <FileRef
@@ -52,17 +52,17 @@
                   location = "group:application/ocean/demo/base/console/democonsole.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/demo/base/sharedmemory/server/osx/demobasesharedmemoryserver.xcodeproj">
+                  location = "group:application/ocean/demo/base/sharedmemory/server/macos/demobasesharedmemoryserver.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/demo/base/sharedmemory/client/osx/demobasesharedmemoryclient.xcodeproj">
+                  location = "group:application/ocean/demo/base/sharedmemory/client/macos/demobasesharedmemoryclient.xcodeproj">
                </FileRef>
             </Group>
             <Group
                location = "container:"
                name = "math">
                <FileRef
-                  location = "group:application/ocean/demo/math/lookup/osx/demomathlookup.xcodeproj">
+                  location = "group:application/ocean/demo/math/lookup/macos/demomathlookup.xcodeproj">
                </FileRef>
             </Group>
             <Group
@@ -75,37 +75,37 @@
                   location = "group:application/ocean/demo/media/videopreview/ios/demomediavideopreviewios.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/demo/media/videopreview/osx/demomediavideopreviewosx.xcodeproj">
+                  location = "group:application/ocean/demo/media/videopreview/macos/demomediavideopreviewosx.xcodeproj">
                </FileRef>
             </Group>
             <Group
                location = "container:"
                name = "misc">
                <FileRef
-                  location = "group:application/ocean/demo/misc/appinspector/osx/demomiscappinspectorosx.xcodeproj">
+                  location = "group:application/ocean/demo/misc/appinspector/macos/demomiscappinspectorosx.xcodeproj">
                </FileRef>
             </Group>
             <Group
                location = "container:"
                name = "network">
                <FileRef
-                  location = "group:application/ocean/demo/network/maintenancereceiver/osx/demonetworkmaintenancereceiver.xcodeproj">
+                  location = "group:application/ocean/demo/network/maintenancereceiver/macos/demonetworkmaintenancereceiver.xcodeproj">
                </FileRef>
                <FileRef
                   location = "group:application/ocean/demo/network/tcpclient/demonetworktcpclient/demonetworktcpclient.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/demo/network/tcpserver/osx/demonetworktcpserver.xcodeproj">
+                  location = "group:application/ocean/demo/network/tcpserver/macos/demonetworktcpserver.xcodeproj">
                </FileRef>
             </Group>
             <Group
                location = "container:"
                name = "platform">
                <FileRef
-                  location = "group:application/ocean/demo/platform/osxobjc/osx/demoplatformosxobjc.xcodeproj">
+                  location = "group:application/ocean/demo/platform/osxobjc/macos/demoplatformosxobjc.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/demo/platform/osxswift/osx/demoplatformosxswift.xcodeproj">
+                  location = "group:application/ocean/demo/platform/osxswift/macos/demoplatformosxswift.xcodeproj">
                </FileRef>
             </Group>
             <Group
@@ -115,28 +115,28 @@
                   location = "group:application/ocean/demo/tracking/featuretracker/ios/demotrackingfeaturetrackerios.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/demo/tracking/featuretracker/osx/demotrackingfeaturetrackerosx.xcodeproj">
+                  location = "group:application/ocean/demo/tracking/featuretracker/macos/demotrackingfeaturetrackerosx.xcodeproj">
                </FileRef>
                <FileRef
                   location = "group:application/ocean/demo/tracking/homographyimagealigner/ios/demotrackinghomographyimagealignerios.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/demo/tracking/homographyimagealigner/osx/demotrackinghomographyimagealignerosx.xcodeproj">
+                  location = "group:application/ocean/demo/tracking/homographyimagealigner/macos/demotrackinghomographyimagealignerosx.xcodeproj">
                </FileRef>
                <FileRef
                   location = "group:application/ocean/demo/tracking/pointtracker/ios/demotrackingpointtrackerios.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/demo/tracking/pointtracker/osx/demotrackingpointtrackerosx.xcodeproj">
+                  location = "group:application/ocean/demo/tracking/pointtracker/macos/demotrackingpointtrackerosx.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/demo/tracking/representativefeaturemap/osx/demotrackingrepresentativefeaturemap.xcodeproj">
+                  location = "group:application/ocean/demo/tracking/representativefeaturemap/macos/demotrackingrepresentativefeaturemap.xcodeproj">
                </FileRef>
                <FileRef
                   location = "group:application/ocean/demo/tracking/uvtexturemapping/ios/demotrackinguvtexturemappingios.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/demo/tracking/uvtexturemapping/osx/demotrackinguvtexturemappingosx.xcodeproj">
+                  location = "group:application/ocean/demo/tracking/uvtexturemapping/macos/demotrackinguvtexturemappingosx.xcodeproj">
                </FileRef>
             </Group>
          </Group>
@@ -150,7 +150,7 @@
                   location = "group:application/ocean/test/base/testbase/ios/testbaseios.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/test/base/testbase/osx/testbaseosx.xcodeproj">
+                  location = "group:application/ocean/test/base/testbase/macos/testbaseosx.xcodeproj">
                </FileRef>
             </Group>
             <Group
@@ -160,10 +160,10 @@
                   location = "group:application/ocean/test/cv/testcv/ios/testcvios.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/test/cv/testcv/osx/testcvosx.xcodeproj">
+                  location = "group:application/ocean/test/cv/testcv/macos/testcvosx.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/test/cv/testcv/testcvadvanced/osx/testcvadvanced.xcodeproj">
+                  location = "group:application/ocean/test/cv/testcv/testcvadvanced/macos/testcvadvanced.xcodeproj">
                </FileRef>
                <FileRef
                   location = "group:application/ocean/test/cv/testcv/testcvadvanced/ios/testcvadvanced.xcodeproj">
@@ -172,16 +172,16 @@
                   location = "group:application/ocean/test/cv/testcv/testcvdetector/ios/testcvdetectorios.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/test/cv/testcv/testcvdetector/osx/testcvdetectorosx.xcodeproj">
+                  location = "group:application/ocean/test/cv/testcv/testcvdetector/macos/testcvdetectorosx.xcodeproj">
                </FileRef>
                <FileRef
                   location = "group:application/ocean/test/cv/testcv/testcvdetector/testcvdetectorqrcodes/ios/testcvdetectorqrcodesios.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/test/cv/testcv/testcvdetector/testcvdetectorqrcodes/osx/testcvdetectorqrcodesosx.xcodeproj">
+                  location = "group:application/ocean/test/cv/testcv/testcvdetector/testcvdetectorqrcodes/macos/testcvdetectorqrcodesosx.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/test/cv/testcv/testcvsegmentation/osx/testcvsegmentation.xcodeproj">
+                  location = "group:application/ocean/test/cv/testcv/testcvsegmentation/macos/testcvsegmentation.xcodeproj">
                </FileRef>
                <FileRef
                   location = "group:application/ocean/test/cv/testcv/testcvsegmentation/ios/testcvsegmentation.xcodeproj">
@@ -191,7 +191,7 @@
                location = "container:"
                name = "geometry">
                <FileRef
-                  location = "group:application/ocean/test/geometry/testgeometry/osx/testgeometryosx.xcodeproj">
+                  location = "group:application/ocean/test/geometry/testgeometry/macos/testgeometryosx.xcodeproj">
                </FileRef>
                <FileRef
                   location = "group:application/ocean/test/geometry/testgeometry/ios/testgeometryios.xcodeproj">
@@ -201,14 +201,14 @@
                location = "container:"
                name = "io">
                <FileRef
-                  location = "group:application/ocean/test/io/testio/osx/testio.xcodeproj">
+                  location = "group:application/ocean/test/io/testio/macos/testio.xcodeproj">
                </FileRef>
             </Group>
             <Group
                location = "container:"
                name = "math">
                <FileRef
-                  location = "group:application/ocean/test/math/testmath/osx/testmath.xcodeproj">
+                  location = "group:application/ocean/test/math/testmath/macos/testmath.xcodeproj">
                </FileRef>
                <FileRef
                   location = "group:application/ocean/test/math/testmath/ios/testmath.xcodeproj">
@@ -218,7 +218,7 @@
                location = "container:"
                name = "media">
                <FileRef
-                  location = "group:application/ocean/test/media/testmedia/osx/testmedia.xcodeproj">
+                  location = "group:application/ocean/test/media/testmedia/macos/testmedia.xcodeproj">
                </FileRef>
             </Group>
             <Group
@@ -228,11 +228,11 @@
                   location = "group:application/ocean/test/tracking/testtracking/ios/testtrackingios.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/test/tracking/testtracking/osx/testtrackingosx.xcodeproj">
+                  location = "group:application/ocean/test/tracking/testtracking/macos/testtrackingosx.xcodeproj">
                </FileRef>
             </Group>
             <FileRef
-               location = "group:application/ocean/test/testocean/osx/testocean.xcodeproj">
+               location = "group:application/ocean/test/testocean/macos/testocean.xcodeproj">
             </FileRef>
          </Group>
          <FileRef
