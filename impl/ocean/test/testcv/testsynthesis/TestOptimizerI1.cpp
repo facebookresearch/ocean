@@ -1,6 +1,7 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
 #include "ocean/test/testcv/testsynthesis/TestOptimizerI1.h"
+#include "ocean/test/testcv/testsynthesis/Utilities.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -273,13 +274,11 @@ bool TestOptimizerI1::testAreaConstrained4Neighborhood(const unsigned int width,
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				constexpr unsigned int maskPaddingElements = 0u; // not yet supported
-
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, maskPaddingElements, &randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
 
 				constexpr unsigned int patchSize = 5u;
 
@@ -314,9 +313,7 @@ bool TestOptimizerI1::testAreaConstrained4Neighborhood(const unsigned int width,
 
 				CV::Synthesis::MappingI1 copyMapping(mapping);
 
-				constexpr unsigned int filterMaskPaddingElements = 0u; // not yet implemented
-
-				const Frame filterMask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, filterMaskPaddingElements, &randomGenerator);
+				const Frame filterMask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
 
 				const unsigned int randomSeed = randomGenerator.seed();
 
@@ -463,13 +460,11 @@ bool TestOptimizerI1::testHighPerformance4Neighborhood(const unsigned int width,
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				constexpr unsigned int maskPaddingElements = 0u; // not yet supported
-
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, maskPaddingElements, &randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
 
 				constexpr unsigned int patchSize = 5u;
 
@@ -649,13 +644,11 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkipping(const unsigned in
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				constexpr unsigned int maskPaddingElements = 0u; // not yet supported
-
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, maskPaddingElements, &randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
 
 				constexpr unsigned int patchSize = 5u;
 
@@ -835,13 +828,11 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkippingByCostMask(const u
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				constexpr unsigned int maskPaddingElements = 0u; // not yet supported
-
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, maskPaddingElements, &randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
 
 				constexpr unsigned int patchSize = 5u;
 
@@ -876,9 +867,7 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkippingByCostMask(const u
 
 				CV::Synthesis::MappingI1 copyMapping(mapping);
 
-				constexpr unsigned int skippingMaskPaddingElements = 0u; // not yet implemented
-
-				const Frame skippingMask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, skippingMaskPaddingElements, &randomGenerator);
+				const Frame skippingMask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
 
 				const unsigned int randomSeed = randomGenerator.seed();
 
@@ -1025,13 +1014,11 @@ bool TestOptimizerI1::testStructuralConstrained4Neighborhood(const unsigned int 
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				constexpr unsigned int maskPaddingElements = 0u; // not yet supported
-
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, maskPaddingElements, &randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
 
 				constexpr unsigned int patchSize = 5u;
 

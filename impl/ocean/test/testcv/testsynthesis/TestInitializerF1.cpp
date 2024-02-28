@@ -1,6 +1,7 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
 #include "ocean/test/testcv/testsynthesis/TestInitializerF1.h"
+#include "ocean/test/testcv/testsynthesis/Utilities.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -143,13 +144,11 @@ bool TestInitializerF1::testAppearanceMapping(const unsigned int width, const un
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 100u, width);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 100u, height);
 
-				constexpr unsigned int maskPaddingElements = 0u; // not yet supported
-
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, maskPaddingElements, &randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
 
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), 4u, false /*assignFinal*/, CV::PixelBoundingBox());
 

@@ -1,6 +1,7 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
 #include "ocean/test/testcv/testsynthesis/TestOptimizerF1.h"
+#include "ocean/test/testcv/testsynthesis/Utilities.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -177,13 +178,11 @@ bool TestOptimizerF1::testHighPerformance4Neighborhood(const unsigned int width,
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				constexpr unsigned int maskPaddingElements = 0u; // not yet supported
-
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, maskPaddingElements, &randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
 
 				// adding a 2-pixel border not including any mask pixel
 				mask.subFrame(0u, 0u, mask.width(), 2u).setValue(0xFFu);
@@ -393,7 +392,6 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
 				constexpr unsigned int referenceFramePaddingElements = 0u; // not yet supported
-				constexpr unsigned int maskPaddingElements = 0u;
 
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
@@ -402,7 +400,7 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, maskPaddingElements, &randomGenerator);
+				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
 
 				// adding a 2-pixel border not including any mask pixel
 				mask.subFrame(0u, 0u, mask.width(), 2u).setValue(0xFFu);

@@ -1,6 +1,7 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
 #include "ocean/test/testcv/testsynthesis/TestCreatorI1.h"
+#include "ocean/test/testcv/testsynthesis/Utilities.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -185,13 +186,11 @@ bool TestCreatorI1::testInpaintingContent(const unsigned int width, const unsign
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-				constexpr unsigned int maskPaddingElements = 0u; // not yet supported
-
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, maskPaddingElements, &randomGenerator);
+				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
 
 				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
 
@@ -325,24 +324,12 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 					const unsigned int testWidth = RandomI::random(randomGenerator, 3u, width);
 					const unsigned int testHeight = RandomI::random(randomGenerator, 3u, height);
 
-					constexpr unsigned int maskPaddingElements = 0u; // not yet supported
-
 					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-					Frame mask(FrameType(frame.frameType(), FrameType::FORMAT_Y8), maskPaddingElements);
-
 					frame.setValue(0xFFu);
 
 					const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-					mask.setValue(0xFFu);
-
-					for (unsigned int n = 0u; n < mask.pixels() / 4u; ++n)
-					{
-						const unsigned int x = RandomI::random(randomGenerator, mask.width() - 1u);
-						const unsigned int y = RandomI::random(randomGenerator, mask.height() - 1u);
-
-						mask.pixel<uint8_t>(x, y)[0] = 0x00u;
-					}
+					const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00u, randomGenerator);
 
 					LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
 
@@ -382,7 +369,7 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 						const unsigned int x = RandomI::random(randomGenerator, mask.width() - 1u);
 						const unsigned int y = RandomI::random(randomGenerator, mask.height() - 1u);
 
-						if (mask.pixel<uint8_t>(x, y)[0] == 0x00u)
+						if (mask.constpixel<uint8_t>(x, y)[0] == 0x00u)
 						{
 							const CV::PixelPosition& centerMapping = mapping.position(x, y);
 
@@ -631,13 +618,11 @@ bool TestCreatorI1::testInformationCost4Neighborhood(const unsigned int width, c
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 5u, width);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 5u, height);
 
-				constexpr unsigned int maskPaddingElements = 0u; // not yet supported
-
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, maskPaddingElements, &randomGenerator);const
+				Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
 
 				constexpr unsigned int patchSize = 5u;
 

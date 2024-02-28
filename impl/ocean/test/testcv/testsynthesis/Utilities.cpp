@@ -19,6 +19,8 @@ namespace TestSynthesis
 
 Frame Utilities::randomizedInpaintingMask(const unsigned int width, const unsigned int height, const uint8_t maskValue, RandomGenerator& randomGenerator)
 {
+	ocean_assert(width >= 1u && height >= 1u);
+
 	while (true)
 	{
 		unsigned int maskPaddingElements = 0u;
@@ -53,6 +55,27 @@ Frame Utilities::randomizedInpaintingMask(const unsigned int width, const unsign
 			const unsigned int yCenter = RandomI::random(randomGenerator, height - 1u);
 
 			CV::Canvas::ellipse(mask, CV::PixelPosition(xCenter, yCenter), xSize, ySize, &maskValue);
+		}
+
+		if (width >= 10u && height >= 10u)
+		{
+			if (RandomI::random(randomGenerator, 1u) == 0u)
+			{
+				// in 50% of the cases we add a blank border
+
+				const unsigned int left = RandomI::random(randomGenerator, 1u, width / 4u);
+				const unsigned int right = RandomI::random(randomGenerator, 1u, width / 4u);
+
+				const unsigned int top = RandomI::random(randomGenerator, 1u, height / 4u);
+				const unsigned int bottom = RandomI::random(randomGenerator, 1u, height / 4u);
+
+				const uint8_t blankValue = 0xFFu - maskValue;
+
+				mask.subFrame(0u, 0u, mask.width(), top).setValue(blankValue); // top
+				mask.subFrame(0u, 0u, left, mask.height()).setValue(blankValue); // left
+				mask.subFrame(mask.width() - right, 0u, right, mask.height()).setValue(blankValue); // right
+				mask.subFrame(0u, mask.height() - bottom, mask.width(), bottom).setValue(blankValue); // bottom
+			}
 		}
 
 		// let's ensure that we have at least one non-mask pixel

@@ -1,6 +1,7 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
 #include "ocean/test/testcv/testsynthesis/TestCreatorF1.h"
+#include "ocean/test/testcv/testsynthesis/Utilities.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
@@ -141,13 +142,11 @@ bool TestCreatorF1::testInpaintingContent(const unsigned int width, const unsign
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-				constexpr unsigned int maskPaddingElements = 0u; // not yet supported
-
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0x00u, maskPaddingElements, &randomGenerator);
+				const Frame mask = Utilities::randomizedInpaintingMaskWithoutPadding(testWidth, testHeight, 0x00, randomGenerator);
 
 				const LegacyFrame legacyMask(mask, LegacyFrame::FCM_USE_IF_POSSIBLE);
 
