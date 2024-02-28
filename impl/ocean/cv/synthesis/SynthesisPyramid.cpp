@@ -136,7 +136,7 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 
 	for (unsigned int n = 0u; n < synthesisFramePyramid_.validLayers(); ++n)
 	{
-		LegacyFrame& layerMask = synthesisMaskPyramid_[n];
+		Frame layerMask(synthesisMaskPyramid_[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 		Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(layerMask.data<uint8_t>(), layerMask.width(), layerMask.height(), layerMask.paddingElements(), 3u, false, synthesisBoundingBoxes_[n], worker);
 	}
 
@@ -174,19 +174,19 @@ void SynthesisPyramid::determineBoundingBoxes(Worker* worker)
 
 	for (unsigned int n = synthesisMaskPyramid_.validLayers() - 1u; n != (unsigned int)(-1); --n)
 	{
-		const LegacyFrame& mask = synthesisMaskPyramid_[n];
+		const Frame mask(synthesisMaskPyramid_[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 
 		if (n == synthesisMaskPyramid_.validLayers() - 1u)
 		{
-			synthesisBoundingBoxes_[n] = MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, 0u);
+			synthesisBoundingBoxes_[n] = MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 		}
 		else
 		{
 			const PixelBoundingBox& previous = synthesisBoundingBoxes_[n + 1];
 			const PixelBoundingBox rough(previous.left() * 2u, previous.top() * 2u, previous.right() * 2u, previous.bottom() * 2u);
 
-			synthesisBoundingBoxes_[n] = MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), rough, 4u);
-			ocean_assert(synthesisBoundingBoxes_[n] == MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, 0u));
+			synthesisBoundingBoxes_[n] = MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), rough, 4u, 0xFFu, mask.paddingElements());
+			ocean_assert(synthesisBoundingBoxes_[n] == MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements()));
 		}
 	}
 
@@ -200,9 +200,9 @@ PixelBoundingBoxes SynthesisPyramid::slowDetermineBoundingBoxes(const FramePyram
 
 	for (unsigned int n = maskPyramid.validLayers() - 1u; n != (unsigned int)(-1); --n)
 	{
-		const LegacyFrame& mask = maskPyramid[n];
+		const Frame mask(maskPyramid[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 
-		result[n] = MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, 0u);
+		result[n] = MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 	}
 
 	return result;
