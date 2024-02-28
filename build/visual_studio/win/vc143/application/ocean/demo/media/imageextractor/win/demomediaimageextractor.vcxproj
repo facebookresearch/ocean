@@ -51,10 +51,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\media\imageextractor\ImageExtractorMain.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\imageextractor\ImageExtractorMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\media\imageextractor\ImageExtractorMain.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\media\imageextractor\ImageExtractorMain.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FD7B28DA-CAEA-460A-8869-8BDF3A75D567}</ProjectGuid>
