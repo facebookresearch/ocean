@@ -2,7 +2,7 @@
 
 ## Contributing
 
-Please read the [contribution guidelines](doc/style-guide.md) before submitting any code changes.
+Please read the [contribution guidelines](CONTRIBUTING.md) before submitting any code changes.
 
 ## License
 
