@@ -154,6 +154,7 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 	const unsigned int layerFramePaddingElements = layerFrame.paddingElements();
 	const unsigned int layerFrameStrideElements = layerFrame.strideElements();
 	const unsigned int layerMaskPaddingElements = layerMask.paddingElements();
+	const unsigned int layerMaskStrideElements = layerMask.width() + layerMask.paddingElements(); // **TODO** replace with Frame::strideElements() once switched to Frame
 	const unsigned int referencePaddingElements = referenceFrame_.paddingElements();
 
 #ifdef OCEAN_DEBUG
@@ -179,21 +180,18 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 		{
 			const unsigned int y = modulo(int(yy + rowOffset - boundingBoxTop), int(boundingBoxHeight)) + boundingBoxTop;
 
-			const uint8_t* mask = layerMaskData + int(y * layerWidth + xStart) - 1;
-			Vector2* position = layerMapping() + int(y * layerWidth + xStart) - 1;
+			const uint8_t* maskRow = layerMask.constrow<uint8_t>(y) + xStart;
+			Vector2* positionRow = layerMapping.row(y) + xStart;
 
 			for (unsigned int x = xStart; x < xEnd; ++x)
 			{
-				++mask;
-				++position;
-
 				bool foundBetter = false;
 
-				ocean_assert(*mask == layerMaskData[y * layerWidth + x]);
-				if (*mask != 0xFF)
+				ocean_assert(maskRow == layerMask.constpixel<uint8_t>(x, y));
+				if (*maskRow != 0xFF)
 				{
-					Scalar newPositionX = position->x();
-					Scalar newPositionY = position->y();
+					Scalar newPositionX = positionRow->x();
+					Scalar newPositionY = positionRow->y();
 
 					const Scalar oldSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, newPositionX, newPositionY, layerMaskData, layerMaskPaddingElements, Scalar(maxSpatialCost));
 					const unsigned int oldColorCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, newPositionX, newPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
@@ -202,17 +200,17 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 					Scalar testPositionX, testPositionY;
 
 					// first propagation from left to right
-					ocean_assert(*(mask - 1) == layerMaskData[y * layerWidth + x - 1]);
-					if (x > 0 && *(mask - 1) != 0xFF)
+					ocean_assert((maskRow - 1) == layerMask.constpixel<uint8_t>(x - 1u, y));
+					if (x > 0u && *(maskRow - 1) != 0xFFu)
 					{
-						ocean_assert(layerMapping.position(x - 1, y).x() > 0);
-						ocean_assert(*(position - 1) == layerMapping.position(x - 1, y));
+						ocean_assert(layerMapping.position(x - 1u, y).x() > 0);
+						ocean_assert(*(positionRow - 1) == layerMapping.position(x - 1, y));
 
 						// take the position to the left (of the current position)
-						testPositionX = (position - 1)->x() + 1;
-						testPositionY = (position - 1)->y();
+						testPositionX = (positionRow - 1)->x() + 1;
+						testPositionY = (positionRow - 1)->y();
 
-						if (testPositionX < Scalar(layerWidth - 3u) && layerMaskData[Numeric::round32(testPositionY) * layerWidth + Numeric::round32(testPositionX)] == 0xFF)
+						if (testPositionX < Scalar(layerWidth - 3u) && layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] == 0xFF)
 						{
 							// the structure cost is 0 due to the neighbor condition
 							const unsigned int testCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
@@ -228,17 +226,17 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 					}
 
 					// second propagation from top to bottom
-					ocean_assert(*(mask - layerWidth) == layerMaskData[(y - 1) * layerWidth + x]);
-					if (y > 0 && *(mask - layerWidth) != 0xFF)
+					ocean_assert((maskRow - layerMaskStrideElements) == layerMask.constpixel<uint8_t>(x, y - 1u));
+					if (y > 0u && *(maskRow - layerMaskStrideElements) != 0xFFu)
 					{
 						ocean_assert(layerMapping.position(x, y - 1).x() > 0);
-						ocean_assert(*(position - layerWidth) == layerMapping.position(x, y - 1));
+						ocean_assert(*(positionRow - layerWidth) == layerMapping.position(x, y - 1));
 
 						// take the next position to the top (of the current position)
-						testPositionX = (position - layerWidth)->x();
-						testPositionY = (position - layerWidth)->y() + 1;
+						testPositionX = (positionRow - layerWidth)->x();
+						testPositionY = (positionRow - layerWidth)->y() + 1;
 
-						if (testPositionY < Scalar(layerHeight - 3u) && layerMaskData[Numeric::round32(testPositionY) * layerWidth + Numeric::round32(testPositionX)] == 0xFF)
+						if (testPositionY < Scalar(layerHeight - 3u) && layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] == 0xFF)
 						{
 							// the structure cost is 0 due to the neighbor condition
 							const unsigned int testCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
@@ -264,7 +262,7 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 						// the test position must lie inside the
 						if ((testPositionX == newPositionX && testPositionY == newPositionY) || testPositionX < Scalar(2) || testPositionX >= Scalar(layerWidth - 3u)
 								|| testPositionY < Scalar(2) || testPositionY >= Scalar(layerHeight - 3u)
-								|| layerMaskData[Numeric::round32(testPositionY) * layerWidth + Numeric::round32(testPositionX)] != 0xFF)
+								|| layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] != 0xFF)
 							continue;
 
 						const Scalar testSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, testPositionX, testPositionY, layerMaskData, layerMaskPaddingElements, Scalar(maxSpatialCost));
@@ -282,14 +280,17 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 
 					if (tUpdateFrame && foundBetter)
 					{
-						ocean_assert(layerMaskData[y * layerWidth + x] != 0xFF);
-						ocean_assert(layerMaskData[Numeric::round32(newPositionY) * layerWidth + Numeric::round32(newPositionX)] == 0xFF);
+						ocean_assert(layerMask.constpixel<uint8_t>(x, y)[0] != 0xFFu);
+						ocean_assert(layerMask.constpixel<uint8_t>(Numeric::round32(newPositionX), Numeric::round32(newPositionY))[0] == 0xFFu);
 
-						*position = Vector2(newPositionX, newPositionY);
+						*positionRow = Vector2(newPositionX, newPositionY);
 
 						CV::FrameInterpolatorBilinear::interpolatePixel8BitPerChannel<tChannels, CV::PC_TOP_LEFT>(layerFrameData, layerWidth, layerHeight, layerFramePaddingElements, Vector2(newPositionX, newPositionY), layerFrameData + y * layerFrameStrideElements + x * tChannels);
 					}
 				}
+
+				++maskRow;
+				++positionRow;
 			}
 		}
 	}
@@ -300,21 +301,18 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 		{
 			const unsigned int y = modulo(int(yy + rowOffset - boundingBoxTop), int(boundingBoxHeight)) + boundingBoxTop;
 
-			const uint8_t* mask = layerMaskData + y * layerWidth + xEnd;
-			Vector2* position = layerMapping() + y * layerWidth + xEnd;
+			const uint8_t* maskRow = layerMask.constrow<uint8_t>(y) + xEnd - 1u;
+			Vector2* positionRow = layerMapping.row(y) + xEnd - 1u;
 
-			for (unsigned int x = xEnd - 1; x != xStart - 1 ; --x)
+			for (unsigned int x = xEnd - 1u; x != xStart - 1u; --x)
 			{
-				--mask;
-				--position;
-
 				bool foundBetter = false;
 
-				ocean_assert(*mask == layerMaskData[y * layerWidth + x]);
-				if (*mask != 0xFF)
+				ocean_assert(maskRow == layerMask.constpixel<uint8_t>(x, y));
+				if (*maskRow != 0xFFu)
 				{
-					Scalar newPositionX = position->x();
-					Scalar newPositionY = position->y();
+					Scalar newPositionX = positionRow->x();
+					Scalar newPositionY = positionRow->y();
 
 					const Scalar oldSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, newPositionX, newPositionY, layerMaskData, layerMaskPaddingElements, Scalar(maxSpatialCost));
 					const unsigned int oldColorCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, newPositionX, newPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
@@ -323,17 +321,17 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 					Scalar testPositionX, testPositionY;
 
 					// first propagation from right to left
-					ocean_assert(*(mask + 1) == layerMaskData[y * layerWidth + x + 1]);
-					if (x < layerWidth - 1 && *(mask + 1) != 0xFF)
+					ocean_assert((maskRow + 1) == layerMask.constpixel<uint8_t>(x + 1u, y));
+					if (x < layerWidth - 1u && *(maskRow + 1) != 0xFFu)
 					{
 						ocean_assert(layerMapping.position(x + 1, y).x() > 0);
-						ocean_assert(*(position + 1) == layerMapping.position(x + 1, y));
+						ocean_assert(*(positionRow + 1) == layerMapping.position(x + 1, y));
 
 						// take the position to the right (of the current position)
-						testPositionX = (position + 1)->x() - 1;
-						testPositionY = (position + 1)->y();
+						testPositionX = (positionRow + 1)->x() - 1;
+						testPositionY = (positionRow + 1)->y();
 
-						if (testPositionX >= Scalar(2) && layerMaskData[Numeric::round32(testPositionY) * layerWidth + Numeric::round32(testPositionX)] == 0xFF)
+						if (testPositionX >= Scalar(2) && layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] == 0xFF)
 						{
 							// the structure cost is 0 due to the neighbor condition
 							const unsigned int testCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
@@ -349,17 +347,17 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 					}
 
 					// second propagation from bottom to top
-					ocean_assert(*(mask + layerWidth) == layerMaskData[(y + 1) * layerWidth + x]);
-					if (y < layerHeight - 1 && *(mask + layerWidth) != 0xFF)
+					ocean_assert((maskRow + layerMaskStrideElements) == layerMask.constpixel<uint8_t>(x, y + 1u));
+					if (y < layerHeight - 1u && *(maskRow + layerMaskStrideElements) != 0xFFu)
 					{
 						ocean_assert(layerMapping.position(x, y + 1).x() > 0);
-						ocean_assert(*(position + layerWidth) == layerMapping.position(x, y + 1));
+						ocean_assert(*(positionRow + layerWidth) == layerMapping.position(x, y + 1));
 
 						// take the next position towards the bottom (of the current position)
-						testPositionX = (position + layerWidth)->x();
-						testPositionY = (position + layerWidth)->y() - 1;
+						testPositionX = (positionRow + layerWidth)->x();
+						testPositionY = (positionRow + layerWidth)->y() - 1;
 
-						if (testPositionY >= Scalar(2) && layerMaskData[Numeric::round32(testPositionY) * layerWidth + Numeric::round32(testPositionX)] == 0xFF)
+						if (testPositionY >= Scalar(2) && layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] == 0xFF)
 						{
 							// the structure cost is 0 due to the neighbor condition
 							const unsigned int testCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
@@ -384,7 +382,7 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 
 						if ((testPositionX == newPositionX && testPositionY == newPositionY) || testPositionX < Scalar(2) || testPositionX >= Scalar(layerWidth - 3u)
 								|| testPositionY < Scalar(2) || testPositionY >= Scalar(layerHeight - 3u)
-								|| layerMaskData[Numeric::round32(testPositionY) * layerWidth + Numeric::round32(testPositionX)] != 0xFF)
+								|| layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] != 0xFF)
 							continue;
 
 						const Scalar testSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, testPositionX, testPositionY, layerMaskData, layerMaskPaddingElements, Scalar(maxSpatialCost));
@@ -402,14 +400,17 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 
 					if (tUpdateFrame && foundBetter)
 					{
-						ocean_assert(layerMaskData[y * layerWidth + x] != 0xFF);
-						ocean_assert(layerMaskData[Numeric::round32(newPositionY) * layerWidth + Numeric::round32(newPositionX)] == 0xFF);
+						ocean_assert(layerMask.constpixel<uint8_t>(x, y)[0] != 0xFFu);
+						ocean_assert(layerMask.constpixel<uint8_t>(Numeric::round32(newPositionX), Numeric::round32(newPositionY))[0] == 0xFFu);
 
-						*position = Vector2(newPositionX, newPositionY);
+						*positionRow = Vector2(newPositionX, newPositionY);
 
 						CV::FrameInterpolatorBilinear::interpolatePixel8BitPerChannel<tChannels, CV::PC_TOP_LEFT>(layerFrameData, layerWidth, layerHeight, layerFramePaddingElements, Vector2(newPositionX, newPositionY), layerFrameData + y * layerFrameStrideElements + x * tChannels);
 					}
 				}
+
+				--maskRow;
+				--positionRow;
 			}
 		}
 	}
