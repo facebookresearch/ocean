@@ -57,6 +57,27 @@ class OCEAN_TEST_CV_SYNTHESIS_EXPORT TestInitializerF1
 		 * @return True, if succeeded
 		 */
 		static bool testAppearanceMapping(const unsigned int width, const unsigned int height, const unsigned int channels, const double testDuration, Worker& worker);
+
+		/**
+		 * Tests the coarser mapping adaption initializer.
+		 * @param width The width of the source frame in pixel, with range [1, infinity)
+		 * @param height The height of the source frame in pixel, with range [1, infinity)
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object to distribute the CPU load
+		 * @return True, if succeeded
+		 */
+		static bool testCoarserMappingAdaption(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+
+		/**
+		 * Tests the coarser mapping adaption initializer.
+		 * @param width The width of the source frame in pixel, with range [1, infinity)
+		 * @param height The height of the source frame in pixel, with range [1, infinity)
+		 * @param channels The number of frame channels which will be used during the test, with range [1, infinity)
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object to distribute the CPU load
+		 * @return True, if succeeded
+		 */
+		static bool testCoarserMappingAdaption(const unsigned int width, const unsigned int height, const unsigned int channels, const double testDuration, Worker& worker);
 };
 
 }

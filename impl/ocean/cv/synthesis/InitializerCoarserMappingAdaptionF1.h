@@ -147,8 +147,8 @@ inline void InitializerCoarserMappingAdaptionF1<2u>::initializeSubset(const unsi
 				{
 					while (true)
 					{
-						const Scalar localHighAbsoluteX = Random::scalar(randomGenerator, Scalar(2u), Scalar(layerWidth - 4u));
-						const Scalar localHighAbsoluteY = Random::scalar(randomGenerator, Scalar(2u), Scalar(layerHeight - 4u));
+						const Scalar localHighAbsoluteX = Random::scalar(randomGenerator, Scalar(2u), Scalar(layerWidth - 3u));
+						const Scalar localHighAbsoluteY = Random::scalar(randomGenerator, Scalar(2u), Scalar(layerHeight - 3u));
 
 						if (layerMaskData[Numeric::round32(localHighAbsoluteY) * layerWidth + Numeric::round32(localHighAbsoluteX)] == 0xFF)
 						{

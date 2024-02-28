@@ -1029,11 +1029,9 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 
 				for (unsigned int y = 0u; y < coarserMask.height(); ++y)
 				{
-					const uint8_t* maskRow = coarserMask.constrow<uint8_t>(y);
-
 					for (unsigned int x = 0u; x < coarserMask.width(); ++x)
 					{
-						if (maskRow[x] == 0x00)
+						if (coarserMask.constpixel<uint8_t>(x, y)[0] == 0x00u)
 						{
 							unsigned int sourceX, sourceY;
 
