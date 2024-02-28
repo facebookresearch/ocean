@@ -1,0 +1,444 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#include "ocean/system/Memory.h"
+
+#if defined(_WINDOWS)
+	#include <winsock2.h>
+	#include <windows.h>
+	#include <Psapi.h>
+#elif defined(__APPLE__)
+	#include <sys/types.h>
+	#include <sys/sysctl.h>
+	#include <sys/param.h>
+	#include <sys/mount.h>
+	#include <mach/vm_statistics.h>
+	#include <mach/mach_types.h>
+	#include <mach/mach_init.h>
+	#include <mach/mach_host.h>
+	#include <mach/mach.h>
+#elif defined(__linux__)
+	#include <fstream>
+	#include <regex>
+#endif
+
+namespace Ocean
+{
+
+namespace System
+{
+
+void Memory::MemoryMeasurement::start()
+{
+	ocean_assert(isThreadActive() == false);
+
+	measurements_.clear();
+	measurementFirstInThread_ = 0ull;
+
+	// first measurement
+	measurements_.emplace_back(processVirtualMemory());
+
+	startThread();
+}
+
+void Memory::MemoryMeasurement::stop()
+{
+	if (!isThreadActive())
+	{
+		return;
+	}
+
+	stopThread();
+
+	while (isThreadActive())
+	{
+		Thread::sleep(1u);
+	}
+
+	// last measurement
+	measurements_.emplace_back(processVirtualMemory());
+}
+
+const std::vector<uint64_t>& Memory::MemoryMeasurement::measurements()
+{
+	return measurements_;
+}
+
+int64_t Memory::MemoryMeasurement::measurementImpact()
+{
+	if (measurements_.empty())
+	{
+		return 0ll;
+	}
+
+	ocean_assert(measurementFirstInThread_ != 0ull);
+
+	if (measurementFirstInThread_ >= measurements_.front())
+	{
+		return int64_t(measurementFirstInThread_ - measurements_.front()) + int64_t(measurements_.capacity() * sizeof(uint64_t));
+	}
+	else
+	{
+		return -int64_t(measurements_.front() - measurementFirstInThread_) + int64_t(measurements_.capacity() * sizeof(uint64_t));
+	}
+}
+
+uint64_t Memory::MemoryMeasurement::minimum()
+{
+	uint64_t value = uint64_t(-1);
+
+	for (const uint64_t& measurement : measurements_)
+	{
+		if (measurement < value)
+		{
+			value = measurement;
+		}
+	}
+
+	return value;
+}
+
+uint64_t Memory::MemoryMeasurement::maximum()
+{
+	uint64_t value = 0ull;
+
+	for (const uint64_t& measurement : measurements_)
+	{
+		if (measurement > value)
+		{
+			value = measurement;
+		}
+	}
+
+	return value;
+}
+
+int64_t Memory::MemoryMeasurement::minPeakToIdentity()
+{
+	if (measurements_.empty())
+	{
+		return 0ll;
+	}
+
+	const uint64_t minValue = minimum();
+
+	if (minValue > measurements_.front())
+	{
+		return int64_t(minValue - measurements_.front());
+	}
+	else
+	{
+		return -int64_t(measurements_.front() - minValue);
+	}
+}
+
+int64_t Memory::MemoryMeasurement::maxPeakToIdentity()
+{
+	if (measurements_.empty())
+	{
+		return 0ll;
+	}
+
+	const uint64_t maxValue = maximum();
+
+	if (maxValue > measurements_.front())
+	{
+		return int64_t(maxValue - measurements_.front());
+	}
+	else
+	{
+		return -int64_t(measurements_.front() - maxValue);
+	}
+}
+
+void Memory::MemoryMeasurement::threadRun()
+{
+	ocean_assert(measurementFirstInThread_ == 0ull);
+	ocean_assert(measurements_.size() == 1);
+
+	measurementFirstInThread_ = processVirtualMemory();
+
+	while (!shouldThreadStop())
+	{
+		measurements_.emplace_back(processVirtualMemory());
+		Thread::sleep(0u);
+	}
+}
+
+unsigned int Memory::memoryLoad()
+{
+
+#ifdef _WINDOWS
+
+	MEMORYSTATUSEX status;
+	status.dwLength = sizeof(status);
+
+	GlobalMemoryStatusEx(&status);
+	ocean_assert(status.dwMemoryLoad >= 0 && status.dwMemoryLoad <= 100);
+	return (unsigned int)(status.dwMemoryLoad);
+
+#elif defined(__APPLE__)
+
+	// there is no way to determine a percentage value for the virtual mem usage on mac
+	// so only the physical memory is taken into account
+	return (unsigned int)(100ull - (100ull * availablePhysicalMemory()) / totalPhysicalMemory());
+
+#else
+
+	/*struct sysinfo info;
+	const int result = sysinfo(&info);
+	ocean_assert(result == 0);
+
+	return (unsigned int)(100ull - 100ull * (uint64_t(info.freeram) + uint64_t(info.freeswap)) / (uint64_t(info.totalram) + uint64_t(info.totalswap)));*/
+
+	OCEAN_WARNING_MISSING_IMPLEMENTATION;
+	return 0ull;
+
+#endif
+
+}
+
+uint64_t Memory::processVirtualMemory()
+{
+
+#if defined(_WINDOWS)
+
+	PROCESS_MEMORY_COUNTERS_EX processMemoryCounters;
+	const bool result = GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&processMemoryCounters, sizeof(processMemoryCounters)) == TRUE;
+	ocean_assert(result);
+
+	if (result)
+	{
+		return uint64_t(processMemoryCounters.PrivateUsage);
+	}
+	else
+	{
+		return 0ull;
+	}
+
+#elif defined(__APPLE__)
+
+	mach_task_basic_info_data_t taskInfo;
+	mach_msg_type_number_t count = MACH_TASK_BASIC_INFO_COUNT;
+	const bool result = task_info(mach_task_self(), MACH_TASK_BASIC_INFO, (task_info_t)&taskInfo, &count) == KERN_SUCCESS;
+	ocean_assert(result);
+
+	if (result)
+	{
+		return uint64_t(taskInfo.resident_size);
+	}
+	else
+	{
+		return 0ull;
+	}
+
+#elif defined(__linux__) && !defined(_ANDROID)
+
+	// The /proc/self/ directory is a link to the currently running process. This
+	// allows a process to look at itself without having to know its process ID.
+	std::ifstream statusFile("/proc/self/status");
+
+	if (!statusFile.is_open())
+	{
+		ocean_assert(false && "Failed to read from /proc/self/...");
+		return 0ull;
+	}
+
+	std::string line;
+	std::regex virtualMemoryRegex("VmSize:\\s+(\\d+)\\s+(\\w+)");
+	std::smatch regexMatch;
+	bool foundMatch = false;
+
+	while (std::getline(statusFile, line))
+	{
+		if (std::regex_search(line, regexMatch, virtualMemoryRegex))
+		{
+			foundMatch = true;
+			break;
+		}
+	}
+
+	if (!foundMatch)
+	{
+		ocean_assert(false && "Failed to query virtual memory used by this process");
+		return 0ull;
+	}
+
+	ocean_assert(regexMatch[2] == "kB" && "Unknown memory unit");
+	return 1000ull * std::stoull(regexMatch[1]); // kB = 1000, KB = KiB = 1024
+
+#else
+
+	OCEAN_WARNING_MISSING_IMPLEMENTATION;
+	return 0ull;
+
+#endif
+
+}
+
+uint64_t Memory::totalPhysicalMemory()
+{
+
+#ifdef _WINDOWS
+
+	MEMORYSTATUSEX status;
+	status.dwLength = sizeof(status);
+
+	GlobalMemoryStatusEx(&status);
+	return uint64_t(status.ullTotalPhys);
+
+#elif defined(__APPLE__)
+
+	int64_t physicalMemory;
+	int mib[2];
+
+	mib[0] = CTL_HW;
+	mib[1] = HW_MEMSIZE;
+
+	size_t length = sizeof(int64_t);
+	sysctl(mib, 2, &physicalMemory, &length, NULL, 0);
+
+	return uint64_t(physicalMemory);
+
+#else
+
+	/*struct sysinfo info;
+	const int result = sysinfo(&info);
+	ocean_assert(result == 0);
+
+	return uint64_t(info.totalram) * uint64_t(info.mem_unit);*/
+
+	OCEAN_WARNING_MISSING_IMPLEMENTATION;
+	return 0ull;
+
+#endif
+
+}
+
+uint64_t Memory::totalVirtualMemory()
+{
+
+#ifdef _WINDOWS
+
+	MEMORYSTATUSEX status;
+	status.dwLength = sizeof(status);
+
+	GlobalMemoryStatusEx(&status);
+	return uint64_t(status.ullTotalVirtual);
+
+#elif defined(__APPLE__)
+
+	// mac operation systems don't have a preallocated virtual memory file
+	// instead the free space left on boot partition can be used as virtual memory
+	struct statfs stats;
+	uint64_t freeSwap=0;
+
+	if (0 == statfs("/", &stats))
+	{
+		freeSwap = uint64_t(stats.f_bsize) * stats.f_bfree;
+	}
+
+	return (uint64_t)freeSwap;
+
+#else
+
+	/*struct sysinfo info;
+	const int result = sysinfo(&info);
+	ocean_assert(result == 0);
+
+	return (uint64_t(info.totalram) + uint64_t(info.totalswap)) * uint64_t(info.mem_unit);*/
+
+	OCEAN_WARNING_MISSING_IMPLEMENTATION;
+	return 0ull;
+
+#endif
+
+}
+
+uint64_t Memory::availablePhysicalMemory()
+{
+
+#ifdef _WINDOWS
+
+	MEMORYSTATUSEX status;
+	status.dwLength = sizeof(status);
+
+	GlobalMemoryStatusEx(&status);
+	return uint64_t(status.ullAvailPhys);
+
+#elif defined(__APPLE__)
+
+	vm_size_t pageSize;
+	mach_port_t machPort;
+
+	mach_msg_type_number_t count;
+	vm_statistics_data_t vmStats;
+	int64_t freeMem = 0;
+
+	machPort = mach_host_self();
+	count = sizeof(vmStats) / sizeof(natural_t);
+
+	if (KERN_SUCCESS == host_page_size(machPort, &pageSize) && KERN_SUCCESS == host_statistics(machPort, HOST_VM_INFO, (host_info_t)&vmStats, &count))
+	{
+		freeMem = int64_t(vmStats.free_count - vmStats.speculative_count) * (int64_t)pageSize;
+	}
+
+	return uint64_t(freeMem);
+
+#else
+
+	/*struct sysinfo info;
+	const int result = sysinfo(&info);
+	ocean_assert(result == 0);
+
+	return uint64_t(info.freeram) * uint64_t(info.mem_unit);*/
+
+	OCEAN_WARNING_MISSING_IMPLEMENTATION;
+	return 0ull;
+
+#endif
+
+}
+
+uint64_t Memory::availableVirtualMemory()
+{
+
+#ifdef _WINDOWS
+
+	MEMORYSTATUSEX status;
+	status.dwLength = sizeof(status);
+
+	GlobalMemoryStatusEx(&status);
+	return uint64_t(status.ullAvailVirtual);
+
+#elif defined(__APPLE__)
+
+	// mac operation systems don't have a preallocated virtual memory file
+	// instead the free space left on boot partition can be used as virtual memory
+	struct statfs stats;
+	uint64_t freeSwap = 0;
+
+	if (0 == statfs("/", &stats))
+	{
+		freeSwap = uint64_t(stats.f_bsize) * stats.f_bfree;
+	}
+
+	return uint64_t(freeSwap);
+
+#else
+
+	/*struct sysinfo info;
+	const int result = sysinfo(&info);
+	ocean_assert(result == 0);
+
+	return (uint64_t(info.freeram) + uint64_t(info.freeswap)) * uint64_t(info.mem_unit);*/
+
+	OCEAN_WARNING_MISSING_IMPLEMENTATION;
+	return 0ull;
+
+#endif
+
+}
+
+}
+
+}

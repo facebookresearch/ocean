@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Ocean Rendering GLESceneGraph Android (Common)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_renderingglescenegraphandroid_common_imported>True</ocean_renderingglescenegraphandroid_common_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\base\base_use.props"/>
+    <Import Condition="'$(ocean_rendering_use_imported)' != 'True'" Project="..\..\..\rendering\rendering_use.props"/>
+    <Import Condition="'$(ocean_renderingglescenegraph_use_imported)' != 'True'" Project="..\..\..\rendering\glescenegraph\renderingglescenegraph_use.props"/>
+  </ImportGroup>
+</Project>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Ocean CV Segmentation (Common)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_cvsegmentation_common_imported>True</ocean_cvsegmentation_common_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\base\base_use.props"/>
+    <Import Condition="'$(ocean_cv_use_imported)' != 'True'" Project="..\..\cv\cv_use.props"/>
+    <Import Condition="'$(ocean_cvadvanced_use_imported)' != 'True'" Project="..\..\cv\advanced\cvadvanced_use.props"/>
+    <Import Condition="'$(ocean_cvdetector_use_imported)' != 'True'" Project="..\..\cv\detector\cvdetector_use.props"/>
+    <Import Condition="'$(ocean_geometry_use_imported)' != 'True'" Project="..\..\geometry\geometry_use.props"/>
+    <Import Condition="'$(ocean_math_use_imported)' != 'True'" Project="..\..\math\math_use.props"/>
+  </ImportGroup>
+</Project>

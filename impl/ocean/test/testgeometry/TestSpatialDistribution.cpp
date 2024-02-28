@@ -1,0 +1,714 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#include "ocean/test/testgeometry/TestSpatialDistribution.h"
+
+#include "ocean/base/HighPerformanceTimer.h"
+#include "ocean/base/Timestamp.h"
+
+#include "ocean/geometry/SpatialDistribution.h"
+
+#include "ocean/math/Random.h"
+
+namespace Ocean
+{
+
+namespace Test
+{
+
+namespace TestGeometry
+{
+
+bool TestSpatialDistribution::test(const double testDuration)
+{
+	ocean_assert(testDuration > 0);
+
+	Log::info() << "---   Spatial distribution test:   ---";
+	Log::info() << " ";
+
+	bool allSucceeded = true;
+
+	allSucceeded = testIdealBins(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testIdealBinsNeighborhood9(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testMinimalSqrDistances(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testDistribute(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testDistributeAndFilter(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testDistributeAndFilterIndices(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testCopyConstructorWithNeighborhood8(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	if (allSucceeded)
+	{
+		Log::info() << "Spatial distribution test succeeded.";
+	}
+	else
+	{
+		Log::info() << "Spatial distribution test FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+#ifdef OCEAN_USE_GTEST
+
+TEST(TestSpatialDistribution, IdealBins)
+{
+	EXPECT_TRUE(TestSpatialDistribution::testIdealBins(GTEST_TEST_DURATION));
+}
+
+TEST(TestSpatialDistribution, IdealBinsNeighborhood9)
+{
+	EXPECT_TRUE(TestSpatialDistribution::testIdealBinsNeighborhood9(GTEST_TEST_DURATION));
+}
+
+TEST(TestSpatialDistribution, MinimalSqrDistances)
+{
+	EXPECT_TRUE(TestSpatialDistribution::testMinimalSqrDistances(GTEST_TEST_DURATION));
+}
+
+TEST(TestSpatialDistribution, Distribute)
+{
+	EXPECT_TRUE(TestSpatialDistribution::testDistribute(GTEST_TEST_DURATION));
+}
+
+TEST(TestSpatialDistribution, DistributeAndFilter)
+{
+	EXPECT_TRUE(TestSpatialDistribution::testDistributeAndFilter(GTEST_TEST_DURATION));
+}
+
+TEST(TestSpatialDistribution, DistributeAndFilterIndices)
+{
+	EXPECT_TRUE(TestSpatialDistribution::testDistributeAndFilterIndices(GTEST_TEST_DURATION));
+}
+
+TEST(TestSpatialDistribution, CopyConstructorWithNeighborhood8)
+{
+	EXPECT_TRUE(TestSpatialDistribution::testCopyConstructorWithNeighborhood8(GTEST_TEST_DURATION));
+}
+
+#endif // OCEAN_USE_GTEST
+
+bool TestSpatialDistribution::testIdealBins(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing ideal number of bins:";
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int width = RandomI::random(randomGenerator, 10u, 1920u * 2u);
+		const unsigned int height = RandomI::random(randomGenerator, 10u, 1080u * 2u);
+
+		const size_t numberPoints = RandomI::random(randomGenerator, 1000u * 1000u) + 1u;
+
+		const unsigned int minimalHorizontalBins = RandomI::random(randomGenerator, 1u, min(20u, width));
+		const unsigned int minimalVerticalBins = RandomI::random(randomGenerator, 1u, min(20u, height));
+
+		unsigned int horizontalBins = (unsigned int)(-1);
+		unsigned int verticalBins = (unsigned int)(-1);
+
+		Geometry::SpatialDistribution::idealBins(width, height, numberPoints, horizontalBins, verticalBins, minimalHorizontalBins, minimalVerticalBins);
+
+		ocean_assert(horizontalBins != (unsigned int)(-1));
+		ocean_assert(verticalBins != (unsigned int)(-1));
+
+		if (horizontalBins < minimalHorizontalBins || horizontalBins > width)
+		{
+			allSucceeded = false;
+		}
+
+		if (verticalBins < minimalVerticalBins || verticalBins > height)
+		{
+			allSucceeded = false;
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestSpatialDistribution::testIdealBinsNeighborhood9(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing ideal number of bins with 9 neighborhood guarantee:";
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int width = RandomI::random(randomGenerator, 10u, 1920u * 2u);
+		const unsigned int height = RandomI::random(randomGenerator, 10u, 1080u * 2u);
+
+		const Scalar distance = Random::scalar(randomGenerator, Scalar(1), Scalar(2u * max(width, height)));
+
+		const unsigned int minimalHorizontalBins = RandomI::random(randomGenerator, 1u, min(20u, width));
+		const unsigned int minimalVerticalBins = RandomI::random(randomGenerator, 1u, min(20u, height));
+
+		const unsigned int maximalHorizontalBins = RandomI::random(randomGenerator, minimalHorizontalBins, width);
+		const unsigned int maximalVerticalBins = RandomI::random(randomGenerator, minimalVerticalBins, height);
+
+		ocean_assert(minimalHorizontalBins != 0u && minimalHorizontalBins <= maximalHorizontalBins && maximalHorizontalBins <= width);
+		ocean_assert(minimalVerticalBins != 0u && minimalVerticalBins <= maximalVerticalBins && maximalVerticalBins <= height);
+
+		unsigned int horizontalBins = (unsigned int)(-1);
+		unsigned int verticalBins = (unsigned int)(-1);
+
+		Geometry::SpatialDistribution::idealBinsNeighborhood9(width, height, distance, horizontalBins, verticalBins, minimalHorizontalBins, minimalVerticalBins, maximalHorizontalBins, maximalVerticalBins);
+
+		ocean_assert(horizontalBins != (unsigned int)(-1));
+		ocean_assert(verticalBins != (unsigned int)(-1));
+
+		if (horizontalBins < minimalHorizontalBins || horizontalBins > maximalHorizontalBins)
+		{
+			allSucceeded = false;
+		}
+
+		if (verticalBins < minimalVerticalBins || verticalBins > maximalVerticalBins)
+		{
+			allSucceeded = false;
+		}
+	} while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestSpatialDistribution::testMinimalSqrDistances(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	const unsigned int numberImagePoints = 50u;
+	const unsigned int numberCandidates = 300u;
+
+	Log::info() << "Testing minimal square distances for " << numberImagePoints << " points to " << numberCandidates << " candidates:";
+
+	const unsigned int width = 640u;
+	const unsigned int height = 480u;
+
+	HighPerformanceStatistic performanceDistributionCreation;
+	HighPerformanceStatistic performanceDistributionSearch;
+	HighPerformanceStatistic performanceBruteForce;
+
+	bool allSucceeded = true;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		Geometry::ImagePoints imagePoints, candidates;
+
+		for (unsigned int n = 0u; n < numberImagePoints; ++n)
+			imagePoints.push_back(Vector2(Scalar(Random::random(width - 1u)), Scalar(Random::random(height - 1u))));
+
+		for (unsigned int n = 0u; n < numberCandidates; ++n)
+			candidates.push_back(Vector2(Scalar(Random::random(width - 1u)), Scalar(Random::random(height - 1u))));
+
+		{
+			// first we test the performance
+
+			Scalars minimalSqrDistances(numberImagePoints);
+
+			performanceDistributionCreation.start();
+			const Geometry::SpatialDistribution::DistributionArray indexArray(Geometry::SpatialDistribution::distributeToArray(candidates.data(), candidates.size(), Scalar(0), Scalar(0), Scalar(width), Scalar(height), 10u, 10u));
+			performanceDistributionCreation.stop();
+
+			performanceDistributionSearch.start();
+			Geometry::SpatialDistribution::determineMinimalSqrDistances(imagePoints.data(), imagePoints.size(), candidates.data(), numberCandidates, indexArray, minimalSqrDistances.data());
+			performanceDistributionSearch.stop();
+
+			performanceBruteForce.start();
+
+			for (unsigned int n = 0u; n < numberImagePoints; ++n)
+			{
+				const Vector2& imagePoint = imagePoints[n];
+
+				Scalar minimalSqrDistance = Numeric::maxValue();
+
+				for (unsigned int i = 0u; i < numberCandidates; ++i)
+				{
+					const Scalar sqrDistance = imagePoint.sqrDistance(candidates[i]);
+
+					if (sqrDistance < minimalSqrDistance)
+						minimalSqrDistance = sqrDistance;
+				}
+
+				minimalSqrDistances[n] = minimalSqrDistance;
+			}
+
+			performanceBruteForce.stop();
+		}
+
+		{
+			// now we validate the result as the result
+
+			Scalars minimalSqrDistances(numberImagePoints);
+			Geometry::SpatialDistribution::determineMinimalSqrDistances(imagePoints.data(), imagePoints.size(), candidates.data(), candidates.size(), width, height, 10u, minimalSqrDistances.data());
+
+			const Geometry::SpatialDistribution::DistributionArray distributionArray(Geometry::SpatialDistribution::distributeToArray(candidates.data(), candidates.size(), Scalar(0), Scalar(0), Scalar(width), Scalar(height), 10u, 10u));
+
+			Scalars testMinimalSqrDistances;
+			testMinimalSqrDistances.reserve(numberImagePoints);
+
+			for (unsigned int n = 0u; n < numberImagePoints; ++n)
+			{
+				const Vector2& imagePoint = imagePoints[n];
+
+				const int binX = distributionArray.horizontalBin(imagePoint.x());
+				const int binY = distributionArray.verticalBin(imagePoint.y());
+
+				Scalar testMinSqrDistance = Numeric::maxValue();
+
+				for (unsigned int c = 0u; c < numberCandidates; ++c)
+				{
+					const Vector2& candidate = candidates[c];
+
+					const int candidateX = distributionArray.horizontalBin(candidate.x());
+					const int candidateY = distributionArray.verticalBin(candidate.y());
+
+					if (abs(candidateX - binX) <= 1 && abs(candidateY - binY) <= 1)
+						testMinSqrDistance = min(testMinSqrDistance, imagePoint.sqrDistance(candidate));
+				}
+
+				testMinimalSqrDistances.push_back(testMinSqrDistance);
+			}
+
+			ocean_assert(minimalSqrDistances.size() == testMinimalSqrDistances.size());
+
+			for (unsigned int n = 0u; n < numberImagePoints; ++n)
+				if (minimalSqrDistances[n] != testMinimalSqrDistances[n] && minimalSqrDistances[n] != Numeric::maxValue())
+					allSucceeded = false;
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Brute force performance: " << performanceBruteForce.averageMseconds() << "ms";
+	Log::info() << "Distribution performance: " << performanceDistributionCreation.averageMseconds() + performanceDistributionSearch.averageMseconds() << "ms (creation: " << performanceDistributionCreation.averageMseconds() << "ms + search: " << performanceDistributionSearch.averageMseconds() << "ms)";
+
+	if (allSucceeded)
+		Log::info() << "Validation: succeeded.";
+	else
+		Log::info() << "Validation: FAILED!";
+
+	return allSucceeded;
+}
+
+bool TestSpatialDistribution::testDistribute(const double testDuration)
+{
+	ocean_assert(testDuration > 0);
+
+	static const unsigned int numberPoints = 500u;
+
+	Log::info() << "Testing distribute function for " << numberPoints << " points:";
+
+	unsigned long long iterations = 0ull;
+	unsigned long long validIterations = 0ull;
+
+	Vectors2 imagePoints(numberPoints);
+
+	HighPerformanceStatistic performance;
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (unsigned int n = 0u; n < numberPoints; ++n)
+			imagePoints[n] = Vector2(Random::scalar(-100, 100), Random::scalar(-100, 100));
+
+		const Scalar left = Random::scalar(-200, 200);
+		const Scalar top = Random::scalar(-200, 200);
+
+		const Scalar width = Random::scalar(Scalar(0.001), 300);
+		const Scalar height = Random::scalar(Scalar(0.001), 300);
+
+		const unsigned int horizontalBins = RandomI::random(1, max(1, int(width * 5)));
+		const unsigned int verticalBins = RandomI::random(1, max(1, int(height * 5)));
+
+		performance.start();
+		const Geometry::SpatialDistribution::DistributionArray distribution(Geometry::SpatialDistribution::distributeToArray(imagePoints.data(), imagePoints.size(), left, top, width, height, horizontalBins, verticalBins));
+		performance.stop();
+
+		ocean_assert(Numeric::isNotEqualEps(width) && Numeric::isNotEqualEps(height));
+		const Scalar invWidth = Scalar(1) / width;
+		const Scalar invHeight = Scalar(1) / height;
+
+		size_t numberDistributed = 0;
+
+		bool localSucceeded = true;
+
+		for (size_t n = 0; n < imagePoints.size(); ++n)
+		{
+			const Vector2& imagePoint = imagePoints[n];
+
+			if (imagePoint.x() >= left && imagePoint.x() <= left + width && imagePoint.y() >= top && imagePoint.y() <= top + height)
+			{
+				const Scalar floatBinX = (imagePoint.x() - left) * Scalar(horizontalBins) * invWidth;
+				const Scalar floatBinY = (imagePoint.y() - top) * Scalar(verticalBins) * invHeight;
+
+				ocean_assert(floatBinX >= 0 && floatBinY >= 0);
+
+				const unsigned int binX = (unsigned int)floatBinX;
+				const unsigned int binY = (unsigned int)floatBinY;
+
+				if (hasElement(distribution(binX, binY), (unsigned int)n))
+					numberDistributed++;
+				else
+					localSucceeded = false;
+			}
+		}
+
+		size_t testNumberDistributed = 0;
+		for (unsigned int n = 0u; n < distribution.bins(); ++n)
+			testNumberDistributed += distribution[n].size();
+
+		if (numberDistributed != testNumberDistributed)
+			localSucceeded = false;
+
+		iterations++;
+
+		if (localSucceeded)
+			validIterations++;
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
+
+	ocean_assert(iterations != 0ull);
+	const double percent = double(validIterations) / double(iterations);
+
+	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+
+	return percent >= 0.99;
+}
+
+bool TestSpatialDistribution::testDistributeAndFilter(const double testDuration)
+{
+	ocean_assert(testDuration > 0);
+
+	static const unsigned int numberPoints = 500u;
+
+	Log::info() << "Testing distribute and filter function for " << numberPoints << " points:";
+
+	Vectors2 imagePoints(numberPoints);
+
+	unsigned long long iterations = 0ull;
+	unsigned long long validIterations = 0ull;
+
+	HighPerformanceStatistic performance;
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (unsigned int n = 0u; n < numberPoints; ++n)
+			imagePoints[n] = Vector2(Random::scalar(-100, 100), Random::scalar(-100, 100));
+
+		const Scalar left = Random::scalar(-200, 200);
+		const Scalar top = Random::scalar(-200, 200);
+
+		const Scalar width = Random::scalar(Scalar(0.001), 300);
+		const Scalar height = Random::scalar(Scalar(0.001), 300);
+
+		const unsigned int horizontalBins = RandomI::random(1, max(1, int(width * 5)));
+		const unsigned int verticalBins = RandomI::random(1, max(1, int(height * 5)));
+
+		performance.start();
+		const Vectors2 filteredImagePoints(Geometry::SpatialDistribution::distributeAndFilter(imagePoints.data(), imagePoints.size(), left, top, width, height, horizontalBins, verticalBins));
+		performance.stop();
+
+		const std::set<Vector2> filteredImagePointsSet(filteredImagePoints.begin(), filteredImagePoints.end());
+
+		Indices32 occupiedBins(horizontalBins * verticalBins, 0u);
+
+		ocean_assert(Numeric::isNotEqualEps(width) && Numeric::isNotEqualEps(height));
+		const Scalar invWidth = Scalar(1) / width;
+		const Scalar invHeight = Scalar(1) / height;
+
+		size_t numberFiltered = 0;
+
+		bool localSucceeded = true;
+
+		for (size_t n = 0; n < imagePoints.size(); ++n)
+		{
+			const Vector2& imagePoint = imagePoints[n];
+
+			if (imagePoint.x() >= left && imagePoint.x() <= left + width && imagePoint.y() >= top && imagePoint.y() <= top + height)
+			{
+				const Scalar floatBinX = (imagePoint.x() - left) * Scalar(horizontalBins) * invWidth;
+				const Scalar floatBinY = (imagePoint.y() - top) * Scalar(verticalBins) * invHeight;
+
+				ocean_assert(floatBinX >= 0 && floatBinY >= 0);
+
+				const unsigned int binX = (unsigned int)floatBinX;
+				const unsigned int binY = (unsigned int)floatBinY;
+
+				if (occupiedBins[binY * horizontalBins + binX] == 0u)
+				{
+					occupiedBins[binY * horizontalBins + binX] = 1u;
+
+					if (filteredImagePointsSet.find(imagePoint) != filteredImagePointsSet.end())
+						numberFiltered++;
+					else
+						localSucceeded = false;
+				}
+			}
+		}
+
+		if (filteredImagePoints.size() != numberFiltered)
+			localSucceeded = false;
+
+		if (localSucceeded)
+			validIterations++;
+
+		iterations++;
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
+
+	ocean_assert(iterations != 0ull);
+	const double percent = double(validIterations) / double(iterations);
+
+	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+
+	return percent >= 0.99;
+}
+
+bool TestSpatialDistribution::testDistributeAndFilterIndices(const double testDuration)
+{
+	ocean_assert(testDuration > 0);
+
+	static const unsigned int numberPoints = 500u;
+
+	Log::info() << "Testing distribute and filter indices function for " << numberPoints << " points:";
+
+	Vectors2 imagePoints(numberPoints);
+
+	unsigned long long iterations = 0ull;
+	unsigned long long validIterations = 0ull;
+
+	HighPerformanceStatistic performance;
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (unsigned int n = 0u; n < numberPoints; ++n)
+			imagePoints[n] = Vector2(Random::scalar(-100, 100), Random::scalar(-100, 100));
+
+		const Scalar left = Random::scalar(-200, 200);
+		const Scalar top = Random::scalar(-200, 200);
+
+		const Scalar width = Random::scalar(Scalar(0.001), 300);
+		const Scalar height = Random::scalar(Scalar(0.001), 300);
+
+		const unsigned int horizontalBins = RandomI::random(1, max(1, int(width * 5)));
+		const unsigned int verticalBins = RandomI::random(1, max(1, int(height * 5)));
+
+		performance.start();
+		const Indices32 filteredIndices(Geometry::SpatialDistribution::distributeAndFilterIndices<Index32>(imagePoints.data(), imagePoints.size(), left, top, width, height, horizontalBins, verticalBins));
+		performance.stop();
+
+		const std::set<Index64> filteredIndicesSet(filteredIndices.begin(), filteredIndices.end());
+
+		Indices32 occupiedBins(horizontalBins * verticalBins, 0u);
+
+		ocean_assert(Numeric::isNotEqualEps(width) && Numeric::isNotEqualEps(height));
+		const Scalar invWidth = Scalar(1) / width;
+		const Scalar invHeight = Scalar(1) / height;
+
+		size_t numberFiltered = 0;
+
+		bool localSucceeded = true;
+
+		for (size_t n = 0; n < imagePoints.size(); ++n)
+		{
+			const Vector2& imagePoint = imagePoints[n];
+
+			if (imagePoint.x() >= left && imagePoint.x() <= left + width && imagePoint.y() >= top && imagePoint.y() <= top + height)
+			{
+				const Scalar floatBinX = (imagePoint.x() - left) * Scalar(horizontalBins) * invWidth;
+				const Scalar floatBinY = (imagePoint.y() - top) * Scalar(verticalBins) * invHeight;
+
+				ocean_assert(floatBinX >= 0 && floatBinY >= 0);
+
+				const unsigned int binX = (unsigned int)floatBinX;
+				const unsigned int binY = (unsigned int)floatBinY;
+
+				if (occupiedBins[binY * horizontalBins + binX] == 0u)
+				{
+					occupiedBins[binY * horizontalBins + binX] = 1u;
+
+					if (filteredIndicesSet.find(Index32(n)) != filteredIndicesSet.end())
+						numberFiltered++;
+					else
+						localSucceeded = false;
+				}
+			}
+		}
+
+		if (filteredIndices.size() != numberFiltered)
+			localSucceeded = false;
+
+		if (localSucceeded)
+			validIterations++;
+
+		iterations++;
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
+
+	ocean_assert(iterations != 0ull);
+	const double percent = double(validIterations) / double(iterations);
+
+	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+
+	return percent >= 0.99;
+}
+
+bool TestSpatialDistribution::testCopyConstructorWithNeighborhood8(const double testDuration)
+{
+	ocean_assert(testDuration > 0);
+
+	Log::info() << "Testing copy constructor with 8-neighborhood:";
+
+	bool allSucceeded = true;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int elements = RandomI::random(1u, 5000u);
+
+		const Scalar left = Random::scalar(-200, 200);
+		const Scalar top = Random::scalar(-200, 200);
+
+		const Scalar width = Random::scalar(Scalar(1), 300);
+		const Scalar height = Random::scalar(Scalar(1), 300);
+
+		const unsigned int horizontalBins = RandomI::random(1u, 200u);
+		const unsigned int verticalBins = RandomI::random(1u, 200u);
+
+		Geometry::SpatialDistribution::DistributionArray distributionArray(left, top, width, height, horizontalBins, verticalBins);
+
+		for (unsigned int n = 0u; n < elements; ++n)
+		{
+			const unsigned int binX = RandomI::random(0u, horizontalBins - 1u);
+			const unsigned int binY = RandomI::random(0u, verticalBins - 1u);
+
+			distributionArray(binX, binY).push_back(n);
+		}
+
+		const Geometry::SpatialDistribution::DistributionArray distributionArray8(distributionArray, true);
+
+		for (unsigned int verticalBin = 0u; verticalBin < verticalBins; ++verticalBin)
+		{
+			for (unsigned int horizontalBin = 0u; horizontalBin < horizontalBins; ++horizontalBin)
+			{
+				const Indices32& indices = distributionArray8(horizontalBin, verticalBin);
+
+				for (const Index32& index : indices)
+				{
+					bool indexFound = false;
+
+					size_t neighborhoodIndices = 0;
+
+					for (int yBin = max(0, int(verticalBin) - 1); yBin < min(int(verticalBin) + 2, int(verticalBins)); ++yBin)
+					{
+						for (int xBin = max(0, int(horizontalBin) - 1); xBin < min(int(horizontalBin) + 2, int(horizontalBins)); ++xBin)
+						{
+							const Indices32& localIndices = distributionArray(xBin, yBin);
+
+							neighborhoodIndices += localIndices.size();
+
+							for (const Index32& localIndex : localIndices)
+							{
+								if (localIndex == index)
+								{
+									if (indexFound)
+									{
+										// the index must not exist in two individual bins (in the original distribution array)
+										allSucceeded = false;
+									}
+
+									indexFound = true;
+								}
+							}
+						}
+					}
+
+					if (indexFound == false)
+					{
+						allSucceeded = false;
+					}
+
+					if (neighborhoodIndices != indices.size())
+					{
+						allSucceeded = false;
+					}
+				}
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+}
+
+}
+
+}

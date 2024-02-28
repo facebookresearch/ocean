@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4C4BB60C-4556-4A30-84C9-8AE989D492CB}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>network</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>network</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="network_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="network_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="network_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="network_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\Address4.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\BufferQueue.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\Client.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\ConnectionlessClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\ConnectionlessServer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\ConnectionOrientedClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\ConnectionOrientedServer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\Data.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\HTTPClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\HTTPSClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\MaintenanceTCPConnector.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\MaintenanceUDPConnector.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\MessageQueue.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\Network.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\NetworkResource.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\PackagedConnectionlessClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\PackagedConnectionlessServer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\PackagedSocket.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\PackagedTCPClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\PackagedTCPServer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\PackagedUDPClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\PackagedUDPServer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\Port.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\Resolver.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\Server.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\Socket.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\SocketScheduler.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\Streaming.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\StreamingClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\StreamingServer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\TCPClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\TCPServer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\UDPClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\network\UDPServer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\Address4.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\Client.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\ConnectionlessClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\ConnectionlessServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\ConnectionOrientedClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\ConnectionOrientedServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\HTTPClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\HTTPSClient.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\MaintenanceTCPConnector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\MaintenanceUDPConnector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\MessageQueue.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\NetworkResource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\PackagedConnectionlessClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\PackagedConnectionlessServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\PackagedSocket.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\PackagedTCPClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\PackagedTCPServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\PackagedUDPClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\PackagedUDPServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\Resolver.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\Server.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\Socket.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\SocketScheduler.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\Streaming.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\StreamingClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\StreamingServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\TCPClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\TCPServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\UDPClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\network\UDPServer.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

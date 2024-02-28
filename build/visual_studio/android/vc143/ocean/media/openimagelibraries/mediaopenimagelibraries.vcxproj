@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DDD3E6E8-E3AC-4BDE-B4BB-68CD50E6DB2D}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>mediaopenimagelibraries</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>mediaopenimagelibraries</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="mediaopenimagelibraries_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="mediaopenimagelibraries_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="mediaopenimagelibraries_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="mediaopenimagelibraries_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\Image.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\ImageGif.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\ImageJpg.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\ImagePng.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\ImageTif.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILBufferImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILBufferImageRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILImageRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILImageSequence.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILImageSequenceRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILLibrary.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OpenImageLibraries.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\Plugin.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\Image.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\ImageGif.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\ImageJpg.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\ImagePng.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\ImageTif.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILBufferImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILBufferImageRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILImageRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILImageSequence.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILImageSequenceRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OILLibrary.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\OpenImageLibraries.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\Plugin.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

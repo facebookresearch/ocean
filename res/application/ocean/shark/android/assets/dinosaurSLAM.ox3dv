@@ -1,0 +1,32 @@
+#OX3D V3.0 utf8
+
+TrackerTransform
+{
+	tracker "SLAM Feature Based 6DOF Tracker"
+	trackerInput "BACKGROUND"
+
+	insideOut FALSE
+
+	object "no_map"
+	objectSize 0.270 0 0
+
+	alwaysVisible FALSE
+
+	children
+	[
+		Transform
+		{
+			translation 0.0 0.0 0.0
+			scale 0.2 0.2 0.2
+			rotation 0 1 0 -1.17079632679
+
+			children DEF TRANSFORM Transform
+			{
+				children Inline
+				{
+					url "trex.obj"
+				}
+			}
+		}
+	]
+}

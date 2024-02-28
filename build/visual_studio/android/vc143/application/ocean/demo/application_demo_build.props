@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Demo</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationdemo_build_imported>True</ocean_applicationdemo_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_application_build_imported)' != 'True'" Project="..\application_build.props"/>
+  </ImportGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm64_cl50_static_debug\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm_cl50_static_debug\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|ARM64'">
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm64_cl50_static_profile\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|ARM'">
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm_cl50_static_profile\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm64_cl50_static\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm_cl50_static\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|ARM64'">
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm64_cl50_shared_debug\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|ARM'">
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm_cl50_shared_debug\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|ARM64'">
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm64_cl50_shared_profile\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|ARM'">
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm_cl50_shared_profile\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|ARM64'">
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm64_cl50_shared\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|ARM'">
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm_cl50_shared\</IntDir>
+  </PropertyGroup>
+</Project>

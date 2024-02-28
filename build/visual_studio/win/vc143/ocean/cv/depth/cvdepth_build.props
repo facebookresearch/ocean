@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean CV Depth</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_cvdepth_build_imported>True</ocean_cvdepth_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_cvdepth_common_imported)' != 'True'" Project="cvdepth_common.props"/>
+    <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\..\ocean_library_build.props"/>
+  </ImportGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <TargetName>OceanCVDepthD</TargetName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <TargetName>OceanCVDepth</TargetName>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <ClCompile>
+      <PreprocessorDefinitions>USE_OCEAN_CV_DEPTH_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Ocean Demo Geometry VanishingProjection</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationdemogeometryvanishingprojection_build_imported>True</ocean_applicationdemogeometryvanishingprojection_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_applicationdemogeometry_build_imported)' != 'True'" Project="..\..\application_demo_geometry_build.props"/>
+    <Import Condition="'$(ocean_application_window_build_imported)' != 'True'" Project="..\..\..\..\application_window_build.props" />
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\base\base_use.props" />
+    <Import Condition="'$(ocean_cvadvanced_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\cv\advanced\cvadvanced_use.props" />
+    <Import Condition="'$(ocean_geometry_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\geometry\geometry_use.props" />
+    <Import Condition="'$(ocean_mediawic_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\media\wic\mediawic_use.props" />
+    <Import Condition="'$(ocean_platformwin_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\platform\win\platformwin_use.props" />
+  </ImportGroup>
+</Project>

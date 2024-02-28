@@ -1,0 +1,322 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Shared Debug|Win32">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|x64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|Win32">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|x64">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|Win32">
+      <Configuration>Shared Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|x64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|Win32">
+      <Configuration>Static Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|Win32">
+      <Configuration>Static Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|x64">
+      <Configuration>Static Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|Win32">
+      <Configuration>Static Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x64">
+      <Configuration>Static Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A965080B-B004-4442-AF02-4A1FAAC2E066}</ProjectGuid>
+    <RootNamespace>renderingglescenegraph</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglescenegraph_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglescenegraph_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglescenegraph_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglescenegraph_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglescenegraph_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglescenegraph_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglescenegraph_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglescenegraph_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglescenegraph_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglescenegraph_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglescenegraph_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglescenegraph_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESAbsoluteTransform.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESAttributeSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESBackground.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESBlendAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESceneGraph.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESCone.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESCylinder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESDepthAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESDirectionalLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESDynamicLibrary.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESEngine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESFactory.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESFrameTexture2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESGeometry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESGroup.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESIndependentPrimitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESLightSource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESLines.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESLineStrips.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESLOD.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESMaterial.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESMediaTexture2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPerspectiveView.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPhantomAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPointLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPoints.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPrimitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPrimitiveAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESProgramManager.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESRenderable.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESScene.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESShader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESShaderProgram.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESShape.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESSphere.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESSpotLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESStereoAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESStereoView.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESStripPrimitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESSwitch.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESText.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTexture.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTexture2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTextureFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTextures.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTransform.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTraverser.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTriangleFans.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTriangles.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTriangleStrips.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESUndistortedBackground.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESVertexSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESView.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\windows\GLESBitmapFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\windows\GLESEngineWindows.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\windows\GLESWindowFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\windows\Plugin.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\windows\Windows.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESAbsoluteTransform.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESAttributeSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESBackground.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESBlendAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESceneGraph.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESCone.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESCylinder.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESDepthAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESDirectionalLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESDynamicLibrary.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESEngine.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESFactory.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESFrameTexture2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESGeometry.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESGroup.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESIndependentPrimitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESLightSource.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESLines.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESLineStrips.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESLOD.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESMaterial.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESMediaTexture2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPerspectiveView.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPhantomAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPointLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPoints.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPrimitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESPrimitiveAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESProgramManager.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESRenderable.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESScene.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESShader.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESShaderProgram.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESShape.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESSphere.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESSpotLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESStereoAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESStereoView.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESStripPrimitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESSwitch.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESText.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTexture.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTexture2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTextureFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTextures.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTransform.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTraverser.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTriangleFans.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTriangles.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESTriangleStrips.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESUndistortedBackground.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESVertexSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\GLESView.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\windows\GLESBitmapFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\windows\GLESEngineWindows.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\windows\GLESWindowFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\windows\Plugin.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\windows\Windows.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\..\..\..\..\res\ocean\rendering\glescenegraph\win\renderingglescenegraph.rc">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

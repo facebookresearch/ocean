@@ -1,0 +1,5 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+// @nolint
+
+include ':app' $(AarDependenciesSettings)

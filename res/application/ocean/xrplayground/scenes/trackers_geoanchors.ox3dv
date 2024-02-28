@@ -1,0 +1,116 @@
+#OX3D V3.0 utf8
+
+TrackerTransform
+{
+	tracker
+	[
+		"ARKit 6DOF World Tracker", # any of the trackers, whatever is available
+		"ARCore 6DOF World Tracker"
+	]
+
+	trackerInput "BACKGROUND"
+	object "World"
+
+	children Transform
+	{
+		scale 0.1 0.1 0.1
+
+		children Inline
+		{
+			url "coordinatesystem.x3dv"
+		}
+	}
+}
+
+TrackerTransform
+{
+	tracker "GeoAnchor 6DOF Tracker"
+	trackerInput "BACKGROUND"
+	object "GPS Location 47.60989632181187, -122.3241059081297"
+
+	children
+	[
+		Transform
+		{
+			translation 0 0.5 0
+
+			children Shape
+			{
+				geometry Box
+				{
+					size 1 1 1
+				}
+
+				appearance Appearance
+				{
+					material Material
+					{
+						diffuseColor 1 0 0
+					}
+				}
+			}
+		}
+	]
+}
+
+TrackerTransform
+{
+	tracker "GeoAnchor 6DOF Tracker"
+	trackerInput "BACKGROUND"
+	object "GPS Location 47.60980997647713, -122.32402812407484"
+
+	children
+	[
+		Transform
+		{
+			translation 0 0.5 0
+
+			children Shape
+			{
+				geometry Box
+				{
+					size 1 1 1
+				}
+
+				appearance Appearance
+				{
+					material Material
+					{
+						diffuseColor 0 1 0
+					}
+				}
+			}
+		}
+	]
+}
+
+TrackerTransform
+{
+	tracker "GeoAnchor 6DOF Tracker"
+	trackerInput "BACKGROUND"
+	object "GPS Location 47.6097245351417, -122.32396911548146"
+
+	children
+	[
+		Transform
+		{
+			translation 0 0.5 0
+
+			children Shape
+			{
+				geometry Box
+				{
+					size 1 1 1
+				}
+
+				appearance Appearance
+				{
+					material Material
+					{
+						diffuseColor 0 0 1
+					}
+				}
+			}
+		}
+	]
+}

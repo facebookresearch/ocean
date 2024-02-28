@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0C1091EF-0016-4AA2-8952-C5F5634C858D}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>platformmetaquestopenxrapplication</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>platformmetaquestopenxrapplication</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="platformmetaquestopenxrapplication_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="platformmetaquestopenxrapplication_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="platformmetaquestopenxrapplication_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="platformmetaquestopenxrapplication_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\NativeApplication.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\VRControllerVisualizer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\VRHandVisualizer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\VRNativeApplication.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\VRNativeApplicationAdvanced.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\VRTableMenu.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\Application.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\NativeApplication.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\VRControllerVisualizer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\VRHandVisualizer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\VRNativeApplication.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\VRNativeApplicationAdvanced.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\application\VRTableMenu.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

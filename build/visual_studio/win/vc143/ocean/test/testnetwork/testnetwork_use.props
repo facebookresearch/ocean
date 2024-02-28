@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean Test Network</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ocean_testnetwork_use_imported>True</ocean_testnetwork_use_imported>
+  </PropertyGroup>
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_testnetwork_common_imported)' != 'True'" Project="testnetwork_common.props"/>
+  </ImportGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <Link>
+      <AdditionalDependencies>OceanTestNetworkD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <Link>
+	    <AdditionalDependencies>OceanTestNetwork.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

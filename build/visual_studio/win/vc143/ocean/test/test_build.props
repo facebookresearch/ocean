@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean Test Library</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_test_build_imported>True</ocean_test_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="../../ocean_common.props"/>
+    <Import Condition="'$(ocean_test_common_imported)' != 'True'" Project="test_common.props"/>
+  </ImportGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <TargetName>OceanTestD</TargetName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <TargetName>OceanTest</TargetName>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <ClCompile>
+      <PreprocessorDefinitions>USE_OCEAN_TEST_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x64_vc143_static_debug\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\win_x64_vc143_static_debug\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x86_vc143_static_debug\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\win_x86_vc143_static_debug\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'">
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x64_vc143_static_profile\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\win_x64_vc143_static_profile\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'">
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x86_vc143_static_profile\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\win_x86_vc143_static_profile\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'">
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x64_vc143_static\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\win_x64_vc143_static\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x86_vc143_static\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\win_x86_vc143_static\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'">
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x64_vc143_shared_debug\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\win_x64_vc143_shared_debug\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x86_vc143_shared_debug\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\win_x86_vc143_shared_debug\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'">
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x64_vc143_shared_profile\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\win_x64_vc143_shared_profile\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'">
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x86_vc143_shared_profile\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\win_x86_vc143_shared_profile\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'">
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x64_vc143_shared\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\win_x64_vc143_shared\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'">
+    <OutDir>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x86_vc143_shared\</OutDir>
+    <IntDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\ocean\$(ProjectName)\win_x86_vc143_shared\</IntDir>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
+    <PostBuildEvent>
+      <Message>Copying libraries to build directory</Message>
+      <Command>if not exist "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x86_vc143_shared_debug" mkdir "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x86_vc143_shared_debug"
+copy $(OutDir)$(TargetName)$(TargetExt) "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x86_vc143_shared_debug"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'">
+    <PostBuildEvent>
+      <Message>Copying libraries to build directory</Message>
+      <Command>if not exist "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x64_vc143_shared_debug" mkdir "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x64_vc143_shared_debug"
+copy $(OutDir)$(TargetName)$(TargetExt) "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x64_vc143_shared_debug"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'">
+    <PostBuildEvent>
+      <Message>Copying libraries to build directory</Message>
+      <Command>if not exist "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x86_vc143_shared" mkdir "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x86_vc143_shared"
+copy $(OutDir)$(TargetName)$(TargetExt) "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x86_vc143_shared"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'">
+    <PostBuildEvent>
+      <Message>Copying libraries to build directory</Message>
+      <Command>if not exist "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x86_vc143_shared_profile" mkdir "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x86_vc143_shared_profile"
+copy $(OutDir)$(TargetName)$(TargetExt) "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x86_vc143_shared_profile"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'">
+    <PostBuildEvent>
+      <Message>Copying libraries to build directory</Message>
+      <Command>if not exist "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x64_vc143_shared" mkdir "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x64_vc143_shared"
+copy $(OutDir)$(TargetName)$(TargetExt) "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x64_vc143_shared"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'">
+    <PostBuildEvent>
+      <Message>Copying libraries to build directory</Message>
+      <Command>if not exist "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x64_vc143_shared_profile" mkdir "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x64_vc143_shared_profile"
+copy $(OutDir)$(TargetName)$(TargetExt) "$(OCEAN_DEVELOPMENT_PATH)\bin\test\dll\win_x64_vc143_shared_profile"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+</Project>

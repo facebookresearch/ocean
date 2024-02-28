@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvdetectorbarcodesdetector2d", "democvdetectorbarcodesdetector2d.vcxproj", "{21C4AF8B-68F2-4257-84C4-2975AE52549A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Shared Debug|x64 = Shared Debug|x64
+		Shared Debug|x86 = Shared Debug|x86
+		Shared Profile|x64 = Shared Profile|x64
+		Shared Profile|x86 = Shared Profile|x86
+		Shared Release|x64 = Shared Release|x64
+		Shared Release|x86 = Shared Release|x86
+		Static Debug|x64 = Static Debug|x64
+		Static Debug|x86 = Static Debug|x86
+		Static Profile|x64 = Static Profile|x64
+		Static Profile|x86 = Static Profile|x86
+		Static Release|x64 = Static Release|x64
+		Static Release|x86 = Static Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Shared Debug|x64.Build.0 = Shared Debug|x64
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Shared Debug|x86.ActiveCfg = Shared Debug|Win32
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Shared Debug|x86.Build.0 = Shared Debug|Win32
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Shared Profile|x64.ActiveCfg = Shared Profile|x64
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Shared Profile|x64.Build.0 = Shared Profile|x64
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Shared Profile|x86.ActiveCfg = Shared Profile|Win32
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Shared Profile|x86.Build.0 = Shared Profile|Win32
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Shared Release|x64.ActiveCfg = Shared Release|x64
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Shared Release|x64.Build.0 = Shared Release|x64
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Shared Release|x86.ActiveCfg = Shared Release|Win32
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Shared Release|x86.Build.0 = Shared Release|Win32
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Static Debug|x64.Build.0 = Static Debug|x64
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Static Debug|x86.ActiveCfg = Static Debug|Win32
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Static Debug|x86.Build.0 = Static Debug|Win32
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Static Profile|x64.ActiveCfg = Static Profile|x64
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Static Profile|x64.Build.0 = Static Profile|x64
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Static Profile|x86.ActiveCfg = Static Profile|Win32
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Static Profile|x86.Build.0 = Static Profile|Win32
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Static Release|x64.ActiveCfg = Static Release|x64
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Static Release|x64.Build.0 = Static Release|x64
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Static Release|x86.ActiveCfg = Static Release|Win32
+		{21C4AF8B-68F2-4257-84C4-2975AE52549A}.Static Release|x86.Build.0 = Static Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

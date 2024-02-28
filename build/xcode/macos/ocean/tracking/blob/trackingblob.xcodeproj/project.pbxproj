@@ -1,0 +1,1026 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D936F471BC6ABFA0046ACD4 /* CorrespondenceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F3F1BC6ABFA0046ACD4 /* CorrespondenceManager.cpp */; };
+		5D936F481BC6ABFA0046ACD4 /* Correspondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F401BC6ABFA0046ACD4 /* Correspondences.cpp */; };
+		5D936F4A1BC6ABFA0046ACD4 /* FeatureMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F421BC6ABFA0046ACD4 /* FeatureMap.cpp */; };
+		5D936F4B1BC6ABFA0046ACD4 /* BlobTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F431BC6ABFA0046ACD4 /* BlobTracker6DOF.cpp */; };
+		5D936F4C1BC6ABFA0046ACD4 /* Loader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F441BC6ABFA0046ACD4 /* Loader.cpp */; };
+		5D936F4D1BC6ABFA0046ACD4 /* UnidirectionalCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F451BC6ABFA0046ACD4 /* UnidirectionalCorrespondences.cpp */; };
+		5D936F571BC6AC410046ACD4 /* Blob.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F4F1BC6AC410046ACD4 /* Blob.h */; };
+		5D936F581BC6AC410046ACD4 /* CorrespondenceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F501BC6AC410046ACD4 /* CorrespondenceManager.h */; };
+		5D936F591BC6AC410046ACD4 /* Correspondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F511BC6AC410046ACD4 /* Correspondences.h */; };
+		5D936F5B1BC6AC410046ACD4 /* FeatureMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F531BC6AC410046ACD4 /* FeatureMap.h */; };
+		5D936F5C1BC6AC410046ACD4 /* BlobTracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F541BC6AC410046ACD4 /* BlobTracker6DOF.h */; };
+		5D936F5D1BC6AC410046ACD4 /* Loader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F551BC6AC410046ACD4 /* Loader.h */; };
+		5D936F5E1BC6AC410046ACD4 /* UnidirectionalCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F561BC6AC410046ACD4 /* UnidirectionalCorrespondences.h */; };
+		5D936F611BC6AC7A0046ACD4 /* Correspondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F401BC6ABFA0046ACD4 /* Correspondences.cpp */; };
+		5D936F631BC6AC7A0046ACD4 /* Loader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F441BC6ABFA0046ACD4 /* Loader.cpp */; };
+		5D936F641BC6AC7A0046ACD4 /* UnidirectionalCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F451BC6ABFA0046ACD4 /* UnidirectionalCorrespondences.cpp */; };
+		5D936F651BC6AC7A0046ACD4 /* BlobTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F431BC6ABFA0046ACD4 /* BlobTracker6DOF.cpp */; };
+		5D936F671BC6AC7A0046ACD4 /* CorrespondenceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F3F1BC6ABFA0046ACD4 /* CorrespondenceManager.cpp */; };
+		5D936F681BC6AC7A0046ACD4 /* FeatureMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F421BC6ABFA0046ACD4 /* FeatureMap.cpp */; };
+		5D936F6B1BC6AC7A0046ACD4 /* CorrespondenceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F501BC6AC410046ACD4 /* CorrespondenceManager.h */; };
+		5D936F6C1BC6AC7A0046ACD4 /* BlobTracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F541BC6AC410046ACD4 /* BlobTracker6DOF.h */; };
+		5D936F6D1BC6AC7A0046ACD4 /* Loader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F551BC6AC410046ACD4 /* Loader.h */; };
+		5D936F6F1BC6AC7A0046ACD4 /* UnidirectionalCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F561BC6AC410046ACD4 /* UnidirectionalCorrespondences.h */; };
+		5D936F701BC6AC7A0046ACD4 /* Correspondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F511BC6AC410046ACD4 /* Correspondences.h */; };
+		5D936F711BC6AC7A0046ACD4 /* Blob.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F4F1BC6AC410046ACD4 /* Blob.h */; };
+		5D936F721BC6AC7A0046ACD4 /* FeatureMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F531BC6AC410046ACD4 /* FeatureMap.h */; };
+		5D98641B1D8B634100DEDB00 /* Correspondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F401BC6ABFA0046ACD4 /* Correspondences.cpp */; };
+		5D98641D1D8B634100DEDB00 /* Loader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F441BC6ABFA0046ACD4 /* Loader.cpp */; };
+		5D98641E1D8B634100DEDB00 /* UnidirectionalCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F451BC6ABFA0046ACD4 /* UnidirectionalCorrespondences.cpp */; };
+		5D98641F1D8B634100DEDB00 /* BlobTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F431BC6ABFA0046ACD4 /* BlobTracker6DOF.cpp */; };
+		5D9864211D8B634100DEDB00 /* CorrespondenceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F3F1BC6ABFA0046ACD4 /* CorrespondenceManager.cpp */; };
+		5D9864221D8B634100DEDB00 /* FeatureMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F421BC6ABFA0046ACD4 /* FeatureMap.cpp */; };
+		5D9864251D8B634100DEDB00 /* CorrespondenceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F501BC6AC410046ACD4 /* CorrespondenceManager.h */; };
+		5D9864261D8B634100DEDB00 /* BlobTracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F541BC6AC410046ACD4 /* BlobTracker6DOF.h */; };
+		5D9864271D8B634100DEDB00 /* Loader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F551BC6AC410046ACD4 /* Loader.h */; };
+		5D9864291D8B634100DEDB00 /* UnidirectionalCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F561BC6AC410046ACD4 /* UnidirectionalCorrespondences.h */; };
+		5D98642A1D8B634100DEDB00 /* Correspondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F511BC6AC410046ACD4 /* Correspondences.h */; };
+		5D98642B1D8B634100DEDB00 /* Blob.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F4F1BC6AC410046ACD4 /* Blob.h */; };
+		5D98642C1D8B634100DEDB00 /* FeatureMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F531BC6AC410046ACD4 /* FeatureMap.h */; };
+		C041EEDF1DABFBA900BF5D76 /* Correspondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F401BC6ABFA0046ACD4 /* Correspondences.cpp */; };
+		C041EEE11DABFBA900BF5D76 /* Loader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F441BC6ABFA0046ACD4 /* Loader.cpp */; };
+		C041EEE21DABFBA900BF5D76 /* UnidirectionalCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F451BC6ABFA0046ACD4 /* UnidirectionalCorrespondences.cpp */; };
+		C041EEE31DABFBA900BF5D76 /* BlobTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F431BC6ABFA0046ACD4 /* BlobTracker6DOF.cpp */; };
+		C041EEE51DABFBA900BF5D76 /* CorrespondenceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F3F1BC6ABFA0046ACD4 /* CorrespondenceManager.cpp */; };
+		C041EEE61DABFBA900BF5D76 /* FeatureMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D936F421BC6ABFA0046ACD4 /* FeatureMap.cpp */; };
+		C041EEE91DABFBA900BF5D76 /* CorrespondenceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F501BC6AC410046ACD4 /* CorrespondenceManager.h */; };
+		C041EEEA1DABFBA900BF5D76 /* BlobTracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F541BC6AC410046ACD4 /* BlobTracker6DOF.h */; };
+		C041EEEB1DABFBA900BF5D76 /* Loader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F551BC6AC410046ACD4 /* Loader.h */; };
+		C041EEED1DABFBA900BF5D76 /* UnidirectionalCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F561BC6AC410046ACD4 /* UnidirectionalCorrespondences.h */; };
+		C041EEEE1DABFBA900BF5D76 /* Correspondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F511BC6AC410046ACD4 /* Correspondences.h */; };
+		C041EEEF1DABFBA900BF5D76 /* Blob.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F4F1BC6AC410046ACD4 /* Blob.h */; };
+		C041EEF01DABFBA900BF5D76 /* FeatureMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936F531BC6AC410046ACD4 /* FeatureMap.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D936F2F1BC6AB1D0046ACD4 /* libOceanTrackingBlobD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingBlobD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D936F3F1BC6ABFA0046ACD4 /* CorrespondenceManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CorrespondenceManager.cpp; path = ../../../../../../impl/ocean/tracking/blob/CorrespondenceManager.cpp; sourceTree = "<group>"; };
+		5D936F401BC6ABFA0046ACD4 /* Correspondences.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Correspondences.cpp; path = ../../../../../../impl/ocean/tracking/blob/Correspondences.cpp; sourceTree = "<group>"; };
+		5D936F421BC6ABFA0046ACD4 /* FeatureMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FeatureMap.cpp; path = ../../../../../../impl/ocean/tracking/blob/FeatureMap.cpp; sourceTree = "<group>"; };
+		5D936F431BC6ABFA0046ACD4 /* BlobTracker6DOF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BlobTracker6DOF.cpp; path = ../../../../../../impl/ocean/tracking/blob/BlobTracker6DOF.cpp; sourceTree = "<group>"; };
+		5D936F441BC6ABFA0046ACD4 /* Loader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Loader.cpp; path = ../../../../../../impl/ocean/tracking/blob/Loader.cpp; sourceTree = "<group>"; };
+		5D936F451BC6ABFA0046ACD4 /* UnidirectionalCorrespondences.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnidirectionalCorrespondences.cpp; path = ../../../../../../impl/ocean/tracking/blob/UnidirectionalCorrespondences.cpp; sourceTree = "<group>"; };
+		5D936F4F1BC6AC410046ACD4 /* Blob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Blob.h; path = ../../../../../../impl/ocean/tracking/blob/Blob.h; sourceTree = "<group>"; };
+		5D936F501BC6AC410046ACD4 /* CorrespondenceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CorrespondenceManager.h; path = ../../../../../../impl/ocean/tracking/blob/CorrespondenceManager.h; sourceTree = "<group>"; };
+		5D936F511BC6AC410046ACD4 /* Correspondences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Correspondences.h; path = ../../../../../../impl/ocean/tracking/blob/Correspondences.h; sourceTree = "<group>"; };
+		5D936F531BC6AC410046ACD4 /* FeatureMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeatureMap.h; path = ../../../../../../impl/ocean/tracking/blob/FeatureMap.h; sourceTree = "<group>"; };
+		5D936F541BC6AC410046ACD4 /* BlobTracker6DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlobTracker6DOF.h; path = ../../../../../../impl/ocean/tracking/blob/BlobTracker6DOF.h; sourceTree = "<group>"; };
+		5D936F551BC6AC410046ACD4 /* Loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Loader.h; path = ../../../../../../impl/ocean/tracking/blob/Loader.h; sourceTree = "<group>"; };
+		5D936F561BC6AC410046ACD4 /* UnidirectionalCorrespondences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnidirectionalCorrespondences.h; path = ../../../../../../impl/ocean/tracking/blob/UnidirectionalCorrespondences.h; sourceTree = "<group>"; };
+		5D936F761BC6AC7A0046ACD4 /* libOceanTrackingBlobD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingBlobD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9864301D8B634100DEDB00 /* libOceanTrackingBlobD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingBlobD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C041EEF51DABFBA900BF5D76 /* libOceanTrackingBlobD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingBlobD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D936F2C1BC6AB1D0046ACD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936F691BC6AC7A0046ACD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9864231D8B634100DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EEE71DABFBA900BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D936F261BC6AB1D0046ACD4 = {
+			isa = PBXGroup;
+			children = (
+				5D936F4E1BC6AC300046ACD4 /* Header Files */,
+				5D936F3D1BC6ABE50046ACD4 /* Source Files */,
+				5D936F301BC6AB1D0046ACD4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D936F301BC6AB1D0046ACD4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D936F2F1BC6AB1D0046ACD4 /* libOceanTrackingBlobD.a */,
+				5D936F761BC6AC7A0046ACD4 /* libOceanTrackingBlobD.dylib */,
+				5D9864301D8B634100DEDB00 /* libOceanTrackingBlobD.a */,
+				C041EEF51DABFBA900BF5D76 /* libOceanTrackingBlobD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D936F3D1BC6ABE50046ACD4 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D936F3F1BC6ABFA0046ACD4 /* CorrespondenceManager.cpp */,
+				5D936F401BC6ABFA0046ACD4 /* Correspondences.cpp */,
+				5D936F421BC6ABFA0046ACD4 /* FeatureMap.cpp */,
+				5D936F431BC6ABFA0046ACD4 /* BlobTracker6DOF.cpp */,
+				5D936F441BC6ABFA0046ACD4 /* Loader.cpp */,
+				5D936F451BC6ABFA0046ACD4 /* UnidirectionalCorrespondences.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D936F4E1BC6AC300046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D936F4F1BC6AC410046ACD4 /* Blob.h */,
+				5D936F501BC6AC410046ACD4 /* CorrespondenceManager.h */,
+				5D936F511BC6AC410046ACD4 /* Correspondences.h */,
+				5D936F531BC6AC410046ACD4 /* FeatureMap.h */,
+				5D936F541BC6AC410046ACD4 /* BlobTracker6DOF.h */,
+				5D936F551BC6AC410046ACD4 /* Loader.h */,
+				5D936F561BC6AC410046ACD4 /* UnidirectionalCorrespondences.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D936F2D1BC6AB1D0046ACD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936F581BC6AC410046ACD4 /* CorrespondenceManager.h in Headers */,
+				5D936F5C1BC6AC410046ACD4 /* BlobTracker6DOF.h in Headers */,
+				5D936F5D1BC6AC410046ACD4 /* Loader.h in Headers */,
+				5D936F5E1BC6AC410046ACD4 /* UnidirectionalCorrespondences.h in Headers */,
+				5D936F591BC6AC410046ACD4 /* Correspondences.h in Headers */,
+				5D936F571BC6AC410046ACD4 /* Blob.h in Headers */,
+				5D936F5B1BC6AC410046ACD4 /* FeatureMap.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936F6A1BC6AC7A0046ACD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936F6B1BC6AC7A0046ACD4 /* CorrespondenceManager.h in Headers */,
+				5D936F6C1BC6AC7A0046ACD4 /* BlobTracker6DOF.h in Headers */,
+				5D936F6D1BC6AC7A0046ACD4 /* Loader.h in Headers */,
+				5D936F6F1BC6AC7A0046ACD4 /* UnidirectionalCorrespondences.h in Headers */,
+				5D936F701BC6AC7A0046ACD4 /* Correspondences.h in Headers */,
+				5D936F711BC6AC7A0046ACD4 /* Blob.h in Headers */,
+				5D936F721BC6AC7A0046ACD4 /* FeatureMap.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9864241D8B634100DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9864251D8B634100DEDB00 /* CorrespondenceManager.h in Headers */,
+				5D9864261D8B634100DEDB00 /* BlobTracker6DOF.h in Headers */,
+				5D9864271D8B634100DEDB00 /* Loader.h in Headers */,
+				5D9864291D8B634100DEDB00 /* UnidirectionalCorrespondences.h in Headers */,
+				5D98642A1D8B634100DEDB00 /* Correspondences.h in Headers */,
+				5D98642B1D8B634100DEDB00 /* Blob.h in Headers */,
+				5D98642C1D8B634100DEDB00 /* FeatureMap.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EEE81DABFBA900BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EEE91DABFBA900BF5D76 /* CorrespondenceManager.h in Headers */,
+				C041EEEA1DABFBA900BF5D76 /* BlobTracker6DOF.h in Headers */,
+				C041EEEB1DABFBA900BF5D76 /* Loader.h in Headers */,
+				C041EEED1DABFBA900BF5D76 /* UnidirectionalCorrespondences.h in Headers */,
+				C041EEEE1DABFBA900BF5D76 /* Correspondences.h in Headers */,
+				C041EEEF1DABFBA900BF5D76 /* Blob.h in Headers */,
+				C041EEF01DABFBA900BF5D76 /* FeatureMap.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D936F2E1BC6AB1D0046ACD4 /* trackingblob x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D936F3A1BC6AB1D0046ACD4 /* Build configuration list for PBXNativeTarget "trackingblob x64 (Static)" */;
+			buildPhases = (
+				5D936F2B1BC6AB1D0046ACD4 /* Sources */,
+				5D936F2C1BC6AB1D0046ACD4 /* Frameworks */,
+				5D936F2D1BC6AB1D0046ACD4 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "trackingblob x64 (Static)";
+			productName = trackingblob;
+			productReference = 5D936F2F1BC6AB1D0046ACD4 /* libOceanTrackingBlobD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D936F5F1BC6AC7A0046ACD4 /* trackingblob x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D936F731BC6AC7A0046ACD4 /* Build configuration list for PBXNativeTarget "trackingblob x64 (Shared)" */;
+			buildPhases = (
+				5D936F601BC6AC7A0046ACD4 /* Sources */,
+				5D936F691BC6AC7A0046ACD4 /* Frameworks */,
+				5D936F6A1BC6AC7A0046ACD4 /* Headers */,
+				C041EEF61DABFC6A00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "trackingblob x64 (Shared)";
+			productName = trackingblob;
+			productReference = 5D936F761BC6AC7A0046ACD4 /* libOceanTrackingBlobD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D9864191D8B634100DEDB00 /* trackingblob arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D98642D1D8B634100DEDB00 /* Build configuration list for PBXNativeTarget "trackingblob arm64 (Static)" */;
+			buildPhases = (
+				5D98641A1D8B634100DEDB00 /* Sources */,
+				5D9864231D8B634100DEDB00 /* Frameworks */,
+				5D9864241D8B634100DEDB00 /* Headers */,
+				5D837F5A1D8F10FD00939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "trackingblob arm64 (Static)";
+			productName = trackingblob;
+			productReference = 5D9864301D8B634100DEDB00 /* libOceanTrackingBlobD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EEDD1DABFBA900BF5D76 /* trackingblob arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EEF21DABFBA900BF5D76 /* Build configuration list for PBXNativeTarget "trackingblob arm64 (Shared)" */;
+			buildPhases = (
+				C041EEDE1DABFBA900BF5D76 /* Sources */,
+				C041EEE71DABFBA900BF5D76 /* Frameworks */,
+				C041EEE81DABFBA900BF5D76 /* Headers */,
+				C041EEF11DABFBA900BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "trackingblob arm64 (Shared)";
+			productName = trackingblob;
+			productReference = C041EEF51DABFBA900BF5D76 /* libOceanTrackingBlobD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D936F271BC6AB1D0046ACD4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = fayteq;
+				TargetAttributes = {
+					5D936F2E1BC6AB1D0046ACD4 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D936F2A1BC6AB1D0046ACD4 /* Build configuration list for PBXProject "trackingblob" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D936F261BC6AB1D0046ACD4;
+			productRefGroup = 5D936F301BC6AB1D0046ACD4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D936F2E1BC6AB1D0046ACD4 /* trackingblob x64 (Static) */,
+				5D936F5F1BC6AC7A0046ACD4 /* trackingblob x64 (Shared) */,
+				5D9864191D8B634100DEDB00 /* trackingblob arm64 (Static) */,
+				C041EEDD1DABFBA900BF5D76 /* trackingblob arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F5A1D8F10FD00939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EEF11DABFBA900BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EEF61DABFC6A00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D936F2B1BC6AB1D0046ACD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936F481BC6ABFA0046ACD4 /* Correspondences.cpp in Sources */,
+				5D936F4C1BC6ABFA0046ACD4 /* Loader.cpp in Sources */,
+				5D936F4D1BC6ABFA0046ACD4 /* UnidirectionalCorrespondences.cpp in Sources */,
+				5D936F4B1BC6ABFA0046ACD4 /* BlobTracker6DOF.cpp in Sources */,
+				5D936F471BC6ABFA0046ACD4 /* CorrespondenceManager.cpp in Sources */,
+				5D936F4A1BC6ABFA0046ACD4 /* FeatureMap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936F601BC6AC7A0046ACD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936F611BC6AC7A0046ACD4 /* Correspondences.cpp in Sources */,
+				5D936F631BC6AC7A0046ACD4 /* Loader.cpp in Sources */,
+				5D936F641BC6AC7A0046ACD4 /* UnidirectionalCorrespondences.cpp in Sources */,
+				5D936F651BC6AC7A0046ACD4 /* BlobTracker6DOF.cpp in Sources */,
+				5D936F671BC6AC7A0046ACD4 /* CorrespondenceManager.cpp in Sources */,
+				5D936F681BC6AC7A0046ACD4 /* FeatureMap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98641A1D8B634100DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D98641B1D8B634100DEDB00 /* Correspondences.cpp in Sources */,
+				5D98641D1D8B634100DEDB00 /* Loader.cpp in Sources */,
+				5D98641E1D8B634100DEDB00 /* UnidirectionalCorrespondences.cpp in Sources */,
+				5D98641F1D8B634100DEDB00 /* BlobTracker6DOF.cpp in Sources */,
+				5D9864211D8B634100DEDB00 /* CorrespondenceManager.cpp in Sources */,
+				5D9864221D8B634100DEDB00 /* FeatureMap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EEDE1DABFBA900BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EEDF1DABFBA900BF5D76 /* Correspondences.cpp in Sources */,
+				C041EEE11DABFBA900BF5D76 /* Loader.cpp in Sources */,
+				C041EEE21DABFBA900BF5D76 /* UnidirectionalCorrespondences.cpp in Sources */,
+				C041EEE31DABFBA900BF5D76 /* BlobTracker6DOF.cpp in Sources */,
+				C041EEE51DABFBA900BF5D76 /* CorrespondenceManager.cpp in Sources */,
+				C041EEE61DABFBA900BF5D76 /* FeatureMap.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D936F381BC6AB1D0046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D936F391BC6AB1D0046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D936F3B1BC6AB1D0046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/trackingblob/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/trackingblob/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingBlobD;
+				PRODUCT_NAME = OceanTrackingBlobD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D936F3C1BC6AB1D0046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/trackingblob/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/trackingblob/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingBlob;
+				PRODUCT_NAME = OceanTrackingBlob;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D936F741BC6AC7A0046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/trackingblob/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/trackingblob/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVDetectorBlobD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanTrackingD",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingBlobD;
+				PRODUCT_NAME = OceanTrackingBlobD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D936F751BC6AC7A0046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/trackingblob/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/trackingblob/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVDetectorBlob",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanTracking",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingBlob;
+				PRODUCT_NAME = OceanTrackingBlob;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D98642E1D8B634100DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingBlobD;
+				PRODUCT_NAME = OceanTrackingBlobD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D98642F1D8B634100DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingBlob;
+				PRODUCT_NAME = OceanTrackingBlob;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EEF31DABFBA900BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVDetectorBlobD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanTrackingD",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingBlobD;
+				PRODUCT_NAME = OceanTrackingBlobD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041EEF41DABFBA900BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVDetectorBlob",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanTracking",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingBlob;
+				PRODUCT_NAME = OceanTrackingBlob;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/trackingblob/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D936F2A1BC6AB1D0046ACD4 /* Build configuration list for PBXProject "trackingblob" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936F381BC6AB1D0046ACD4 /* Debug */,
+				5D936F391BC6AB1D0046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D936F3A1BC6AB1D0046ACD4 /* Build configuration list for PBXNativeTarget "trackingblob x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936F3B1BC6AB1D0046ACD4 /* Debug */,
+				5D936F3C1BC6AB1D0046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D936F731BC6AC7A0046ACD4 /* Build configuration list for PBXNativeTarget "trackingblob x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936F741BC6AC7A0046ACD4 /* Debug */,
+				5D936F751BC6AC7A0046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D98642D1D8B634100DEDB00 /* Build configuration list for PBXNativeTarget "trackingblob arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D98642E1D8B634100DEDB00 /* Debug */,
+				5D98642F1D8B634100DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EEF21DABFBA900BF5D76 /* Build configuration list for PBXNativeTarget "trackingblob arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EEF31DABFBA900BF5D76 /* Debug */,
+				C041EEF41DABFBA900BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D936F271BC6AB1D0046ACD4 /* Project object */;
+}

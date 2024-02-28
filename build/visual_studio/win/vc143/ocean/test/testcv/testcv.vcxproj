@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Shared Debug|Win32">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|x64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|Win32">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|x64">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|Win32">
+      <Configuration>Shared Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|x64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|Win32">
+      <Configuration>Static Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|Win32">
+      <Configuration>Static Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|x64">
+      <Configuration>Static Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|Win32">
+      <Configuration>Static Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x64">
+      <Configuration>Static Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{24453264-0ADA-48C9-945E-A4C486D85663}</ProjectGuid>
+    <RootNamespace>testcv</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testcv_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testcv_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testcv_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testcv_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testcv_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testcv_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testcv_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testcv_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testcv_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testcv_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testcv_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testcv_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30128.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestBresenham.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestCanvas.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameBlender.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameChannels.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterABGR32.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterARGB32.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR32.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR565.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGRA32.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB32.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGBA32.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGBA64.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGGB10_Packed.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterThreshold.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterUYVY16.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY10_Packed.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY32.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterYA16.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterYUVA32.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterYUYV16.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterYVU24.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_V_U12.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterCanny.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterGaussian.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterMax.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterMin.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterScharrMagnitude.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterSeparable.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterSobelMagnitude.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterSorted.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterTemplate.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameInterpolator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameInterpolatorBilinearAlpha.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameInterpolatorNearestPixel.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameMean.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameMinMax.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameNorm.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameNormalizer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameOperations.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFramePyramid.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameShrinkerAlpha.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameTransposer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameVariance.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestHistogram.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestMaskAnalyzer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestNonMaximumSuppression.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestPixelBoundingBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestSSE.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestSumAbsoluteDifferences.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY8.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_U_V12.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_U_V24.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_VU12.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterDilation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterErosion.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR24.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB24.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterYUV24.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_UV12.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameEnlarger.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterGradient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterLaplace.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterMean.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterMedian.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterPrewitt.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterScharr.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterSobel.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameInterpolatorBicubic.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameInterpolatorBilinear.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameShrinker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestIntegralImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestMotion.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestPixelPosition.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestCV.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestEigenUtilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestSumSquareDifferences.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestUtilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestZeroMeanSumSquareDifferences.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameInverter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB565.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestImageQuality.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestBresenham.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestCanvas.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameBlender.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameChannels.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterABGR32.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterARGB32.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR32.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR565.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGRA32.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB32.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGBA32.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGBA64.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGGB10_Packed.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterThreshold.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterUYVY16.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY10_Packed.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY32.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterYA16.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterYUVA32.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterYUYV16.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterYVU24.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_V_U12.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterCanny.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterGaussian.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterMax.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterMin.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterScharrMagnitude.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterSeparable.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterSobelMagnitude.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterSorted.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterTemplate.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameInterpolator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameInterpolatorBilinearAlpha.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameInterpolatorNearestPixel.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameMean.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameMinMax.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameNorm.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameNormalizer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameOperations.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFramePyramid.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameShrinkerAlpha.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameTransposer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameVariance.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestHistogram.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestMaskAnalyzer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestNonMaximumSuppression.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestPixelBoundingBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestSSE.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestSumAbsoluteDifferences.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverter.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY8.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_U_V12.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_U_V24.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_VU12.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterDilation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterErosion.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterScharr.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestMotion.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR24.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB24.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterYUV24.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_UV12.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameEnlarger.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilter.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterGradient.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterLaplace.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterMean.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterMedian.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterPrewitt.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterSobel.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameInterpolatorBicubic.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameInterpolatorBilinear.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameShrinker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestIntegralImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestPixelPosition.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestCV.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestEigenUtilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestSumSquareDifferences.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestUtilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestZeroMeanSumSquareDifferences.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameInverter.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB565.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestImageQuality.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

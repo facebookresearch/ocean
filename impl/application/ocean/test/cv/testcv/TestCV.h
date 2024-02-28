@@ -1,0 +1,17 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#ifndef FACEBOOK_APPLICATION_OCEAN_TEST_CV_TESTCV_TEST_CV_H
+#define FACEBOOK_APPLICATION_OCEAN_TEST_CV_TESTCV_TEST_CV_H
+
+#include "application/ocean/test/cv/ApplicationTestCV.h"
+
+/**
+ * @ingroup applicationtestcv
+ * @defgroup applicationtestcvtestcv Computer Vision Test
+ * @{
+ * The test application validates the accuracy and measures the performance of the Computer Vision library.<br>
+ * This application is almost platform independent and is available on desktop platforms like e.g., Windows or OS X.<br>
+ * @}
+ */
+
+#endif // FACEBOOK_APPLICATION_OCEAN_TEST_CV_TESTCV_TEST_CV_H

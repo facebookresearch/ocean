@@ -1,0 +1,58 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#ifndef META_OCEAN_SCENEDESCRIPTION_SDX_X3D_GROUP_H
+#define META_OCEAN_SCENEDESCRIPTION_SDX_X3D_GROUP_H
+
+#include "ocean/scenedescription/sdx/x3d/X3D.h"
+#include "ocean/scenedescription/sdx/x3d/X3DGroupingNode.h"
+
+namespace Ocean
+{
+
+namespace SceneDescription
+{
+
+namespace SDX
+{
+
+namespace X3D
+{
+
+/**
+ * This class implements a x3d group node.
+ * @ingroup scenedescriptionsdxx3d
+ */
+class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT Group : virtual public X3DGroupingNode
+{
+	public:
+
+		/**
+		 * Creates a new x3d group node.
+		 * @param environment Node environment
+		 */
+		explicit Group(const SDXEnvironment* environment);
+
+	protected:
+
+		/**
+		 * Specifies the node type and the fields of this node.
+		 * @return Unique node specification of this node
+		 */
+		NodeSpecification specifyNode();
+
+		/**
+		 * Returns the address of the most derived object.
+		 * @see Node::objectAddress().
+		 */
+		size_t objectAddress() const override;
+};
+
+}
+
+}
+
+}
+
+}
+
+#endif // META_OCEAN_SCENEDESCRIPTION_SDX_X3D_GROUP_H

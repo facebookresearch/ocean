@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Ocean Demo Geometry MultiViewCalibration</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationdemogeometrymultiviewcalibration_build_imported>True</ocean_applicationdemogeometrymultiviewcalibration_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_applicationdemogeometry_build_imported)' != 'True'" Project="..\..\application_demo_geometry_build.props"/>
+    <Import Condition="'$(ocean_application_console_build_imported)' != 'True'" Project="..\..\..\..\application_console_build.props" />
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\base\base_use.props" />
+    <Import Condition="'$(ocean_cvadvanced_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\cv\advanced\cvadvanced_use.props" />
+    <Import Condition="'$(ocean_cvdepth_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\cv\depth\cvdepth_use.props" />
+    <Import Condition="'$(ocean_cvdetector_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\cv\detector\cvdetector_use.props" />
+    <Import Condition="'$(ocean_geometry_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\geometry\geometry_use.props" />
+    <Import Condition="'$(ocean_io_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\io\io_use.props" />
+    <Import Condition="'$(ocean_ioimage_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\io\image\ioimage_use.props" />
+    <Import Condition="'$(ocean_platformwin_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\platform\win\platformwin_use.props" />
+    <Import Condition="'$(ocean_supportcvdepth_use_imported)' != 'True'" Project="..\..\..\..\..\..\application\ocean\support\cv\depth\supportcvdepth_use.props" />
+    <Import Condition="'$(ocean_tracking_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\tracking\tracking_use.props" />
+  </ImportGroup>
+</Project>

@@ -1,0 +1,30 @@
+#OX3D V3.0 utf8
+
+TrackerTransform
+{
+	tracker "Pattern 6DOF Tracker"
+	trackerInput "BACKGROUND"
+
+	object "sift400x320.bmp"
+	objectSize 0.275 0 0
+
+	alwaysVisible FALSE
+
+	children
+	[
+		Transform
+		{
+			translation 0.1375 0.0 0.105
+			scale 0.1 0.1 0.1
+			rotation 0 1 0 -1.17079632679
+
+			children DEF TRANSFORM Transform
+			{
+				children Inline
+				{
+					url "trex.obj"
+				}
+			}
+		}
+	]
+}

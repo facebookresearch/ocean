@@ -1,0 +1,136 @@
+#OX3D V3.0 utf8
+
+HeadUpTransform # Ocean-specific node
+{
+	children Transform
+	{
+		# moving 1 meter in front of the users/view
+		translation 0 0 -1
+
+		children
+		[
+			TrackerTransform # Ocean-specific node
+			{
+				# use one of the following trackers
+				tracker
+				[
+					"IOS 3DOF Gravity Tracker",
+					"Android 3DOF Gravity Tracker"
+				]
+
+				insideOut TRUE
+
+				children
+				[
+					# negative y-axis
+					Transform
+					{
+						translation 0 -0.255 0
+
+						children Shape
+						{
+							geometry Cylinder
+							{
+								height 0.45
+								radius 0.025
+							}
+
+							appearance Appearance
+							{
+								material Material
+								{
+									diffuseColor 0 1 1
+								}
+							}
+						}
+					}
+
+					Transform
+					{
+						translation 0 -0.5 0
+						rotation 1 0 0 3.14159
+
+						children Shape
+						{
+							geometry Cone
+							{
+								height 0.05
+								bottomRadius 0.05
+							}
+
+							appearance Appearance
+							{
+								material Material
+								{
+									diffuseColor 0 1 1
+								}
+							}
+						}
+					}
+				]
+			}
+
+			TrackerTransform # Ocean-specific node
+			{
+				# use one of the following trackers
+				tracker
+				[
+					"IOS 3DOF Heading Tracker",
+					"Android 3DOF Heading Tracker"
+				]
+
+				insideOut TRUE
+
+				children
+				[
+					# negative y-axis
+					Transform
+					{
+						translation 0 0 -0.255
+						rotation 1 0 0 -1.570796
+
+						children Shape
+						{
+							geometry Cylinder
+							{
+								height 0.45
+								radius 0.025
+							}
+
+							appearance Appearance
+							{
+								material Material
+								{
+									diffuseColor 1 1 0
+								}
+							}
+						}
+					}
+
+					Transform
+					{
+						translation 0 0 -0.5
+						rotation 1 0 0 -1.570796
+
+						children Shape
+						{
+							geometry Cone
+							{
+								height 0.05
+								bottomRadius 0.05
+							}
+
+							appearance Appearance
+							{
+								material Material
+								{
+									diffuseColor 1 1 0
+								}
+							}
+						}
+					}
+				]
+			}
+		]
+	}
+}

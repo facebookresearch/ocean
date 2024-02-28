@@ -1,0 +1,54 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#import "ViewController.h"
+
+#include "ocean/base/Messenger.h"
+#include "ocean/base/StringApple.h"
+
+#include "ocean/platform/apple/Resource.h"
+
+#include "ocean/test/testcv/testdetector/testqrcodes/TestCVDetectorQRCodes.h"
+
+using namespace Ocean;
+
+@interface ViewController ()
+@end
+
+@implementation ViewController
+
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+
+	Messenger::get().setOutputType(Messenger::OUTPUT_QUEUED);
+
+	// define the number of seconds each test is applied
+	const double testDurations = 2.0;
+
+	// define the subset of functions which will be invoked, an empty set invokes all functions
+	const std::string testFunctions = "";
+
+	// we seek for the resource file containing the media file
+	const std::wstring testMediaFilename = Platform::Apple::Resource::resourcePath(L"sift800x640", L"bmp");
+
+	Test::TestCV::TestDetector::TestQRCodes::testCVDetectorQRCodesAsynchronous(testDurations, testFunctions);
+
+	[NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(timerTicked:) userInfo:nil repeats:YES];
+}
+
+- (void)timerTicked:(NSTimer*)timer
+{
+	const std::string message(Messenger::get().popMessage());
+
+	if (!message.empty())
+	{
+		[_controllerTextView setText:[[_controllerTextView text] stringByAppendingString:StringApple::toNSString(message + std::string("\n"))]];
+	}
+}
+
+- (void)didReceiveMemoryWarning
+{
+	[super didReceiveMemoryWarning];
+}
+
+@end

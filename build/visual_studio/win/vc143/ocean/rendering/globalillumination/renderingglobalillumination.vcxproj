@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Shared Debug|Win32">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|x64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|Win32">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|x64">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|Win32">
+      <Configuration>Shared Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|x64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|Win32">
+      <Configuration>Static Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|Win32">
+      <Configuration>Static Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|x64">
+      <Configuration>Static Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|Win32">
+      <Configuration>Static Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x64">
+      <Configuration>Static Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C998B23E-9607-4F31-84C4-779B11D3B43B}</ProjectGuid>
+    <RootNamespace>renderingglobalillumination</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="renderingglobalillumination_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\..\..\..\..\res\ocean\rendering\globalillumination\win\renderingglobalillumination.rc">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIAttributeSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIBitmapFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GICone.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GICylinder.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIEngine.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIFactory.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIGeometry.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIGroup.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIIndependentPrimitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GILightSource.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIMediaTexture2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GISpotLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIStripPrimitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITriangleStrips.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIMaterial.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GINode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIPerspectiveView.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIPointLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIPrimitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIRenderable.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIScene.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIShape.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GISphere.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITexture.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITexture2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITextures.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITransform.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITriangles.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIVertexSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIView.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIWindowFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GlobalIllumination.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\Lighting.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\Plugin.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\RayIntersection.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingGroup.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingMesh.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingSphere.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIAttributeSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIBitmapFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GICone.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GICylinder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIEngine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIFactory.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIGeometry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIGroup.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIIndependentPrimitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GILightSource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIMediaTexture2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GISpotLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIStripPrimitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITriangleStrips.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIMaterial.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GINode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIPerspectiveView.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIPointLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIPrimitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIRenderable.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIScene.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIShape.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GISphere.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITexture.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITexture2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITextures.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITransform.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GITriangles.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIVertexSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIView.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GIWindowFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\GlobalIllumination.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\Lighting.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\Plugin.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingGroup.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingMesh.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\globalillumination\TracingSphere.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

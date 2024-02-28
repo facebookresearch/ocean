@@ -1,0 +1,72 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#include "ocean/base/OceanManager.h"
+
+namespace Ocean
+{
+
+OceanManager::OceanManager()
+{
+	// nothing to do here
+}
+
+OceanManager::~OceanManager()
+{
+	shutdown();
+}
+
+OceanManager& OceanManager::get()
+{
+	static OceanManager* singletonManager = nullptr;
+
+	if (!singletonManager)
+	{
+		static Lock lock;
+		const ScopedLock scopedLock(lock);
+
+		if (!singletonManager)
+		{
+			singletonManager = new OceanManager();
+			std::atexit(internalRelease);
+		}
+	}
+
+	return *singletonManager;
+}
+
+void OceanManager::registerSingleton(const SingletonDestroyFunction& destroySingleton)
+{
+	ocean_assert(destroySingleton);
+
+	const ScopedLock scopedLock(lock_);
+
+#ifdef OCEAN_DEBUG
+	for (const SingletonDestroyFunction& object : singletonDestroyFunctions_)
+	{
+		ocean_assert(object != destroySingleton);
+	}
+#endif
+
+	singletonDestroyFunctions_.push_back(destroySingleton);
+}
+
+void OceanManager::shutdown()
+{
+	const ScopedLock scopedLock(lock_);
+
+	// we destroy all singleton in reverse order
+
+	for (SingletonDestroyFunctions::const_reverse_iterator i = singletonDestroyFunctions_.rbegin(); i != singletonDestroyFunctions_.rend(); ++i)
+	{
+		(*i)();
+	}
+
+	singletonDestroyFunctions_.clear();
+}
+
+void OceanManager::internalRelease()
+{
+	delete &get();
+}
+
+}

@@ -1,0 +1,85 @@
+#OX3D V3.0 utf8
+
+# (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+Transform
+{
+	translation -0.75 0 -5
+
+	children
+	[
+		Shape
+		{
+			geometry Box
+			{
+				size 1 1 1
+			}
+
+			appearance Appearance
+			{
+				texture LiveVideoTexture
+				{
+					url
+					[
+						"LiveVideoId:0"
+					]
+				}
+			}
+		}
+
+		Shape
+		{
+			geometry Text
+			{
+				string [" LiveVideoId:0 ", " not supported "]
+
+				fontStyle FontStyle
+				{
+					justify ["MIDDLE", "MIDDLE"]
+					size 0.1
+				}
+			}
+		}
+	]
+}
+
+Transform
+{
+	translation 0.75 0 -5
+
+	children
+	[
+		Shape
+		{
+			geometry Box
+			{
+				size 1 1 1
+			}
+
+			appearance Appearance
+			{
+				texture LiveVideoTexture
+				{
+					url
+					[
+						"LiveVideoId:1"
+					]
+				}
+			}
+		}
+
+		Shape
+		{
+			geometry Text
+			{
+				string [" LiveVideoId:1 ", " not supported "]
+
+				fontStyle FontStyle
+				{
+					justify ["MIDDLE", "MIDDLE"]
+					size 0.1
+				}
+			}
+		}
+	]
+}

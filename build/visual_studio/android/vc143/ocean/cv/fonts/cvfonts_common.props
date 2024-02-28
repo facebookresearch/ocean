@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Ocean CV Fonts (Common)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_cvfonts_common_imported>True</ocean_cvfonts_common_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\base\base_use.props"/>
+    <Import Condition="'$(ocean_cv_use_imported)' != 'True'" Project="..\..\cv\cv_use.props"/>
+    <Import Condition="'$(ocean_io_use_imported)' != 'True'" Project="..\..\io\io_use.props"/>
+    <Import Condition="'$(ocean_math_use_imported)' != 'True'" Project="..\..\math\math_use.props"/>
+  </ImportGroup>
+
+  <ItemDefinitionGroup>
+	  <ClCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\2.10\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64' Or '$(Configuration)|$(Platform)'=='Shared Debug|ARM64'">
+    <Link>
+      <LibraryDependencies>freetype;png;zlib;%(LibraryDependencies)</LibraryDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\2.10\lib\android_arm64_cl50_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\android_arm64_cl50_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\android_arm64_cl50_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM' Or '$(Configuration)|$(Platform)'=='Shared Debug|ARM'">
+    <Link>
+      <LibraryDependencies>freetype;png;zlib;%(LibraryDependencies)</LibraryDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\2.10\lib\android_arm_cl50_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\android_arm_cl50_static_debug;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\android_arm_cl50_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|ARM64' Or '$(Configuration)|$(Platform)'=='Shared Profile|ARM64' Or '$(Configuration)|$(Platform)'=='Static Release|ARM64' Or '$(Configuration)|$(Platform)'=='Shared Release|ARM64'">
+    <Link>
+	    <LibraryDependencies>freetype;png;zlib;%(LibraryDependencies)</LibraryDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\2.10\lib\android_arm64_cl50_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\android_arm64_cl50_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\android_arm64_cl50_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|ARM' Or '$(Configuration)|$(Platform)'=='Shared Profile|ARM' Or '$(Configuration)|$(Platform)'=='Static Release|ARM' Or '$(Configuration)|$(Platform)'=='Shared Release|ARM'">
+    <Link>
+	    <LibraryDependencies>freetype;png;zlib;%(LibraryDependencies)</LibraryDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\freetype\2.10\lib\android_arm_cl50_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\libpng\lib\android_arm_cl50_static;$(OCEAN_DEVELOPMENT_PATH)\3rdparty\zlib\lib\android_arm_cl50_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

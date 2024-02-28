@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F6B3F41F-26DB-48CA-89C8-05CC12292023}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>scenedescriptionsdxx3d</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>scenedescriptionsdxx3d</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="scenedescriptionsdxx3d_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="scenedescriptionsdxx3d_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="scenedescriptionsdxx3d_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="scenedescriptionsdxx3d_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Appearance.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\AudioClip.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Background.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Billboard.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\BooleanFilter.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\BooleanToggle.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\BooleanTrigger.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Box.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ClassicParser.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ClassicScanner.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Color.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ColorInterpolator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ComposedShader.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Cone.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Coordinate.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\CoordinateInterpolator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Cylinder.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\DirectionalLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Factory.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\FontStyle.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Group.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\HeadUpTransform.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ImageTexture.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\IndexedFaceSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\IndexedLineSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Inline.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\LiveVideoTexture.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\LOD.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Material.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\MovieTexture.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\MultiTexture.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\MultiTextureTransform.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\NavigationInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Normal.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\NormalInterpolator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\OrientationInterpolator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\PackagedShader.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\PhantomTextureCoordinate.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Plugin.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\PointLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\PointSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\PositionInterpolator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\PositionInterpolator2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ProximitySensor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ScalarInterpolator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ShaderPart.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ShaderProgram.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Shape.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Sphere.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\SpotLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\StaticGroup.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Switch.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Text.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TextureCoordinate.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TextureProperties.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TextureTransform.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TimeSensor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TimeTrigger.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TouchSensor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TrackerTransform.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Transform.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Utilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Viewpoint.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\WorldInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3D.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DAppearanceChildNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DAppearanceNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DBackgroundNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DBindableNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DBoundedObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DChildNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DColorNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DComposedGeometryNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DCoordinateNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DEnvironmentalSensorNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DFontStyleNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DGeometricPropertyNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DGeometryNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DGroupingNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DInfoNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DInterpolatorNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DLibrary.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DLightNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DMaterialNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DNormalNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DPointingDeviceSensorNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DProgrammableShaderObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DScene.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DSensorNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DShaderNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DShapeNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DSoundSourceNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DTexture2DNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DTextureCoordinateNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DTextureNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DTextureTransformNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DTimeDependentNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DTouchSensorNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DUrlObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DViewpointNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\XMLParser.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Appearance.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\AudioClip.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Background.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Billboard.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\BooleanFilter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\BooleanToggle.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\BooleanTrigger.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Box.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ClassicParser.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ClassicScanner.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Color.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ColorInterpolator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ComposedShader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Cone.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Coordinate.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\CoordinateInterpolator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Cylinder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\DirectionalLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Factory.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\FontStyle.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Group.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\HeadUpTransform.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ImageTexture.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\IndexedFaceSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\IndexedLineSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Inline.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\LiveVideoTexture.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\LOD.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Material.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\MovieTexture.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\MultiTexture.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\MultiTextureTransform.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\NavigationInfo.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Normal.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\NormalInterpolator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\OrientationInterpolator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\PackagedShader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\PhantomTextureCoordinate.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Plugin.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\PointLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\PointSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\PositionInterpolator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\PositionInterpolator2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ProximitySensor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ScalarInterpolator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ShaderPart.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\ShaderProgram.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Shape.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Sphere.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\SpotLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\StaticGroup.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Switch.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Text.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TextureCoordinate.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TextureProperties.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TextureTransform.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TimeSensor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TimeTrigger.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TouchSensor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\TrackerTransform.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Transform.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Utilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\Viewpoint.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\WorldInfo.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DAppearanceChildNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DAppearanceNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DBackgroundNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DBindableNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DBoundedObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DChildNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DColorNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DComposedGeometryNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DCoordinateNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DEnvironmentalSensorNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DFontStyleNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DGeometricPropertyNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DGeometryNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DGroupingNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DInfoNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DInterpolatorNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DLibrary.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DLightNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DMaterialNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DNormalNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DPointingDeviceSensorNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DProgrammableShaderObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DScene.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DSensorNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DShaderNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DShapeNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DSoundSourceNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DTexture2DNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DTextureCoordinateNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DTextureNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DTextureTransformNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DTimeDependentNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DTouchSensorNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DUrlObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\X3DViewpointNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\XMLParser.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

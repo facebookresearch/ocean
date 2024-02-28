@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3985BD7C-2998-4582-9AAD-7339D7DB4723}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>media</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>media</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="media_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="media_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="media_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="media_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\Audio.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\BufferImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\BufferImageRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\BufferRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\ConfigMedium.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\ExplicitRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\FileRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\FiniteMedium.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\FrameCollection.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\FrameMedium.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\FrameMemoryRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\FrameRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\Image.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\ImageFileSequence.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\ImageRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\ImageSequence.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\ImageSequenceFrameProviderInterface.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\ImageSequenceRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\ImageSequenceStereoImageProvider.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\ImplicitRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\Library.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\LiveAudio.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\LiveMedium.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\LiveVideo.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\Manager.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\Medium.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\MediumRef.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\Microphone.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\Movie.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\MovieFrameProvider.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\MovieFrameProviderInterface.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\MovieRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\PixelImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\Recorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\SoundMedium.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\media\Utilities.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\Audio.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\BufferImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\BufferImageRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\BufferRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\ConfigMedium.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\ExplicitRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\FileRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\FiniteMedium.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\FrameCollection.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\FrameMedium.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\FrameMemoryRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\FrameRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\Image.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\ImageFileSequence.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\ImageRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\ImageSequence.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\ImageSequenceFrameProviderInterface.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\ImageSequenceRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\ImageSequenceStereoImageProvider.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\ImplicitRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\Library.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\LiveAudio.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\LiveMedium.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\LiveVideo.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\Manager.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\Media.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\Medium.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\MediumRef.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\Microphone.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\Movie.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\MovieFrameProvider.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\MovieFrameProviderInterface.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\MovieRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\PixelImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\Recorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\SoundMedium.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\StereoImageProviderInterface.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\media\Utilities.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

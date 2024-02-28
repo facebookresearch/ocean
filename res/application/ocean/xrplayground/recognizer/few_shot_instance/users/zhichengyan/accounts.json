@@ -1,0 +1,108 @@
+{
+  "userName": "Zhicheng Yan",
+  "accessToken": "d2433a67-5ac9-42f9-9bb7-0e10280ac785",
+  "classificationRoiFeatures": "recognizer/few_shot_instance/users/zhichengyan/classification_roi_features.bin",
+  "localizationRoiFeatures": "recognizer/few_shot_instance/users/zhichengyan/localization_roi_features.bin",
+  "devices": [
+    {
+      "deviceType": "KasaSmartLightStrip",
+      "deviceId": "5007667e-bb22-42af-9f1f-4f21b8d3ef09",
+      "deviceName": "Light strip for cabinet"
+    },
+    {
+      "deviceType": "Ecobee3Lite",
+      "deviceId": "6b0f8a69-58d0-4a81-9c0f-889ec97fc19c",
+      "deviceName": "Ecobee3"
+    },
+    {
+      "deviceType": "JetBotRobotVacuum",
+      "deviceId": "1eba9a7d-761b-8139-1438-02b0e54f3254",
+      "deviceName": "JetBot vaccum"
+    },
+    {
+      "deviceType": "SonosOneGen2",
+      "deviceId": "d963268a-4487-48e9-8d7f-0bd9fe6f1712",
+      "deviceName": "Sonos One"
+    },
+    {
+      "deviceType": "KasaSmartLightBulb",
+      "deviceId": "17792144-0048-49bb-98b6-e756d1f7cd18",
+      "deviceName": "Bulb for table lamp"
+    },
+    {
+      "deviceType": "KasaSmartLightStrip",
+      "deviceId": "43693b66-6d25-4794-9729-d5daba7c6179",
+      "deviceName": "Light strip by fireplace"
+    },
+    {
+      "deviceType": "KasaSmartPlugMini",
+      "deviceId": "28863f7c-64f0-4f33-8432-8208bd18a679",
+      "deviceName": "Plug for floor lamp"
+    }
+  ],
+  "deviceViews": [
+    {
+      "deviceId": "5007667e-bb22-42af-9f1f-4f21b8d3ef09"
+    },
+    {
+      "deviceId": "5007667e-bb22-42af-9f1f-4f21b8d3ef09"
+    },
+    {
+      "deviceId": "5007667e-bb22-42af-9f1f-4f21b8d3ef09"
+    },
+    {
+      "deviceId": "6b0f8a69-58d0-4a81-9c0f-889ec97fc19c"
+    },
+    {
+      "deviceId": "6b0f8a69-58d0-4a81-9c0f-889ec97fc19c"
+    },
+    {
+      "deviceId": "6b0f8a69-58d0-4a81-9c0f-889ec97fc19c"
+    },
+    {
+      "deviceId": "1eba9a7d-761b-8139-1438-02b0e54f3254"
+    },
+    {
+      "deviceId": "1eba9a7d-761b-8139-1438-02b0e54f3254"
+    },
+    {
+      "deviceId": "1eba9a7d-761b-8139-1438-02b0e54f3254"
+    },
+    {
+      "deviceId": "d963268a-4487-48e9-8d7f-0bd9fe6f1712"
+    },
+    {
+      "deviceId": "d963268a-4487-48e9-8d7f-0bd9fe6f1712"
+    },
+    {
+      "deviceId": "d963268a-4487-48e9-8d7f-0bd9fe6f1712"
+    },
+    {
+      "deviceId": "17792144-0048-49bb-98b6-e756d1f7cd18"
+    },
+    {
+      "deviceId": "17792144-0048-49bb-98b6-e756d1f7cd18"
+    },
+    {
+      "deviceId": "17792144-0048-49bb-98b6-e756d1f7cd18"
+    },
+    {
+      "deviceId": "43693b66-6d25-4794-9729-d5daba7c6179"
+    },
+    {
+      "deviceId": "43693b66-6d25-4794-9729-d5daba7c6179"
+    },
+    {
+      "deviceId": "43693b66-6d25-4794-9729-d5daba7c6179"
+    },
+    {
+      "deviceId": "28863f7c-64f0-4f33-8432-8208bd18a679"
+    },
+    {
+      "deviceId": "28863f7c-64f0-4f33-8432-8208bd18a679"
+    },
+    {
+      "deviceId": "28863f7c-64f0-4f33-8432-8208bd18a679"
+    }
+  ]
+}

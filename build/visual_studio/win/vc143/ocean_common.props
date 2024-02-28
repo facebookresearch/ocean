@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Ocean (Common)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_common_imported>True</ocean_common_imported>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\impl</AdditionalIncludeDirectories>
+      <WarningLevel>Level4</WarningLevel>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+
+      <!-- C5038: data member 'member1' will be initialized after data member 'member2' -->
+      <!-- C4062: enumerator 'identifier' in switch of enum 'enumeration' is not handled -->
+      <!-- C4265: 'class': class has virtual functions, but destructor is not virtual -->
+      <!-- C5266: 'const' qualifier on return type has no effect -->
+      <AdditionalOptions>/permissive- /w15038 /w44062 /w34265 /w45266 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <MinimalRebuild>false</MinimalRebuild>
+
+      <!-- C4250: inherits class member via dominance -->
+      <!-- C4251: class needs to have dll-interface to be used by clients of class -->
+      <!-- C4275: non dll-interface class used as base for dll-interface class -->
+      <!-- C4355: 'this' used in base member initializer list -->
+      <!-- C4702: unreachable code (sometimes intended for readability e.g., due to platform independent code) -->
+      <!-- C4127: conditional expression is constant (also warns when constexpr and not-constexpr in the same condition) -->
+      <!-- C4589: Constructor of abstract class 'type' ignores initializer for virtual base class 'type' (unclear how to prevent the warning) -->
+      <!-- C4121: alignment of a member was sensitive to packing -->
+      <DisableSpecificWarnings>4250;4251;4275;4355;4702;4127;4589;4121;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Shared Profile'">
+    <ClCompile>
+      <AdditionalOptions>/permissive- /w15038 /w44062 /w34265 /w45266 /Zo %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug'">
+    <ClCompile>
+      <PreprocessorDefinitions>OCEAN_RUNTIME_STATIC;_DEBUG;EXTENDED_DEBUG;ENABLE_LOGGING=1;_WINDOWS;WIN32;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Static Release'">
+    <ClCompile>
+      <PreprocessorDefinitions>OCEAN_RUNTIME_STATIC;NDEBUG;ENABLE_LOGGING=1;_WINDOWS;WIN32;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug'">
+    <ClCompile>
+      <PreprocessorDefinitions>OCEAN_RUNTIME_SHARED;_DEBUG;EXTENDED_DEBUG;ENABLE_LOGGING=1;_WINDOWS;WIN32;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <ClCompile>
+      <PreprocessorDefinitions>OCEAN_RUNTIME_SHARED;NDEBUG;ENABLE_LOGGING=1;_WINDOWS;WIN32;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x64_vc143_static_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x86_vc143_static_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x64_vc143_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x86_vc143_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x64_vc143_shared_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x86_vc143_shared_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x64_vc143_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\lib\win_x86_vc143_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64' Or '$(Configuration)|$(Platform)'=='Static Profile|x64' Or '$(Configuration)|$(Platform)'=='Static Release|x64'">
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64' Or '$(Configuration)|$(Platform)'=='Shared Profile|x64'Or '$(Configuration)|$(Platform)'=='Shared Release|x64'">
+    <Link>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32' Or '$(Configuration)|$(Platform)'=='Static Profile|Win32' Or '$(Configuration)|$(Platform)'=='Static Release|Win32'">
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32' Or '$(Configuration)|$(Platform)'=='Shared Profile|Win32'Or '$(Configuration)|$(Platform)'=='Shared Release|Win32'">
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <Link>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <Optimization>Disabled</Optimization>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Shared Profile'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Release'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <StringPooling>true</StringPooling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+  </ItemDefinitionGroup>
+</Project>

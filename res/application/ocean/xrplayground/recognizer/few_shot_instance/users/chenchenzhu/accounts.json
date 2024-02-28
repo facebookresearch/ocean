@@ -1,0 +1,52 @@
+{
+  "userName": "Chenchen Zhu",
+  "accessToken": "1da54616-801b-42f1-a9ef-af158767be94",
+  "classificationRoiFeatures": "recognizer/few_shot_instance/users/chenchenzhu/classification_roi_features.bin",
+  "localizationRoiFeatures": "recognizer/few_shot_instance/users/chenchenzhu/localization_roi_features.bin",
+  "devices": [
+    {
+      "deviceType": "SonosOneGen2",
+      "deviceId": "8e003f23-6f3e-4e1d-aa8d-b9e55c8d6d97",
+      "deviceName": "Sonos One"
+    },
+    {
+      "deviceType": "JetBotRobotVacuum",
+      "deviceId": "1eba9a7d-761b-8139-1438-02b0e54f3254",
+      "deviceName": "JetBot vaccum"
+    },
+    {
+      "deviceType": "KasaSmartLightBulb",
+      "deviceId": "1886cb7d-602a-474c-9497-6c4883eee174",
+      "deviceName": "Bulb for table lamp"
+    }
+  ],
+  "deviceViews": [
+    {
+      "deviceId": "8e003f23-6f3e-4e1d-aa8d-b9e55c8d6d97"
+    },
+    {
+      "deviceId": "8e003f23-6f3e-4e1d-aa8d-b9e55c8d6d97"
+    },
+    {
+      "deviceId": "8e003f23-6f3e-4e1d-aa8d-b9e55c8d6d97"
+    },
+    {
+      "deviceId": "1eba9a7d-761b-8139-1438-02b0e54f3254"
+    },
+    {
+      "deviceId": "1eba9a7d-761b-8139-1438-02b0e54f3254"
+    },
+    {
+      "deviceId": "1eba9a7d-761b-8139-1438-02b0e54f3254"
+    },
+    {
+      "deviceId": "1886cb7d-602a-474c-9497-6c4883eee174"
+    },
+    {
+      "deviceId": "1886cb7d-602a-474c-9497-6c4883eee174"
+    },
+    {
+      "deviceId": "1886cb7d-602a-474c-9497-6c4883eee174"
+    }
+  ]
+}

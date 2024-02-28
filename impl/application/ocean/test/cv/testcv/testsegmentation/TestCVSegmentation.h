@@ -1,0 +1,17 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#ifndef FACEBOOK_APPLICATION_OCEAN_TEST_CV_SEGMENTATION_TESTCVSEGMENTATION_TEST_CV_SEGMENTATION_H
+#define FACEBOOK_APPLICATION_OCEAN_TEST_CV_SEGMENTATION_TESTCVSEGMENTATION_TEST_CV_SEGMENTATION_H
+
+#include "application/ocean/test/cv/ApplicationTestCV.h"
+
+/**
+ * @ingroup applicationtestcv
+ * @defgroup applicationtestcvtestcvsegmentation Computer Vision segmentation Test
+ * @{
+ * The test application validates the accuracy and measures the performance of the Computer Vision segmentation library.<br>
+ * This application is almost platform independent and is available on desktop platforms like e.g., Windows or OS X.<br>
+ * @}
+ */
+
+#endif // FACEBOOK_APPLICATION_OCEAN_TEST_CV_SEGMENTATION_TESTCVSEGMENTATION_TEST_CV_SEGMENTATION_H

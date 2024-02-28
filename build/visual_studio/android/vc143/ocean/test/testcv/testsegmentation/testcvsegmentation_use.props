@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean Test CV Segmentation</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_testcvsegmentation_use_imported>True</ocean_testcvsegmentation_use_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_testcvsegmentation_common_imported)' != 'True'" Project="testcvsegmentation_common.props"/>
+  </ImportGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <Link>
+      <LibraryDependencies>OceanTestCVSegmentationD;%(LibraryDependencies)</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <Link>
+	    <LibraryDependencies>OceanTestCVSegmentation;%(LibraryDependencies)</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

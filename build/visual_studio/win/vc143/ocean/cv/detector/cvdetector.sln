@@ -1,0 +1,37 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cvdetector", "cvdetector.vcxproj", "{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Shared Debug|Win32 = Shared Debug|Win32
+		Shared Debug|x64 = Shared Debug|x64
+		Shared Release|Win32 = Shared Release|Win32
+		Shared Release|x64 = Shared Release|x64
+		Static Debug|Win32 = Static Debug|Win32
+		Static Debug|x64 = Static Debug|x64
+		Static Release|Win32 = Static Release|Win32
+		Static Release|x64 = Static Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Shared Debug|Win32.ActiveCfg = Shared Debug|Win32
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Shared Debug|Win32.Build.0 = Shared Debug|Win32
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Shared Debug|x64.Build.0 = Shared Debug|x64
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Shared Release|Win32.ActiveCfg = Shared Release|Win32
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Shared Release|Win32.Build.0 = Shared Release|Win32
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Shared Release|x64.ActiveCfg = Shared Release|x64
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Shared Release|x64.Build.0 = Shared Release|x64
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Static Debug|Win32.Build.0 = Static Debug|Win32
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Static Debug|x64.Build.0 = Static Debug|x64
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Static Release|Win32.Build.0 = Static Release|Win32
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Static Release|x64.ActiveCfg = Static Release|x64
+		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794}.Static Release|x64.Build.0 = Static Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

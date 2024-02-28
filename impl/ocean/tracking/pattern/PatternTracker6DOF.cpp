@@ -1,0 +1,109 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#include "ocean/tracking/pattern/PatternTracker6DOF.h"
+
+#include "ocean/cv/FrameConverter.h"
+
+namespace Ocean
+{
+
+namespace Tracking
+{
+
+namespace Pattern
+{
+
+PatternTracker6DOF::PatternTracker6DOF(const Options& options) :
+	PatternTrackerCore6DOF(options)
+{
+	// nothing to do here
+}
+
+PatternTracker6DOF::~PatternTracker6DOF()
+{
+	// nothing to do here
+}
+
+unsigned int PatternTracker6DOF::addPattern(const Frame& frame, const Vector2& dimension, Worker* worker)
+{
+	if (frame.isNull() || dimension.x() <= 0)
+	{
+		return (unsigned int)(-1);
+	}
+
+	Frame yFrame;
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, false, worker))
+	{
+		return (unsigned int)(-1);
+	}
+
+	return PatternTrackerCore6DOF::addPattern(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), dimension, worker);
+}
+
+unsigned int PatternTracker6DOF::addPattern(const std::string& filename, const Vector2& dimension, Worker* worker)
+{
+	return PatternTrackerCore6DOF::addPattern(filename, dimension, worker);
+}
+
+unsigned int PatternTracker6DOF::addCylinderPattern(const Frame& frame, const UVTextureMapping::CylinderUVTextureMapping& cylinderUVTextureMapping, Worker* worker)
+{
+	if (frame.isNull() || !cylinderUVTextureMapping.isValid())
+	{
+		return (unsigned int)(-1);
+	}
+
+	Frame yFrame;
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, false, worker))
+	{
+		return (unsigned int)(-1);
+	}
+
+	return PatternTrackerCore6DOF::addCylinderPattern(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), cylinderUVTextureMapping, worker);
+}
+
+unsigned int PatternTracker6DOF::addConePattern(const Frame& frame, const UVTextureMapping::ConeUVTextureMapping& coneUVTextureMapping, Worker* worker)
+{
+	if (frame.isNull() || !coneUVTextureMapping.isValid())
+	{
+		return (unsigned int)(-1);
+	}
+
+	Frame yFrame;
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, false, worker))
+	{
+		return (unsigned int)(-1);
+	}
+
+	return PatternTrackerCore6DOF::addConePattern(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), coneUVTextureMapping, worker);
+}
+
+bool PatternTracker6DOF::removePattern(const unsigned int patternId)
+{
+	return PatternTrackerCore6DOF::removePattern(patternId);
+}
+
+bool PatternTracker6DOF::removePatterns()
+{
+	return PatternTrackerCore6DOF::removePatterns();
+}
+
+bool PatternTracker6DOF::determinePoses(const Frame& frame, const PinholeCamera& pinholeCamera, const bool frameIsUndistorted, TransformationSamples& transformations, const Quaternion& previousCamera_R_camera, Worker* worker)
+{
+	ocean_assert(frame.isValid() && pinholeCamera.isValid());
+	ocean_assert(frame.width() == pinholeCamera.width() && frame.height() == pinholeCamera.height());
+
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	{
+		return false;
+	}
+
+	ocean_assert(yFrame_.width() == pinholeCamera.width() && yFrame_.height() == pinholeCamera.height());
+
+	return PatternTrackerCore6DOF::determinePoses(yFrame_.constdata<uint8_t>(), pinholeCamera, yFrame_.paddingElements(), frameIsUndistorted, frame.timestamp(), transformations, previousCamera_R_camera, worker);
+}
+
+}
+
+}
+
+}

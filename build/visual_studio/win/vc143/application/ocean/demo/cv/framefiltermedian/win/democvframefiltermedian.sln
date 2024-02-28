@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvframefiltermedian", "democvframefiltermedian.vcxproj", "{32016263-5B5F-4979-B1B8-1DEA9935060C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Shared Debug|Win32 = Shared Debug|Win32
+		Shared Debug|x64 = Shared Debug|x64
+		Shared Release|Win32 = Shared Release|Win32
+		Shared Release|x64 = Shared Release|x64
+		Static Debug|Win32 = Static Debug|Win32
+		Static Debug|x64 = Static Debug|x64
+		Static Release|Win32 = Static Release|Win32
+		Static Release|x64 = Static Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Shared Debug|Win32.ActiveCfg = Shared Debug|Win32
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Shared Debug|Win32.Build.0 = Shared Debug|Win32
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Shared Debug|x64.Build.0 = Shared Debug|x64
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Shared Release|Win32.ActiveCfg = Shared Release|Win32
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Shared Release|Win32.Build.0 = Shared Release|Win32
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Shared Release|x64.ActiveCfg = Shared Release|x64
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Shared Release|x64.Build.0 = Shared Release|x64
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Static Debug|Win32.Build.0 = Static Debug|Win32
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Static Debug|x64.Build.0 = Static Debug|x64
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Static Release|Win32.Build.0 = Static Release|Win32
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Static Release|x64.ActiveCfg = Static Release|x64
+		{32016263-5B5F-4979-B1B8-1DEA9935060C}.Static Release|x64.Build.0 = Static Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

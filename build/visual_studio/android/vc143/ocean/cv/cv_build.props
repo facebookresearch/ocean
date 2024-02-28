@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean CV</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_cv_build_imported>True</ocean_cv_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_cv_common_imported)' != 'True'" Project="cv_common.props"/>
+    <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\ocean_library_build.props"/>
+  </ImportGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <TargetName>libOceanCVD</TargetName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <TargetName>libOceanCV</TargetName>
+  </PropertyGroup>
+</Project>

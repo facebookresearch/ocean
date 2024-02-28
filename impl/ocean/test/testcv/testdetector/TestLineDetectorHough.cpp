@@ -1,0 +1,520 @@
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+
+#include "ocean/test/testcv/testdetector/TestLineDetectorHough.h"
+
+#include "ocean/base/HighPerformanceTimer.h"
+#include "ocean/base/RandomI.h"
+
+#include "ocean/cv/Canvas.h"
+#include "ocean/cv/FrameFilterGaussian.h"
+#include "ocean/cv/CVUtilities.h"
+
+namespace Ocean
+{
+
+namespace Test
+{
+
+namespace TestCV
+{
+
+namespace TestDetector
+{
+
+bool TestLineDetectorHough::test(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "---   Line detector test:   ---";
+	Log::info() << " ";
+
+	constexpr unsigned int width = 800u;
+	constexpr unsigned int height = 640u;
+
+	bool allSucceeded = true;
+
+	allSucceeded = testAccumulatorJoin(width, height, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testLineDetectorRandomFrame(testDuration, worker);
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testLineDetectorArtificialFrame(width, height, testDuration, worker);
+
+	Log::info() << " ";
+
+	if (allSucceeded)
+	{
+		Log::info() << "Line detector test succeeded.";
+	}
+	else
+	{
+		Log::info() << "Line detector test FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+#ifdef OCEAN_USE_GTEST
+
+TEST(TestLineDetectorHough, AccumulatorJoin_800x640)
+{
+	Worker worker;
+	EXPECT_TRUE(TestLineDetectorHough::testAccumulatorJoin(800u, 640u, worker));
+}
+
+TEST(TestLineDetectorHough, LineDetectorRandomFrame)
+{
+	Worker worker;
+	EXPECT_TRUE(TestLineDetectorHough::testLineDetectorRandomFrame(GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestLineDetectorHough, LineDetectorArtificialFrame_800x640)
+{
+	Worker worker;
+	EXPECT_TRUE(TestLineDetectorHough::testLineDetectorArtificialFrame(800u, 640u, GTEST_TEST_DURATION, worker));
+}
+
+#endif // OCEAN_USE_GTEST
+
+bool TestLineDetectorHough::testAccumulatorJoin(const unsigned int width, const unsigned int height, Worker& /*worker*/)
+{
+	ocean_assert(width >= 7u && height >= 7u);
+
+	Log::info() << "Accumulator join function:";
+
+	const unsigned int diagonalHalf = (unsigned int)(Numeric::sqrt(Scalar(width * width + height * height))) / 2;
+
+	bool allSucceeded = true;
+
+	{
+		CV::Detector::LineDetectorHough::Accumulator accumulators[] =
+		{
+			CV::Detector::LineDetectorHough::Accumulator(width, height, diagonalHalf, 180u, 0u, true),
+			CV::Detector::LineDetectorHough::Accumulator(width, height, diagonalHalf, 180u, 0u, true)
+		};
+
+		const unsigned int accumulatorElements = accumulators->distanceBins() * accumulators->angleBins();
+
+		for (unsigned int n = 0; n < accumulatorElements; ++n)
+		{
+			accumulators[0].accumulatorFrame_.data<uint32_t>()[n] = RandomI::random(10000u);
+			accumulators[1].accumulatorFrame_.data<uint32_t>()[n] = RandomI::random(10000u);
+		}
+
+		CV::Detector::LineDetectorHough::Accumulator copy[] =
+		{
+			CV::Detector::LineDetectorHough::Accumulator(width, height, diagonalHalf, 180u, 0u, true),
+			CV::Detector::LineDetectorHough::Accumulator(width, height, diagonalHalf, 180u, 0u, true)
+		};
+
+		copy[0].accumulatorFrame_.copy(0, 0, accumulators[0].accumulatorFrame_);
+		copy[1].accumulatorFrame_.copy(0, 0, accumulators[1].accumulatorFrame_);
+
+		CV::Detector::LineDetectorHough::Accumulator::joinTwo(accumulators);
+
+		allSucceeded = validateJoin(copy, accumulators, 2) && allSucceeded;
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestLineDetectorHough::testLineDetectorRandomFrame(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Detector test on random frame:";
+
+	bool allSucceeded = true;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int width = RandomI::random(50u, 1000u);
+		const unsigned int height = RandomI::random(50u, 1000u);
+		const FrameType::PixelFormat pixelFormat = RandomI::random(1u) == 0u ? FrameType::FORMAT_Y8 : FrameType::FORMAT_RGB24;
+
+		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+
+		Frame frame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
+		CV::CVUtilities::randomizeFrame(frame, false);
+
+		const CV::Detector::LineDetectorHough::FilterType filterType = RandomI::random(1u) == 0u ? CV::Detector::LineDetectorHough::FT_SOBEL : CV::Detector::LineDetectorHough::FT_SCHARR;
+		CV::Detector::LineDetectorHough::FilterResponse filterResponse = CV::Detector::LineDetectorHough::FR_INVALID;
+
+		switch (RandomI::random(2u))
+		{
+			case 0u:
+				filterResponse = CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL;
+				break;
+
+			case 1u:
+				filterResponse = CV::Detector::LineDetectorHough::FR_DIAGONAL;
+				break;
+
+			case 2u:
+				filterResponse = CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL_DIAGONAL;
+				break;
+
+			default:
+				ocean_assert(false && "Invalid value!");
+				break;
+		}
+
+		CV::Detector::LineDetectorHough::InfiniteLines infiniteLines;
+		FiniteLines2 optionalFiniteLines;
+
+		FiniteLines2* finiteLines = RandomI::random(1u) == 0u ? &optionalFiniteLines : nullptr;
+
+		const bool optimizeLines = RandomI::random(1u) == 0u;
+
+		Worker* useWorker = RandomI::random(1u) == 0u ? &worker : nullptr;
+
+		if (!CV::Detector::LineDetectorHough::detectLines(frame, filterType, filterResponse, infiniteLines, finiteLines, optimizeLines, 100u, 16u, 2u, true, useWorker))
+		{
+			allSucceeded = false;
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+{
+	ocean_assert(width >= 7u && height >= 7u);
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Detector test on artificial frame:";
+
+	HighPerformanceStatistic performance0, performance1;
+
+	const uint8_t dark = 0x40u;
+
+	unsigned long long iterations = 0ull;
+	unsigned long long succeeded = 0ull;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+
+		Frame frame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
+		frame.setValue(0xFF);
+
+		const unsigned int horizontalTop = RandomI::random(6u, width - 7u);
+		const unsigned int horizontalBottom = RandomI::random(6u, width - 7u);
+
+		const unsigned int verticalLeft = RandomI::random(6u, height - 7u);
+		const unsigned int verticalRight = RandomI::random(6u, height - 7u);
+
+		// create two 11 pixel thick lines
+		for (int n = -5; n <= 5; ++n)
+		{
+			CV::Canvas::line<1u>(frame, Scalar(int(horizontalTop) + n), Scalar(0), Scalar(int(horizontalBottom) + n), Scalar(int(height - 1u)), &dark);
+			CV::Canvas::line<1u>(frame, Scalar(0), Scalar(int(verticalLeft) + n), Scalar(int(width - 1u)), Scalar(int(verticalRight) + n), &dark);
+		}
+
+		Lines2 testLines(4);
+		testLines[0] = Line2(Vector2(Scalar(horizontalTop - 5), 0), (Vector2(Scalar(horizontalBottom - 5), Scalar(height - 1u)) - Vector2(Scalar(horizontalTop - 5), 0)).normalized());
+		testLines[1] = Line2(Vector2(Scalar(horizontalTop + 5), 0), (Vector2(Scalar(horizontalBottom + 5), Scalar(height - 1u)) - Vector2(Scalar(horizontalTop + 5), 0)).normalized());
+		testLines[2] = Line2(Vector2(0, Scalar(verticalLeft - 5)), (Vector2(Scalar(width - 1u), Scalar(verticalRight - 5)) - Vector2(0, Scalar(verticalLeft - 5))).normalized());
+		testLines[3] = Line2(Vector2(0, Scalar(verticalLeft + 5)), (Vector2(Scalar(width - 1u), Scalar(verticalRight + 5)) - Vector2(0, Scalar(verticalLeft + 5))).normalized());
+
+		// apply some image blur
+		CV::FrameFilterGaussian::filter(frame, 7u, &worker);
+
+		CV::Detector::LineDetectorHough::InfiniteLines infiniteLines0, infiniteLines1;
+
+		performance0.start();
+
+		const bool result0 = CV::Detector::LineDetectorHough::detectLines(frame, CV::Detector::LineDetectorHough::FT_SOBEL, CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL, infiniteLines0, nullptr, true, 80u, 8u, 5u, true, &worker, 360u, (unsigned int)(-1), false, Scalar(10), Numeric::deg2rad(5));
+		ocean_assert_and_suppress_unused(result0, result0);
+
+		performance0.stop();
+
+		performance1.start();
+
+		const bool result1 = CV::Detector::LineDetectorHough::detectLinesWithAdaptiveThreshold(frame, CV::Detector::LineDetectorHough::FT_SOBEL, CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL, infiniteLines1, nullptr, true, Scalar(10), 61u, 8u, 5u, true, &worker, 360u, (unsigned int)(-1), false, Scalar(10), Numeric::deg2rad(5));
+		ocean_assert_and_suppress_unused(result1, result1);
+
+		performance1.stop();
+
+		std::sort(infiniteLines0.rbegin(), infiniteLines0.rend());
+		std::sort(infiniteLines1.rbegin(), infiniteLines1.rend());
+
+		unsigned int foundLines = 0u;
+
+		for (size_t n = 0; n < infiniteLines0.size() && n < 4; ++n)
+		{
+			const Line2& line0 = infiniteLines0[n];
+			const Line2 transformedLine0(line0.point() + Vector2(Scalar(width / 2u), Scalar(height / 2u)), line0.direction());
+
+			bool lineFound = false;
+
+			for (size_t m = 0; !lineFound && m < 4; ++m)
+			{
+				const Scalar cosValue = transformedLine0.direction() * testLines[m].direction();
+
+				if (Numeric::abs(cosValue) > Numeric::cos(Numeric::deg2rad(2.5)) && Numeric::abs(transformedLine0.distance(testLines[m].point())) < 2.5)
+				{
+					lineFound = true;
+				}
+			}
+
+			if (lineFound)
+			{
+				foundLines++;
+			}
+		}
+
+		for (size_t n = 0; n < infiniteLines1.size() && n < 4; ++n)
+		{
+			const Line2& line1 = infiniteLines1[n];
+			const Line2 transformedLine1(line1.point() + Vector2(Scalar(width / 2u), Scalar(height / 2u)), line1.direction());
+
+			bool lineFound = false;
+
+			for (size_t m = 0; !lineFound && m < 4; ++m)
+			{
+				const Scalar cosValue = transformedLine1.direction() * testLines[m].direction();
+
+				if (Numeric::abs(cosValue) > Numeric::cos(Numeric::deg2rad(2.5)) && Numeric::abs(transformedLine1.distance(testLines[m].point())) < 2.5)
+				{
+					lineFound = true;
+				}
+			}
+
+			if (lineFound)
+			{
+				foundLines++;
+			}
+		}
+
+		if (foundLines == 8u)
+		{
+			succeeded++;
+		}
+
+		iterations++;
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Performance static threshold: " << performance0.averageMseconds() << "ms";
+	Log::info() << "Performance dynamic threshold: " << performance1.averageMseconds() << "ms";
+
+	ocean_assert(iterations != 0ull);
+	const double percent = double(succeeded) / double(iterations);
+
+	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+
+	return percent >= 0.95;
+}
+
+bool TestLineDetectorHough::validateSmooth(const unsigned int* original, const unsigned int* smoothAccumulator, const unsigned int width, const unsigned int height)
+{
+	// center
+	for (unsigned int x = 1; x < width - 1; ++x)
+	{
+		for (unsigned int y = 1; y < height - 1; ++y)
+		{
+			// Filter mask:
+			// 1 2 1
+			// 2 4 2
+			// 1 2 1
+
+			const unsigned int topRow = original[(y - 1) * width + x - 1] * 1 + original[(y - 1) * width + x - 0] * 2 + original[(y - 1) * width + x + 1] * 1;
+			const unsigned int middleRow = original[(y - 0) * width + x - 1] * 2 + original[(y - 0) * width + x - 0] * 4 + original[(y - 0) * width + x + 1] * 2;
+			const unsigned int bottomRow = original[(y + 1) * width + x - 1] * 1 + original[(y + 1) * width + x - 0] * 2 + original[(y + 1) * width + x + 1] * 1;
+
+			const unsigned int result = (topRow + middleRow + bottomRow + 8) / 16;
+
+			if (result != smoothAccumulator[y * width + x])
+			{
+				return false;
+			}
+		}
+	}
+
+	{
+		// top left corner
+
+		// Top left filter mask:
+		// 4 2
+		// 2 1
+		// Bottom right filter mask:
+		// 1 2
+		const unsigned int topRow = original[width * height - 1] * 2 + original[width * height - 2] * 1;
+		const unsigned int middleRow = original[0] * 4 + original[1] * 2;
+		const unsigned int bottomRow = original[width] * 2 + original[width + 1] * 1;
+
+		const unsigned int result = (topRow + middleRow + bottomRow + 6) / 12;
+
+		if (result != smoothAccumulator[0])
+		{
+			return false;
+		}
+	}
+
+	{
+		// top right corner
+
+		// Top right filter mask:
+		// 2 4
+		// 1 2
+		// Bottom left filter mask:
+		// 2 1
+		const unsigned int topRow = original[width * (height - 1)] * 2 + original[width * (height - 1) + 1] * 1;
+		const unsigned int middleRow = original[width - 1] * 4 + original[width - 2] * 2;
+		const unsigned int bottomRow = original[2 * width - 1] * 2 + original[2 * width - 2] * 1;
+
+		const unsigned int result = (topRow + middleRow + bottomRow + 6) / 12;
+
+		if (result != smoothAccumulator[width - 1])
+		{
+			return false;
+		}
+	}
+
+	{
+		// bottom left corner
+
+		// Bottom left filter mask:
+		// 2 1
+		// 4 2
+		// Top right filter mask:
+		// 1 2
+		const unsigned int topRow = original[width * (height - 2)] * 2 + original[width * (height - 2) + 1] * 1;
+		const unsigned int middleRow = original[width * (height - 1)] * 4 + original[width * (height - 1) + 1] * 2;
+		const unsigned int bottomRow = original[width - 1] * 2 + original[width - 2] * 1;
+
+		const unsigned int result = (topRow + middleRow + bottomRow + 6) / 12;
+
+		if (result != smoothAccumulator[width * (height - 1)])
+		{
+			return false;
+		}
+	}
+
+	{
+		// bottom right corner
+
+		// Bottom right filter mask:
+		// 1 2
+		// 2 4
+		// Top left filter mask:
+		// 2 1
+		const unsigned int topRow = original[width * (height - 2) + width - 2] * 1 + original[width * (height - 2) + width - 1] * 2;
+		const unsigned int middleRow = original[width * height - 2] * 2 + original[width * height - 1] * 4;
+		const unsigned int bottomRow = original[0] * 2 + original[1] * 1;
+
+		const unsigned int result = (topRow + middleRow + bottomRow + 6) / 12;
+
+		if (result != smoothAccumulator[width * height - 1])
+		{
+			return false;
+		}
+	}
+
+	// top line
+	// top filter mask:
+	// 2 4 2
+	// 1 2 1
+	// bottom filter mask:
+	// 1 2 1
+
+	for (unsigned int x = 1; x < width - 1; ++x)
+	{
+		const unsigned int topRow = original[width * height - x - 1 - 1] * 1 + original[width * height - x - 0 - 1] * 2 + original[width * height - x + 1 - 1] * 1;
+		const unsigned int middleRow = original[x - 1] * 2 + original[x] * 4 + original[x + 1] * 2;
+		const unsigned int bottomRow = original[width + x - 1] * 1 + original[width + x] * 2 + original[width + x + 1] * 1;
+
+		const unsigned int result = (topRow + middleRow + bottomRow + 8) / 16;
+
+		if (result != smoothAccumulator[x])
+		{
+			return false;
+		}
+	}
+
+	// bottom line
+	// top filter mask:
+	// 1 2 1
+	// bottom filter mask:
+	// 1 2 1
+	// 2 4 2
+
+	for (unsigned int x = 1; x < width - 1; ++x)
+	{
+		const unsigned int topRow = original[width * (height - 2) + x - 1] * 1 + original[width * (height - 2) + x - 0] * 2 + original[width * (height - 2) + x + 1] * 1;
+		const unsigned int middleRow = original[width * (height - 1) + x - 1] * 2 + original[width * (height - 1) + x - 0] * 4 + original[width * (height - 1) + x + 1] * 2;
+		const unsigned int bottomRow = original[width - x - 1 - 1] * 1 + original[width - x - 0 - 1] * 2 + original[width - x + 1 - 1] * 1;
+
+		const unsigned int result = (topRow + middleRow + bottomRow + 8) / 16;
+
+		if (result != smoothAccumulator[width * (height - 1) + x])
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool TestLineDetectorHough::validateJoin(const CV::Detector::LineDetectorHough::Accumulator* original, const CV::Detector::LineDetectorHough::Accumulator* joined, const unsigned int accumulators)
+{
+	ocean_assert(original && joined);
+
+	const unsigned int elements = original->distanceBins() * original->angleBins();
+
+	for (unsigned int n = 0; n < elements; ++n)
+	{
+		uint32_t total = 0u;
+
+		for (unsigned int a = 0u; a < accumulators; ++a)
+		{
+			total += original[a].accumulatorFrame_.constdata<uint32_t>()[n];
+		}
+
+		if (total != joined->accumulatorFrame_.constdata<uint32_t>()[n])
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+}
+
+}
+
+}
+
+}
