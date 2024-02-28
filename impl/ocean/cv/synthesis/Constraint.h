@@ -27,6 +27,8 @@ namespace Synthesis
  */
 class OCEAN_CV_SYNTHESIS_EXPORT Constraint
 {
+	friend class Constraints;
+
 	public:
 
 		/**
@@ -37,7 +39,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT Constraint
 		/**
 		 * Destructs this constraint.
 		 */
-		virtual ~Constraint();
+		virtual ~Constraint() = default;
 
 		/**
 		 * Creates an empty constraint.
@@ -66,29 +68,20 @@ class OCEAN_CV_SYNTHESIS_EXPORT Constraint
 		 */
 		virtual Scalar weight(const Vector2& point) const = 0;
 
+	protected:
+
 		/**
 		 * Creates a copy of this constraint by an optional scale parameter.
 		 * A scale of 0.5 provide a constraint for an image with bisected dimensions.<br>
 		 * The resulting object has to be released by the caller.<br>
 		 * @param scale The scale to be used
 		 */
-		virtual Constraint* copy(const Scalar scale = 1) const = 0;
+		virtual std::unique_ptr<Constraint> copy(const Scalar scale = Scalar(1)) const = 0;
 
 	protected:
 
 		/// Impact factor of this constraint.
 		Scalar impact_ = Scalar(0);
-};
-
-/**
- * This class implements an area constraint.
- * @ingroup cvsynthesis
- */
-class OCEAN_CV_SYNTHESIS_EXPORT AreaConstraint : public Constraint
-{
-	public:
-
-		// **TOOD**
 };
 
 /**
@@ -190,11 +183,13 @@ class OCEAN_CV_SYNTHESIS_EXPORT LineConstraint : public StructureConstraint
 		 */
 		inline Scalar weight(const Scalar distance) const;
 
+	protected:
+
 		/**
 		 * Creates a copy of this constraint by an optional scale parameter.
 		 * @see Constraint::copy().
 		 */
-		Constraint* copy(const Scalar scale = 1) const override;
+		std::unique_ptr<Constraint> copy(const Scalar scale = 1) const override;
 
 	protected:
 
@@ -257,13 +252,13 @@ class OCEAN_CV_SYNTHESIS_EXPORT FiniteLineConstraint : public LineConstraint
 		 * Returns the weight of this constraint according to a given point.
 		 * @see StructureConstraint::weight().
 		 */
-		virtual Scalar weight(const Vector2& point) const;
+		Scalar weight(const Vector2& point) const override;
 
 		/**
 		 * Returns the cost for a given for two given points.
 		 * @see Constraint::cost().
 		 */
-		virtual Scalar cost(const Vector2& inside, const Vector2& outside) const;
+		Scalar cost(const Vector2& inside, const Vector2& outside) const override;
 
 		/**
 		 * Returns the distance between a given point and this infinite line.
@@ -276,7 +271,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT FiniteLineConstraint : public LineConstraint
 		 * Creates a copy of this constraint by an optional scale parameter.
 		 * @see Constraint::copy().
 		 */
-		virtual Constraint* copy(const Scalar scale = 1) const;
+		std::unique_ptr<Constraint> copy(const Scalar scale = 1) const override;
 
 	protected:
 
@@ -284,16 +279,16 @@ class OCEAN_CV_SYNTHESIS_EXPORT FiniteLineConstraint : public LineConstraint
 		Vector2 offset_;
 
 		/// Square length of the offset vector.
-		Scalar offsetSquare_;
+		Scalar offsetSquare_ = Scalar(-1);
 
 		/// Penalty value.
-		Scalar penalty_;
+		Scalar penalty_ = Scalar(-1);
 
 		/// State to finite the line at the first point.
-		bool finite0_;
+		bool finite0_ = false;
 
 		/// State to finite the line at the second point.
-		bool finite1_;
+		bool finite1_ = false;
 };
 
 /**
@@ -307,7 +302,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT Constraints
 		/**
 		 * Definition of a vector holding constraints.
 		 */
-		typedef std::vector<const Constraint*> ConstraintVector;
+		typedef std::vector<std::unique_ptr<Constraint>> ConstraintsVector;
 
 	public:
 
@@ -325,35 +320,36 @@ class OCEAN_CV_SYNTHESIS_EXPORT Constraints
 		/**
 		 * Copies a constraint container and applies an explicit scale factor.
 		 * @param constraints The constraints to be copied
-		 * @param scale The scale factor to be applied for each constraint to be copied
+		 * @param scale The scale factor to be applied for each constraint to be copied, with range (0, infinity)
 		 */
 		Constraints(const Constraints& constraints, const Scalar scale);
 
 		/**
 		 * Destructs the constraint container.
 		 */
-		~Constraints();
+		~Constraints() = default;
 
 		/**
 		 * Adds a new constraint.
 		 * The given constraint will be released by the container.
 		 * @param constraint The constraint to be added
 		 */
-		inline void addConstraint(const Constraint* constraint);
+		inline void addConstraint(std::unique_ptr<Constraint> constraint);
 
 		/**
 		 * Returns the number of constraints.
-		 * Number of constraints
+		 * The number of constraints
 		 */
-		inline unsigned int size() const;
+		inline size_t size() const;
 
 		/**
 		 * Initializes the constraint decisions.
 		 * @param mask The mask to create the decisions for, must be valid
 		 * @param width The width of the mask in pixel
 		 * @param height The height of the mask in pixel
+		 * @param maskPaddingElements The number of padding elements at the end of each mask row, in elements, with range [0, infinity)
 		 */
-		void initializeDecisions(const uint8_t* mask, const unsigned int width, const unsigned int height) const;
+		void initializeDecisions(const uint8_t* mask, const unsigned int width, const unsigned int height, const unsigned int maskPaddingElements) const;
 
 		/**
 		 * Returns the cost for one inside point and one outside point.
@@ -389,16 +385,10 @@ class OCEAN_CV_SYNTHESIS_EXPORT Constraints
 	private:
 
 		/// Vector holding the internal constraints.
-		ConstraintVector constraintVector_;
+		ConstraintsVector constraints_;
 
 		/// Decision frame.
 		mutable Frame decisionFrame_;
-
-		/// Decision values.
-		mutable const uint8_t* decision_ = nullptr;
-
-		/// Decision width.
-		mutable unsigned int width_ = 0u;
 };
 
 inline Constraint::Constraint(const Scalar impact) :
@@ -538,34 +528,33 @@ inline Scalar FiniteLineConstraint::finiteLineDistance(const Vector2& point) con
 	return ((finite0_ && product < 0) || (finite1_ && product > offsetSquare_)) ? penalty_ : LineConstraint::infiniteLineDistance(point);
 }
 
-inline void Constraints::addConstraint(const Constraint* constraint)
+inline void Constraints::addConstraint(std::unique_ptr<Constraint> constraint)
 {
-	constraintVector_.push_back(constraint);
+	constraints_.emplace_back(std::move(constraint));
 }
 
-inline unsigned int Constraints::size() const
+inline size_t Constraints::size() const
 {
-	return (unsigned int)(constraintVector_.size());
+	return constraints_.size();
 }
 
 inline Scalar Constraints::cost(const unsigned int insideX, const unsigned int insideY, const Vector2& outside) const
 {
-	ocean_assert(decision_);
-	ocean_assert(width_ == decisionFrame_.width());
+	ocean_assert(decisionFrame_.isValid());
 
 	ocean_assert(insideX < decisionFrame_.width());
 	ocean_assert(insideY < decisionFrame_.height());
 
-	const uint8_t decision = decision_[insideY * width_ + insideX];
+	const uint8_t decision = decisionFrame_.constpixel<uint8_t>(insideX, insideY)[0];
 
-	if (decision == 0xFF)
+	if (decision == 0xFFu)
 	{
 		return 0;
 	}
 
-	ocean_assert((size_t)decision < constraintVector_.size());
+	ocean_assert((size_t)decision < constraints_.size());
 
-	return constraintVector_[decision]->cost(Vector2(Scalar(insideX), Scalar(insideY)), outside);
+	return constraints_[decision]->cost(Vector2(Scalar(insideX), Scalar(insideY)), outside);
 }
 
 inline Scalar Constraints::cost(const unsigned int insideX, const unsigned int insideY, const unsigned int outsideX, const unsigned int outsideY) const
@@ -575,12 +564,12 @@ inline Scalar Constraints::cost(const unsigned int insideX, const unsigned int i
 
 inline bool Constraints::isEmpty() const
 {
-	return constraintVector_.empty();
+	return constraints_.empty();
 }
 
 inline Constraints::operator bool() const
 {
-	return !constraintVector_.empty();
+	return !constraints_.empty();
 }
 
 }

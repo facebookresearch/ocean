@@ -1066,7 +1066,7 @@ bool TestOptimizerI1::testStructuralConstrained4Neighborhood(const unsigned int 
 					constexpr Scalar radius = 40;
 					constexpr Scalar penality = 500;
 
-					constraints.addConstraint(new CV::Synthesis::FiniteLineConstraint(point0, point1, impact, radius, penality, true, true));
+					constraints.addConstraint(std::make_unique<CV::Synthesis::FiniteLineConstraint>(point0, point1, impact, radius, penality, true, true));
 				}
 
 				const unsigned int randomSeed = randomGenerator.seed();

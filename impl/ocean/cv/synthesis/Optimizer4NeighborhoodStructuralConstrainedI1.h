@@ -90,7 +90,7 @@ inline Optimizer4NeighborhoodStructuralConstrainedI1<tWeightFactor, tBorderFacto
 {
 	if (!constraints_.isEmpty())
 	{
-		constraints_.initializeDecisions(layer.legacyMask().constdata<uint8_t>(), layer.legacyMask().width(), layer.legacyMask().height());
+		constraints_.initializeDecisions(layer.legacyMask().constdata<uint8_t>(), layer.legacyMask().width(), layer.legacyMask().height(), layer.legacyMask().paddingElements());
 	}
 }
 

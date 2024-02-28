@@ -85,7 +85,7 @@ bool Surface::executeInpainting(const unsigned int quality)
 				CV::Synthesis::Constraints constraints;
 
 				for (Lines::const_iterator i = lines_.begin(); i != lines_.end(); ++i)
-					constraints.addConstraint(new CV::Synthesis::FiniteLineConstraint(i->first, i->second, 200, 40, 500, true, true));
+					constraints.addConstraint(std::make_unique<CV::Synthesis::FiniteLineConstraint>(i->first, i->second, 200, 40, 500, true, true));
 
 				synthesisPyramid.applyInpainting(constraints, randomGenerator_, 10u, 25u, 0xFFFFFFFF, 4u, 2u, worker());
 			}

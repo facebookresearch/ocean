@@ -11,11 +11,6 @@ namespace CV
 namespace Synthesis
 {
 
-Constraint::~Constraint()
-{
-	// nothing to do here
-}
-
 Scalar LineConstraint::cost(const Vector2& inside, const Vector2& outside) const
 {
 	const Scalar distanceInside = infiniteLineDistance(inside);
@@ -29,9 +24,9 @@ Scalar LineConstraint::weight(const Vector2& point) const
 	return weight(infiniteLineDistance(point));
 }
 
-Constraint* LineConstraint::copy(const Scalar scale) const
+std::unique_ptr<Constraint> LineConstraint::copy(const Scalar scale) const
 {
-	return new LineConstraint(*this, scale);
+	return std::make_unique<LineConstraint>(*this, scale);
 }
 
 Scalar FiniteLineConstraint::cost(const Vector2& inside, const Vector2& outside) const
@@ -47,59 +42,63 @@ Scalar FiniteLineConstraint::weight(const Vector2& point) const
 	return LineConstraint::weight(finiteLineDistance(point));
 }
 
-Constraint* FiniteLineConstraint::copy(const Scalar scale) const
+std::unique_ptr<Constraint> FiniteLineConstraint::copy(const Scalar scale) const
 {
-	return new FiniteLineConstraint(*this, scale);
+	return std::make_unique<FiniteLineConstraint>(*this, scale);
 }
 
-Constraints::Constraints(const Constraints& constraints) :
-	decision_(nullptr),
-	width_(0u)
+Constraints::Constraints(const Constraints& constraints)
 {
-	constraintVector_.reserve(constraints.constraintVector_.size());
+	constraints_.reserve(constraints.constraints_.size());
 
-	for (ConstraintVector::const_iterator i = constraints.constraintVector_.begin(); i != constraints.constraintVector_.end(); ++i)
-		constraintVector_.push_back((*i)->copy());
+	for (const std::unique_ptr<Constraint>& constraint : constraints_)
+	{
+		ocean_assert(constraint);
+
+		constraints_.emplace_back(constraint->copy());
+	}
 }
 
-Constraints::Constraints(const Constraints& constraints, const Scalar scale) :
-	decision_(nullptr),
-	width_(0u)
+Constraints::Constraints(const Constraints& constraints, const Scalar scale)
 {
-	constraintVector_.reserve(constraints.constraintVector_.size());
+	ocean_assert(scale > Numeric::eps());
 
-	for (ConstraintVector::const_iterator i = constraints.constraintVector_.begin(); i != constraints.constraintVector_.end(); ++i)
-		constraintVector_.push_back((*i)->copy(scale));
+	constraints_.reserve(constraints.constraints_.size());
+
+	for (const std::unique_ptr<Constraint>& constraint : constraints_)
+	{
+		ocean_assert(constraint);
+
+		constraints_.emplace_back(constraint->copy(scale));
+	}
 }
 
-Constraints::~Constraints()
+void Constraints::initializeDecisions(const uint8_t* mask, const unsigned int width, const unsigned int height, const unsigned int maskPaddingElements) const
 {
-	for (ConstraintVector::iterator i = constraintVector_.begin(); i != constraintVector_.end(); ++i)
-		delete *i;
-}
-
-void Constraints::initializeDecisions(const uint8_t* mask, const unsigned int width, const unsigned int height) const
-{
-	ocean_assert(mask);
-	ocean_assert(constraintVector_.size() < 250);
+	ocean_assert(mask != nullptr);
+	ocean_assert(width >= 1u && height >= 1u);
+	ocean_assert(constraints_.size() < 250);
 
 	decisionFrame_.set(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
 	decisionFrame_.setValue(0xFFu);
 
+	const unsigned int maskStrideElements = width + maskPaddingElements;
+
 	for (unsigned int y = 0u; y < decisionFrame_.height(); ++y)
 	{
 		uint8_t* decisionRow = decisionFrame_.row<uint8_t>(y);
+		const uint8_t* maskRow = mask + y * maskStrideElements;
 
 		for (unsigned int x = 0u; x < decisionFrame_.width(); ++x)
 		{
-			if (*mask++ != 0xFF)
+			if (*maskRow++ != 0xFF)
 			{
 				Scalar maxWeight = 0;
 				uint8_t maxIndex = 0xFF;
 
-				for (unsigned int n = 0; n < constraintVector_.size(); ++n)
+				for (unsigned int n = 0; n < constraints_.size(); ++n)
 				{
-					const Constraint& constraint = *constraintVector_[n];
+					const Constraint& constraint = *constraints_[n];
 					const Scalar weight = constraint.weight(Vector2(Scalar(x), Scalar(y)));
 
 					if (weight > maxWeight)
@@ -115,9 +114,6 @@ void Constraints::initializeDecisions(const uint8_t* mask, const unsigned int wi
 			++decisionRow;
 		}
 	}
-
-	decision_ = decisionFrame_.data<uint8_t>();
-	width_ = decisionFrame_.width();
 }
 
 }
