@@ -127,6 +127,10 @@
 		5DB1041E1F60385800C745E4 /* JSONConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB1041C1F60385800C745E4 /* JSONConfig.cpp */; };
 		5DB1041F1F60385800C745E4 /* JSONConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB1041C1F60385800C745E4 /* JSONConfig.cpp */; };
 		5DB104201F60385800C745E4 /* JSONConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB1041C1F60385800C745E4 /* JSONConfig.cpp */; };
+		9EE8BC9A2B89987800517978 /* File.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9EE8BC992B89987800517978 /* File.mm */; };
+		9EE8BC9B2B89987800517978 /* File.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9EE8BC992B89987800517978 /* File.mm */; };
+		9EE8BC9C2B89987800517978 /* File.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9EE8BC992B89987800517978 /* File.mm */; };
+		9EE8BC9D2B89987800517978 /* File.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9EE8BC992B89987800517978 /* File.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -164,6 +168,7 @@
 		5D98620F1D8B582900DEDB00 /* libOceanIOD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanIOD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DB104171F60384600C745E4 /* JSONConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONConfig.h; path = ../../../../../impl/ocean/io/JSONConfig.h; sourceTree = "<group>"; };
 		5DB1041C1F60385800C745E4 /* JSONConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSONConfig.cpp; path = ../../../../../impl/ocean/io/JSONConfig.cpp; sourceTree = "<group>"; };
+		9EE8BC992B89987800517978 /* File.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = File.mm; path = ../../../../../impl/ocean/io/File.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -250,6 +255,7 @@
 				5D63F5E61B9767D400E2498E /* Directory.cpp */,
 				503E4F791FA358C000AE7674 /* Directory.mm */,
 				5D63F5E71B9767D400E2498E /* File.cpp */,
+				9EE8BC992B89987800517978 /* File.mm */,
 				5D63F5E81B9767D400E2498E /* FileConfig.cpp */,
 				5D63F5E91B9767D400E2498E /* FileManager.cpp */,
 				5D63F5EA1B9767D400E2498E /* FileResolver.cpp */,
@@ -524,6 +530,7 @@
 				5DB1041E1F60385800C745E4 /* JSONConfig.cpp in Sources */,
 				5D222A791BB16D2E00298788 /* CameraCalibrationManager.cpp in Sources */,
 				5D222A7A1BB16D2E00298788 /* Utilities.cpp in Sources */,
+				9EE8BC9B2B89987800517978 /* File.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -546,6 +553,7 @@
 				5DB104201F60385800C745E4 /* JSONConfig.cpp in Sources */,
 				5D491D131D8F570600C4099B /* CameraCalibrationManager.cpp in Sources */,
 				5D491D141D8F570600C4099B /* Utilities.cpp in Sources */,
+				9EE8BC9D2B89987800517978 /* File.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,6 +576,7 @@
 				5DB1041D1F60385800C745E4 /* JSONConfig.cpp in Sources */,
 				5D63F5F41B9767D400E2498E /* CameraCalibrationManager.cpp in Sources */,
 				5D63F6001B9767D400E2498E /* Utilities.cpp in Sources */,
+				9EE8BC9A2B89987800517978 /* File.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -590,6 +599,7 @@
 				5DB1041F1F60385800C745E4 /* JSONConfig.cpp in Sources */,
 				5D9861F71D8B582900DEDB00 /* CameraCalibrationManager.cpp in Sources */,
 				5D9861F81D8B582900DEDB00 /* Utilities.cpp in Sources */,
+				9EE8BC9C2B89987800517978 /* File.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
