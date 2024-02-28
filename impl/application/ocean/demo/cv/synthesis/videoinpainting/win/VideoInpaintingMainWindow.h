@@ -240,14 +240,14 @@ class VideoInpaintingMainWindow :
 		 * @param currentFrame The current frame for which the reference frame will be created, must be valid
 		 * @param currentMask The current mask identifying the undesired object, with same frame dimension and pixel origin as the current frame, must be valid
 		 * @param inpaintingReferenceFrame The previously inpainted frame which will provide the visual content for the resulting reference frame, with same frame dimension and pixel origin as the current frame, must be valid
-		 * @param inpaintingReferenceFrameQuarter The previously inpainted frame with a quarter of the original resolutio, must be valid
+		 * @param inpaintingReferenceFrameQuarter The previously inpainted frame with a quarter of the original resolution, must be valid
 		 * @param referenceHomographyCurrent The homography transforming points defined in the current frame to points defined in the previously inpainted frame
 		 * @param contourPoints The dense mask border contour points matching with the provided mask
 		 * @param trackingMaskBoundingBox The bounding box of the mask (and the bounding box of the provided contour points)
 		 * @param referenceFrame The resulting reference frame composed of the previously inpainted frame (for mask pixels) and the current frame (for non-mask pixels)
 		 * @param worker Optional worker object to distribute the computation
 		 */
-		static void createReferenceFrame(const LegacyFrame& currentFrame, const LegacyFrame& currentMask, const LegacyFrame& inpaintingReferenceFrame, const LegacyFrame& inpaintingReferenceFrameQuarter, const SquareMatrix3& referenceHomographyCurrent, const CV::PixelPositions& contourPoints, const CV::PixelBoundingBox& trackingMaskBoundingBox, LegacyFrame& referenceFrame, Worker* worker = nullptr);
+		static void createReferenceFrame(const LegacyFrame& currentFrame, const LegacyFrame& currentMask, const LegacyFrame& inpaintingReferenceFrame, const LegacyFrame& inpaintingReferenceFrameQuarter, const SquareMatrix3& referenceHomographyCurrent, const CV::PixelPositions& contourPoints, const CV::PixelBoundingBox& trackingMaskBoundingBox, Frame& referenceFrame, Worker* worker = nullptr);
 
 		/**
 		 * Highlights an area within a frame defined by a mask, and optional highlights the contour of the mask.
@@ -288,7 +288,7 @@ class VideoInpaintingMainWindow :
 		LegacyFrame synthesisResult_;
 
 		/// The frame holding the reference content for the image synthesis, defined as member object to avoid to re-create a new frame during each synthesis iteration.
-		LegacyFrame referenceFrame_;
+		Frame referenceFrame_;
 
 		/// The 8 bit mask for the current frame covering the undesired object, width upper left corner as pixel origin.
 		LegacyFrame currentMask_;

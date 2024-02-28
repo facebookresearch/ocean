@@ -646,7 +646,7 @@ void VideoInpaintingMainWindow::reset()
 	// **TODO** release further information?
 }
 
-void VideoInpaintingMainWindow::createReferenceFrame(const LegacyFrame& currentFrame, const LegacyFrame& currentMask, const LegacyFrame& inpaintingReferenceFrame, const LegacyFrame& inpaintingReferenceFrameQuarter, const SquareMatrix3& referenceHomographyCurrent, const CV::PixelPositions& contourPoints, const CV::PixelBoundingBox& trackingMaskBoundingBox, LegacyFrame& referenceFrame, Worker* worker)
+void VideoInpaintingMainWindow::createReferenceFrame(const LegacyFrame& currentFrame, const LegacyFrame& currentMask, const LegacyFrame& inpaintingReferenceFrame, const LegacyFrame& inpaintingReferenceFrameQuarter, const SquareMatrix3& referenceHomographyCurrent, const CV::PixelPositions& contourPoints, const CV::PixelBoundingBox& trackingMaskBoundingBox, Frame& referenceFrame, Worker* worker)
 {
 	ocean_assert(contourPoints.size() >= 3);
 	ocean_assert(trackingMaskBoundingBox);
@@ -655,13 +655,10 @@ void VideoInpaintingMainWindow::createReferenceFrame(const LegacyFrame& currentF
 	ocean_assert(FrameType::formatIsGeneric(currentFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 3u) && "The current implemented is restricted to thee-channel frames");
 
 	// we create a reference frame based on the current frame so that is looks like the very first inpainting frame
-	referenceFrame.copy(currentFrame);
-
-	Frame tempReferenceFrame(referenceFrame, Frame::temporary_ACM_USE_KEEP_LAYOUT);
-	ocean_assert(!tempReferenceFrame.isOwner());
+	referenceFrame = Frame(currentFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
 	// first we fill the undesired area in the current frame with visual information from the very first inpainting frame
-	CV::Advanced::AdvancedFrameInterpolatorBilinear::Comfort::homographyFilterMask(Frame(inpaintingReferenceFrame, Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(currentMask, Frame::temporary_ACM_USE_KEEP_LAYOUT), tempReferenceFrame, referenceHomographyCurrent, trackingMaskBoundingBox, worker);
+	CV::Advanced::AdvancedFrameInterpolatorBilinear::Comfort::homographyFilterMask(Frame(inpaintingReferenceFrame, Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(currentMask, Frame::temporary_ACM_USE_KEEP_LAYOUT), referenceFrame, referenceHomographyCurrent, trackingMaskBoundingBox, worker);
 
 	// now we need to adjust the appearance of the undesired area so that it matches with the appearance of the current frame, wrt. e.g., ambient lighting changes (camera exposure, shadows, etc...)
 	// however, due to performance reasons we apply a very basic adjustment only

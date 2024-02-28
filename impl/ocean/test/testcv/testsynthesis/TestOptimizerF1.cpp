@@ -389,12 +389,9 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				constexpr unsigned int referenceFramePaddingElements = 0u; // not yet supported
-
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-				Frame referenceFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), referenceFramePaddingElements);
-				CV::CVUtilities::randomizeFrame(referenceFrame, false, &randomGenerator);
+				Frame referenceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -410,8 +407,6 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 				constexpr unsigned int patchSize_2 = patchSize / 2u;
 
 				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
-
-				LegacyFrame legacyReferenceFrame(referenceFrame, LegacyFrame::FCM_USE_IF_POSSIBLE);
 
 				CV::Synthesis::LayerF1 layer(frame, mask);
 				CV::Synthesis::MappingF1& mapping = layer.mappingF1();
@@ -476,7 +471,7 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 				constexpr bool applyInitialMapping = true;
 
 				performance.startIf(performanceIteration);
-					CV::Synthesis::Optimizer4NeighborhoodReferenceFrameF1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator, legacyReferenceFrame).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
+					CV::Synthesis::Optimizer4NeighborhoodReferenceFrameF1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator, referenceFrame).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
 				performance.stopIf(performanceIteration);
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))

@@ -41,7 +41,7 @@ class Optimizer4NeighborhoodReferenceFrameF1 :
 		 * @param randomGenerator Random number generator
 		 * @param reference The reference frame that is used during the optimization
 		 */
-		inline Optimizer4NeighborhoodReferenceFrameF1(LayerF1& layer, RandomGenerator& randomGenerator, const LegacyFrame& reference);
+		inline Optimizer4NeighborhoodReferenceFrameF1(LayerF1& layer, RandomGenerator& randomGenerator, const Frame& reference);
 
 	private:
 
@@ -77,11 +77,11 @@ class Optimizer4NeighborhoodReferenceFrameF1 :
 		LayerF1& layerF1_;
 
 		/// Reference frame that is used during the optimization.
-		const LegacyFrame& referenceFrame_;
+		const Frame& referenceFrame_;
 };
 
 template <unsigned int tWeightFactor, unsigned int tBorderFactor, bool tUpdateFrame>
-inline Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdateFrame>::Optimizer4NeighborhoodReferenceFrameF1(LayerF1& layer, RandomGenerator& randomGenerator, const LegacyFrame& reference) :
+inline Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdateFrame>::Optimizer4NeighborhoodReferenceFrameF1(LayerF1& layer, RandomGenerator& randomGenerator, const Frame& reference) :
 	Optimizer(layer),
 	OptimizerF(layer),
 	OptimizerSubset(layer, randomGenerator),
@@ -150,7 +150,7 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 
 	uint8_t* const layerFrameData = layerFrame.data<uint8_t>();
 	const uint8_t* const layerMaskData = layerMask.constdata<uint8_t>();
-	const uint8_t* const reference = referenceFrame_.constdata<uint8_t>();
+	const uint8_t* const referenceData = referenceFrame_.constdata<uint8_t>();
 
 	const unsigned int layerFramePaddingElements = layerFrame.paddingElements();
 	const unsigned int layerFrameStrideElements = layerFrame.strideElements();
@@ -195,7 +195,7 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 					Scalar newPositionY = positionRow->y();
 
 					const Scalar oldSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, newPositionX, newPositionY, layerMaskData, layerMaskPaddingElements, Scalar(maxSpatialCost));
-					const unsigned int oldColorCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, newPositionX, newPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
+					const unsigned int oldColorCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, newPositionX, newPositionY, layerFrameData, layerMaskData, referenceData, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
 					Scalar newCost = Scalar(tWeightFactor) * oldSpatialCost + Scalar(oldColorCost);
 
 					Scalar testPositionX, testPositionY;
@@ -214,7 +214,7 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 						if (testPositionX < Scalar(layerWidth - 3u) && layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] == 0xFF)
 						{
 							// the structure cost is 0 due to the neighbor condition
-							const unsigned int testCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
+							const unsigned int testCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, referenceData, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
 
 							if (Scalar(testCost) < newCost)
 							{
@@ -240,7 +240,7 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 						if (testPositionY < Scalar(layerHeight - 3u) && layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] == 0xFF)
 						{
 							// the structure cost is 0 due to the neighbor condition
-							const unsigned int testCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
+							const unsigned int testCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, referenceData, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
 
 							if (Scalar(testCost) < newCost)
 							{
@@ -267,7 +267,7 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 							continue;
 
 						const Scalar testSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, testPositionX, testPositionY, layerMaskData, layerMaskPaddingElements, Scalar(maxSpatialCost));
-						const unsigned int testColorCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
+						const unsigned int testColorCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, referenceData, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
 						const Scalar testCost = Scalar(tWeightFactor) * testSpatialCost + Scalar(testColorCost);
 
 						if (testCost < newCost)
@@ -316,7 +316,7 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 					Scalar newPositionY = positionRow->y();
 
 					const Scalar oldSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, newPositionX, newPositionY, layerMaskData, layerMaskPaddingElements, Scalar(maxSpatialCost));
-					const unsigned int oldColorCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, newPositionX, newPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
+					const unsigned int oldColorCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, newPositionX, newPositionY, layerFrameData, layerMaskData, referenceData, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
 					Scalar newCost = Scalar(tWeightFactor) * oldSpatialCost + Scalar(oldColorCost);
 
 					Scalar testPositionX, testPositionY;
@@ -335,7 +335,7 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 						if (testPositionX >= Scalar(2) && layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] == 0xFF)
 						{
 							// the structure cost is 0 due to the neighbor condition
-							const unsigned int testCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
+							const unsigned int testCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, referenceData, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
 
 							if (Scalar(testCost) < newCost)
 							{
@@ -361,7 +361,7 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 						if (testPositionY >= Scalar(2) && layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] == 0xFF)
 						{
 							// the structure cost is 0 due to the neighbor condition
-							const unsigned int testCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
+							const unsigned int testCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, referenceData, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
 
 							if (Scalar(testCost) < newCost)
 							{
@@ -387,7 +387,7 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 							continue;
 
 						const Scalar testSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, testPositionX, testPositionY, layerMaskData, layerMaskPaddingElements, Scalar(maxSpatialCost));
-						const unsigned int testColorCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, reference, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
+						const unsigned int testColorCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, referenceData, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
 						const Scalar testCost = Scalar(tWeightFactor) * testSpatialCost + Scalar(testColorCost);
 
 						if (testCost < newCost)
