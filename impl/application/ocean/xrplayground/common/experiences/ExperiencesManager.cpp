@@ -59,8 +59,6 @@
 #include "application/ocean/xrplayground/common/experiences/oceantrackerdemos/TexturedSceneTrackerExperience.h"
 #include "application/ocean/xrplayground/common/experiences/oceantrackerdemos/VogonMeshCreatorExperience.h"
 
-#include "application/ocean/xrplayground/common/experiences/relocalization/GenericCloudPlacementsExperience.h"
-#include "application/ocean/xrplayground/common/experiences/relocalization/GenericCloudRelocalizationExperience.h"
 #include "application/ocean/xrplayground/common/experiences/relocalization/OnDeviceMapCreatorExperience.h"
 #include "application/ocean/xrplayground/common/experiences/relocalization/OnDeviceRelocalizerExperience.h"
 
@@ -124,8 +122,6 @@ void ExperiencesManager::registerAllCodeBasedExperiences()
 	registerNewExperience("GravityAndHeadingNative", std::bind(&GravityAndHeadingNativeExperience::createExperience));
 	registerNewExperience("UserInterface", std::bind(&UserInterfaceExperience::createExperience));
 	registerNewExperience("UserProfile", std::bind(&UserProfileExperience::createExperience));
-	registerNewExperience("GenericCloudRelocalization", std::bind(&GenericCloudRelocalizationExperience::createExperience));
-	registerNewExperience("GenericCloudPlacements", std::bind(&GenericCloudPlacementsExperience::createExperience));
 	registerNewExperience("SceneTracker", std::bind(&SceneTrackerExperience::createExperience));
 	registerNewExperience("TexturedSceneTracker", std::bind(&TexturedSceneTrackerExperience::createExperience));
 	registerNewExperience("PlaneTracker", std::bind(&PlaneTrackerExperience::createExperience));
@@ -239,10 +235,6 @@ ExperiencesManager::SelectableExperienceGroups ExperiencesManager::defineExperie
 
 		SelectableExperiences landmarkExperiencesProduction =
 		{
-			SelectableExperience("Generic Cloud Relocalization", "GenericCloudRelocalization.experience", PT_PHONE_OR_DESKTOP),
-			SelectableExperience("Static Cloud Relocalization", "static_cloud_relocalization.ox3dv", PT_PHONE_OR_DESKTOP),
-			SelectableExperience("Generic Cloud Placements", "GenericCloudPlacements.experience", PT_PHONE_OR_DESKTOP),
-
 			SelectableExperience("On-Device Map Creator", "OnDeviceMapCreator.experience", PT_PHONE_OR_DESKTOP),
 			SelectableExperience("On-Device Relocalizer", "OnDeviceRelocalizer.experience", PT_PHONE_OR_DESKTOP)
 		};
