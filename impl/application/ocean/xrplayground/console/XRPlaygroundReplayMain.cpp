@@ -8,8 +8,6 @@
 
 #include "ocean/devices/Tracker.h"
 
-#include "ocean/devices/cloud/Cloud.h"
-
 #include "ocean/devices/mapbuilding/MapBuilding.h"
 
 #include "ocean/devices/pattern/Pattern.h"
@@ -447,7 +445,6 @@ ScopedPlugins::ScopedPlugins()
 	OCEAN_APPLY_IF_APPLE(Media::AVFoundation::registerAVFLibrary());
 	OCEAN_APPLY_IF_APPLE(Media::ImageIO::registerImageIOLibrary());
 
-	Devices::Cloud::registerCloudLibrary();
 	Devices::VRS::registerVRSLibrary();
 	Devices::Pattern::registerPatternLibrary();
 	Devices::MapBuilding::registerMapBuildingLibrary();
@@ -473,7 +470,6 @@ ScopedPlugins::~ScopedPlugins()
 	Devices::MapBuilding::unregisterMapBuildingLibrary();
 	Devices::Pattern::unregisterPatternLibrary();
 	Devices::VRS::unregisterVRSLibrary();
-	Devices::Cloud::unregisterCloudLibrary();
 
 	OCEAN_APPLY_IF_APPLE(Media::ImageIO::unregisterImageIOLibrary());
 	OCEAN_APPLY_IF_APPLE(Media::AVFoundation::unregisterAVFLibrary());

@@ -8,7 +8,6 @@
 #include "ocean/base/CommandArguments.h"
 #include "ocean/base/Messenger.h"
 
-#include "ocean/devices/cloud/Cloud.h"
 #include "ocean/devices/mapbuilding/MapBuilding.h"
 #include "ocean/devices/pattern/Pattern.h"
 
@@ -83,7 +82,6 @@ int main(int argc, char *argv[])
 	Media::AVFoundation::registerAVFLibrary();
 #endif
 
-	Devices::Cloud::registerCloudLibrary();
 	Devices::Pattern::registerPatternLibrary();
 	Devices::MapBuilding::registerMapBuildingLibrary();
 
@@ -110,7 +108,6 @@ int main(int argc, char *argv[])
 
 	Devices::MapBuilding::unregisterMapBuildingLibrary();
 	Devices::Pattern::unregisterPatternLibrary();
-	Devices::Cloud::unregisterCloudLibrary();
 
 #ifdef __APPLE__
 	Media::AVFoundation::unregisterAVFLibrary();
