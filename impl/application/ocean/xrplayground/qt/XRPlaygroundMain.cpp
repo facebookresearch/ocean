@@ -11,13 +11,13 @@
 #include "ocean/devices/mapbuilding/MapBuilding.h"
 #include "ocean/devices/pattern/Pattern.h"
 
-#include "ocean/platform/meta/Login.h"
-
 #include "ocean/rendering/glescenegraph/qt/QT.h"
 
 #include "ocean/scenedescription/sdl/obj/OBJ.h"
 #include "ocean/scenedescription/sdl/assimp/Assimp.h"
 #include "ocean/scenedescription/sdx/x3d/X3d.h"
+
+#include "metaonly/ocean/platform/meta/Login.h"
 
 #ifdef __APPLE__
 	#include "ocean/media/avfoundation/AVFoundation.h"

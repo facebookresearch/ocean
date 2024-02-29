@@ -6,9 +6,9 @@
 #include "application/ocean/xrplayground/oculus/NativeInterfaceXRPlayground.h"
 #include "application/ocean/xrplayground/oculus/XRPlaygroundApplication.h"
 
-#include "ocean/platform/meta/Login.h"
-
 #include "ocean/platform/android/Utilities.h"
+
+#include "metaonly/ocean/platform/meta/Login.h"
 
 namespace Ocean
 {

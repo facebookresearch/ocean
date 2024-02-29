@@ -2,12 +2,12 @@
 
 #include "ocean/network/tigon/TigonClient.h"
 
-#include "ocean/platform/meta/Login.h"
-
 #ifdef OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY
 	#import <FBNetworker/FBHttpExecutor+Tigon.h>
 	#import <FBSessionNetworker/FBSessionNetworker.h>
 #endif
+
+#include "metaonly/ocean/platform/meta/Login.h"
 
 namespace Ocean
 {

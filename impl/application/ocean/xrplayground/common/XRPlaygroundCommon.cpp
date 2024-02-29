@@ -19,14 +19,14 @@
 
 #include "ocean/network/verts/Manager.h"
 
-#include "ocean/platform/meta/Login.h"
-
 #include "ocean/rendering/Manager.h"
 #include "ocean/rendering/PerspectiveView.h"
 #include "ocean/rendering/UndistortedBackground.h"
 #include "ocean/rendering/Utilities.h"
 
 #include "ocean/scenedescription/Manager.h"
+
+#include "metaonly/ocean/platform/meta/Login.h"
 
 #ifdef OCEAN_PLATFORM_BUILD_ANDROID
 	#include "ocean/devices/arcore/ACFactory.h"

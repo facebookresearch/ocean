@@ -14,11 +14,11 @@
 
 #include "ocean/media/FrameMedium.h"
 
-#include "ocean/platform/meta/Login.h"
-
 #include "ocean/rendering/Engine.h"
 #include "ocean/rendering/Framebuffer.h"
 #include "ocean/rendering/MediaTexture2D.h"
+
+#include "metaonly/ocean/platform/meta/Login.h"
 
 #ifdef OCEAN_PLATFORM_BUILD_MOBILE
 	#include "ocean/platform/meta/avatars/Manager.h"

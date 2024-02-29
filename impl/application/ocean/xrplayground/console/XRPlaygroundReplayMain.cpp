@@ -22,12 +22,12 @@
 #include "ocean/media/Manager.h"
 #include "ocean/media/MovieRecorder.h"
 
-#include "ocean/platform/meta/Login.h"
-
 #include "ocean/rendering/BitmapFramebuffer.h"
 #include "ocean/rendering/Manager.h"
 #include "ocean/rendering/PerspectiveView.h"
 #include "ocean/rendering/UndistortedBackground.h"
+
+#include "metaonly/ocean/platform/meta/Login.h"
 
 #if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 	#include "ocean/rendering/glescenegraph/windows/Windows.h"

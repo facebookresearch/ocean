@@ -8,8 +8,6 @@
 
 #include "ocean/base/Singleton.h"
 
-#include "ocean/platform/meta/Login.h"
-
 #include "ocean/platform/meta/avatars/Manager.h"
 
 #include "ocean/platform/meta/quest/vrapi/HandPoses.h"
@@ -20,6 +18,8 @@
 #include "ocean/platform/meta/quest/vrapi/application/VRNativeApplication.h"
 
 #include "ocean/rendering/Scene.h"
+
+#include "metaonly/ocean/platform/meta/Login.h"
 
 namespace Ocean
 {

@@ -8,9 +8,9 @@
 
 #include "application/ocean/xrplayground/common/experiences/ExperiencesManager.h"
 
-#include "ocean/platform/meta/Login.h"
-
 #include "ocean/platform/android/Utilities.h"
+
+#include "metaonly/ocean/platform/meta/Login.h"
 
 namespace Ocean
 {
