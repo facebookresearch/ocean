@@ -11,18 +11,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\harriscorner\win\HarrisCorner.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\harriscorner\win\HarrisCorner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\harriscorner\win\HarrisCornerMainWindow.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\harriscorner\win\HarrisCornerMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\harriscorner\win\HarrisCorner.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\harriscorner\win\HarrisCorner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\harriscorner\win\HarrisCornerMainWindow.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\harriscorner\win\HarrisCornerMainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
