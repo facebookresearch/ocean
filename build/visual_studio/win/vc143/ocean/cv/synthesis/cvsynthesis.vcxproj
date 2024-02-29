@@ -192,10 +192,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorInpaintingContentF1.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorInpaintingContentI1.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorSubset.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletion.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletionLayer.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletionLayer_patchmask.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletion_patchmask.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Initializer.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Initializer1.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerAppearanceMapping.h" />
@@ -255,10 +251,6 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorInpaintingContentF1.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorInpaintingContentI1.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorSubset.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletion.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletionLayer.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletionLayer_patchmask.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletion_patchmask.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerContourMappingI1.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerConvertMappingF1.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerCopyMappingI1.cpp" />

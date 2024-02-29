@@ -11,10 +11,6 @@
 		5D7D93C71BA9E0F700D38120 /* CreatorInpaintingContentF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AB1BA9E0F700D38120 /* CreatorInpaintingContentF1.cpp */; };
 		5D7D93C81BA9E0F700D38120 /* CreatorInpaintingContentI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AC1BA9E0F700D38120 /* CreatorInpaintingContentI1.cpp */; };
 		5D7D93C91BA9E0F700D38120 /* CreatorSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AD1BA9E0F700D38120 /* CreatorSubset.cpp */; };
-		5D7D93CA1BA9E0F700D38120 /* ImageCompletion_patchmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AE1BA9E0F700D38120 /* ImageCompletion_patchmask.cpp */; };
-		5D7D93CB1BA9E0F700D38120 /* ImageCompletion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AF1BA9E0F700D38120 /* ImageCompletion.cpp */; };
-		5D7D93CC1BA9E0F700D38120 /* ImageCompletionLayer_patchmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B01BA9E0F700D38120 /* ImageCompletionLayer_patchmask.cpp */; };
-		5D7D93CD1BA9E0F700D38120 /* ImageCompletionLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B11BA9E0F700D38120 /* ImageCompletionLayer.cpp */; };
 		5D7D93CE1BA9E0F700D38120 /* InitializerContourMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B21BA9E0F700D38120 /* InitializerContourMappingI1.cpp */; };
 		5D7D93CF1BA9E0F700D38120 /* InitializerConvertMappingF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B31BA9E0F700D38120 /* InitializerConvertMappingF1.cpp */; };
 		5D7D93D01BA9E0F700D38120 /* InitializerCopyMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B41BA9E0F700D38120 /* InitializerCopyMappingI1.cpp */; };
@@ -46,10 +42,6 @@
 		5D7D93F51BA9E10E00D38120 /* CreatorInpaintingContentF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EA1BA9E10E00D38120 /* CreatorInpaintingContentF1.h */; };
 		5D7D93F61BA9E10E00D38120 /* CreatorInpaintingContentI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EB1BA9E10E00D38120 /* CreatorInpaintingContentI1.h */; };
 		5D7D93F71BA9E10E00D38120 /* CreatorSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EC1BA9E10E00D38120 /* CreatorSubset.h */; };
-		5D7D94311BA9E12100D38120 /* ImageCompletion_patchmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93F81BA9E12100D38120 /* ImageCompletion_patchmask.h */; };
-		5D7D94321BA9E12100D38120 /* ImageCompletion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93F91BA9E12100D38120 /* ImageCompletion.h */; };
-		5D7D94331BA9E12100D38120 /* ImageCompletionLayer_patchmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FA1BA9E12100D38120 /* ImageCompletionLayer_patchmask.h */; };
-		5D7D94341BA9E12100D38120 /* ImageCompletionLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FB1BA9E12100D38120 /* ImageCompletionLayer.h */; };
 		5D7D94351BA9E12100D38120 /* Initializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FC1BA9E12100D38120 /* Initializer.h */; };
 		5D7D94361BA9E12100D38120 /* Initializer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FD1BA9E12100D38120 /* Initializer1.h */; };
 		5D7D94371BA9E12100D38120 /* InitializerAppearanceMapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FE1BA9E12100D38120 /* InitializerAppearanceMapping.h */; };
@@ -106,14 +98,10 @@
 		5D936E011BC548CB0046ACD4 /* CreatorSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AD1BA9E0F700D38120 /* CreatorSubset.cpp */; };
 		5D936E021BC548CB0046ACD4 /* LayerI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BF1BA9E0F700D38120 /* LayerI1.cpp */; };
 		5D936E031BC548CB0046ACD4 /* InitializerContourMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B21BA9E0F700D38120 /* InitializerContourMappingI1.cpp */; };
-		5D936E041BC548CB0046ACD4 /* ImageCompletion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AF1BA9E0F700D38120 /* ImageCompletion.cpp */; };
 		5D936E051BC548CB0046ACD4 /* SynthesisPyramidI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C51BA9E0F700D38120 /* SynthesisPyramidI1.cpp */; };
 		5D936E061BC548CB0046ACD4 /* LayerF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BE1BA9E0F700D38120 /* LayerF1.cpp */; };
-		5D936E071BC548CB0046ACD4 /* ImageCompletionLayer_patchmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B01BA9E0F700D38120 /* ImageCompletionLayer_patchmask.cpp */; };
 		5D936E081BC548CB0046ACD4 /* InitializerShrinkingErosionI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B91BA9E0F700D38120 /* InitializerShrinkingErosionI1.cpp */; };
-		5D936E091BC548CB0046ACD4 /* ImageCompletionLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B11BA9E0F700D38120 /* ImageCompletionLayer.cpp */; };
 		5D936E0A1BC548CB0046ACD4 /* InitializerRandomMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B81BA9E0F700D38120 /* InitializerRandomMappingI1.cpp */; };
-		5D936E0B1BC548CB0046ACD4 /* ImageCompletion_patchmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AE1BA9E0F700D38120 /* ImageCompletion_patchmask.cpp */; };
 		5D936E0C1BC548CB0046ACD4 /* InitializerConvertMappingF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B31BA9E0F700D38120 /* InitializerConvertMappingF1.cpp */; };
 		5D936E0D1BC548CB0046ACD4 /* MappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C11BA9E0F700D38120 /* MappingI1.cpp */; };
 		5D936E0E1BC548CB0046ACD4 /* InitializerMoveMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B61BA9E0F700D38120 /* InitializerMoveMappingI1.cpp */; };
@@ -146,7 +134,6 @@
 		5D936E2B1BC548CB0046ACD4 /* InitializerContourMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94071BA9E12100D38120 /* InitializerContourMappingI1.h */; };
 		5D936E2C1BC548CB0046ACD4 /* Optimizer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94231BA9E12100D38120 /* Optimizer1.h */; };
 		5D936E2D1BC548CB0046ACD4 /* Synthesis.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942E1BA9E12100D38120 /* Synthesis.h */; };
-		5D936E2E1BC548CB0046ACD4 /* ImageCompletionLayer_patchmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FA1BA9E12100D38120 /* ImageCompletionLayer_patchmask.h */; };
 		5D936E2F1BC548CB0046ACD4 /* InitializerAppearanceMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94011BA9E12100D38120 /* InitializerAppearanceMappingI1.h */; };
 		5D936E301BC548CB0046ACD4 /* InitializerShrinkingPatchMatchingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94131BA9E12100D38120 /* InitializerShrinkingPatchMatchingI1.h */; };
 		5D936E311BC548CB0046ACD4 /* Mapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941B1BA9E12100D38120 /* Mapping.h */; };
@@ -154,7 +141,6 @@
 		5D936E341BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94041BA9E12100D38120 /* InitializerCoarserMappingAdaptionF1.h */; };
 		5D936E351BC548CB0046ACD4 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94271BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h */; };
 		5D936E361BC548CB0046ACD4 /* Operator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94211BA9E12100D38120 /* Operator.h */; };
-		5D936E371BC548CB0046ACD4 /* ImageCompletionLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FB1BA9E12100D38120 /* ImageCompletionLayer.h */; };
 		5D936E381BC548CB0046ACD4 /* CreatorInformationSpatialCostI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E91BA9E10E00D38120 /* CreatorInformationSpatialCostI1.h */; };
 		5D936E391BC548CB0046ACD4 /* InitializerHomographyMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940B1BA9E12100D38120 /* InitializerHomographyMappingAdaptionF1.h */; };
 		5D936E3A1BC548CB0046ACD4 /* LayerF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94171BA9E12100D38120 /* LayerF1.h */; };
@@ -182,10 +168,8 @@
 		5D936E501BC548CB0046ACD4 /* InitializerRandomized.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940E1BA9E12100D38120 /* InitializerRandomized.h */; };
 		5D936E511BC548CB0046ACD4 /* InitializerCopyMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94091BA9E12100D38120 /* InitializerCopyMappingI1.h */; };
 		5D936E521BC548CB0046ACD4 /* SynthesisPyramidI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94301BA9E12100D38120 /* SynthesisPyramidI1.h */; };
-		5D936E531BC548CB0046ACD4 /* ImageCompletion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93F91BA9E12100D38120 /* ImageCompletion.h */; };
 		5D936E541BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94051BA9E12100D38120 /* InitializerCoarserMappingAdaptionI1.h */; };
 		5D936E551BC548CB0046ACD4 /* Optimizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94221BA9E12100D38120 /* Optimizer.h */; };
-		5D936E561BC548CB0046ACD4 /* ImageCompletion_patchmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93F81BA9E12100D38120 /* ImageCompletion_patchmask.h */; };
 		5D936E571BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94061BA9E12100D38120 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h */; };
 		5D936E581BC548CB0046ACD4 /* InitializerSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94141BA9E12100D38120 /* InitializerSubset.h */; };
 		5D936E591BC548CB0046ACD4 /* Layer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94151BA9E12100D38120 /* Layer.h */; };
@@ -201,14 +185,10 @@
 		5D9861401D8B567A00DEDB00 /* CreatorSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AD1BA9E0F700D38120 /* CreatorSubset.cpp */; };
 		5D9861411D8B567A00DEDB00 /* LayerI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BF1BA9E0F700D38120 /* LayerI1.cpp */; };
 		5D9861421D8B567A00DEDB00 /* InitializerContourMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B21BA9E0F700D38120 /* InitializerContourMappingI1.cpp */; };
-		5D9861431D8B567A00DEDB00 /* ImageCompletion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AF1BA9E0F700D38120 /* ImageCompletion.cpp */; };
 		5D9861441D8B567A00DEDB00 /* SynthesisPyramidI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C51BA9E0F700D38120 /* SynthesisPyramidI1.cpp */; };
 		5D9861451D8B567A00DEDB00 /* LayerF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BE1BA9E0F700D38120 /* LayerF1.cpp */; };
-		5D9861461D8B567A00DEDB00 /* ImageCompletionLayer_patchmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B01BA9E0F700D38120 /* ImageCompletionLayer_patchmask.cpp */; };
 		5D9861471D8B567A00DEDB00 /* InitializerShrinkingErosionI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B91BA9E0F700D38120 /* InitializerShrinkingErosionI1.cpp */; };
-		5D9861481D8B567A00DEDB00 /* ImageCompletionLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B11BA9E0F700D38120 /* ImageCompletionLayer.cpp */; };
 		5D9861491D8B567A00DEDB00 /* InitializerRandomMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B81BA9E0F700D38120 /* InitializerRandomMappingI1.cpp */; };
-		5D98614A1D8B567A00DEDB00 /* ImageCompletion_patchmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AE1BA9E0F700D38120 /* ImageCompletion_patchmask.cpp */; };
 		5D98614B1D8B567A00DEDB00 /* InitializerConvertMappingF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B31BA9E0F700D38120 /* InitializerConvertMappingF1.cpp */; };
 		5D98614C1D8B567A00DEDB00 /* MappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C11BA9E0F700D38120 /* MappingI1.cpp */; };
 		5D98614D1D8B567A00DEDB00 /* InitializerMoveMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B61BA9E0F700D38120 /* InitializerMoveMappingI1.cpp */; };
@@ -241,7 +221,6 @@
 		5D98616A1D8B567A00DEDB00 /* InitializerContourMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94071BA9E12100D38120 /* InitializerContourMappingI1.h */; };
 		5D98616B1D8B567A00DEDB00 /* Optimizer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94231BA9E12100D38120 /* Optimizer1.h */; };
 		5D98616C1D8B567A00DEDB00 /* Synthesis.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942E1BA9E12100D38120 /* Synthesis.h */; };
-		5D98616D1D8B567A00DEDB00 /* ImageCompletionLayer_patchmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FA1BA9E12100D38120 /* ImageCompletionLayer_patchmask.h */; };
 		5D98616E1D8B567A00DEDB00 /* InitializerAppearanceMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94011BA9E12100D38120 /* InitializerAppearanceMappingI1.h */; };
 		5D98616F1D8B567A00DEDB00 /* InitializerShrinkingPatchMatchingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94131BA9E12100D38120 /* InitializerShrinkingPatchMatchingI1.h */; };
 		5D9861701D8B567A00DEDB00 /* Mapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941B1BA9E12100D38120 /* Mapping.h */; };
@@ -249,7 +228,6 @@
 		5D9861731D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94041BA9E12100D38120 /* InitializerCoarserMappingAdaptionF1.h */; };
 		5D9861741D8B567A00DEDB00 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94271BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h */; };
 		5D9861751D8B567A00DEDB00 /* Operator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94211BA9E12100D38120 /* Operator.h */; };
-		5D9861761D8B567A00DEDB00 /* ImageCompletionLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FB1BA9E12100D38120 /* ImageCompletionLayer.h */; };
 		5D9861771D8B567A00DEDB00 /* CreatorInformationSpatialCostI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E91BA9E10E00D38120 /* CreatorInformationSpatialCostI1.h */; };
 		5D9861781D8B567A00DEDB00 /* InitializerHomographyMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940B1BA9E12100D38120 /* InitializerHomographyMappingAdaptionF1.h */; };
 		5D9861791D8B567A00DEDB00 /* LayerF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94171BA9E12100D38120 /* LayerF1.h */; };
@@ -277,10 +255,8 @@
 		5D98618F1D8B567A00DEDB00 /* InitializerRandomized.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940E1BA9E12100D38120 /* InitializerRandomized.h */; };
 		5D9861901D8B567A00DEDB00 /* InitializerCopyMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94091BA9E12100D38120 /* InitializerCopyMappingI1.h */; };
 		5D9861911D8B567A00DEDB00 /* SynthesisPyramidI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94301BA9E12100D38120 /* SynthesisPyramidI1.h */; };
-		5D9861921D8B567A00DEDB00 /* ImageCompletion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93F91BA9E12100D38120 /* ImageCompletion.h */; };
 		5D9861931D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94051BA9E12100D38120 /* InitializerCoarserMappingAdaptionI1.h */; };
 		5D9861941D8B567A00DEDB00 /* Optimizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94221BA9E12100D38120 /* Optimizer.h */; };
-		5D9861951D8B567A00DEDB00 /* ImageCompletion_patchmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93F81BA9E12100D38120 /* ImageCompletion_patchmask.h */; };
 		5D9861961D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94061BA9E12100D38120 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h */; };
 		5D9861971D8B567A00DEDB00 /* InitializerSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94141BA9E12100D38120 /* InitializerSubset.h */; };
 		5D9861981D8B567A00DEDB00 /* Layer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94151BA9E12100D38120 /* Layer.h */; };
@@ -304,14 +280,10 @@
 		C041EB451DABD98100BF5D76 /* CreatorSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AD1BA9E0F700D38120 /* CreatorSubset.cpp */; };
 		C041EB461DABD98100BF5D76 /* LayerI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BF1BA9E0F700D38120 /* LayerI1.cpp */; };
 		C041EB471DABD98100BF5D76 /* InitializerContourMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B21BA9E0F700D38120 /* InitializerContourMappingI1.cpp */; };
-		C041EB481DABD98100BF5D76 /* ImageCompletion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AF1BA9E0F700D38120 /* ImageCompletion.cpp */; };
 		C041EB491DABD98100BF5D76 /* SynthesisPyramidI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C51BA9E0F700D38120 /* SynthesisPyramidI1.cpp */; };
 		C041EB4A1DABD98100BF5D76 /* LayerF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BE1BA9E0F700D38120 /* LayerF1.cpp */; };
-		C041EB4B1DABD98100BF5D76 /* ImageCompletionLayer_patchmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B01BA9E0F700D38120 /* ImageCompletionLayer_patchmask.cpp */; };
 		C041EB4C1DABD98100BF5D76 /* InitializerShrinkingErosionI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B91BA9E0F700D38120 /* InitializerShrinkingErosionI1.cpp */; };
-		C041EB4D1DABD98100BF5D76 /* ImageCompletionLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B11BA9E0F700D38120 /* ImageCompletionLayer.cpp */; };
 		C041EB4E1DABD98100BF5D76 /* InitializerRandomMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B81BA9E0F700D38120 /* InitializerRandomMappingI1.cpp */; };
-		C041EB4F1DABD98100BF5D76 /* ImageCompletion_patchmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AE1BA9E0F700D38120 /* ImageCompletion_patchmask.cpp */; };
 		C041EB501DABD98100BF5D76 /* InitializerConvertMappingF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B31BA9E0F700D38120 /* InitializerConvertMappingF1.cpp */; };
 		C041EB511DABD98100BF5D76 /* MappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C11BA9E0F700D38120 /* MappingI1.cpp */; };
 		C041EB521DABD98100BF5D76 /* InitializerMoveMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B61BA9E0F700D38120 /* InitializerMoveMappingI1.cpp */; };
@@ -344,7 +316,6 @@
 		C041EB6F1DABD98100BF5D76 /* InitializerContourMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94071BA9E12100D38120 /* InitializerContourMappingI1.h */; };
 		C041EB701DABD98100BF5D76 /* Optimizer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94231BA9E12100D38120 /* Optimizer1.h */; };
 		C041EB711DABD98100BF5D76 /* Synthesis.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942E1BA9E12100D38120 /* Synthesis.h */; };
-		C041EB721DABD98100BF5D76 /* ImageCompletionLayer_patchmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FA1BA9E12100D38120 /* ImageCompletionLayer_patchmask.h */; };
 		C041EB731DABD98100BF5D76 /* InitializerAppearanceMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94011BA9E12100D38120 /* InitializerAppearanceMappingI1.h */; };
 		C041EB741DABD98100BF5D76 /* InitializerShrinkingPatchMatchingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94131BA9E12100D38120 /* InitializerShrinkingPatchMatchingI1.h */; };
 		C041EB751DABD98100BF5D76 /* Mapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941B1BA9E12100D38120 /* Mapping.h */; };
@@ -352,7 +323,6 @@
 		C041EB781DABD98100BF5D76 /* InitializerCoarserMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94041BA9E12100D38120 /* InitializerCoarserMappingAdaptionF1.h */; };
 		C041EB791DABD98100BF5D76 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94271BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h */; };
 		C041EB7A1DABD98100BF5D76 /* Operator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94211BA9E12100D38120 /* Operator.h */; };
-		C041EB7B1DABD98100BF5D76 /* ImageCompletionLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FB1BA9E12100D38120 /* ImageCompletionLayer.h */; };
 		C041EB7C1DABD98100BF5D76 /* CreatorInformationSpatialCostI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E91BA9E10E00D38120 /* CreatorInformationSpatialCostI1.h */; };
 		C041EB7D1DABD98100BF5D76 /* InitializerHomographyMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940B1BA9E12100D38120 /* InitializerHomographyMappingAdaptionF1.h */; };
 		C041EB7E1DABD98100BF5D76 /* LayerF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94171BA9E12100D38120 /* LayerF1.h */; };
@@ -380,10 +350,8 @@
 		C041EB941DABD98100BF5D76 /* InitializerRandomized.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940E1BA9E12100D38120 /* InitializerRandomized.h */; };
 		C041EB951DABD98100BF5D76 /* InitializerCopyMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94091BA9E12100D38120 /* InitializerCopyMappingI1.h */; };
 		C041EB961DABD98100BF5D76 /* SynthesisPyramidI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94301BA9E12100D38120 /* SynthesisPyramidI1.h */; };
-		C041EB971DABD98100BF5D76 /* ImageCompletion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93F91BA9E12100D38120 /* ImageCompletion.h */; };
 		C041EB981DABD98100BF5D76 /* InitializerCoarserMappingAdaptionI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94051BA9E12100D38120 /* InitializerCoarserMappingAdaptionI1.h */; };
 		C041EB991DABD98100BF5D76 /* Optimizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94221BA9E12100D38120 /* Optimizer.h */; };
-		C041EB9A1DABD98100BF5D76 /* ImageCompletion_patchmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93F81BA9E12100D38120 /* ImageCompletion_patchmask.h */; };
 		C041EB9B1DABD98100BF5D76 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94061BA9E12100D38120 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h */; };
 		C041EB9C1DABD98100BF5D76 /* InitializerSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94141BA9E12100D38120 /* InitializerSubset.h */; };
 		C041EB9D1DABD98100BF5D76 /* Layer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94151BA9E12100D38120 /* Layer.h */; };
@@ -403,10 +371,6 @@
 		5D7D93AB1BA9E0F700D38120 /* CreatorInpaintingContentF1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CreatorInpaintingContentF1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/CreatorInpaintingContentF1.cpp; sourceTree = "<group>"; };
 		5D7D93AC1BA9E0F700D38120 /* CreatorInpaintingContentI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CreatorInpaintingContentI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/CreatorInpaintingContentI1.cpp; sourceTree = "<group>"; };
 		5D7D93AD1BA9E0F700D38120 /* CreatorSubset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CreatorSubset.cpp; path = ../../../../../../impl/ocean/cv/synthesis/CreatorSubset.cpp; sourceTree = "<group>"; };
-		5D7D93AE1BA9E0F700D38120 /* ImageCompletion_patchmask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageCompletion_patchmask.cpp; path = ../../../../../../impl/ocean/cv/synthesis/ImageCompletion_patchmask.cpp; sourceTree = "<group>"; };
-		5D7D93AF1BA9E0F700D38120 /* ImageCompletion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageCompletion.cpp; path = ../../../../../../impl/ocean/cv/synthesis/ImageCompletion.cpp; sourceTree = "<group>"; };
-		5D7D93B01BA9E0F700D38120 /* ImageCompletionLayer_patchmask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageCompletionLayer_patchmask.cpp; path = ../../../../../../impl/ocean/cv/synthesis/ImageCompletionLayer_patchmask.cpp; sourceTree = "<group>"; };
-		5D7D93B11BA9E0F700D38120 /* ImageCompletionLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageCompletionLayer.cpp; path = ../../../../../../impl/ocean/cv/synthesis/ImageCompletionLayer.cpp; sourceTree = "<group>"; };
 		5D7D93B21BA9E0F700D38120 /* InitializerContourMappingI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerContourMappingI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerContourMappingI1.cpp; sourceTree = "<group>"; };
 		5D7D93B31BA9E0F700D38120 /* InitializerConvertMappingF1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerConvertMappingF1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerConvertMappingF1.cpp; sourceTree = "<group>"; };
 		5D7D93B41BA9E0F700D38120 /* InitializerCopyMappingI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerCopyMappingI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerCopyMappingI1.cpp; sourceTree = "<group>"; };
@@ -438,10 +402,6 @@
 		5D7D93EA1BA9E10E00D38120 /* CreatorInpaintingContentF1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatorInpaintingContentF1.h; path = ../../../../../../impl/ocean/cv/synthesis/CreatorInpaintingContentF1.h; sourceTree = "<group>"; };
 		5D7D93EB1BA9E10E00D38120 /* CreatorInpaintingContentI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatorInpaintingContentI1.h; path = ../../../../../../impl/ocean/cv/synthesis/CreatorInpaintingContentI1.h; sourceTree = "<group>"; };
 		5D7D93EC1BA9E10E00D38120 /* CreatorSubset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatorSubset.h; path = ../../../../../../impl/ocean/cv/synthesis/CreatorSubset.h; sourceTree = "<group>"; };
-		5D7D93F81BA9E12100D38120 /* ImageCompletion_patchmask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageCompletion_patchmask.h; path = ../../../../../../impl/ocean/cv/synthesis/ImageCompletion_patchmask.h; sourceTree = "<group>"; };
-		5D7D93F91BA9E12100D38120 /* ImageCompletion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageCompletion.h; path = ../../../../../../impl/ocean/cv/synthesis/ImageCompletion.h; sourceTree = "<group>"; };
-		5D7D93FA1BA9E12100D38120 /* ImageCompletionLayer_patchmask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageCompletionLayer_patchmask.h; path = ../../../../../../impl/ocean/cv/synthesis/ImageCompletionLayer_patchmask.h; sourceTree = "<group>"; };
-		5D7D93FB1BA9E12100D38120 /* ImageCompletionLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageCompletionLayer.h; path = ../../../../../../impl/ocean/cv/synthesis/ImageCompletionLayer.h; sourceTree = "<group>"; };
 		5D7D93FC1BA9E12100D38120 /* Initializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Initializer.h; path = ../../../../../../impl/ocean/cv/synthesis/Initializer.h; sourceTree = "<group>"; };
 		5D7D93FD1BA9E12100D38120 /* Initializer1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Initializer1.h; path = ../../../../../../impl/ocean/cv/synthesis/Initializer1.h; sourceTree = "<group>"; };
 		5D7D93FE1BA9E12100D38120 /* InitializerAppearanceMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerAppearanceMapping.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerAppearanceMapping.h; sourceTree = "<group>"; };
@@ -560,10 +520,6 @@
 				5D7D93AB1BA9E0F700D38120 /* CreatorInpaintingContentF1.cpp */,
 				5D7D93AC1BA9E0F700D38120 /* CreatorInpaintingContentI1.cpp */,
 				5D7D93AD1BA9E0F700D38120 /* CreatorSubset.cpp */,
-				5D7D93AE1BA9E0F700D38120 /* ImageCompletion_patchmask.cpp */,
-				5D7D93AF1BA9E0F700D38120 /* ImageCompletion.cpp */,
-				5D7D93B01BA9E0F700D38120 /* ImageCompletionLayer_patchmask.cpp */,
-				5D7D93B11BA9E0F700D38120 /* ImageCompletionLayer.cpp */,
 				5D7D93B21BA9E0F700D38120 /* InitializerContourMappingI1.cpp */,
 				5D7D93B31BA9E0F700D38120 /* InitializerConvertMappingF1.cpp */,
 				5D7D93B41BA9E0F700D38120 /* InitializerCopyMappingI1.cpp */,
@@ -603,10 +559,6 @@
 				5D7D93EA1BA9E10E00D38120 /* CreatorInpaintingContentF1.h */,
 				5D7D93EB1BA9E10E00D38120 /* CreatorInpaintingContentI1.h */,
 				5D7D93EC1BA9E10E00D38120 /* CreatorSubset.h */,
-				5D7D93F81BA9E12100D38120 /* ImageCompletion_patchmask.h */,
-				5D7D93F91BA9E12100D38120 /* ImageCompletion.h */,
-				5D7D93FA1BA9E12100D38120 /* ImageCompletionLayer_patchmask.h */,
-				5D7D93FB1BA9E12100D38120 /* ImageCompletionLayer.h */,
 				5D7D93FC1BA9E12100D38120 /* Initializer.h */,
 				5D7D93FD1BA9E12100D38120 /* Initializer1.h */,
 				5D7D93FE1BA9E12100D38120 /* InitializerAppearanceMapping.h */,
@@ -687,7 +639,6 @@
 				5D7D94401BA9E12100D38120 /* InitializerContourMappingI1.h in Headers */,
 				5D7D945C1BA9E12100D38120 /* Optimizer1.h in Headers */,
 				5D7D94671BA9E12100D38120 /* Synthesis.h in Headers */,
-				5D7D94331BA9E12100D38120 /* ImageCompletionLayer_patchmask.h in Headers */,
 				5D7D943A1BA9E12100D38120 /* InitializerAppearanceMappingI1.h in Headers */,
 				5D7D944C1BA9E12100D38120 /* InitializerShrinkingPatchMatchingI1.h in Headers */,
 				5D7D94541BA9E12100D38120 /* Mapping.h in Headers */,
@@ -695,7 +646,6 @@
 				5D7D943D1BA9E12100D38120 /* InitializerCoarserMappingAdaptionF1.h in Headers */,
 				5D7D94601BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */,
 				5D7D945A1BA9E12100D38120 /* Operator.h in Headers */,
-				5D7D94341BA9E12100D38120 /* ImageCompletionLayer.h in Headers */,
 				5D7D93F41BA9E10E00D38120 /* CreatorInformationSpatialCostI1.h in Headers */,
 				5D7D94441BA9E12100D38120 /* InitializerHomographyMappingAdaptionF1.h in Headers */,
 				5D7D94501BA9E12100D38120 /* LayerF1.h in Headers */,
@@ -724,10 +674,8 @@
 				5D7D94471BA9E12100D38120 /* InitializerRandomized.h in Headers */,
 				5D7D94421BA9E12100D38120 /* InitializerCopyMappingI1.h in Headers */,
 				5D7D94691BA9E12100D38120 /* SynthesisPyramidI1.h in Headers */,
-				5D7D94321BA9E12100D38120 /* ImageCompletion.h in Headers */,
 				5D7D943E1BA9E12100D38120 /* InitializerCoarserMappingAdaptionI1.h in Headers */,
 				5D7D945B1BA9E12100D38120 /* Optimizer.h in Headers */,
-				5D7D94311BA9E12100D38120 /* ImageCompletion_patchmask.h in Headers */,
 				5D7D943F1BA9E12100D38120 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */,
 				5D7D944D1BA9E12100D38120 /* InitializerSubset.h in Headers */,
 				5D7D944E1BA9E12100D38120 /* Layer.h in Headers */,
@@ -762,7 +710,6 @@
 				5D936E2B1BC548CB0046ACD4 /* InitializerContourMappingI1.h in Headers */,
 				5D936E2C1BC548CB0046ACD4 /* Optimizer1.h in Headers */,
 				5D936E2D1BC548CB0046ACD4 /* Synthesis.h in Headers */,
-				5D936E2E1BC548CB0046ACD4 /* ImageCompletionLayer_patchmask.h in Headers */,
 				5D936E2F1BC548CB0046ACD4 /* InitializerAppearanceMappingI1.h in Headers */,
 				5D936E301BC548CB0046ACD4 /* InitializerShrinkingPatchMatchingI1.h in Headers */,
 				5D936E311BC548CB0046ACD4 /* Mapping.h in Headers */,
@@ -770,7 +717,6 @@
 				5D936E341BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionF1.h in Headers */,
 				5D936E351BC548CB0046ACD4 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */,
 				5D936E361BC548CB0046ACD4 /* Operator.h in Headers */,
-				5D936E371BC548CB0046ACD4 /* ImageCompletionLayer.h in Headers */,
 				5D936E381BC548CB0046ACD4 /* CreatorInformationSpatialCostI1.h in Headers */,
 				5D936E391BC548CB0046ACD4 /* InitializerHomographyMappingAdaptionF1.h in Headers */,
 				5D936E3A1BC548CB0046ACD4 /* LayerF1.h in Headers */,
@@ -799,10 +745,8 @@
 				5D936E501BC548CB0046ACD4 /* InitializerRandomized.h in Headers */,
 				5D936E511BC548CB0046ACD4 /* InitializerCopyMappingI1.h in Headers */,
 				5D936E521BC548CB0046ACD4 /* SynthesisPyramidI1.h in Headers */,
-				5D936E531BC548CB0046ACD4 /* ImageCompletion.h in Headers */,
 				5D936E541BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionI1.h in Headers */,
 				5D936E551BC548CB0046ACD4 /* Optimizer.h in Headers */,
-				5D936E561BC548CB0046ACD4 /* ImageCompletion_patchmask.h in Headers */,
 				5D936E571BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */,
 				5D936E581BC548CB0046ACD4 /* InitializerSubset.h in Headers */,
 				5D936E591BC548CB0046ACD4 /* Layer.h in Headers */,
@@ -837,7 +781,6 @@
 				5D98616A1D8B567A00DEDB00 /* InitializerContourMappingI1.h in Headers */,
 				5D98616B1D8B567A00DEDB00 /* Optimizer1.h in Headers */,
 				5D98616C1D8B567A00DEDB00 /* Synthesis.h in Headers */,
-				5D98616D1D8B567A00DEDB00 /* ImageCompletionLayer_patchmask.h in Headers */,
 				5D98616E1D8B567A00DEDB00 /* InitializerAppearanceMappingI1.h in Headers */,
 				5D98616F1D8B567A00DEDB00 /* InitializerShrinkingPatchMatchingI1.h in Headers */,
 				5D9861701D8B567A00DEDB00 /* Mapping.h in Headers */,
@@ -845,7 +788,6 @@
 				5D9861731D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionF1.h in Headers */,
 				5D9861741D8B567A00DEDB00 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */,
 				5D9861751D8B567A00DEDB00 /* Operator.h in Headers */,
-				5D9861761D8B567A00DEDB00 /* ImageCompletionLayer.h in Headers */,
 				5D9861771D8B567A00DEDB00 /* CreatorInformationSpatialCostI1.h in Headers */,
 				5D9861781D8B567A00DEDB00 /* InitializerHomographyMappingAdaptionF1.h in Headers */,
 				5D9861791D8B567A00DEDB00 /* LayerF1.h in Headers */,
@@ -874,10 +816,8 @@
 				5D98618F1D8B567A00DEDB00 /* InitializerRandomized.h in Headers */,
 				5D9861901D8B567A00DEDB00 /* InitializerCopyMappingI1.h in Headers */,
 				5D9861911D8B567A00DEDB00 /* SynthesisPyramidI1.h in Headers */,
-				5D9861921D8B567A00DEDB00 /* ImageCompletion.h in Headers */,
 				5D9861931D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionI1.h in Headers */,
 				5D9861941D8B567A00DEDB00 /* Optimizer.h in Headers */,
-				5D9861951D8B567A00DEDB00 /* ImageCompletion_patchmask.h in Headers */,
 				5D9861961D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */,
 				5D9861971D8B567A00DEDB00 /* InitializerSubset.h in Headers */,
 				5D9861981D8B567A00DEDB00 /* Layer.h in Headers */,
@@ -912,7 +852,6 @@
 				C041EB6F1DABD98100BF5D76 /* InitializerContourMappingI1.h in Headers */,
 				C041EB701DABD98100BF5D76 /* Optimizer1.h in Headers */,
 				C041EB711DABD98100BF5D76 /* Synthesis.h in Headers */,
-				C041EB721DABD98100BF5D76 /* ImageCompletionLayer_patchmask.h in Headers */,
 				C041EB731DABD98100BF5D76 /* InitializerAppearanceMappingI1.h in Headers */,
 				C041EB741DABD98100BF5D76 /* InitializerShrinkingPatchMatchingI1.h in Headers */,
 				C041EB751DABD98100BF5D76 /* Mapping.h in Headers */,
@@ -920,7 +859,6 @@
 				C041EB781DABD98100BF5D76 /* InitializerCoarserMappingAdaptionF1.h in Headers */,
 				C041EB791DABD98100BF5D76 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */,
 				C041EB7A1DABD98100BF5D76 /* Operator.h in Headers */,
-				C041EB7B1DABD98100BF5D76 /* ImageCompletionLayer.h in Headers */,
 				C041EB7C1DABD98100BF5D76 /* CreatorInformationSpatialCostI1.h in Headers */,
 				C041EB7D1DABD98100BF5D76 /* InitializerHomographyMappingAdaptionF1.h in Headers */,
 				C041EB7E1DABD98100BF5D76 /* LayerF1.h in Headers */,
@@ -949,10 +887,8 @@
 				C041EB941DABD98100BF5D76 /* InitializerRandomized.h in Headers */,
 				C041EB951DABD98100BF5D76 /* InitializerCopyMappingI1.h in Headers */,
 				C041EB961DABD98100BF5D76 /* SynthesisPyramidI1.h in Headers */,
-				C041EB971DABD98100BF5D76 /* ImageCompletion.h in Headers */,
 				C041EB981DABD98100BF5D76 /* InitializerCoarserMappingAdaptionI1.h in Headers */,
 				C041EB991DABD98100BF5D76 /* Optimizer.h in Headers */,
-				C041EB9A1DABD98100BF5D76 /* ImageCompletion_patchmask.h in Headers */,
 				C041EB9B1DABD98100BF5D76 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */,
 				C041EB9C1DABD98100BF5D76 /* InitializerSubset.h in Headers */,
 				C041EB9D1DABD98100BF5D76 /* Layer.h in Headers */,
@@ -1127,14 +1063,10 @@
 				5D7D93C91BA9E0F700D38120 /* CreatorSubset.cpp in Sources */,
 				5D7D93DB1BA9E0F700D38120 /* LayerI1.cpp in Sources */,
 				5D7D93CE1BA9E0F700D38120 /* InitializerContourMappingI1.cpp in Sources */,
-				5D7D93CB1BA9E0F700D38120 /* ImageCompletion.cpp in Sources */,
 				5D7D93E11BA9E0F700D38120 /* SynthesisPyramidI1.cpp in Sources */,
 				5D7D93DA1BA9E0F700D38120 /* LayerF1.cpp in Sources */,
-				5D7D93CC1BA9E0F700D38120 /* ImageCompletionLayer_patchmask.cpp in Sources */,
 				5D7D93D51BA9E0F700D38120 /* InitializerShrinkingErosionI1.cpp in Sources */,
-				5D7D93CD1BA9E0F700D38120 /* ImageCompletionLayer.cpp in Sources */,
 				5D7D93D41BA9E0F700D38120 /* InitializerRandomMappingI1.cpp in Sources */,
-				5D7D93CA1BA9E0F700D38120 /* ImageCompletion_patchmask.cpp in Sources */,
 				5D7D93CF1BA9E0F700D38120 /* InitializerConvertMappingF1.cpp in Sources */,
 				5D7D93DD1BA9E0F700D38120 /* MappingI1.cpp in Sources */,
 				5D7D93D21BA9E0F700D38120 /* InitializerMoveMappingI1.cpp in Sources */,
@@ -1163,14 +1095,10 @@
 				5D936E011BC548CB0046ACD4 /* CreatorSubset.cpp in Sources */,
 				5D936E021BC548CB0046ACD4 /* LayerI1.cpp in Sources */,
 				5D936E031BC548CB0046ACD4 /* InitializerContourMappingI1.cpp in Sources */,
-				5D936E041BC548CB0046ACD4 /* ImageCompletion.cpp in Sources */,
 				5D936E051BC548CB0046ACD4 /* SynthesisPyramidI1.cpp in Sources */,
 				5D936E061BC548CB0046ACD4 /* LayerF1.cpp in Sources */,
-				5D936E071BC548CB0046ACD4 /* ImageCompletionLayer_patchmask.cpp in Sources */,
 				5D936E081BC548CB0046ACD4 /* InitializerShrinkingErosionI1.cpp in Sources */,
-				5D936E091BC548CB0046ACD4 /* ImageCompletionLayer.cpp in Sources */,
 				5D936E0A1BC548CB0046ACD4 /* InitializerRandomMappingI1.cpp in Sources */,
-				5D936E0B1BC548CB0046ACD4 /* ImageCompletion_patchmask.cpp in Sources */,
 				5D936E0C1BC548CB0046ACD4 /* InitializerConvertMappingF1.cpp in Sources */,
 				5D936E0D1BC548CB0046ACD4 /* MappingI1.cpp in Sources */,
 				5D936E0E1BC548CB0046ACD4 /* InitializerMoveMappingI1.cpp in Sources */,
@@ -1199,14 +1127,10 @@
 				5D9861401D8B567A00DEDB00 /* CreatorSubset.cpp in Sources */,
 				5D9861411D8B567A00DEDB00 /* LayerI1.cpp in Sources */,
 				5D9861421D8B567A00DEDB00 /* InitializerContourMappingI1.cpp in Sources */,
-				5D9861431D8B567A00DEDB00 /* ImageCompletion.cpp in Sources */,
 				5D9861441D8B567A00DEDB00 /* SynthesisPyramidI1.cpp in Sources */,
 				5D9861451D8B567A00DEDB00 /* LayerF1.cpp in Sources */,
-				5D9861461D8B567A00DEDB00 /* ImageCompletionLayer_patchmask.cpp in Sources */,
 				5D9861471D8B567A00DEDB00 /* InitializerShrinkingErosionI1.cpp in Sources */,
-				5D9861481D8B567A00DEDB00 /* ImageCompletionLayer.cpp in Sources */,
 				5D9861491D8B567A00DEDB00 /* InitializerRandomMappingI1.cpp in Sources */,
-				5D98614A1D8B567A00DEDB00 /* ImageCompletion_patchmask.cpp in Sources */,
 				5D98614B1D8B567A00DEDB00 /* InitializerConvertMappingF1.cpp in Sources */,
 				5D98614C1D8B567A00DEDB00 /* MappingI1.cpp in Sources */,
 				5D98614D1D8B567A00DEDB00 /* InitializerMoveMappingI1.cpp in Sources */,
@@ -1235,14 +1159,10 @@
 				C041EB451DABD98100BF5D76 /* CreatorSubset.cpp in Sources */,
 				C041EB461DABD98100BF5D76 /* LayerI1.cpp in Sources */,
 				C041EB471DABD98100BF5D76 /* InitializerContourMappingI1.cpp in Sources */,
-				C041EB481DABD98100BF5D76 /* ImageCompletion.cpp in Sources */,
 				C041EB491DABD98100BF5D76 /* SynthesisPyramidI1.cpp in Sources */,
 				C041EB4A1DABD98100BF5D76 /* LayerF1.cpp in Sources */,
-				C041EB4B1DABD98100BF5D76 /* ImageCompletionLayer_patchmask.cpp in Sources */,
 				C041EB4C1DABD98100BF5D76 /* InitializerShrinkingErosionI1.cpp in Sources */,
-				C041EB4D1DABD98100BF5D76 /* ImageCompletionLayer.cpp in Sources */,
 				C041EB4E1DABD98100BF5D76 /* InitializerRandomMappingI1.cpp in Sources */,
-				C041EB4F1DABD98100BF5D76 /* ImageCompletion_patchmask.cpp in Sources */,
 				C041EB501DABD98100BF5D76 /* InitializerConvertMappingF1.cpp in Sources */,
 				C041EB511DABD98100BF5D76 /* MappingI1.cpp in Sources */,
 				C041EB521DABD98100BF5D76 /* InitializerMoveMappingI1.cpp in Sources */,

@@ -62,18 +62,6 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorSubset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletion_patchmask.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletionLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletionLayer_patchmask.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerContourMappingI1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -143,18 +131,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorSubset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletion_patchmask.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletionLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\ImageCompletionLayer_patchmask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Initializer.h">
