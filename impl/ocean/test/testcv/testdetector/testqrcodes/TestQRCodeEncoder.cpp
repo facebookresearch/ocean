@@ -12,7 +12,7 @@
 #ifdef OCEAN_ENABLED_EVERSTORE_CLIENT
 	#include "ocean/media/openimagelibraries/Image.h"
 
-	#include "ocean/network/everstore/EverstoreClient.h"
+	#include "metaonly/ocean/network/everstore/EverstoreClient.h"
 #else
 	#ifdef __APPLE__
 		#include "ocean/media/imageio/Image.h"

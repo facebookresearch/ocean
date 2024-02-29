@@ -25,7 +25,7 @@
 #endif
 
 #ifdef OCEAN_ENABLED_EVERSTORE_CLIENT
-	#include "ocean/network/everstore/EverstoreClient.h"
+	#include "metaonly/ocean/network/everstore/EverstoreClient.h"
 #endif // OCEAN_ENABLED_EVERSTORE_CLIENT
 
 #include <random>
