@@ -1,17 +1,21 @@
 // (c) Meta Platform, Inc. and its affiliates. Confidential and proprietary.
 #pragma once
 
-#include <application/ocean/xrplayground/common/experiences/Experiences.h>
-#include <application/ocean/xrplayground/common/experiences/XRPlaygroundExperience.h>
+#include "application/ocean/xrplayground/common/experiences/Experiences.h"
+#include "application/ocean/xrplayground/common/experiences/XRPlaygroundExperience.h"
 
 #if defined XR_PLAYGROUND_PLATFORM_BUILD_META_QUEST
 
-#include <ocean/platform/meta/quest/application/VRTextVisualizer.h>
-#include <ocean/platform/meta/quest/vrapi/application/VRTableMenu.h>
-#include <ocean/media/FrameMedium.h>
-#include <ocean/rendering/Box.h>
-#include <ocean/rendering/Text.h>
-#include <application/ocean/xrplayground/common/PlatformSpecific.h>
+#include "application/ocean/xrplayground/common/PlatformSpecific.h"
+
+#include "ocean/media/FrameMedium.h"
+
+#include "ocean/platform/meta/quest/application/VRTextVisualizer.h"
+#include "ocean/platform/meta/quest/vrapi/application/VRTableMenu.h"
+
+#include "ocean/rendering/Box.h"
+#include "ocean/rendering/Text.h"
+
 #include <recognition/image_tracker_ipc/ImageTrackerRuntimeIpcClient.h>
 #include <vros/sys/tracking/HeadTracker.h>
 

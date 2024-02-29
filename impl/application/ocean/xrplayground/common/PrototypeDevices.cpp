@@ -19,7 +19,7 @@
 
 #include "ocean/io/FileResolver.h"
 
-#include <ocean/math/SophusUtilities.h>
+#include "ocean/math/SophusUtilities.h"
 
 #include "ocean/tracking/blob/BlobTracker6DOF.h"
 #include "ocean/tracking/pattern/PatternTrackerCore6DOF.h"

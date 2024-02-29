@@ -4,11 +4,14 @@
 #include "application/ocean/xrplayground/common/DownloadManager.h"
 #include "application/ocean/xrplayground/common/ContentManager.h"
 
+#include "ocean/io/File.h"
+#include "ocean/io/image/Image.h"
+
+#include "ocean/media/Manager.h"
+
+#include "ocean/rendering/Utilities.h"
+
 #include <folly/Random.h>
-#include <ocean/io/File.h>
-#include <ocean/io/image/Image.h>
-#include <ocean/media/Manager.h>
-#include <ocean/rendering/Utilities.h>
 #include <vector>
 
 #if defined XR_PLAYGROUND_PLATFORM_BUILD_META_QUEST

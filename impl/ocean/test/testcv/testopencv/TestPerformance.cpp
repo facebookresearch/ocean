@@ -2,15 +2,17 @@
 
 #include "ocean/test/testcv/testopencv/TestPerformance.h"
 
-#include <ocean/base/HighPerformanceTimer.h>
-#include <ocean/base/String.h>
+#include "ocean/base/HighPerformanceTimer.h"
+#include "ocean/base/String.h"
 #include "ocean/base/Timestamp.h"
-#include <ocean/base/Worker.h>
-#include <ocean/base/WorkerPool.h>
-#include <ocean/cv/FrameInterpolatorBilinear.h>
-#include <ocean/cv/OpenCVUtilities.h>
-#include <ocean/math/Random.h>
-#include <ocean/math/SquareMatrix3.h>
+#include "ocean/base/Worker.h"
+#include "ocean/base/WorkerPool.h"
+
+#include "ocean/cv/FrameInterpolatorBilinear.h"
+#include "ocean/cv/OpenCVUtilities.h"
+
+#include "ocean/math/Random.h"
+#include "ocean/math/SquareMatrix3.h"
 
 #include <opencv2/imgproc.hpp>
 

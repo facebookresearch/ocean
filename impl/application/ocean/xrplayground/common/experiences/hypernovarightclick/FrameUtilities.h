@@ -3,12 +3,12 @@
 
 #ifdef XR_PLAYGROUND_PLATFORM_BUILD_META_QUEST
 
-	#include <ocean/cv/FrameConverter.h>
-	#include <ocean/cv/FrameConverterBGR24.h>
-	#include <folly/Optional.h>
-	#include <memory>
-	#include <xplat/common/bufferpool/BufferPool.hpp>
+#include "ocean/cv/FrameConverter.h"
+#include "ocean/cv/FrameConverterBGR24.h"
 
+#include <folly/Optional.h>
+#include <memory>
+#include <xplat/common/bufferpool/BufferPool.hpp>
 
 namespace Ocean::XRPlayground
 {

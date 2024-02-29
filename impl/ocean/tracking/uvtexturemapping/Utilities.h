@@ -1,6 +1,6 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-#include <ocean/tracking/uvtexturemapping/MeshUVTextureMapping.h>
+#include "ocean/tracking/uvtexturemapping/MeshUVTextureMapping.h"
 
 namespace Ocean
 {
@@ -18,6 +18,7 @@ namespace UVTextureMapping
 class OCEAN_TRACKING_UVTEXTUREMAPPING_EXPORT Utilities
 {
 	public:
+
 		/**
 		* Creates a MeshUVTextureMapping from a given cubemap (box) texture.
 		* The output mesh is given in a right-hand coordinate system, centered in the center of the box.
