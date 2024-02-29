@@ -20,7 +20,7 @@
 		9327785021BA06310012E514 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ../../../../../../../../../../impl/application/ocean/demo/cv/detector/linedetector/ios/AppDelegate.mm; sourceTree = "<group>"; };
 		9327785121BA06310012E514 /* Application.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Application.mm; path = ../../../../../../../../../../impl/application/ocean/demo/cv/detector/linedetector/ios/Application.mm; sourceTree = "<group>"; };
 		9327785421BA06360012E514 /* LineDetectorWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LineDetectorWrapper.cpp; path = ../../../../../../../../../../impl/application/ocean/demo/cv/detector/linedetector/LineDetectorWrapper.cpp; sourceTree = "<group>"; };
-		9327785621BA064B0012E514 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../../res/application/ocean/demo/cv/detector/linedetector/ios/Info.plist; sourceTree = "<group>"; };
+		9327785621BA064B0012E514 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../../impl/application/ocean/demo/cv/detector/linedetector/ios/Info.plist; sourceTree = "<group>"; };
 		9327785721BA064B0012E514 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = ../../../../../../../../../../res/application/ocean/demo/cv/detector/linedetector/ios/LaunchScreen.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -313,7 +313,7 @@
 					"$(inherited)",
 					../../../../../../../../../../impl,
 				);
-				INFOPLIST_FILE = ../../../../../../../../../../res/application/ocean/demo/cv/detector/linedetector/ios/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../../impl/application/ocean/demo/cv/detector/linedetector/ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
@@ -412,7 +412,7 @@
 					"$(inherited)",
 					../../../../../../../../../../impl,
 				);
-				INFOPLIST_FILE = ../../../../../../../../../../res/application/ocean/demo/cv/detector/linedetector/ios/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../../impl/application/ocean/demo/cv/detector/linedetector/ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
