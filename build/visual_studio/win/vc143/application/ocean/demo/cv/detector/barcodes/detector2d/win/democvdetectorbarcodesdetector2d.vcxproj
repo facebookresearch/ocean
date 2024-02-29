@@ -51,14 +51,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\barcodes\detector2d\win\Application.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\barcodes\detector2d\win\MainWindow.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\barcodes\detector2d\Wrapper.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\barcodes\detector2d\win\Application.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\barcodes\detector2d\win\MainWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\barcodes\detector2d\Wrapper.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\barcodes\detector2d\win\Application.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\barcodes\detector2d\win\MainWindow.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\barcodes\detector2d\Wrapper.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\barcodes\detector2d\win\Application.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\barcodes\detector2d\win\MainWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\barcodes\detector2d\Wrapper.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{71125F04-9131-4AE3-97E3-10E98D1B1EAF}</ProjectGuid>
