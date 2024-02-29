@@ -61,10 +61,6 @@ namespace Devices
  * <tr><td>"ARKit 6DOF Geo Anchors Tracker" <td> Tracker <td> iOS <td> Devices::ARKit::AKGeoAnchorsTracker6DOF <td> 6-DOF SLAM tracker anchored at GPS locations
  * <tr><td>"ARKit 6DOF World Tracker" <td> Tracker <td> iOS <td> Devices::ARKit::AKWorldTracker6DOF <td> 6-DOF SLAM tracker provided via ARKit
  * <tr><td>
- * <tr><td>"Cloud Per-Frame Relocalizer 6DOF Tracker" <td> Tracker <td> iOS <td> Devices::Cloud::CloudPerFrameRelocalizerTracker6DOF <td> 6-DOF tracker anchored at maps applying a re-localization for each individual frame
- * <tr><td>"Cloud Relocalizer 6DOF Tracker" <td> Tracker <td> iOS <td> Devices::Cloud::CloudRelocalizerTracker6DOF <td> 6-DOF SLAM tracker anchored at maps mainly using Ocean on the client side
- * <tr><td>"Cloud Relocalizer 6DOF Tracker without f2f" <td> Tracker <td> iOS <td> Devices::Cloud::CloudRelocalizerTracker6DOF <td> 6-DOF SLAM tracker similar to '"Cloud Relocalizer 6DOF Tracker"' but not applying the frame-to-frame tracking after a successful re-localization
- * <tr><td>
  * <tr><td>"IOS 3DOF Acceleration Sensor" <td> Sensor <td> iOS <td> Devices::IOS::IOSAccelerationSensor3DOF <td> Sensor providing access to the acceleration force that is applied to a device on all three physical axes, including the force of gravity
  * <tr><td>"IOS 3DOF Linear Acceleration Sensor" <td> Sensor <td> iOS <td> Devices::IOS::IOSAccelerationSensor3DOF <td> Sensor providing access to the acceleration force that is applied to a device on all three physical axes, excluding the force of gravity
  * <tr><td>"IOS GPS Tracker" <td> Tracker <td> iOS <td> Devices::IOS::IOSGPSTracker <td> Tracker providing GPS locations
