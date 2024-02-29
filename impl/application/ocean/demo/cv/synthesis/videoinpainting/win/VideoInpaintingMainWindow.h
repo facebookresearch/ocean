@@ -123,7 +123,7 @@ class VideoInpaintingMainWindow :
 			protected:
 
 				/// The individual adjustment values, one for each frame channel, with range [-255, 255]
-				Scalar objectDeltas[tChannels];
+				Scalar deltas_[tChannels];
 		};
 
 	public:
@@ -189,7 +189,7 @@ class VideoInpaintingMainWindow :
 		 * Event function if a new frame has arrived.
 		 * @param frame New frame
 		 */
-		void onFrame(const LegacyFrame& frame);
+		void onFrame(const Frame& frame);
 
 		/**
 		 * Invokes the contour defining for the contour-based inpainting mode.
@@ -247,7 +247,7 @@ class VideoInpaintingMainWindow :
 		 * @param referenceFrame The resulting reference frame composed of the previously inpainted frame (for mask pixels) and the current frame (for non-mask pixels)
 		 * @param worker Optional worker object to distribute the computation
 		 */
-		static void createReferenceFrame(const LegacyFrame& currentFrame, const LegacyFrame& currentMask, const LegacyFrame& inpaintingReferenceFrame, const LegacyFrame& inpaintingReferenceFrameQuarter, const SquareMatrix3& referenceHomographyCurrent, const CV::PixelPositions& contourPoints, const CV::PixelBoundingBox& trackingMaskBoundingBox, Frame& referenceFrame, Worker* worker = nullptr);
+		static void createReferenceFrame(const Frame& currentFrame, const Frame& currentMask, const Frame& inpaintingReferenceFrame, const Frame& inpaintingReferenceFrameQuarter, const SquareMatrix3& referenceHomographyCurrent, const CV::PixelPositions& contourPoints, const CV::PixelBoundingBox& trackingMaskBoundingBox, Frame& referenceFrame, Worker* worker = nullptr);
 
 		/**
 		 * Highlights an area within a frame defined by a mask, and optional highlights the contour of the mask.
@@ -256,7 +256,7 @@ class VideoInpaintingMainWindow :
 		 * @param boundingBox Optional bounding box to improved the computation
 		 * @param contourPixels Optional pixel location of the mask's contour which will be highlighted in addition, if defined with range (-infinity, infinity)x(-infinity, infinity)
 		 */
-		static void highlightMask(LegacyFrame& frame, const LegacyFrame& mask, const CV::PixelBoundingBox& boundingBox = CV::PixelBoundingBox(), const CV::PixelPositions& contourPixels = CV::PixelPositions());
+		static void highlightMask(Frame& frame, const Frame& mask, const CV::PixelBoundingBox& boundingBox = CV::PixelBoundingBox(), const CV::PixelPositions& contourPixels = CV::PixelPositions());
 
 	protected:
 
@@ -273,25 +273,25 @@ class VideoInpaintingMainWindow :
 		CV::PixelPositions userDefinedRoughContour_;
 
 		/// The current frame with upper left corner as pixel origin.
-		LegacyFrame currentFrame_;
+		Frame currentFrame_;
 
 		/// The previous frame as 8 bit grayscale frame with upper left corner as pixel origin, used for the mask-based inpainting only.
-		LegacyFrame prevousFrameGray_;
+		Frame yPrevousFrame_;
 
 		/// The first frame that has been inpainted which will be used as reference for all successive frames.
-		LegacyFrame firstInpaintingFrame_;
+		Frame firstInpaintingFrame_;
 
 		/// The first frame that has been inpainted with a quarter of the original resolution.
-		LegacyFrame firstInpaintingFrameQuarter_;
+		Frame firstInpaintingFrameQuarter_;
 
 		/// The frame holding the (intermediate) synthesis result, defined as member object to avoid to re-create a new frame during each synthesis iteration.
-		LegacyFrame synthesisResult_;
+		Frame synthesisResult_;
 
 		/// The frame holding the reference content for the image synthesis, defined as member object to avoid to re-create a new frame during each synthesis iteration.
 		Frame referenceFrame_;
 
 		/// The 8 bit mask for the current frame covering the undesired object, width upper left corner as pixel origin.
-		LegacyFrame currentMask_;
+		Frame currentMask_;
 
 		/// The most dominant homography transforming points defined in the most recent frame to points defined in the first inpainting frame.
 		SquareMatrix3 firstHomographyRecent_ = SquareMatrix3(true);
@@ -344,7 +344,7 @@ inline VideoInpaintingMainWindow::ColorAdjustmentObject<tChannels>::ColorAdjustm
 
 	for (unsigned int n = 0u; n < tChannels; ++n)
 	{
-		objectDeltas[n] = Scalar(int(valuesB[n]) - int(valuesA[n]));
+		deltas_[n] = Scalar(int(valuesB[n]) - int(valuesA[n]));
 	}
 }
 
@@ -356,7 +356,7 @@ inline VideoInpaintingMainWindow::ColorAdjustmentObject<tChannels>::ColorAdjustm
 
 	for (unsigned int n = 0u; n < tChannels; ++n)
 	{
-		objectDeltas[n] = (adjustment0.objectDeltas[n] + adjustment1.objectDeltas[n]) * Scalar(0.5);
+		deltas_[n] = (adjustment0.deltas_[n] + adjustment1.deltas_[n]) * Scalar(0.5);
 	}
 }
 
@@ -366,7 +366,7 @@ inline Scalar VideoInpaintingMainWindow::ColorAdjustmentObject<tChannels>::delta
 	static_assert(tChannels != 0u, "Invalid channel number!");
 
 	ocean_assert(channel < tChannels);
-	return objectDeltas[channel];
+	return deltas_[channel];
 }
 
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_CV_SYNTHESIS_VIDEO_INPAINTING_WIN_VIDEO_INPAINTING_MAINWINDOW_H

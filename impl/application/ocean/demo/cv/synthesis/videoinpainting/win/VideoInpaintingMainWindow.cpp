@@ -46,24 +46,41 @@ VideoInpaintingMainWindow::~VideoInpaintingMainWindow()
 void VideoInpaintingMainWindow::onInitialized()
 {
 	if (!mediaFilename_.empty())
+	{
 		frameMedium_ = Media::Manager::get().newMedium(mediaFilename_, Media::Medium::FRAME_MEDIUM);
+	}
 
 	if (frameMedium_.isNull())
+	{
 		frameMedium_ = Media::Manager::get().newMedium("LiveVideoId:1", Media::Medium::LIVE_VIDEO);
+	}
 
 	if (frameMedium_.isNull())
+	{
 		frameMedium_ = Media::Manager::get().newMedium("LiveVideoId:0", Media::Medium::LIVE_VIDEO);
+	}
 
 	if (frameMedium_)
 	{
 		if (preferredMediaFrameSize_ == "640x480")
+		{
 			frameMedium_->setPreferredFrameDimension(640u, 480u);
+		}
+
 		else if (preferredMediaFrameSize_ == "640x400")
+		{
 			frameMedium_->setPreferredFrameDimension(640u, 400u);
+		}
+
 		if (preferredMediaFrameSize_ == "1280x720")
+		{
 			frameMedium_->setPreferredFrameDimension(1280u, 720u);
+		}
+
 		if (preferredMediaFrameSize_ == "1920x1080")
+		{
 			frameMedium_->setPreferredFrameDimension(1920u, 1080u);
+		}
 
 		frameMedium_->start();
 	}
@@ -77,14 +94,14 @@ void VideoInpaintingMainWindow::onIdle()
 
 		if (frame && (*frame && frame->timestamp() != frameTimestamp_))
 		{
-			onFrame(LegacyFrame(*frame, LegacyFrame::FCM_USE_IF_POSSIBLE));
+			onFrame(*frame);
 
 			frameTimestamp_ = frame->timestamp();
 			return;
 		}
 	}
 
-	Sleep(1);
+	Thread::sleep(1u);
 }
 
 void VideoInpaintingMainWindow::onMouseDown(const MouseButton button, const int x, const int y)
@@ -106,7 +123,9 @@ void VideoInpaintingMainWindow::onMouseDown(const MouseButton button, const int 
 
 		int bitmapX, bitmapY;
 		if (window2bitmap(x, y, bitmapX, bitmapY) && bitmapX >= 0 && bitmapX < int(bitmap().width()) && bitmapY >= 0 && bitmapY < int(bitmap().height()))
-			userDefinedRoughContour_.push_back(CV::PixelPosition((unsigned int)bitmapX, (unsigned int)bitmapY));
+		{
+			userDefinedRoughContour_.push_back(CV::PixelPosition((unsigned int)(bitmapX), (unsigned int)(bitmapY)));
+		}
 	}
 	else if (button & BUTTON_RIGHT)
 	{
@@ -122,7 +141,9 @@ void VideoInpaintingMainWindow::onMouseDown(const MouseButton button, const int 
 
 		int bitmapX, bitmapY;
 		if (window2bitmap(x, y, bitmapX, bitmapY) && bitmapX >= 0 && bitmapX < int(bitmap().width()) && bitmapY >= 0 && bitmapY < int(bitmap().height()))
-			homographyMaskNewBlobPosition_ = CV::PixelPosition((unsigned int)bitmapX, (unsigned int)bitmapY);
+		{
+			homographyMaskNewBlobPosition_ = CV::PixelPosition((unsigned int)(bitmapX), (unsigned int)(bitmapY));
+		}
 	}
 	else if (button & BUTTON_MIDDLE)
 	{
@@ -160,7 +181,7 @@ void VideoInpaintingMainWindow::onMouseMove(const MouseButton buttons, const int
 			int bitmapX, bitmapY;
 			if (window2bitmap(x, y, bitmapX, bitmapY) && bitmapX >= 0 && bitmapX < int(bitmap().width()) && bitmapY >= 0 && bitmapY < int(bitmap().height()))
 			{
-				userDefinedRoughContour_.push_back(CV::PixelPosition((unsigned int)bitmapX, (unsigned int)bitmapY));
+				userDefinedRoughContour_.push_back(CV::PixelPosition((unsigned int)(bitmapX), (unsigned int)(bitmapY)));
 			}
 		}
 	}
@@ -171,7 +192,7 @@ void VideoInpaintingMainWindow::onMouseMove(const MouseButton buttons, const int
 			int bitmapX, bitmapY;
 			if (window2bitmap(x, y, bitmapX, bitmapY) && bitmapX >= 0 && bitmapX < int(bitmap().width()) && bitmapY >= 0 && bitmapY < int(bitmap().height()))
 			{
-				homographyMaskNewBlobPosition_ = CV::PixelPosition(bitmapX, bitmapY);
+				homographyMaskNewBlobPosition_ = CV::PixelPosition((unsigned int)(bitmapX), (unsigned int)(bitmapY));
 			}
 		}
 	}
@@ -196,9 +217,13 @@ void VideoInpaintingMainWindow::onToggleFullscreen()
 
 		unsigned int flag = 0;
 		if (left == -1000 || top == -1000)
+		{
 			flag |= SWP_NOMOVE;
+		}
 		if (width == -1000 || height == -1000)
+		{
 			flag |= SWP_NOSIZE;
+		}
 
 		const int virtualDisplayWidth = Platform::Win::Screen::virtualDisplayWidth();
 		const int virtualDisplayHeight = Platform::Win::Screen::virtualDisplayHeight();
@@ -226,16 +251,18 @@ void VideoInpaintingMainWindow::onToggleFullscreen()
 		nonFullScreenStyle_ = int(SetWindowLongPtr(handle(), GWL_STYLE, WS_VISIBLE));
 
 		unsigned int screenLeft, screenTop, screenWidth, screenHeight;
-		if (Platform::Win::Screen::screen(handle(), screenLeft, screenTop, screenWidth, screenHeight) == false)
+		if (!Platform::Win::Screen::screen(handle(), screenLeft, screenTop, screenWidth, screenHeight))
+		{
 			ocean_assert(false && "Invalid screen");
+		}
 
 		::SetWindowPos(handle(), HWND_TOPMOST, int(screenLeft), int(screenTop), int(screenWidth), int(screenHeight), SWP_SHOWWINDOW);
 	}
 }
 
-void VideoInpaintingMainWindow::onFrame(const LegacyFrame& frame)
+void VideoInpaintingMainWindow::onFrame(const Frame& frame)
 {
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), currentFrame_, false, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), currentFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
 	{
 		ocean_assert(false && "This should never happen!");
 		return;
@@ -249,13 +276,17 @@ void VideoInpaintingMainWindow::onFrame(const LegacyFrame& frame)
 		{
 			// the user still is defining the contour
 			if (!definingContour())
+			{
 				reset();
+			}
 		}
 		else
 		{
 			// the fine contour has been determined, so we apply the actual inpainting in every frame
 			if (!contourBasedInpainting())
+			{
 				reset();
+			}
 		}
 	}
 	else if (inpaintingMode_ == IM_HOMOGRAPHY_MASK_BASED)
@@ -264,8 +295,8 @@ void VideoInpaintingMainWindow::onFrame(const LegacyFrame& frame)
 
 		// as we use the previous gray frame for the mask-based video inpainting only, we create the video for this case only
 
-		LegacyFrame currentGray;
-		if (!CV::FrameConverter::Comfort::convert(currentFrame_, FrameType(currentFrame_, FrameType::FORMAT_Y8), currentGray, true, &worker_))
+		Frame yCurrent;
+		if (!CV::FrameConverter::Comfort::convert(currentFrame_, FrameType(currentFrame_, FrameType::FORMAT_Y8), yCurrent, CV::FrameConverter::CP_ALWAYS_COPY, &worker_))
 		{
 			ocean_assert(false && "This should never happen!");
 			return;
@@ -275,24 +306,31 @@ void VideoInpaintingMainWindow::onFrame(const LegacyFrame& frame)
 		{
 			// the user still is defining the mask
 			if (!definingMask())
+			{
 				reset();
+			}
 		}
 		else
 		{
 			// the fine contour has been determined, so we apply the actual inpainting in every frame
 			if (!maskBasedInpainting())
+			{
 				reset();
+			}
 		}
 
 		// in the case no reset has been invoked above
 		if (inpaintingMode_ == IM_HOMOGRAPHY_MASK_BASED)
-			prevousFrameGray_ = std::move(currentGray);
+		{
+			yPrevousFrame_ = std::move(currentFrame_);
+			yPrevousFrame_.makeOwner();
+		}
 	}
 
 	if (inpaintingMode_ == IM_UNKNOWN)
 	{
 		ocean_assert(currentFrame_);
-		setFrame(Frame(currentFrame_, Frame::temporary_ACM_USE_KEEP_LAYOUT));
+		setFrame(currentFrame_);
 	}
 
 	repaint();
@@ -305,7 +343,7 @@ bool VideoInpaintingMainWindow::definingContour()
 
 	ocean_assert(currentFrame_ && currentFrame_.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
 
-	setFrame(Frame(currentFrame_, Frame::temporary_ACM_USE_KEEP_LAYOUT));
+	setFrame(currentFrame_);
 
 	switch (contourState_)
 	{
@@ -336,7 +374,7 @@ bool VideoInpaintingMainWindow::definingContour()
 
 		case CS_DETERMINE_FINE_CONTOUR:
 		{
-			if (!contourTracker_.detectObject(Frame(currentFrame_, Frame::temporary_ACM_USE_KEEP_LAYOUT), CV::Segmentation::PixelContour(true, false, userDefinedRoughContour_), randomGenerator_, 10u, &worker_) || contourTracker_.denseContourSubPixel().size() < 3) // **TODO** explicit gray frame if available?
+			if (!contourTracker_.detectObject(currentFrame_, CV::Segmentation::PixelContour(true, false, userDefinedRoughContour_), randomGenerator_, 10u, &worker_) || contourTracker_.denseContourSubPixel().size() < 3) // **TODO** explicit gray frame if available?
 				return false;
 
 			// the undesired object enclosed in the rough user-defined contour could be determined successfully, so we proceed with the actual inpainting
@@ -362,13 +400,19 @@ bool VideoInpaintingMainWindow::contourBasedInpainting()
 	ocean_assert(currentFrame_ && currentFrame_.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
 
 	// first we track the contour from the previous frame to the current frame
-	if (!contourTracker_.trackObject(Frame(currentFrame_, Frame::temporary_ACM_USE_KEEP_LAYOUT), randomGenerator_, 10u, &worker_) || contourTracker_.denseContourSubPixel().size() < 3) // **TODO** explicit gray frame if available?
+	if (!contourTracker_.trackObject(currentFrame_, randomGenerator_, 10u, &worker_) || contourTracker_.denseContourSubPixel().size() < 3) // **TODO** explicit gray frame if available?
+	{
 		return false;
+	}
 
 	// we check whether the new contour has left the frame so that we stop here, thus we simply do not re-track an object which has left the camera frame
-	for (size_t n = 0; n < contourTracker_.denseContour().pixels().size(); ++n)
-		if (contourTracker_.denseContour().pixels()[n].x() >= currentFrame_.width() || contourTracker_.denseContour().pixels()[n].y() >= currentFrame_.height())
+	for (const CV::PixelPosition& pixel : contourTracker_.denseContour().pixels())
+	{
+		if (pixel.x() >= currentFrame_.width() || pixel.y() >= currentFrame_.height())
+		{
 			return false;
+		}
+	}
 
 	// now as we have the dominant homography and the accurate/fine contour for the current frame we invoke the core inpainting approach with is identical for either the contour-based or mask-based mode
 
@@ -381,16 +425,16 @@ bool VideoInpaintingMainWindow::definingMask()
 	ocean_assert(maskState_ == MS_DEFINING_MASK);
 
 	// first, we determine the most dominant homography between the previous and the current frame, mainly based on the mask's border locations in the previous and current frame
-	// in the case, the homography determination fails we simply take the previous points as current points (we also could stop here, as the trackings situation seems to be very complex)
+	// in the case, the homography determination fails we simply take the previous points as current points (we also could stop here, as the tracking situation seems to be very complex)
 
 	SquareMatrix3 currentHomographyPrevious;
-	if (homographyTracker_.trackPoints(Frame(currentFrame_, Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(prevousFrameGray_, Frame::temporary_ACM_USE_KEEP_LAYOUT), randomGenerator_, homographyMaskPreviousPoints_, currentHomographyPrevious, &worker_)) // we call also for the first frame so that the tracker can store a frame pyramid internally
+	if (homographyTracker_.trackPoints(currentFrame_, yPrevousFrame_, randomGenerator_, homographyMaskPreviousPoints_, currentHomographyPrevious, &worker_)) // we call also for the first frame so that the tracker can store a frame pyramid internally
 	{
 		homographyMaskPreviousPoints_ = Tracking::HomographyTracker::transformPoints(homographyMaskPreviousPoints_, currentHomographyPrevious);
 	}
 
-	currentMask_.set(FrameType(currentFrame_, FrameType::FORMAT_Y8));
-	memset(currentMask_.data(), 0xFF, currentMask_.size());
+	currentMask_.set(FrameType(currentFrame_, FrameType::FORMAT_Y8), true /*forceOwner*/, true /*forceWritable*/);
+	currentMask_.setValue(0xFFu);
 
 	// then, we paint the mask from the previous frame into the current mask (so that the mask does not get lost as time goes by)
 
@@ -408,7 +452,7 @@ bool VideoInpaintingMainWindow::definingMask()
 	if (homographyMaskNewBlobPosition_)
 	{
 		const unsigned char value = 0x00;
-		CV::Canvas::ellipse8BitPerChannel<1u>(currentMask_.data(), currentMask_.width(), currentMask_.height(), homographyMaskNewBlobPosition_, 51u, 51u, &value);
+		CV::Canvas::ellipse8BitPerChannel<1u>(currentMask_.data<uint8_t>(), currentMask_.width(), currentMask_.height(), homographyMaskNewBlobPosition_, 51u, 51u, &value, currentMask_.paddingElements());
 		homographyMaskNewBlobPosition_ = CV::PixelPosition();
 
 		CV::PixelPositions borderPixels4;
@@ -426,9 +470,11 @@ bool VideoInpaintingMainWindow::definingMask()
 	}
 
 	if (!maskPixelContour.isEmpty())
+	{
 		highlightMask(currentFrame_, currentMask_, maskPixelContour.boundingBox(), maskPixelContour.pixels());
+	}
 
-	setFrame(Frame(currentFrame_, Frame::temporary_ACM_USE_KEEP_LAYOUT));
+	setFrame(currentFrame_);
 
 	return true;
 }
@@ -443,25 +489,33 @@ bool VideoInpaintingMainWindow::maskBasedInpainting()
 	// first we track the mask from the previous frame to the current frame (via the mask's strong boundary locations defining a dominant homography)
 
 	SquareMatrix3 currentHomographyPrevious(true);
-	if (homographyTracker_.trackPoints(Frame(currentFrame_, Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(prevousFrameGray_, Frame::temporary_ACM_USE_KEEP_LAYOUT), randomGenerator_, homographyMaskPreviousPoints_, currentHomographyPrevious, &worker_))
+	if (homographyTracker_.trackPoints(currentFrame_, yPrevousFrame_, randomGenerator_, homographyMaskPreviousPoints_, currentHomographyPrevious, &worker_))
 	{
 		homographyMaskPreviousPoints_ = Tracking::HomographyTracker::transformPoints(homographyMaskPreviousPoints_, currentHomographyPrevious);
 	}
 
 	// we check whether the new mask has left the frame so that we stop here, thus we simply do not re-track an object which has left the camera frame
-	for (size_t n = 0; n < homographyMaskPreviousPoints_.size(); ++n)
-		if ((unsigned int)homographyMaskPreviousPoints_[n].x() >= currentFrame_.width() || (unsigned int)homographyMaskPreviousPoints_[n].y() >= currentFrame_.height())
+	for (const Vector2& point : homographyMaskPreviousPoints_)
+	{
+		if ((unsigned int)(Numeric::round32(point.x())) >= currentFrame_.width() || (unsigned int)(Numeric::round32(point.y())) >= currentFrame_.height())
+		{
 			return false;
+		}
+	}
 
 	if (homographyMaskPreviousPoints_.size() < 3)
+	{
 		return false;
+	}
 
 	CV::Segmentation::PixelContour contour(CV::PixelPosition::vectors2pixelPositions(homographyMaskPreviousPoints_, currentFrame_.width(), currentFrame_.height()));
 	contour.makeDistinct();
 	contour.makeDense();
 
 	if (contour.size() < 3)
+	{
 		return false;
+	}
 
 	// now as we have the dominant homography and the accurate/fine contour for the current frame we invoke the core inpainting approach with is identical for either the contour-based or mask-based mode
 
@@ -474,16 +528,18 @@ bool VideoInpaintingMainWindow::coreInpainting(const SquareMatrix3& currentHomog
 
 	SquareMatrix3 previousHomographyCurrent;
 	if (!currentHomographyPrevious.invert(previousHomographyCurrent))
+	{
 		return false;
+	}
 
 	// we compute the most dominant homography between the current and the first frame
 	firstHomographyRecent_ = Geometry::Homography::normalizedHomography(firstHomographyRecent_ * previousHomographyCurrent);
 
 	// create the mask of the undesired object according to the tracked object contour
-	currentMask_.set(FrameType(currentFrame_, FrameType::FORMAT_Y8));
-	memset(currentMask_.data(), 0xFF, currentMask_.size());
+	currentMask_.set(FrameType(currentFrame_, FrameType::FORMAT_Y8), true /*forceOwner*/, true /*forceWritable*/);
+	currentMask_.setValue(0xFFu);
 
-	CV::Segmentation::MaskCreator::denseContour2inclusiveMask(currentMask_.data(), currentMask_.width(), currentMask_.height(), currentMask_.paddingElements(), pixelContour, 0x00);
+	CV::Segmentation::MaskCreator::denseContour2inclusiveMask(currentMask_.data<uint8_t>(), currentMask_.width(), currentMask_.height(), currentMask_.paddingElements(), pixelContour, 0x00);
 
 	// the very first frame needs a different treatment as the successive frames
 	if (!firstInpaintingFrame_)
@@ -491,7 +547,7 @@ bool VideoInpaintingMainWindow::coreInpainting(const SquareMatrix3& currentHomog
 		// the current frame is the very first inpainting frame, so we do not care about any previous frame (wrt. video coherence) but we simply try to create a plausible and high quality inpainting result
 
 		CV::Synthesis::SynthesisPyramidI1 initialSynthesisPyramid;
-		initialSynthesisPyramid.arrange(Frame(currentFrame_, Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(currentMask_, Frame::temporary_ACM_USE_KEEP_LAYOUT), &worker_, false, false);
+		initialSynthesisPyramid.arrange(currentFrame_, currentMask_, &worker_, false, false);
 
 		CV::Synthesis::Constraints constraints;
 
@@ -516,16 +572,19 @@ bool VideoInpaintingMainWindow::coreInpainting(const SquareMatrix3& currentHomog
 #endif // USE_SYNTHESIS_CONSTRAINTS
 
 		if (!constraints.isEmpty())
-			initialSynthesisPyramid.applyInpainting(constraints, randomGenerator_, 5u, 26u, 0xFFFFFFFF, 4u, 2u, &worker_);
+		{
+			initialSynthesisPyramid.applyInpainting(constraints, randomGenerator_, 5u, 26u, (unsigned int)(-1), 4u, 2u, &worker_);
+		}
 		else
-			initialSynthesisPyramid.applyInpainting(CV::Synthesis::SynthesisPyramidI1::IT_PATCH_SUB_REGION_2, randomGenerator_, 5u, 26u, 0xFFFFFFFF, 2u, 1u, 1u, &worker_);
+		{
+			initialSynthesisPyramid.applyInpainting(CV::Synthesis::SynthesisPyramidI1::IT_PATCH_SUB_REGION_2, randomGenerator_, 5u, 26u, (unsigned int)(-1), 2u, 1u, 1u, &worker_);
+		}
 
 		// as we will not use the 'applicationCurrentFrame' anymore during this inpainting iteration we store it as first inpainting frame
 		firstInpaintingFrame_ = std::move(currentFrame_);
 
 		// we apply the determined mapping and create the final inpainting result
-		Frame tmpFrame(firstInpaintingFrame_, Frame::temporary_ACM_USE_KEEP_LAYOUT);
-		initialSynthesisPyramid.createInpaintingResult(tmpFrame, &worker_);
+		initialSynthesisPyramid.createInpaintingResult(firstInpaintingFrame_, &worker_);
 
 		// we also store a small resolution of the first inpainting frame as we will use this resolution during the creation of the reference frame
 		CV::FrameShrinker::downsampleByTwo11(firstInpaintingFrame_, firstInpaintingFrameQuarter_, &worker_);
@@ -534,7 +593,7 @@ bool VideoInpaintingMainWindow::coreInpainting(const SquareMatrix3& currentHomog
 		// we store the synthesis result for the first frame (the mapping of the finest synthesis layer) as initial rough guess for the successive frame
 		previousMapping_ = std::move(initialSynthesisPyramid.finestLayer().mapping());
 
-		setFrame(Frame(firstInpaintingFrame_, Frame::temporary_ACM_USE_KEEP_LAYOUT));
+		setFrame(firstInpaintingFrame_);
 	}
 	else
 	{
@@ -545,7 +604,7 @@ bool VideoInpaintingMainWindow::coreInpainting(const SquareMatrix3& currentHomog
 		const CV::PixelBoundingBox maskBoundingBox(pixelContour.boundingBox());
 
 		// determine the inner distance between the mask pixels and the border of the mask and stores this information as the pixel values within the mask, 0 means the border itself, 1 means one pixel until the border is reached, and so on...
-		CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(currentMask_.data(), currentMask_.width(), currentMask_.height(), currentMask_.paddingElements(), 6u, false, maskBoundingBox, &worker_);
+		CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(currentMask_.data<uint8_t>(), currentMask_.width(), currentMask_.height(), currentMask_.paddingElements(), 6u, false, maskBoundingBox, &worker_);
 
 		// now, we create a reference frame which will be used for the image synthesis guiding the algorithm to create an visual result similar to the reference frame
 		createReferenceFrame(currentFrame_, currentMask_, firstInpaintingFrame_, firstInpaintingFrameQuarter_, firstHomographyRecent_, pixelContour.pixels(), maskBoundingBox, referenceFrame_, &worker_);
@@ -553,32 +612,28 @@ bool VideoInpaintingMainWindow::coreInpainting(const SquareMatrix3& currentHomog
 
 		// we initialize the sub-pixel accurate synthesis pyramid
 		Frame copyCurrentFrame(currentFrame_, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
-		CV::Synthesis::LayerF1 newSynthesisPixelLayer(copyCurrentFrame, Frame(currentMask_, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT), maskBoundingBox); // **TODO** remove frame copy
+		CV::Synthesis::LayerF1 newSynthesisPixelLayer(copyCurrentFrame, currentMask_, maskBoundingBox); // **TODO** remove frame copy
 
 		// we adopt the synthesis mapping from the previous frame
 		CV::Synthesis::InitializerHomographyMappingAdaptionF1(newSynthesisPixelLayer, previousMapping_, randomGenerator_, previousHomographyCurrent).invoke(&worker_);
 
 		// we optimize the synthesis for the current frame while respecting a reference frame
-		CV::Synthesis::Optimizer4NeighborhoodReferenceFrameF1<5u, 25u, true>(newSynthesisPixelLayer, randomGenerator_, referenceFrame_).invoke(5u, 1u, 0xFFFFFFFF, &worker_, true);
+		CV::Synthesis::Optimizer4NeighborhoodReferenceFrameF1<5u, 25u, true>(newSynthesisPixelLayer, randomGenerator_, referenceFrame_).invoke(5u, 1u, (unsigned int)(-1), &worker_, true);
 
 
 		synthesisResult_.copy(currentFrame_); // **TODO** perhaps we do not need to create a copy, neither here, nor above
 
-		Frame tmpFrame(synthesisResult_, Frame::temporary_ACM_USE_KEEP_LAYOUT);
-		ocean_assert(!tmpFrame.isOwner());
-		CV::Synthesis::CreatorInpaintingContentF1(newSynthesisPixelLayer, tmpFrame).invoke(&worker_);
+		CV::Synthesis::CreatorInpaintingContentF1(newSynthesisPixelLayer, synthesisResult_).invoke(&worker_);
 
 		// finally, we improve the resulting video quality by blending the synthesized content with the current live content (at the border of the undesired object, actually all pixels with distance <= 5 pixels)
 		// beware: although the blending is in general a nice idea to improve the image quality (to prevent hard transitions) the blending may introduce other issues like adding a shadow from the current/original frame - in this case the extra boundary around the undesired object should be increased
 
-		const unsigned int boundingBoxTopLeftIndex = maskBoundingBox.topLeft().index(referenceFrame_.width());
-
-		const uint8_t* currentData = currentFrame_.constdata<uint8_t>() + boundingBoxTopLeftIndex * 3u;
-		const uint8_t* maskData = currentMask_.constdata<uint8_t>() + boundingBoxTopLeftIndex;
-		uint8_t* resultData = synthesisResult_.data<uint8_t>() + boundingBoxTopLeftIndex * 3u;
-
 		for (unsigned int y = maskBoundingBox.top(); y < maskBoundingBox.bottomEnd(); ++y)
 		{
+			const uint8_t* currentData = currentFrame_.constpixel<uint8_t>(maskBoundingBox.left(), y);
+			const uint8_t* maskData = currentMask_.constpixel<uint8_t>(maskBoundingBox.left(), y);
+			uint8_t* resultData = synthesisResult_.pixel<uint8_t>(maskBoundingBox.left(), y);
+
 			for (unsigned int x = maskBoundingBox.left(); x < maskBoundingBox.rightEnd(); ++x)
 			{
 				if (*maskData > 0u && *maskData <= 5u)
@@ -603,17 +658,11 @@ bool VideoInpaintingMainWindow::coreInpainting(const SquareMatrix3& currentHomog
 				resultData += 3;
 				maskData++;
 			}
-
-			ocean_assert(currentMask_.width() >= maskBoundingBox.width());
-
-			currentData += (currentMask_.width() - maskBoundingBox.width()) * 3u;
-			resultData += (currentMask_.width() - maskBoundingBox.width()) * 3u;
-			maskData += currentMask_.width() - maskBoundingBox.width();
 		}
 
 		previousMapping_ = std::move(newSynthesisPixelLayer.mapping());
 
-		setFrame(Frame(synthesisResult_, Frame::temporary_ACM_USE_KEEP_LAYOUT));
+		setFrame(synthesisResult_);
 	}
 
 	return true;
@@ -638,15 +687,13 @@ void VideoInpaintingMainWindow::reset()
 	firstInpaintingFrame_.release();
 	firstInpaintingFrameQuarter_.release();
 
-	prevousFrameGray_.release();
+	yPrevousFrame_.release();
 	currentMask_.release();
 
 	synthesisResult_.release();
-
-	// **TODO** release further information?
 }
 
-void VideoInpaintingMainWindow::createReferenceFrame(const LegacyFrame& currentFrame, const LegacyFrame& currentMask, const LegacyFrame& inpaintingReferenceFrame, const LegacyFrame& inpaintingReferenceFrameQuarter, const SquareMatrix3& referenceHomographyCurrent, const CV::PixelPositions& contourPoints, const CV::PixelBoundingBox& trackingMaskBoundingBox, Frame& referenceFrame, Worker* worker)
+void VideoInpaintingMainWindow::createReferenceFrame(const Frame& currentFrame, const Frame& currentMask, const Frame& inpaintingReferenceFrame, const Frame& inpaintingReferenceFrameQuarter, const SquareMatrix3& referenceHomographyCurrent, const CV::PixelPositions& contourPoints, const CV::PixelBoundingBox& trackingMaskBoundingBox, Frame& referenceFrame, Worker* worker)
 {
 	ocean_assert(contourPoints.size() >= 3);
 	ocean_assert(trackingMaskBoundingBox);
@@ -658,12 +705,12 @@ void VideoInpaintingMainWindow::createReferenceFrame(const LegacyFrame& currentF
 	referenceFrame = Frame(currentFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
 	// first we fill the undesired area in the current frame with visual information from the very first inpainting frame
-	CV::Advanced::AdvancedFrameInterpolatorBilinear::Comfort::homographyFilterMask(Frame(inpaintingReferenceFrame, Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(currentMask, Frame::temporary_ACM_USE_KEEP_LAYOUT), referenceFrame, referenceHomographyCurrent, trackingMaskBoundingBox, worker);
+	CV::Advanced::AdvancedFrameInterpolatorBilinear::Comfort::homographyFilterMask(inpaintingReferenceFrame, currentMask, referenceFrame, referenceHomographyCurrent, trackingMaskBoundingBox, worker);
 
 	// now we need to adjust the appearance of the undesired area so that it matches with the appearance of the current frame, wrt. e.g., ambient lighting changes (camera exposure, shadows, etc...)
 	// however, due to performance reasons we apply a very basic adjustment only
 
-	LegacyFrame currentFrameQuarter;
+	Frame currentFrameQuarter;
 	CV::FrameShrinker::downsampleByTwo11(currentFrame, currentFrameQuarter, worker); // **TODO** masked shrinking as we do not want visual information from non-mask pixels
 	CV::FrameShrinker::downsampleByTwo11(currentFrameQuarter, worker);
 
@@ -673,9 +720,6 @@ void VideoInpaintingMainWindow::createReferenceFrame(const LegacyFrame& currentF
 
 	ColorAdjustmentObject<3u>::ColorAdjustmentObjects colorAdjustmentObjects;
 	colorAdjustmentObjects.reserve(contourPoints.size() / 4);
-
-	const uint8_t* const referenceDataQuarter = inpaintingReferenceFrameQuarter.constdata<uint8_t>();
-	const uint8_t* const currentDataQuarter = currentFrameQuarter.constdata<uint8_t>();
 
 	CV::PixelPosition lastPixelPositionQuarter;
 	for (CV::PixelPositions::const_iterator i = contourPoints.begin(); i != contourPoints.end(); ++i)
@@ -697,13 +741,10 @@ void VideoInpaintingMainWindow::createReferenceFrame(const LegacyFrame& currentF
 				const CV::PixelPosition referencePixelPositionQuarter(CV::PixelPosition::vector2pixelPosition(referencePositionQuarter));
 				ocean_assert(referencePixelPositionQuarter.x() < inpaintingReferenceFrameQuarter.width() && referencePixelPositionQuarter.y() < inpaintingReferenceFrameQuarter.height());
 
-				const unsigned int referenceIndex = referencePixelPositionQuarter.index(currentFrameQuarter.width());
-				const unsigned int currentIndex = currentPixelPositionQuarter.index(currentFrameQuarter.width());
+				const uint8_t* const referencePixel = inpaintingReferenceFrameQuarter.constpixel<uint8_t>(referencePixelPositionQuarter.x(), referencePixelPositionQuarter.y());
+				const uint8_t* const currentPixel = currentFrameQuarter.constpixel<uint8_t>(currentPixelPositionQuarter.x(), currentPixelPositionQuarter.y());
 
-				ocean_assert(referenceIndex < inpaintingReferenceFrameQuarter.pixels());
-				ocean_assert(currentIndex < currentFrameQuarter.pixels());
-
-				colorAdjustmentObjects.push_back(ColorAdjustmentObject<3u>(currentPixelPositionQuarter.vector(), referenceDataQuarter + referenceIndex * 3u, currentDataQuarter + currentIndex * 3u));
+				colorAdjustmentObjects.emplace_back(currentPixelPositionQuarter.vector(), referencePixel, currentPixel);
 			}
 		}
 	}
@@ -715,7 +756,9 @@ void VideoInpaintingMainWindow::createReferenceFrame(const LegacyFrame& currentF
 		newColorAdjustmentObjects.reserve(newColorAdjustmentObjects.size() / 2);
 
 		for (size_t n = 1; n < colorAdjustmentObjects.size(); n += 2)
-			newColorAdjustmentObjects.push_back(ColorAdjustmentObject<3u>(colorAdjustmentObjects[n - 1u], colorAdjustmentObjects[n]));
+		{
+			newColorAdjustmentObjects.emplace_back(colorAdjustmentObjects[n - 1u], colorAdjustmentObjects[n]);
+		}
 
 		colorAdjustmentObjects = std::move(newColorAdjustmentObjects);
 	}
@@ -766,14 +809,13 @@ void VideoInpaintingMainWindow::createReferenceFrame(const LegacyFrame& currentF
 	// now we adjust each pixel value of the reference frame (inside the mask only) by using interpolated adjustment values from the lookup table, **TODO** multicore?
 	// further we blend the visual content of the current frame and the reference frame at the border of the mask (actually all pixels with distance <= 5 pixels)
 
-	const unsigned int boundingBoxTopLeftIndex = trackingMaskBoundingBox.topLeft().index(referenceFrame.width());
-
-	uint8_t* referenceData = referenceFrame.data<uint8_t>() + boundingBoxTopLeftIndex * 3u;
-	const uint8_t* currentData = currentFrame.constdata<uint8_t>() + boundingBoxTopLeftIndex * 3u;
-	const uint8_t* maskData = currentMask.constdata<uint8_t>() + boundingBoxTopLeftIndex;
-
 	for (unsigned int y = trackingMaskBoundingBox.top(); y < trackingMaskBoundingBox.bottomEnd(); ++y)
 	{
+		uint8_t* referenceData = referenceFrame.pixel<uint8_t>(trackingMaskBoundingBox.left(), y);
+
+		const uint8_t* currentData = currentFrame.constpixel<uint8_t>(trackingMaskBoundingBox.left(), y);
+		const uint8_t* maskData = currentMask.constpixel<uint8_t>(trackingMaskBoundingBox.left(), y);
+
 		for (unsigned int x = trackingMaskBoundingBox.left(); x < trackingMaskBoundingBox.rightEnd(); ++x)
 		{
 			if (*maskData != 0xFF)
@@ -817,99 +859,64 @@ void VideoInpaintingMainWindow::createReferenceFrame(const LegacyFrame& currentF
 			referenceData += 3;
 			currentData += 3;
 		}
-
-		ocean_assert(currentMask.width() >= trackingMaskBoundingBox.width());
-
-		referenceData += (currentMask.width() - trackingMaskBoundingBox.width()) * 3u;
-		currentData += (currentMask.width() - trackingMaskBoundingBox.width()) * 3u;
-		maskData += currentMask.width() - trackingMaskBoundingBox.width();
 	}
 }
 
-void VideoInpaintingMainWindow::highlightMask(LegacyFrame& frame, const LegacyFrame& mask, const CV::PixelBoundingBox& boundingBox, const CV::PixelPositions& contourPixels)
+void VideoInpaintingMainWindow::highlightMask(Frame& frame, const Frame& mask, const CV::PixelBoundingBox& boundingBox, const CV::PixelPositions& contourPixels)
 {
-	ocean_assert(frame && mask);
+	ocean_assert(frame.isValid() && mask.isValid());
 	ocean_assert(FrameType(frame, mask.pixelFormat()) == mask.frameType());
 
 	ocean_assert(FrameType::formatIsGeneric(frame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 3u));
 	ocean_assert(FrameType::formatIsGeneric(mask.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
 
-	// **TODO** this highlighting is designed for RGB, we need somthing more flexible e.g., also for YUV, and multicore?
+	// **TODO** this highlighting is designed for RGB, we need something more flexible e.g., also for YUV, and multicore?
+
+	unsigned int left = 0u;
+	unsigned int top = 0u;
+
+	unsigned int rightEnd = frame.width();
+	unsigned int bottomEnd = frame.height();
 
 	if (boundingBox)
 	{
-		const unsigned int left = min(boundingBox.left(), frame.width() - 1u);
-		const unsigned int top = min(boundingBox.top(), frame.height() - 1u);
+		left = min(boundingBox.left(), frame.width() - 1u);
+		top = min(boundingBox.top(), frame.height() - 1u);
 
-		const unsigned int rightEnd = min(boundingBox.rightEnd(), frame.width());
-		const unsigned int bottomEnd = min(boundingBox.bottomEnd(), frame.height());
-
-		const unsigned int width = rightEnd - left;
-		const unsigned int height = bottomEnd - top;
-
-		ocean_assert(width < frame.width() && height < frame.height());
-
-		uint8_t* frameData = frame.data<uint8_t>() + (top * frame.width() + left) * 3u;
-		const uint8_t* maskData = mask.constdata<uint8_t>() + top * mask.width() + left;
-
-		const uint8_t* const frameDataEnd = frameData + (height * frame.width()) * 3u;
-
-		while (frameData != frameDataEnd)
-		{
-			ocean_assert(frameData < frameDataEnd);
-
-			const uint8_t* const frameDataRowEnd = frameData + width * 3u;
-
-			while (frameData != frameDataRowEnd)
-			{
-				if (*maskData++ == 0x00)
-				{
-					frameData[0u] = 0xFF;
-					frameData[1u] >>= 1u;
-					frameData[2u] >>= 1u;
-				}
-
-				frameData += 3;
-			}
-
-			frameData += (frame.width() - width) * 3u;
-			maskData += frame.width() - width;
-		}
+		rightEnd = min(boundingBox.rightEnd(), frame.width());
+		bottomEnd = min(boundingBox.bottomEnd(), frame.height());
 	}
-	else
+
+	for (unsigned int y = top; y < bottomEnd; ++y)
 	{
-		uint8_t* frameData = frame.data<uint8_t>();
-		const uint8_t* maskData = mask.constdata<uint8_t>();
+		uint8_t* framePixel = frame.pixel<uint8_t>(left, y);
+		const uint8_t* maskPixel = mask.constpixel<uint8_t>(left, y);
 
-		const uint8_t* const frameDataEnd = frameData + frame.pixels() * 3u;
-
-		while (frameData != frameDataEnd)
+		for (unsigned int x = left; x < rightEnd; ++x)
 		{
-			ocean_assert(frameData < frameDataEnd);
-
-			if (*maskData++ == 0x00)
+			if (*maskPixel++ == 0x00u)
 			{
-				frameData[0u] = 0xFF;
-				frameData[1u] >>= 1u;
-				frameData[2u] >>= 1u;
+				framePixel[0u] = 0xFF;
+				framePixel[1u] /= 2u;
+				framePixel[2u] /= 2u;
 			}
 
-			frameData += 3;
+			framePixel += 3;
 		}
 	}
 
 	if (!contourPixels.empty())
 	{
-		uint8_t* const frameData = frame.data<uint8_t>();
-
-		for (size_t n = 0; n < contourPixels.size(); ++n)
-			if (contourPixels[n].x() < frame.width() && contourPixels[n].y() < frame.height())
+		for (const CV::PixelPosition& contourPixel : contourPixels)
+		{
+			if (contourPixel.x() < frame.width() && contourPixel.y() < frame.height())
 			{
-				const unsigned int index = contourPixels[n].index(frame.width());
+				uint8_t* const framePixel = frame.pixel<uint8_t>(contourPixel.x(), contourPixel.y());
 
-				frameData[3u * index + 0u] = 0x00;
-				frameData[3u * index + 1u] = 0x00;
-				frameData[3u * index + 2u] = 0xFF;
+				framePixel[0u] = 0x00u;
+				framePixel[1u] = 0x00u;
+				framePixel[2u] = 0xFFu;
 			}
+		}
 	}
 }

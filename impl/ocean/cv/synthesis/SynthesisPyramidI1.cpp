@@ -257,7 +257,7 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 				InitializerCoarserMappingAdaptionSpatialCostMaskI1<2u, 9u>(layersReversedOrder_.back(), randomGenerator, layersReversedOrder_[layersReversedOrder_.size() - 2], costMask).invoke(worker);
 			}
 
-			Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1<5u, 25u, true>(layersReversedOrder_.back(), randomGenerator, LegacyFrame(costMask, LegacyFrame::FCM_USE_IF_POSSIBLE)).invoke(5u, optimizationIterations, maxSpatialCostLayer, worker, true);
+			Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1<5u, 25u, true>(layersReversedOrder_.back(), randomGenerator, costMask).invoke(5u, optimizationIterations, maxSpatialCostLayer, worker, true);
 
 #endif
 

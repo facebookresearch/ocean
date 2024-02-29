@@ -10,7 +10,7 @@
  * @defgroup applicationdemocvsynthesisvideoinpaintingwin Video Inpainting (Windows)
  * @{
  * The demo application implement a basic video inpainter.<br>
- * This application is platform dependent and is implemented for windows platforms.<br>
+ * This application is platform dependent and is implemented for windows platforms.
  * @}
  */
 
