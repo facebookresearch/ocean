@@ -26,7 +26,7 @@
 
 #include "ocean/network/tigon/TigonClient.h"
 
-#include "ocean/network/verts/Manager.h"
+#include "metaonly/ocean/network/verts/Manager.h"
 
 #include "ocean/platform/android/Resource.h"
 #include "ocean/platform/android/Utilities.h"

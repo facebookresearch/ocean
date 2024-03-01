@@ -6,8 +6,8 @@
 #include "ocean/io/File.h"
 #include "ocean/io/FileResolver.h"
 
-#include "ocean/network/verts/Manager.h"
-#include "ocean/network/verts/NodeSpecification.h"
+#include "metaonly/ocean/network/verts/Manager.h"
+#include "metaonly/ocean/network/verts/NodeSpecification.h"
 
 #ifdef OCEAN_PLATFORM_BUILD_ANDROID
 	#include "ocean/platform/android/Resource.h"

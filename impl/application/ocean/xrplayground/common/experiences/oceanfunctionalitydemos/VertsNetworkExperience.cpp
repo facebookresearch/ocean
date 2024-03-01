@@ -8,7 +8,7 @@
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
 
-#include "ocean/network/verts/Manager.h"
+#include "metaonly/ocean/network/verts/Manager.h"
 
 #include "ocean/rendering/Utilities.h"
 

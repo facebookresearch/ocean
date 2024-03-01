@@ -14,10 +14,10 @@
 #include "ocean/base/ScopedSubscription.h"
 #include "ocean/base/Singleton.h"
 
-#include "ocean/network/verts/Driver.h"
-#include "ocean/network/verts/Entity.h"
-#include "ocean/network/verts/Node.h"
-#include "ocean/network/verts/Voip.h"
+#include "metaonly/ocean/network/verts/Driver.h"
+#include "metaonly/ocean/network/verts/Entity.h"
+#include "metaonly/ocean/network/verts/Node.h"
+#include "metaonly/ocean/network/verts/Voip.h"
 
 #include "ocean/rendering/Engine.h"
 

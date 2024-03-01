@@ -9,7 +9,7 @@
 
 #include "ocean/media/FrameMedium.h"
 
-#include "ocean/network/verts/Driver.h"
+#include "metaonly/ocean/network/verts/Driver.h"
 
 #ifdef XR_PLAYGROUND_PLATFORM_BUILD_META_QUEST
 	#include "ocean/platform/meta/quest/platformsdk/Multiplayer.h"

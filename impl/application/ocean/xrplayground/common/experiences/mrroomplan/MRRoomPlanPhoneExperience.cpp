@@ -17,7 +17,7 @@
 
 #include "ocean/network/tigon/TigonClient.h"
 
-#include "ocean/network/verts/Manager.h"
+#include "metaonly/ocean/network/verts/Manager.h"
 
 #include "ocean/rendering/AbsoluteTransform.h"
 #include "ocean/rendering/Textures.h"

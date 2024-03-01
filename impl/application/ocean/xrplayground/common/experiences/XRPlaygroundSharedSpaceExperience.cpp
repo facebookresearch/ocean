@@ -15,7 +15,7 @@
 
 #include "ocean/media/Manager.h"
 
-#include "ocean/network/verts/Manager.h"
+#include "metaonly/ocean/network/verts/Manager.h"
 
 #include "ocean/rendering/UndistortedBackground.h"
 #include "ocean/rendering/Utilities.h"

@@ -5,7 +5,7 @@
 
 #include "application/ocean/xrplayground/common/experiences/Experiences.h"
 
-#include "ocean/network/verts/Node.h"
+#include "metaonly/ocean/network/verts/Node.h"
 
 #include "ocean/rendering/Material.h"
 #include "ocean/rendering/Transform.h"
