@@ -32,11 +32,6 @@ class OCEAN_CV_SYNTHESIS_EXPORT Constraint
 	public:
 
 		/**
-		 * Creates an empty constraint.
-		 */
-		Constraint() = default;
-
-		/**
 		 * Destructs this constraint.
 		 */
 		virtual ~Constraint() = default;
@@ -69,6 +64,11 @@ class OCEAN_CV_SYNTHESIS_EXPORT Constraint
 		virtual Scalar weight(const Vector2& point) const = 0;
 
 	protected:
+
+		/**
+		 * Creates an empty constraint.
+		 */
+		Constraint() = default;
 
 		/**
 		 * Creates a copy of this constraint by an optional scale parameter.
@@ -115,10 +115,10 @@ class OCEAN_CV_SYNTHESIS_EXPORT StructureConstraint : public Constraint
 	protected:
 
 		/// Impact radius of this structure constraint.
-		Scalar radius_;
+		Scalar radius_ = Scalar(0);
 
 		/// Radius parameter of this constraint: 1 / (1/4 * radius)
-		Scalar radiusParameter_;
+		Scalar radiusParameter_ = Scalar(0);
 };
 
 /**
@@ -318,6 +318,12 @@ class OCEAN_CV_SYNTHESIS_EXPORT Constraints
 		Constraints(const Constraints& constraints);
 
 		/**
+		 * Default move constructor.
+		 * @param constraints The constraints to be moved
+		 */
+		Constraints(Constraints&& constraints) = default;
+
+		/**
 		 * Copies a constraint container and applies an explicit scale factor.
 		 * @param constraints The constraints to be copied
 		 * @param scale The scale factor to be applied for each constraint to be copied, with range (0, infinity)
@@ -381,6 +387,21 @@ class OCEAN_CV_SYNTHESIS_EXPORT Constraints
 		 * @return True, if so
 		 */
 		explicit inline operator bool() const;
+
+		/**
+		 * Default move operator.
+		 * @param constraints The constraints to be moved
+		 * @return Reference to this object
+		 */
+		Constraints& operator=(Constraints&& constraints) = default;
+
+	private:
+
+		/**
+		 * Disabled assign operator.
+		 * @return Reference to this object
+		 */
+		Constraints& operator=(const Constraints& constraints) = delete;
 
 	private:
 
