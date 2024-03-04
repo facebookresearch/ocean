@@ -11,7 +11,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\misc\edenworkaround\EdenWorkaround.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\misc\edenworkaround\EdenWorkaround.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
