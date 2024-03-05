@@ -181,12 +181,12 @@
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\blob\blobfeatures\win\BlobFeatures.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\blob\blobfeatures\win\BlobFeaturesMainWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\blob\blobfeatures\win\BlobFeatures.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\blob\blobfeatures\win\BlobFeaturesMainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\blob\blobfeatures\win\BlobFeatures.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\blob\blobfeatures\win\BlobFeaturesMainWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\blob\blobfeatures\win\BlobFeatures.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\blob\blobfeatures\win\BlobFeaturesMainWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
