@@ -166,8 +166,8 @@ template <unsigned int tWeightFactor, unsigned int tBorderFactor>
 template <unsigned int tChannels>
 void CreatorInformationCost4NeighborhoodI1<tWeightFactor, tBorderFactor>::createSubsetChannels(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows) const
 {
-	const uint8_t* layerFrame = layerI1_.frame().constdata<uint8_t>();
-	const uint8_t* layerMask = layerI1_.mask().constdata<uint8_t>();
+	const uint8_t* layerFrame = layerI1_.frame().template constdata<uint8_t>();
+	const uint8_t* layerMask = layerI1_.mask().template constdata<uint8_t>();
 
 	const unsigned int layerFramePaddingElements = layerI1_.frame().paddingElements();
 	const unsigned int layerMaskPaddingElements = layerI1_.mask().paddingElements();
