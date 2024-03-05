@@ -51,14 +51,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\qrcodes\detector3d\Detector3DWrapper.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\qrcodes\detector3d\win\Detector3D.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\qrcodes\detector3d\win\Detector3DMainWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector3d\Detector3DWrapper.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector3d\win\Detector3D.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector3d\win\Detector3DMainWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\qrcodes\detector3d\Detector3DWrapper.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\qrcodes\detector3d\win\Detector3D.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\qrcodes\detector3d\win\Detector3DMainWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector3d\Detector3DWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector3d\win\Detector3D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector3d\win\Detector3DMainWindow.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{962365F2-D67B-465E-8299-634E6F92BEEF}</ProjectGuid>
