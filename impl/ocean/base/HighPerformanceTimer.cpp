@@ -13,7 +13,7 @@
 	#pragma clang diagnostic push
 	#pragma clang diagnostic ignored "-Wimport-preprocessor-directive-pedantic"
 	#include <TargetConditionals.h>
-	#if TARGET_OS_IOS
+	#ifdef OCEAN_PLATFORM_BUILD_APPLE_IOS
 		#include <METAMonotonicTime/METAMonotonicTime.h>
 	#else
 		#include <mach/mach_time.h>
@@ -86,7 +86,7 @@ HighPerformanceTimer::Ticks HighPerformanceTimer::ticks()
 
 #elif defined(__APPLE__)
 
-#if TARGET_OS_IOS
+#ifdef OCEAN_PLATFORM_BUILD_APPLE_IOS
 	value = METAMonotonicDeviceTimeGetMachTime();
 #else
 	value = mach_absolute_time();
