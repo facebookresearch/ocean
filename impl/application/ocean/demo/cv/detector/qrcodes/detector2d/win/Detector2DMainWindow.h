@@ -2,17 +2,18 @@
 
 #pragma once
 
-#include "application/ocean/demo/cv/detector/qrcodes/detector/win/Detector.h"
-#include "application/ocean/demo/cv/detector/qrcodes/detector/DetectorWrapper.h"
+#include "application/ocean/demo/cv/detector/qrcodes/detector2d/win/Detector2D.h"
+
+#include "application/ocean/demo/cv/detector/qrcodes/detector2d/Detector2DWrapper.h"
 
 #include "ocean/platform/win/ApplicationWindow.h"
 #include "ocean/platform/win/BitmapWindow.h"
 
 /**
  * This class implements a main window.
- * @ingroup applicationdemocvdetectorqrcodesdetectorwin
+ * @ingroup applicationdemocvdetectorqrcodesdetector2dwin
  */
-class DetectorMainWindow :
+class Detector2DMainWindow :
 	virtual public Platform::Win::BitmapWindow,
 	virtual public Platform::Win::ApplicationWindow
 {
@@ -24,12 +25,12 @@ class DetectorMainWindow :
 		 * @param name The name of the main window
 		 * @param commandArguments The command arguments used to configure the tracker
 		 */
-		DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const std::vector<std::wstring>& commandArguments);
+		Detector2DMainWindow(HINSTANCE instance, const std::wstring& name, const std::vector<std::wstring>& commandArguments);
 
 		/**
 		 * Destructs the main window.
 		 */
-		virtual ~DetectorMainWindow();
+		virtual ~Detector2DMainWindow();
 
 	protected:
 
@@ -42,5 +43,5 @@ class DetectorMainWindow :
 	protected:
 
 		/// The platform independent wrapper for the qrcode detector.
-		DetectorWrapper detectorWrapper_;
+		Detector2DWrapper detector2dWrapper_;
 };

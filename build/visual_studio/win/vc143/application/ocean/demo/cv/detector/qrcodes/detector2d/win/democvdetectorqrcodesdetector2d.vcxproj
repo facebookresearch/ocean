@@ -51,18 +51,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\qrcodes\detector\DetectorWrapper.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\qrcodes\detector\win\Detector.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\qrcodes\detector\win\DetectorMainWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector2d\Detector2DWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector2d\win\Detector2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector2d\win\Detector2DMainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\qrcodes\detector\DetectorWrapper.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\qrcodes\detector\win\Detector.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\qrcodes\detector\win\DetectorMainWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector2d\Detector2DWrapper.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector2d\win\Detector2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector2d\win\Detector2DMainWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{58B33040-45E6-4590-9235-5B98A1718816}</ProjectGuid>
-    <RootNamespace>democvdetectorqrcodesdetector</RootNamespace>
+    <RootNamespace>democvdetectorqrcodesdetector2d</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -140,51 +140,51 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="democvdetectorqrcodesdetector_build.props" />
+    <Import Project="democvdetectorqrcodesdetector2d_build.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="democvdetectorqrcodesdetector_build.props" />
+    <Import Project="democvdetectorqrcodesdetector2d_build.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="democvdetectorqrcodesdetector_build.props" />
+    <Import Project="democvdetectorqrcodesdetector2d_build.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="democvdetectorqrcodesdetector_build.props" />
+    <Import Project="democvdetectorqrcodesdetector2d_build.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="democvdetectorqrcodesdetector_build.props" />
+    <Import Project="democvdetectorqrcodesdetector2d_build.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="democvdetectorqrcodesdetector_build.props" />
+    <Import Project="democvdetectorqrcodesdetector2d_build.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="democvdetectorqrcodesdetector_build.props" />
+    <Import Project="democvdetectorqrcodesdetector2d_build.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="democvdetectorqrcodesdetector_build.props" />
+    <Import Project="democvdetectorqrcodesdetector2d_build.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="democvdetectorqrcodesdetector_build.props" />
+    <Import Project="democvdetectorqrcodesdetector2d_build.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="democvdetectorqrcodesdetector_build.props" />
+    <Import Project="democvdetectorqrcodesdetector2d_build.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="democvdetectorqrcodesdetector_build.props" />
+    <Import Project="democvdetectorqrcodesdetector2d_build.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="democvdetectorqrcodesdetector_build.props" />
+    <Import Project="democvdetectorqrcodesdetector2d_build.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>

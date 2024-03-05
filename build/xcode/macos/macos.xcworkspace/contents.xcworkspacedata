@@ -34,10 +34,10 @@
                      location = "container:"
                      name = "qrcodes">
                      <FileRef
-                        location = "group:application/ocean/demo/cv/detector/qrcodes/detector/ios/democvdetectorqrcodeasdetectorios.xcodeproj">
+                        location = "group:application/ocean/demo/cv/detector/qrcodes/detector2d/ios/democvdetectorqrcodesdetector2dios.xcodeproj">
                      </FileRef>
                      <FileRef
-                        location = "group:application/ocean/demo/cv/detector/qrcodes/detector/macos/democvdetectorqrcodesdetectorosx.xcodeproj">
+                        location = "group:application/ocean/demo/cv/detector/qrcodes/detector2d/macos/democvdetectorqrcodesdetector2dosx.xcodeproj">
                      </FileRef>
                   </Group>
                   <FileRef

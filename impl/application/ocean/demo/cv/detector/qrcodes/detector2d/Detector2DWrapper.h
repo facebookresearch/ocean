@@ -15,7 +15,7 @@
 
 /**
  * @ingroup applicationdemocvdetectorqrcodes
- * @defgroup applicationdemocvdetectorqrcodesdetector QR Code
+ * @defgroup applicationdemocvdetectorqrcodesdetector2d Demo for the QR Code Detector (2D).
  * @{
  * Demo for the detection and decoding of QR codes (e.g., from a live video/webcam).
  * The user has the possibility to define the video input source (with preferred frame dimension) via the commando line parameter.<br>
@@ -27,34 +27,34 @@ using namespace Ocean;
 
 /**
  * This class implements the platform independent detection and decoding of QR codes.
- * Beware: You must not have more than one DetectorWrapper object within one application.
- * @ingroup applicationdemocvdetectorqrcodesdetector
+ * Beware: You must not have more than one Detector2DWrapper object within one application.
+ * @ingroup applicationdemocvdetectorqrcodesdetector2d
  */
-class DetectorWrapper
+class Detector2DWrapper
 {
 	public:
 
 		/**
-		 * Creates an invalid DetectorWrapper object.
+		 * Creates an invalid Detector2DWrapper object.
 		 */
-		DetectorWrapper() = default;
+		Detector2DWrapper() = default;
 
 		/**
 		 * Move constructor.
-		 * @param detectorWrapper The wrapper object to be moved
+		 * @param detector2dWrapper The wrapper object to be moved
 		 */
-		DetectorWrapper(DetectorWrapper&& detectorWrapper);
+		Detector2DWrapper(Detector2DWrapper&& detector2dWrapper);
 
 		/**
 		 * Creates a new wrapper object by a given set of command arguments.
 		 * @param commandArguments The command arguments that configure the properties of this demo
 		 */
-		explicit DetectorWrapper(const std::vector<std::wstring>& commandArguments);
+		explicit Detector2DWrapper(const std::vector<std::wstring>& commandArguments);
 
 		/**
 		 * Destructs an QRCOde object.
 		 */
-		~DetectorWrapper();
+		~Detector2DWrapper();
 
 		/**
 		 * Explicitly releases this QRCOde object.
@@ -79,23 +79,23 @@ class DetectorWrapper
 
 		/**
 		 * Move operator.
-		 * @param detectorWrapper The detector wrapper object to be moved
+		 * @param detector2dWrapper The detector wrapper object to be moved
 		 */
-		DetectorWrapper& operator=(DetectorWrapper&& detectorWrapper);
+		Detector2DWrapper& operator=(Detector2DWrapper&& detector2dWrapper);
 
 	protected:
 
 		/**
 		 * Not existing copy constructor.
-		 * @param detectorWrapper The wrapper object to be copied
+		 * @param detector2dWrapper The wrapper object to be copied
 		 */
-		DetectorWrapper(const DetectorWrapper& detectorWrapper) = delete;
+		Detector2DWrapper(const Detector2DWrapper& detector2dWrapper) = delete;
 
 		/**
 		 * Not existing assign operator.
-		 * @param detectorWrapper The wrapper object to be assigned
+		 * @param detector2dWrapper The wrapper object to be assigned
 		 */
-		DetectorWrapper& operator=(const DetectorWrapper& detectorWrapper) = delete;
+		Detector2DWrapper& operator=(const Detector2DWrapper& detector2dWrapper) = delete;
 
 	protected:
 
@@ -117,7 +117,7 @@ class DetectorWrapper
 		HighPerformanceStatistic performance_;
 };
 
-inline Media::FrameMediumRef DetectorWrapper::frameMedium() const
+inline Media::FrameMediumRef Detector2DWrapper::frameMedium() const
 {
 	return frameMedium_;
 }

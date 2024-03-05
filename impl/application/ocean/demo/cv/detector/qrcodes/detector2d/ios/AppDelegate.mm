@@ -2,7 +2,7 @@
 
 #include "AppDelegate.h"
 
-#include "application/ocean/demo/cv/detector/qrcodes/detector2d/DetectorWrapper.h"
+#include "application/ocean/demo/cv/detector/qrcodes/detector2d/Detector2DWrapper.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/Messenger.h"
@@ -24,7 +24,7 @@
 @interface AppDelegate ()
 {
 	/// The platform independent wrapper for the detection of QR codes
-	DetectorWrapper detectorWrapper_;
+	Detector2DWrapper detectorWrapper_;
 
 	/// A text label showing the performance of the original implementation of QR code
 	UILabel* runtimePerformanceLabel_;
@@ -85,7 +85,7 @@
 	commandLines.push_back(L"LiveVideoId:0"); // 0. Video source
 	commandLines.push_back(L"1280x720"); // 1. Video resolution
 
-	detectorWrapper_ = DetectorWrapper(commandLines);
+	detectorWrapper_ = Detector2DWrapper(commandLines);
 
 	// Now we create a PixelImage that simply wrapps a Frame object
 	// as the OpenGLES renderer uses Media objects for textures only

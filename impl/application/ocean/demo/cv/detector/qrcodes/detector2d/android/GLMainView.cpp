@@ -32,7 +32,7 @@ void GLMainView::initializeQRCode(const std::string& inputMedium, const std::str
 	commandLines.push_back(String::toWString(inputMedium));
 	commandLines.push_back(String::toWString(resolution));
 
-	viewDetectorWrapper_ = DetectorWrapper(commandLines);
+	viewDetector2DWrapper_ = Detector2DWrapper(commandLines);
 
 	const Media::FrameMediumRef oldBackgroundMedium = backgroundMedium();
 
@@ -56,7 +56,7 @@ void GLMainView::threadRun()
 
 		Frame resultingAlignerFrame;
 		std::vector<std::string> messages;
-		viewDetectorWrapper_.detectAndDecode(resultingAlignerFrame, resultingAlignerPerformance, messages);
+		viewDetector2DWrapper_.detectAndDecode(resultingAlignerFrame, resultingAlignerPerformance, messages);
 
 		if (resultingAlignerFrame.isValid())
 		{
@@ -92,7 +92,7 @@ void GLMainView::threadRun()
 	}
 }
 
-jboolean Java_com_meta_ocean_app_demo_cv_detector_qrcodes_detector2d_android_QRCodesActivity_initializeQRCode(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution)
+jboolean Java_com_meta_ocean_app_demo_cv_detector_qrcodes_detector2d_android_Detector2DActivity_initializeQRCode(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution)
 {
 	const std::string inputMediumValue(Platform::Android::Utilities::toAString(env, inputMedium));
 	const std::string resolutionValue(Platform::Android::Utilities::toAString(env, resolution));

@@ -1,6 +1,6 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-#include "application/ocean/demo/cv/detector/qrcodes/detector2d/DetectorWrapper.h"
+#include "application/ocean/demo/cv/detector/qrcodes/detector2d/Detector2DWrapper.h"
 
 #include "ocean/base/Build.h"
 #include "ocean/base/CommandArguments.h"
@@ -39,12 +39,12 @@
 	#endif
 #endif
 
-DetectorWrapper::DetectorWrapper(DetectorWrapper&& detectorWrapper)
+Detector2DWrapper::Detector2DWrapper(Detector2DWrapper&& detector2dWrapper)
 {
-	*this = std::move(detectorWrapper);
+	*this = std::move(detector2dWrapper);
 }
 
-DetectorWrapper::DetectorWrapper(const std::vector<std::wstring>& separatedCommandArguments)
+Detector2DWrapper::Detector2DWrapper(const std::vector<std::wstring>& separatedCommandArguments)
 {
 #if defined(_WINDOWS)
 	Messenger::get().setOutputType(Messenger::OUTPUT_DEBUG_WINDOW);
@@ -230,12 +230,12 @@ DetectorWrapper::DetectorWrapper(const std::vector<std::wstring>& separatedComma
 	frameMedium_->start();
 }
 
-DetectorWrapper::~DetectorWrapper()
+Detector2DWrapper::~Detector2DWrapper()
 {
 	// We do not release this instance, this should be done by the user before the application ends
 }
 
-void DetectorWrapper::release()
+void Detector2DWrapper::release()
 {
 	frameMedium_.release();
 
@@ -264,7 +264,7 @@ void DetectorWrapper::release()
 #endif
 }
 
-bool DetectorWrapper::detectAndDecode(Frame& outputFrame, double& time, std::vector<std::string>& messages, bool* lastFrameReached)
+bool Detector2DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::vector<std::string>& messages, bool* lastFrameReached)
 {
 	messages.clear();
 
@@ -395,22 +395,22 @@ bool DetectorWrapper::detectAndDecode(Frame& outputFrame, double& time, std::vec
 	return codes.empty() == false;
 }
 
-DetectorWrapper& DetectorWrapper::operator=(DetectorWrapper&& detectorWrapper)
+Detector2DWrapper& Detector2DWrapper::operator=(Detector2DWrapper&& detector2dWrapper)
 {
-	if (this != &detectorWrapper)
+	if (this != &detector2dWrapper)
 	{
 		// Only one instance of this class may exist at the same time
 		ocean_assert(frameMedium_.isNull());
 
-		useOldDetector_ = detectorWrapper.useOldDetector_;
+		useOldDetector_ = detector2dWrapper.useOldDetector_;
 
 #ifdef OCEAN_USE_DEVICES_VRS
-		devicePlayer_ = std::move(detectorWrapper.devicePlayer_);
+		devicePlayer_ = std::move(detector2dWrapper.devicePlayer_);
 #endif // OCEAN_USE_DEVICES_VRS
 
-		frameMedium_ = std::move(detectorWrapper.frameMedium_);
-		timestamp_ = detectorWrapper.timestamp_;
-		performance_ = detectorWrapper.performance_;
+		frameMedium_ = std::move(detector2dWrapper.frameMedium_);
+		timestamp_ = detector2dWrapper.timestamp_;
+		performance_ = detector2dWrapper.performance_;
 	}
 
 	return *this;

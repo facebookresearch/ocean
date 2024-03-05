@@ -11,24 +11,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\qrcodes\detector\win\Detector.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector2d\win\Detector2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\qrcodes\detector\win\DetectorMainWindow.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector2d\win\Detector2DMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\qrcodes\detector\DetectorWrapper.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector2d\Detector2DWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\qrcodes\detector\win\Detector.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector2d\win\Detector2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\qrcodes\detector\win\DetectorMainWindow.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector2d\win\Detector2DMainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\qrcodes\detector\DetectorWrapper.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\qrcodes\detector2d\Detector2DWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

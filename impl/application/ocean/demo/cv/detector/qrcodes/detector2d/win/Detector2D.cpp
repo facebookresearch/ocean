@@ -1,7 +1,7 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-#include "application/ocean/demo/cv/detector/qrcodes/detector/win/Detector.h"
-#include "application/ocean/demo/cv/detector/qrcodes/detector/win/DetectorMainWindow.h"
+#include "application/ocean/demo/cv/detector/qrcodes/detector2d/win/Detector2D.h"
+#include "application/ocean/demo/cv/detector/qrcodes/detector2d/win/Detector2DMainWindow.h"
 
 #include "ocean/base/Build.h"
 #include "ocean/base/RandomI.h"
@@ -16,7 +16,7 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 
 	try
 	{
-		DetectorMainWindow mainWindow(hInstance, std::wstring(L"oceandemocvdetectorqrcode, ") + String::toWString(Build::buildString()), Platform::Utilities::parseCommandLine(lpCmdLine));
+		Detector2DMainWindow mainWindow(hInstance, std::wstring(L"oceandemocvdetectorqrcode, ") + String::toWString(Build::buildString()), Platform::Utilities::parseCommandLine(lpCmdLine));
 	}
 	catch(...)
 	{

@@ -2,7 +2,7 @@
 
 #include "AppDelegate.h"
 
-#include "application/ocean/demo/cv/detector/qrcodes/detector2d/DetectorWrapper.h"
+#include "application/ocean/demo/cv/detector/qrcodes/detector2d/Detector2DWrapper.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/RandomI.h"
@@ -14,7 +14,7 @@
 @interface AppDelegate ()
 {
 	/// The platform independent implementation of the actual functionality.
-	DetectorWrapper detectorWrapper;
+	Detector2DWrapper detectorWrapper;
 
 	/// The view displaying the current frame.
 	Platform::Apple::MacOS::FrameView frameView;
@@ -53,7 +53,7 @@
 	Messenger::get().setOutputType(Messenger::OUTPUT_STANDARD);
 
 	// First we create a new instance and pass the command-line arguments
-	detectorWrapper = DetectorWrapper(commandLines);
+	detectorWrapper = Detector2DWrapper(commandLines);
 
 	// We create the view that can display frame medium object on its own
 	frameView = Platform::Apple::MacOS::FrameView([_mainWindowView frame]);

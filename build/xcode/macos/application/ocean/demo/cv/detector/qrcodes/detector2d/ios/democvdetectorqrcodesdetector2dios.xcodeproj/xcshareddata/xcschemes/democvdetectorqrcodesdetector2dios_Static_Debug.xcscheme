@@ -70,6 +70,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D98611C1D8B55AC00DEDB00"
+               BuildableName = "libOceanCVFonts.a"
+               BlueprintName = "cvfonts arm64 (Static)"
+               ReferencedContainer = "container:../../../../../../../../ocean/cv/fonts/cvfonts.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5D9861A51D8B574E00DEDB00"
                BuildableName = "libOceanGeometry.a"
                BlueprintName = "geometry arm64 (Static)"
@@ -239,34 +253,34 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5D4A71691D8B10B000B8B729"
-               BuildableName = "democvdetectorqrcodesdetectorios.app"
-               BlueprintName = "democvdetectorqrcodesdetectorios arm64 (Static)"
-               ReferencedContainer = "container:democvdetectorqrcodesdetectorios.xcodeproj">
+               BuildableName = "democvdetectorqrcodesdetector2dios.app"
+               BlueprintName = "democvdetectorqrcodesdetector2dios arm64 (Static)"
+               ReferencedContainer = "container:democvdetectorqrcodesdetector2dios.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "Release"
-      selectedDebuggerIdentifier = ""
-      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5D4A71691D8B10B000B8B729"
-            BuildableName = "democvdetectorqrcodesdetectorios.app"
-            BlueprintName = "democvdetectorqrcodesdetectorios arm64 (Static)"
-            ReferencedContainer = "container:democvdetectorqrcodesdetectorios.xcodeproj">
+            BuildableName = "democvdetectorqrcodesdetector2dios.app"
+            BlueprintName = "democvdetectorqrcodesdetector2dios arm64 (Static)"
+            ReferencedContainer = "container:democvdetectorqrcodesdetector2dios.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Release"
-      selectedDebuggerIdentifier = ""
-      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -278,14 +292,14 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5D4A71691D8B10B000B8B729"
-            BuildableName = "democvdetectorqrcodesdetectorios.app"
-            BlueprintName = "democvdetectorqrcodesdetectorios arm64 (Static)"
-            ReferencedContainer = "container:democvdetectorqrcodesdetectorios.xcodeproj">
+            BuildableName = "democvdetectorqrcodesdetector2dios.app"
+            BlueprintName = "democvdetectorqrcodesdetector2dios arm64 (Static)"
+            ReferencedContainer = "container:democvdetectorqrcodesdetector2dios.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -295,17 +309,17 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5D4A71691D8B10B000B8B729"
-            BuildableName = "democvdetectorqrcodesdetectorios.app"
-            BlueprintName = "democvdetectorqrcodesdetectorios arm64 (Static)"
-            ReferencedContainer = "container:democvdetectorqrcodesdetectorios.xcodeproj">
+            BuildableName = "democvdetectorqrcodesdetector2dios.app"
+            BlueprintName = "democvdetectorqrcodesdetector2dios arm64 (Static)"
+            ReferencedContainer = "container:democvdetectorqrcodesdetector2dios.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "Release">
+      buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

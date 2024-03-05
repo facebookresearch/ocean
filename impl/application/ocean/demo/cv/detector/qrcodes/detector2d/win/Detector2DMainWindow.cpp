@@ -1,31 +1,31 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-#include "application/ocean/demo/cv/detector/qrcodes/detector/win/DetectorMainWindow.h"
+#include "application/ocean/demo/cv/detector/qrcodes/detector2d/win/Detector2DMainWindow.h"
 
 #include "ocean/platform/win/Utilities.h"
 
-DetectorMainWindow::DetectorMainWindow(HINSTANCE instance, const std::wstring& name, const std::vector<std::wstring>& commandArguments) :
+Detector2DMainWindow::Detector2DMainWindow(HINSTANCE instance, const std::wstring& name, const std::vector<std::wstring>& commandArguments) :
 	Window(instance, name),
 	BitmapWindow(instance, name),
 	ApplicationWindow(instance, name),
-	detectorWrapper_(commandArguments)
+	detector2dWrapper_(commandArguments)
 {
 	initialize();
 	start();
 }
 
-DetectorMainWindow::~DetectorMainWindow()
+Detector2DMainWindow::~Detector2DMainWindow()
 {
-	detectorWrapper_.release();
+	detector2dWrapper_.release();
 }
 
-void DetectorMainWindow::onIdle()
+void Detector2DMainWindow::onIdle()
 {
 	Frame resultingDetectorFrame;
 	double resultingDetectorPerformance;
 	std::vector<std::string> messages;
 
-	const bool foundQRCodes = detectorWrapper_.detectAndDecode(resultingDetectorFrame, resultingDetectorPerformance, messages);
+	const bool foundQRCodes = detector2dWrapper_.detectAndDecode(resultingDetectorFrame, resultingDetectorPerformance, messages);
 
 	if (resultingDetectorFrame.isValid())
 	{

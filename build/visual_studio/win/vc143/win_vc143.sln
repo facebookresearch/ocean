@@ -2353,7 +2353,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testcvdetectorqrcodes", "ap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "qrcodes", "qrcodes", "{93DF74BD-5F31-4396-B267-2608A71F74B8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvdetectorqrcodesdetector", "application\ocean\demo\cv\detector\qrcodes\detector\win\democvdetectorqrcodesdetector.vcxproj", "{58B33040-45E6-4590-9235-5B98A1718816}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvdetectorqrcodesdetector2d", "application\ocean\demo\cv\detector\qrcodes\detector2d\win\democvdetectorqrcodesdetector2d.vcxproj", "{58B33040-45E6-4590-9235-5B98A1718816}"
 	ProjectSection(ProjectDependencies) = postProject
 		{087BD7E5-E90F-4444-8C7C-85C4ED1B6453} = {087BD7E5-E90F-4444-8C7C-85C4ED1B6453}
 		{29326726-1FF7-40D3-B2F2-C2717AC43465} = {29326726-1FF7-40D3-B2F2-C2717AC43465}

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "application/ocean/demo/cv/detector/qrcodes/detector2d/DetectorWrapper.h"
+#include "application/ocean/demo/cv/detector/qrcodes/detector2d/Detector2DWrapper.h"
 
 #include "ocean/base/Thread.h"
 
@@ -11,8 +11,8 @@
 #include "ocean/platform/android/application/GLFrameView.h"
 
 /**
- * @ingroup applicationdemocvdetectorqrcodesdetector
- * @defgroup applicationdemocvdetectorqrcodesdetectorandroid QR code detector demo on Android
+ * @ingroup applicationdemocvdetectorqrcodesdetector2d
+ * @defgroup applicationdemocvdetectorqrcodesdetector2dandroid QR code detector demo on Android
  * @{
  * The demo application demonstrates the 2D detector for QR codes<br>
  * This application is platform dependent and is implemented for Android platforms.<br>
@@ -21,7 +21,7 @@
 
 /**
  * This class implements the main view of the QR code detector demo application for android platforms.
- * @ingroup applicationdemocvdetectorqrcodesdetectorandroid
+ * @ingroup applicationdemocvdetectorqrcodesdetector2dandroid
  */
 class GLMainView :
 	public Ocean::Platform::Android::Application::GLFrameView,
@@ -72,7 +72,7 @@ class GLMainView :
 		Ocean::Media::PixelImageRef viewPixelImage_;
 
 		/// The platform-independent implementation of this demo.
-		DetectorWrapper viewDetectorWrapper_;
+		Detector2DWrapper viewDetector2DWrapper_;
 };
 
 inline Ocean::Platform::Android::Application::GLView* GLMainView::createInstance()
@@ -87,6 +87,6 @@ inline Ocean::Platform::Android::Application::GLView* GLMainView::createInstance
  * @param inputMedium The URL of the input medium (e.g., "LiveVideoId:0")
  * @param resolution The resolution of the input medium (e.g., "640x480", "1280x720", "1920x1080")
  * @return True, if succeeded
- * @ingroup applicationdemocvdetectorqrcodesdetectorandroid
+ * @ingroup applicationdemocvdetectorqrcodesdetector2dandroid
  */
-extern "C" jboolean Java_com_meta_ocean_app_demo_cv_detector_qrcodes_detector2d_android_QRCodesActivity_initializeQRCode(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution);
+extern "C" jboolean Java_com_meta_ocean_app_demo_cv_detector_qrcodes_detector2d_android_Detector2DActivity_initializeQRCode(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution);

@@ -3,11 +3,10 @@
 #import <Cocoa/Cocoa.h>
 
 /**
- * @ingroup applicationdemocvdetectorqrcodes
- * @defgroup applicationdemocvdetectorqrcodesdetector3dosx 3D QR Code Detector (OSX)
+ * @ingroup applicationdemocvdetectorqrcodesdetector2d
+ * @defgroup applicationdemocvdetectorqrcodesdetector2dosx 3D QR Code Detector (OSX)
  * @{
  * This application demonstrates the 3D detection of QR codes from VRS files.
- * @see QRCode, applicationdemocvdetectorqrcodes
  * @}
  */
 

@@ -211,9 +211,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
-               BuildableName = "democvdetectorqrcodesdetectorosx.app"
-               BlueprintName = "democvdetectorqrcodesdetectorosx x64 (Static)"
-               ReferencedContainer = "container:democvdetectorqrcodesdetectorosx.xcodeproj">
+               BuildableName = "democvdetectorqrcodesdetector2dosx.app"
+               BlueprintName = "democvdetectorqrcodesdetector2dosx x64 (Static)"
+               ReferencedContainer = "container:democvdetectorqrcodesdetector2dosx.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -227,9 +227,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
-            BuildableName = "democvdetectorqrcodesdetectorosx.app"
-            BlueprintName = "democvdetectorqrcodesdetectorosx x64 (Static)"
-            ReferencedContainer = "container:democvdetectorqrcodesdetectorosx.xcodeproj">
+            BuildableName = "democvdetectorqrcodesdetector2dosx.app"
+            BlueprintName = "democvdetectorqrcodesdetector2dosx x64 (Static)"
+            ReferencedContainer = "container:democvdetectorqrcodesdetector2dosx.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -250,9 +250,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
-            BuildableName = "democvdetectorqrcodesdetectorosx.app"
-            BlueprintName = "democvdetectorqrcodesdetectorosx x64 (Static)"
-            ReferencedContainer = "container:democvdetectorqrcodesdetectorosx.xcodeproj">
+            BuildableName = "democvdetectorqrcodesdetector2dosx.app"
+            BlueprintName = "democvdetectorqrcodesdetector2dosx x64 (Static)"
+            ReferencedContainer = "container:democvdetectorqrcodesdetector2dosx.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>

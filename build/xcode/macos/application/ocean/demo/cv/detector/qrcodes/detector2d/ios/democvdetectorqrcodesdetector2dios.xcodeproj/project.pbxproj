@@ -7,22 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		50882752270C1B3100B3726F /* Application.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50882750270C1B3100B3726F /* Application.mm */; };
-		50882753270C1B3100B3726F /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50882751270C1B3100B3726F /* AppDelegate.mm */; };
-		50882755270C1B4500B3726F /* DetectorWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50882754270C1B4500B3726F /* DetectorWrapper.cpp */; };
-		50882758270C1B6800B3726F /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50882756270C1B6800B3726F /* Info.plist */; };
-		50882759270C1B6800B3726F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50882757270C1B6800B3726F /* LaunchScreen.xib */; };
+		50CAE3CC2B9684A20035ECED /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50CAE3CA2B9684990035ECED /* AppDelegate.mm */; };
+		50CAE3CD2B9684A20035ECED /* Application.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50CAE3CB2B9684990035ECED /* Application.mm */; };
+		50CAE3D02B9684C40035ECED /* Detector2DWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50CAE3CF2B9684C30035ECED /* Detector2DWrapper.cpp */; };
+		50CAE3D22B9684F00035ECED /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50CAE3D12B9684EF0035ECED /* LaunchScreen.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5088274E270C1AFE00B3726F /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector/ios/AppDelegate.h; sourceTree = "<group>"; };
-		5088274F270C1B1300B3726F /* DetectorWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DetectorWrapper.h; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector/DetectorWrapper.h; sourceTree = "<group>"; };
-		50882750270C1B3100B3726F /* Application.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Application.mm; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector/ios/Application.mm; sourceTree = "<group>"; };
-		50882751270C1B3100B3726F /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector/ios/AppDelegate.mm; sourceTree = "<group>"; };
-		50882754270C1B4500B3726F /* DetectorWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DetectorWrapper.cpp; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector/DetectorWrapper.cpp; sourceTree = "<group>"; };
-		50882756270C1B6800B3726F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../../../res/application/ocean/demo/cv/detector/qrcodes/detector/ios/Info.plist; sourceTree = "<group>"; };
-		50882757270C1B6800B3726F /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = ../../../../../../../../../../../res/application/ocean/demo/cv/detector/qrcodes/detector/ios/LaunchScreen.xib; sourceTree = "<group>"; };
-		5D4A716A1D8B10B000B8B729 /* democvdetectorqrcodesdetectorios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = democvdetectorqrcodesdetectorios.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		50CAE3C92B9684990035ECED /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/AppDelegate.h; sourceTree = "<group>"; };
+		50CAE3CA2B9684990035ECED /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/AppDelegate.mm; sourceTree = "<group>"; };
+		50CAE3CB2B9684990035ECED /* Application.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Application.mm; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/Application.mm; sourceTree = "<group>"; };
+		50CAE3CE2B9684C30035ECED /* Detector2DWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Detector2DWrapper.h; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/Detector2DWrapper.h; sourceTree = "<group>"; };
+		50CAE3CF2B9684C30035ECED /* Detector2DWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Detector2DWrapper.cpp; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/Detector2DWrapper.cpp; sourceTree = "<group>"; };
+		50CAE3D12B9684EF0035ECED /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = ../../../../../../../../../../../res/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/LaunchScreen.xib; sourceTree = "<group>"; };
+		5D4A716A1D8B10B000B8B729 /* democvdetectorqrcodesdetector2dios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = democvdetectorqrcodesdetector2dios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,7 +47,7 @@
 		5D4A716B1D8B10B000B8B729 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5D4A716A1D8B10B000B8B729 /* democvdetectorqrcodesdetectorios.app */,
+				5D4A716A1D8B10B000B8B729 /* democvdetectorqrcodesdetector2dios.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -57,9 +55,9 @@
 		5DF0B9561D8FE33000BE5D21 /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
-				50882751270C1B3100B3726F /* AppDelegate.mm */,
-				50882750270C1B3100B3726F /* Application.mm */,
-				50882754270C1B4500B3726F /* DetectorWrapper.cpp */,
+				50CAE3CF2B9684C30035ECED /* Detector2DWrapper.cpp */,
+				50CAE3CA2B9684990035ECED /* AppDelegate.mm */,
+				50CAE3CB2B9684990035ECED /* Application.mm */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -67,8 +65,8 @@
 		5DF0B9571D8FE33E00BE5D21 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
-				5088274E270C1AFE00B3726F /* AppDelegate.h */,
-				5088274F270C1B1300B3726F /* DetectorWrapper.h */,
+				50CAE3CE2B9684C30035ECED /* Detector2DWrapper.h */,
+				50CAE3C92B9684990035ECED /* AppDelegate.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -76,8 +74,7 @@
 		5DF0B9581D8FE35D00BE5D21 /* Resource Files */ = {
 			isa = PBXGroup;
 			children = (
-				50882756270C1B6800B3726F /* Info.plist */,
-				50882757270C1B6800B3726F /* LaunchScreen.xib */,
+				50CAE3D12B9684EF0035ECED /* LaunchScreen.xib */,
 			);
 			name = "Resource Files";
 			sourceTree = "<group>";
@@ -85,9 +82,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5D4A71691D8B10B000B8B729 /* democvdetectorqrcodesdetectorios arm64 (Static) */ = {
+		5D4A71691D8B10B000B8B729 /* democvdetectorqrcodesdetector2dios arm64 (Static) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5D4A71911D8B10B000B8B729 /* Build configuration list for PBXNativeTarget "democvdetectorqrcodesdetectorios arm64 (Static)" */;
+			buildConfigurationList = 5D4A71911D8B10B000B8B729 /* Build configuration list for PBXNativeTarget "democvdetectorqrcodesdetector2dios arm64 (Static)" */;
 			buildPhases = (
 				5D4A71661D8B10B000B8B729 /* Sources */,
 				5D4A71671D8B10B000B8B729 /* Frameworks */,
@@ -98,9 +95,9 @@
 			);
 			dependencies = (
 			);
-			name = "democvdetectorqrcodesdetectorios arm64 (Static)";
+			name = "democvdetectorqrcodesdetector2dios arm64 (Static)";
 			productName = democvdetectorlinedetectorios;
-			productReference = 5D4A716A1D8B10B000B8B729 /* democvdetectorqrcodesdetectorios.app */;
+			productReference = 5D4A716A1D8B10B000B8B729 /* democvdetectorqrcodesdetector2dios.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -119,7 +116,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "democvdetectorqrcodeasdetectorios" */;
+			buildConfigurationList = 5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "democvdetectorqrcodesdetector2dios" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -132,7 +129,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5D4A71691D8B10B000B8B729 /* democvdetectorqrcodesdetectorios arm64 (Static) */,
+				5D4A71691D8B10B000B8B729 /* democvdetectorqrcodesdetector2dios arm64 (Static) */,
 			);
 		};
 /* End PBXProject section */
@@ -142,8 +139,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50882759270C1B6800B3726F /* LaunchScreen.xib in Resources */,
-				50882758270C1B6800B3726F /* Info.plist in Resources */,
+				50CAE3D22B9684F00035ECED /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,9 +166,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50882753270C1B3100B3726F /* AppDelegate.mm in Sources */,
-				50882755270C1B4500B3726F /* DetectorWrapper.cpp in Sources */,
-				50882752270C1B3100B3726F /* Application.mm in Sources */,
+				50CAE3CC2B9684A20035ECED /* AppDelegate.mm in Sources */,
+				50CAE3CD2B9684A20035ECED /* Application.mm in Sources */,
+				50CAE3D02B9684C40035ECED /* Detector2DWrapper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,8 +293,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = NO;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetectorios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
-				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetectorios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -314,13 +310,13 @@
 					"$(inherited)",
 					../../../../../../../../../../../impl,
 				);
-				INFOPLIST_FILE = ../../../../../../../../../../../res/application/ocean/demo/cv/detector/qrcode/ios/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../../../../../bin/lib/ios_arm64_xc9_static_debug;
 				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../../../../../bin/lib/ios_i386_xc9_static_debug;
-				OBJROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetectorios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				OBJROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lOceanBaseD",
@@ -358,10 +354,10 @@
 					CoreGraphics,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.cv.detector.qrcodes.detector.ios;
-				PRODUCT_MODULE_NAME = democvdetectorqrcodesdetectorios;
-				PRODUCT_NAME = democvdetectorqrcodesdetectorios;
+				PRODUCT_MODULE_NAME = democvdetectorqrcodesdetector2dios;
+				PRODUCT_NAME = democvdetectorqrcodesdetector2dios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
-				SYMROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetectorios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				SYMROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
 					"-Wdeprecated-declarations",
@@ -383,8 +379,8 @@
 				CLANG_WARN_UNREACHABLE_CODE = NO;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetectorios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
-				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetectorios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -399,13 +395,13 @@
 					"$(inherited)",
 					../../../../../../../../../../../impl,
 				);
-				INFOPLIST_FILE = ../../../../../../../../../../../res/application/ocean/demo/cv/detector/qrcode/ios/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../../../../../bin/lib/ios_arm64_xc9_static;
 				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../../../../../bin/lib/ios_i386_xc9_static;
-				OBJROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetectorios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				OBJROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lOceanBase",
@@ -443,10 +439,10 @@
 					CoreGraphics,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.cv.detector.qrcodes.detector.ios;
-				PRODUCT_MODULE_NAME = democvdetectorqrcodesdetectorios;
-				PRODUCT_NAME = democvdetectorqrcodesdetectorios;
+				PRODUCT_MODULE_NAME = democvdetectorqrcodesdetector2dios;
+				PRODUCT_NAME = democvdetectorqrcodesdetector2dios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
-				SYMROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetectorios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				SYMROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
 					"-Wdeprecated-declarations",
@@ -464,7 +460,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "democvdetectorqrcodeasdetectorios" */ = {
+		5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "democvdetectorqrcodesdetector2dios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5D4A718F1D8B10B000B8B729 /* Debug */,
@@ -473,7 +469,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5D4A71911D8B10B000B8B729 /* Build configuration list for PBXNativeTarget "democvdetectorqrcodesdetectorios arm64 (Static)" */ = {
+		5D4A71911D8B10B000B8B729 /* Build configuration list for PBXNativeTarget "democvdetectorqrcodesdetector2dios arm64 (Static)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5D4A71921D8B10B000B8B729 /* Debug */,

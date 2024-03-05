@@ -9,9 +9,9 @@ import android.os.Bundle;
 
 /**
  * This class implements the main Activity object for the QR code detector demo (Android).
- * @ingroup applicationdemocvdetectorqrcodeandroid
- */
-public class QRCodesActivity extends GLFrameViewActivity
+ * @ingroup applicationdemocvdetectorqrcodesdetector2dandroid
+  */
+public class Detector2DActivity extends GLFrameViewActivity
 {
 	static
 	{
