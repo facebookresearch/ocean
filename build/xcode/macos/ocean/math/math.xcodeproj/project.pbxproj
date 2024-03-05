@@ -1182,13 +1182,6 @@
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					../../../../../impl,
-					../../../../../3rdparty/eigen/3.3.8/impl,
-					"\"$(SRCROOT)/../../../../../../../../third-party/eigen/include\"",
-				);
 				MACH_O_TYPE = staticlib;
 				OBJROOT = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_static_debug;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1218,13 +1211,6 @@
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					../../../../../impl,
-					../../../../../3rdparty/eigen/3.3.8/impl,
-					"\"$(SRCROOT)/../../../../../../../../third-party/eigen/include\"",
-				);
 				MACH_O_TYPE = staticlib;
 				OBJROOT = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_static;
 				ONLY_ACTIVE_ARCH = YES;
