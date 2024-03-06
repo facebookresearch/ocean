@@ -12,6 +12,19 @@
             name = "demo">
             <Group
                location = "container:"
+               name = "base">
+               <FileRef
+                  location = "group:application/ocean/demo/base/console/democonsole.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/base/sharedmemory/server/macos/demobasesharedmemoryserver.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/base/sharedmemory/client/macos/demobasesharedmemoryclient.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
                name = "cv">
                <Group
                   location = "container:"
@@ -44,19 +57,6 @@
                      location = "group:application/ocean/demo/cv/detector/linedetector/ios/democvdetectorlinedetectorios.xcodeproj">
                   </FileRef>
                </Group>
-            </Group>
-            <Group
-               location = "container:"
-               name = "base">
-               <FileRef
-                  location = "group:application/ocean/demo/base/console/democonsole.xcodeproj">
-               </FileRef>
-               <FileRef
-                  location = "group:application/ocean/demo/base/sharedmemory/server/macos/demobasesharedmemoryserver.xcodeproj">
-               </FileRef>
-               <FileRef
-                  location = "group:application/ocean/demo/base/sharedmemory/client/macos/demobasesharedmemoryclient.xcodeproj">
-               </FileRef>
             </Group>
             <Group
                location = "container:"
