@@ -51,14 +51,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\fbmessengercodes\FBMessengerCodesWrapper.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodes.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodesMainWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\fbmessengercodes\FBMessengerCodesWrapper.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodes.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodesMainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\fbmessengercodes\FBMessengerCodesWrapper.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodes.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodesMainWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\fbmessengercodes\FBMessengerCodesWrapper.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodes.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodesMainWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0F24ECB3-360A-4224-B840-95D112D8E0DA}</ProjectGuid>

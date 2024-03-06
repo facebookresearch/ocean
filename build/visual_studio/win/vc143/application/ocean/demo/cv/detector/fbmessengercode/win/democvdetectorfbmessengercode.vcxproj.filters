@@ -11,24 +11,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodes.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodesMainWindow.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodesMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\detector\fbmessengercodes\FBMessengerCodesWrapper.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\fbmessengercodes\FBMessengerCodesWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodes.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodesMainWindow.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\fbmessengercodes\win\FBMessengerCodesMainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\detector\fbmessengercodes\FBMessengerCodesWrapper.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\fbmessengercodes\FBMessengerCodesWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
