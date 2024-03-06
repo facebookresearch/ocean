@@ -51,10 +51,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\src\application\ocean\support\tracking\targetar\TargetAR.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\tracking\targetar\TargetAR.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\h\application\ocean\support\tracking\targetar\TargetAR.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\tracking\targetar\TargetAR.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1DE8F85F-8278-40BC-AEBC-CB9D448DA28E}</ProjectGuid>

@@ -11,36 +11,36 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\h\application\ocean\support\tracking\panoramastitcher\ImagePair.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\tracking\panoramastitcher\ImagePair.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\h\application\ocean\support\tracking\panoramastitcher\Metadata.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\tracking\panoramastitcher\Metadata.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\h\application\ocean\support\tracking\panoramastitcher\PanoramaStitcher.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\tracking\panoramastitcher\PanoramaStitcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\h\application\ocean\support\tracking\panoramastitcher\StitcherUtilities.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\tracking\panoramastitcher\StitcherUtilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\h\application\ocean\support\tracking\panoramastitcher\FeaturePointCollection.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\tracking\panoramastitcher\FeaturePointCollection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\h\application\ocean\support\tracking\panoramastitcher\ImageAlignment.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\tracking\panoramastitcher\ImageAlignment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\src\application\ocean\support\tracking\panoramastitcher\Metadata.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\tracking\panoramastitcher\Metadata.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\src\application\ocean\support\tracking\panoramastitcher\PanoramaStitcher.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\tracking\panoramastitcher\PanoramaStitcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\src\application\ocean\support\tracking\panoramastitcher\StitcherUtilities.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\tracking\panoramastitcher\StitcherUtilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\src\application\ocean\support\tracking\panoramastitcher\ImageAlignment.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\tracking\panoramastitcher\ImageAlignment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
