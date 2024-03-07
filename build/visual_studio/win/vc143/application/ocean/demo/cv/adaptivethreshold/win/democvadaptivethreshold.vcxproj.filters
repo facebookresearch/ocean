@@ -11,18 +11,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\adaptivethreshold\win\AdaptiveThreshold.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\adaptivethreshold\win\AdaptiveThreshold.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\adaptivethreshold\win\AdaptiveThresholdMainWindow.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\adaptivethreshold\win\AdaptiveThresholdMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\adaptivethreshold\win\AdaptiveThreshold.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\adaptivethreshold\win\AdaptiveThreshold.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\adaptivethreshold\win\AdaptiveThresholdMainWindow.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\adaptivethreshold\win\AdaptiveThresholdMainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
