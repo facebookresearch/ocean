@@ -30,13 +30,56 @@ class OCEAN_TEST_CV_ADVANCED_EXPORT TestAdvancedMotion
 
 		/**
 		 * Invokes all tests for AdvancedMotion.
-		 * @param width The width of the test frame in pixel, with range [5, infinity)
-		 * @param height The height of the test frame in pixel, with range [5, infinity)
+		 * @param width The width of the test frame in pixel, with range [32, infinity)
+		 * @param height The height of the test frame in pixel, with range [32, infinity)
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
 		 * @return True, if succeeded
 		 */
 		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+
+		/**
+		 * Invokes the test of trackPointsBidirectionalSubPixelMirroredBorder().
+		 * @param width The width of the test frame in pixel, with range [32, infinity)
+		 * @param height The height of the test frame in pixel, with range [32, infinity)
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		static bool testTrackPointsBidirectionalSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+
+		/**
+		 * Invokes the test of trackPointsBidirectionalSubPixelMirroredBorder() with specified metric type.
+		 * @param width The width of the test frame in pixel, with range [32, infinity)
+		 * @param height The height of the test frame in pixel, with range [32, infinity)
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		template <typename T>
+		static bool testTrackPointsBidirectionalSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+
+		/**
+		 * Invokes the test of trackPointsBidirectionalSubPixelMirroredBorder() with specified metric type and channel number.
+		 * @param width The width of the test frame in pixel, with range [32, infinity)
+		 * @param height The height of the test frame in pixel, with range [32, infinity)
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		template <typename T, unsigned int tChannels>
+		static bool testTrackPointsBidirectionalSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+
+		/**
+		 * Invokes the test of trackPointsBidirectionalSubPixelMirroredBorder() with specified metric type, channel number, and patch size.
+		 * @param width The width of the test frame in pixel, with range [32, infinity)
+		 * @param height The height of the test frame in pixel, with range [32, infinity)
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		template <typename T, unsigned int tChannels, unsigned int tPatchSize>
+		static bool testTrackPointsBidirectionalSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
 
 		/**
 		 * Invokes the stress test of trackPointsBidirectionalSubPixelMirroredBorder().
@@ -66,6 +109,16 @@ class OCEAN_TEST_CV_ADVANCED_EXPORT TestAdvancedMotion
 		 */
 		template <typename T, unsigned int tPatchSize>
 		static bool stressTestTrackPointsBidirectionalSubPixelMirroredBorder(RandomGenerator& randomGenerator, Worker& worker);
+
+	protected:
+
+		/**
+		 * Creates a random image which is suitable for patch tracking.
+		 * @param frameType The frame type of the resulting image, must be valid
+		 * @param randomGenerator The random generator to be used
+		 * @return The resulting frame
+		 */
+		static Frame createRandomTrackableFrame(const FrameType& frameType, RandomGenerator& randomGenerator);
 };
 
 }
