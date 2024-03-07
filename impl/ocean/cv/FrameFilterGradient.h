@@ -5,8 +5,6 @@
 
 #include "ocean/cv/CV.h"
 #include "ocean/cv/FrameFilterGradientBase.h"
-#include "ocean/cv/FrameFilterGradientNEON.h"
-#include "ocean/cv/FrameFilterGradientSSE.h"
 
 #include "ocean/base/Worker.h"
 
@@ -90,21 +88,6 @@ class FrameFilterGradient
 		static inline void filterHorizontalVerticalSubFrame(const TSource* source, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int sourceLeft, const unsigned int sourceTop, TTarget* target, const unsigned int targetWidth, const unsigned int targetHeight, const unsigned int targetPaddingElements, const TTarget multiplicationFactor = TTarget(1), Worker* worker = nullptr);
 
 		/**
-		 * Filter function determining the squared horizontal, vertical and the product between horizontal and vertical gradient filter responses for 1 channel 8 bit frames.
-		 * Each resulting gradient response value is normalized by 1/2 to fit into the value range [-127, 127] and than used for the multiplication afterwards.<br>
-		 * The border pixel results are set to zero.<br>
-		 * The three different filter responses are collected together (zipped) for each pixel,<br>
-		 * thus the target frame must provide 3x16 bit for each pixel.<br>
-		 * The final zipped response order is Ix * Ix, Iy * Iy, Ix * Iy (with Ix the horizontal gradient and Iy the vertical gradient)
-		 * @param source The source frame to filter, must be valid
-		 * @param target The target frame receiving the filter result
-		 * @param width The width of the frame in pixel, with range [3, infinity)
-		 * @param height The height of the frame in pixel, with range [3, infinity)
-		 * @param worker Optional worker object to distribute the computational load
-		 */
-		static inline void filterHorizontalVertical3Products1Channel8Bit(const uint8_t* source, int16_t* target, const unsigned int width, const unsigned int height, Worker* worker = nullptr);
-
-		/**
 		 * Determines the lined integral image of the horizontal 1x2 gradient filter when applied to a source image.
 		 * The function applies the following 1x2 box filter to each pixel of the source image:
 		 * <pre>
@@ -186,17 +169,6 @@ template <typename TSource, typename TTarget, unsigned int tChannels, bool tNorm
 inline void FrameFilterGradient::filterHorizontalVerticalSubFrame(const TSource* source, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int sourceLeft, const unsigned int sourceTop, TTarget* target, const unsigned int targetWidth, const unsigned int targetHeight, const unsigned int targetPaddingElements, const TTarget multiplicationFactor, Worker* worker)
 {
 	FrameFilterGradientBase::filterHorizontalVerticalSubFrame<TSource, TTarget, tChannels, tNormalizeByTwo>(source, sourceWidth, sourceHeight, sourcePaddingElements, sourceLeft, sourceTop, target, targetWidth, targetHeight, targetPaddingElements, multiplicationFactor, worker);
-}
-
-inline void FrameFilterGradient::filterHorizontalVertical3Products1Channel8Bit(const uint8_t* source, int16_t* target, const unsigned int width, const unsigned int height, Worker* worker)
-{
-#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
-	FrameFilterGradientSSE::filterHorizontalVertical3Products1Channel8Bit(source, target, width, height, worker);
-#elif defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
-	FrameFilterGradientNEON::filterHorizontalVertical3Products1Channel8Bit(source, target, width, height, worker);
-#else
-	FrameFilterGradientBase::filterHorizontalVertical3Products1Channel8Bit(source, target, width, height, worker);
-#endif
 }
 
 template <typename T, typename TIntegral, bool tAbsoluteGradient>

@@ -54,9 +54,6 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientNEON.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterLaplace.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -366,12 +363,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterErosion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientNEON.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterLaplace.cpp">

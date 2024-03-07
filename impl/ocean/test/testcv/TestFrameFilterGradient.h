@@ -113,16 +113,6 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilterGradient
 		static bool testHorizontalVerticalSubFrame(const unsigned int width, const unsigned int height, const unsigned int channels, const TTarget multiplicationFactor, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the horizontal and vertical gradient filter with squared response values.
-		 * @param width The width of source and target buffer in pixel, with range [3, infinity)
-		 * @param height The height of source and target buffer in pixel, with range [3, infinity)
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param worker The worker object
-		 * @return True, if succeeded
-		 */
-		static bool testHorizontalVertical3Products1Channel8Bit(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
-
-		/**
 		 * Tests the lined integral image for the horizontal 1x2 gradient filter.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @tparam T The data type of the elements in the source image
@@ -165,15 +155,6 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilterGradient
 		 */
 		template <typename TSource, typename TTarget, bool tNormalizeByTwo>
 		static bool validationHorizontalVerticalMagnitudeSquared(const Frame& source, const Frame& target, const TTarget multiplicationFactor = TTarget(1));
-
-		/**
-		 * Tests the validation of the horizontal and vertical gradient filter with squared response values.
-		 * @param original Original gray scale buffer
-		 * @param filtered Filtered gray scale buffer
-		 * @param width The width of original and filtered image buffer in pixel, with range [3, infinity)
-		 * @param height The height of original and filtered image buffer in pixel, with range [3, infinity)
-		 */
-		static bool validationHorizontalVertical3Products1Channel8Bit(const unsigned char* original, const short* filtered, const unsigned int width, const unsigned int height);
 };
 
 }

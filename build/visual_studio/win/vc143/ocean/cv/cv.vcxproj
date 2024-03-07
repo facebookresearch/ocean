@@ -201,8 +201,6 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterDilation.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterErosion.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGaussian.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientBase.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientSSE.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterLaplace.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMax.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMean.cpp" />
@@ -284,8 +282,6 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGaussian.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradient.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientBase.h" />
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientNEON.h" />
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientSSE.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterLaplace.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMax.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMean.h" />

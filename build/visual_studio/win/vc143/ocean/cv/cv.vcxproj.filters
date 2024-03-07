@@ -95,9 +95,6 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FramePyramid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\Histogram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -135,9 +132,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterCanny.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientSSE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameOperations.cpp">
@@ -295,9 +289,6 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientNEON.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SumAbsoluteDifferencesBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -356,9 +347,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterCanny.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientSSE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameOperations.h">

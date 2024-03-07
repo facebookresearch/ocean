@@ -23,8 +23,6 @@
 		5D188D651B90CA1800FA7DD7 /* FrameFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D301B90CA1800FA7DD7 /* FrameFilter.cpp */; };
 		5D188D671B90CA1800FA7DD7 /* FrameFilterDilation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D321B90CA1800FA7DD7 /* FrameFilterDilation.cpp */; };
 		5D188D681B90CA1800FA7DD7 /* FrameFilterErosion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D331B90CA1800FA7DD7 /* FrameFilterErosion.cpp */; };
-		5D188D691B90CA1800FA7DD7 /* FrameFilterGradientBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D341B90CA1800FA7DD7 /* FrameFilterGradientBase.cpp */; };
-		5D188D6A1B90CA1800FA7DD7 /* FrameFilterGradientNEON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D351B90CA1800FA7DD7 /* FrameFilterGradientNEON.cpp */; };
 		5D188D6B1B90CA1800FA7DD7 /* FrameFilterLaplace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D361B90CA1800FA7DD7 /* FrameFilterLaplace.cpp */; };
 		5D188D6C1B90CA1800FA7DD7 /* FrameFilterMean.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D371B90CA1800FA7DD7 /* FrameFilterMean.cpp */; };
 		5D188D6D1B90CA1800FA7DD7 /* FrameFilterMedian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D381B90CA1800FA7DD7 /* FrameFilterMedian.cpp */; };
@@ -78,7 +76,6 @@
 		5D188E0D1B90CA4200FA7DD7 /* FrameFilterErosion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA11B90CA4200FA7DD7 /* FrameFilterErosion.h */; };
 		5D188E0E1B90CA4200FA7DD7 /* FrameFilterGradient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA21B90CA4200FA7DD7 /* FrameFilterGradient.h */; };
 		5D188E0F1B90CA4200FA7DD7 /* FrameFilterGradientBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA31B90CA4200FA7DD7 /* FrameFilterGradientBase.h */; };
-		5D188E101B90CA4200FA7DD7 /* FrameFilterGradientNEON.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA41B90CA4200FA7DD7 /* FrameFilterGradientNEON.h */; };
 		5D188E111B90CA4200FA7DD7 /* FrameFilterLaplace.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA51B90CA4200FA7DD7 /* FrameFilterLaplace.h */; };
 		5D188E121B90CA4200FA7DD7 /* FrameFilterMean.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA61B90CA4200FA7DD7 /* FrameFilterMean.h */; };
 		5D188E131B90CA4200FA7DD7 /* FrameFilterMedian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA71B90CA4200FA7DD7 /* FrameFilterMedian.h */; };
@@ -143,9 +140,7 @@
 		5D222B5B1BB1878100298788 /* FrameConverterY_VU12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D291B90CA1800FA7DD7 /* FrameConverterY_VU12.cpp */; };
 		5D222B5C1BB1878100298788 /* FramePyramid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D471B90CA1800FA7DD7 /* FramePyramid.cpp */; };
 		5D222B5E1BB1878100298788 /* FrameConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D201B90CA1800FA7DD7 /* FrameConverter.cpp */; };
-		5D222B5F1BB1878100298788 /* FrameFilterGradientNEON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D351B90CA1800FA7DD7 /* FrameFilterGradientNEON.cpp */; };
 		5D222B611BB1878100298788 /* FrameInterpolatorNearestPixel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D411B90CA1800FA7DD7 /* FrameInterpolatorNearestPixel.cpp */; };
-		5D222B621BB1878100298788 /* FrameFilterGradientBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D341B90CA1800FA7DD7 /* FrameFilterGradientBase.cpp */; };
 		5D222B631BB1878100298788 /* FrameFilterMedian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D381B90CA1800FA7DD7 /* FrameFilterMedian.cpp */; };
 		5D222B641BB1878100298788 /* FrameFilterErosion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D331B90CA1800FA7DD7 /* FrameFilterErosion.cpp */; };
 		5D222B671BB1878100298788 /* SubRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D501B90CA1800FA7DD7 /* SubRegion.cpp */; };
@@ -190,7 +185,6 @@
 		5D222BA91BB1878100298788 /* FrameConverterBGR24.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188D8F1B90CA4200FA7DD7 /* FrameConverterBGR24.h */; };
 		5D222BAB1BB1878100298788 /* FrameFilterSobelMagnitude.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DAE1B90CA4200FA7DD7 /* FrameFilterSobelMagnitude.h */; };
 		5D222BAE1BB1878100298788 /* FrameInterpolatorBicubic.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DB01B90CA4200FA7DD7 /* FrameInterpolatorBicubic.h */; };
-		5D222BAF1BB1878100298788 /* FrameFilterGradientNEON.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA41B90CA4200FA7DD7 /* FrameFilterGradientNEON.h */; };
 		5D222BB11BB1878100298788 /* FrameFilterDilation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA01B90CA4200FA7DD7 /* FrameFilterDilation.h */; };
 		5D222BB21BB1878100298788 /* Canvas.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188D881B90CA4200FA7DD7 /* Canvas.h */; };
 		5D222BB31BB1878100298788 /* SumAbsoluteDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DCA1B90CA4200FA7DD7 /* SumAbsoluteDifferences.h */; };
@@ -249,9 +243,7 @@
 		5D491C291D8F548F00C4099B /* FrameConverterY_VU12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D291B90CA1800FA7DD7 /* FrameConverterY_VU12.cpp */; };
 		5D491C2A1D8F548F00C4099B /* FramePyramid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D471B90CA1800FA7DD7 /* FramePyramid.cpp */; };
 		5D491C2C1D8F548F00C4099B /* FrameConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D201B90CA1800FA7DD7 /* FrameConverter.cpp */; };
-		5D491C2D1D8F548F00C4099B /* FrameFilterGradientNEON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D351B90CA1800FA7DD7 /* FrameFilterGradientNEON.cpp */; };
 		5D491C2F1D8F548F00C4099B /* FrameInterpolatorNearestPixel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D411B90CA1800FA7DD7 /* FrameInterpolatorNearestPixel.cpp */; };
-		5D491C301D8F548F00C4099B /* FrameFilterGradientBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D341B90CA1800FA7DD7 /* FrameFilterGradientBase.cpp */; };
 		5D491C311D8F548F00C4099B /* FrameFilterMedian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D381B90CA1800FA7DD7 /* FrameFilterMedian.cpp */; };
 		5D491C321D8F548F00C4099B /* FrameFilterErosion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D331B90CA1800FA7DD7 /* FrameFilterErosion.cpp */; };
 		5D491C351D8F548F00C4099B /* SubRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D501B90CA1800FA7DD7 /* SubRegion.cpp */; };
@@ -296,7 +288,6 @@
 		5D491C771D8F548F00C4099B /* FrameConverterBGR24.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188D8F1B90CA4200FA7DD7 /* FrameConverterBGR24.h */; };
 		5D491C791D8F548F00C4099B /* FrameFilterSobelMagnitude.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DAE1B90CA4200FA7DD7 /* FrameFilterSobelMagnitude.h */; };
 		5D491C7C1D8F548F00C4099B /* FrameInterpolatorBicubic.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DB01B90CA4200FA7DD7 /* FrameInterpolatorBicubic.h */; };
-		5D491C7D1D8F548F00C4099B /* FrameFilterGradientNEON.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA41B90CA4200FA7DD7 /* FrameFilterGradientNEON.h */; };
 		5D491C7F1D8F548F00C4099B /* FrameFilterDilation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA01B90CA4200FA7DD7 /* FrameFilterDilation.h */; };
 		5D491C801D8F548F00C4099B /* Canvas.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188D881B90CA4200FA7DD7 /* Canvas.h */; };
 		5D491C811D8F548F00C4099B /* SumAbsoluteDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DCA1B90CA4200FA7DD7 /* SumAbsoluteDifferences.h */; };
@@ -355,9 +346,7 @@
 		5D9860031D8B4DFB00DEDB00 /* FrameConverterY_VU12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D291B90CA1800FA7DD7 /* FrameConverterY_VU12.cpp */; };
 		5D9860041D8B4DFB00DEDB00 /* FramePyramid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D471B90CA1800FA7DD7 /* FramePyramid.cpp */; };
 		5D9860061D8B4DFB00DEDB00 /* FrameConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D201B90CA1800FA7DD7 /* FrameConverter.cpp */; };
-		5D9860071D8B4DFB00DEDB00 /* FrameFilterGradientNEON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D351B90CA1800FA7DD7 /* FrameFilterGradientNEON.cpp */; };
 		5D9860091D8B4DFB00DEDB00 /* FrameInterpolatorNearestPixel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D411B90CA1800FA7DD7 /* FrameInterpolatorNearestPixel.cpp */; };
-		5D98600A1D8B4DFB00DEDB00 /* FrameFilterGradientBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D341B90CA1800FA7DD7 /* FrameFilterGradientBase.cpp */; };
 		5D98600B1D8B4DFB00DEDB00 /* FrameFilterMedian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D381B90CA1800FA7DD7 /* FrameFilterMedian.cpp */; };
 		5D98600C1D8B4DFB00DEDB00 /* FrameFilterErosion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D331B90CA1800FA7DD7 /* FrameFilterErosion.cpp */; };
 		5D98600F1D8B4DFB00DEDB00 /* SubRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188D501B90CA1800FA7DD7 /* SubRegion.cpp */; };
@@ -402,7 +391,6 @@
 		5D9860511D8B4DFB00DEDB00 /* FrameConverterBGR24.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188D8F1B90CA4200FA7DD7 /* FrameConverterBGR24.h */; };
 		5D9860531D8B4DFB00DEDB00 /* FrameFilterSobelMagnitude.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DAE1B90CA4200FA7DD7 /* FrameFilterSobelMagnitude.h */; };
 		5D9860561D8B4DFB00DEDB00 /* FrameInterpolatorBicubic.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DB01B90CA4200FA7DD7 /* FrameInterpolatorBicubic.h */; };
-		5D9860571D8B4DFB00DEDB00 /* FrameFilterGradientNEON.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA41B90CA4200FA7DD7 /* FrameFilterGradientNEON.h */; };
 		5D9860591D8B4DFB00DEDB00 /* FrameFilterDilation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DA01B90CA4200FA7DD7 /* FrameFilterDilation.h */; };
 		5D98605A1D8B4DFB00DEDB00 /* Canvas.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188D881B90CA4200FA7DD7 /* Canvas.h */; };
 		5D98605B1D8B4DFB00DEDB00 /* SumAbsoluteDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D188DCA1B90CA4200FA7DD7 /* SumAbsoluteDifferences.h */; };
@@ -637,14 +625,6 @@
 		9E8D04962B2D191F000590B4 /* FrameConverterBGR32.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E8D04932B2D191F000590B4 /* FrameConverterBGR32.h */; };
 		9E8D04972B2D191F000590B4 /* FrameConverterBGR32.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E8D04932B2D191F000590B4 /* FrameConverterBGR32.h */; };
 		C08107481DF59F46003F0172 /* FrameConverterY32.h in Headers */ = {isa = PBXBuildFile; fileRef = C08107471DF59F46003F0172 /* FrameConverterY32.h */; };
-		C0A452701E894ED900970811 /* FrameFilterGradientSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = C0A4526F1E894ED900970811 /* FrameFilterGradientSSE.h */; };
-		C0A452711E894EDC00970811 /* FrameFilterGradientSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = C0A4526F1E894ED900970811 /* FrameFilterGradientSSE.h */; };
-		C0A452721E894EDC00970811 /* FrameFilterGradientSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = C0A4526F1E894ED900970811 /* FrameFilterGradientSSE.h */; };
-		C0A452731E894EDD00970811 /* FrameFilterGradientSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = C0A4526F1E894ED900970811 /* FrameFilterGradientSSE.h */; };
-		C0A452751E894F0000970811 /* FrameFilterGradientSSE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A452741E894F0000970811 /* FrameFilterGradientSSE.cpp */; };
-		C0A452761E894F0400970811 /* FrameFilterGradientSSE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A452741E894F0000970811 /* FrameFilterGradientSSE.cpp */; };
-		C0A452771E894F0500970811 /* FrameFilterGradientSSE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A452741E894F0000970811 /* FrameFilterGradientSSE.cpp */; };
-		C0A452781E894F0600970811 /* FrameFilterGradientSSE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A452741E894F0000970811 /* FrameFilterGradientSSE.cpp */; };
 		C0F6E5E81E1EA31F00F90052 /* FrameConverterYA16.h in Headers */ = {isa = PBXBuildFile; fileRef = C0F6E5E71E1EA31F00F90052 /* FrameConverterYA16.h */; };
 		C0F6E5EA1E1EA32E00F90052 /* FrameFilterCanny.h in Headers */ = {isa = PBXBuildFile; fileRef = C0F6E5E91E1EA32E00F90052 /* FrameFilterCanny.h */; };
 		C0F6E5EC1E1EA34300F90052 /* FrameFilterCanny.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0F6E5EB1E1EA34300F90052 /* FrameFilterCanny.cpp */; };
@@ -674,8 +654,6 @@
 		5D188D301B90CA1800FA7DD7 /* FrameFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameFilter.cpp; path = ../../../../../impl/ocean/cv/FrameFilter.cpp; sourceTree = "<group>"; };
 		5D188D321B90CA1800FA7DD7 /* FrameFilterDilation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameFilterDilation.cpp; path = ../../../../../impl/ocean/cv/FrameFilterDilation.cpp; sourceTree = "<group>"; };
 		5D188D331B90CA1800FA7DD7 /* FrameFilterErosion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameFilterErosion.cpp; path = ../../../../../impl/ocean/cv/FrameFilterErosion.cpp; sourceTree = "<group>"; };
-		5D188D341B90CA1800FA7DD7 /* FrameFilterGradientBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameFilterGradientBase.cpp; path = ../../../../../impl/ocean/cv/FrameFilterGradientBase.cpp; sourceTree = "<group>"; };
-		5D188D351B90CA1800FA7DD7 /* FrameFilterGradientNEON.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameFilterGradientNEON.cpp; path = ../../../../../impl/ocean/cv/FrameFilterGradientNEON.cpp; sourceTree = "<group>"; };
 		5D188D361B90CA1800FA7DD7 /* FrameFilterLaplace.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameFilterLaplace.cpp; path = ../../../../../impl/ocean/cv/FrameFilterLaplace.cpp; sourceTree = "<group>"; };
 		5D188D371B90CA1800FA7DD7 /* FrameFilterMean.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameFilterMean.cpp; path = ../../../../../impl/ocean/cv/FrameFilterMean.cpp; sourceTree = "<group>"; };
 		5D188D381B90CA1800FA7DD7 /* FrameFilterMedian.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameFilterMedian.cpp; path = ../../../../../impl/ocean/cv/FrameFilterMedian.cpp; sourceTree = "<group>"; };
@@ -729,7 +707,6 @@
 		5D188DA11B90CA4200FA7DD7 /* FrameFilterErosion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameFilterErosion.h; path = ../../../../../impl/ocean/cv/FrameFilterErosion.h; sourceTree = "<group>"; };
 		5D188DA21B90CA4200FA7DD7 /* FrameFilterGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameFilterGradient.h; path = ../../../../../impl/ocean/cv/FrameFilterGradient.h; sourceTree = "<group>"; };
 		5D188DA31B90CA4200FA7DD7 /* FrameFilterGradientBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameFilterGradientBase.h; path = ../../../../../impl/ocean/cv/FrameFilterGradientBase.h; sourceTree = "<group>"; };
-		5D188DA41B90CA4200FA7DD7 /* FrameFilterGradientNEON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameFilterGradientNEON.h; path = ../../../../../impl/ocean/cv/FrameFilterGradientNEON.h; sourceTree = "<group>"; };
 		5D188DA51B90CA4200FA7DD7 /* FrameFilterLaplace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameFilterLaplace.h; path = ../../../../../impl/ocean/cv/FrameFilterLaplace.h; sourceTree = "<group>"; };
 		5D188DA61B90CA4200FA7DD7 /* FrameFilterMean.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameFilterMean.h; path = ../../../../../impl/ocean/cv/FrameFilterMean.h; sourceTree = "<group>"; };
 		5D188DA71B90CA4200FA7DD7 /* FrameFilterMedian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameFilterMedian.h; path = ../../../../../impl/ocean/cv/FrameFilterMedian.h; sourceTree = "<group>"; };
@@ -823,8 +800,6 @@
 		9E8D048E2B2D130C000590B4 /* FrameConverterRGB32.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FrameConverterRGB32.h; path = ../../../../../impl/ocean/cv/FrameConverterRGB32.h; sourceTree = "<group>"; };
 		9E8D04932B2D191F000590B4 /* FrameConverterBGR32.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FrameConverterBGR32.h; path = ../../../../../impl/ocean/cv/FrameConverterBGR32.h; sourceTree = "<group>"; };
 		C08107471DF59F46003F0172 /* FrameConverterY32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameConverterY32.h; path = ../../../../../impl/ocean/cv/FrameConverterY32.h; sourceTree = "<group>"; };
-		C0A4526F1E894ED900970811 /* FrameFilterGradientSSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameFilterGradientSSE.h; path = ../../../../../impl/ocean/cv/FrameFilterGradientSSE.h; sourceTree = "<group>"; };
-		C0A452741E894F0000970811 /* FrameFilterGradientSSE.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameFilterGradientSSE.cpp; path = ../../../../../impl/ocean/cv/FrameFilterGradientSSE.cpp; sourceTree = "<group>"; };
 		C0F6E5E71E1EA31F00F90052 /* FrameConverterYA16.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameConverterYA16.h; path = ../../../../../impl/ocean/cv/FrameConverterYA16.h; sourceTree = "<group>"; };
 		C0F6E5E91E1EA32E00F90052 /* FrameFilterCanny.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameFilterCanny.h; path = ../../../../../impl/ocean/cv/FrameFilterCanny.h; sourceTree = "<group>"; };
 		C0F6E5EB1E1EA34300F90052 /* FrameFilterCanny.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameFilterCanny.cpp; path = ../../../../../impl/ocean/cv/FrameFilterCanny.cpp; sourceTree = "<group>"; };
@@ -906,9 +881,6 @@
 				5D188D321B90CA1800FA7DD7 /* FrameFilterDilation.cpp */,
 				5D188D331B90CA1800FA7DD7 /* FrameFilterErosion.cpp */,
 				9333640B2098FB5A0078C605 /* FrameFilterGaussian.cpp */,
-				5D188D341B90CA1800FA7DD7 /* FrameFilterGradientBase.cpp */,
-				5D188D351B90CA1800FA7DD7 /* FrameFilterGradientNEON.cpp */,
-				C0A452741E894F0000970811 /* FrameFilterGradientSSE.cpp */,
 				5D188D361B90CA1800FA7DD7 /* FrameFilterLaplace.cpp */,
 				93E66E712AC25CC20012ECC1 /* FrameFilterMax.cpp */,
 				5D188D371B90CA1800FA7DD7 /* FrameFilterMean.cpp */,
@@ -996,8 +968,6 @@
 				9328F8342096FEC20050A262 /* FrameFilterGaussian.h */,
 				5D188DA21B90CA4200FA7DD7 /* FrameFilterGradient.h */,
 				5D188DA31B90CA4200FA7DD7 /* FrameFilterGradientBase.h */,
-				5D188DA41B90CA4200FA7DD7 /* FrameFilterGradientNEON.h */,
-				C0A4526F1E894ED900970811 /* FrameFilterGradientSSE.h */,
 				5D188DA51B90CA4200FA7DD7 /* FrameFilterLaplace.h */,
 				93E66E6C2AC25CB50012ECC1 /* FrameFilterMax.h */,
 				5D188DA61B90CA4200FA7DD7 /* FrameFilterMean.h */,
@@ -1117,7 +1087,6 @@
 				50554DFA20354F93007EA3BF /* FrameOperations.h in Headers */,
 				93596E4A25393D8E00AF9095 /* ZeroMeanSumSquareDifferencesNEON.h in Headers */,
 				93B691A0209B9E5B008E90E2 /* ImageQuality.h in Headers */,
-				5D188E101B90CA4200FA7DD7 /* FrameFilterGradientNEON.h in Headers */,
 				5D188E0C1B90CA4200FA7DD7 /* FrameFilterDilation.h in Headers */,
 				5D188DF41B90CA4200FA7DD7 /* Canvas.h in Headers */,
 				5D188E361B90CA4300FA7DD7 /* SumAbsoluteDifferences.h in Headers */,
@@ -1152,7 +1121,6 @@
 				93596E4025393D3C00AF9095 /* SumAbsoluteDifferencesBase.h in Headers */,
 				5D1B65B21D9D413800C412C4 /* CVUtilities.h in Headers */,
 				5D188E121B90CA4200FA7DD7 /* FrameFilterMean.h in Headers */,
-				C0A452701E894ED900970811 /* FrameFilterGradientSSE.h in Headers */,
 				5D188E131B90CA4200FA7DD7 /* FrameFilterMedian.h in Headers */,
 				5D188E1E1B90CA4200FA7DD7 /* FrameInterpolatorBilinearAlpha.h in Headers */,
 				5D188E331B90CA4300FA7DD7 /* PixelPosition.h in Headers */,
@@ -1218,7 +1186,6 @@
 				5D222BA91BB1878100298788 /* FrameConverterBGR24.h in Headers */,
 				5D222BAB1BB1878100298788 /* FrameFilterSobelMagnitude.h in Headers */,
 				5D222BAE1BB1878100298788 /* FrameInterpolatorBicubic.h in Headers */,
-				5D222BAF1BB1878100298788 /* FrameFilterGradientNEON.h in Headers */,
 				C0F6E5F81E1EA88B00F90052 /* FrameFilterCanny.h in Headers */,
 				5D222BB11BB1878100298788 /* FrameFilterDilation.h in Headers */,
 				5D222BB21BB1878100298788 /* Canvas.h in Headers */,
@@ -1259,7 +1226,6 @@
 				93596E4125393D3C00AF9095 /* SumAbsoluteDifferencesBase.h in Headers */,
 				5D222BD31BB1878100298788 /* FrameFilterMean.h in Headers */,
 				933BD57B223B4007002C4E18 /* FrameConverterRGB565.h in Headers */,
-				C0A452711E894EDC00970811 /* FrameFilterGradientSSE.h in Headers */,
 				9391E0D8287501F100B0D39B /* FrameConverterRGBA64.h in Headers */,
 				5D222BD51BB1878100298788 /* FrameFilterMedian.h in Headers */,
 				5D222BD61BB1878100298788 /* FrameInterpolatorBilinearAlpha.h in Headers */,
@@ -1328,7 +1294,6 @@
 				5D491C771D8F548F00C4099B /* FrameConverterBGR24.h in Headers */,
 				5D491C791D8F548F00C4099B /* FrameFilterSobelMagnitude.h in Headers */,
 				5D491C7C1D8F548F00C4099B /* FrameInterpolatorBicubic.h in Headers */,
-				5D491C7D1D8F548F00C4099B /* FrameFilterGradientNEON.h in Headers */,
 				C0F6E5FA1E1EA88B00F90052 /* FrameFilterCanny.h in Headers */,
 				5D491C7F1D8F548F00C4099B /* FrameFilterDilation.h in Headers */,
 				5D491C801D8F548F00C4099B /* Canvas.h in Headers */,
@@ -1369,7 +1334,6 @@
 				93596E4325393D3C00AF9095 /* SumAbsoluteDifferencesBase.h in Headers */,
 				5D491CA11D8F548F00C4099B /* FrameFilterMean.h in Headers */,
 				933BD57D223B4007002C4E18 /* FrameConverterRGB565.h in Headers */,
-				C0A452731E894EDD00970811 /* FrameFilterGradientSSE.h in Headers */,
 				9391E0DA287501F100B0D39B /* FrameConverterRGBA64.h in Headers */,
 				5D491CA31D8F548F00C4099B /* FrameFilterMedian.h in Headers */,
 				5D491CA41D8F548F00C4099B /* FrameInterpolatorBilinearAlpha.h in Headers */,
@@ -1438,7 +1402,6 @@
 				5D9860511D8B4DFB00DEDB00 /* FrameConverterBGR24.h in Headers */,
 				5D9860531D8B4DFB00DEDB00 /* FrameFilterSobelMagnitude.h in Headers */,
 				5D9860561D8B4DFB00DEDB00 /* FrameInterpolatorBicubic.h in Headers */,
-				5D9860571D8B4DFB00DEDB00 /* FrameFilterGradientNEON.h in Headers */,
 				C0F6E5F91E1EA88B00F90052 /* FrameFilterCanny.h in Headers */,
 				5D9860591D8B4DFB00DEDB00 /* FrameFilterDilation.h in Headers */,
 				5D98605A1D8B4DFB00DEDB00 /* Canvas.h in Headers */,
@@ -1479,7 +1442,6 @@
 				93596E4225393D3C00AF9095 /* SumAbsoluteDifferencesBase.h in Headers */,
 				5D98607B1D8B4DFB00DEDB00 /* FrameFilterMean.h in Headers */,
 				933BD57C223B4007002C4E18 /* FrameConverterRGB565.h in Headers */,
-				C0A452721E894EDC00970811 /* FrameFilterGradientSSE.h in Headers */,
 				9391E0D9287501F100B0D39B /* FrameConverterRGBA64.h in Headers */,
 				5D98607D1D8B4DFB00DEDB00 /* FrameFilterMedian.h in Headers */,
 				5D98607E1D8B4DFB00DEDB00 /* FrameInterpolatorBilinearAlpha.h in Headers */,
@@ -1675,7 +1637,6 @@
 				93E66E592AC25C370012ECC1 /* FrameFilterMin.cpp in Sources */,
 				C0F6E5EC1E1EA34300F90052 /* FrameFilterCanny.cpp in Sources */,
 				5D188D531B90CA1800FA7DD7 /* Canvas.cpp in Sources */,
-				C0A452751E894F0000970811 /* FrameFilterGradientSSE.cpp in Sources */,
 				5D188D7D1B90CA1800FA7DD7 /* FrameShrinker.cpp in Sources */,
 				9333640C2098FB5B0078C605 /* FrameFilterGaussian.cpp in Sources */,
 				5D188D811B90CA1800FA7DD7 /* Histogram.cpp in Sources */,
@@ -1688,13 +1649,11 @@
 				933BD57F223B401C002C4E18 /* FrameConverterRGB565.cpp in Sources */,
 				5D188D7C1B90CA1800FA7DD7 /* FramePyramid.cpp in Sources */,
 				5D188D551B90CA1800FA7DD7 /* FrameConverter.cpp in Sources */,
-				5D188D6A1B90CA1800FA7DD7 /* FrameFilterGradientNEON.cpp in Sources */,
 				93CBEED225CDBC0C00B8A928 /* FrameConverterColorMap.cpp in Sources */,
 				507FEE6D2488B06A0056A32C /* FrameMinMax.cpp in Sources */,
 				5D188D761B90CA1800FA7DD7 /* FrameInterpolatorNearestPixel.cpp in Sources */,
 				93CCED902A13E82700950169 /* FrameShrinkerAlpha.cpp in Sources */,
 				5D1B65B71D9D414400C412C4 /* CVUtilities.cpp in Sources */,
-				5D188D691B90CA1800FA7DD7 /* FrameFilterGradientBase.cpp in Sources */,
 				5D188D6D1B90CA1800FA7DD7 /* FrameFilterMedian.cpp in Sources */,
 				939857EB2582C16200A6EB09 /* FrameConverterY10_Packed.cpp in Sources */,
 				5D188D681B90CA1800FA7DD7 /* FrameFilterErosion.cpp in Sources */,
@@ -1741,7 +1700,6 @@
 				93E66E5A2AC25C370012ECC1 /* FrameFilterMin.cpp in Sources */,
 				5D222B541BB1878100298788 /* Canvas.cpp in Sources */,
 				5D222B571BB1878100298788 /* FrameShrinker.cpp in Sources */,
-				C0A452761E894F0400970811 /* FrameFilterGradientSSE.cpp in Sources */,
 				5D222B581BB1878100298788 /* Histogram.cpp in Sources */,
 				5D222B591BB1878100298788 /* FrameFilterDilation.cpp in Sources */,
 				9333640D2098FB5B0078C605 /* FrameFilterGaussian.cpp in Sources */,
@@ -1753,13 +1711,11 @@
 				933BD56C223B2FB3002C4E18 /* FrameConverterBGR565.cpp in Sources */,
 				933BD580223B401C002C4E18 /* FrameConverterRGB565.cpp in Sources */,
 				5D222B5E1BB1878100298788 /* FrameConverter.cpp in Sources */,
-				5D222B5F1BB1878100298788 /* FrameFilterGradientNEON.cpp in Sources */,
 				5D222B611BB1878100298788 /* FrameInterpolatorNearestPixel.cpp in Sources */,
 				5D1B65B81D9D414400C412C4 /* CVUtilities.cpp in Sources */,
 				93CBEED325CDBC0C00B8A928 /* FrameConverterColorMap.cpp in Sources */,
 				507FEE6E2488B06A0056A32C /* FrameMinMax.cpp in Sources */,
 				93CCED912A13E82700950169 /* FrameShrinkerAlpha.cpp in Sources */,
-				5D222B621BB1878100298788 /* FrameFilterGradientBase.cpp in Sources */,
 				5D222B631BB1878100298788 /* FrameFilterMedian.cpp in Sources */,
 				5D222B641BB1878100298788 /* FrameFilterErosion.cpp in Sources */,
 				5D222B671BB1878100298788 /* SubRegion.cpp in Sources */,
@@ -1807,7 +1763,6 @@
 				93E66E5C2AC25C370012ECC1 /* FrameFilterMin.cpp in Sources */,
 				5D491C221D8F548F00C4099B /* Canvas.cpp in Sources */,
 				5D491C251D8F548F00C4099B /* FrameShrinker.cpp in Sources */,
-				C0A452781E894F0600970811 /* FrameFilterGradientSSE.cpp in Sources */,
 				5D491C261D8F548F00C4099B /* Histogram.cpp in Sources */,
 				5D491C271D8F548F00C4099B /* FrameFilterDilation.cpp in Sources */,
 				9333640F2098FB5B0078C605 /* FrameFilterGaussian.cpp in Sources */,
@@ -1819,13 +1774,11 @@
 				933BD56E223B2FB3002C4E18 /* FrameConverterBGR565.cpp in Sources */,
 				933BD582223B401C002C4E18 /* FrameConverterRGB565.cpp in Sources */,
 				5D491C2C1D8F548F00C4099B /* FrameConverter.cpp in Sources */,
-				5D491C2D1D8F548F00C4099B /* FrameFilterGradientNEON.cpp in Sources */,
 				5D491C2F1D8F548F00C4099B /* FrameInterpolatorNearestPixel.cpp in Sources */,
 				5D1B65BA1D9D414400C412C4 /* CVUtilities.cpp in Sources */,
 				93CBEED525CDBC0C00B8A928 /* FrameConverterColorMap.cpp in Sources */,
 				507FEE702488B06B0056A32C /* FrameMinMax.cpp in Sources */,
 				93CCED932A13E82700950169 /* FrameShrinkerAlpha.cpp in Sources */,
-				5D491C301D8F548F00C4099B /* FrameFilterGradientBase.cpp in Sources */,
 				5D491C311D8F548F00C4099B /* FrameFilterMedian.cpp in Sources */,
 				5D491C321D8F548F00C4099B /* FrameFilterErosion.cpp in Sources */,
 				5D491C351D8F548F00C4099B /* SubRegion.cpp in Sources */,
@@ -1873,7 +1826,6 @@
 				93E66E5B2AC25C370012ECC1 /* FrameFilterMin.cpp in Sources */,
 				5D985FFC1D8B4DFB00DEDB00 /* Canvas.cpp in Sources */,
 				5D985FFF1D8B4DFB00DEDB00 /* FrameShrinker.cpp in Sources */,
-				C0A452771E894F0500970811 /* FrameFilterGradientSSE.cpp in Sources */,
 				5D9860001D8B4DFB00DEDB00 /* Histogram.cpp in Sources */,
 				5D9860011D8B4DFB00DEDB00 /* FrameFilterDilation.cpp in Sources */,
 				9333640E2098FB5B0078C605 /* FrameFilterGaussian.cpp in Sources */,
@@ -1885,13 +1837,11 @@
 				933BD56D223B2FB3002C4E18 /* FrameConverterBGR565.cpp in Sources */,
 				933BD581223B401C002C4E18 /* FrameConverterRGB565.cpp in Sources */,
 				5D9860061D8B4DFB00DEDB00 /* FrameConverter.cpp in Sources */,
-				5D9860071D8B4DFB00DEDB00 /* FrameFilterGradientNEON.cpp in Sources */,
 				5D9860091D8B4DFB00DEDB00 /* FrameInterpolatorNearestPixel.cpp in Sources */,
 				5D1B65B91D9D414400C412C4 /* CVUtilities.cpp in Sources */,
 				93CBEED425CDBC0C00B8A928 /* FrameConverterColorMap.cpp in Sources */,
 				507FEE6F2488B06B0056A32C /* FrameMinMax.cpp in Sources */,
 				93CCED922A13E82700950169 /* FrameShrinkerAlpha.cpp in Sources */,
-				5D98600A1D8B4DFB00DEDB00 /* FrameFilterGradientBase.cpp in Sources */,
 				5D98600B1D8B4DFB00DEDB00 /* FrameFilterMedian.cpp in Sources */,
 				5D98600C1D8B4DFB00DEDB00 /* FrameFilterErosion.cpp in Sources */,
 				5D98600F1D8B4DFB00DEDB00 /* SubRegion.cpp in Sources */,

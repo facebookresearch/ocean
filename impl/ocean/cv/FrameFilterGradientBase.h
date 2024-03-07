@@ -58,18 +58,6 @@ class OCEAN_CV_EXPORT FrameFilterGradientBase
 		template <typename TSource, typename TTarget, unsigned int tChannels, bool tNormalizeByTwo>
 		static inline void filterHorizontalVerticalSubFrame(const TSource* source, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int sourceLeft, const unsigned int sourceTop, TTarget* target, const unsigned int targetWidth, const unsigned int targetHeight, const unsigned int targetPaddingElemnets, const TTarget multiplicationFactor = TTarget(1), Worker* worker = nullptr);
 
-		/**
-		 * Filter function determining the squared horizontal, vertical and the product between horizontal and vertical gradient filter responses for 1 channel 8 bit frames.
-		 * @see FrameFilterGradient::filterHorizontalVertical3Squared1Channel8Bit().
-		 */
-		static inline void filterHorizontalVertical3Products1Channel8Bit(const uint8_t* source, int16_t* target, const unsigned int width, const unsigned int height, Worker* worker = nullptr);
-
-		/**
-		 * Filter function determining the squared horizontal, vertical and the product between horizontal and vertical gradient filter responses for 1 channel 8 bit frames.
-		 * @see FrameFilterGradient::filterHorizontalVertical3Products1Channel8Bit().
-		 */
-		static void filterHorizontalVertical3Products1Channel8BitLinedIntegralImage(const uint8_t* source, int32_t* target, const unsigned int width, const unsigned int height);
-
 	protected:
 
 		/**
@@ -100,12 +88,6 @@ class OCEAN_CV_EXPORT FrameFilterGradientBase
 		 */
 		template <typename TSource, typename TTarget, unsigned int tChannels, bool tNormalizeByTwo>
 		static void filterHorizontalVerticalSubFrameSubset(const TSource* source, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int sourceLeft, const unsigned int sourceTop, TTarget* target, const unsigned int targetWidth, const unsigned int targetHeight, const unsigned int targetPaddingElements, const TTarget multiplicationFactor, const unsigned int firstTargetRow, const unsigned int numberTargetRows);
-
-		/**
-		 * Filter function determining the squared horizontal, vertical and the product between horizontal and vertical gradient filter responses for a subset of a 1 channel 8 bit frames.
-		 * @see FrameFilterGradient::filterHorizontalVertical3Products1Channel8Bit().
-		 */
-		static void filterHorizontalVertical3Products1Channel8BitSubset(const uint8_t* source, int16_t* target, const unsigned int width, const unsigned int height, const unsigned int firstRow, const unsigned int numberRows);
 
 		/**
 		 * Determines the squared magnitude of the horizontal and vertical gradient filter for one pixel.
@@ -165,18 +147,6 @@ inline void FrameFilterGradientBase::filterHorizontalVerticalSubFrame(const TSou
 	else
 	{
 		filterHorizontalVerticalSubFrameSubset<TSource, TTarget, tChannels, tNormalizeByTwo>(source, sourceWidth, sourceHeight, sourcePaddingElements, sourceLeft, sourceTop, target, targetWidth, targetHeight, targetPaddingElements, multiplicationFactor, 0u, targetHeight);
-	}
-}
-
-inline void FrameFilterGradientBase::filterHorizontalVertical3Products1Channel8Bit(const uint8_t* source, int16_t* target, const unsigned int width, const unsigned int height, Worker* worker)
-{
-	if (worker)
-	{
-		worker->executeFunction(Worker::Function::createStatic(FrameFilterGradientBase::filterHorizontalVertical3Products1Channel8BitSubset, source, target, width, height, 0u, 0u), 0u, height, 4u, 5u, 20u);
-	}
-	else
-	{
-		filterHorizontalVertical3Products1Channel8BitSubset(source, target, width, height, 0u, height);
 	}
 }
 
