@@ -51,12 +51,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\imageanalyzer\win\ImageAnalyzerMain.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\imageanalyzer\win\ImageAnalyzerMainWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\imageanalyzer\win\ImageAnalyzerMain.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\imageanalyzer\win\ImageAnalyzerMainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\imageanalyzer\win\ImageAnalyzerMain.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\imageanalyzer\win\ImageAnalyzerMainWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\imageanalyzer\win\ImageAnalyzerMain.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\imageanalyzer\win\ImageAnalyzerMainWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EB01AEEF-0BA0-45F6-93C8-128E9FDF6235}</ProjectGuid>
