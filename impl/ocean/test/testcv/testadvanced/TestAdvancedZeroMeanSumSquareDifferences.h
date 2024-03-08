@@ -259,6 +259,20 @@ class OCEAN_TEST_CV_ADVANCED_EXPORT TestAdvancedZeroMeanSumSquareDifferences
 		 * @return The resulting ssd
 		 */
 		static uint32_t calculateMirroredBorder8BitPerChannel(const Frame& frame0, const Vector2& center0, const uint8_t* buffer1, const unsigned int patchSize);
+
+		/**
+		 * Calculates the sum of squared differences value between two patches with associated masks.
+		 * @param frame0 First frame to be used, must be valid, must be valid
+		 * @param frame1 Second frame to be used, must be valid, must be valid
+		 * @param mask0 First mask to be used, must be valid, must be valid
+		 * @param mask1 Second mask to be used, must be valid, must be valid
+		 * @param center0 Center position in the first frame, with range [patchSize/2, width0 - tSize/2)x[patchSize/2, height0 - patchSize/2)
+		 * @param center1 Center position in the second frame, with range [patchSize/2, width1 - tSize/2 - 1)x[patchSize/2, height1 - patchSize/2 - 1)
+		 * @param patchSize The size of the square patch (the edge length) in pixel, with range [1, infinity), must be odd
+		 * @param maskValue The pixel value for mask pixels which will be excluded from SSD calculation
+		 * @return The resulting ssd
+		 */
+		static IndexPair32 calculateWithMask8BitPerChannel(const Frame& frame0, const Frame& frame1, const Frame& mask0, const Frame& mask1, const CV::PixelPosition& center0, const CV::PixelPosition& center1, const unsigned int patchSize, const uint8_t maskValue);
 };
 
 }

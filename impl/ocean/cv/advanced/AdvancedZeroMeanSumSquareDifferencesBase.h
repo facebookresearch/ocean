@@ -116,6 +116,8 @@ class AdvancedZeroMeanSumSquareDifferencesBase
 		template <unsigned int tChannels>
 		static inline unsigned int determine8BitPerChannelPartialTemplate(const uint8_t* frame0, const uint8_t* frame1, const uint8_t* mask0, const uint8_t* mask1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, unsigned int sizeX, unsigned int sizeY, const int left0, const int top0, const int left1, const int top1, unsigned int& pixels0, unsigned int& pixels1);
 
+	protected:
+
 		/**
 		 * Determines the mean values of given image patch with arbitrary sizes while a binary mask specifies whether a pixel is valid or skipped.
 		 * A pixel is valid if the pixel is a non-mask pixels and lies inside the frame.

@@ -634,7 +634,7 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testPartialTwoMasks(const double 
 	allSucceeded = testPartialTwoMasks<1u>(640u, 480u, 640u, 480u, 5u, 5u, testDuration);
 	allSucceeded = testPartialTwoMasks<1u>(641u, 477u, 640u, 480u, 5u, 5u, testDuration);
 	allSucceeded = testPartialTwoMasks<1u>(640u, 481u, 645u, 483u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<1u>(1280u, 720u, 1280u, 720u, 10u, 10u, testDuration);
+	allSucceeded = testPartialTwoMasks<1u>(1280u, 720u, 1280u, 720u, 9u, 9u, testDuration);
 	allSucceeded = testPartialTwoMasks<1u>(1280u, 720u, 1280u, 720u, 31u, 31u, testDuration);
 
 	Log::info() << " ";
@@ -642,7 +642,7 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testPartialTwoMasks(const double 
 	allSucceeded = testPartialTwoMasks<2u>(640u, 480u, 640u, 480u, 5u, 5u, testDuration);
 	allSucceeded = testPartialTwoMasks<2u>(641u, 477u, 640u, 480u, 5u, 5u, testDuration);
 	allSucceeded = testPartialTwoMasks<2u>(640u, 481u, 645u, 483u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<2u>(1280u, 720u, 1280u, 720u, 10u, 10u, testDuration);
+	allSucceeded = testPartialTwoMasks<2u>(1280u, 720u, 1280u, 720u, 9u, 9u, testDuration);
 	allSucceeded = testPartialTwoMasks<2u>(1280u, 720u, 1280u, 720u, 31u, 31u, testDuration);
 
 	Log::info() << " ";
@@ -650,7 +650,7 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testPartialTwoMasks(const double 
 	allSucceeded = testPartialTwoMasks<3u>(640u, 480u, 640u, 480u, 5u, 5u, testDuration);
 	allSucceeded = testPartialTwoMasks<3u>(641u, 477u, 640u, 480u, 5u, 5u, testDuration);
 	allSucceeded = testPartialTwoMasks<3u>(640u, 481u, 645u, 483u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<3u>(1280u, 720u, 1280u, 720u, 10u, 10u, testDuration);
+	allSucceeded = testPartialTwoMasks<3u>(1280u, 720u, 1280u, 720u, 9u, 9u, testDuration);
 	allSucceeded = testPartialTwoMasks<3u>(1280u, 720u, 1280u, 720u, 31u, 31u, testDuration);
 
 	Log::info() << " ";
@@ -658,7 +658,7 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testPartialTwoMasks(const double 
 	allSucceeded = testPartialTwoMasks<4u>(640u, 480u, 640u, 480u, 5u, 5u, testDuration);
 	allSucceeded = testPartialTwoMasks<4u>(641u, 477u, 640u, 480u, 5u, 5u, testDuration);
 	allSucceeded = testPartialTwoMasks<4u>(640u, 481u, 645u, 483u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<4u>(1280u, 720u, 1280u, 720u, 10u, 10u, testDuration);
+	allSucceeded = testPartialTwoMasks<4u>(1280u, 720u, 1280u, 720u, 9u, 9u, testDuration);
 	allSucceeded = testPartialTwoMasks<4u>(1280u, 720u, 1280u, 720u, 31u, 31u, testDuration);
 
 	return allSucceeded;
@@ -1578,11 +1578,14 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testPartialTwoMasks(const unsigne
 {
 	Log::info() << "Test " << tChannels * 8u << " bit masked with (" << width0 << "x" << height0 << ", " << width1 << "x" << height1 << ") and patch size " << sizeX << "x" << sizeY << ":";
 
+	ocean_assert(sizeX == sizeY);
+	ocean_assert(sizeX >= 1u && sizeX % 2u == 1u);
+
 	LegacyFrame frame0(FrameType(width0, height0, FrameType::findPixelFormat(tChannels * 8u), FrameType::ORIGIN_UPPER_LEFT));
 	LegacyFrame frame1(FrameType(width1, height1, FrameType::findPixelFormat(tChannels * 8u), FrameType::ORIGIN_UPPER_LEFT));
 
 	LegacyFrame maskFrame0(FrameType(width0, height0, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
-	LegacyFrame maskFrame1(FrameType(width1, height1, FrameType::FORMAT_Y8, FrameType::ORIGIN_LOWER_LEFT));
+	LegacyFrame maskFrame1(FrameType(width1, height1, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 
 	CV::CVUtilities::randomizeFrame(frame0);
 	CV::CVUtilities::randomizeFrame(frame1);
@@ -1608,42 +1611,73 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testPartialTwoMasks(const unsigne
 
 	static const unsigned int constRepetitions = 1000u;
 
+	const unsigned int patchSize = sizeX;
+	const unsigned int patchSize_2 = patchSize / 2u;
+
 	int left0[constRepetitions], top0[constRepetitions], left1[constRepetitions], top1[constRepetitions];
 	for (unsigned int n = 0u; n < constRepetitions; ++n)
 	{
-		left0[n] = RandomI::random(-int(sizeX) + 1, int(width0 - 1u));
-		top0[n] = RandomI::random(-int(sizeY) + 1, int(height0 - 1u));
+		left0[n] = RandomI::random(-int(patchSize_2), int(width0 - patchSize_2 - 1u));
+		top0[n] = RandomI::random(-int(patchSize_2), int(height0 - patchSize_2 - 1u));
 
-		left1[n] = RandomI::random(-int(sizeX) + 1, int(width1 - 1u));
-		top1[n] = RandomI::random(-int(sizeY) + 1, int(height1 - 1u));
+		left1[n] = RandomI::random(-int(patchSize_2), int(width1 - patchSize_2 - 1u));
+		top1[n] = RandomI::random(-int(patchSize_2), int(height1 - patchSize_2 - 1u));
 	}
 
 	HighPerformanceStatistic performance;
 
-	unsigned int dummy0 = 0u;
-	unsigned int dummy1 = 0u;
+	IndexPairs32 results(constRepetitions);
+
+	bool validation = true;
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const HighPerformanceStatistic::ScopedStatistic scopedStatistic(performance);
+		HighPerformanceStatistic::ScopedStatistic scopedStatistic(performance);
 
 		for (unsigned int n = 0u; n < constRepetitions; ++n)
 		{
-			const std::pair<unsigned int, unsigned int> result = CV::Advanced::AdvancedZeroMeanSumSquareDifferencesBase::determine8BitPerChannelPartialTemplate<tChannels>(data0, data1, mask0, mask1, width0, height0, width1, height1, sizeX, sizeY, left0[n], top0[n], left1[n], top1[n]);
-			dummy0 += result.first;
-			dummy1 += result.second;
+			results[n] = CV::Advanced::AdvancedZeroMeanSumSquareDifferencesBase::determine8BitPerChannelPartialTemplate<tChannels>(data0, data1, mask0, mask1, width0, height0, width1, height1, sizeX, sizeY, left0[n], top0[n], left1[n], top1[n]);
+		}
+
+		scopedStatistic.release();
+
+		constexpr uint8_t maskValue = 0x00u;
+
+		for (unsigned int n = 0u; n < constRepetitions; ++n)
+		{
+			const int xCenter0 = left0[n] + int(patchSize_2);
+			const int yCenter0 = top0[n] + int(patchSize_2);
+
+			const int xCenter1 = left1[n] + int(patchSize_2);
+			const int yCenter1 = top1[n] + int(patchSize_2);
+
+			ocean_assert(xCenter0 >= 0 && xCenter0 < int(frame0.width()));
+			ocean_assert(yCenter0 >= 0 && yCenter0 < int(frame0.height()));
+
+			ocean_assert(xCenter1 >= 0 && xCenter1 < int(frame1.width()));
+			ocean_assert(yCenter1 >= 0 && yCenter1 < int(frame1.height()));
+
+			const CV::PixelPosition center0(xCenter0, yCenter0);
+			const CV::PixelPosition center1(xCenter1, yCenter1);
+
+			const IndexPair32 test = calculateWithMask8BitPerChannel(Frame(frame0, Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(frame1, Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(maskFrame0, Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(maskFrame1, Frame::temporary_ACM_USE_KEEP_LAYOUT), center0, center1, patchSize, maskValue);
+
+			if (test != results[n])
+			{
+				validation = false;
+			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (dummy0 + dummy1 == 0xFFFFFFFFu)
-		Log::info() << "Performance of " << String::insertCharacter(String::toAString(constRepetitions), ',', 3, false) << " repetitions: " << performance.averageMseconds() << "ms";
-	else
-		Log::info() << "Performance of " << String::insertCharacter(String::toAString(constRepetitions), ',', 3, false) << " repetitions: " << performance.averageMseconds() << "ms";
+	Log::info() << "Performance of " << String::insertCharacter(String::toAString(constRepetitions), ',', 3, false) << " repetitions: " << performance.averageMseconds() << "ms";
 
-	const bool validation = validatePartialTwoMasks<tChannels>(data0, data1, mask0, mask1, width0, height0, width1, height1, sizeX, sizeY, testDuration);
+	if (!validatePartialTwoMasks<tChannels>(data0, data1, mask0, mask1, width0, height0, width1, height1, sizeX, sizeY, testDuration))
+	{
+		validation = false;
+	}
 
 	if (validation)
 		Log::info() << "Validation: succeeded.";
@@ -2586,6 +2620,114 @@ uint32_t TestAdvancedZeroMeanSumSquareDifferences::calculateMirroredBorder8BitPe
 	}
 
 	return ssdTest;
+}
+
+IndexPair32 TestAdvancedZeroMeanSumSquareDifferences::calculateWithMask8BitPerChannel(const Frame& frame0, const Frame& frame1, const Frame& mask0, const Frame& mask1, const CV::PixelPosition& center0, const CV::PixelPosition& center1, const unsigned int patchSize, const uint8_t maskValue)
+{
+	ocean_assert(frame0.isValid() && frame1.isValid());
+	ocean_assert(mask0.isValid() && mask1.isValid());
+
+	if (!frame0.isValid() || !frame1.isValid() || !frame0.isPixelFormatCompatible(frame1.pixelFormat()))
+	{
+		ocean_assert(false && "This should never happen!");
+		return IndexPair32(uint32_t(-1), uint32_t(-1));
+	}
+
+	if (!frame0.isFrameTypeCompatible(FrameType(mask0, frame0.pixelFormat()), false) || !frame1.isFrameTypeCompatible(FrameType(mask1, frame1.pixelFormat()), false))
+	{
+		ocean_assert(false && "This should never happen!");
+		return IndexPair32(uint32_t(-1), uint32_t(-1));
+	}
+
+	const unsigned int channels = frame0.channels();
+
+	ocean_assert(patchSize % 2u == 1u);
+
+	if (patchSize == 0u || patchSize % 2u != 1u)
+	{
+		return IndexPair32(uint32_t(-1), uint32_t(-1));
+	}
+
+	const unsigned int patchSize_2 = patchSize / 2u;
+
+	Indices32 mean0(channels, 0u);
+	Indices32 mean1(channels, 0u);
+
+	uint32_t ssd = 0u;
+	uint32_t validPixels = 0u;
+
+	for (const bool meanIteration : {true, false})
+	{
+		for (int yy = -int(patchSize_2); yy <= int(patchSize_2); ++yy)
+		{
+			const int y0 = int(center0.y()) + yy;
+			const int y1 = int(center1.y()) + yy;
+
+			if (y0 < 0 || y0 >= int(frame0.height()) || y1 < 0 || y1 >= int(frame1.height()))
+			{
+				continue;
+			}
+
+			for (int xx = -int(patchSize_2); xx <= int(patchSize_2); ++xx)
+			{
+				const int x0 = int(center0.x()) + xx;
+				const int x1 = int(center1.x()) + xx;
+
+				if (x0 < 0 || x0 >= int(frame0.width()) || x1 < 0 || x1 >= int(frame1.width()))
+				{
+					continue;
+				}
+
+				if (mask0.constpixel<uint8_t>(x0, y0)[0] != maskValue && mask1.constpixel<uint8_t>(x1, y1)[0] != maskValue)
+				{
+					const uint8_t* const pixel0 = frame0.constpixel<uint8_t>((unsigned int)(x0), (unsigned int)(y0));
+					const uint8_t* const pixel1 = frame1.constpixel<uint8_t>((unsigned int)(x1), (unsigned int)(y1));
+
+					if (meanIteration)
+					{
+						for (unsigned int n = 0u; n < channels; ++n)
+						{
+							mean0[n] += pixel0[n];
+							mean1[n] += pixel1[n];
+						}
+
+						++validPixels;
+					}
+					else
+					{
+						for (unsigned int n = 0u; n < channels; ++n)
+						{
+							const uint8_t value0 = pixel0[n];
+							const uint8_t value1 = pixel1[n];
+
+							const int32_t adjusted0 = int32_t(value0) - int32_t(mean0[n]);
+							const int32_t adjusted1 = int32_t(value1) - int32_t(mean1[n]);
+
+							const int32_t difference = int32_t(adjusted0) - int32_t(adjusted1);
+
+							ssd += uint32_t(difference * difference);
+						}
+					}
+				}
+			}
+		}
+
+		if (meanIteration)
+		{
+			if (validPixels == 0u)
+			{
+				return IndexPair32(0u, 0u);
+			}
+
+			for (unsigned int n = 0u; n < channels; ++n)
+			{
+				mean0[n] = (mean0[n] + validPixels / 2u) / validPixels;
+				mean1[n] = (mean1[n] + validPixels / 2u) / validPixels;
+			}
+		}
+	}
+
+	return IndexPair32(ssd, validPixels);
 }
 
 }
