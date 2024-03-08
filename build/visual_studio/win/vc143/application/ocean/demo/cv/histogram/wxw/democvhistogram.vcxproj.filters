@@ -11,21 +11,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\histogram\wxw\HistogramApplication.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogram\wxw\HistogramApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\histogram\wxw\HistogramMainWindow.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogram\wxw\HistogramMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\histogram\wxw\HistogramApplication.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogram\wxw\HistogramApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\histogram\wxw\HistogramMainWindow.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogram\wxw\HistogramMainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\histogram\wxw\Histogram.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogram\wxw\Histogram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

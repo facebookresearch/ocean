@@ -11,21 +11,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentApplication.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentMainWindow.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentApplication.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustment.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentMainWindow.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentMainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -51,13 +51,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\histogram\wxw\HistogramApplication.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\histogram\wxw\HistogramMainWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogram\wxw\HistogramApplication.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogram\wxw\HistogramMainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\histogram\wxw\Histogram.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\histogram\wxw\HistogramApplication.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\histogram\wxw\HistogramMainWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogram\wxw\Histogram.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogram\wxw\HistogramApplication.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogram\wxw\HistogramMainWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{43A4B6C5-0338-497E-8249-822969B8D1E8}</ProjectGuid>

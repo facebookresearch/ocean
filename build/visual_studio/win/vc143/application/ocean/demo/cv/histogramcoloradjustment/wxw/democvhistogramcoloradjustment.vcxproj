@@ -51,13 +51,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentApplication.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentMainWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentApplication.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentMainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustment.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentApplication.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentMainWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustment.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentApplication.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\histogramcoloradjustment\wxw\HistogramColorAdjustmentMainWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8F907C75-AD60-4433-BD10-C548314E107A}</ProjectGuid>
