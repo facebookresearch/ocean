@@ -39,6 +39,49 @@ class OCEAN_TEST_CV_ADVANCED_EXPORT TestAdvancedMotion
 		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
 
 		/**
+		 * Invokes the test of trackPointsSubPixelMirroredBorder().
+		 * @param width The width of the test frame in pixel, with range [32, infinity)
+		 * @param height The height of the test frame in pixel, with range [32, infinity)
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		static bool testTrackPointsSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+
+		/**
+		 * Invokes the test of trackPointsSubPixelMirroredBorder() with specified metric type.
+		 * @param width The width of the test frame in pixel, with range [32, infinity)
+		 * @param height The height of the test frame in pixel, with range [32, infinity)
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		template <typename T>
+		static bool testTrackPointsSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+
+		/**
+		 * Invokes the test of trackPointsSubPixelMirroredBorder() with specified metric type and channel number.
+		 * @param width The width of the test frame in pixel, with range [32, infinity)
+		 * @param height The height of the test frame in pixel, with range [32, infinity)
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		template <typename T, unsigned int tChannels>
+		static bool testTrackPointsSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+
+		/**
+		 * Invokes the test of trackPointsSubPixelMirroredBorder() with specified metric type, channel number, and patch size.
+		 * @param width The width of the test frame in pixel, with range [32, infinity)
+		 * @param height The height of the test frame in pixel, with range [32, infinity)
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		template <typename T, unsigned int tChannels, unsigned int tPatchSize>
+		static bool testTrackPointsSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
+
+		/**
 		 * Invokes the test of trackPointsBidirectionalSubPixelMirroredBorder().
 		 * @param width The width of the test frame in pixel, with range [32, infinity)
 		 * @param height The height of the test frame in pixel, with range [32, infinity)
