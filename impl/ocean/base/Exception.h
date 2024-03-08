@@ -33,7 +33,13 @@ class OCEAN_BASE_EXPORT OceanException : public Exception
 		 * Move constructor.
 		 * @param exception The exception to be moved
 		 */
-		OceanException(OceanException&& exception);
+		OceanException(OceanException&& exception) noexcept;
+
+		/**
+		 * Copy constructor.
+		 * @param exception The exception to be copied
+		 */
+		OceanException(const OceanException& exception) noexcept;
 
 		/**
 		 * Creates a new OceanException object with a message.
@@ -58,13 +64,32 @@ class OCEAN_BASE_EXPORT OceanException : public Exception
 		 */
 		const char* what() const noexcept override;
 
-	protected:
+		/**
+		 * Move operator.
+		 * @param exception The exception to be moved
+		 * @return Reference to this object
+		 */
+		OceanException& operator=(OceanException&& exception) noexcept;
 
 		/**
-		 * Disabled copy constructor.
-		 * @param exception The exception which would be copied
+		 * Copy operator.
+		 * @param exception The exception to be moved
+		 * @return Reference to this object
 		 */
-		OceanException(const OceanException& exception) = delete;
+		OceanException& operator=(const OceanException& exception) noexcept;
+
+	private:
+
+		/**
+		 * Sets a message.
+		 * @param message The message to set, must be valid
+		 */
+		void setMessage(const char* message);
+
+		/**
+		 * Releases the exception and all resources.
+		 */
+		void release();
 
 	private:
 
