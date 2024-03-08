@@ -55,7 +55,7 @@ bool TestAdvancedZeroMeanSumSquareDifferences::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testPartialTwoMasks(testDuration) && allSucceeded;
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -97,6 +97,11 @@ TEST(TestAdvancedZeroMeanSumSquareDifferences, PatchBuffer8BitPerChannel)
 TEST(TestAdvancedZeroMeanSumSquareDifferences, PatchMirroredBorderBuffer8BitPerChannel)
 {
 	EXPECT_TRUE(TestAdvancedZeroMeanSumSquareDifferences::testPatchMirroredBorderBuffer8BitPerChannel(GTEST_TEST_DURATION));
+}
+
+TEST(TestAdvancedZeroMeanSumSquareDifferences, TwoPixelPatchWithMask8BitPerChannel)
+{
+	EXPECT_TRUE(TestAdvancedZeroMeanSumSquareDifferences::testTwoPixelPatchWithMask8BitPerChannel(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -625,41 +630,133 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testPatchMirroredBorderBuffer8Bit
 	return allSucceeded;
 }
 
-bool TestAdvancedZeroMeanSumSquareDifferences::testPartialTwoMasks(const double testDuration)
+bool TestAdvancedZeroMeanSumSquareDifferences::testTwoPixelPatchWithMask8BitPerChannel(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
+	Log::info() << "Testing two pixel accurate SSD between two patches combined with a mask:";
+	Log::info() << " ";
+
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+
 	bool allSucceeded = true;
 
-	allSucceeded = testPartialTwoMasks<1u>(640u, 480u, 640u, 480u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<1u>(641u, 477u, 640u, 480u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<1u>(640u, 481u, 645u, 483u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<1u>(1280u, 720u, 1280u, 720u, 9u, 9u, testDuration);
-	allSucceeded = testPartialTwoMasks<1u>(1280u, 720u, 1280u, 720u, 31u, 31u, testDuration);
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<1u, 1u>(width, height, testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
-	allSucceeded = testPartialTwoMasks<2u>(640u, 480u, 640u, 480u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<2u>(641u, 477u, 640u, 480u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<2u>(640u, 481u, 645u, 483u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<2u>(1280u, 720u, 1280u, 720u, 9u, 9u, testDuration);
-	allSucceeded = testPartialTwoMasks<2u>(1280u, 720u, 1280u, 720u, 31u, 31u, testDuration);
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<2u, 1u>(width, height, testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
-	allSucceeded = testPartialTwoMasks<3u>(640u, 480u, 640u, 480u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<3u>(641u, 477u, 640u, 480u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<3u>(640u, 481u, 645u, 483u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<3u>(1280u, 720u, 1280u, 720u, 9u, 9u, testDuration);
-	allSucceeded = testPartialTwoMasks<3u>(1280u, 720u, 1280u, 720u, 31u, 31u, testDuration);
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<3u, 1u>(width, height, testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
-	allSucceeded = testPartialTwoMasks<4u>(640u, 480u, 640u, 480u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<4u>(641u, 477u, 640u, 480u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<4u>(640u, 481u, 645u, 483u, 5u, 5u, testDuration);
-	allSucceeded = testPartialTwoMasks<4u>(1280u, 720u, 1280u, 720u, 9u, 9u, testDuration);
-	allSucceeded = testPartialTwoMasks<4u>(1280u, 720u, 1280u, 720u, 31u, 31u, testDuration);
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<4u, 1u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<1u, 3u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<2u, 3u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<3u, 3u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<4u, 3u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<1u, 5u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<2u, 5u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<3u, 5u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<4u, 5u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<1u, 7u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<2u, 7u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<3u, 7u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<4u, 7u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<1u, 9u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<2u, 9u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<3u, 9u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<4u, 9u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<1u, 15u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<2u, 15u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<3u, 15u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<4u, 15u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<1u, 31u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<2u, 31u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<3u, 31u>(width, height, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testTwoPixelPatchWithMask8BitPerChannel<4u, 31u>(width, height, testDuration) && allSucceeded;
 
 	return allSucceeded;
 }
@@ -1573,213 +1670,222 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testPatchMirroredBorderBuffer8Bit
 	return allSucceeded;
 }
 
-template <unsigned int tChannels>
-bool TestAdvancedZeroMeanSumSquareDifferences::testPartialTwoMasks(const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int sizeX, const unsigned int sizeY, const double testDuration)
+template <unsigned int tChannels, unsigned int tPatchSize>
+bool TestAdvancedZeroMeanSumSquareDifferences::testTwoPixelPatchWithMask8BitPerChannel(const unsigned int width, const unsigned int height, const double testDuration)
 {
-	Log::info() << "Test " << tChannels * 8u << " bit masked with (" << width0 << "x" << height0 << ", " << width1 << "x" << height1 << ") and patch size " << sizeX << "x" << sizeY << ":";
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+	static_assert(tPatchSize % 2u == 1u, "Invalid size");
 
-	ocean_assert(sizeX == sizeY);
-	ocean_assert(sizeX >= 1u && sizeX % 2u == 1u);
+	ocean_assert(width >= tPatchSize && height >= tPatchSize);
+	ocean_assert(testDuration > 0.0);
 
-	LegacyFrame frame0(FrameType(width0, height0, FrameType::findPixelFormat(tChannels * 8u), FrameType::ORIGIN_UPPER_LEFT));
-	LegacyFrame frame1(FrameType(width1, height1, FrameType::findPixelFormat(tChannels * 8u), FrameType::ORIGIN_UPPER_LEFT));
+	constexpr unsigned int patchSize_2 = tPatchSize / 2u;
 
-	LegacyFrame maskFrame0(FrameType(width0, height0, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
-	LegacyFrame maskFrame1(FrameType(width1, height1, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
+	constexpr size_t locations = 10000;
 
-	CV::CVUtilities::randomizeFrame(frame0);
-	CV::CVUtilities::randomizeFrame(frame1);
+	Log::info() << "... with " << tChannels << " channels and " << tPatchSize * tPatchSize << " pixels (" << tPatchSize << "x" << tPatchSize << ") at " << locations << " locations:";
 
-	memset(maskFrame0.data<void>(), 0xFFu, maskFrame0.size());
-	memset(maskFrame1.data<void>(), 0xFFu, maskFrame1.size());
+	bool allSucceeded = true;
 
-	for (unsigned int n = 0u; n < maskFrame0.size() / 4u; ++n)
-	{
-		maskFrame0.data<uint8_t>()[RandomI::random(height0 - 1u) * width0 + RandomI::random(width0 - 1u)] = 0x00u;
-	}
+	RandomGenerator randomGenerator;
 
-	for (unsigned int n = 0u ; n < maskFrame1.size() / 4u; ++n)
-	{
-		maskFrame1.data<uint8_t>()[RandomI::random(height1 - 1u) * width1 + RandomI::random(width1 - 1u)] = 0x00u;
-	}
+	HighPerformanceStatistic performanceNaive;
+	HighPerformanceStatistic performanceTemplate;
+	HighPerformanceStatistic performanceSSE;
+	HighPerformanceStatistic performanceNEON;
+	HighPerformanceStatistic performanceDefault;
 
-	const uint8_t* data0 = frame0.constdata<uint8_t>();
-	const uint8_t* data1 = frame1.constdata<uint8_t>();
+	Indices32 centersX0(locations);
+	Indices32 centersY0(locations);
+	Indices32 centersX1(locations);
+	Indices32 centersY1(locations);
 
-	const uint8_t* mask0 = maskFrame0.constdata<uint8_t>();
-	const uint8_t* mask1 = maskFrame1.constdata<uint8_t>();
-
-	static const unsigned int constRepetitions = 1000u;
-
-	const unsigned int patchSize = sizeX;
-	const unsigned int patchSize_2 = patchSize / 2u;
-
-	int left0[constRepetitions], top0[constRepetitions], left1[constRepetitions], top1[constRepetitions];
-	for (unsigned int n = 0u; n < constRepetitions; ++n)
-	{
-		left0[n] = RandomI::random(-int(patchSize_2), int(width0 - patchSize_2 - 1u));
-		top0[n] = RandomI::random(-int(patchSize_2), int(height0 - patchSize_2 - 1u));
-
-		left1[n] = RandomI::random(-int(patchSize_2), int(width1 - patchSize_2 - 1u));
-		top1[n] = RandomI::random(-int(patchSize_2), int(height1 - patchSize_2 - 1u));
-	}
-
-	HighPerformanceStatistic performance;
-
-	IndexPairs32 results(constRepetitions);
-
-	bool validation = true;
+	IndexPairs32 resultsNaive;
+	IndexPairs32 resultsTemplate;
+	IndexPairs32 resultsSSE;
+	IndexPairs32 resultsNEON;
+	IndexPairs32 resultsDefault;
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		HighPerformanceStatistic::ScopedStatistic scopedStatistic(performance);
+		const unsigned int width0 = RandomI::random(randomGenerator, width - 1u, width + 1u);
+		const unsigned int height0 = RandomI::random(randomGenerator, height - 1u, height + 1u);
 
-		for (unsigned int n = 0u; n < constRepetitions; ++n)
+		const unsigned int width1 = RandomI::random(randomGenerator, width - 1u, width + 1u);
+		const unsigned int height1 = RandomI::random(randomGenerator, height - 1u, height + 1u);
+
+		Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame frame1 = CV::CVUtilities::randomizedFrame(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+
+		frame0.makeContinuous(); // not yet supported
+		frame1.makeContinuous();
+
+		constexpr unsigned int maskPaddingElements0 = 0u; // not yet supported
+		constexpr unsigned int maskPaddingElements1 = 0u;
+
+		constexpr uint8_t maskValue = 0u; // not yet supported
+
+		const Frame mask0 = CV::CVUtilities::randomizedBinaryMask(width0, height0, maskValue, maskPaddingElements0, &randomGenerator);
+		const Frame mask1 = CV::CVUtilities::randomizedBinaryMask(width1, height1, maskValue, maskPaddingElements1, &randomGenerator);
+
+		for (unsigned int n = 0u; n < locations; ++n)
 		{
-			results[n] = CV::Advanced::AdvancedZeroMeanSumSquareDifferencesBase::determine8BitPerChannelPartialTemplate<tChannels>(data0, data1, mask0, mask1, width0, height0, width1, height1, sizeX, sizeY, left0[n], top0[n], left1[n], top1[n]);
+			centersX0[n] = RandomI::random(randomGenerator, width0 - 1u);
+			centersY0[n] = RandomI::random(randomGenerator, height0 - 1u);
+
+			centersX1[n] = RandomI::random(randomGenerator, width1 - 1u);
+			centersY1[n] = RandomI::random(randomGenerator, height1 - 1u);
 		}
 
-		scopedStatistic.release();
+		const uint8_t* const frameData0 = frame0.constdata<uint8_t>();
+		const uint8_t* const frameData1 = frame1.constdata<uint8_t>();
 
-		constexpr uint8_t maskValue = 0x00u;
+		const uint8_t* const maskData0 = mask0.constdata<uint8_t>();
+		const uint8_t* const maskData1 = mask1.constdata<uint8_t>();
 
-		for (unsigned int n = 0u; n < constRepetitions; ++n)
+		for (const ImplementationType implementationType : {IT_NAIVE, IT_TEMPLATE, IT_SSE, IT_NEON, IT_DEFAULT})
 		{
-			const int xCenter0 = left0[n] + int(patchSize_2);
-			const int yCenter0 = top0[n] + int(patchSize_2);
-
-			const int xCenter1 = left1[n] + int(patchSize_2);
-			const int yCenter1 = top1[n] + int(patchSize_2);
-
-			ocean_assert(xCenter0 >= 0 && xCenter0 < int(frame0.width()));
-			ocean_assert(yCenter0 >= 0 && yCenter0 < int(frame0.height()));
-
-			ocean_assert(xCenter1 >= 0 && xCenter1 < int(frame1.width()));
-			ocean_assert(yCenter1 >= 0 && yCenter1 < int(frame1.height()));
-
-			const CV::PixelPosition center0(xCenter0, yCenter0);
-			const CV::PixelPosition center1(xCenter1, yCenter1);
-
-			const IndexPair32 test = calculateWithMask8BitPerChannel(Frame(frame0, Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(frame1, Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(maskFrame0, Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(maskFrame1, Frame::temporary_ACM_USE_KEEP_LAYOUT), center0, center1, patchSize, maskValue);
-
-			if (test != results[n])
+			switch (implementationType)
 			{
-				validation = false;
+				case IT_NAIVE:
+				{
+					resultsNaive.resize(locations);
+
+					const HighPerformanceStatistic::ScopedStatistic scopedStatistic(performanceNaive);
+
+					for (size_t n = 0; n < locations; ++n)
+					{
+						// **TODO** use naive implementation once existing
+
+						resultsNaive[n] = CV::Advanced::AdvancedZeroMeanSumSquareDifferencesBase::determine8BitPerChannelPartialTemplate<tChannels>(frameData0, frameData1, maskData0, maskData1, width0, height0, width1, height1, tPatchSize, tPatchSize, int(centersX0[n]) - int(patchSize_2), int(centersY0[n]) - int(patchSize_2), int(centersX1[n]) - int(patchSize_2), int(centersY1[n]) - int(patchSize_2));
+					}
+
+					break;
+				}
+
+				case IT_TEMPLATE:
+				{
+					resultsTemplate.resize(locations);
+
+					const HighPerformanceStatistic::ScopedStatistic scopedStatistic(performanceTemplate);
+
+					for (size_t n = 0; n < locations; ++n)
+					{
+						resultsTemplate[n] = CV::Advanced::AdvancedZeroMeanSumSquareDifferencesBase::determine8BitPerChannelPartialTemplate<tChannels>(frameData0, frameData1, maskData0, maskData1, width0, height0, width1, height1, tPatchSize, tPatchSize, int(centersX0[n]) - int(patchSize_2), int(centersY0[n]) - int(patchSize_2), int(centersX1[n]) - int(patchSize_2), int(centersY1[n]) - int(patchSize_2));
+					}
+
+					break;
+				}
+
+				case IT_SSE:
+				{
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+					// not yet implemented
+#endif // defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+					break;
+				}
+
+				case IT_NEON:
+				{
+#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+					// not yet implemented
+#endif // defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+
+					break;
+				}
+
+				case IT_DEFAULT:
+				{
+					resultsDefault.resize(locations);
+
+					const HighPerformanceStatistic::ScopedStatistic scopedStatistic(performanceDefault);
+
+					for (size_t n = 0; n < locations; ++n)
+					{
+						// **TODO** use naive implementation once existing
+
+						resultsDefault[n] = CV::Advanced::AdvancedZeroMeanSumSquareDifferencesBase::determine8BitPerChannelPartialTemplate<tChannels>(frameData0, frameData1, maskData0, maskData1, width0, height0, width1, height1, tPatchSize, tPatchSize, int(centersX0[n]) - int(patchSize_2), int(centersY0[n]) - int(patchSize_2), int(centersX1[n]) - int(patchSize_2), int(centersY1[n]) - int(patchSize_2));
+					}
+
+					break;
+				}
+
+				default:
+					ocean_assert(false && "Invalid implementation type!");
+					break;
+			}
+		}
+
+		for (size_t n = 0; n < locations; ++n)
+		{
+			const IndexPair32 ssdTest = calculateWithMask8BitPerChannel(frame0, frame1, mask0, mask1, CV::PixelPosition(centersX0[n], centersY0[n]), CV::PixelPosition(centersX1[n], centersY1[n]), tPatchSize, maskValue);
+
+			if (!resultsNaive.empty() && resultsNaive[n] != ssdTest)
+			{
+				allSucceeded = false;
+			}
+
+			if (!resultsTemplate.empty() && resultsTemplate[n] != ssdTest)
+			{
+				allSucceeded = false;
+			}
+
+			if (!resultsSSE.empty() && resultsSSE[n] != ssdTest)
+			{
+				allSucceeded = false;
+			}
+
+			if (!resultsNEON.empty() && resultsNEON[n] != ssdTest)
+			{
+				allSucceeded = false;
+			}
+
+			if (resultsDefault[n] != ssdTest)
+			{
+				allSucceeded = false;
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	Log::info() << "Performance of " << String::insertCharacter(String::toAString(constRepetitions), ',', 3, false) << " repetitions: " << performance.averageMseconds() << "ms";
+	static_assert(locations != 0, "Invalid number of locations!");
 
-	if (!validatePartialTwoMasks<tChannels>(data0, data1, mask0, mask1, width0, height0, width1, height1, sizeX, sizeY, testDuration))
+	if (performanceNaive.measurements() != 0u)
 	{
-		validation = false;
+		Log::info() << "   Naive: [" << performanceNaive.bestMseconds() << ", " << performanceNaive.medianMseconds() << ", " << performanceNaive.worstMseconds() << "] ms";
 	}
 
-	if (validation)
+	if (performanceTemplate.measurements() != 0u)
+	{
+		Log::info() << "Template: [" << performanceTemplate.bestMseconds() << ", " << performanceTemplate.medianMseconds() << ", " << performanceTemplate.worstMseconds() << "] ms";
+	}
+
+	if (performanceSSE.measurements() != 0u)
+	{
+		Log::info() << "     SSE: [" << performanceSSE.bestMseconds() << ", " << performanceSSE.medianMseconds() << ", " << performanceSSE.worstMseconds() << "] ms";
+	}
+
+	if (performanceNEON.measurements() != 0u)
+	{
+		Log::info() << "    NEON: [" << performanceNEON.bestMseconds() << ", " << performanceNEON.medianMseconds() << ", " << performanceNEON.worstMseconds() << "] ms";
+	}
+
+	ocean_assert(performanceDefault.measurements() != 0u);
+	Log::info() << " Default: [" << performanceDefault.bestMseconds() << ", " << performanceDefault.medianMseconds() << ", " << performanceDefault.worstMseconds() << "] ms";
+
+	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
-
-	return validation;
-}
-
-template <unsigned int tChannels>
-bool TestAdvancedZeroMeanSumSquareDifferences::validatePartialTwoMasks(const unsigned char* frame0, const unsigned char* frame1, const unsigned char* mask0, const unsigned char* mask1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int sizeX, const unsigned int sizeY, const double testDuration)
-{
-	const Timestamp startTimestamp(true);
-
-	do
-	{
-		const int left0 = RandomI::random(-int(sizeX) + 1, int(width0 - 1u));
-		const int top0 = RandomI::random(-int(sizeY) + 1, int(height0 - 1u));
-
-		const int left1 = RandomI::random(-int(sizeX) + 1, int(width1 - 1u));
-		const int top1 = RandomI::random(-int(sizeY) + 1, int(height1 - 1u));
-
-		const IndexPair32 result = CV::Advanced::AdvancedZeroMeanSumSquareDifferencesBase::determine8BitPerChannelPartialTemplate<tChannels>(frame0, frame1, mask0, mask1, width0, height0, width1, height1, sizeX, sizeY, left0, top0, left1, top1);
-
-		IndexPair32 test = std::make_pair(0u, 0u);
-
-		unsigned int means0[tChannels] = {0u};
-		unsigned int means1[tChannels] = {0u};
-
-		unsigned int meanPixels = 0u;
-
-		int y1 = top1;
-		for (int y0 = top0; y0 < top0 + int(sizeY); ++y0)
-		{
-			int x1 = left1;
-			for (int x0 = left0; x0 < left0 + int(sizeX); ++x0)
-			{
-				if (x0 >= 0 && x0 <= int(width0 - 1u) && y0 >= 0 && y0 <= int(height0 - 1u)
-						&& x1 >= 0 && x1 <= int(width1 - 1u) && y1 >= 0 && y1 <= int(height1 - 1u))
-				{
-					if (mask0[y0 * width0 + x0] == 0xFF && mask1[y1 * width1 + x1] == 0xFF)
-					{
-						meanPixels++;
-
-						for (unsigned int n = 0u; n < tChannels; ++n)
-						{
-							means0[n] += frame0[tChannels * (y0 * width0 + x0) + n];
-							means1[n] += frame1[tChannels * (y1 * width1 + x1) + n];
-						}
-					}
-				}
-
-				x1++;
-			}
-
-			y1++;
-		}
-
-		if (meanPixels != 0u)
-		{
-			for (unsigned int n = 0u; n < tChannels; ++n)
-			{
-				means0[n] = (means0[n] + meanPixels / 2u) / meanPixels;
-				means1[n] = (means1[n] + meanPixels / 2u) / meanPixels;
-			}
-		}
-
-		y1 = top1;
-		for (int y0 = top0; y0 < top0 + int(sizeY); ++y0)
-		{
-			int x1 = left1;
-			for (int x0 = left0; x0 < left0 + int(sizeX); ++x0)
-			{
-				if (x0 >= 0 && x0 <= int(width0 - 1u) && y0 >= 0 && y0 <= int(height0 - 1u)
-						&& x1 >= 0 && x1 <= int(width1 - 1u) && y1 >= 0 && y1 <= int(height1 - 1u))
-				{
-					if (mask0[y0 * width0 + x0] == 0xFF && mask1[y1 * width1 + x1] == 0xFF)
-					{
-						for (unsigned int n = 0u; n < tChannels; ++n)
-						{
-							const int value0 = int(frame0[tChannels * (y0 * width0 + x0) + n]) - int(means0[n]);
-							const int value1 = int(frame1[tChannels * (y1 * width1 + x1) + n]) - int(means1[n]);
-
-							test.first += sqr(value0 - value1);
-						}
-
-						test.second++;
-					}
-				}
-
-				x1++;
-			}
-
-			y1++;
-		}
-
-		if (result != test)
-			return false;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
 
-	return true;
+	return allSucceeded;
 }
 
 bool TestAdvancedZeroMeanSumSquareDifferences::testPartialTwoMasksTwoCounts(const double testDuration)

@@ -86,14 +86,14 @@ class OCEAN_TEST_CV_ADVANCED_EXPORT TestAdvancedZeroMeanSumSquareDifferences
 		 */
 		static bool testPatchMirroredBorderBuffer8BitPerChannel(const double testDuration);
 
-	private:
-
 		/**
-		 * Tests the partial zero-mean ssd with two binary masks.
+		 * Tests the sum square differences function for two pixel accurate patches in combination with a mask.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testPartialTwoMasks(const double testDuration);
+		static bool testTwoPixelPatchWithMask8BitPerChannel(const double testDuration);
+
+	private:
 
 		/**
 		 * Tests the sum square differences function for two sub-pixel accurate patches in two images.
@@ -144,38 +144,16 @@ class OCEAN_TEST_CV_ADVANCED_EXPORT TestAdvancedZeroMeanSumSquareDifferences
 		static bool testPatchMirroredBorderBuffer8BitPerChannel(const unsigned int width, const unsigned int height, const double testDuration);
 
 		/**
-		 * Tests the partial zero-mean ssd with two binary masks.
-		 * @param width0 The width of the first frame in pixel, with range [1, infinity)
-		 * @param height0 The height of the first frame in pixel, with range [1, infinity)
-		 * @param width1 The width of the second frame in pixel, with range [1, infinity)
-		 * @param height1 The height of the second frame in pixel, with range [1, infinity)
-		 * @param sizeX The width of the patch in pixel, with range [1, infinity)
-		 * @param sizeY The height of the patch in pixel, with range [1, infinity)
+		 * Tests the sum square differences function for two pixel accurate patches in combination with a mask.
+		 * @param width The width of the test image, in pixel, with range [tSize, infinity)
+		 * @param height The height of the test image, in pixel, with range [tSize, infinity)
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
-		 * @tparam tChannels The number of data channels of the frames
+		 * @tparam tChannels The number of frame channels, with range [1, infinity)
+		 * @tparam tPatchSize The size of the patch, with range [1, infinity)
 		 */
-		template <unsigned int tChannels>
-		static bool testPartialTwoMasks(const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int sizeX, const unsigned int sizeY, const double testDuration);
-
-		/**
-		 * Validates the partial zero-mean ssd with two binary masks.
-		 * @param frame0 The first frame to be used for testing
-		 * @param frame1 The second frame to be used for testing
-		 * @param mask0 The mask for the first frame
-		 * @param mask1 The mask for the second frame
-		 * @param width0 The width of the first frame in pixel, with range [1, infinity)
-		 * @param height0 The height of the first frame in pixel, with range [1, infinity)
-		 * @param width1 The width of the second frame in pixel, with range [1, infinity)
-		 * @param height1 The height of the second frame in pixel, with range [1, infinity)
-		 * @param sizeX The width of the patch in pixel, with range [1, infinity)
-		 * @param sizeY The height of the patch in pixel, with range [1, infinity)
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 * @tparam tChannels The number of data channels of the frames
-		 */
-		template <unsigned int tChannels>
-		static bool validatePartialTwoMasks(const unsigned char* frame0, const unsigned char* frame1, const unsigned char* mask0, const unsigned char* mask1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int sizeX, const unsigned int sizeY, const double testDuration);
+		template <unsigned int tChannels, unsigned int tPatchSize>
+		static bool testTwoPixelPatchWithMask8BitPerChannel(const unsigned int width, const unsigned int height, const double testDuration);
 
 		/**
 		 * Tests the partial zero-mean ssd with two binary masks and two counts for the number of valid pixels.
