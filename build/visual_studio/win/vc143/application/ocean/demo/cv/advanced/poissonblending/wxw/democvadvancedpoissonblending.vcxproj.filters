@@ -11,21 +11,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingApplication.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingMainWindow.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingMainWindow.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingMainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlending.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlending.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingApplication.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

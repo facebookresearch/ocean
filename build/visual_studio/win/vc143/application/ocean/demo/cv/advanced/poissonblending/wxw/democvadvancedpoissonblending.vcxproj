@@ -51,13 +51,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingApplication.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingMainWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingApplication.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingMainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlending.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingApplication.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingMainWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlending.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingApplication.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\advanced\poissonblending\wxw\PoissonBlendingMainWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4DD2C065-3F05-4B3E-9A96-D3274F5E3F51}</ProjectGuid>
