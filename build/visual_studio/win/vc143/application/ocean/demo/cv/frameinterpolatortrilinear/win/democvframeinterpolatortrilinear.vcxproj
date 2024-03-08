@@ -51,14 +51,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\frameinterpolatortrilinear\win\FrameInterpolatorTrilinear.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\frameinterpolatortrilinear\win\FITBitmapWindow.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\cv\frameinterpolatortrilinear\win\FITMainWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\frameinterpolatortrilinear\win\FrameInterpolatorTrilinear.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\frameinterpolatortrilinear\win\FITBitmapWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\frameinterpolatortrilinear\win\FITMainWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\frameinterpolatortrilinear\win\FrameInterpolatorTrilinear.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\frameinterpolatortrilinear\win\FITBitmapWindow.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\frameinterpolatortrilinear\win\FITMainWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\frameinterpolatortrilinear\win\FrameInterpolatorTrilinear.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\frameinterpolatortrilinear\win\FITBitmapWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\frameinterpolatortrilinear\win\FITMainWindow.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{077B99DE-62CD-4A8B-BB88-BDF157D90656}</ProjectGuid>
