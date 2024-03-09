@@ -76,6 +76,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSegmentUnion.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSignal.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSingleton.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestStaticBuffer.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSTL.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestString.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSubset.h" />
@@ -112,6 +113,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSegmentUnion.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSignal.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSingleton.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestStaticBuffer.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSTL.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestString.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSubset.cpp" />
