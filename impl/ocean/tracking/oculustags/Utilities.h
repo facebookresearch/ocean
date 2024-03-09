@@ -644,7 +644,7 @@ inline Scalar Utilities::verifyStereoLocations(const Frame& yFrameA, const Frame
 	ocean_assert(yFrameA.isValid() && yFrameB.isValid());
 	ocean_assert(searchRadius >= 1u);
 
-	locationB = CV::Advanced::AdvancedMotionZeroMeanSSD::pointMotionInFrameSubPixelMirroredBorder<1u, 15u>(yFrameA.constdata<uint8_t>(), yFrameB.constdata<uint8_t>(), yFrameA.width(), yFrameA.height(), yFrameB.width(), yFrameB.height(), yFrameA.paddingElements(), yFrameB.paddingElements(), locationA, searchRadius, searchRadius, predictedLocationB, 4u);
+	locationB = CV::Advanced::AdvancedMotionZeroMeanSSD::trackPointSubPixelMirroredBorder<1u, 15u>(yFrameA.constdata<uint8_t>(), yFrameB.constdata<uint8_t>(), yFrameA.width(), yFrameA.height(), yFrameB.width(), yFrameB.height(), yFrameA.paddingElements(), yFrameB.paddingElements(), locationA, searchRadius, searchRadius, predictedLocationB, 4u);
 
 	Utilities::refineCorner(yFrameB, locationB, 2u);
 

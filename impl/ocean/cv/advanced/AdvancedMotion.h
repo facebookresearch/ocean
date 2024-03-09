@@ -118,7 +118,7 @@ class AdvancedMotion
 		 * @see trackPointsSubPixelMask().
 		 */
 		template <unsigned int tSize>
-		inline static bool trackPointsSubPixelMirroredBorder(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations = 4u, Worker* worker = nullptr, MetricResults* metricResults = nullptr, MetricResults* metricIdentityResults = nullptr);
+		static inline bool trackPointsSubPixelMirroredBorder(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations = 4u, Worker* worker = nullptr, MetricResults* metricResults = nullptr, MetricResults* metricIdentityResults = nullptr);
 
 		/**
 		 * Tracks a set of given points between two frame pyramids, with sub-pixel accuracy.
@@ -144,7 +144,7 @@ class AdvancedMotion
 		 * @see trackPointsSubPixelMask().
 		 */
 		template <unsigned int tChannels, unsigned int tSize>
-		inline static bool trackPointsSubPixelMirroredBorder(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations = 4u, Worker* worker = nullptr, MetricResults* metricResults = nullptr, MetricResults* metricIdentityResults = nullptr);
+		static inline bool trackPointsSubPixelMirroredBorder(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations = 4u, Worker* worker = nullptr, MetricResults* metricResults = nullptr, MetricResults* metricIdentityResults = nullptr);
 
 		/**
 		 * Tracks a set of given points between two frame pyramids with pixel accuracy while each pyramid layer can contain valid and invalid pixels specified by two individual (pyramid) masks.
@@ -165,7 +165,7 @@ class AdvancedMotion
 		 * @see trackPointsSubPixelMask().
 		 */
 		template <unsigned int tSize>
-		inline static bool trackPointsMask(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const FramePyramid& previousMaskPyramid, const FramePyramid& currentMaskPyramid, const PixelPositions& previousPoints, const PixelPositions& roughCurrentPoints, PixelPositions& currentPoints, const unsigned int coarsestLayerRadius, Worker* worker = nullptr);
+		static inline bool trackPointsMask(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const FramePyramid& previousMaskPyramid, const FramePyramid& currentMaskPyramid, const PixelPositions& previousPoints, const PixelPositions& roughCurrentPoints, PixelPositions& currentPoints, const unsigned int coarsestLayerRadius, Worker* worker = nullptr);
 
 		/**
 		 * Tracks a set of given points between two frame pyramids with sub-pixel accuracy while each pyramid layer can contain valid and invalid pixels specified by two individual (pyramid) masks.
@@ -187,7 +187,7 @@ class AdvancedMotion
 		 * @see trackPointsMask().
 		 */
 		template <unsigned int tSize>
-		inline static bool trackPointsSubPixelMask(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const FramePyramid& previousMaskPyramid, const FramePyramid& currentMaskPyramid, const Vectors2& previousPoints, const Vectors2& roughCurrentPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations = 4u, Worker* worker = nullptr);
+		static inline bool trackPointsSubPixelMask(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const FramePyramid& previousMaskPyramid, const FramePyramid& currentMaskPyramid, const Vectors2& previousPoints, const Vectors2& roughCurrentPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations = 4u, Worker* worker = nullptr);
 
 		/**
 		 * Tracks a set of arbitrary (unknown) points between two frame pyramids with sub-pixel accuracy.
@@ -245,7 +245,7 @@ class AdvancedMotion
 
 		/**
 		 * Tracks a set of given points between two frame pyramids with sub-pixel accuracy.
-		 * The points are tracked bidirectional, thus the points are tracked from the previous pyramid to the next pyramid and from the next pyramid back to the previous pyraimd.<br>
+		 * The points are tracked bidirectional, thus the points are tracked from the previous pyramid to the next pyramid and from the next pyramid back to the previous pyramid.<br>
 		 * Point correspondences with an inaccurate bidirectional tracking are discarded.<br>
 		 * If a point is near the frame border, a mirrored image patch is applied.
 		 * @param previousPyramid The previous frame pyramid, must be valid
@@ -376,7 +376,7 @@ class AdvancedMotion
 		static bool trackReliableReferencePoints(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, Vectors2& previousReferencePoints, Vectors2& currentReferencePoints, const unsigned int horizontalBins = 16u, const unsigned int verticalBins = 16u, const PixelBoundingBox& boundingBox = PixelBoundingBox(), const Frame& maskFrame = Frame(), Worker* worker = nullptr);
 
 		/**
-		 * Determines the motion for one given point between two frames with sub-pixel accuracy by application of an image patch.
+		 * Tracks the location of one given 2D point from one image to another image with sub-pixel precision by application of an image patch without the use of a multi-resolution approach.
 		 * Patch pixels outside the frame are mirrored into the frame before compared.
 		 * @param frame0 The first frame, must be valid
 		 * @param frame1 The second frame, must be valid
@@ -398,7 +398,32 @@ class AdvancedMotion
 		 * @tparam tPatchSize The size of the square patch (the edge length) in pixel, with range [3, infinity), must be odd, recommended is 5, 7, 15, 31, or 63
 		 */
 		template <unsigned int tChannels, unsigned int tPatchSize>
-		static Vector2 pointMotionInFrameSubPixelMirroredBorder(const uint8_t* frame0, const uint8_t* frame1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const Vector2& position0, const unsigned int radiusX, const unsigned int radiusY, const Vector2& rough1 = Vector2(Numeric::maxValue(), Numeric::maxValue()), const unsigned int subPixelIterations = 4u, uint32_t* metricResult = nullptr, uint32_t* metricIdentityResult = nullptr);
+		static Vector2 trackPointSubPixelMirroredBorder(const uint8_t* frame0, const uint8_t* frame1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const Vector2& position0, const unsigned int radiusX, const unsigned int radiusY, const Vector2& rough1 = Vector2(Numeric::maxValue(), Numeric::maxValue()), const unsigned int subPixelIterations = 4u, uint32_t* metricResult = nullptr, uint32_t* metricIdentityResult = nullptr);
+
+		/**
+		 * Tracks the location of one given 2D point from one image to another image with sub-pixel precision by application of an image patch without the use of a multi-resolution approach.
+		 * Patch pixels outside the frame are mirrored into the frame before compared.
+		 * @param frame0 The first frame, must be valid
+		 * @param frame1 The second frame, must be valid
+		 * @param channels The number of frame channels, with range [1, 4]
+		 * @param width0 Width of the first frame in pixel, with range [tPatchSize / 2u, infinity)
+		 * @param height0 Height of the first frame in pixel, with range [tPatchSize / 2u, infinity)
+		 * @param width1 Width of the second frame in pixel, with range [tPatchSize / 2u, infinity)
+		 * @param height1 Height of the second frame in pixel, with range [tPatchSize / 2u, infinity)
+		 * @param frame0PaddingElements The number of padding elements at the end of each first frame row, in elements, with range [0, infinity)
+		 * @param frame1PaddingElements The number of padding elements at the end of each second frame row, in elements, with range [0, infinity)
+		 * @param position0 Position in the first frame, with range [0, width)x[0, height)
+		 * @param radiusX The search radius in horizontal direction, in pixel, with range [0, width - 1]
+		 * @param radiusY The search radius in vertical direction, in pixel, with range [0, height - 1]
+		 * @param rough1 The optional rough guess of the point in the second frame, (Numeric::maxValue(), Numeric::maxValue()) if unknown
+		 * @param subPixelIterations Number of sub-pixel iterations that will be applied, each iteration doubles the sub-pixel accuracy, with range [1, infinity)
+		 * @param metricResult Optional resulting result of the applied metric, nullptr if the result does not matter
+		 * @param metricIdentityResult Optional resulting result of the applied metric in both frames at the same previous position, nullptr if the results do not matter
+		 * @return Best matching position in the second frame
+		 * @tparam tPatchSize The size of the square patch (the edge length) in pixel, with range [3, infinity), must be odd, recommended is 5, 7, 15, 31, or 63
+		 */
+		template <unsigned int tPatchSize>
+		static inline Vector2 trackPointSubPixelMirroredBorder(const uint8_t* frame0, const uint8_t* frame1, const unsigned int channels, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const Vector2& position0, const unsigned int radiusX, const unsigned int radiusY, const Vector2& rough1 = Vector2(Numeric::maxValue(), Numeric::maxValue()), const unsigned int subPixelIterations = 4u, uint32_t* metricResult = nullptr, uint32_t* metricIdentityResult = nullptr);
 
 		/**
 		 * Determines the motion for one given point between two frames with pixel accuracy while each frame can contain valid and invalid pixels specified by two individual masks.
@@ -451,47 +476,22 @@ class AdvancedMotion
 	private:
 
 		/**
-		 * Determines the motion for one given point between two frames with sub-pixel accuracy by application of an image patch.
+		 * Tracks the location of one given 2D point from one image to another image with sub-pixel precision by application of an image patch without the use of a multi-resolution approach.
 		 * Patch pixels outside the frame are mirrored into the frame before compared.
-		 * @param frame0 The first frame, must be valid
-		 * @param frame1 The second frame, must be valid
-		 * @param channels The number of frame channels, with range [1, 4]
-		 * @param width0 Width of the first frame in pixel, with range [tPatchSize / 2u, infinity)
-		 * @param height0 Height of the first frame in pixel, with range [tPatchSize / 2u, infinity)
-		 * @param width1 Width of the second frame in pixel, with range [tPatchSize / 2u, infinity)
-		 * @param height1 Height of the second frame in pixel, with range [tPatchSize / 2u, infinity)
-		 * @param frame0PaddingElements The number of padding elements at the end of each first frame row, in elements, with range [0, infinity)
-		 * @param frame1PaddingElements The number of padding elements at the end of each second frame row, in elements, with range [0, infinity)
-		 * @param position0 Position in the first frame, with range [0, width)x[0, height)
-		 * @param radiusX The search radius in horizontal direction, in pixel, with range [0, width - 1]
-		 * @param radiusY The search radius in vertical direction, in pixel, with range [0, height - 1]
-		 * @param rough1 The optional rough guess of the point in the second frame, (Numeric::maxValue(), Numeric::maxValue()) if unknown
-		 * @param subPixelIterations Number of sub-pixel iterations that will be applied, each iteration doubles the sub-pixel accuracy, with range [1, infinity)
-		 * @param metricResult Optional resulting result of the applied metric, nullptr if the result does not matter
-		 * @param metricIdentityResult Optional resulting result of the applied metric in both frames at the same previous position, nullptr if the results do not matter
-		 * @return Best matching position in the second frame
-		 * @tparam tPatchSize The size of the square patch (the edge length) in pixel, with range [3, infinity), must be odd, recommended is 5, 7, 15, 31, or 63
-		 */
-		template <unsigned int tPatchSize>
-		inline static Vector2 pointMotionInFrameSubPixelMirroredBorder(const uint8_t* frame0, const uint8_t* frame1, const unsigned int channels, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const Vector2& position0, const unsigned int radiusX, const unsigned int radiusY, const Vector2& rough1 = Vector2(Numeric::maxValue(), Numeric::maxValue()), const unsigned int subPixelIterations = 4u, uint32_t* metricResult = nullptr, uint32_t* metricIdentityResult = nullptr);
-
-		/**
-		 * Determines the motion for one given point between two frames by application of an image patch.
-		 * Patch pixels outside the frame are mirrored into the frame before compared.
-		 * @param buffer0 The buffer containing the first image patch as one continuous memory block, must be valid
+		 * @param buffer0 The buffer containing the (interpolated) first image patch as one continuous memory block, must be valid
 		 * @param frame1 The second image, with same pixel format as the buffer, must be valid
 		 * @param width1 Width of the second frame in pixel, with range [tSize, infinity)
 		 * @param height1 Height of the second frame in pixel, with range [tSize, infinity)
 		 * @param frame1PaddingElements The number of padding elements at the end of each second image row, in elements, with range [0, infinity)
-		 * @param position1 Rough position in the second frame
+		 * @param roughPosition1 The rough position in the second frame, with range [0, width1)x[0, height1)
 		 * @param subPixelIterations Number of sub-pixel iterations that will be applied, each iteration doubles the sub-pixel accuracy, with range [1, infinity)
 		 * @param metricResult Optional resulting result of the applied metric, nullptr if the result does not matter
 		 * @return Best matching position in the second frame
-		 * @tparam tChannels Number of channels the frame holds
-		 * @tparam tSize Size of the image patch that is used to determine the motion, must be odd
+		 * @tparam tChannels The number of data channel each frame has, with range [1, infinity)
+		 * @tparam tPatchSize The size of the square patch (the edge length) in pixel, with range [3, infinity), must be odd, recommended is 5, 7, 15, 31, or 63
 		 */
-		template <unsigned int tChannels, unsigned int tSize>
-		static Vector2 pointMotionSubPixelMirroredBorder(const uint8_t* buffer0, const uint8_t* frame1, const unsigned int width1, const unsigned int height1, const unsigned int frame1PaddingElements, const Vector2& position1, const unsigned int subPixelIterations, unsigned int* metricResult = nullptr);
+		template <unsigned int tChannels, unsigned int tPatchSize>
+		static Vector2 trackPointBufferSubPixelMirroredBorder(const uint8_t* buffer0, const uint8_t* frame1, const unsigned int width1, const unsigned int height1, const unsigned int frame1PaddingElements, const Vector2& roughPosition1, const unsigned int subPixelIterations, uint32_t* metricResult = nullptr);
 
 		/**
 		 * Tracks a subset of given points between two frame pyramids with sub-pixel accuracy.
@@ -1423,28 +1423,227 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackReliableReferencePoints(
 }
 
 template <typename TMetricInteger, typename TMetricFloat>
+template <unsigned int tChannels, unsigned int tPatchSize>
+Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointSubPixelMirroredBorder(const uint8_t* frame0, const uint8_t* frame1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const Vector2& position0, const unsigned int radiusX, const unsigned int radiusY, const Vector2& rough1, const unsigned int subPixelIterations, uint32_t* metricResult, uint32_t* metricIdentityResult)
+{
+	static_assert(tChannels != 0u, "Invalid number of data channels!");
+	static_assert(tPatchSize % 2u == 1u, "Invalid size of the image patch, must be odd!");
+
+	constexpr unsigned int tPatchSize_2 = tPatchSize / 2u;
+
+	ocean_assert(frame0 != nullptr && frame1 != nullptr);
+
+	ocean_assert(width0 >= tPatchSize && height0 >= tPatchSize);
+	ocean_assert(width1 >= tPatchSize && height1 >= tPatchSize);
+
+	ocean_assert(position0.x() >= Scalar(0) && position0.x() < Scalar(width0));
+	ocean_assert(position0.y() >= Scalar(0) && position0.y() < Scalar(height0));
+
+	const PixelPosition position1(rough1.x() != Numeric::maxValue() ? PixelPosition::vector2pixelPosition(rough1) : PixelPosition::vector2pixelPosition(position0));
+
+	const unsigned int leftCenter1 = (unsigned int)(max(0, int(position1.x() - radiusX)));
+	const unsigned int topCenter1 = (unsigned int)(max(0, int(position1.y() - radiusY)));
+
+	const unsigned int rightCenter1 = min(position1.x() + radiusX, width1 - 1u);
+	const unsigned int bottomCenter1 = min(position1.y() + radiusY, height1 - 1u);
+
+	// first, we determine a buffer containing the first (interpolated) image patch
+
+	uint8_t buffer0[tPatchSize * tPatchSize * tChannels];
+	uint8_t buffer1[tPatchSize * tPatchSize * tChannels];
+
+	const unsigned int x0 = (unsigned int)(position0.x());
+	const unsigned int y0 = (unsigned int)(position0.y());
+
+	if (x0 - tPatchSize_2 < width0 - tPatchSize && y0 - tPatchSize_2 < height0 - tPatchSize)
+	{
+		ocean_assert(x0 >= tPatchSize_2 && x0 < width0 - (tPatchSize_2 + 1u) && y0 >= tPatchSize_2 && y0 < height0 - (tPatchSize_2 + 1u));
+		AdvancedFrameInterpolatorBilinear::interpolateSquarePatch8BitPerChannel<tChannels, tPatchSize, PC_TOP_LEFT>(frame0, width0, frame0PaddingElements, buffer0, position0);
+	}
+	else
+	{
+		ocean_assert(!(x0 >= tPatchSize_2 && x0 < width0 - (tPatchSize_2 + 1u) && y0 >= tPatchSize_2 && y0 < height0 - (tPatchSize_2 + 1u)));
+		AdvancedFrameInterpolatorBilinear::interpolateSquareMirroredBorder8BitPerChannel<tChannels, tPatchSize>(frame0, width0, height0, frame0PaddingElements, buffer0, position0);
+	}
+
+	PixelPosition bestPosition;
+	uint32_t bestMetric = uint32_t(-1);
+	unsigned int bestSqrDistance = (unsigned int)(-1);
+
+	for (unsigned int y1 = topCenter1; y1 <= bottomCenter1; ++y1)
+	{
+		for (unsigned int x1 = leftCenter1; x1 <= rightCenter1; ++x1)
+		{
+			uint32_t candidateMetric;
+
+			if (x1 - tPatchSize_2 < width1 - tPatchSize && y1 - tPatchSize_2 < height1 - tPatchSize)
+			{
+				candidateMetric = TMetricInteger::template patchBuffer8BitPerChannel<tChannels, tPatchSize>(frame1, width1, x1, y1, frame1PaddingElements, buffer0);
+			}
+			else
+			{
+				constexpr unsigned int buffer1PaddingElements = 0u;
+
+				FrameConverter::patchFrameMirroredBorder<uint8_t, tChannels>(frame1, buffer1, width1, height1, x1, y1, tPatchSize, frame1PaddingElements, buffer1PaddingElements); // **TODO** for performance improvements: use patch/patch mirrored border metric
+
+				candidateMetric = TMetricInteger::template buffer8BitPerChannel<tChannels, tPatchSize * tPatchSize>(buffer0, buffer1);
+			}
+
+			const PixelPosition position(x1, y1);
+
+			if (candidateMetric < bestMetric || (candidateMetric == bestMetric && position1.sqrDistance(position) < bestSqrDistance))
+			{
+				bestMetric = candidateMetric;
+				bestPosition = position;
+
+				bestSqrDistance = position1.sqrDistance(position);
+			}
+
+			if (metricIdentityResult && x1 == position1.x() && y1 == position1.y())
+			{
+				*metricIdentityResult = candidateMetric;
+			}
+		}
+	}
+
+	ocean_assert(bestMetric != (unsigned int)(-1) && bestPosition);
+
+	ocean_assert(abs(int(bestPosition.x()) - int(position1.x())) <= int(radiusX));
+	ocean_assert(abs(int(bestPosition.y()) - int(position1.y())) <= int(radiusY));
+
+	if (metricResult)
+	{
+		*metricResult = bestMetric;
+	}
+
+	return trackPointBufferSubPixelMirroredBorder<tChannels, tPatchSize>(buffer0, frame1, width1, height1, frame1PaddingElements, Vector2(Scalar(bestPosition.x()), Scalar(bestPosition.y())), subPixelIterations, metricResult);
+}
+
+template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tPatchSize>
-inline Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::pointMotionInFrameSubPixelMirroredBorder(const uint8_t* frame0, const uint8_t* frame1, const unsigned int channels, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const Vector2& position0, const unsigned int radiusX, const unsigned int radiusY, const Vector2& rough1, const unsigned int subPixelIterations, uint32_t* metricResult, uint32_t* metricIdentityResult)
+inline Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointSubPixelMirroredBorder(const uint8_t* frame0, const uint8_t* frame1, const unsigned int channels, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const Vector2& position0, const unsigned int radiusX, const unsigned int radiusY, const Vector2& rough1, const unsigned int subPixelIterations, uint32_t* metricResult, uint32_t* metricIdentityResult)
 {
 	ocean_assert(channels >= 1u);
 
 	switch (channels)
 	{
 		case 1u:
-			return pointMotionInFrameSubPixelMirroredBorder<1u, tPatchSize>(frame0, frame1, width0, height0, width1, height1, frame0PaddingElements, frame1PaddingElements, position0, radiusX, radiusY, rough1, subPixelIterations, metricResult, metricIdentityResult);
+			return trackPointSubPixelMirroredBorder<1u, tPatchSize>(frame0, frame1, width0, height0, width1, height1, frame0PaddingElements, frame1PaddingElements, position0, radiusX, radiusY, rough1, subPixelIterations, metricResult, metricIdentityResult);
 
 		case 2u:
-			return pointMotionInFrameSubPixelMirroredBorder<2u, tPatchSize>(frame0, frame1, width0, height0, width1, height1, frame0PaddingElements, frame1PaddingElements, position0, radiusX, radiusY, rough1, subPixelIterations, metricResult, metricIdentityResult);
+			return trackPointSubPixelMirroredBorder<2u, tPatchSize>(frame0, frame1, width0, height0, width1, height1, frame0PaddingElements, frame1PaddingElements, position0, radiusX, radiusY, rough1, subPixelIterations, metricResult, metricIdentityResult);
 
 		case 3u:
-			return pointMotionInFrameSubPixelMirroredBorder<3u, tPatchSize>(frame0, frame1, width0, height0, width1, height1, frame0PaddingElements, frame1PaddingElements, position0, radiusX, radiusY, rough1, subPixelIterations, metricResult, metricIdentityResult);
+			return trackPointSubPixelMirroredBorder<3u, tPatchSize>(frame0, frame1, width0, height0, width1, height1, frame0PaddingElements, frame1PaddingElements, position0, radiusX, radiusY, rough1, subPixelIterations, metricResult, metricIdentityResult);
 
 		case 4u:
-			return pointMotionInFrameSubPixelMirroredBorder<4u, tPatchSize>(frame0, frame1, width0, height0, width1, height1, frame0PaddingElements, frame1PaddingElements, position0, radiusX, radiusY, rough1, subPixelIterations, metricResult, metricIdentityResult);
+			return trackPointSubPixelMirroredBorder<4u, tPatchSize>(frame0, frame1, width0, height0, width1, height1, frame0PaddingElements, frame1PaddingElements, position0, radiusX, radiusY, rough1, subPixelIterations, metricResult, metricIdentityResult);
 	}
 
 	ocean_assert(false && "Invalid pixel format!");
 	return rough1;
+}
+
+template <typename TMetricInteger, typename TMetricFloat>
+template <unsigned int tChannels, unsigned int tPatchSize>
+Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointBufferSubPixelMirroredBorder(const uint8_t* buffer0, const uint8_t* frame1, const unsigned int width1, const unsigned int height1, const unsigned int frame1PaddingElements, const Vector2& roughPosition1, const unsigned int subPixelIterations, uint32_t* metricResult)
+{
+	static_assert(tChannels >= 1u, "Invalid number of data channels!");
+	static_assert(tPatchSize % 2u == 1u, "Invalid size of the image patch, must be odd!");
+
+	ocean_assert(buffer0 != nullptr && frame1 != nullptr);
+
+	ocean_assert(width1 >= tPatchSize && height1 >= tPatchSize);
+
+	ocean_assert(roughPosition1.x() >= Scalar(0) && roughPosition1.x() < Scalar(width1));
+	ocean_assert(roughPosition1.y() >= Scalar(0) && roughPosition1.y() < Scalar(height1));
+
+	uint32_t metricBest = uint32_t(-1);
+
+	if (metricResult != nullptr)
+	{
+		metricBest = *metricResult;
+
+#ifdef OCEAN_DEBUG
+		const bool result = metricBest == TMetricFloat::template patchMirroredBorderBuffer8BitPerChannel<tChannels, tPatchSize>(frame1, width1, height1, roughPosition1.x(), roughPosition1.y(), frame1PaddingElements, buffer0);
+		ocean_assert_and_suppress_unused(result, result);
+#endif
+	}
+	else
+	{
+		const unsigned int x1 = (unsigned int)(roughPosition1.x());
+		const unsigned int y1 = (unsigned int)(roughPosition1.y());
+
+		if (x1 - (tPatchSize / 2u) < width1 - tPatchSize && y1 - (tPatchSize / 2u) < height1 - tPatchSize)
+		{
+			ocean_assert(x1 >= (tPatchSize / 2u) && y1 >= (tPatchSize / 2u) && x1 < width1 - (tPatchSize / 2u + 1u) && y1 < height1 - (tPatchSize / 2u + 1u));
+			metricBest = TMetricFloat::template patchBuffer8BitPerChannel<tChannels, tPatchSize>(frame1, width1, roughPosition1.x(), roughPosition1.y(), frame1PaddingElements, buffer0);
+		}
+		else
+		{
+			ocean_assert(!(x1 >= (tPatchSize / 2u) && y1 >= (tPatchSize / 2u) && x1 < width1 - (tPatchSize / 2u + 1u) && y1 < height1 - (tPatchSize / 2u + 1u)));
+			metricBest = TMetricFloat::template patchMirroredBorderBuffer8BitPerChannel<tChannels, tPatchSize>(frame1, width1, height1, roughPosition1.x(), roughPosition1.y(), frame1PaddingElements, buffer0);
+		}
+	}
+
+	constexpr unsigned int numberSteps = 8u;
+
+	const Vector2 steps[numberSteps] =
+	{
+		Vector2(-1, -1),
+		Vector2(0, -1),
+		Vector2(1, -1),
+		Vector2(-1, 0),
+		Vector2(1, 0),
+		Vector2(-1, 1),
+		Vector2(0, 1),
+		Vector2(1, 1)
+	};
+
+	Scalar offset = Scalar(0.5);
+	Vector2 position1 = roughPosition1;
+
+	for (unsigned int n = 0u; n < subPixelIterations; ++n)
+	{
+		Vector2 bestPosition1 = position1;
+
+		// make 8 sample calculations
+
+		for (unsigned int i = 0u; i < numberSteps; ++i)
+		{
+			const Vector2 candidatePosition1(position1.x() + steps[i].x() * offset, position1.y() + steps[i].y() * offset);
+
+			if (candidatePosition1.x() >= Scalar(0) && candidatePosition1.x() < Scalar(width1) && candidatePosition1.y() >= Scalar(0) && candidatePosition1.y() < Scalar(height1))
+			{
+				const unsigned int x1 = (unsigned int)(candidatePosition1.x());
+				const unsigned int y1 = (unsigned int)(candidatePosition1.y());
+
+				const uint32_t candidateMetric = (x1 - (tPatchSize / 2u) < width1 - tPatchSize && y1 - (tPatchSize / 2u) < height1 - tPatchSize) ?
+									TMetricFloat::template patchBuffer8BitPerChannel<tChannels, tPatchSize>(frame1, width1, candidatePosition1.x(), candidatePosition1.y(), frame1PaddingElements, buffer0) :
+									TMetricFloat::template patchMirroredBorderBuffer8BitPerChannel<tChannels, tPatchSize>(frame1, width1, height1, candidatePosition1.x(), candidatePosition1.y(), frame1PaddingElements, buffer0);
+
+				if (candidateMetric < metricBest)
+				{
+					metricBest = candidateMetric;
+					bestPosition1 = candidatePosition1;
+				}
+
+			}
+		}
+
+		position1 = bestPosition1;
+		offset *= Scalar(0.5);
+	}
+
+	if (metricResult != nullptr)
+	{
+		*metricResult = metricBest;
+	}
+
+	ocean_assert(position1.x() >= 0 && position1.y() >= 0);
+	ocean_assert(position1.x() < Scalar(width1) && position1.y() < Scalar(height1));
+
+	return position1;
 }
 
 template <typename TMetricInteger, typename TMetricFloat>
@@ -1530,7 +1729,7 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 				unsigned int* const metricResult = metricResults ? metricResults + pointIndex : nullptr;
 				unsigned int* const metricIdentityResult = metricIdentityResults ? metricIdentityResults + pointIndex : nullptr;
 
-				const Vector2 nextPoint = pointMotionInFrameSubPixelMirroredBorder<tSize>(previousLayerData, nextLayerData, channels, previousLayerWidth, previousLayerHeight, nextLayerWidth, nextLayerHeight, previousLayerPaddingElements, nextLayerPaddingElements, previousPosition, layerRadiusX, layerRadiusY, intermediateRoughNextPoint, subPixelIterations, metricResult, metricIdentityResult);
+				const Vector2 nextPoint = trackPointSubPixelMirroredBorder<tSize>(previousLayerData, nextLayerData, channels, previousLayerWidth, previousLayerHeight, nextLayerWidth, nextLayerHeight, previousLayerPaddingElements, nextLayerPaddingElements, previousPosition, layerRadiusX, layerRadiusY, intermediateRoughNextPoint, subPixelIterations, metricResult, metricIdentityResult);
 
 				ocean_assert(nextPoint.x() >= 0 && nextPoint.x() < Scalar(nextLayerWidth));
 				ocean_assert(nextPoint.y() >= 0 && nextPoint.y() < Scalar(nextLayerHeight));
@@ -1677,7 +1876,7 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 				ocean_assert(previousPosition.x() >= Scalar(0) && previousPosition.y() >= Scalar(0));
 				ocean_assert(previousPosition.x() < Scalar(previousWidth) && previousPosition.y() < Scalar(previousHeight));
 
-				const Vector2 position(pointMotionInFrameSubPixelMirroredBorder<tChannels, tSize>(previousFrameData, currentFrameData, previousWidth, previousHeight, currentWidth, currentHeight, previousFramePaddingElements, currentFramePaddingElements, previousPosition, layerRadiusX, layerRadiusY, intermediateRoughPoint, subPixelIterations, metricResult, metricIdentityResult));
+				const Vector2 position(trackPointSubPixelMirroredBorder<tChannels, tSize>(previousFrameData, currentFrameData, previousWidth, previousHeight, currentWidth, currentHeight, previousFramePaddingElements, currentFramePaddingElements, previousPosition, layerRadiusX, layerRadiusY, intermediateRoughPoint, subPixelIterations, metricResult, metricIdentityResult));
 
 				ocean_assert(position.x() >= 0 && position.x() < Scalar(currentWidth));
 				ocean_assert(position.y() >= 0 && position.y() < Scalar(currentHeight));
@@ -2172,204 +2371,6 @@ Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::pointMotionInFrameSubPixel
 		iterationPosition1 = betterPosition1;
 		offset *= Scalar(0.5);
 	}
-
-	return iterationPosition1;
-}
-
-template <typename TMetricInteger, typename TMetricFloat>
-template <unsigned int tChannels, unsigned int tPatchSize>
-Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::pointMotionInFrameSubPixelMirroredBorder(const uint8_t* frame0, const uint8_t* frame1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const Vector2& position0, const unsigned int radiusX, const unsigned int radiusY, const Vector2& rough1, const unsigned int subPixelIterations, uint32_t* metricResult, uint32_t* metricIdentityResult)
-{
-	static_assert(tChannels != 0u, "Invalid number of data channels!");
-	static_assert(tPatchSize % 2u == 1u, "Invalid size of the image patch, must be odd!");
-
-	constexpr unsigned int tPatchSize_2 = tPatchSize / 2u;
-
-	ocean_assert(frame0 != nullptr && frame1 != nullptr);
-
-	// **TODO** correct this assert due to the mirrored patch and correct the documentation -> also interpolateSquareMirroredBorder()...
-	ocean_assert(width0 >= tPatchSize && height0 >= tPatchSize);
-	ocean_assert(width1 >= tPatchSize && height1 >= tPatchSize);
-
-	ocean_assert(position0.x() >= Scalar(0) && position0.x() < Scalar(width0));
-	ocean_assert(position0.y() >= Scalar(0) && position0.y() < Scalar(height0));
-
-	const PixelPosition position1(rough1.x() != Numeric::maxValue() ? PixelPosition::vector2pixelPosition(rough1) : PixelPosition::vector2pixelPosition(position0));
-
-	const unsigned int leftCenter1 = (unsigned int)(max(0, int(position1.x() - radiusX)));
-	const unsigned int topCenter1 = (unsigned int)(max(0, int(position1.y() - radiusY)));
-
-	const unsigned int rightCenter1 = min(position1.x() + radiusX, width1 - 1u);
-	const unsigned int bottomCenter1 = min(position1.y() + radiusY, height1 - 1u);
-
-	// first, we determine a buffer containing the first (interpolated) image patch
-
-	uint8_t buffer0[tPatchSize * tPatchSize * tChannels];
-	uint8_t buffer1[tPatchSize * tPatchSize * tChannels];
-
-	const unsigned int x0 = (unsigned int)(position0.x());
-	const unsigned int y0 = (unsigned int)(position0.y());
-
-	if (x0 - tPatchSize_2 < width0 - tPatchSize && y0 - tPatchSize_2 < height0 - tPatchSize)
-	{
-		ocean_assert(x0 >= tPatchSize_2 && x0 < width0 - (tPatchSize_2 + 1u) && y0 >= tPatchSize_2 && y0 < height0 - (tPatchSize_2 + 1u));
-		AdvancedFrameInterpolatorBilinear::interpolateSquarePatch8BitPerChannel<tChannels, tPatchSize>(frame0, width0, frame0PaddingElements, buffer0, position0);
-	}
-	else
-	{
-		ocean_assert(!(x0 >= tPatchSize_2 && x0 < width0 - (tPatchSize_2 + 1u) && y0 >= tPatchSize_2 && y0 < height0 - (tPatchSize_2 + 1u)));
-		AdvancedFrameInterpolatorBilinear::interpolateSquareMirroredBorder8BitPerChannel<tChannels, tPatchSize>(frame0, width0, height0, frame0PaddingElements, buffer0, position0);
-	}
-
-	PixelPosition bestPosition;
-	uint32_t bestMetric = uint32_t(-1);
-	unsigned int bestSqrDistance = (unsigned int)(-1);
-
-	for (unsigned int y1 = topCenter1; y1 <= bottomCenter1; ++y1)
-	{
-		for (unsigned int x1 = leftCenter1; x1 <= rightCenter1; ++x1)
-		{
-			uint32_t candidateMetric;
-
-			if (x1 - tPatchSize_2 < width1 - tPatchSize && y1 - tPatchSize_2 < height1 - tPatchSize)
-			{
-				candidateMetric = TMetricInteger::template patchBuffer8BitPerChannel<tChannels, tPatchSize>(frame1, width1, x1, y1, frame1PaddingElements, buffer0);
-			}
-			else
-			{
-				constexpr unsigned int buffer1PaddingElements = 0u;
-
-				FrameConverter::patchFrameMirroredBorder<uint8_t, tChannels>(frame1, buffer1, width1, height1, x1, y1, tPatchSize, frame1PaddingElements, buffer1PaddingElements); // **TODO** for performance improvements: use patch/patch mirrored border metric
-
-				candidateMetric = TMetricInteger::template buffer8BitPerChannel<tChannels, tPatchSize * tPatchSize>(buffer0, buffer1);
-			}
-
-			const PixelPosition position(x1, y1);
-
-			if (candidateMetric < bestMetric || (candidateMetric == bestMetric && position1.sqrDistance(position) < bestSqrDistance))
-			{
-				bestMetric = candidateMetric;
-				bestPosition = position;
-
-				bestSqrDistance = position1.sqrDistance(position);
-			}
-
-			if (metricIdentityResult && x1 == position1.x() && y1 == position1.y())
-			{
-				*metricIdentityResult = candidateMetric;
-			}
-		}
-	}
-
-	ocean_assert(bestMetric != (unsigned int)(-1) && bestPosition);
-
-	ocean_assert(abs(int(bestPosition.x()) - int(position1.x())) <= int(radiusX));
-	ocean_assert(abs(int(bestPosition.y()) - int(position1.y())) <= int(radiusY));
-
-	if (metricResult)
-	{
-		*metricResult = bestMetric;
-	}
-
-	return pointMotionSubPixelMirroredBorder<tChannels, tPatchSize>(buffer0, frame1, width1, height1, frame1PaddingElements, Vector2(Scalar(bestPosition.x()), Scalar(bestPosition.y())), subPixelIterations, metricResult);
-}
-
-template <typename TMetricInteger, typename TMetricFloat>
-template <unsigned int tChannels, unsigned int tSize>
-Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::pointMotionSubPixelMirroredBorder(const uint8_t* buffer0, const uint8_t* frame1, const unsigned int width1, const unsigned int height1, const unsigned int frame1PaddingElements, const Vector2& position1, const unsigned int subPixelIterations, unsigned int* metricResult)
-{
-	static_assert(tChannels != 0u, "Invalid number of data channels!");
-	static_assert(tSize % 2u == 1u, "Invalid size of the image patch, must be odd!");
-
-	ocean_assert(buffer0 != nullptr && frame1 != nullptr);
-
-	ocean_assert(width1 >= tSize && height1 >= tSize);
-
-	ocean_assert(position1.x() >= 0 && position1.x() < Scalar(width1));
-	ocean_assert(position1.y() >= 0 && position1.y() < Scalar(height1));
-
-	unsigned int metricBest = (unsigned int)(-1);
-
-	if (metricResult)
-	{
-		metricBest = *metricResult;
-
-#ifdef OCEAN_DEBUG
-		const bool result = metricBest == TMetricFloat::template patchMirroredBorderBuffer8BitPerChannel<tChannels, tSize>(frame1, width1, height1, position1.x(), position1.y(), frame1PaddingElements, buffer0);
-		ocean_assert_and_suppress_unused(result, result);
-#endif
-	}
-	else
-	{
-		const unsigned int x1 = (unsigned int)position1.x();
-		const unsigned int y1 = (unsigned int)position1.y();
-
-		if (x1 - (tSize / 2u) < width1 - tSize && y1 - (tSize / 2u) < height1 - tSize)
-		{
-			ocean_assert(x1 >= (tSize / 2u) && y1 >= (tSize / 2u) && x1 < width1 - (tSize / 2u + 1u) && y1 < height1 - (tSize / 2u + 1u));
-			metricBest = TMetricFloat::template patchBuffer8BitPerChannel<tChannels, tSize>(frame1, width1, position1.x(), position1.y(), frame1PaddingElements, buffer0);
-		}
-		else
-		{
-			ocean_assert(!(x1 >= (tSize / 2u) && y1 >= (tSize / 2u) && x1 < width1 - (tSize / 2u + 1u) && y1 < height1 - (tSize / 2u + 1u)));
-			metricBest = TMetricFloat::template patchMirroredBorderBuffer8BitPerChannel<tChannels, tSize>(frame1, width1, height1, position1.x(), position1.y(), frame1PaddingElements, buffer0);
-		}
-	}
-
-	const Vector2 steps[8] =
-	{
-		Vector2(-1, -1),
-		Vector2(0, -1),
-		Vector2(1, -1),
-		Vector2(-1, 0),
-		Vector2(1, 0),
-		Vector2(-1, 1),
-		Vector2(0, 1),
-		Vector2(1, 1)
-	};
-
-	Scalar offset = Scalar(0.5);
-	Vector2 iterationPosition1(position1);
-
-	for (unsigned int n = 0u; n < subPixelIterations; ++n)
-	{
-		Vector2 betterPosition1(iterationPosition1);
-
-		// make 8 sample calculations
-
-		for (unsigned int i = 0u; i < 8u; ++i)
-		{
-			const Vector2 testPosition1(iterationPosition1.x() + steps[i].x() * offset, iterationPosition1.y() + steps[i].y() * offset);
-
-			if (testPosition1.x() >= 0 && testPosition1.x() < Scalar(width1) && testPosition1.y() >= 0 && testPosition1.y() < Scalar(height1))
-			{
-				const unsigned int x1 = (unsigned int)(testPosition1.x());
-				const unsigned int y1 = (unsigned int)(testPosition1.y());
-
-				const unsigned int metric = (x1 - (tSize / 2u) < width1 - tSize && y1 - (tSize / 2u) < height1 - tSize) ?
-									TMetricFloat::template patchBuffer8BitPerChannel<tChannels, tSize>(frame1, width1, testPosition1.x(), testPosition1.y(), frame1PaddingElements, buffer0) :
-									TMetricFloat::template patchMirroredBorderBuffer8BitPerChannel<tChannels, tSize>(frame1, width1, height1, testPosition1.x(), testPosition1.y(), frame1PaddingElements, buffer0);
-
-				if (metric < metricBest)
-				{
-					metricBest = metric;
-					betterPosition1 = testPosition1;
-				}
-
-			}
-		}
-
-		iterationPosition1 = betterPosition1;
-		offset *= Scalar(0.5);
-	}
-
-	if (metricResult)
-	{
-		*metricResult = metricBest;
-	}
-
-	ocean_assert(iterationPosition1.x() >= 0 && iterationPosition1.y() >= 0);
-	ocean_assert(iterationPosition1.x() < Scalar(width1) && iterationPosition1.y() < Scalar(height1));
 
 	return iterationPosition1;
 }

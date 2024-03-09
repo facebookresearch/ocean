@@ -582,7 +582,7 @@ bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int
 						const Vector2& pointA = pointsA[n];
 						const Vector2 roughB = pointsB[n];
 
-						pointsB[n] = T::template pointMotionInFrameSubPixelMirroredBorder<tChannels, tPatchSize>(frameDataA, frameDataB, widthA, heightA, widthB, heightB, paddingElementsA, paddingElementsB, pointA, radiusX, radiusY, roughB, subPixelIterations);
+						pointsB[n] = T::template trackPointSubPixelMirroredBorder<tPatchSize>(frameDataA, frameDataB, tChannels, widthA, heightA, widthB, heightB, paddingElementsA, paddingElementsB, pointA, radiusX, radiusY, roughB, subPixelIterations);
 					}
 				performance.stopIf(performanceIteration);
 
