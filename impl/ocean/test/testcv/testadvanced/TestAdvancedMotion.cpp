@@ -33,6 +33,12 @@ bool TestAdvancedMotion::test(const unsigned int width, const unsigned int heigh
 	Log::info() << "---   Advanced motion test:   ---";
 	Log::info() << " ";
 
+	allSucceeded = testTrackPointSubPixelMirroredBorder(width, height, testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testTrackPointsSubPixelMirroredBorder(width, height, testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
@@ -62,6 +68,80 @@ bool TestAdvancedMotion::test(const unsigned int width, const unsigned int heigh
 }
 
 #ifdef OCEAN_USE_GTEST
+
+TEST(TestAdvancedMotion, TrackPointSubPixelMirroredBorder_AdvancedMotionSSD_1Channel)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 1u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointSubPixelMirroredBorder_AdvancedMotionSSD_2Channels)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 2u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointSubPixelMirroredBorder_AdvancedMotionSSD_3Channels)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 3u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointSubPixelMirroredBorder_AdvancedMotionSSD_4Channels)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 4u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+
+TEST(TestAdvancedMotion, TrackPointSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_1Channel)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 1u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_2Channels)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 2u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_3Channels)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 3u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_4Channels)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 4u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
 
 TEST(TestAdvancedMotion, TrackPointsSubPixelMirroredBorder_AdvancedMotionSSD_1Channel)
 {
@@ -277,6 +357,318 @@ TEST(TestAdvancedMotion, StressTestTrackPointsBidirectionalSubPixelMirroredBorde
 }
 
 #endif // OCEAN_USE_GTEST
+
+bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Test for trackPointSubPixelMirroredBorder()";
+	Log::info() << " ";
+
+	RandomGenerator randomGenerator;
+
+	bool allSucceeded = true;
+
+	Timestamp startTimestamp(true);
+
+	do
+	{
+		if (!testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD>(width, height, testDuration, worker))
+		{
+			allSucceeded = false;
+		}
+
+		Log::info() << " ";
+		Log::info() << " ";
+
+		if (!testTrackPointSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD>(width, height, testDuration, worker))
+		{
+			allSucceeded = false;
+		}
+
+		Log::info() << " ";
+		Log::info() << " ";
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << " ";
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: Succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+template <typename T>
+bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+{
+	static_assert(std::is_same<T, CV::Advanced::AdvancedMotionSSD>::value || std::is_same<T, CV::Advanced::AdvancedMotionZeroMeanSSD>::value, "Invalid metric!");
+
+	if constexpr (std::is_same<T, CV::Advanced::AdvancedMotionSSD>::value)
+	{
+		Log::info() << "Using AdvancedMotionSSD with resolution " << width << "x" << height << ":";
+	}
+	else
+	{
+		Log::info() << "Using AdvancedMotionZeroMeanSSD with resolution " << width << "x" << height << ":";
+	}
+
+	Log::info() << " ";
+
+	bool allSucceeded = true;
+
+	if (!testTrackPointSubPixelMirroredBorder<T, 1u>(width, height, testDuration, worker))
+	{
+		allSucceeded = false;
+	}
+
+	if (!testTrackPointSubPixelMirroredBorder<T, 2u>(width, height, testDuration, worker))
+	{
+		allSucceeded = false;
+	}
+
+	if (!testTrackPointSubPixelMirroredBorder<T, 3u>(width, height, testDuration, worker))
+	{
+		allSucceeded = false;
+	}
+
+	if (!testTrackPointSubPixelMirroredBorder<T, 4u>(width, height, testDuration, worker))
+	{
+		allSucceeded = false;
+	}
+
+	return allSucceeded;
+}
+
+template <typename T, unsigned int tChannels>
+bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+{
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+	static_assert(std::is_same<T, CV::Advanced::AdvancedMotionSSD>::value || std::is_same<T, CV::Advanced::AdvancedMotionZeroMeanSSD>::value, "Invalid metric!");
+
+	Log::info() << "... with " << tChannels << " channels:";
+	Log::info() << " ";
+
+	bool allSucceeded = true;
+
+	if (!testTrackPointSubPixelMirroredBorder<T, tChannels, 5u>(width, height, testDuration, worker))
+	{
+		allSucceeded = false;
+	}
+
+	Log::info() << " ";
+
+	if (!testTrackPointSubPixelMirroredBorder<T, tChannels, 7u>(width, height, testDuration, worker))
+	{
+		allSucceeded = false;
+	}
+
+	Log::info() << " ";
+
+	if (!testTrackPointSubPixelMirroredBorder<T, tChannels, 15u>(width, height, testDuration, worker))
+	{
+		allSucceeded = false;
+	}
+
+	Log::info() << " ";
+
+	if (!testTrackPointSubPixelMirroredBorder<T, tChannels, 31u>(width, height, testDuration, worker))
+	{
+		allSucceeded = false;
+	}
+
+	Log::info() << " ";
+
+	return allSucceeded;
+}
+
+template <typename T, unsigned int tChannels, unsigned int tPatchSize>
+bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
+{
+	Log::info() << "... with patch size " << tPatchSize;
+
+	constexpr unsigned int numberPoints = 1000u;
+
+	HighPerformanceStatistic performanceSinglecore;
+	HighPerformanceStatistic performanceMulticore;
+
+	RandomGenerator randomGenerator;
+
+	bool allSucceeded = true;
+
+	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
+
+	std::vector<double> percentsAccuratePoints;
+
+	for (const bool performanceIteration : {true, false})
+	{
+		for (unsigned int workerIteration = 0u; workerIteration < maxWorkerIterations; ++workerIteration)
+		{
+			Worker* useWorker = (workerIteration == 0u) ? nullptr : &worker;
+			HighPerformanceStatistic& performance = useWorker ? performanceMulticore : performanceSinglecore;
+
+			const Timestamp startTimestamp(true);
+
+			do
+			{
+				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, tPatchSize * 2u, width);
+				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, tPatchSize * 2u, height);
+
+				const FrameType frameTypeA(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT);
+
+				const Frame frameA = createRandomTrackableFrame(frameTypeA, randomGenerator);
+
+				constexpr unsigned int maxBorderSize = 50u;
+
+				const unsigned int borderLeft = RandomI::random(randomGenerator, maxBorderSize);
+				const unsigned int borderTop = RandomI::random(randomGenerator, maxBorderSize);
+				const unsigned int borderRight = RandomI::random(randomGenerator, maxBorderSize);
+				const unsigned int borderBottom = RandomI::random(randomGenerator, maxBorderSize);
+
+				const FrameType frameTypeB(frameTypeA, testWidth + borderLeft + borderRight, testHeight + borderTop + borderBottom);
+
+				Frame frameB = createRandomTrackableFrame(frameTypeB, randomGenerator); // making a second frame B which is larger than frameA, but the inner core is identical to A
+				frameB.copy(int(borderLeft), int(borderTop), frameA);
+
+				Vectors2 pointsA;
+				pointsA.reserve(numberPoints);
+
+				for (unsigned int n = 0u; n < numberPoints; ++n)
+				{
+					pointsA.emplace_back(Random::vector2(randomGenerator, Scalar(0), Scalar(frameA.width()) - Numeric::eps(), Scalar(0), Scalar(frameA.height()) - Numeric::eps()));
+				}
+
+				constexpr unsigned int subPixelIterations = 4u;
+
+				const uint8_t* const frameDataA = frameA.constdata<uint8_t>();
+				const uint8_t* const frameDataB = frameB.constdata<uint8_t>();
+
+				const unsigned int widthA = frameA.width();
+				const unsigned int heightA = frameA.height();
+
+				const unsigned int widthB = frameB.width();
+				const unsigned int heightB = frameB.height();
+
+				const unsigned int paddingElementsA = frameA.paddingElements();
+				const unsigned int paddingElementsB = frameB.paddingElements();
+
+				const Vector2 frameB_t_frameA = Vector2(Scalar(borderLeft), Scalar(borderTop));
+
+				Vectors2 pointsB;
+				pointsB.reserve(numberPoints);
+
+				for (size_t n = 0; n < numberPoints; ++n)
+				{
+					Vector2 pointB = frameB_t_frameA + pointsA[n];
+
+					pointB.x() = minmax(Scalar(0), pointB.x() + Random::scalar(randomGenerator, Scalar(-8), Scalar(8)), Scalar(widthB) - Numeric::weakEps());
+					pointB.y() = minmax(Scalar(0), pointB.y() + Random::scalar(randomGenerator, Scalar(-8), Scalar(8)), Scalar(heightB) - Numeric::weakEps());
+
+					pointsB.emplace_back(pointB);
+				}
+
+				constexpr unsigned int radiusX = 10u;
+				constexpr unsigned int radiusY = 10u;
+
+				performance.startIf(performanceIteration);
+					for (size_t n = 0; n < numberPoints; ++n)
+					{
+						const Vector2& pointA = pointsA[n];
+						const Vector2 roughB = pointsB[n];
+
+						pointsB[n] = T::template pointMotionInFrameSubPixelMirroredBorder<tChannels, tPatchSize>(frameDataA, frameDataB, widthA, heightA, widthB, heightB, paddingElementsA, paddingElementsB, pointA, radiusX, radiusY, roughB, subPixelIterations);
+					}
+				performance.stopIf(performanceIteration);
+
+				if (performanceIteration)
+				{
+					double percentAccuratePoints = NumericD::maxValue();
+
+					unsigned int accuratePoints = 0u;
+
+					for (size_t n = 0; n < pointsA.size(); ++n)
+					{
+						const Vector2 expectedB = frameB_t_frameA + pointsA[n];
+
+						const Scalar distance = pointsB[n].distance(expectedB);
+
+						if (distance < Scalar(1))
+						{
+							++accuratePoints;
+						}
+					}
+
+					percentAccuratePoints = double(accuratePoints) / double(pointsA.size());
+
+					percentsAccuratePoints.emplace_back(percentAccuratePoints);
+				}
+				else
+				{
+					for (const Vector2& pointB : pointsB)
+					{
+						if (pointB.x() < Scalar(0) || pointB.x() > Scalar(widthB) || pointB.y() < Scalar(0) || pointB.y() > Scalar(heightB))
+						{
+							allSucceeded = false;
+						}
+					}
+				}
+			}
+			while (startTimestamp + testDuration > Timestamp(true));
+		}
+	}
+
+	Log::info() << "Single-core performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms";
+
+	if (performanceMulticore.measurements() != 0u)
+	{
+		Log::info() << "Multi-core performance: Best: " << String::toAString(performanceMulticore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceMulticore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceMulticore.averageMseconds(), 2u) << "ms";
+		Log::info() << "Multi-core boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
+	}
+
+	std::sort(percentsAccuratePoints.begin(), percentsAccuratePoints.end());
+
+	const double minPercentAccuratePoints = percentsAccuratePoints.front();
+	const double medianPercentAccuratePoints = percentsAccuratePoints[percentsAccuratePoints.size() / 2];
+	const double maxPercentAccuratePoints = percentsAccuratePoints.back();
+
+	Log::info() << "Accurate point range: [" << String::toAString(minPercentAccuratePoints * 100.0, 1u) << "%, " << String::toAString(medianPercentAccuratePoints * 100.0, 1u) << "%, " << String::toAString(maxPercentAccuratePoints * 100.0, 1u) << "%]";
+
+
+	ocean_assert(0.0 <= minPercentAccuratePoints && minPercentAccuratePoints <= 1.0);
+
+	if constexpr (tPatchSize >= 7u)
+	{
+		if (minPercentAccuratePoints < 0.70)
+		{
+			allSucceeded = false;
+		}
+	}
+
+	if constexpr (tPatchSize >= 15u)
+	{
+		if (minPercentAccuratePoints < 0.85)
+		{
+			allSucceeded = false;
+		}
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
 
 bool TestAdvancedMotion::testTrackPointsSubPixelMirroredBorder(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
 {
