@@ -1241,7 +1241,7 @@ bool TestFrameRectification::renderPlanarRectangleObject(const Frame& objectFram
 
 					if (objectX <= Scalar(objectFrame.width() - 1u) && objectY <= Scalar(objectFrame.height() - 1u))
 					{
-						ocean_assert(objectX >= 0 && objectX < Scalar(objectFrame.width() - 1u) && objectY >= 0 && objectY < Scalar(objectFrame.height() - 1u));
+						ocean_assert(objectX >= 0 && objectX <= Scalar(objectFrame.width() - 1u) && objectY >= 0 && objectY <= Scalar(objectFrame.height() - 1u));
 
 						switch (channels)
 						{
