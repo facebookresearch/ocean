@@ -11,18 +11,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\rendering\opengl\win\OpenGLMainWindow.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\rendering\opengl\win\OpenGLMainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\rendering\opengl\win\OpenGL.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\rendering\opengl\win\OpenGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\rendering\opengl\win\OpenGLMainWindow.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\rendering\opengl\win\OpenGLMainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\rendering\opengl\win\OpenGL.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\rendering\opengl\win\OpenGL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
