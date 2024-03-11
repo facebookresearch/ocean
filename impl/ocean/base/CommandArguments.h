@@ -177,12 +177,44 @@ class OCEAN_BASE_EXPORT CommandArguments
 
 		/**
 		 * Returns the value of a specific parameter which has been parsed.
+		 * Below an example of how to use this function:
+		 * @code
+		 * CommandArguments commandArguments;
+		 * commandArguments.registerParameter("input", "i", "The input file");
+		 *
+		 * const Value inputFile = commandArguments.value<std::string>("input");
+		 * if (inputFile.isString())
+		 * {
+		 *     const std::string inputFileString = inputFile.stringValue();
+		 *     // ...
+		 * }
+		 * @endcode
 		 * @param longName The long name of the parameter for which the value will be returned, must be valid
 		 * @param allowDefaultValue True, to return the default value in case no actual value has been parsed; False, to return an invalid value if no actual value has been parsed
 		 * @param namelessValueIndex Optional explicit index of a nameless value which is used in case the named value does not exist, -1 to avoid using a nameless value
-		 * @return The value of the parameter, an invalid valid if the value has not been parsed
+		 * @return The value of the parameter, an invalid value if the value has not been parsed
 		 */
 		Value value(const std::string& longName, const bool allowDefaultValue = true, const size_t namelessValueIndex = size_t(-1)) const;
+
+		/**
+		 * Returns the value of a specific parameter which has been parsed.
+		 * Below an example of how to use this function:
+		 * @code
+		 * CommandArguments commandArguments;
+		 * commandArguments.registerParameter("input", "i", "The input file");
+		 * commandArguments.registerParameter("factor", "f", "The factor parameter");
+		 *
+		 * const std::string inputFile = commandArguments.value<std::string>("input", std::string(), false);
+		 * const double factor = commandArguments.value<double>("factor", -1.0, false);
+		 * @endcode
+		 * @param longName The long name of the parameter for which the value will be returned, must be valid
+		 * @param invalidValue The resulting value in case the parameter was not parsed
+		 * @param allowDefaultValue True, to return the default value in case no actual value has been parsed; False, to return an invalid value if no actual value has been parsed
+		 * @param namelessValueIndex Optional explicit index of a nameless value which is used in case the named value does not exist, -1 to avoid using a nameless value
+		 * @return The value of the parameter, the invalid value if the value has not been parsed
+		 */
+		template <typename T>
+		T value(const std::string& longName, const T& invalidValue, const bool allowDefaultValue, const size_t namelessValueIndex = size_t(-1)) const;
 
 		/**
 		 * Checks whether a specific parameter value has been parsed, or whether a default value is defined.
@@ -383,6 +415,18 @@ bool CommandArguments::parse(const TChar* const* arguments, const size_t size, c
 	}
 
 	return parse(separatedArguments);
+}
+
+template <typename T>
+T CommandArguments::value(const std::string& longName, const T& invalidValue, const bool allowDefaultValue, const size_t namelessValueIndex) const
+{
+	T validValue;
+	if (hasValue<T>(longName, validValue, allowDefaultValue, namelessValueIndex))
+	{
+		return validValue;
+	}
+
+	return invalidValue;
 }
 
 template <>
