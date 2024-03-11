@@ -5,11 +5,11 @@
 #include "ocean/media/Manager.h"
 #include "ocean/media/Utilities.h"
 
-#include "ocean/network/tigon/TigonClient.h"
+#include "ocean/rendering/Utilities.h"
+
+#include "metaonly/ocean/network/tigon/TigonClient.h"
 
 #include "metaonly/ocean/network/verts/Manager.h"
-
-#include "ocean/rendering/Utilities.h"
 
 namespace Ocean
 {

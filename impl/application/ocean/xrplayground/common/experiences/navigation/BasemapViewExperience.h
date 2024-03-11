@@ -11,12 +11,12 @@
 
 #include "ocean/io/maps/Basemap.h"
 
-#include "ocean/network/tigon/TigonClient.h"
-
 #include "ocean/rendering/AbsoluteTransform.h"
 #include "ocean/rendering/Transform.h"
 
 #include "ocean/tracking/SmoothedTransformation.h"
+
+#include "metaonly/ocean/network/tigon/TigonClient.h"
 
 namespace Ocean
 {

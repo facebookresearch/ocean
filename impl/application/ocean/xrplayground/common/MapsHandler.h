@@ -11,7 +11,7 @@
 #include "ocean/rendering/Engine.h"
 #include "ocean/rendering/Triangles.h"
 
-#include "ocean/network/tigon/TigonRequest.h"
+#include "metaonly/ocean/network/tigon/TigonRequest.h"
 
 namespace Ocean
 {

@@ -15,16 +15,16 @@
 
 #include "ocean/io/Compression.h"
 
-#include "ocean/network/tigon/TigonClient.h"
-
-#include "metaonly/ocean/network/verts/Manager.h"
-
 #include "ocean/rendering/AbsoluteTransform.h"
 #include "ocean/rendering/Textures.h"
 #include "ocean/rendering/UndistortedBackground.h"
 #include "ocean/rendering/Utilities.h"
 
 #include "ocean/tracking/mapbuilding/Utilities.h"
+
+#include "metaonly/ocean/network/tigon/TigonClient.h"
+
+#include "metaonly/ocean/network/verts/Manager.h"
 
 #define USE_STEREO_RELOCALIZATION
 

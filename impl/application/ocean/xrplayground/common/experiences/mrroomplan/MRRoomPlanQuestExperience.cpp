@@ -15,10 +15,6 @@
 #include "ocean/media/FrameMedium.h"
 #include "ocean/media/Manager.h"
 
-#include "ocean/network/tigon/TigonClient.h"
-
-#include "metaonly/ocean/network/verts/Manager.h"
-
 #include "ocean/rendering/AbsoluteTransform.h"
 #include "ocean/rendering/AttributeSet.h"
 #include "ocean/rendering/Box.h"
@@ -30,6 +26,10 @@
 #include "ocean/tracking/mapbuilding/MultiViewMapCreator.h"
 #include "ocean/tracking/mapbuilding/TrackerStereo.h"
 #include "ocean/tracking/mapbuilding/Utilities.h"
+
+#include "metaonly/ocean/network/tigon/TigonClient.h"
+
+#include "metaonly/ocean/network/verts/Manager.h"
 
 namespace Ocean
 {

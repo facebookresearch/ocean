@@ -10,7 +10,7 @@
 
 #include "ocean/interaction/experiences/AnchoredContentManager.h"
 
-#include "ocean/network/tigon/TigonClient.h"
+#include "metaonly/ocean/network/tigon/TigonClient.h"
 
 namespace Ocean
 {

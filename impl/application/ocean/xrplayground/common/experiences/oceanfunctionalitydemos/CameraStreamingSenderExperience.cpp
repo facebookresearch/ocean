@@ -4,13 +4,13 @@
 
 #include "ocean/media/Utilities.h"
 
-#include "metaonly/ocean/network/verts/Manager.h"
-
-#include "ocean/network/tigon/TigonClient.h"
-
 #include "ocean/rendering/AbsoluteTransform.h"
 #include "ocean/rendering/UndistortedBackground.h"
 #include "ocean/rendering/Utilities.h"
+
+#include "metaonly/ocean/network/verts/Manager.h"
+
+#include "metaonly/ocean/network/tigon/TigonClient.h"
 
 namespace Ocean
 {

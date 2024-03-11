@@ -8,13 +8,13 @@
 	#include "ocean/network/HTTPSClient.h"
 #endif
 
-#include "ocean/network/tigon/TigonClient.h"
-
 #include "ocean/rendering/AttributeSet.h"
 #include "ocean/rendering/Geometry.h"
 #include "ocean/rendering/Material.h"
 #include "ocean/rendering/Triangles.h"
 #include "ocean/rendering/VertexSet.h"
+
+#include "metaonly/ocean/network/tigon/TigonClient.h"
 
 namespace Ocean
 {

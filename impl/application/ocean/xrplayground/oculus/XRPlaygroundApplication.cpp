@@ -24,10 +24,6 @@
 #include "ocean/media/openimagelibraries/OpenImageLibraries.h"
 #include "ocean/media/quest/Quest.h"
 
-#include "ocean/network/tigon/TigonClient.h"
-
-#include "metaonly/ocean/network/verts/Manager.h"
-
 #include "ocean/platform/android/Resource.h"
 #include "ocean/platform/android/Utilities.h"
 
@@ -45,6 +41,10 @@
 #include "ocean/scenedescription/sdl/assimp/Assimp.h"
 #include "ocean/scenedescription/sdl/obj/OBJ.h"
 #include "ocean/scenedescription/sdx/x3d/X3D.h"
+
+#include "metaonly/ocean/network/tigon/TigonClient.h"
+
+#include "metaonly/ocean/network/verts/Manager.h"
 
 namespace Ocean
 {

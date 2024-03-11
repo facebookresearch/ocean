@@ -13,14 +13,14 @@
 #include "ocean/media/FrameMedium.h"
 #include "ocean/media/Manager.h"
 
-#include "ocean/network/tigon/TigonClient.h"
-
-#include "metaonly/ocean/network/verts/Manager.h"
-
 #include "ocean/rendering/Utilities.h"
 
 #include "ocean/tracking/mapbuilding/RelocalizerStereo.h"
 #include "ocean/tracking/mapbuilding/Utilities.h"
+
+#include "metaonly/ocean/network/tigon/TigonClient.h"
+
+#include "metaonly/ocean/network/verts/Manager.h"
 
 namespace Ocean
 {
