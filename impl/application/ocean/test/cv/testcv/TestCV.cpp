@@ -64,25 +64,19 @@ using namespace Ocean;
 	unsigned int testWidth = 1920u;
 	unsigned int testHeight = 1080u;
 
-	double testDuration = 2.0;
-	std::string outputFilename;
-	std::string functionList;
-
-	Value resolutionValue;
-	if (commandArguments.hasValue("resolution", &resolutionValue, true) && resolutionValue.isString())
+	std::string resolutionValue;
+	if (commandArguments.hasValue("resolution", resolutionValue, true))
 	{
-		const std::string resolution = resolutionValue.stringValue();
-
-		if (!resolution.empty())
+		if (!resolutionValue.empty())
 		{
-			const std::string::size_type pos = resolution.find('x');
+			const std::string::size_type pos = resolutionValue.find('x');
 
 			if (pos != std::string::npos)
 			{
 				int width = -1;
 				int height = -1;
 
-				if (String::isInteger32(resolution.substr(0, pos), &width) && String::isInteger32(resolution.substr(pos + 1), &height) && width > 0 && height > 0)
+				if (String::isInteger32(resolutionValue.substr(0, pos), &width) && String::isInteger32(resolutionValue.substr(pos + 1), &height) && width > 0 && height > 0)
 				{
 					testWidth = (unsigned int)(width);
 					testHeight = (unsigned int)(height);
@@ -91,23 +85,11 @@ using namespace Ocean;
 		}
 	}
 
-	Value durationValue;
-	if (commandArguments.hasValue("duration", &durationValue, true) && durationValue.isFloat64(true))
-	{
-		testDuration = durationValue.float64Value(true);
-	}
+	const double testDuration = commandArguments.value<double>("duration", defaultTestDuration, true);
 
-	Value outputValue;
-	if (commandArguments.hasValue("output", &outputValue) && outputValue.isString())
-	{
-		outputFilename = outputValue.stringValue();
-	}
+	const std::string outputFilename = commandArguments.value<std::string>("output", "", false);
 
-	Value functionsValue;
-	if (commandArguments.hasValue("functions", &functionsValue) && functionsValue.isString())
-	{
-		functionList = functionsValue.stringValue();
-	}
+	const std::string functionList = commandArguments.value<std::string>("functions", "", false);
 
 	Messenger::MessageOutput messageOutput = Messenger::OUTPUT_STANDARD;
 

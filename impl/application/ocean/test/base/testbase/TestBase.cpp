@@ -59,27 +59,11 @@ using namespace Ocean;
 		return 0;
 	}
 
-	double testDuration = 2.0;
-	std::string outputFilename;
-	std::string functionList;
+	const double testDuration = commandArguments.value<double>("duration", defaultTestDuration, true);
 
-	Value durationValue;
-	if (commandArguments.hasValue("duration", &durationValue, true) && durationValue.isFloat64(true))
-	{
-		testDuration = durationValue.float64Value(true);
-	}
+	const std::string outputFilename = commandArguments.value<std::string>("output", "", false);
 
-	Value outputValue;
-	if (commandArguments.hasValue("output", &outputValue) && outputValue.isString())
-	{
-		outputFilename = outputValue.stringValue();
-	}
-
-	Value functionsValue;
-	if (commandArguments.hasValue("functions", &functionsValue) && functionsValue.isString())
-	{
-		functionList = functionsValue.stringValue();
-	}
+	const std::string functionList = commandArguments.value<std::string>("functions", "", false);
 
 	Messenger::MessageOutput messageOutput = Messenger::OUTPUT_STANDARD;
 
