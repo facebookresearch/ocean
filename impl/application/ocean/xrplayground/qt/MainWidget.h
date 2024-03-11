@@ -8,7 +8,7 @@
 
 #include "application/ocean/xrplayground/common/XRPlaygroundCommon.h"
 
-#include "ocean/devices/vrs/DevicePlayer.h"
+#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
 
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QWidget>

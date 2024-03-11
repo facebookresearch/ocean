@@ -12,10 +12,6 @@
 
 #include "ocean/devices/pattern/Pattern.h"
 
-#include "ocean/devices/vrs/DevicePlayer.h"
-#include "ocean/devices/vrs/DeviceRecorder.h"
-#include "ocean/devices/vrs/VRSVisualTracker6DOF.h"
-
 #include "ocean/io/File.h"
 
 #include "ocean/media/ImageSequence.h"
@@ -27,6 +23,17 @@
 #include "ocean/rendering/PerspectiveView.h"
 #include "ocean/rendering/UndistortedBackground.h"
 
+#include "ocean/scenedescription/Manager.h"
+#include "ocean/scenedescription/Scene.h"
+
+#include "ocean/scenedescription/sdl/assimp/Assimp.h"
+#include "ocean/scenedescription/sdl/obj/OBJ.h"
+#include "ocean/scenedescription/sdx/x3d/X3D.h"
+
+#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
+#include "metaonly/ocean/devices/vrs/DeviceRecorder.h"
+#include "metaonly/ocean/devices/vrs/VRSVisualTracker6DOF.h"
+
 #include "metaonly/ocean/platform/meta/Login.h"
 
 #if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
@@ -36,13 +43,6 @@
 #else
 	#error Missing platform
 #endif
-
-#include "ocean/scenedescription/Manager.h"
-#include "ocean/scenedescription/Scene.h"
-
-#include "ocean/scenedescription/sdl/assimp/Assimp.h"
-#include "ocean/scenedescription/sdl/obj/OBJ.h"
-#include "ocean/scenedescription/sdx/x3d/X3D.h"
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(__APPLE__)

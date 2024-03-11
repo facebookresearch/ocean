@@ -14,8 +14,6 @@
 #include "ocean/cv/detector/qrcodes/LegacyQRCodeDetector2D.h"
 #include "ocean/cv/detector/qrcodes/Utilities.h"
 
-#include "ocean/devices/vrs/DevicePlayer.h"
-
 #include "ocean/media/Manager.h"
 #include "ocean/media/MovieRecorder.h"
 
@@ -23,6 +21,8 @@
 #include "ocean/io/File.h"
 
 #include "ocean/platform/System.h"
+
+#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)

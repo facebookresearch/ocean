@@ -8,8 +8,6 @@
 #include "ocean/devices/Device.h"
 #include "ocean/devices/GPSTracker.h"
 
-#include "ocean/devices/vrs/DeviceRecorder.h"
-
 #include "ocean/interaction/UserInterface.h"
 
 #include "ocean/media/FrameMedium.h"
@@ -17,6 +15,8 @@
 #include "ocean/rendering/Engine.h"
 #include "ocean/rendering/Framebuffer.h"
 #include "ocean/rendering/MediaTexture2D.h"
+
+#include "metaonly/ocean/devices/vrs/DeviceRecorder.h"
 
 #include "metaonly/ocean/platform/meta/Login.h"
 

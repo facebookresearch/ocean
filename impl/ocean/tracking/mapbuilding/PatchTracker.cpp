@@ -15,8 +15,6 @@
 #include "ocean/devices/Manager.h"
 #include "ocean/devices/Tracker6DOF.h"
 
-#include "ocean/devices/vrs/DevicePlayer.h"
-
 #include "ocean/geometry/Octree.h"
 #include "ocean/geometry/RANSAC.h"
 
@@ -25,6 +23,8 @@
 #include "ocean/media/FrameMedium.h"
 
 #include "ocean/tracking/Solver3.h"
+
+#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
 
 #ifdef _WINDOWS
 	#include "ocean/platform/win/Utilities.h"

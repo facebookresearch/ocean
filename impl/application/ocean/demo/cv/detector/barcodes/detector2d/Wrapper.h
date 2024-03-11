@@ -11,11 +11,11 @@
 
 #include "ocean/media/MovieRecorder.h"
 
-#if defined(USE_OCEAN_DEVICES_VRS)
-	#include "ocean/devices/vrs/DevicePlayer.h"
-#endif
-
 #include "ocean/media/FrameMedium.h"
+
+#if defined(USE_OCEAN_DEVICES_VRS)
+	#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
+#endif
 
 /**
  * @ingroup applicationdemocvdetectorbarcodes

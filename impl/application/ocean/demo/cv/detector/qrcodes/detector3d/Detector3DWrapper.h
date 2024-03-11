@@ -11,9 +11,9 @@
 
 #include "ocean/media/MovieRecorder.h"
 
-#include "ocean/devices/vrs/DevicePlayer.h"
-
 #include "ocean/media/FrameMedium.h"
+
+#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
 
 /**
  * @ingroup applicationdemocvdetectorqrcodes

@@ -7,11 +7,11 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
-#ifdef OCEAN_USE_DEVICES_VRS
-	#include "ocean/devices/vrs/DevicePlayer.h"
-#endif // OCEAN_USE_DEVICES_VRS
-
 #include "ocean/media/FrameMedium.h"
+
+#ifdef OCEAN_USE_DEVICES_VRS
+	#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
+#endif // OCEAN_USE_DEVICES_VRS
 
 /**
  * @ingroup applicationdemocvdetectorqrcodes

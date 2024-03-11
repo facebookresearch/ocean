@@ -7,10 +7,6 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
-#ifdef OCEAN_USE_DEVICES_VRS
-	#include "ocean/devices/vrs/DevicePlayer.h"
-#endif
-
 #include "ocean/io/File.h"
 
 #include "ocean/math/AnyCamera.h"
@@ -20,6 +16,10 @@
 #include "ocean/media/MovieRecorder.h"
 
 #include "ocean/tracking/oculustags/OculusTagTracker.h"
+
+#ifdef OCEAN_USE_DEVICES_VRS
+	#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
+#endif
 
 /**
  * @ingroup applicationdemotracking
