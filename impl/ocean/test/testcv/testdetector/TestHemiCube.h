@@ -9,12 +9,16 @@
 
 namespace Ocean
 {
+
 namespace Test
 {
+
 namespace TestCV
 {
+
 namespace TestDetector
 {
+
 /**
  * This class implements tests for the Hemi cube.
  * @ingroup testcvdetector

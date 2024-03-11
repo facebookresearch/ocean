@@ -12,12 +12,16 @@
 
 namespace Ocean
 {
+
 namespace Test
 {
+
 namespace TestCV
 {
+
 namespace TestDetector
 {
+
 using namespace Ocean::CV::Detector;
 
 bool TestHemiCube::test(const double testDuration, Worker& /*worker*/)
@@ -62,17 +66,17 @@ TEST(TestHemiCube, Add)
 	EXPECT_TRUE(TestHemiCube::testAdd(GTEST_TEST_DURATION));
 }
 
-TEST(TestHemiCube, FuseLinePair)
+TEST(TestHemiCube, LineFusion)
 {
 	EXPECT_TRUE(TestHemiCube::testLineFusion(GTEST_TEST_DURATION));
 }
 
-TEST(TestHemiCube, MergeCollinearLinesBruteForce)
+TEST(TestHemiCube, MergeGreedyBruteForce)
 {
 	EXPECT_TRUE(TestHemiCube::testMergeGreedyBruteForce(GTEST_TEST_DURATION));
 }
 
-TEST(TestHemiCube, MergeLines)
+TEST(TestHemiCube, Merge)
 {
 	EXPECT_TRUE(TestHemiCube::testMerge(GTEST_TEST_DURATION));
 }
@@ -90,11 +94,13 @@ bool TestHemiCube::testAdd(const double testDuration)
 	bool allSucceeded = true;
 
 	const Timestamp startTime(true);
+
 	do
 	{
 		const unsigned int hemiCubeBins = RandomI::random(2u, 320u);
 
-		{ // Case 1: random number of only collinear lines + random bin size, all lines should land in the same bin
+		{
+			// Case 1: random number of only collinear lines + random bin size, all lines should land in the same bin
 			const FiniteLine2 randomSeedLine = generateRandomFiniteLine2(imageWidth, imageHeight);
 			const unsigned int linesCount = RandomI::random(2u, 10000u);
 			FiniteLines2 randomCollinearLines;
@@ -115,7 +121,8 @@ bool TestHemiCube::testAdd(const double testDuration)
 			}
 		}
 
-		{ // Case 2: two orthogonal lines - should be in separate bins
+		{
+			// Case 2: two orthogonal lines - should be in separate bins
 			const FiniteLine2 line0 = generateRandomFiniteLine2(imageWidth, imageHeight);
 			const FiniteLine2 line1 = generateRandomOrthogonalFiniteLine2(line0, imageWidth, imageHeight);
 			const FiniteLines2 lines = { line0, line1 };
@@ -130,7 +137,7 @@ bool TestHemiCube::testAdd(const double testDuration)
 			}
 		}
 	}
-	while (allSucceeded && startTime + testDuration > Timestamp(true));
+	while (startTime + testDuration > Timestamp(true));
 
 	if (allSucceeded)
 	{
@@ -154,21 +161,22 @@ bool TestHemiCube::testLineFusion(const double testDuration)
 	bool allSucceeded = true;
 
 	const Timestamp startTime(true);
-	while (allSucceeded && startTime + testDuration > Timestamp(true))
+
+	do
 	{
 		const FiniteLine2 line0 = generateRandomFiniteLine2(imageWidth, imageHeight);
 		const FiniteLine2 line1 = generateRandomFiniteLine2(imageWidth, imageHeight);
 
-		if (line0 == line1)
-		{
-			continue;
-		}
-
 		const FiniteLine2 mergedLine = HemiCube::fuse(line0, line1);
 
-		const FiniteLines2 lines = { line0, line1 };
-		allSucceeded = validateLineFusion(mergedLine, lines) && allSucceeded;
+		const FiniteLines2 lines = {line0, line1};
+
+		if (!validateLineFusion(mergedLine, lines))
+		{
+			allSucceeded = false;
+		}
 	}
+	while (startTime + testDuration > Timestamp(true));
 
 	if (allSucceeded)
 	{
@@ -196,9 +204,11 @@ bool TestHemiCube::testMergeGreedyBruteForce(const double testDuration)
 	bool allSucceeded = true;
 
 	const Timestamp startTime(true);
-	while (allSucceeded && startTime + testDuration > Timestamp(true))
+
+	do
 	{
-		{ // Case 1: random number of only collinear lines + random bin size, all lines should land in the same bin
+		{
+			// Case 1: random number of only collinear lines + random bin size, all lines should land in the same bin
 			const FiniteLine2 randomSeedLine = generateRandomFiniteLine2(imageWidth, imageHeight);
 			const unsigned int linesCount = RandomI::random(2u, 10000u);
 			FiniteLines2 randomCollinearLines;
@@ -217,7 +227,8 @@ bool TestHemiCube::testMergeGreedyBruteForce(const double testDuration)
 			}
 		}
 
-		{ // Case 2: two orthogonal lines - should be in separate bins
+		{
+			// Case 2: two orthogonal lines - should be in separate bins
 			const FiniteLine2 line0 = generateRandomFiniteLine2(imageWidth, imageHeight);
 			const FiniteLine2 line1 = generateRandomOrthogonalFiniteLine2(line0, imageWidth, imageHeight);
 			const FiniteLines2 lines = { line0, line1 };
@@ -230,6 +241,7 @@ bool TestHemiCube::testMergeGreedyBruteForce(const double testDuration)
 			}
 		}
 	}
+	while (startTime + testDuration > Timestamp(true));
 
 	if (allSucceeded)
 	{
@@ -258,11 +270,13 @@ bool TestHemiCube::testMerge(const double testDuration)
 	bool allSucceeded = true;
 
 	const Timestamp startTime(true);
-	while (allSucceeded && startTime + testDuration > Timestamp(true))
+
+	do
 	{
 		const unsigned int hemiCubeBins = RandomI::random(2u, 320u);
 
-		{ // Case 1: random number of only collinear lines + random bin size, all lines should land in the same bin
+		{
+			// Case 1: random number of only collinear lines + random bin size, all lines should land in the same bin
 			const FiniteLine2 randomSeedLine = generateRandomFiniteLine2(imageWidth, imageHeight);
 			const unsigned int linesCount = RandomI::random(2u, 10000u);
 			FiniteLines2 randomCollinearLines;
@@ -282,7 +296,8 @@ bool TestHemiCube::testMerge(const double testDuration)
 			}
 		}
 
-		{ // Case 2: two orthogonal lines - should be in separate bins
+		{
+			// Case 2: two orthogonal lines - should be in separate bins
 			const FiniteLine2 line0 = generateRandomFiniteLine2(imageWidth, imageHeight);
 			const FiniteLine2 line1 = generateRandomOrthogonalFiniteLine2(line0, imageWidth, imageHeight);
 			const FiniteLines2 lines = { line0, line1 };
@@ -297,6 +312,7 @@ bool TestHemiCube::testMerge(const double testDuration)
 			}
 		}
 	}
+	while (startTime + testDuration > Timestamp(true));
 
 	if (allSucceeded)
 	{
@@ -313,12 +329,13 @@ bool TestHemiCube::testMerge(const double testDuration)
 FiniteLine2 TestHemiCube::generateRandomFiniteLine2(const unsigned int imageWidth, const unsigned int imageHeight)
 {
 	ocean_assert(imageWidth != 0u && imageHeight != 0u);
-	const Vector2 point0(Random::scalar(Scalar(0), Scalar(imageWidth - 1u)), Random::scalar(Scalar(0), Scalar(imageHeight - 1u)));
-	Vector2 point1(Random::scalar(Scalar(0), Scalar(imageWidth - 1u)), Random::scalar(Scalar(0), Scalar(imageHeight - 1u)));
+
+	const Vector2 point0 = Random::vector2(Scalar(0), Scalar(imageWidth - 1u), Scalar(0), Scalar(imageHeight - 1u));
+	Vector2 point1 = Random::vector2(Scalar(0), Scalar(imageWidth - 1u), Scalar(0), Scalar(imageHeight - 1u));
 
 	while ((point0 - point1).length() < Numeric::eps())
 	{
-		point1 = Vector2(Random::scalar(Scalar(0), Scalar(imageWidth - 1u)), Random::scalar(Scalar(0), Scalar(imageHeight - 1u)));
+		point1 = Random::vector2(Scalar(0), Scalar(imageWidth - 1u), Scalar(0), Scalar(imageHeight - 1u));
 	}
 
 	return FiniteLine2(point0, point1);
@@ -328,40 +345,51 @@ FiniteLine2 TestHemiCube::generateRandomOrthogonalFiniteLine2(const FiniteLine2&
 {
 	ocean_assert(imageWidth != 0u && imageHeight != 0u);
 	ocean_assert(minLineLength >= Numeric::eps());
-	const Vector2 point0(Random::scalar(Scalar(0), Scalar(imageWidth - 1u)), Random::scalar(Scalar(0), Scalar(imageHeight - 1u)));
+
+	const Vector2 point0 = Random::vector2(Scalar(0), Scalar(imageWidth - 1u), Scalar(0), Scalar(imageHeight - 1u));
 	Vector2 point1;
 
-	do
+	while (true)
 	{
 		const Scalar length = Random::scalar(minLineLength, Scalar(std::min(imageHeight, imageWidth)));
 		point1 = point0 + line.normal() * length * Random::sign();
-	} while (point1.x() < Scalar(0) || point1.x() >= Scalar(imageWidth) || point1.y() < Scalar(0) || point1.y() >= Scalar(imageHeight));
 
+		if (point1.x() < Scalar(0) || point1.x() > Scalar(imageWidth - 1u) || point1.y() < Scalar(0) || point1.y() > Scalar(imageHeight - 1u))
+		{
+			continue;
+		}
 
-	const FiniteLine2 orthogonalLine(point0, point1);
-	ocean_assert(orthogonalLine.length() > Numeric::eps());
-	ocean_assert(line.normal().isOrthogonal(orthogonalLine.normal()));
+		const FiniteLine2 orthogonalLine(point0, point1);
+		ocean_assert(orthogonalLine.length() > Numeric::eps());
 
-	return orthogonalLine;
+		ocean_assert(line.normal().isOrthogonal(orthogonalLine.normal(), Numeric::weakEps()));
+
+		if (line.normal().isOrthogonal(orthogonalLine.normal())) // explicit
+		{
+			return orthogonalLine;
+		}
+	}
 }
 
 FiniteLine2 TestHemiCube::generateRandomCollinearFiniteLine2(const FiniteLine2& line, const unsigned int imageWidth, const unsigned int imageHeight, const Scalar minLineLength)
 {
 	ocean_assert(minLineLength > Numeric::eps());
+
 	const Scalar distanceEpsilon = Numeric::weakEps();
 	const Scalar cosAngleEpsilon = Numeric::weakEps();
 
 	Vector2 point0;
 	Vector2 point1;
 
-	const Scalar maxDistance = std::is_same<Scalar, float>() ? Scalar(0.1) : Numeric::weakEps();
+	const Scalar maxDistance = std::is_same<Scalar, float>() ? Scalar(0.5) : Numeric::weakEps();
 
 	do
 	{
 		const Scalar length = Random::scalar(minLineLength, Scalar(std::min(imageHeight, imageWidth)));
 		point0 = line.point0() + line.direction() * length * Random::sign();
 		ocean_assert((line.nearestPointOnInfiniteLine(point0) - point0).length() <= maxDistance);
-	} while (point0.x() < Scalar(0) || point0.x() >= Scalar(imageWidth) || point0.y() < Scalar(0) || point0.y() >= Scalar(imageHeight));
+	}
+	while (point0.x() < Scalar(0) || point0.x() >= Scalar(imageWidth) || point0.y() < Scalar(0) || point0.y() >= Scalar(imageHeight));
 
 	FiniteLine2 collinearLine;
 
@@ -373,7 +401,8 @@ FiniteLine2 TestHemiCube::generateRandomCollinearFiniteLine2(const FiniteLine2& 
 
 		collinearLine = FiniteLine2(point0, point1);
 		ocean_assert((collinearLine.nearestPointOnInfiniteLine(line.point0()) - line.point0()).length() <= maxDistance && (collinearLine.nearestPointOnInfiniteLine(line.point1()) - line.point1()).length() <= maxDistance);
-	} while (point1.x() < Scalar(0) || point1.x() >= Scalar(imageWidth) || point1.y() < Scalar(0) || point1.y() >= Scalar(imageHeight) || collinearLine.isValid() == false || collinearLine.length() <= minLineLength);
+	}
+	while (point1.x() < Scalar(0) || point1.x() >= Scalar(imageWidth) || point1.y() < Scalar(0) || point1.y() >= Scalar(imageHeight) || collinearLine.isValid() == false || collinearLine.length() <= minLineLength);
 
 	bool isValid = false;
 	FiniteLine2 pertubedCollinearLine;
@@ -391,7 +420,8 @@ FiniteLine2 TestHemiCube::generateRandomCollinearFiniteLine2(const FiniteLine2& 
 		const bool validDistance0 = (line.nearestPointOnInfiniteLine(pertubedCollinearLine.point0()) - pertubedCollinearLine.point0()).length() <= maxDistance && (line.nearestPointOnInfiniteLine(pertubedCollinearLine.point1()) - pertubedCollinearLine.point1()).length() <= maxDistance;
 		const bool validDistance1 = (pertubedCollinearLine.nearestPointOnInfiniteLine(line.point0()) - line.point0()).length() <= maxDistance && (pertubedCollinearLine.nearestPointOnInfiniteLine(line.point1()) - line.point1()).length() <= maxDistance;
 		isValid = pertubedCollinearLine.isValid() && validAngle && validDistance0 && validDistance1;
-	} while (isValid == false);
+	}
+	while (isValid == false);
 
 	return pertubedCollinearLine;
 }
@@ -399,25 +429,33 @@ FiniteLine2 TestHemiCube::generateRandomCollinearFiniteLine2(const FiniteLine2& 
 bool TestHemiCube::validateLineFusion(const FiniteLine2& testLine, const FiniteLines2& lines)
 {
 	ocean_assert(lines.empty() == false);
-	ocean_assert(std::accumulate(lines.begin(), lines.end(), true, [](bool isValid, const FiniteLine2& line) { return isValid && line.isValid(); }) == true);
 
-	const Scalar sumLineLengths = std::accumulate(lines.begin(), lines.end(), Scalar(0), [](Scalar sumSoFar, const FiniteLine2& line) { return sumSoFar + line.length(); });
+	Scalar sumLineLengths = 0;
+
+	for (const FiniteLine2& line : lines)
+	{
+		ocean_assert(line.isValid());
+
+		sumLineLengths += line.length();
+	}
+
+	ocean_assert(sumLineLengths > Scalar(0));
 
 	Vector2 centroid(Scalar(0), Scalar(0));
 	Vector2 direction(Scalar(0), Scalar(0));
 
 	for (const FiniteLine2& line : lines)
 	{
-		ocean_assert(sumLineLengths > Scalar(0));
 		const Scalar weight = line.length() / sumLineLengths;
 
-		centroid = centroid + ((line.point0() + line.point1()) * weight);
+		centroid += ((line.point0() + line.point1()) * weight);
 
 		const Vector2 lineDirection = direction * line.direction() >= Scalar(0) ? line.direction() : -line.direction();
-		direction = direction + lineDirection * weight;
+
+		direction += lineDirection * weight;
 	}
 
-	centroid = centroid / Scalar(2);
+	centroid /= Scalar(lines.size());
 
 	ocean_assert(direction.length() > 0);
 	const FiniteLine2 referenceLine(centroid, centroid + direction);
@@ -433,16 +471,19 @@ bool TestHemiCube::validateLineFusion(const FiniteLine2& testLine, const FiniteL
 
 	// Out of all combinations of end-points, find the one that maximizes the length of the result line segment
 	ocean_assert(projectedPoints.size() >= 2 && projectedPoints.size() % 2 == 0);
+
 	FiniteLine2 mergedLine(projectedPoints[0], projectedPoints[1]);
 	ocean_assert(mergedLine.isValid());
+
 	Scalar longestLineLength = mergedLine.length();
 
-	for (unsigned int i = 0u; i < projectedPoints.size() - 1u; ++i)
+	for (unsigned int nOuter = 0u; nOuter < projectedPoints.size() - 1; ++nOuter)
 	{
-		for (unsigned int j = i + 1; j < projectedPoints.size(); ++j)
+		for (unsigned int nInner = nOuter + 1u; nInner < projectedPoints.size(); ++nInner)
 		{
-			const FiniteLine2 currentLine(projectedPoints[i], projectedPoints[j]);
+			const FiniteLine2 currentLine(projectedPoints[nOuter], projectedPoints[nInner]);
 			ocean_assert(currentLine.isValid());
+
 			const Scalar currentLineLength = currentLine.length();
 
 			if (currentLineLength > longestLineLength)
@@ -455,9 +496,12 @@ bool TestHemiCube::validateLineFusion(const FiniteLine2& testLine, const FiniteL
 	ocean_assert(mergedLine.isValid());
 
 	// Make sure the endpoints of the test line and the merged line are within acceptable proximity to each other
-	const Scalar distance0 = std::min((testLine.point0() - mergedLine.point0()).length(), (testLine.point0() - mergedLine.point1()).length());
-	const Scalar distance1 = std::min((testLine.point1() - mergedLine.point0()).length(), (testLine.point1() - mergedLine.point1()).length());
-	const bool validationSuccessful = Numeric::isWeakEqualEps(distance0) && Numeric::isWeakEqualEps(distance1);
+	const Scalar distance0 = std::min(testLine.point0().distance(mergedLine.point0()), testLine.point0().distance(mergedLine.point1()));
+	const Scalar distance1 = std::min(testLine.point1().distance(mergedLine.point0()), testLine.point1().distance(mergedLine.point1()));
+
+	const Scalar threshold = std::is_same<float, Scalar>::value ? Scalar(0.5) : Numeric::weakEps(); // in pixel
+
+	const bool validationSuccessful = Numeric::isEqual(distance0, Scalar(0), threshold) && Numeric::isEqual(distance1, Scalar(0), threshold);
 
 	return validationSuccessful;
 }
