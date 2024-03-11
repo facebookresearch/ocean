@@ -29,44 +29,57 @@ class StaticBuffer
 		/**
 		 * Creates a new buffer object.
 		 */
-		inline StaticBuffer();
+		StaticBuffer() = default;
 
 		/**
 		 * Creates a new buffer object.
-		 * @param value Value that will be set for the first element of this buffer
+		 * @param value The value that will be set for the first element of this buffer
 		 */
-		inline explicit StaticBuffer(const T& value);
+		explicit inline StaticBuffer(const T& value);
 
 		/**
 		 * Creates a new buffer object.
-		 * @param buffer A buffer with at least as much elements as this static buffer has, all elements are copied
+		 * @param value The value that will be set for the first element of this buffer
 		 */
-		inline explicit StaticBuffer(const T* buffer);
+		explicit inline StaticBuffer(T&& value);
 
 		/**
 		 * Creates a new buffer object.
-		 * @param number Number of elements to be created
-		 * @param value Value that will be created in the first 'number' elements of this buffer
+		 * @param buffer A buffer with at least as much elements as this static buffer has, all 'tCapacity' elements are copied, must be valid
+		 */
+		explicit inline StaticBuffer(const T* buffer);
+
+		/**
+		 * Creates a new buffer object.
+		 * @param number The number of elements to be created, with range [0, tCapacity]
+		 * @param value The value that will be created in the first 'number' elements of this buffer
 		 */
 		inline StaticBuffer(const size_t number, const T& value);
 
 		/**
 		 * Creates a new buffer object.
 		 * This constructor converts a stl vector object to a static buffer object.<br>
-		 * Only the first tCapacity elements of the given vector are copied.<br>
-		 * @param values Values that will be used as first elements
+		 * Only the first tCapacity elements of the given vector are copied.
+		 * @param values The values that will be used as first elements
 		 */
-		inline explicit StaticBuffer(const std::vector<T>& values);
+		explicit inline StaticBuffer(const std::vector<T>& values);
+
+		/**
+		 * Creates a new buffer object.
+		 * This constructor converts a stl vector object to a static buffer object.<br>
+		 * Only the first tCapacity elements of the given vector are copied.
+		 * @param values The values that will be used as first elements
+		 */
+		explicit inline StaticBuffer(std::vector<T>&& values);
 
 		/**
 		 * Returns the capacity of this buffer.
 		 * @return Buffer capacity
 		 */
-		inline static constexpr size_t capacity();
+		static constexpr size_t capacity();
 
 		/**
 		 * Clears all elements of this buffer.
-		 * @see weakClear().
 		 */
 		inline void clear();
 
@@ -109,7 +122,7 @@ class StaticBuffer
 		/**
 		 * Returns one element of this buffer.
 		 * Beware: No range check is done.
-		 * @param index Index of the element that will be returned, with range [0, tCapacity)
+		 * @param index The index of the element that will be returned, with range [0, tCapacity)
 		 * @return Buffer element
 		 */
 		inline const T& operator[](const size_t index) const;
@@ -117,21 +130,21 @@ class StaticBuffer
 		/**
 		 * Returns one element of this buffer.
 		 * Beware: No range check is done.
-		 * @param index Index of the element that will be returned, with range [0, tCapacity)
+		 * @param index The index of the element that will be returned, with range [0, tCapacity)
 		 * @return Buffer element
 		 */
 		inline T& operator[](const size_t index);
 
 		/**
 		 * Returns whether two buffers are identical.
-		 * @param second Second buffer object
+		 * @param second The second buffer object
 		 * @return True, if so
 		 */
 		inline bool operator==(const StaticBuffer<T, tCapacity>& second) const;
 
 		/**
 		 * Returns whether two buffers are not identical.
-		 * @param second Second buffer object
+		 * @param second The second buffer object
 		 * @return True, if so
 		 */
 		inline bool operator!=(const StaticBuffer<T, tCapacity>& second) const;
@@ -139,28 +152,36 @@ class StaticBuffer
 	protected:
 
 		/// Elements of this buffer (with at least one entry).
-		T bufferElements[tCapacity > size_t(0) ? tCapacity : size_t(1)];
+		T elements_[tCapacity > size_t(0) ? tCapacity : size_t(1)];
 };
-
-template <typename T, size_t tCapacity>
-inline StaticBuffer<T, tCapacity>::StaticBuffer()
-{
-	static_assert(tCapacity > 0, "Invalid buffer capacity!");
-}
 
 template <typename T, size_t tCapacity>
 inline StaticBuffer<T, tCapacity>::StaticBuffer(const T& value)
 {
 	static_assert(tCapacity > 0, "Invalid buffer capacity!");
 
-	bufferElements[0] = value;
+	elements_[0] = value;
+}
+
+template <typename T, size_t tCapacity>
+inline StaticBuffer<T, tCapacity>::StaticBuffer(T&& value)
+{
+	static_assert(tCapacity > 0, "Invalid buffer capacity!");
+
+	elements_[0] = std::move(value);
 }
 
 template <typename T, size_t tCapacity>
 inline StaticBuffer<T, tCapacity>::StaticBuffer(const T* buffer)
 {
-	ocean_assert(buffer != NULL);
-	memcpy(bufferElements, buffer, tCapacity * sizeof(T));
+	static_assert(tCapacity > 0, "Invalid buffer capacity!");
+
+	ocean_assert(buffer != nullptr);
+
+	for (size_t n = 0u; n < tCapacity; ++n)
+	{
+		elements_[n] = buffer[n];
+	}
 }
 
 template <typename T, size_t tCapacity>
@@ -171,87 +192,128 @@ inline StaticBuffer<T, tCapacity>::StaticBuffer(const size_t number, const T& va
 	ocean_assert(number <= tCapacity);
 
 	for (size_t n = 0; n < number; ++n)
-		bufferElements[n] = value;
+	{
+		elements_[n] = value;
+	}
 }
 
 template <typename T, size_t tCapacity>
 inline StaticBuffer<T, tCapacity>::StaticBuffer(const std::vector<T>& values)
 {
+	static_assert(tCapacity > 0, "Invalid buffer capacity!");
+
 	const size_t size = min(tCapacity, values.size());
 
 	for (size_t n = 0; n < size; ++n)
-		bufferElements[n] = values[n];
+	{
+		elements_[n] = values[n];
+	}
 }
 
 template <typename T, size_t tCapacity>
-inline constexpr size_t StaticBuffer<T, tCapacity>::capacity()
+inline StaticBuffer<T, tCapacity>::StaticBuffer(std::vector<T>&& values)
 {
+	static_assert(tCapacity > 0, "Invalid buffer capacity!");
+
+	const size_t size = min(tCapacity, values.size());
+
+	for (size_t n = 0; n < size; ++n)
+	{
+		elements_[n] = std::move(values[n]);
+	}
+}
+
+template <typename T, size_t tCapacity>
+constexpr size_t StaticBuffer<T, tCapacity>::capacity()
+{
+	static_assert(tCapacity > 0, "Invalid buffer capacity!");
+
 	return tCapacity;
 }
 
 template <typename T, size_t tCapacity>
 inline const T* StaticBuffer<T, tCapacity>::data() const
 {
-	return bufferElements;
+	return elements_;
 }
 
 template <typename T, size_t tCapacity>
 inline T* StaticBuffer<T, tCapacity>::data()
 {
-	return bufferElements;
+	return elements_;
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticBuffer<T, tCapacity>::clear()
 {
 	for (size_t n = 0; n < tCapacity; ++n)
-		bufferElements[n] = T();
+	{
+		elements_[n] = T();
+	}
 }
 
 template <typename T, size_t tCapacity>
 inline const T& StaticBuffer<T, tCapacity>::front() const
 {
-	return bufferElements[0];
+	static_assert(tCapacity > 0, "Invalid buffer capacity!");
+
+	return elements_[0];
 }
 
 template <typename T, size_t tCapacity>
 inline T& StaticBuffer<T, tCapacity>::front()
 {
-	return bufferElements[0];
+	static_assert(tCapacity > 0, "Invalid buffer capacity!");
+
+	return elements_[0];
 }
 
 template <typename T, size_t tCapacity>
 inline const T& StaticBuffer<T, tCapacity>::back() const
 {
-	return bufferElements[tCapacity - 1];
+	static_assert(tCapacity > 0, "Invalid buffer capacity!");
+
+	return elements_[tCapacity - 1];
 }
 
 template <typename T, size_t tCapacity>
 inline T& StaticBuffer<T, tCapacity>::back()
 {
-	return bufferElements[tCapacity - 1];
+	static_assert(tCapacity > 0, "Invalid buffer capacity!");
+
+	return elements_[tCapacity - 1];
 }
 
 template <typename T, size_t tCapacity>
 inline const T& StaticBuffer<T, tCapacity>::operator[](const size_t index) const
 {
+	static_assert(tCapacity > 0, "Invalid buffer capacity!");
+
 	ocean_assert(index < tCapacity);
-	return bufferElements[index];
+
+	return elements_[index];
 }
 
 template <typename T, size_t tCapacity>
 inline T& StaticBuffer<T, tCapacity>::operator[](const size_t index)
 {
+	static_assert(tCapacity > 0, "Invalid buffer capacity!");
+
 	ocean_assert(index < tCapacity);
-	return bufferElements[index];
+
+	return elements_[index];
 }
 
 template <typename T, size_t tCapacity>
 inline bool StaticBuffer<T, tCapacity>::operator==(const StaticBuffer<T, tCapacity>& second) const
 {
 	for (size_t n = 0; n < tCapacity; ++n)
-		if (bufferElements[n] != second.bufferElements[n])
+	{
+		if (elements_[n] != second.elements_[n])
+		{
 			return false;
+		}
+	}
 
 	return true;
 }

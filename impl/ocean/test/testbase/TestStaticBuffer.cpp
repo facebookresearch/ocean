@@ -101,9 +101,9 @@ bool TestStaticBuffer::testConstructor()
 	allSucceeded = testConstructor<float, 2>(randomGenerator) && allSucceeded;
 	allSucceeded = testConstructor<float, 10>(randomGenerator) && allSucceeded;
 
-	/*allSucceeded = testConstructor<std::string, 1>(randomGenerator) && allSucceeded; // not yet supported
+	allSucceeded = testConstructor<std::string, 1>(randomGenerator) && allSucceeded;
 	allSucceeded = testConstructor<std::string, 2>(randomGenerator) && allSucceeded;
-	allSucceeded = testConstructor<std::string, 10>(randomGenerator) && allSucceeded;*/
+	allSucceeded = testConstructor<std::string, 10>(randomGenerator) && allSucceeded;
 
 	if (allSucceeded)
 	{

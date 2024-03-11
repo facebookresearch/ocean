@@ -284,7 +284,7 @@ template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::pushBack(const T& value)
 {
 	ocean_assert(vectorSize < tCapacity);
-	this->bufferElements[vectorSize++] = value;
+	this->elements_[vectorSize++] = value;
 }
 
 template <typename T, size_t tCapacity>
@@ -293,7 +293,7 @@ inline bool StaticVector<T, tCapacity>::securePushBack(const T& value)
 	if (vectorSize >= tCapacity)
 		return false;
 
-	this->bufferElements[vectorSize++] = value;
+	this->elements_[vectorSize++] = value;
 	return true;
 }
 
@@ -304,7 +304,7 @@ inline void StaticVector<T, tCapacity>::pushBack(const StaticVector<T, tCapacity
 	size_t elements = min(value.size(), tCapacity - vectorSize);
 
 	for (size_t n = 0; n < elements; ++n)
-		this->bufferElements[n + vectorSize] = value.bufferElements[n];
+		this->elements_[n + vectorSize] = value.elements_[n];
 
 	vectorSize += elements;
 }
@@ -315,7 +315,7 @@ inline void StaticVector<T, tCapacity>::pushBack(const std::vector<T>& value)
 	size_t elements = min(value.size(), tCapacity - vectorSize);
 
 	for (size_t n = 0; n < elements; ++n)
-		this->bufferElements[n + vectorSize] = value.bufferElements[n];
+		this->elements_[n + vectorSize] = value.elements_[n];
 
 	vectorSize += elements;
 }
@@ -324,14 +324,14 @@ template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::popBack()
 {
 	ocean_assert(vectorSize > 0);
-	this->bufferElements[--vectorSize] = T();
+	this->elements_[--vectorSize] = T();
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::securePopBack()
 {
 	if (vectorSize > 0)
-		this->bufferElements[--vectorSize] = T();
+		this->elements_[--vectorSize] = T();
 }
 
 template <typename T, size_t tCapacity>
@@ -352,28 +352,28 @@ template <typename T, size_t tCapacity>
 inline const T& StaticVector<T, tCapacity>::front() const
 {
 	ocean_assert(!empty());
-	return this->bufferElements[0];
+	return this->elements_[0];
 }
 
 template <typename T, size_t tCapacity>
 inline T& StaticVector<T, tCapacity>::front()
 {
 	ocean_assert(!empty());
-	return this->bufferElements[0];
+	return this->elements_[0];
 }
 
 template <typename T, size_t tCapacity>
 inline const T& StaticVector<T, tCapacity>::back() const
 {
 	ocean_assert(!empty());
-	return this->bufferElements[vectorSize - 1];
+	return this->elements_[vectorSize - 1];
 }
 
 template <typename T, size_t tCapacity>
 inline T& StaticVector<T, tCapacity>::back()
 {
 	ocean_assert(!empty());
-	return this->bufferElements[vectorSize - 1];
+	return this->elements_[vectorSize - 1];
 }
 
 template <typename T, size_t tCapacity>
@@ -387,9 +387,9 @@ inline void StaticVector<T, tCapacity>::erase(const size_t index)
 {
 	ocean_assert(index < vectorSize);
 	for (size_t n = index; n + 1 < vectorSize; ++n)
-		this->bufferElements[n] = std::move(this->bufferElements[n + 1]);
+		this->elements_[n] = std::move(this->elements_[n + 1]);
 
-	this->bufferElements[--vectorSize] = T();
+	this->elements_[--vectorSize] = T();
 }
 
 template <typename T, size_t tCapacity>
@@ -400,9 +400,9 @@ inline void StaticVector<T, tCapacity>::unstableErase(const size_t index)
 	vectorSize--;
 
 	if (index < vectorSize)
-		this->bufferElements[index] = this->bufferElements[vectorSize];
+		this->elements_[index] = this->elements_[vectorSize];
 
-	this->bufferElements[vectorSize] = T();
+	this->elements_[vectorSize] = T();
 }
 
 template <typename T, size_t tCapacity>
@@ -411,7 +411,7 @@ inline void StaticVector<T, tCapacity>::resize(const size_t size)
 	ocean_assert(size <= tCapacity);
 
 	for (size_t n = size; n < vectorSize; ++n)
-		this->bufferElements[n] = T();
+		this->elements_[n] = T();
 
 	vectorSize = size;
 }
@@ -427,7 +427,7 @@ template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::clear()
 {
 	for (size_t n = 0; n < vectorSize; ++n)
-		this->bufferElements[n] = T();
+		this->elements_[n] = T();
 
 	vectorSize = 0;
 }
@@ -442,14 +442,14 @@ template <typename T, size_t tCapacity>
 inline const T& StaticVector<T, tCapacity>::operator[](const size_t index) const
 {
 	ocean_assert(index < vectorSize);
-	return this->bufferElements[index];
+	return this->elements_[index];
 }
 
 template <typename T, size_t tCapacity>
 inline T& StaticVector<T, tCapacity>::operator[](const size_t index)
 {
 	ocean_assert(index < vectorSize);
-	return this->bufferElements[index];
+	return this->elements_[index];
 }
 
 template <typename T, size_t tCapacity>
@@ -459,7 +459,7 @@ inline bool StaticVector<T, tCapacity>::operator==(const StaticVector<T, tCapaci
 		return false;
 
 	for (size_t n = 0; n < vectorSize; ++n)
-		if (this->bufferElements[n] != second.bufferElements[n])
+		if (this->elements_[n] != second.elements_[n])
 			return false;
 
 	return true;
