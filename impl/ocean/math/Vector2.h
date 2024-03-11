@@ -227,19 +227,21 @@ class VectorT2
 
 		/**
 		 * Returns whether two vectors are parallel.
-		 * A zero vector will not be parallel.<br>
-		 * @param right Right vector
+		 * A zero vector is be parallel.
+		 * @param right The right vector
+		 * @param epsilon The epsilon to be used, with range [0, infinity)
 		 * @return True, if so
 		 */
-		bool isParallel(const VectorT2<T>& right) const;
+		bool isParallel(const VectorT2<T>& right, const T epsilon = NumericT<T>::eps()) const;
 
 		/**
 		 * Returns whether two vectors are orthogonal.
-		 * A zero vector will not be orthogonal.<br>
-		 * @param right Right vector
+		 * A zero vector is not orthogonal.
+		 * @param right The right vector
+		 * @param epsilon The epsilon to be used, with range [0, infinity)
 		 * @return True, if so
 		 */
-		bool isOrthogonal(const VectorT2<T>& right) const;
+		bool isOrthogonal(const VectorT2<T>& right, const T epsilon = NumericT<T>::eps()) const;
 
 		/**
 		 * Returns the x value.
@@ -667,20 +669,24 @@ T VectorT2<T>::angle(const VectorT2<T>& right) const
 }
 
 template <typename T>
-bool VectorT2<T>::isParallel(const VectorT2<T>& right) const
+bool VectorT2<T>::isParallel(const VectorT2<T>& right, const T epsilon) const
 {
+	ocean_assert(epsilon >= T(0));
+
 	const VectorT2<T> normalizedThis(normalizedOrZero());
 	const VectorT2<T> normalizedRight(right.normalizedOrZero());
 
 	const T dotProduct = normalizedThis * normalizedRight;
 
-	return NumericT<T>::isEqual(dotProduct, 1) || NumericT<T>::isEqual(dotProduct, -1);
+	return NumericT<T>::isEqual(dotProduct, T(1), epsilon) || NumericT<T>::isEqual(dotProduct, T(-1), epsilon);
 }
 
 template <typename T>
-bool VectorT2<T>::isOrthogonal(const VectorT2<T>& right) const
+bool VectorT2<T>::isOrthogonal(const VectorT2<T>& right, const T epsilon) const
 {
-	return NumericT<T>::isEqualEps(values_[0] * right.values_[0] + values_[1] * right.values_[1]);
+	ocean_assert(epsilon >= T(0));
+
+	return NumericT<T>::isEqual(values_[0] * right.values_[0] + values_[1] * right.values_[1], T(0), epsilon);
 }
 
 template <typename T>
