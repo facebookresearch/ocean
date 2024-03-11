@@ -233,7 +233,7 @@ bool TestFrameFilterLaplace::testVariance1Channel(const unsigned int width, cons
 
 			const double testVariance = varianceObject.variance();
 
-			if (Numeric::isNotEqual(variance, testVariance, 0.01))
+			if (NumericD::isNotEqual(variance, testVariance, 0.01))
 			{
 				allSucceeded = false;
 			}

@@ -87,8 +87,8 @@ bool Utilities::triangleIsVisible(const Triangle3& triangle3, const PinholeCamer
 	}
 
 	// Split the image into two triangles and see if the current triangle overlaps either.
-	const Triangle2 upperTriangle(Vector2(Scalar(0.0), Scalar(0.0)), Vector2(Scalar(0.0), pinholeCamera.height()), Vector2(pinholeCamera.width(), Scalar(0.0)));
-	const Triangle2 lowerTriangle(Vector2(Scalar(0.0), pinholeCamera.height()), Vector2(pinholeCamera.width(), Scalar(0.0)), Vector2(pinholeCamera.width(), pinholeCamera.height()));
+	const Triangle2 upperTriangle(Vector2(Scalar(0.0), Scalar(0.0)), Vector2(Scalar(0.0), pinholeCamera.height()), Vector2(Scalar(pinholeCamera.width()), Scalar(0.0)));
+	const Triangle2 lowerTriangle(Vector2(Scalar(0.0), pinholeCamera.height()), Vector2(Scalar(pinholeCamera.width()), Scalar(0.0)), Vector2(Scalar(pinholeCamera.width()), Scalar(pinholeCamera.height())));
 
 	return imageTriangle2.intersects(upperTriangle) || imageTriangle2.intersects(lowerTriangle);
 }

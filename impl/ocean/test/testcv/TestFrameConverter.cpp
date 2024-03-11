@@ -5611,7 +5611,7 @@ bool TestFrameConverter::validateConversion(const Frame& sourceFrame, const Fram
 
 				const double absError = NumericD::abs(groundTruthValueFloat - valueFloat);
 
-				ocean_assert(skipPlausibilityCheck || absError <= 10.0);
+				ocean_assert_and_suppress_unused(skipPlausibilityCheck || absError <= 10.0, skipPlausibilityCheck);
 
 				localAverageErrorToFloat += absError;
 
