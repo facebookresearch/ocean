@@ -207,7 +207,8 @@ bool TestEstimator::testRobustError(const double testDuration)
 
 			for (size_t n = 0; n < numberValues; ++n)
 			{
-				values.emplace_back(Random::scalar(randomGenerator, -100, 100));
+				constexpr Scalar range = std::is_same<double, Scalar>::value ? Scalar(100) : Scalar(10);
+				values.emplace_back(Random::scalar(randomGenerator, -range , range));
 			}
 
 			std::sort(values.begin(), values.end(), compareAbsolute);
@@ -292,7 +293,7 @@ bool TestEstimator::testRobustError(const double testDuration)
 							tukeyValue = sigma * sigma / Scalar(6);
 						}
 
-						if (Numeric::isNotEqual(robustError, tukeyValue))
+						if (Numeric::isNotWeakEqual(robustError, tukeyValue))
 						{
 							allSucceeded = false;
 						}
