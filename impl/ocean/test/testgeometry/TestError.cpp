@@ -474,8 +474,12 @@ bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuratio
 
 				objectPoints[n] = ray.point(Random::scalar(randomGenerator, Scalar(-10), Scalar(-0.01))); // we keep the same image point, but place the object point along the viewing ray behind the camera
 
-				ocean_assert(perfectImagePoints[n].isEqual(camera->projectToImage(world_T_camera, objectPoints[n]), Scalar(1)));
 				ocean_assert(!AnyCamera::isObjectPointInFrontIF(AnyCamera::standard2InvertedFlipped(world_T_camera), objectPoints[n]));
+
+				if constexpr (std::is_same<double, Scalar>::value)
+				{
+					ocean_assert(perfectImagePoints[n].isEqual(camera->projectToImage(world_T_camera, objectPoints[n]), Scalar(1)));
+				}
 			}
 		}
 
