@@ -217,77 +217,301 @@ TEST(TestAdvancedMotion, TrackPointsSubPixelMirroredBorder_AdvancedMotionZeroMea
 }
 
 
-TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_1Channel)
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_1Channel_5PatchSize)
 {
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 	Worker worker;
 
-	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 1u>(width, height, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 1u, 5u>(width, height, GTEST_TEST_DURATION, worker)));
 }
 
-TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_2Channels)
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_1Channel_7PatchSize)
 {
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 	Worker worker;
 
-	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 2u>(width, height, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 1u, 7u>(width, height, GTEST_TEST_DURATION, worker)));
 }
 
-TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_3Channels)
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_1Channel_15PatchSize)
 {
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 	Worker worker;
 
-	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 3u>(width, height, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 1u, 15u>(width, height, GTEST_TEST_DURATION, worker)));
 }
 
-TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_4Channels)
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_1Channel_31PatchSize)
 {
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 	Worker worker;
 
-	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 4u>(width, height, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 1u, 31u>(width, height, GTEST_TEST_DURATION, worker)));
 }
 
 
-TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_1Channel)
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_2Channels_5PatchSize)
 {
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 	Worker worker;
 
-	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 1u>(width, height, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 2u, 5u>(width, height, GTEST_TEST_DURATION, worker)));
 }
 
-TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_2Channels)
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_2Channels_7PatchSize)
 {
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 	Worker worker;
 
-	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 2u>(width, height, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 2u, 7u>(width, height, GTEST_TEST_DURATION, worker)));
 }
 
-TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_3Channels)
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_2Channels_15PatchSize)
 {
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 	Worker worker;
 
-	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 3u>(width, height, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 2u, 15u>(width, height, GTEST_TEST_DURATION, worker)));
 }
 
-TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_4Channels)
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_2Channels_31PatchSize)
 {
 	constexpr unsigned int width = 1280u;
 	constexpr unsigned int height = 720u;
 	Worker worker;
 
-	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 4u>(width, height, GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 2u, 31u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_3Channels_5PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 3u, 5u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_3Channels_7PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 3u, 7u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_3Channels_15PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 3u, 15u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_3Channels_31PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 3u, 31u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_4Channels_5PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 4u, 5u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_4Channels_7PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 4u, 7u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_4Channels_15PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 4u, 15u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionSSD_4Channels_31PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionSSD, 4u, 31u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_1Channel_5PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 1u, 5u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_1Channel_7PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 1u, 7u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_1Channel_15PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 1u, 15u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_1Channel_31PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 1u, 31u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_2Channels_5PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 2u, 5u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_2Channels_7PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 2u, 7u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_2Channels_15PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 2u, 15u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_2Channels_31PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 2u, 31u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_3Channels_5PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 3u, 5u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_3Channels_7PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 3u, 7u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_3Channels_15PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 3u, 15u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_3Channels_31PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 3u, 31u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_4Channels_5PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 4u, 5u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_4Channels_7PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 4u, 7u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_4Channels_15PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 4u, 15u>(width, height, GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestAdvancedMotion, TrackPointsBidirectionalSubPixelMirroredBorder_AdvancedMotionZeroMeanSSD_4Channels_31PatchSize)
+{
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
+	Worker worker;
+
+	EXPECT_TRUE((TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder<CV::Advanced::AdvancedMotionZeroMeanSSD, 4u, 31u>(width, height, GTEST_TEST_DURATION, worker)));
 }
 
 
