@@ -140,11 +140,13 @@ unsigned int P3P::poses(const AnyCameraT<TCamera>& anyCamera, const VectorT3<TPo
 		return 0u;
 	}
 
+	constexpr bool makeUnitVector = false; // we normalize the image ray on our own, as the camera profile (TCamera) may have less precision than TPoint
+
 	const VectorT3<TPoint> imageRays[3] =
 	{
-		VectorT3<TPoint>(anyCamera.vector(VectorT2<TCamera>(imagePoints[0]))),
-		VectorT3<TPoint>(anyCamera.vector(VectorT2<TCamera>(imagePoints[1]))),
-		VectorT3<TPoint>(anyCamera.vector(VectorT2<TCamera>(imagePoints[2]))),
+		VectorT3<TPoint>(anyCamera.vector(VectorT2<TCamera>(imagePoints[0]), makeUnitVector)).normalized(),
+		VectorT3<TPoint>(anyCamera.vector(VectorT2<TCamera>(imagePoints[1]), makeUnitVector)).normalized(),
+		VectorT3<TPoint>(anyCamera.vector(VectorT2<TCamera>(imagePoints[2]), makeUnitVector)).normalized()
 	};
 
 	const unsigned int resultNumberPoses = poses(objectPoints, imageRays, world_T_cameras);
