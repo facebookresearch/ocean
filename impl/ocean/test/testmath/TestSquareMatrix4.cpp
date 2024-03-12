@@ -867,29 +867,45 @@ bool TestSquareMatrix4::testMatrixConversion(const double testDuration)
 			for (unsigned int i = 0u; i < 16u; ++i)
 			{
 				if (NumericD::isNotWeakEqual(matricesD[n][i], convertedD2D_0[n][i]))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericD::isNotWeakEqual(matricesD[n][i], convertedD2D_1[n][i]))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericD::isNotWeakEqual(matricesD[n][i], double(convertedD2F_0[n][i])))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericD::isNotWeakEqual(matricesD[n][i], double(convertedD2F_1[n][i])))
+				{
 					allSucceeded = false;
+				}
 
 
 				if (NumericF::isNotWeakEqual(matricesF[n][i], convertedF2F_0[n][i]))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericF::isNotWeakEqual(matricesF[n][i], convertedF2F_1[n][i]))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericF::isNotWeakEqual(matricesF[n][i], float(convertedF2D_0[n][i])))
+				{
 					allSucceeded = false;
+				}
 
 				if (NumericF::isNotWeakEqual(matricesF[n][i], float(convertedF2D_1[n][i])))
+				{
 					allSucceeded = false;
+				}
 			}
 		}
 	}
@@ -955,7 +971,7 @@ bool TestSquareMatrix4::testProjectionMatrixFieldOfView(const double testDuratio
 			}
 		}
 
-		if (SquareMatrix4::projectionMatrix(anyCamera, nearDistance, farDistance) != projectionMatrix)
+		if (!SquareMatrix4::projectionMatrix(anyCamera, nearDistance, farDistance).isEqual(projectionMatrix, Numeric::weakEps()))
 		{
 			allSucceeded = false;
 		}
