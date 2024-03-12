@@ -98,12 +98,12 @@ bool TestEpipolarGeometry::testFaultlessFundamentalMatrix(const double testDurat
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Testing faultless fundamental matrix:";
-	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
 
 	for (unsigned int points : {8u, 11u, 15u, 30u, 50u, 90u, 500u})
 	{
+		Log::info() << " ";
 		Log::info() << "... with " << points << " points:";
 
 		unsigned long long failed = 0ull;
@@ -243,12 +243,12 @@ bool TestEpipolarGeometry::testFaultlessNoisedFundamentalMatrix(const double tes
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Testing Gaussian noised fundamental matrix:";
-	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
 
 	for (unsigned int points : {8u, 11u, 15u, 30u, 50u, 90u, 500u})
 	{
+		Log::info() << " ";
 		Log::info() << "... with " << points << " points:";
 
 		unsigned long long failed = 0ull;
@@ -379,12 +379,12 @@ bool TestEpipolarGeometry::testFaultyFundamentalMatrix(const double testDuration
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Testing faulty fundamental matrix with 20% invalid correspondences:";
-	Log::info() << " ";
 
 	RandomGenerator randomGenerator;
 
 	for (unsigned int points : {14u, 20u, 30u, 50u, 90u, 500u})
 	{
+		Log::info() << " ";
 		Log::info() << "... with " << points << " points:";
 
 		unsigned long long failed = 0ull;

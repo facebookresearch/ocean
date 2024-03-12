@@ -185,11 +185,15 @@ bool EpipolarGeometry::epipoles(const SquareMatrix3& fundamental, Vector2& leftE
 
 	const Vector3 left(leftEpipole, 1);
 	const Vector3 testLeft(fundamental * left);
-	ocean_assert(Numeric::isWeakEqualEps(testLeft.length()));
 
 	const Vector3 right(rightEpipole, 1);
 	const Vector3 testRight(fundamental.transposed() * right);
-	ocean_assert(Numeric::isWeakEqualEps(testRight.length()));
+
+	if constexpr (std::is_same<double, Scalar>::value)
+	{
+		ocean_assert(Numeric::isWeakEqualEps(testLeft.length()));
+		ocean_assert(Numeric::isWeakEqualEps(testRight.length()));
+	}
 
 #endif // OCEAN_DEBUG
 
@@ -315,8 +319,11 @@ bool EpipolarGeometry::factorizeEssential(const SquareMatrix3& essential, const 
 	SquareMatrix3 rotation0(u * s * vTransposed);
 	SquareMatrix3 rotation1(u * s.transposed() * vTransposed);
 
-	ocean_assert(Numeric::isEqual(Numeric::abs(rotation0.determinant()), Scalar(1)));
-	ocean_assert(Numeric::isEqual(Numeric::abs(rotation1.determinant()), Scalar(1)));
+	if constexpr (std::is_same<double, Scalar>::value)
+	{
+		ocean_assert(Numeric::isEqual(Numeric::abs(rotation0.determinant()), Scalar(1)));
+		ocean_assert(Numeric::isEqual(Numeric::abs(rotation1.determinant()), Scalar(1)));
+	}
 
 	Vector3 translation0(u.zAxis());
 	Vector3 translation1(-translation0);
