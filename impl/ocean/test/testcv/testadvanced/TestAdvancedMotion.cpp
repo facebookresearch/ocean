@@ -541,7 +541,7 @@ bool TestAdvancedMotion::testTrackPointSubPixelMirroredBorder(const unsigned int
 
 				for (unsigned int n = 0u; n < numberPoints; ++n)
 				{
-					pointsA.emplace_back(Random::vector2(randomGenerator, Scalar(0), Scalar(frameA.width()) - Numeric::eps(), Scalar(0), Scalar(frameA.height()) - Numeric::eps()));
+					pointsA.emplace_back(Random::vector2(randomGenerator, Scalar(0), Scalar(frameA.width()) - Numeric::weakEps(), Scalar(0), Scalar(frameA.height()) - Numeric::weakEps()));
 				}
 
 				constexpr unsigned int subPixelIterations = 4u;
@@ -853,7 +853,7 @@ bool TestAdvancedMotion::testTrackPointsSubPixelMirroredBorder(const unsigned in
 
 				for (unsigned int n = 0u; n < numberPoints; ++n)
 				{
-					pointsA.emplace_back(Random::vector2(randomGenerator, Scalar(0), Scalar(frameA.width()) - Numeric::eps(), Scalar(0), Scalar(frameA.height()) - Numeric::eps()));
+					pointsA.emplace_back(Random::vector2(randomGenerator, Scalar(0), Scalar(frameA.width()) - Numeric::weakEps(), Scalar(0), Scalar(frameA.height()) - Numeric::weakEps()));
 				}
 
 				constexpr unsigned int baseline = maxBorderSize * 2u;
@@ -1141,7 +1141,7 @@ bool TestAdvancedMotion::testTrackPointsBidirectionalSubPixelMirroredBorder(cons
 
 				for (unsigned int n = 0u; n < numberPoints; ++n)
 				{
-					pointsA.emplace_back(Random::vector2(randomGenerator, Scalar(0), Scalar(frameA.width()) - Numeric::eps(), Scalar(0), Scalar(frameA.height()) - Numeric::eps()));
+					pointsA.emplace_back(Random::vector2(randomGenerator, Scalar(0), Scalar(frameA.width()) - Numeric::weakEps(), Scalar(0), Scalar(frameA.height()) - Numeric::weakEps()));
 				}
 
 				constexpr unsigned int baseline = maxBorderSize * 2u;
