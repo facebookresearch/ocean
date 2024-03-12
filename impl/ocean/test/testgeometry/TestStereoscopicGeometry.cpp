@@ -313,11 +313,7 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 2u) << "% succeeded.";
 
-#ifdef OCEAN_DEBUG
-	constexpr double threshold = 0.85;
-#else
-	constexpr double threshold = 0.95;
-#endif
+	constexpr double threshold = std::is_same<double, Scalar>::value ? 0.95 : 0.85;
 
 	return percent >= threshold;
 }
