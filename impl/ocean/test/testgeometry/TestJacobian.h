@@ -20,7 +20,7 @@ namespace TestGeometry
 {
 
 /**
- * This class implements jacobian tests.
+ * This class implements Jacobian tests.
  * @ingroup testgeometry
  */
 class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
@@ -28,14 +28,14 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 	public:
 
 		/**
-		 * Tests the entire jacobian functionality.
+		 * Tests the entire Jacobian functionality.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool test(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the rotational part of extrinsic camera parameters.
+		 * Tests the Jacobian for the rotational part of extrinsic camera parameters.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 * @tparam T the data type of the scalar to be used, either 'float' or 'double'
@@ -44,35 +44,35 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		static bool testAnyCameraOrientationJacobian2x3(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the extrinsic camera parameters and a pinhole camera.
+		 * Tests the Jacobian for the extrinsic camera parameters and a pinhole camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testPineholeCameraPoseJacobian2nx6(const double testDuration);
+		static bool testPinholeCameraPoseJacobian2nx6(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the extrinsic camera parameters and fisheye camera.
+		 * Tests the Jacobian for the extrinsic camera parameters and fisheye camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testFisheyeCameraPoseJacobian2x6(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the extrinsic camera parameters and any camera.
+		 * Tests the Jacobian for the extrinsic camera parameters and any camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testAnyCameraPoseJacobian2x6(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the extrinsic camera parameters using a damped distortion.
+		 * Tests the Jacobian for the extrinsic camera parameters using a damped distortion.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testPoseJacobianDampedDistortion2nx6(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the extrinsic camera parameters (including the zoom parameter).
+		 * Tests the Jacobian for the extrinsic camera parameters (including the zoom parameter).
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
@@ -93,91 +93,91 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		static bool testFisheyeCameraObjectTransformation2nx6(const double testDuration);
 
 		/**
-		 * Tests the jacobian for an 2D image point projection in relation to an object point using a pinhole camera.
+		 * Tests the Jacobian for an 2D image point projection in relation to an object point using a pinhole camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testPinholeCameraPointJacobian2nx3(const double testDuration);
 
 		/**
-		 * Tests the jacobian for an 2D image point projection in relation to an object point using a fisheye camera.
+		 * Tests the Jacobian for an 2D image point projection in relation to an object point using a fisheye camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testFisheyeCameraPointJacobian2x3(const double testDuration);
 
 		/**
-		 * Tests the jacobian for an 2D image point projection in relation to an object point using any camera.
+		 * Tests the Jacobian for an 2D image point projection in relation to an object point using any camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testAnyCameraPointJacobian2x3(const double testDuration);
 
 		/**
-		 * Tests the jacobian for two 6DOF poses and a set of 3D object points.
+		 * Tests the Jacobian for two 6DOF poses and a set of 3D object points.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testPosesPointsJacobian2nx12(const double testDuration);
 
 		/**
-		 * Tests the jacobian for an exponential map representing a 3D object point.
+		 * Tests the Jacobian for an exponential map representing a 3D object point.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testSphericalObjectPoint3x3(const double testDuration);
 
 		/**
-		 * Tests the jacobian for an exponential map representing a 3D object point which is projected into the camera frame.
+		 * Tests the Jacobian for an exponential map representing a 3D object point which is projected into the camera frame.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testSphericalObjectPointOrientation2x3(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the radial and tangential distortion camera parameters.
+		 * Tests the Jacobian for the radial and tangential distortion camera parameters.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testCameraDistortionJacobian2x4(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the intrinsic and radial distortion camera parameters.
+		 * Tests the Jacobian for the intrinsic and radial distortion camera parameters.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testCameraJacobian2x6(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the intrinsic and radial and tangential distortion camera parameters.
+		 * Tests the Jacobian for the intrinsic and radial and tangential distortion camera parameters.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testCameraJacobian2x7(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the intrinsic and radial and tangential distortion camera parameters.
+		 * Tests the Jacobian for the intrinsic and radial and tangential distortion camera parameters.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testCameraJacobian2x8(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the rotational part of the extrinsic camera matrix, intrinsic and radial and tangential camera parameters.
+		 * Tests the Jacobian for the rotational part of the extrinsic camera matrix, intrinsic and radial and tangential camera parameters.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testOrientationCameraJacobian2x11(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the extrinsic, intrinsic and radial  camera parameters.
+		 * Tests the Jacobian for the extrinsic, intrinsic and radial  camera parameters.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testPoseCameraJacobian2x12(const double testDuration);
 
 		/**
-		 * Tests the jacobian for the extrinsic, intrinsic and radial and tangential distortion camera parameters.
+		 * Tests the Jacobian for the extrinsic, intrinsic and radial and tangential distortion camera parameters.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
@@ -257,16 +257,16 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		inline static bool checkAccuracy(const VectorT3<T>& original, const VectorT3<T>& offset, const T eps, const T derivativeX, const T derivativeY, const T derivativeZ);
 
 		/**
-		 * Calculates the two jacobian rows for a given pose and dynamic object point.
+		 * Calculates the two Jacobian rows for a given pose and dynamic object point.
 		 * The derivatives are calculated for the 3D object point only.<br>
-		 * The resulting jacobian rows have the following form:<br>
+		 * The resulting Jacobian rows have the following form:<br>
 		 * | dfx / dX, dfx / dY, dfx / dZ |<br>
 		 * | dfy / dX, dfy / dY, dfy / dZ |<br>
 		 * @param jx First row position of the jacobian, with 3 column entries receiving the point derivatives
 		 * @param jy Second row position of the jacobian, with 3 column entries receiving the point derivatives
-		 * @param pinholeCamera The pinhole camera to determine the jacobian values for
-		 * @param flippedCamera_T_world Pose to determine the jacobian for (inverted and flipped)
-		 * @param objectPoint 3D object point to determine the jacobian for
+		 * @param pinholeCamera The pinhole camera to determine the Jacobian values for
+		 * @param flippedCamera_T_world Pose to determine the Jacobian for (inverted and flipped)
+		 * @param objectPoint 3D object point to determine the Jacobian for
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @tparam tUseBorderDistortionIfOutside True, to apply the distortion from the nearest point lying on the frame border if the point lies outside the visible camera area; False to apply the distortion from the given position
 		 */
