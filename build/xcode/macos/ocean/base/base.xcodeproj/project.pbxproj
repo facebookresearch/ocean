@@ -1540,6 +1540,14 @@
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				/* T182076072 - HEADER_SEARCH_PATHS added for METAMonotonicTime dependency */
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+					../../../../../../apple_layer_zero,
+					../../../../../../,
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
 				MACH_O_TYPE = mh_dylib;
@@ -1587,6 +1595,14 @@
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				/* T182076072 - HEADER_SEARCH_PATHS added for METAMonotonicTime dependency */
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+					../../../../../../apple_layer_zero,
+					../../../../../../,
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
 				MACH_O_TYPE = mh_dylib;
@@ -1632,6 +1648,14 @@
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				/* T182076072 - HEADER_SEARCH_PATHS added for METAMonotonicTime dependency */
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+					../../../../../../apple_layer_zero,
+					../../../../../../,
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
@@ -1678,6 +1702,14 @@
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
+				/* T182076072 - HEADER_SEARCH_PATHS added for METAMonotonicTime dependency */
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+					../../../../../../apple_layer_zero,
+					../../../../../../,
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
