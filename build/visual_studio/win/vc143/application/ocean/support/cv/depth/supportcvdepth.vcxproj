@@ -51,10 +51,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\cv\depth\Depth.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\support\cv\depth\Depth.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\cv\depth\Depth.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\support\cv\depth\Depth.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4AE7CF68-8CD1-478F-B2CD-E8C6B509E7A5}</ProjectGuid>

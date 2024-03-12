@@ -11,12 +11,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\cv\depth\Depth.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\support\cv\depth\Depth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\application\ocean\support\cv\depth\Depth.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\support\cv\depth\Depth.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

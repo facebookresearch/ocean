@@ -51,10 +51,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\rendering\groundtruthdepth\GroundTruthDepthMain.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\media\imageextractor\ImageExtractorMain.h" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\demo\rendering\groundtruthdepth\GroundTruthDepthMain.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2A25C84E-7B94-4644-8E8D-1F2E96D5FE5A}</ProjectGuid>

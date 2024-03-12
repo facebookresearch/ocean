@@ -11,13 +11,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\media\imageextractor\ImageExtractorMain.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\demo\rendering\groundtruthdepth\GroundTruthDepthMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\media\imageextractor\ImageExtractorMain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
