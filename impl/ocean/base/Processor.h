@@ -13,7 +13,7 @@ namespace Ocean
  * Definition of individual processor instruction types.
  * @ingroup base
  */
-enum ProcessorInstructions : unsigned int
+enum ProcessorInstructions : uint32_t
 {
 	/// Unknown processor instruction set.
 	PI_NONE = 0,
@@ -184,9 +184,9 @@ class OCEAN_BASE_EXPORT Processor : public Singleton<Processor>
 	private:
 
 		/**
-		 * Creates a new processor object.
+		 * Constructs a new processor object.
 		 */
-		inline Processor();
+		Processor() = default;
 
 #if defined(__APPLE__)
 
@@ -197,7 +197,7 @@ class OCEAN_BASE_EXPORT Processor : public Singleton<Processor>
 		 */
 		static unsigned int realCoresApple();
 
-#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE==1
+	#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE==1
 
 		/**
 		 * Returns the device name of the Apple iOS device.
@@ -205,55 +205,59 @@ class OCEAN_BASE_EXPORT Processor : public Singleton<Processor>
 		 */
 		static std::string deviceModelAppleIOS();
 
-#endif // TARGET_OS_IPHONE==1
+	#endif // TARGET_OS_IPHONE==1
 
-#endif
+#endif // __APPLE__
+
+		/**
+		 * Returns invalid processor instructions.
+		 * @return Invalid instructions
+		 */
+		static constexpr ProcessorInstructions invalidProcessorInstructions();
 
 	private:
 
 		/// Explicitly forced number of processor cores.
-		unsigned int forcedProcessorCores;
+		unsigned int forcedCores_ = 0u;
 
 		/// Explicitly forced CPU instructions.
-		ProcessorInstructions forcedProcessorInstructions;
+		ProcessorInstructions forcedProcessorInstructions_ = invalidProcessorInstructions();
 
 		/// The real instructions of the processor.
-		ProcessorInstructions processorInstructions;
+		ProcessorInstructions processorInstructions_ = invalidProcessorInstructions();
 
 		/// The lock of the processor class.
-		mutable Lock processorLock;
+		mutable Lock lock_;
 };
-
-inline Processor::Processor() :
-	forcedProcessorCores(0),
-	forcedProcessorInstructions((ProcessorInstructions)(-1)),
-	processorInstructions((ProcessorInstructions)(-1))
-{
-	// nothing to do here
-}
 
 inline unsigned int Processor::cores() const
 {
-	const ScopedLock scopedLock(processorLock);
+	const ScopedLock scopedLock(lock_);
 
-	if (forcedProcessorCores > 0)
-		return forcedProcessorCores;
+	if (forcedCores_ > 0u)
+	{
+		return forcedCores_;
+	}
 
 	return realCores();
 }
 
 inline ProcessorInstructions Processor::instructions()
 {
-	const ScopedLock scopedLock(processorLock);
+	const ScopedLock scopedLock(lock_);
 
-	if (forcedProcessorInstructions != (ProcessorInstructions)(-1))
-		return forcedProcessorInstructions;
+	if (forcedProcessorInstructions_ != invalidProcessorInstructions())
+	{
+		return forcedProcessorInstructions_;
+	}
 
-	if (processorInstructions == (ProcessorInstructions)(-1))
-		processorInstructions = realInstructions();
+	if (processorInstructions_ == invalidProcessorInstructions())
+	{
+		processorInstructions_ = realInstructions();
+	}
 
-	ocean_assert(processorInstructions == realInstructions());
-	return processorInstructions;
+	ocean_assert(processorInstructions_ == realInstructions());
+	return processorInstructions_;
 }
 
 /**
@@ -267,7 +271,7 @@ class ProcessorInstructionChecker<tHighestInstructions, PI_SSE>
 	public:
 
 		/// True, if the requested instruction is part of the provided set of instructions.
-		const static bool value = (tHighestInstructions & PI_SSE_ANY) >= PI_SSE;
+		constexpr static bool value = (tHighestInstructions & PI_SSE_ANY) >= PI_SSE;
 };
 
 /**
@@ -281,7 +285,7 @@ class ProcessorInstructionChecker<tHighestInstructions, PI_SSE_2>
 	public:
 
 		/// True, if the requested instruction is part of the provided set of instructions.
-		const static bool value = (tHighestInstructions & PI_SSE_ANY) >= PI_SSE_2;
+		constexpr static bool value = (tHighestInstructions & PI_SSE_ANY) >= PI_SSE_2;
 };
 
 /**
@@ -295,7 +299,7 @@ class ProcessorInstructionChecker<tHighestInstructions, PI_SSE_3>
 	public:
 
 		/// True, if the requested instruction is part of the provided set of instructions.
-		const static bool value = (tHighestInstructions & PI_SSE_ANY) >= PI_SSE_3;
+		constexpr static bool value = (tHighestInstructions & PI_SSE_ANY) >= PI_SSE_3;
 };
 
 /**
@@ -309,7 +313,7 @@ class ProcessorInstructionChecker<tHighestInstructions, PI_SSSE_3>
 	public:
 
 		/// True, if the requested instruction is part of the provided set of instructions.
-		const static bool value = (tHighestInstructions & PI_SSE_ANY) >= PI_SSSE_3;
+		constexpr static bool value = (tHighestInstructions & PI_SSE_ANY) >= PI_SSSE_3;
 };
 
 /**
@@ -323,7 +327,7 @@ class ProcessorInstructionChecker<tHighestInstructions, PI_SSE_4_1>
 	public:
 
 		/// True, if the requested instruction is part of the provided set of instructions.
-		const static bool value = (tHighestInstructions & PI_SSE_ANY) >= PI_SSE_4_1;
+		constexpr static bool value = (tHighestInstructions & PI_SSE_ANY) >= PI_SSE_4_1;
 };
 
 /**
@@ -337,7 +341,7 @@ class ProcessorInstructionChecker<tHighestInstructions, PI_SSE_4_2>
 	public:
 
 		/// True, if the requested instruction is part of the provided set of instructions.
-		const static bool value = (tHighestInstructions & PI_SSE_ANY) >= PI_SSE_4_2;
+		constexpr static bool value = (tHighestInstructions & PI_SSE_ANY) >= PI_SSE_4_2;
 };
 
 /**
@@ -351,7 +355,7 @@ class ProcessorInstructionChecker<tHighestInstructions, PI_AVX>
 	public:
 
 		/// True, if the requested instruction is part of the provided set of instructions.
-		const static bool value = (tHighestInstructions & PI_AVX_ANY) >= PI_AVX;
+		constexpr static bool value = (tHighestInstructions & PI_AVX_ANY) >= PI_AVX;
 };
 
 /**
@@ -365,7 +369,7 @@ class ProcessorInstructionChecker<tHighestInstructions, PI_AVX_2>
 	public:
 
 		/// True, if the requested instruction is part of the provided set of instructions.
-		const static bool value = (tHighestInstructions & PI_AVX_ANY) >= PI_AVX_2;
+		constexpr static bool value = (tHighestInstructions & PI_AVX_ANY) >= PI_AVX_2;
 };
 
 /**
@@ -379,7 +383,7 @@ class ProcessorInstructionChecker<tHighestInstructions, PI_AVX_512>
 	public:
 
 		/// True, if the requested instruction is part of the provided set of instructions.
-		const static bool value = (tHighestInstructions & PI_AVX_ANY) >= PI_AVX_512;
+		constexpr static bool value = (tHighestInstructions & PI_AVX_ANY) >= PI_AVX_512;
 };
 
 /**
@@ -393,7 +397,7 @@ class ProcessorInstructionChecker<tHighestInstructions, PI_NEON>
 	public:
 
 		/// True, if the requested instruction is part of the provided set of instructions.
-		const static bool value = (tHighestInstructions & PI_NEON_ANY) >= PI_NEON;
+		constexpr static bool value = (tHighestInstructions & PI_NEON_ANY) >= PI_NEON;
 };
 
 template <bool tIndependentOfBinary>
@@ -471,6 +475,11 @@ inline bool Processor::isLittleEndian()
 #endif
 
 	return result;
+}
+
+constexpr ProcessorInstructions Processor::invalidProcessorInstructions()
+{
+	return ProcessorInstructions(-1);
 }
 
 }

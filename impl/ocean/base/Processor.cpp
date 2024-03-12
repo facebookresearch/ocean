@@ -22,21 +22,21 @@ namespace Ocean
 
 bool Processor::forceCores(const unsigned int cores)
 {
-	const ScopedLock scopedLock(processorLock);
+	const ScopedLock scopedLock(lock_);
 
 	Log::info() << "Forcing " << cores << " CPU cores to be used.";
 
-	forcedProcessorCores = cores;
+	forcedCores_ = cores;
 	return true;
 }
 
 bool Processor::forceInstructions(const ProcessorInstructions instructions)
 {
-	const ScopedLock scopedLock(processorLock);
+	const ScopedLock scopedLock(lock_);
 
 	Log::info() << "Forcing the instruction set: " << (unsigned int)instructions;
 
-	forcedProcessorInstructions = instructions;
+	forcedProcessorInstructions_ = instructions;
 	return true;
 }
 
@@ -126,11 +126,15 @@ unsigned int Processor::realCores()
 
 		BOOL isWow = FALSE;
 		if (IsWow64Process(GetCurrentProcess(), &isWow) == TRUE && isWow == TRUE)
+		{
 			GetNativeSystemInfo(&info);
+		}
 		else
+		{
 			GetSystemInfo(&info);
+		}
 
-	#endif
+	#endif // _WIN64
 
 	return info.dwNumberOfProcessors;
 
@@ -211,28 +215,44 @@ ProcessorInstructions Processor::realInstructions()
 		const int edx = info[3];
 
 		if (edx & (1 << 25))
+		{
 			instructions = ProcessorInstructions(instructions | PI_SSE);
+		}
 
 		if (edx & (1 << 26))
+		{
 			instructions = ProcessorInstructions(instructions | PI_SSE_2);
+		}
 
 		if (ecx & (1 << 0))
+		{
 			instructions = ProcessorInstructions(instructions | PI_SSE_3);
+		}
 
 		if (ecx & (1 << 9))
+		{
 			instructions = ProcessorInstructions(instructions | PI_SSSE_3);
+		}
 
 		if (ecx & (1 << 19))
+		{
 			instructions = ProcessorInstructions(instructions | PI_SSE_4_1);
+		}
 
 		if (ecx & (1 << 20))
+		{
 			instructions = ProcessorInstructions(instructions | PI_SSE_4_2);
+		}
 
 		if (ecx & (1 << 25))
+		{
 			instructions = ProcessorInstructions(instructions | PI_AES);
+		}
 
 		if (ecx & (1 << 28))
+		{
 			instructions = ProcessorInstructions(instructions | PI_AVX);
+		}
 	}
 
 	if (functionIds >= 7)
@@ -245,10 +265,14 @@ ProcessorInstructions Processor::realInstructions()
 		//const int edx = info[3];
 
 		if (ebx & (1 << 5))
+		{
 			instructions = ProcessorInstructions(instructions | PI_AVX_2);
+		}
 
 		if ((ebx & (1 << 16)) != 0 && (ebx & (1 << 26)) != 0 && (ebx & (1 << 27)) != 0 && (ebx & (1 << 28)) != 0)
+		{
 			instructions = ProcessorInstructions(instructions | PI_AVX_512);
+		}
 	}
 
 
@@ -280,23 +304,41 @@ ProcessorInstructions Processor::realInstructions()
 			stream >> feature;
 
 			if (feature == "SSE")
+			{
 				instructions = ProcessorInstructions(instructions | PI_SSE);
+			}
 			else if (feature == "SSE2")
+			{
 				instructions = ProcessorInstructions(instructions | PI_SSE_2);
+			}
 			else if (feature == "SSE3")
+			{
 				instructions = ProcessorInstructions(instructions | PI_SSE_3);
+			}
 			else if (feature == "SSSE3")
+			{
 				instructions = ProcessorInstructions(instructions | PI_SSSE_3);
+			}
 			else if (feature == "SSE4.1")
+			{
 				instructions = ProcessorInstructions(instructions | PI_SSE_4_1);
+			}
 			else if (feature == "SSE4.2")
+			{
 				instructions = ProcessorInstructions(instructions | PI_SSE_4_2);
+			}
 			else if (feature == "AVX1.0")
+			{
 				instructions = ProcessorInstructions(instructions | PI_AVX);
+			}
 			else if (feature == "AVX2")
+			{
 				instructions = ProcessorInstructions(instructions | PI_AVX_2);
+			}
 			else if (feature == "AES")
+			{
 				instructions = ProcessorInstructions(instructions | PI_AES);
+			}
 		}
 
 		return instructions;
@@ -316,7 +358,9 @@ ProcessorInstructions Processor::realInstructions()
 		{
 
 			if (line.compare(0, flagsKey.length(), flagsKey) != 0)
+			{
 				continue;
+			}
 
 			std::stringstream buffer(line);
 			std::string flag;
@@ -324,23 +368,41 @@ ProcessorInstructions Processor::realInstructions()
 			while (buffer >> flag)
 			{
 				if (flag == "sse")
+				{
 					instructions = ProcessorInstructions(instructions | PI_SSE);
+				}
 				else if (flag == "sse2")
+				{
 					instructions = ProcessorInstructions(instructions | PI_SSE_2);
+				}
 				else if (flag == "sse3")
+				{
 					instructions = ProcessorInstructions(instructions | PI_SSE_3);
+				}
 				else if (flag == "ssse3")
+				{
 					instructions = ProcessorInstructions(instructions | PI_SSSE_3);
+				}
 				else if (flag == "sse4_1")
+				{
 					instructions = ProcessorInstructions(instructions | PI_SSE_4_1);
+				}
 				else if (flag == "sse4_2")
+				{
 					instructions = ProcessorInstructions(instructions | PI_SSE_4_2);
+				}
 				else if (flag == "avx")
+				{
 					instructions = ProcessorInstructions(instructions | PI_AVX);
+				}
 				else if (flag == "avx2")
+				{
 					instructions = ProcessorInstructions(instructions | PI_AVX_2);
+				}
 				else if (flag == "aes")
+				{
 					instructions = ProcessorInstructions(instructions | PI_AES);
+				}
 			}
 		}
 	}
@@ -390,126 +452,94 @@ std::string Processor::translateInstructions(const ProcessorInstructions instruc
 
 	if ((instructions & PI_SSE_ANY) == PI_SSE_ANY)
 	{
-		if (!result.empty())
-			result += ", ";
-
-		result += "Full SSE Support (SSE1 - SSE4.2)";
+		result += "Full SSE Support (SSE1 - SSE4.2), ";
 	}
 	else
 	{
 		if (instructions & PI_SSE)
 		{
-			if (!result.empty())
-				result += ", ";
-
-			result += "SSE";
+			result += "SSE, ";
 		}
 
 		if (instructions & PI_SSE_2)
 		{
-			if (!result.empty())
-				result += ", ";
-
-			result += "SSE2";
+			result += "SSE2, ";
 		}
 
 		if (instructions & PI_SSE_3)
 		{
-			if (!result.empty())
-				result += ", ";
-
-			result += "SSE3";
+			result += "SSE3, ";
 		}
 
 		if (instructions & PI_SSSE_3)
 		{
-			if (!result.empty())
-				result += ", ";
-
-			result += "SSSE3";
+			result += "SSSE3, ";
 		}
 
 		if (instructions & PI_SSE_4_1)
 		{
-			if (!result.empty())
-				result += ", ";
-
-			result += "SSE4.1";
+			result += "SSE4.1, ";
 		}
 
 		if (instructions & PI_SSE_4_2)
 		{
-			if (!result.empty())
-				result += ", ";
-
-			result += "SSE4.2";
+			result += "SSE4.2, ";
 		}
 	}
 
 	if ((instructions & PI_AVX_ANY) == PI_AVX_ANY)
 	{
-		if (!result.empty())
-			result += ", ";
-
-		result += "Full AVX Support (AVX - AVX512)";
+		result += "Full AVX Support (AVX - AVX512), ";
 	}
 	else
 	{
 		if (instructions & PI_AVX)
 		{
-			if (!result.empty())
-				result += ", ";
-
-			result += "AVX";
+			result += "AVX, ";
 		}
 
 		if (instructions & PI_AVX_2)
 		{
-			if (!result.empty())
-				result += ", ";
-
-			result += "AVX2";
+			result += "AVX2, ";
 		}
 
 		if (instructions & PI_AVX_512)
 		{
-			if (!result.empty())
-				result += ", ";
-
-			result += "AVX512";
+			result += "AVX512, ";
 		}
 	}
 
 	if ((instructions & PI_NEON_ANY) == PI_NEON_ANY)
 	{
-		if (!result.empty())
-			result += ", ";
-
-		result += "Full NEON Support (NEON)";
+		result += "Full NEON Support (NEON), ";
 	}
 	else
 	{
 		if (instructions & PI_NEON)
 		{
-			if (!result.empty())
-				result += ", ";
-
-			result += "NEON";
+			result += "NEON, ";
 		}
 	}
 
 	if (instructions & PI_AES)
 	{
-		if (!result.empty())
-			result += ", ";
-
-		result += "AES";
+		result += "AES, ";
 	}
 
 	if (result.empty())
 	{
 		ocean_assert(instructions == PI_NONE);
-		result += "No SIMD Instructions";
+		result = "No SIMD Instructions";
+	}
+	else
+	{
+		ocean_assert(result.size() > 2 && result[result.size() - 2] == ',' && result[result.size() - 1] == ' ');
+
+		if (result.size() > 2 && result[result.size() - 2] == ',' && result[result.size() - 1] == ' ')
+		{
+			result.pop_back();
+			result.pop_back();
+		}
 	}
 
 	return result;
