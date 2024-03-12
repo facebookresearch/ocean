@@ -378,19 +378,23 @@ inline Delaunay::CircumCricleIndexTriangle::CircumCricleIndexTriangle(const unsi
 
 	// make sure points are not co-linear
 	ocean_assert(points[index0] != points[index1] && points[index0] != points[index2] && points[index1] != points[index2]);
-	ocean_assert(!Line2(points[index0], (points[index1] - points[index0]).normalizedOrZero()).isOnLine(points[index2]));
+
+	if constexpr (std::is_same<double, Scalar>::value)
+	{
+		ocean_assert(!Line2(points[index0], (points[index1] - points[index0]).normalizedOrZero()).isOnLine(points[index2]));
+	}
 
 	const Triangle2 triangle = triangle2(points);
 	ocean_assert(triangle.isValid());
 
 	circumcenter_ = triangle.cartesianCircumcenter();
 
-	// radius is equivilant to the distance between the circumcenter and all corners
+	// radius is equivalent to the distance between the circumcenter and all corners
 	circumcircleRadius_ = circumcenter_.distance(triangle.point0());
 
 #ifdef OCEAN_DEBUG
 
-	if (std::is_same<double, Scalar>::value)
+	if constexpr (std::is_same<double, Scalar>::value)
 	{
 		// sanity check, all distances should be equal
 		ocean_assert(Numeric::isEqual(circumcircleRadius_, circumcenter_.distance(triangle.point1()), Numeric::weakEps()));
@@ -408,25 +412,29 @@ inline Delaunay::CircumCricleIndexTriangle::CircumCricleIndexTriangle(const unsi
 {
 	ocean_assert(points && pointsSuperTriangle);
 
-	const Vector2& point0 = index0 < (unsigned int)size ? points[index0] : pointsSuperTriangle[index0 - (unsigned int)size];
-	const Vector2& point1 = index1 < (unsigned int)size ? points[index1] : pointsSuperTriangle[index1 - (unsigned int)size];
-	const Vector2& point2 = index2 < (unsigned int)size ? points[index2] : pointsSuperTriangle[index2 - (unsigned int)size];
+	const Vector2& point0 = size_t(index0) < size ? points[index0] : pointsSuperTriangle[size_t(index0) - size];
+	const Vector2& point1 = size_t(index1) < size ? points[index1] : pointsSuperTriangle[size_t(index1) - size];
+	const Vector2& point2 = size_t(index2) < size ? points[index2] : pointsSuperTriangle[size_t(index2) - size];
 
 	// make sure points are not co-linear
 	ocean_assert(point0 != point1 && point0 != point2 && point1 != point2);
-	ocean_assert(!Line2(point0, (point1 - point0).normalizedOrZero()).isOnLine(point2));
+
+	if constexpr (std::is_same<double, Scalar>::value)
+	{
+		ocean_assert(!Line2(point0, (point1 - point0).normalizedOrZero()).isOnLine(point2));
+	}
 
 	const Triangle2 triangle(point0, point1, point2);
 	ocean_assert(triangle.isValid());
 
 	circumcenter_ = triangle.cartesianCircumcenter();
 
-	// radius is equivilant to the distance between the circumcenter and all corners
+	// radius is equivalent to the distance between the circumcenter and all corners
 	circumcircleRadius_ = circumcenter_.distance(triangle.point0());
 
 #ifdef OCEAN_DEBUG
 
-	if (std::is_same<double, Scalar>::value)
+	if constexpr (std::is_same<double, Scalar>::value)
 	{
 		// sanity check, all distances should be equal
 		ocean_assert(Numeric::isEqual(circumcircleRadius_, circumcenter_.distance(triangle.point1()), Numeric::weakEps()));
