@@ -581,8 +581,8 @@ bool TestLookup2::testCornerLookupBilinearValues(const double testDuration)
 			const size_t sizeX = RandomI::random(20u, 100u);
 			const size_t sizeY = RandomI::random(20u, 100u);
 
-			const size_t binsX = RandomI::random(1u, (unsigned int)sizeX / 4u);
-			const size_t binsY = RandomI::random(1u, (unsigned int)sizeY / 4u);
+			const size_t binsX = RandomI::random(1u, (unsigned int)(sizeX) / 4u);
+			const size_t binsY = RandomI::random(1u, (unsigned int)(sizeY) / 4u);
 
 			LookupCorner2<Vector2> lookupObject(sizeX, sizeY, binsX, binsY);
 
@@ -708,16 +708,18 @@ bool TestLookup2::testCornerLookupBilinearSubsetValues(const double testDuration
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
 		{
-			const size_t sizeX = RandomI::random(20u, 100u);
-			const size_t sizeY = RandomI::random(20u, 100u);
+			const size_t sizeX = RandomI::random(randomGenerator, 20u, 100u);
+			const size_t sizeY = RandomI::random(randomGenerator, 20u, 100u);
 
-			const size_t binsX = RandomI::random(1u, (unsigned int)sizeX / 4u);
-			const size_t binsY = RandomI::random(1u, (unsigned int)sizeY / 4u);
+			const size_t binsX = RandomI::random(randomGenerator, 1u, (unsigned int)(sizeX) / 4u);
+			const size_t binsY = RandomI::random(randomGenerator, 1u, (unsigned int)(sizeY) / 4u);
 
 			LookupCorner2<Vector2> lookupObject(sizeX, sizeY, binsX, binsY);
 
@@ -725,7 +727,7 @@ bool TestLookup2::testCornerLookupBilinearSubsetValues(const double testDuration
 			{
 				for (size_t bX = 0; bX <= binsX; ++bX)
 				{
-					const Vector2 value = Random::vector2(-10, 10);
+					const Vector2 value = Random::vector2(randomGenerator, -10, 10);
 					lookupObject.setBinTopLeftCornerValue(bX, bY, value);
 				}
 			}
@@ -742,13 +744,13 @@ bool TestLookup2::testCornerLookupBilinearSubsetValues(const double testDuration
 				}
 			}
 
-			const size_t size = size_t(RandomI::random(1u, (unsigned int)(sizeX)));
+			const size_t size = size_t(RandomI::random(randomGenerator, 1u, (unsigned int)(sizeX)));
 
 			Vectors2 valuesRows(size);
 
 			for (size_t y = 0; y < sizeY; ++y)
 			{
-				const size_t x = size_t(Random::random(0u, (unsigned int)(sizeX - size)));
+				const size_t x = size_t(Random::random(randomGenerator, 0u, (unsigned int)(sizeX - size)));
 
 				lookupObject.bilinearValues(x, y, size, valuesRows.data());
 

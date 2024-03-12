@@ -1981,10 +1981,10 @@ void LookupCorner2<T, TScalar>::bilinearValues(const size_t x, const size_t y, c
 			invBinWidthX = TScalar(1) / (rightBinPositionX - leftBinPositionX);
 		}
 
-		ocean_assert(leftBinPositionX <= TScalar(nX));
+		ocean_assert(leftBinPositionX <= TScalar(nX) + NumericT<TScalar>::weakEps());
 
 		const TScalar xFactor = (TScalar(nX) - leftBinPositionX) * invBinWidthX;
-		ocean_assert(xFactor >= TScalar(0.0) && xFactor <= TScalar(1.0));
+		ocean_assert(NumericT<TScalar>::isInsideWeakRange(TScalar(0), xFactor, TScalar(1)));
 
 		*values++ = TTarget(leftBinValue * (TScalar(1) - xFactor) + rightBinValue * xFactor);
 
