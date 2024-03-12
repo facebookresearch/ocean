@@ -26,19 +26,25 @@ bool TestLine3::test(const double testDuration)
 
 	bool allSucceeded = true;
 
-	allSucceeded = testIsOnLine(testDuration) && allSucceeded;
+	allSucceeded = testIsOnLine<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testIsOnLine<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testNearestPoints(testDuration) && allSucceeded;
+	allSucceeded = testNearestPoints<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testNearestPoints<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testDistance(testDuration) && allSucceeded;
+	allSucceeded = testDistance<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testDistance<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -56,33 +62,51 @@ bool TestLine3::test(const double testDuration)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestLine3, IsOnLine)
+TEST(TestLine3, IsOnLine_Float)
 {
-	EXPECT_TRUE(TestLine3::testIsOnLine(GTEST_TEST_DURATION));
+	EXPECT_TRUE((TestLine3::testIsOnLine<float>(GTEST_TEST_DURATION)));
 }
 
-TEST(TestLine3, NearestPoints)
+TEST(TestLine3, IsOnLine_Double)
 {
-	EXPECT_TRUE(TestLine3::testNearestPoints(GTEST_TEST_DURATION));
+	EXPECT_TRUE((TestLine3::testIsOnLine<double>(GTEST_TEST_DURATION)));
 }
 
-TEST(TestLine3, Distance)
+
+TEST(TestLine3, NearestPoints_Float)
 {
-	EXPECT_TRUE(TestLine3::testDistance(GTEST_TEST_DURATION));
+	EXPECT_TRUE((TestLine3::testNearestPoints<float>(GTEST_TEST_DURATION)));
+}
+
+TEST(TestLine3, NearestPoints_Double)
+{
+	EXPECT_TRUE((TestLine3::testNearestPoints<double>(GTEST_TEST_DURATION)));
+}
+
+
+TEST(TestLine3, Distance_Float)
+{
+	EXPECT_TRUE((TestLine3::testDistance<float>(GTEST_TEST_DURATION)));
+}
+
+TEST(TestLine3, Distance_Double)
+{
+	EXPECT_TRUE((TestLine3::testDistance<double>(GTEST_TEST_DURATION)));
 }
 
 #endif // OCEAN_USE_GTEST
 
+template <typename T>
 bool TestLine3::testIsOnLine(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "isOnLine test:";
+	Log::info() << "isOnLine test, with " << TypeNamer::name<T>() << ":";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
-	const Scalar range = std::is_same<Scalar, float>::value ? Scalar(100) : Scalar(1000);
+	const T range = std::is_same<T, float>::value ? T(10) : T(1000);
 
 	const Timestamp startTimestamp(true);
 
@@ -90,10 +114,10 @@ bool TestLine3::testIsOnLine(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Line3 line(Random::vector3(-range, range), Random::vector3());
-			ocean_assert(Numeric::isEqual(line.direction().length(), 1));
+			const LineT3<T> line(RandomT<T>::vector3(-range, range), RandomT<T>::vector3());
+			ocean_assert(NumericT<T>::isEqual(line.direction().length(), 1));
 
-			Vector3 perpendicular(line.direction().perpendicular());
+			VectorT3<T> perpendicular(line.direction().perpendicular());
 
 			if (!perpendicular.normalize())
 			{
@@ -101,26 +125,26 @@ bool TestLine3::testIsOnLine(const double testDuration)
 			}
 
 			ocean_assert(line.direction() != perpendicular);
-			ocean_assert(Numeric::isEqual(perpendicular.length(), 1));
-			ocean_assert(Numeric::isEqualEps(line.direction() * perpendicular));
+			ocean_assert(NumericT<T>::isEqual(perpendicular.length(), 1));
+			ocean_assert(NumericT<T>::isEqualEps(line.direction() * perpendicular));
 
 			bool localSucceeded = true;
 
-			const Vector3 pointOnLine(line.point() + line.direction() * Random::scalar(-range * Scalar(10), range * Scalar(10)));
+			const VectorT3<T> pointOnLine(line.point() + line.direction() * RandomT<T>::scalar(-range * T(10), range * T(10)));
 
 			if (line.isOnLine(pointOnLine) == false)
 			{
 				localSucceeded = false;
 			}
 
-			const Vector3 pointOffset(line.point() + perpendicular * Random::scalar(-range, range));
+			const VectorT3<T> pointOffset(line.point() + perpendicular * RandomT<T>::scalar(-range, range));
 
 			if (line.point() != pointOffset && line.isOnLine(pointOffset) == true)
 			{
 				localSucceeded = false;
 			}
 
-			const Vector3 pointOffset2(pointOnLine + perpendicular * Random::scalar(Scalar(0.5), range) * Random::sign());
+			const VectorT3<T> pointOffset2(pointOnLine + perpendicular * RandomT<T>::scalar(T(0.5), range) * RandomT<T>::sign());
 
 			if (line.isOnLine(pointOffset2) == true)
 			{
@@ -145,16 +169,17 @@ bool TestLine3::testIsOnLine(const double testDuration)
 	return percent >= 0.99;
 }
 
+template <typename T>
 bool TestLine3::testNearestPoints(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Nearest points test:";
+	Log::info() << "Nearest points test, with " << TypeNamer::name<T>() << ":";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
-	const Scalar range = std::is_same<Scalar, float>::value ? Scalar(100) : Scalar(1000);
+	const T range = std::is_same<T, float>::value ? T(10) : T(1000);
 
 	const Timestamp startTimestamp(true);
 
@@ -162,33 +187,33 @@ bool TestLine3::testNearestPoints(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Line3 lineA(Random::vector3(-range, range), Random::vector3());
-			const Line3 lineB(Random::vector3(-range, range), Random::vector3());
+			const LineT3<T> lineA(RandomT<T>::vector3(-range, range), RandomT<T>::vector3());
+			const LineT3<T> lineB(RandomT<T>::vector3(-range, range), RandomT<T>::vector3());
 
 			ocean_assert(lineA.direction().isUnit() && lineB.direction().isUnit());
 
-			Vector3 pointA;
-			Vector3 pointB;
+			VectorT3<T> pointA;
+			VectorT3<T> pointB;
 			if (lineA.nearestPoints(lineB, pointA, pointB))
 			{
 				if (lineA.isOnLine(pointA) && lineB.isOnLine(pointB))
 				{
-					Vector3 direction(pointB - pointA);
+					VectorT3<T> direction(pointB - pointA);
 
 					if (direction.normalize())
 					{
 						// the vector between both nearest points must be perpendicular to both lines
-						if (Numeric::isWeakEqualEps(lineA.direction() * direction) && Numeric::isWeakEqualEps(lineB.direction() * direction))
+						if (NumericT<T>::isWeakEqualEps(lineA.direction() * direction) && NumericT<T>::isWeakEqualEps(lineB.direction() * direction))
 						{
 							// ensuring that we cannot find better points
 
-							const Scalar bestDistance = pointA.distance(pointB);
+							const T bestDistance = pointA.distance(pointB);
 
 							bool allSucceeded = true;
 
-							for (Scalar offset : {Scalar(-0.01), Scalar(0.01)})
+							for (T offset : {T(-0.01), T(0.01)})
 							{
-								Scalar checkDistance = (pointA + lineA.direction() * offset).distance(pointB);
+								T checkDistance = (pointA + lineA.direction() * offset).distance(pointB);
 
 								if (checkDistance < bestDistance)
 								{
@@ -211,7 +236,7 @@ bool TestLine3::testNearestPoints(const double testDuration)
 					}
 					else
 					{
-						if (pointA.isEqual(pointB, Numeric::weakEps()))
+						if (pointA.isEqual(pointB, NumericT<T>::weakEps()))
 						{
 							++validIterations;
 						}
@@ -232,16 +257,17 @@ bool TestLine3::testNearestPoints(const double testDuration)
 	return percent >= 0.99;
 }
 
+template <typename T>
 bool TestLine3::testDistance(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Distance between lines test:";
+	Log::info() << "Distance between lines test, with " << TypeNamer::name<T>() << ":";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
-	const Scalar range = std::is_same<Scalar, float>::value ? Scalar(100) : Scalar(1000);
+	const T range = std::is_same<T, float>::value ? T(10) : T(1000);
 
 	const Timestamp startTimestamp(true);
 
@@ -249,20 +275,20 @@ bool TestLine3::testDistance(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Line3 lineA(Random::vector3(-range, range), Random::vector3());
-			const Line3 lineB(Random::vector3(-range, range), Random::vector3());
+			const LineT3<T> lineA(RandomT<T>::vector3(-range, range), RandomT<T>::vector3());
+			const LineT3<T> lineB(RandomT<T>::vector3(-range, range), RandomT<T>::vector3());
 
 			ocean_assert(lineA.direction().isUnit() && lineB.direction().isUnit());
 
-			const Scalar distance = lineA.distance(lineB);
+			const T distance = lineA.distance(lineB);
 
-			Vector3 pointA;
-			Vector3 pointB;
+			VectorT3<T> pointA;
+			VectorT3<T> pointB;
 			if (lineA.nearestPoints(lineB, pointA, pointB))
 			{
-				const Scalar pointDistance = pointA.distance(pointB);
+				const T pointDistance = pointA.distance(pointB);
 
-				if (Numeric::isWeakEqual(distance, pointDistance))
+				if (NumericT<T>::isWeakEqual(distance, pointDistance))
 				{
 					++validIterations;
 				}

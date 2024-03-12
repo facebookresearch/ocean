@@ -33,21 +33,27 @@ class OCEAN_TEST_MATH_EXPORT TestLine3
 		 * Is on line test.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testIsOnLine(const double testDuration);
 
 		/**
 		 * Tests the nearest points function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testNearestPoints(const double testDuration);
 
 		/**
 		 * Tests the distance function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testDistance(const double testDuration);
 };
 
