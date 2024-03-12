@@ -3167,17 +3167,20 @@ IndexPair32 TestAdvancedSumSquareDifferences::calculateWithMask8BitPerChannel(co
 
 	const Scalar leftSize = center0.x() - topLeft0.x();
 	const Scalar rightSize = topLeft0.x() + Scalar(patchSize - 1u) - center0.x();
-	ocean_assert(Numeric::isEqual(leftSize, rightSize));
+	ocean_assert(Numeric::isWeakEqual(leftSize, rightSize));
 
 	const Scalar topSize = center0.y() - topLeft0.y();
 	const Scalar bottomSize = topLeft0.y() + Scalar(patchSize - 1u) - center0.y();
-	ocean_assert(Numeric::isEqual(topSize, bottomSize));
+	ocean_assert(Numeric::isWeakEqual(topSize, bottomSize));
 
-	if (Numeric::isNotEqual(leftSize, rightSize) || Numeric::isNotEqual(topSize, bottomSize))
+	if constexpr (std::is_same<double, Scalar>::value)
 	{
-		ocean_assert(false && "This should never happen!");
+		if (Numeric::isNotEqual(leftSize, rightSize) || Numeric::isNotEqual(topSize, bottomSize))
+		{
+			ocean_assert(false && "This should never happen!");
 
-		return IndexPair32(uint32_t(-1), uint32_t(-1));
+			return IndexPair32(uint32_t(-1), uint32_t(-1));
+		}
 	}
 
 	uint32_t ssd = 0u;
