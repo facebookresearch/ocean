@@ -533,7 +533,7 @@ inline unsigned int MappingF1::ssd5x5Mask(const uint8_t* frame0, const uint8_t* 
 	FrameConverter::patchFrame<uint8_t>(mask0, maskPatch0, width0, 1u, xPosition0, yPosition0, patchSize, mask0PaddingElements, maskPatch0PaddingElements);
 
 	uint8_t framePatch1[patchArea * tChannels];
-	Advanced::AdvancedFrameInterpolatorBilinear::interpolateSquarePatch8BitPerChannel<tChannels, patchSize>(frame1, width1, frame1PaddingElements, framePatch1, Vector2(xPosition1, yPosition1));
+	Advanced::AdvancedFrameInterpolatorBilinear::interpolateSquarePatch8BitPerChannel<tChannels, patchSize, CV::PC_TOP_LEFT>(frame1, width1, frame1PaddingElements, framePatch1, Vector2(xPosition1, yPosition1));
 
 	unsigned int ssd = 0u;
 

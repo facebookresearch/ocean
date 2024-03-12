@@ -199,9 +199,9 @@ class OCEAN_TEST_CV_SYNTHESIS_EXPORT TestMappingF1 : protected CV::Synthesis::Ma
 		 * @param positions1 The center position in the second frame
 		 * @param results The SSD results to verify, one for each position
 		 * @param borderFactor The border factor to be used
-		 * @return True, if succeeded
+		 * @return The number of correct/precise results, with range [0, results.size()]
 		 */
-		static bool validateSumSquaredDifference5x5Mask(const Frame& frame0, const Frame& frame1, const Frame& mask0, const CV::PixelPositions& positions0, const Vectors2& positions1, const Indices32& results, const unsigned int borderFactor);
+		static size_t validateSumSquaredDifference5x5Mask(const Frame& frame0, const Frame& frame1, const Frame& mask0, const CV::PixelPositions& positions0, const Vectors2& positions1, const Indices32& results, const unsigned int borderFactor);
 
 		/**
 		 * Determines the appearance cost.

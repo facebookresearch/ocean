@@ -422,11 +422,12 @@ bool TestMappingF1::testSumSquaredDifference5x5Mask(const unsigned int width, co
 
 	Log::info() << "... for " << tChannels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
+
+	uint64_t totalExecutions = 0ull;
+	uint64_t validExecutions = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -477,26 +478,33 @@ bool TestMappingF1::testSumSquaredDifference5x5Mask(const unsigned int width, co
 				}
 			performance.stopIf(performanceIteration);
 
-			if (!validateSumSquaredDifference5x5Mask(frame0, frame1, mask0, positions0, positions1, results, borderFactor))
-			{
-				allSucceeded = false;
-			}
+			const size_t validResults = validateSumSquaredDifference5x5Mask(frame0, frame1, mask0, positions0, positions1, results, borderFactor);
+
+			totalExecutions += uint64_t(results.size());
+			validExecutions += uint64_t(validResults);
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 3u) << "ms, average: " << String::toAString(performance.averageMseconds(), 3u) << "ms";
 
-	if (allSucceeded)
+	ocean_assert(totalExecutions != 0ull);
+	ocean_assert(validExecutions <= totalExecutions);
+
+	const double percent = double(validExecutions) / double(totalExecutions);
+
+	const bool succeeded = percent >= 0.99;
+
+	if (succeeded)
 	{
-		Log::info() << "Validation: succeeded.";
+		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 	}
 	else
 	{
 		Log::info() << "Validation: FAILED!";
 	}
 
-	return allSucceeded;
+	return succeeded;
 }
 
 bool TestMappingF1::testAppearanceCost5x5(const unsigned int width, const unsigned int height, const double testDuration)
@@ -549,9 +557,10 @@ bool TestMappingF1::testAppearanceCost5x5(const unsigned int width, const unsign
 
 	Log::info() << "... for " << tChannels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	uint64_t totalExecutions = 0ull;
+	uint64_t validExecutions = 0ull;
 
 	constexpr unsigned int patchSize = 5u;
 	constexpr unsigned int borderFactor = 5u;
@@ -605,24 +614,35 @@ bool TestMappingF1::testAppearanceCost5x5(const unsigned int width, const unsign
 
 			const uint64_t testCost = determineAppearanceCost<true>(frame, frame, mask, source, target, patchSize, borderFactor, normalizationFactor);
 
-			if (uint64_t(cost) != testCost)
+			ocean_assert((std::is_same<float, Scalar>::value) || uint64_t(cost) == testCost);
+
+			if (uint64_t(cost) == testCost)
 			{
-				allSucceeded = false;
+				++validExecutions;
 			}
+
+			++totalExecutions;
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
+	ocean_assert(totalExecutions != 0ull);
+	ocean_assert(validExecutions <= totalExecutions);
+
+	const double percent = double(validExecutions) / double(totalExecutions);
+
+	const bool succeeded = percent >= 0.99;
+
+	if (succeeded)
 	{
-		Log::info() << "Validation: succeeded.";
+		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 	}
 	else
 	{
 		Log::info() << "Validation: FAILED!";
 	}
 
-	return allSucceeded;
+	return succeeded;
 }
 
 bool TestMappingF1::testAppearanceReferenceCost5x5(const unsigned int width, const unsigned int height, const double testDuration)
@@ -675,9 +695,10 @@ bool TestMappingF1::testAppearanceReferenceCost5x5(const unsigned int width, con
 
 	Log::info() << "... for " << tChannels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	uint64_t totalExecutions = 0ull;
+	uint64_t validExecutions = 0ull;
 
 	constexpr unsigned int patchSize = 5u;
 	constexpr unsigned int borderFactor = 5u;
@@ -732,24 +753,35 @@ bool TestMappingF1::testAppearanceReferenceCost5x5(const unsigned int width, con
 
 			const uint64_t testCost = determineAppearanceReferenceCost(frame, reference, mask, source, target, patchSize, borderFactor, normalizationFactor);
 
-			if (uint64_t(cost) != testCost)
+			ocean_assert((std::is_same<float, Scalar>::value) || uint64_t(cost) == testCost);
+
+			if (uint64_t(cost) == testCost)
 			{
-				allSucceeded = false;
+				++validExecutions;
 			}
+
+			++totalExecutions;
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
+	ocean_assert(totalExecutions != 0ull);
+	ocean_assert(validExecutions <= totalExecutions);
+
+	const double percent = double(validExecutions) / double(totalExecutions);
+
+	const bool succeeded = percent >= 0.99;
+
+	if (succeeded)
 	{
-		Log::info() << "Validation: succeeded.";
+		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 	}
 	else
 	{
 		Log::info() << "Validation: FAILED!";
 	}
 
-	return allSucceeded;
+	return succeeded;
 }
 
 bool TestMappingF1::testSpatialCost4Neighborhood(const unsigned int width, const unsigned int height, const double testDuration)
@@ -1304,7 +1336,7 @@ bool TestMappingF1::validateMapping(const Frame& frame, const Frame& mask, const
 	return true;
 }
 
-bool TestMappingF1::validateSumSquaredDifference5x5Mask(const Frame& frame0, const Frame& frame1, const Frame& mask0, const CV::PixelPositions& positions0, const Vectors2& positions1, const Indices32& results, const unsigned int borderFactor)
+size_t TestMappingF1::validateSumSquaredDifference5x5Mask(const Frame& frame0, const Frame& frame1, const Frame& mask0, const CV::PixelPositions& positions0, const Vectors2& positions1, const Indices32& results, const unsigned int borderFactor)
 {
 	ocean_assert(frame0.isValid() && frame1.isValid() && mask0.isValid());
 	ocean_assert(!positions0.empty());
@@ -1317,6 +1349,8 @@ bool TestMappingF1::validateSumSquaredDifference5x5Mask(const Frame& frame0, con
 	}
 
 	std::vector<uint8_t> interpolatedPixel1(frame1.channels());
+
+	size_t correctResults = 0;
 
 	for (size_t n = 0; n < positions0.size(); ++n)
 	{
@@ -1363,13 +1397,15 @@ bool TestMappingF1::validateSumSquaredDifference5x5Mask(const Frame& frame0, con
 			}
 		}
 
-		if (ssdTest != results[n])
+		ocean_assert((std::is_same<float, Scalar>::value) || ssdTest == results[n]); // with double precision, we expect a perfect result
+
+		if (ssdTest == results[n])
 		{
-			return false;
+			++correctResults;
 		}
 	}
 
-	return true;
+	return correctResults;
 }
 
 template <bool tPatchSizeNormalization>
