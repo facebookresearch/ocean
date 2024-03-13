@@ -1289,14 +1289,14 @@ inline SpatialDistribution::OccupancyArray::OccupancyArray(const Box2& boundingB
 	Array(boundingBox.left(), boundingBox.top(), boundingBox.width(), boundingBox.height(), horizontalBins, verticalBins),
 	occupancy_(horizontalBins * verticalBins, allFree ? 0u : 1u)
 {
-	// nothing to do here
+	ocean_assert(NumericT<unsigned int>::isInsideValueRange(uint64_t(horizontalBins) * uint64_t(verticalBins)));
 }
 
 inline SpatialDistribution::OccupancyArray::OccupancyArray(const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int horizontalBins, const unsigned int verticalBins, const bool allFree) :
 	Array(left, top, width, height, horizontalBins, verticalBins),
 	occupancy_(horizontalBins * verticalBins, allFree ? 0u : 1u)
 {
-	// nothing to do here
+	ocean_assert(NumericT<unsigned int>::isInsideValueRange(uint64_t(horizontalBins) * uint64_t(verticalBins)));
 }
 
 inline unsigned int SpatialDistribution::OccupancyArray::countOccupiedNeighborhood9(const unsigned int horizontal, const unsigned int vertical) const
