@@ -17,7 +17,7 @@
 	#include "ocean/media/avfoundation/AVFoundation.h"
 #endif
 
-#if defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS) || defined(OCEAN_PLATFORM_BUILD_LINUX) || defined(OCEAN_PLATFORM_BUILD_ANDROID)
+#if defined(OCEAN_PLATFORM_BUILD_LINUX)
 	#include "ocean/media/ffmpeg/FFmpeg.h"
 #endif
 
@@ -798,14 +798,12 @@ void TestMovie::registerMediaLibraries()
 #ifndef OCEAN_RUNTIME_SHARED
 	#if defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS)
 		Media::AVFoundation::registerAVFLibrary();
-		Media::FFmpeg::registerFFmpegLibrary();
 	#elif defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY)
 		Media::AVFoundation::registerAVFLibrary();
 	#elif defined(OCEAN_PLATFORM_BUILD_LINUX)
 		Media::FFmpeg::registerFFmpegLibrary();
 	#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
 		Media::Android::registerAndroidLibrary();
-		Media::FFmpeg::registerFFmpegLibrary();
 	#elif defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 		Media::MediaFoundation::registerMediaFoundationLibrary();
 	#endif
@@ -816,14 +814,12 @@ void TestMovie::unregisterMediaLibraries()
 {
 #ifndef OCEAN_RUNTIME_SHARED
 	#if defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS)
-		Media::FFmpeg::unregisterFFmpegLibrary();
 		Media::AVFoundation::unregisterAVFLibrary();
 	#elif defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY)
 		Media::AVFoundation::unregisterAVFLibrary();
 	#elif defined(OCEAN_PLATFORM_BUILD_LINUX)
 		Media::FFmpeg::unregisterFFmpegLibrary();
 	#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
-		Media::FFmpeg::unregisterFFmpegLibrary();
 		Media::Android::unregisterAndroidLibrary();
 	#elif defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 		Media::MediaFoundation::unregisterMediaFoundationLibrary();
@@ -852,7 +848,6 @@ std::vector<std::string> TestMovie::libraryNamesDecoder()
 
 #if defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS)
 	decoderNames.emplace_back(Media::AVFoundation::nameAVFLibrary());
-	decoderNames.emplace_back(Media::FFmpeg::nameFFmpegLibrary());
 #elif defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY)
 	decoderNames.emplace_back(Media::AVFoundation::nameAVFLibrary());
 #elif defined(OCEAN_PLATFORM_BUILD_LINUX)
@@ -863,7 +858,6 @@ std::vector<std::string> TestMovie::libraryNamesDecoder()
 	#if defined(__ANDROID_API__) && __ANDROID_API__ >= 24
 		decoderNames.emplace_back(Media::Android::nameAndroidLibrary());
 	#endif
-	decoderNames.emplace_back(Media::FFmpeg::nameFFmpegLibrary());
 #endif
 
 	return decoderNames;
