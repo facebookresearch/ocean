@@ -31,8 +31,10 @@ class OCEAN_GEOMETRY_EXPORT PerspectivePose
 		 * @param x2a First solution of the second leg distance
 		 * @param x2b Second solution of the second leg distance
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar
 		 */
-		static bool calculateCosineSolutions(const Scalar x1, const Scalar x1_2, const Scalar cos12, const Scalar d12_2, Scalar& x2a, Scalar& x2b);
+		template <typename T>
+		static bool calculateCosineSolutions(const T x1, const T x1_2, const T cos12, const T d12_2, T& x2a, T& x2b);
 
 		/**
 		 * Returns the result of the law of cosines.
@@ -45,11 +47,14 @@ class OCEAN_GEOMETRY_EXPORT PerspectivePose
 		 * @param cos12 Cosine value of the angle between the two legs
 		 * @param d12_2 Square of the far distance
 		 * @return Result of the law of cosines
+		 * @tparam T The data type of the scalar
 		 */
-		inline static Scalar calculateCosineResults(const Scalar x1, const Scalar x1_2, const Scalar x2, const Scalar x2_2, const Scalar cos12, const Scalar d12_2);
+		template <typename T>
+		inline static T calculateCosineResults(const T x1, const T x1_2, const T x2, const T x2_2, const T cos12, const T d12_2);
 };
 
-inline Scalar PerspectivePose::calculateCosineResults(const Scalar x1, const Scalar x1_2, const Scalar x2, const Scalar x2_2, const Scalar cos12, const Scalar d12_2)
+template <typename T>
+inline T PerspectivePose::calculateCosineResults(const T x1, const T x1_2, const T x2, const T x2_2, const T cos12, const T d12_2)
 {
 	return x1_2 + x2_2 - 2 * x1 * x2 * cos12 - d12_2;
 }

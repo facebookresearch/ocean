@@ -8,33 +8,41 @@ namespace Ocean
 namespace Geometry
 {
 
-bool PerspectivePose::calculateCosineSolutions(const Scalar x1, const Scalar x1_2, const Scalar cos12, const Scalar d12_2, Scalar& x2a, Scalar& x2b)
+template <typename T>
+bool PerspectivePose::calculateCosineSolutions(const T x1, const T x1_2, const T cos12, const T d12_2, T& x2a, T& x2b)
 {
 	// substitution of x1 into x1^2 + x2^2 - 2 x1 x2 cos12 - d12^2 = 0 results in two solutions:
 	// x2a = cos12 * x1 + sqrt(d12^2 + (-1 + cos12^2) * x1^2)
 	// x2b = cos12 * x1 - sqrt(d12^2 + (-1 + cos12^2) * x1^2)
 
-	ocean_assert((std::is_same<Scalar, float>::value) || Numeric::isEqual(x1 * x1, x1_2));
+	ocean_assert((std::is_same<T, float>::value) || NumericT<T>::isEqual(x1 * x1, x1_2));
 
-	const Scalar innerSqrt = d12_2 + (-1 + cos12 * cos12) * x1_2;
-	Scalar sqrtValue = 0;
+	const T innerSqrt = d12_2 + (-1 + cos12 * cos12) * x1_2;
+	T sqrtValue = 0;
 
 	if (innerSqrt < 0)
 	{
-		if (Numeric::isNotWeakEqualEps(innerSqrt))
+		if (NumericT<T>::isNotWeakEqualEps(innerSqrt))
+		{
 			return false;
+		}
 	}
 	else
-		sqrtValue = Numeric::sqrt(innerSqrt);
+	{
+		sqrtValue = NumericT<T>::sqrt(innerSqrt);
+	}
 
 	x2a = cos12 * x1 + sqrtValue;
 	x2b = cos12 * x1 - sqrtValue;
 
-	ocean_assert(Numeric::isWeakEqual(x1_2 + x2a * x2a - 2 * x1 * x2a * cos12, d12_2));
-	ocean_assert(Numeric::isWeakEqual(x1_2 + x2b * x2b - 2 * x1 * x2b * cos12, d12_2));
+	ocean_assert(NumericT<T>::isWeakEqual(x1_2 + x2a * x2a - 2 * x1 * x2a * cos12, d12_2));
+	ocean_assert(NumericT<T>::isWeakEqual(x1_2 + x2b * x2b - 2 * x1 * x2b * cos12, d12_2));
 
 	return true;
 }
+
+template bool OCEAN_GEOMETRY_EXPORT PerspectivePose::calculateCosineSolutions<float>(const float x1, const float x1_2, const float cos12, const float d12_2, float& x2a, float& x2b);
+template bool OCEAN_GEOMETRY_EXPORT PerspectivePose::calculateCosineSolutions<double>(const double x1, const double x1_2, const double cos12, const double d12_2, double& x2a, double& x2b);
 
 }
 
