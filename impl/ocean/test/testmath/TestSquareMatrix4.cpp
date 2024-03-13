@@ -38,11 +38,7 @@ bool TestSquareMatrix4::test(const double testDuration, Worker& worker)
 	Log::info() << " ";
 
 	allSucceeded = testVectorMultiplication<float>(testDuration, worker) && allSucceeded;
-
 	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
 	allSucceeded = testVectorMultiplication<double>(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
@@ -50,11 +46,7 @@ bool TestSquareMatrix4::test(const double testDuration, Worker& worker)
 	Log::info() << " ";
 
 	allSucceeded = testMatrixMultiplication<float>(testDuration) && allSucceeded;
-
 	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
 	allSucceeded = testMatrixMultiplication<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -73,13 +65,17 @@ bool TestSquareMatrix4::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testProjectionMatrixFieldOfView(testDuration) && allSucceeded;
+	allSucceeded = testProjectionMatrixFieldOfView<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testProjectionMatrixFieldOfView<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testProjectionMatrixCameraMatrix(testDuration) && allSucceeded;
+	allSucceeded = testProjectionMatrixCameraMatrix<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testProjectionMatrixCameraMatrix<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -107,24 +103,24 @@ TEST(TestSquareMatrix4, ElementConstructor)
 	EXPECT_TRUE(TestSquareMatrix4::testElementConstructor(GTEST_TEST_DURATION));
 }
 
-TEST(TestSquareMatrix4, VectorMultiplication32)
+TEST(TestSquareMatrix4, VectorMultiplication_Float)
 {
 	Worker worker;
 	EXPECT_TRUE(TestSquareMatrix4::testVectorMultiplication<float>(GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestSquareMatrix4, VectorMultiplication64)
+TEST(TestSquareMatrix4, VectorMultiplication_Double)
 {
 	Worker worker;
 	EXPECT_TRUE(TestSquareMatrix4::testVectorMultiplication<double>(GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestSquareMatrix4, MatrixMultiplication32)
+TEST(TestSquareMatrix4, MatrixMultiplication_Float)
 {
 	EXPECT_TRUE(TestSquareMatrix4::testMatrixMultiplication<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestSquareMatrix4, MatrixMultiplication64)
+TEST(TestSquareMatrix4, MatrixMultiplication_Double)
 {
 	EXPECT_TRUE(TestSquareMatrix4::testMatrixMultiplication<double>(GTEST_TEST_DURATION));
 }
@@ -139,14 +135,24 @@ TEST(TestSquareMatrix4, MatrixConversion)
 	EXPECT_TRUE(TestSquareMatrix4::testMatrixConversion(GTEST_TEST_DURATION));
 }
 
-TEST(TestSquareMatrix4, ProjectionMatrixFieldOfView)
+TEST(TestSquareMatrix4, ProjectionMatrixFieldOfView_Float)
 {
-	EXPECT_TRUE(TestSquareMatrix4::testProjectionMatrixFieldOfView(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestSquareMatrix4::testProjectionMatrixFieldOfView<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestSquareMatrix4, ProjectionMatrixCameraMatrix)
+TEST(TestSquareMatrix4, ProjectionMatrixFieldOfView_Double)
 {
-	EXPECT_TRUE(TestSquareMatrix4::testProjectionMatrixCameraMatrix(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestSquareMatrix4::testProjectionMatrixFieldOfView<double>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, ProjectionMatrixCameraMatrix_Float)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testProjectionMatrixCameraMatrix<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, ProjectionMatrixCameraMatrix_Double)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testProjectionMatrixCameraMatrix<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -923,11 +929,12 @@ bool TestSquareMatrix4::testMatrixConversion(const double testDuration)
 	return allSucceeded;
 }
 
+template <typename T>
 bool TestSquareMatrix4::testProjectionMatrixFieldOfView(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "SquareMatrix4::projectionMatrix() with field of view test:";
+	Log::info() << "SquareMatrix4::projectionMatrix() with field of view test, with " << TypeNamer::name<T>() << ":";
 
 	bool allSucceeded = true;
 
@@ -935,43 +942,45 @@ bool TestSquareMatrix4::testProjectionMatrixFieldOfView(const double testDuratio
 
 	do
 	{
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(20), Numeric::deg2rad(120));
+		const T fovX = RandomT<T>::scalar(NumericT<T>::deg2rad(20), NumericT<T>::deg2rad(120));
 
 		const unsigned int width = RandomI::random(50u, 2000u);
 		const unsigned int height = RandomI::random(50u, 2000u);
 
-		const Scalar aspectRatio = Scalar(width) / Scalar(height);
+		const T aspectRatio = T(width) / T(height);
 
-		const Scalar nearDistance = Random::scalar(Scalar(0.1), Scalar(1));
-		const Scalar farDistance = Random::scalar(Scalar(10), Scalar(100));
+		const T nearDistance = RandomT<T>::scalar(T(0.1), T(1));
+		const T farDistance = RandomT<T>::scalar(T(10), T(100));
 
-		const SquareMatrix4 projectionMatrix = SquareMatrix4::projectionMatrix(fovX, aspectRatio, nearDistance, farDistance);
+		const SquareMatrixT4<T> projectionMatrix = SquareMatrixT4<T>::projectionMatrix(fovX, aspectRatio, nearDistance, farDistance);
 
-		const AnyCameraPinhole anyCamera(PinholeCamera(width, height, fovX));
+		const AnyCameraPinholeT<T> anyCamera(PinholeCameraT<T>(width, height, fovX));
 
 		for (unsigned int n = 0u; n < 10u; ++n)
 		{
-			const Vector3 objectPoint(Random::scalar(Scalar(-10), Scalar(10)), Random::scalar(Scalar(-10), Scalar(10)), Random::scalar(Scalar(0.05), Scalar(10))); // allowing to have points behind the camera
+			const VectorT3<T> objectPoint(RandomT<T>::scalar(T(-10), T(10)), RandomT<T>::scalar(T(-10), T(10)), RandomT<T>::scalar(T(0.05), T(10))); // allowing to have points behind the camera
 
-			const Vector2 imagePoint = anyCamera.projectToImage(objectPoint); // with visible range [0, width]x[0, height]
+			const VectorT2<T> imagePoint = anyCamera.projectToImage(objectPoint); // with visible range [0, width]x[0, height]
 
-			const Vector3 pointInUnitCube = projectionMatrix * objectPoint;
+			const VectorT3<T> pointInUnitCube = projectionMatrix * objectPoint;
 
-			const Scalar pointInClipSpaceX = (pointInUnitCube.x() + Scalar(1)) * Scalar(width) * Scalar(0.5); // visible clip space range [0, width]
-			const Scalar pointInClipSpaceY = -(pointInUnitCube.y() - Scalar(1)) * Scalar(height) * Scalar(0.5); // visible clip space range [0, height]
+			const T pointInClipSpaceX = (pointInUnitCube.x() + T(1)) * T(width) * T(0.5); // visible clip space range [0, width]
+			const T pointInClipSpaceY = -(pointInUnitCube.y() - T(1)) * T(height) * T(0.5); // visible clip space range [0, height]
 
-			if (Numeric::isNotEqual(imagePoint.x(), pointInClipSpaceX, Scalar(0.1)))
+			constexpr T pointThreshold = std::is_same<float, T>::value ? T(2) : T(0.1);
+
+			if (NumericT<T>::isNotEqual(imagePoint.x(), pointInClipSpaceX, pointThreshold))
 			{
 				allSucceeded = false;
 			}
 
-			if (Numeric::isNotEqual(imagePoint.y(), pointInClipSpaceY, Scalar(0.1)))
+			if (NumericT<T>::isNotEqual(imagePoint.y(), pointInClipSpaceY, pointThreshold))
 			{
 				allSucceeded = false;
 			}
 		}
 
-		if (!SquareMatrix4::projectionMatrix(anyCamera, nearDistance, farDistance).isEqual(projectionMatrix, Numeric::weakEps()))
+		if (!SquareMatrixT4<T>::projectionMatrix(anyCamera, nearDistance, farDistance).isEqual(projectionMatrix, NumericT<T>::weakEps()))
 		{
 			allSucceeded = false;
 		}
@@ -990,11 +999,12 @@ bool TestSquareMatrix4::testProjectionMatrixFieldOfView(const double testDuratio
 	return allSucceeded;
 }
 
+template <typename T>
 bool TestSquareMatrix4::testProjectionMatrixCameraMatrix(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "SquareMatrix4::projectionMatrix() with camera matrix test:";
+	Log::info() << "SquareMatrix4::projectionMatrix() with camera matrix test, with " << TypeNamer::name<T>() << ":";
 
 	bool allSucceeded = true;
 
@@ -1002,38 +1012,40 @@ bool TestSquareMatrix4::testProjectionMatrixCameraMatrix(const double testDurati
 
 	do
 	{
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(20), Numeric::deg2rad(120));
+		const T fovX = RandomT<T>::scalar(NumericT<T>::deg2rad(20), NumericT<T>::deg2rad(120));
 
 		const unsigned int width = RandomI::random(50u, 2000u);
 		const unsigned int height = RandomI::random(50u, 2000u);
 
-		const Scalar principalX = Random::scalar(Scalar(-50), Scalar(width + 50u));
-		const Scalar principalY = Random::scalar(Scalar(-50), Scalar(height + 50u));
+		const T principalX = RandomT<T>::scalar(T(-50), T(width + 50u));
+		const T principalY = RandomT<T>::scalar(T(-50), T(height + 50u));
 
-		const Scalar nearDistance = Random::scalar(Scalar(0.1), Scalar(1));
-		const Scalar farDistance = Random::scalar(Scalar(10), Scalar(100));
+		const T nearDistance = RandomT<T>::scalar(T(0.1), T(1));
+		const T farDistance = RandomT<T>::scalar(T(10), T(100));
 
-		const AnyCameraPinhole anyCamera(PinholeCamera(width, height, fovX, principalX, principalY));
+		const AnyCameraPinholeT<T> anyCamera(PinholeCameraT<T>(width, height, fovX, principalX, principalY));
 
-		const SquareMatrix4 projectionMatrix = SquareMatrix4::projectionMatrix(anyCamera, nearDistance, farDistance);
+		const SquareMatrixT4<T> projectionMatrix = SquareMatrixT4<T>::projectionMatrix(anyCamera, nearDistance, farDistance);
 
 		for (unsigned int n = 0u; n < 10u; ++n)
 		{
-			const Vector3 objectPoint(Random::scalar(Scalar(-10), Scalar(10)), Random::scalar(Scalar(-10), Scalar(10)), Random::scalar(Scalar(0.05), Scalar(10))); // allowing to have points behind the camera
+			const VectorT3<T> objectPoint(RandomT<T>::scalar(T(-10), T(10)), RandomT<T>::scalar(T(-10), T(10)), RandomT<T>::scalar(T(0.05), T(10))); // allowing to have points behind the camera
 
-			const Vector2 imagePoint = anyCamera.projectToImage(objectPoint); // with visible range [0, width]x[0, height]
+			const VectorT2<T> imagePoint = anyCamera.projectToImage(objectPoint); // with visible range [0, width]x[0, height]
 
-			const Vector3 pointInUnitCube = projectionMatrix * objectPoint; // with visible range [-1, 1]x[-1, 1]x[-1, 1]
+			const VectorT3<T> pointInUnitCube = projectionMatrix * objectPoint; // with visible range [-1, 1]x[-1, 1]x[-1, 1]
 
-			const Scalar pointInClipSpaceX = (pointInUnitCube.x() + Scalar(1)) * Scalar(width) * Scalar(0.5); // visible clip space range [0, width]
-			const Scalar pointInClipSpaceY = -(pointInUnitCube.y() - Scalar(1)) * Scalar(height) * Scalar(0.5); // visible clip space range [0, height]
+			const T pointInClipSpaceX = (pointInUnitCube.x() + T(1)) * T(width) * T(0.5); // visible clip space range [0, width]
+			const T pointInClipSpaceY = -(pointInUnitCube.y() - T(1)) * T(height) * T(0.5); // visible clip space range [0, height]
 
-			if (Numeric::isNotEqual(imagePoint.x(), pointInClipSpaceX, Scalar(0.1)))
+			constexpr T pointThreshold = std::is_same<float, T>::value ? T(2) : T(0.1);
+
+			if (NumericT<T>::isNotEqual(imagePoint.x(), pointInClipSpaceX, pointThreshold))
 			{
 				allSucceeded = false;
 			}
 
-			if (Numeric::isNotEqual(imagePoint.y(), pointInClipSpaceY, Scalar(0.1)))
+			if (NumericT<T>::isNotEqual(imagePoint.y(), pointInClipSpaceY, pointThreshold))
 			{
 				allSucceeded = false;
 			}
