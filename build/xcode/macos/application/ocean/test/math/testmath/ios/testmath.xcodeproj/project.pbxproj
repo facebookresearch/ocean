@@ -18,7 +18,7 @@
 /* Begin PBXFileReference section */
 		5DD14B221D95623E00CCA9F0 /* testmath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = testmath.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DD14B451D956F8100CCA9F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../../../../../../../res/application/ocean/test/math/testmath/ios/Assets.xcassets; sourceTree = "<group>"; };
-		5DD14B461D956F8100CCA9F0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../res/application/ocean/test/math/testmath/ios/Info.plist; sourceTree = "<group>"; };
+		5DD14B461D956F8100CCA9F0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../impl/application/ocean/test/math/testmath/ios/Info.plist; sourceTree = "<group>"; };
 		5DD14B471D956F8100CCA9F0 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ../../../../../../../../../res/application/ocean/test/math/testmath/ios/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5DD14B481D956F8100CCA9F0 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../../../../../../res/application/ocean/test/math/testmath/ios/Main.storyboard; sourceTree = "<group>"; };
 		5DD14B4D1D956F9700CCA9F0 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../impl/application/ocean/test/math/testmath/ios/AppDelegate.h; sourceTree = "<group>"; };
@@ -316,7 +316,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = ../../../../../../../../../impl;
-				INFOPLIST_FILE = ../../../../../../../../../res/application/ocean/test/math/testmath/ios/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../impl/application/ocean/test/math/testmath/ios/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
 					../../../../../../../../../bin/lib/ios_arm64_xc9_static_debug,
@@ -376,7 +376,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = ../../../../../../../../../impl;
-				INFOPLIST_FILE = ../../../../../../../../../res/application/ocean/test/math/testmath/ios/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../impl/application/ocean/test/math/testmath/ios/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
 					../../../../../../../../../bin/lib/ios_arm64_xc9_static,

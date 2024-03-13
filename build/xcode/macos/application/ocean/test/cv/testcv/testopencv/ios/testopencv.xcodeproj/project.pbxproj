@@ -24,7 +24,7 @@
 		C0EE96041E76AF67004C1D6C /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../../impl/application/ocean/test/cv/testcv/testopencv/ios/AppDelegate.h; sourceTree = "<group>"; };
 		C0EE96051E76AF67004C1D6C /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../../../../../../../../../../impl/application/ocean/test/cv/testcv/testopencv/ios/ViewController.h; sourceTree = "<group>"; };
 		C0EE960C1E76AF9D004C1D6C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../../../../../../../../res/application/ocean/test/cv/testcv/testopencv/ios/Assets.xcassets; sourceTree = "<group>"; };
-		C0EE960D1E76AF9D004C1D6C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../../res/application/ocean/test/cv/testcv/testopencv/ios/Info.plist; sourceTree = "<group>"; };
+		C0EE960D1E76AF9D004C1D6C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../../impl/application/ocean/test/cv/testcv/testopencv/ios/Info.plist; sourceTree = "<group>"; };
 		C0EE960E1E76AF9D004C1D6C /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ../../../../../../../../../../res/application/ocean/test/cv/testcv/testopencv/ios/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C0EE960F1E76AF9D004C1D6C /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../../../../../../../res/application/ocean/test/cv/testcv/testopencv/ios/Main.storyboard; sourceTree = "<group>"; };
 		C0EE962E1E76E8F3004C1D6C /* sift800x640.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = sift800x640.bmp; path = ../../../../../../../../../../res/application/ocean/test/cv/testcv/testopencv/ios/sift800x640.bmp; sourceTree = "<group>"; };
@@ -316,7 +316,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = ../../../../../../../../../../impl;
-				INFOPLIST_FILE = ../../../../../../../../../../res/application/ocean/test/cv/testcv/testopencv/ios/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../../impl/application/ocean/test/cv/testcv/testopencv/ios/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
 					../../../../../../../../../../bin/lib/ios_arm64_xc9_static_debug,
@@ -417,7 +417,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				HEADER_SEARCH_PATHS = ../../../../../../../../../../impl;
-				INFOPLIST_FILE = ../../../../../../../../../../res/application/ocean/test/cv/testcv/testopencv/ios/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../../impl/application/ocean/test/cv/testcv/testopencv/ios/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
 					../../../../../../../../../../bin/lib/ios_arm64_xc9_static,
