@@ -2087,7 +2087,7 @@ bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double test
 			}
 		}
 
-		SquareMatrix3 right_H_left;
+		SquareMatrix3 right_H_left(false);
 
 		performance.start();
 			bool localSucceeded = Geometry::Homography::homographyMatrixFromPointsAndLinesSVD(pointsLeft.data(), pointsRight.data(), pointsLeft.size(), linesLeft.data(), linesRight.data(), linesLeft.size(), right_H_left);

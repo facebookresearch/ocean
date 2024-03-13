@@ -323,7 +323,7 @@ bool Homography::homographyMatrixSVD(const Vector2* leftPoints, const Vector2* r
 
 	Homography::normalizeHomography(right_H_left);
 
-	return true;
+	return right_H_left.isHomography();
 }
 
 bool Homography::homographyMatrixFromPointsAndLinesSVD(const Vector2* leftPoints, const Vector2* rightPoints, const size_t pointCorrespondences, const Line2* leftLines, const Line2* rightLines, const size_t lineCorrespondences, SquareMatrix3& right_H_left)
@@ -454,7 +454,7 @@ bool Homography::homographyMatrixFromPointsAndLinesSVD(const Vector2* leftPoints
 
 	Homography::normalizeHomography(right_H_left);
 
-	return true;
+	return right_H_left.isHomography();
 }
 
 bool Homography::homographyMatrixLinear(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& right_H_left, unsigned int optimizationIterations)
@@ -478,7 +478,7 @@ bool Homography::homographyMatrixLinear(const Vector2* leftPoints, const Vector2
 		right_H_left = optimized_right_H_left;
 	}
 
-	return true;
+	return right_H_left.isHomography();
 }
 
 bool Homography::homographyMatrixLinearWithoutOptimations(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& right_H_left)

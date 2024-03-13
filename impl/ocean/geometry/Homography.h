@@ -426,8 +426,10 @@ class OCEAN_GEOMETRY_EXPORT Homography
 		 * </pre>
 		 * @param homographyForPoints The homography transforming points from one image to another image, must be valid
 		 * @return The homography allowing to transform lines
+		 * @tparam T The data type of the matrix's scalar type, either 'float' or 'double'
 		 */
-		inline static SquareMatrix3 homographyForLines(const SquareMatrix3& homographyForPoints);
+		template <typename T>
+		static inline SquareMatrixT3<T> homographyForLines(const SquareMatrixT3<T>& homographyForPoints);
 };
 
 inline bool Homography::homographyMatrix(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& right_H_left, const bool useSVD)
@@ -494,7 +496,8 @@ inline SquareMatrixT3<T> Homography::scaleHomography(const SquareMatrixT3<T>& ho
 	return scaledHomography;
 }
 
-inline SquareMatrix3 Homography::homographyForLines(const SquareMatrix3& homographyForPoints)
+template <typename T>
+inline SquareMatrixT3<T> Homography::homographyForLines(const SquareMatrixT3<T>& homographyForPoints)
 {
 	ocean_assert(homographyForPoints.isHomography());
 
