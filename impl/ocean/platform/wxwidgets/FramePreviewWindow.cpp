@@ -180,7 +180,10 @@ void FramePreviewWindow::onPaint(wxPaintEvent& /*event*/)
 
 		ocean_assert(i->displayId() < previewFrames.size());
 
-		drawFrame(dc, *previewFrames[i->displayId()], i->index(), displayPositionLeft, i->index() == selectionIndex_);
+		if (!previewFrames[i->displayId()].isNull())
+		{
+			drawFrame(dc, *previewFrames[i->displayId()], i->index(), displayPositionLeft, i->index() == selectionIndex_);
+		}
 
 		if (++i != elements_.end())
 		{
