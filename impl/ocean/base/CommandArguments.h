@@ -122,8 +122,8 @@ class OCEAN_BASE_EXPORT CommandArguments
 
 		/**
 		 * Registers a new named parameter which can be parsed as command argument.
-		 * @param longName The long name of the parameter, must be valid
-		 * @param shortName Optional short name of the parameter, can be empty
+		 * @param longName The long name of the parameter, must be valid, must start with a alphabetic character
+		 * @param shortName Optional short name of the parameter, can be empty, must start with a alphabetic character if defined
 		 * @param description Optional description of the parameter, can be empty
 		 * @param defaultValue Optional default value of the parameter, can be invalid
 		 * @return True, if the named parameter did not exist before
@@ -584,7 +584,9 @@ bool CommandArguments::isLongParameter(const TChar* parameter)
 {
 	ocean_assert(parameter != nullptr);
 
-	return parameter[0] == dashCharacter<TChar>() && parameter[1] == dashCharacter<TChar>() && parameter[2] != dashCharacter<TChar>() && parameter[2] != TChar(0);
+	// we expect two '-' followed by at least one alphabetic character
+
+	return parameter[0] == dashCharacter<TChar>() && parameter[1] == dashCharacter<TChar>() && parameter[2] != dashCharacter<TChar>() && std::isalpha(int(parameter[2])) != 0;
 }
 
 template <typename TChar>
@@ -592,7 +594,9 @@ bool CommandArguments::isShortParameter(const TChar* parameter)
 {
 	ocean_assert(parameter != nullptr);
 
-	return parameter[0] == dashCharacter<TChar>() && parameter[1] != dashCharacter<TChar>() && parameter[1] != TChar(0);
+	// we expect one '-' followed by at least one alphabetic character
+
+	return parameter[0] == dashCharacter<TChar>() && std::isalpha(int(parameter[1])) != 0;
 }
 
 template <>

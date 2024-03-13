@@ -33,16 +33,31 @@ bool CommandArguments::registerParameter(const std::string& longName, const std:
 		return false;
 	}
 
+	if (!std::isalpha(longName[0]))
+	{
+		ocean_assert(false && "Invalid long name, must start with alphabetic character");
+		return false;
+	}
+
 	if (parameterMap_.find(longName) != parameterMap_.cend() || shortToLongMap_.find(longName) != shortToLongMap_.cend())
 	{
 		ocean_assert(false && "The long argument is already in use!");
 		return false;
 	}
 
-	if (!shortName.empty() && (shortToLongMap_.find(shortName) != shortToLongMap_.cend() || parameterMap_.find(longName) != parameterMap_.cend()))
+	if (!shortName.empty())
 	{
-		ocean_assert(false && "The short argument is already in use!");
-		return false;
+		if (!std::isalpha(shortName[0]))
+		{
+			ocean_assert(false && "Invalid short name, must start with alphabetic character");
+			return false;
+		}
+
+		if (shortToLongMap_.find(shortName) != shortToLongMap_.cend() || parameterMap_.find(longName) != parameterMap_.cend())
+		{
+			ocean_assert(false && "The short argument is already in use!");
+			return false;
+		}
 	}
 
 	parameterMap_.insert(std::make_pair(longName, Parameter(longName, shortName, description, defaultValue)));
