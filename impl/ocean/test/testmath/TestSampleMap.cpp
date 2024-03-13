@@ -26,7 +26,19 @@ bool TestSampleMap::test(const double testDuration)
 	Log::info() << "---   SampleMap test:   ---";
 	Log::info() << " ";
 
-	allSucceeded = testSample(testDuration) && allSucceeded;
+	allSucceeded = testSampleMostRecent(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testSampleSpecific(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testSampleInterpolation(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -50,9 +62,19 @@ bool TestSampleMap::test(const double testDuration)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestSampleMap, Sample)
+TEST(TestSampleMap, SampleMostRecent)
 {
-	EXPECT_TRUE(TestSampleMap::testSample(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestSampleMap::testSampleMostRecent(GTEST_TEST_DURATION));
+}
+
+TEST(TestSampleMap, SampleSpecific)
+{
+	EXPECT_TRUE(TestSampleMap::testSampleSpecific(GTEST_TEST_DURATION));
+}
+
+TEST(TestSampleMap, SampleInterpolation)
+{
+	EXPECT_TRUE(TestSampleMap::testSampleInterpolation(GTEST_TEST_DURATION));
 }
 
 TEST(TestSampleMap, StressTest)
@@ -62,11 +84,11 @@ TEST(TestSampleMap, StressTest)
 
 #endif // OCEAN_USE_GTEST
 
-bool TestSampleMap::testSample(const double testDuration)
+bool TestSampleMap::testSampleMostRecent(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Sample test:";
+	Log::info() << "Sample test with most recent element:";
 
 	RandomGenerator randomGenerator;
 	bool allSucceeded = true;
@@ -75,90 +97,134 @@ bool TestSampleMap::testSample(const double testDuration)
 
 	do
 	{
+		const unsigned int capacity = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int iterations = RandomI::random(1u, capacity);
+
+		Vector2 mostRecentValue(0, 0);
+		double mostRecentTimestamp = NumericD::minValue();
+
+		SampleMap<Vector2> sampleMap(capacity);
+
+		for (unsigned int n = 0u; n < iterations; ++n)
 		{
-			// most recent sample
+			const double timestamp = RandomD::scalar(randomGenerator, -1000, 1000);
+			const Vector2 value = Random::vector2();
 
-			const unsigned int capacity = RandomI::random(randomGenerator, 1u, 100u);
-			const unsigned int iterations = RandomI::random(1u, capacity);
-
-			Vector2 mostRecentValue(0, 0);
-			double mostRecentTimestamp = NumericD::minValue();
-
-			SampleMap<Vector2> sampleMap(capacity);
-
-			for (unsigned int n = 0u; n < iterations; ++n)
+			if (timestamp >= mostRecentTimestamp)
 			{
-				const double timestamp = RandomD::scalar(randomGenerator, -1000, 1000);
-				const Vector2 value = Random::vector2();
-
-				if (timestamp >= mostRecentTimestamp)
-				{
-					mostRecentTimestamp = timestamp;
-					mostRecentValue = value;
-				}
-
-				sampleMap.insert(value, timestamp);
+				mostRecentTimestamp = timestamp;
+				mostRecentValue = value;
 			}
 
+			sampleMap.insert(value, timestamp);
+		}
+
+		Vector2 value;
+		if (!sampleMap.sample(value) || value != mostRecentValue)
+		{
+			allSucceeded = false;
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestSampleMap::testSampleSpecific(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "sample test with specific element:";
+
+	RandomGenerator randomGenerator;
+	bool allSucceeded = true;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int capacity = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int iterations = RandomI::random(1u, capacity);
+
+		std::map<double, Vector2> testMap;
+
+		SampleMap<Vector2> sampleMap(capacity);
+
+		for (unsigned int n = 0u; n < iterations; ++n)
+		{
+			const double timestamp = RandomD::scalar(randomGenerator, -1000, 1000);
+			const Vector2 value = Random::vector2();
+
+			testMap[timestamp] = value; // not using insert to ensure that identical timestamps overwrite previous entries
+			sampleMap.insert(value, timestamp);
+		}
+
+		// let's ensure that we can access each sample
+
+		for (std::map<double, Vector2>::const_iterator i = testMap.cbegin(); i != testMap.cend(); ++i)
+		{
+
 			Vector2 value;
-			if (!sampleMap.sample(value) || value != mostRecentValue)
+			if (!sampleMap.sample(i->first, value) || value != i->second)
 			{
 				allSucceeded = false;
 			}
 		}
 
+		// let's ensure that an arbitrary timestamp does not produce a corresponding sample
+
+		for (unsigned int n = 0u; n < 10u; ++n)
 		{
-			// specific sample
+			const double timestamp = RandomD::scalar(randomGenerator, -1000, 1000);
 
-			const unsigned int capacity = RandomI::random(randomGenerator, 1u, 100u);
-			const unsigned int iterations = RandomI::random(1u, capacity);
-
-			std::map<double, Vector2> testMap;
-
-			SampleMap<Vector2> sampleMap(capacity);
-
-			for (unsigned int n = 0u; n < iterations; ++n)
+			if (testMap.find(timestamp) == testMap.cend())
 			{
-				const double timestamp = RandomD::scalar(randomGenerator, -1000, 1000);
-				const Vector2 value = Random::vector2();
-
-				testMap[timestamp] = value; // not using insert to ensure that identical timestamps overwrite previous entries
-				sampleMap.insert(value, timestamp);
-			}
-
-			// let's ensure that we can access each sample
-
-			for (std::map<double, Vector2>::const_iterator i = testMap.cbegin(); i != testMap.cend(); ++i)
-			{
-
 				Vector2 value;
-				if (!sampleMap.sample(i->first, value) || value != i->second)
+				if (sampleMap.sample(timestamp, value))
 				{
 					allSucceeded = false;
 				}
 			}
-
-			// let's ensure that an arbitrary timestamp does not produce a corresponding sample
-
-			for (unsigned int n = 0u; n < 10u; ++n)
-			{
-				const double timestamp = RandomD::scalar(randomGenerator, -1000, 1000);
-
-				if (testMap.find(timestamp) == testMap.cend())
-				{
-					Vector2 value;
-					if (sampleMap.sample(timestamp, value))
-					{
-						allSucceeded = false;
-					}
-				}
-			}
 		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
-		for (unsigned int nInterpolationStrategy = 0u; nInterpolationStrategy < 2u; ++nInterpolationStrategy)
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestSampleMap::testSampleInterpolation(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Sample test with interpolation:";
+
+	RandomGenerator randomGenerator;
+	bool allSucceeded = true;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (const SampleMap<float>::InterpolationStrategy interpolationStrategy : {SampleMap<float>::IS_TIMESTAMP_NEAREST, SampleMap<float>::IS_TIMESTAMP_INTERPOLATE})
 		{
-			const SampleMap<float>::InterpolationStrategy interpolationStrategy = (nInterpolationStrategy == 0u) ? SampleMap<float>::IS_TIMESTAMP_NEAREST : SampleMap<float>::IS_TIMESTAMP_INTERPOLATE;
-		
 			SampleMap<float> sampleMap(RandomI::random(randomGenerator, 2u, 100u));
 
 			const double lowerTimestamp = RandomD::scalar(randomGenerator, -1000, 1000);
@@ -171,10 +237,10 @@ bool TestSampleMap::testSample(const double testDuration)
 
 			sampleMap.insert(lowerValue, lowerTimestamp);
 			sampleMap.insert(higherValue, higherTimestamp);
-			
+
 			{
 				// timestamp below lower timestamp
-				
+
 				const double timestamp = RandomD::scalar(randomGenerator, -2000, lowerTimestamp - Numeric::weakEps());
 
 				float interpolatedValue = NumericF::minValue();
@@ -189,16 +255,16 @@ bool TestSampleMap::testSample(const double testDuration)
 				{
 					allSucceeded = false;
 				}
-				
+
 				if (NumericD::isNotEqual(timestampDistance, NumericD::abs(timestamp - lowerTimestamp)))
 				{
 					allSucceeded = false;
 				}
 			}
-			
+
 			{
 				// timestamp between sample values
-				
+
 				const double timestamp = RandomD::scalar(randomGenerator, lowerTimestamp, higherTimestamp);
 
 				float interpolatedValue = NumericF::minValue();
@@ -208,7 +274,7 @@ bool TestSampleMap::testSample(const double testDuration)
 				{
 					allSucceeded = false;
 				}
-				
+
 				if (interpolationStrategy == SampleMap<float>::IS_TIMESTAMP_NEAREST)
 				{
 					if (interpolatedValue != lowerValue && interpolatedValue != higherValue)
@@ -223,16 +289,18 @@ bool TestSampleMap::testSample(const double testDuration)
 
 					if (NumericD::isNotWeakEqual(lowerDistance, higherDistance))
 					{
-						if (interpolatedValue == lowerValue)
+						if (lowerDistance > higherDistance)
 						{
-							if (lowerDistance > higherDistance)
+							if (interpolatedValue != higherValue)
 							{
 								allSucceeded = false;
 							}
 						}
 						else
 						{
-							if (higherDistance > lowerDistance)
+							ocean_assert(higherDistance > lowerDistance);
+
+							if (interpolatedValue != lowerValue)
 							{
 								allSucceeded = false;
 							}
@@ -251,16 +319,16 @@ bool TestSampleMap::testSample(const double testDuration)
 						allSucceeded = false;
 					}
 				}
-				
+
 				if (NumericD::isNotEqual(timestampDistance, std::min(NumericD::abs(higherTimestamp - timestamp), NumericD::abs(timestamp - lowerTimestamp))))
 				{
 					allSucceeded = false;
 				}
 			}
-			
+
 			{
 				// timestamp above higher timestamp
-				
+
 				const double timestamp = RandomD::scalar(randomGenerator, higherTimestamp + Numeric::weakEps(), 2000);
 
 				float interpolatedValue = NumericF::minValue();
@@ -275,7 +343,7 @@ bool TestSampleMap::testSample(const double testDuration)
 				{
 					allSucceeded = false;
 				}
-				
+
 				if (NumericD::isNotEqual(timestampDistance, NumericD::abs(timestamp - higherTimestamp)))
 				{
 					allSucceeded = false;

@@ -30,11 +30,25 @@ class OCEAN_TEST_MATH_EXPORT TestSampleMap
 		static bool test(const double testDuration);
 
 		/**
-		 * Tests the sample functions.
+		 * Tests the sample functions with most recent element.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testSample(const double testDuration);
+		static bool testSampleMostRecent(const double testDuration);
+
+		/**
+		 * Tests the sample functions with specific element.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testSampleSpecific(const double testDuration);
+
+		/**
+		 * Tests the sample functions with interpolation.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testSampleInterpolation(const double testDuration);
 
 		/**
 		 * Applies a stress test.
