@@ -3,6 +3,8 @@
 #include "ocean/media/imageio/Image.h"
 #include "ocean/media/imageio/IIOObject.h"
 
+#include "ocean/base/StringApple.h"
+
 #include <CoreFoundation/CoreFoundation.h>
 
 namespace Ocean
@@ -76,6 +78,15 @@ bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::v
 	if (typeIdentifier.object() == nullptr)
 	{
 		return false;
+	}
+
+	if (StringApple::toUTF8(typeIdentifier.object()) == "public.heic")
+	{
+		if (frame.width() == 1u && frame.height() == 1u)
+		{
+			Log::error() << "Heic images need to be larger than 1x1";
+			return false;
+		}
 	}
 
 	const ScopedCFMutableDataRef mutableData(CFDataCreateMutable(nullptr, 0));

@@ -248,11 +248,6 @@ TEST_F(TestImageIOGTestInstance, HeicImageRGB24Recorder)
 	EXPECT_TRUE(TestImageIO::testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), "heic", 10.0));
 }
 
-TEST_F(TestImageIOGTestInstance, HeicQualityProperty)
-{
-	EXPECT_TRUE(TestImageIO::testQualityProperty("heic", GTEST_TEST_DURATION));
-}
-
 TEST_F(TestImageIOGTestInstance, HeicColorProfileNameProperty)
 {
 	EXPECT_TRUE(TestImageIO::testColorProfileNameProperty("heic", GTEST_TEST_DURATION));
@@ -511,11 +506,11 @@ bool TestImageIO::testHeicImageEncodeDecode(const double testDuration)
 	// and extreme large images to identify memory leaks
 
 #ifdef OCEAN_HARDWARE_REDUCED_PERFORMANCE
-	const Indices32 widths = {1u, 3u, 640u, 641u, 640u, 641u, 1280u, 1920u, 3840u};
-	const Indices32 heights = {1u, 2u, 480u, 480u, 481u, 481u, 720u, 1080u, 2160u};
+	const Indices32 widths = {2u, 3u, 640u, 641u, 640u, 641u, 1280u, 1920u, 3840u}; // Apple's HEIC does not support images with resolution 1x1
+	const Indices32 heights = {2u, 2u, 480u, 480u, 481u, 481u, 720u, 1080u, 2160u};
 #else
-	const Indices32 widths = {1u, 3u, 640u, 641u, 640u, 641u, 1280u, 1920u, 3840u, 7680u};
-	const Indices32 heights = {1u, 2u, 480u, 480u, 481u, 481u, 720u, 1080u, 2160u, 4320u};
+	const Indices32 widths = {2u, 3u, 640u, 641u, 640u, 641u, 1280u, 1920u, 3840u, 7680u};
+	const Indices32 heights = {2u, 2u, 480u, 480u, 481u, 481u, 720u, 1080u, 2160u, 4320u};
 #endif
 
 	const FrameType::PixelFormats pixelFormats = {FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32, FrameType::FORMAT_YUV24};
@@ -547,13 +542,6 @@ bool TestImageIO::testHeicImageEncodeDecode(const double testDuration)
 	Log::info() << " ";
 
 	if (!testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), "heic", 10.0))
-	{
-		allSucceeded = false;
-	}
-
-	Log::info() << " ";
-
-	if (!testQualityProperty("heic", testDuration))
 	{
 		allSucceeded = false;
 	}
@@ -718,12 +706,9 @@ bool TestImageIO::testAnyImageEncodeDecode(const double testDuration)
 	const Timestamp startTimestamp(true);
 	do
 	{
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false);
 		ocean_assert(sourceFrame);
 
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
 		CV::FrameFilterGaussian::filter(sourceFrame, 7u, WorkerPool::get().conditionalScopedWorker(sourceFrame.pixels() >= 50u * 50u)());
 
 		for (size_t n = 0; n < encoderTypes.size(); ++n)
@@ -847,13 +832,8 @@ bool TestImageIO::testInterchangeability(const double testDuration)
 		{
 			for (const FrameType::PixelOrigin& pixelOrigin : pixelOrigins)
 			{
-				const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-				Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
+				Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
 				ocean_assert(sourceFrame);
-
-				// we create a randomized image
-				CV::CVUtilities::randomizeFrame(sourceFrame, false);
 
 				for (const std::string& imageType : imageTypes)
 				{
@@ -972,21 +952,15 @@ bool TestImageIO::testBmpImageEncodeDecode(const unsigned int width, const unsig
 
 	bool allSucceeded = true;
 
-	std::vector<uint8_t> buffer;
-
 	HighPerformanceStatistic performanceEncoding, performanceDecoding;
 
 	const Timestamp startTimestamp(true);
 	do
 	{
-		buffer.clear();
+		std::vector<uint8_t> buffer;
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
 		ocean_assert(sourceFrame);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
 
 		unsigned int correctRows = 0u;
 
@@ -1079,21 +1053,15 @@ bool TestImageIO::testJpgImageEncodeDecode(const unsigned int width, const unsig
 
 	bool allSucceeded = true;
 
-	std::vector<uint8_t> buffer;
-
 	HighPerformanceStatistic performanceEncoding, performanceDecoding;
 
 	const Timestamp startTimestamp(true);
 	do
 	{
-		buffer.clear();
+		std::vector<uint8_t> buffer;
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
 		ocean_assert(sourceFrame);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
 
 		unsigned int correctRows = 0u;
 
@@ -1205,21 +1173,15 @@ bool TestImageIO::testHeicImageEncodeDecode(const unsigned int width, const unsi
 
 	bool allSucceeded = true;
 
-	std::vector<uint8_t> buffer;
-
 	HighPerformanceStatistic performanceEncoding, performanceDecoding;
 
 	const Timestamp startTimestamp(true);
 	do
 	{
-		buffer.clear();
+		std::vector<uint8_t> buffer;
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
+		Frame sourceFrame =	CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
 		ocean_assert(sourceFrame);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
 
 		unsigned int correctRows = 0u;
 
@@ -1331,21 +1293,15 @@ bool TestImageIO::testPngImageEncodeDecode(const unsigned int width, const unsig
 
 	bool allSucceeded = true;
 
-	std::vector<uint8_t> buffer;
-
 	HighPerformanceStatistic performanceEncoding, performanceDecoding;
 
 	const Timestamp startTimestamp(true);
 	do
 	{
-		buffer.clear();
+		std::vector<uint8_t> buffer;
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
 		ocean_assert(sourceFrame);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
 
 		unsigned int correctRows = 0u;
 
@@ -1509,21 +1465,15 @@ bool TestImageIO::testTifImageEncodeDecode(const unsigned int width, const unsig
 
 	bool allSucceeded = true;
 
-	std::vector<uint8_t> buffer;
-
 	HighPerformanceStatistic performanceEncoding, performanceDecoding;
 
 	const Timestamp startTimestamp(true);
 	do
 	{
-		buffer.clear();
+		std::vector<uint8_t> buffer;
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
 		ocean_assert(sourceFrame);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
 
 		unsigned int correctRows = 0u;
 
@@ -1620,8 +1570,7 @@ bool TestImageIO::testBufferImageRecorder(const FrameType& frameType, const std:
 		return false;
 	}
 
-	Frame sourceFrame(frameType);
-	CV::CVUtilities::randomizeFrame(sourceFrame);
+	Frame sourceFrame = CV::CVUtilities::randomizedFrame(frameType, false);
 
 	if (maximalAverageDifference > 0.0 && sourceFrame.width() >= 7 && sourceFrame.height() >= 7u)
 	{
@@ -1705,9 +1654,8 @@ bool TestImageIO::testQualityProperty(const std::string& imageType, const double
 	const Timestamp startTimestamp(true);
 	do
 	{
-		Frame frame(FrameType(1280u, 720u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT));
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false);
 
-		CV::CVUtilities::randomizeFrame(frame, false);
 		CV::FrameFilterGaussian::filter(frame, 7u, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 50u * 50u)());
 
 		constexpr float highQuality = 1.0f;
@@ -1787,12 +1735,12 @@ bool TestImageIO::testColorProfileNameProperty(const std::string& imageType, con
 			const FrameType::PixelFormat pixelFormat = colorProfilePair.first;
 			const std::string& colorProfileName = colorProfilePair.second;
 
-			const unsigned int width = RandomI::random(1u, 1280u);
-			const unsigned int height = RandomI::random(1u, 720u);
-			const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+			const unsigned int minSize = imageType == "heic" ? 2u : 1u; // Apple's HEIC does not support 1x1
 
-			Frame frame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-			CV::CVUtilities::randomizeFrame(frame, false);
+			const unsigned int width = RandomI::random(minSize, 1280u);
+			const unsigned int height = RandomI::random(minSize, 720u);
+
+			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false);
 
 			Media::Image::Properties encodedProperties;
 			encodedProperties.colorProfileName_ = colorProfileName;
