@@ -45,11 +45,7 @@ bool TestFASTDetector::test(const Frame& frame, const double testDuration, Worke
 	}
 	else
 	{
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		yFrame = Frame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-
-		CV::CVUtilities::randomizeFrame(yFrame, false);
+		yFrame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false);
 	}
 
 	allSucceeded = testStandardStrength(yFrame, testDuration, worker) && allSucceeded;
@@ -78,10 +74,7 @@ bool TestFASTDetector::test(const Frame& frame, const double testDuration, Worke
 
 TEST(TestFASTDetector, StandardStrength)
 {
-	const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-	Frame yFrame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-
-	CV::CVUtilities::randomizeFrame(yFrame, false);
+	const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false);
 
 	Worker worker;
 	EXPECT_TRUE(TestFASTDetector::testStandardStrength(yFrame, GTEST_TEST_DURATION, worker));
@@ -89,10 +82,7 @@ TEST(TestFASTDetector, StandardStrength)
 
 TEST(TestFASTDetector, PreciseStrength)
 {
-	const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-	Frame yFrame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-
-	CV::CVUtilities::randomizeFrame(yFrame, false);
+	const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false);
 
 	Worker worker;
 	EXPECT_TRUE(TestFASTDetector::testPreciseStrength(yFrame, GTEST_TEST_DURATION, worker));
@@ -142,14 +132,10 @@ bool TestFASTDetector::testStandardStrength(const Frame& yFrame, const double te
 
 					if (randomIteration)
 					{
-						const unsigned int testWidth = RandomI::random(7u, 1280u);
-						const unsigned int testHeight = RandomI::random(7u, 720u);
+						const unsigned int testWidth = RandomI::random(9u, 1280u);
+						const unsigned int testHeight = RandomI::random(9u, 720u);
 
-						const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-						testFrame = Frame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-
-						CV::CVUtilities::randomizeFrame(testFrame, false);
+						testFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false);
 					}
 
 					CV::Detector::FASTFeatures features;
@@ -157,8 +143,13 @@ bool TestFASTDetector::testStandardStrength(const Frame& yFrame, const double te
 					constexpr bool preciseScoring = false;
 
 					performance.startIf(!randomIteration);
-					CV::Detector::FASTFeatureDetector::Comfort::detectFeatures(testFrame, threshold, false, preciseScoring, features, useWorker);
+						const bool localResult = CV::Detector::FASTFeatureDetector::Comfort::detectFeatures(testFrame, threshold, false, preciseScoring, features, useWorker);
 					performance.stopIf(!randomIteration);
+
+					if (!localResult)
+					{
+						allSucceeded = false;
+					}
 
 					if (foundFeatures == size_t(-1))
 					{
@@ -244,14 +235,10 @@ bool TestFASTDetector::testPreciseStrength(const Frame& yFrame, const double tes
 
 					if (randomIteration)
 					{
-						const unsigned int testWidth = RandomI::random(7u, 1280u);
-						const unsigned int testHeight = RandomI::random(7u, 720u);
+						const unsigned int testWidth = RandomI::random(9u, 1280u);
+						const unsigned int testHeight = RandomI::random(9u, 720u);
 
-						const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-						testFrame = Frame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-
-						CV::CVUtilities::randomizeFrame(testFrame, false);
+						testFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false);
 					}
 
 					CV::Detector::FASTFeatures features;
@@ -259,8 +246,19 @@ bool TestFASTDetector::testPreciseStrength(const Frame& yFrame, const double tes
 					constexpr bool preciseScoring = true;
 
 					performance.startIf(!randomIteration);
-					CV::Detector::FASTFeatureDetector::Comfort::detectFeatures(testFrame, threshold, false, preciseScoring, features, useWorker);
+						const bool localResult = CV::Detector::FASTFeatureDetector::Comfort::detectFeatures(testFrame, threshold, false, preciseScoring, features, useWorker);
 					performance.stopIf(!randomIteration);
+
+					if (!localResult)
+					{
+						allSucceeded = false;
+					}
+
+					if (foundFeatures == size_t(-1))
+					{
+						ocean_assert(!randomIteration);
+						foundFeatures = size_t(features.size());
+					}
 
 					if (!randomIteration)
 					{
