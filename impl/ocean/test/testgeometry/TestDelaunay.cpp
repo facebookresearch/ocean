@@ -6,6 +6,7 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/geometry/Delaunay.h"
+#include "ocean/geometry/SpatialDistribution.h"
 
 #include "ocean/math/Random.h"
 
@@ -33,9 +34,13 @@ bool TestDelaunay::test(const double testDuration)
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Delaunay test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Delaunay test FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -53,25 +58,32 @@ bool TestDelaunay::testTriangulation(const double testDuration)
 {
 	Log::info() << "Test triangulation:";
 
-	const unsigned int numberPoints[] = {3u, 5u, 10u, 50u, 100u, 1000u, 2000u};
-
 	bool allSucceeded = true;
 
-	Log::info() << " ";
-
-	for (size_t n = 0; n < sizeof(numberPoints) / sizeof(numberPoints[0]); ++n)
+#ifdef OCEAN_MATH_USE_SINGLE_PRECISION
+	for (const unsigned int numberPoints : {3u, 5u, 10u, 50u})
+#else
+	for (const unsigned int numberPoints : {3u, 5u, 10u, 50u, 100u, 1000u, 2000u})
+#endif
 	{
-		Log::info().newLine(n != 0);
+		Log::info() << " ";
 
-		allSucceeded = testTriangulation(numberPoints[n], testDuration) && allSucceeded;
+		if (!testTriangulation(numberPoints, testDuration))
+		{
+			allSucceeded = false;
+		}
 	}
 
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Triangulation test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Triangulation test FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -82,27 +94,47 @@ bool TestDelaunay::testTriangulation(const unsigned int pointNumber, const doubl
 
 	Log::info() << "... with " << String::insertCharacter(String::toAString(pointNumber), ',', 3, false) << " points:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	constexpr Scalar range = std::is_same<float, Scalar>::value ? Scalar(10) : Scalar(1000);
 
-	Vectors2 points(pointNumber);
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		for (unsigned int n = 0u; n < pointNumber; ++n)
-			points[n] = Vector2(Random::scalar(-100, 100), Random::scalar(-100, 100));
+		constexpr Scalar areaSize = range * Scalar(2);
+		constexpr unsigned int bins = (unsigned int)(range * 10);
+
+		Geometry::SpatialDistribution::OccupancyArray occupancyArray(-range, -range, areaSize, areaSize, bins, bins);
+
+		Vectors2 points;
+		points.reserve(pointNumber);
+
+		while (points.size() < pointNumber)
+		{
+			const Vector2 candidate = Random::vector2(-range, range);
+
+			if (!occupancyArray.isOccupiedNeighborhood9(candidate)) // let's ensure that we have some space between all points
+			{
+				occupancyArray.addPoint(candidate);
+
+				points.push_back(candidate);
+			}
+		}
 
 		performance.start();
-		const Geometry::Delaunay::IndexTriangles triangles = Geometry::Delaunay::triangulation(points);
+			const Geometry::Delaunay::IndexTriangles triangles = Geometry::Delaunay::triangulation(points);
 		performance.stop();
 
 		if (Geometry::Delaunay::checkTriangulation(triangles, points))
-			validIterations++;
+		{
+			++validIterations;
+		}
 
-		iterations++;
+		++iterations;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -112,10 +144,9 @@ bool TestDelaunay::testTriangulation(const unsigned int pointNumber, const doubl
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
 
-	if (std::is_same<float, Scalar>::value)
-		return percent >= 0.95;
+	constexpr double threshold = std::is_same<float, Scalar>::value ? 0.95 : 0.99;
 
-	return percent >= 0.99;
+	return percent >= threshold;
 }
 
 }
