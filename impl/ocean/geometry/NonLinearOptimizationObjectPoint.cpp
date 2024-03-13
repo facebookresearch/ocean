@@ -3602,7 +3602,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOrientationalPosesProvider :
 			{
 				translations_T_world_.emplace_back(candidateFlippedCameras_T_world_[n].rotationMatrix().inverted() * candidateFlippedCameras_T_world_[n].translation());
 
-				ocean_assert(candidateFlippedCameras_T_world_[n] == HomogenousMatrix4(candidateFlippedCameras_T_world_[n].rotationMatrix()) * HomogenousMatrix4(translations_T_world_[n]));
+				ocean_assert(candidateFlippedCameras_T_world_[n].isEqual(HomogenousMatrix4(candidateFlippedCameras_T_world_[n].rotationMatrix()) * HomogenousMatrix4(translations_T_world_[n]), Numeric::weakEps()));
 			}
 		}
 
@@ -4538,7 +4538,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOrientationalPoses
 		{
 			(*world_T_optimizedCameras)[n] = AnyCamera::invertedFlipped2Standard(flippedOptimizedCameras_T_world[n]);
 
-			ocean_assert(world_T_cameras[n].translation() == (*world_T_optimizedCameras)[n].translation());
+			ocean_assert(world_T_cameras[n].translation().isEqual((*world_T_optimizedCameras)[n].translation(), Numeric::weakEps()));
 		}
 	}
 

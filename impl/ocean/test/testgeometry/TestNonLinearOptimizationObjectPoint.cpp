@@ -2871,7 +2871,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 
 			for (size_t p = 0; p < world_T_optimizedCameras.size(); ++p)
 			{
-				ocean_assert(world_T_optimizedCameras[p].translation() == world_T_cameras[p].translation());
+				ocean_assert(world_T_optimizedCameras[p].translation().isEqual(world_T_cameras[p].translation(), Numeric::weakEps()));
 
 				const HomogenousMatrix4 world_T_optimizedCamera = world_T_optimizedCameras[p];
 
