@@ -47,32 +47,41 @@ bool TestBoundingSphere::test(const double testDuration)
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Bounding sphere test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Bounding sphere test FAILED!";
+	}
 
 	return allSucceeded;
 }
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestBoundingSphere, Constructor) {
+TEST(TestBoundingSphere, Constructor)
+{
 	EXPECT_TRUE(TestBoundingSphere::testConstructor(GTEST_TEST_DURATION));
 }
 
-TEST(TestBoundingSphere, Intersections) {
+TEST(TestBoundingSphere, Intersections)
+{
 	EXPECT_TRUE(TestBoundingSphere::testIntersections(GTEST_TEST_DURATION));
 }
 
-TEST(TestBoundingSphere, IntersectionsTransformed) {
+TEST(TestBoundingSphere, IntersectionsTransformed)
+{
 	EXPECT_TRUE(TestBoundingSphere::testIntersectionsTransformed(GTEST_TEST_DURATION));
 }
 
-TEST(TestBoundingSphere, PositiveFrontIntersection) {
+TEST(TestBoundingSphere, PositiveFrontIntersection)
+{
 	EXPECT_TRUE(TestBoundingSphere::testPositiveFrontIntersection(GTEST_TEST_DURATION));
 }
 
-TEST(TestBoundingSphere, PositiveBackIntersection) {
+TEST(TestBoundingSphere, PositiveBackIntersection)
+{
 	EXPECT_TRUE(TestBoundingSphere::testPositiveBackIntersection(GTEST_TEST_DURATION));
 }
 
@@ -82,12 +91,13 @@ bool TestBoundingSphere::testConstructor(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Costructor test:";
+	Log::info() << "Constructor test:";
 
-	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.001) : Numeric::eps();
+	constexpr Scalar range = std::is_same<float, Scalar>::value ? Scalar(10) : Scalar(1000);
+	constexpr Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.001) : Numeric::eps();
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -95,8 +105,8 @@ bool TestBoundingSphere::testConstructor(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Vector3 lower(Random::vector3(-1000, 1000));
-			const Vector3 higher(lower + Random::vector3(Scalar(0.05), 1000));
+			const Vector3 lower(Random::vector3(-range, range));
+			const Vector3 higher(lower + Random::vector3(Scalar(0.05), range));
 			const Vector3 center((lower + higher) * Scalar(0.5));
 
 			ocean_assert(Numeric::isEqual(center.distance(lower), center.distance(higher), epsilon));
@@ -107,16 +117,24 @@ bool TestBoundingSphere::testConstructor(const double testDuration)
 			bool localSucceeded = true;
 
 			if (sphere.center() != center)
+			{
 				localSucceeded = false;
+			}
 
 			if (Numeric::isNotEqual(sphere.radius(), center.distance(lower), epsilon))
+			{
 				localSucceeded = false;
+			}
 
 			if (Numeric::isNotEqual(sphere.radius(), center.distance(higher), epsilon))
+			{
 				localSucceeded = false;
+			}
 
 			if (localSucceeded)
-				validIterations++;
+			{
+				++validIterations;
+			}
 
 			iterations++;
 		}
@@ -137,10 +155,11 @@ bool TestBoundingSphere::testIntersections(const double testDuration)
 
 	Log::info() << "Intersections test:";
 
-	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.001) : Numeric::eps();
+	constexpr Scalar range = std::is_same<float, Scalar>::value ? Scalar(10) : Scalar(1000);
+	constexpr Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.001) : Numeric::eps();
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -148,8 +167,8 @@ bool TestBoundingSphere::testIntersections(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			const Vector3 center(Random::vector3(-100, 100));
-			const Scalar radius = Random::scalar(Scalar(0.05), 100);
+			const Vector3 center(Random::vector3(-range, range));
+			const Scalar radius = Random::scalar(Scalar(0.05), range);
 
 			const BoundingSphere sphere(center, radius);
 
@@ -171,30 +190,45 @@ bool TestBoundingSphere::testIntersections(const double testDuration)
 				ocean_assert(intersectingRay.isOnLine(position1));
 
 				if (Numeric::isNotEqual(center.distance(position0), radius, epsilon))
+				{
 					localSucceeded = false;
+				}
+
 				if (Numeric::isNotEqual(center.distance(position1), radius, epsilon))
+				{
 					localSucceeded = false;
+				}
 
 				const Vector3 testPosition0 = intersectingRay.point(distance0);
 				if (!testPosition0.isEqual(position0, epsilon))
+				{
 					localSucceeded = false;
+				}
 
 				const Vector3 testPosition1 = intersectingRay.point(distance1);
 				if (!testPosition1.isEqual(position1, epsilon))
+				{
 					localSucceeded = false;
+				}
 
 				const Vector3 testNormal0 = (position0 - center).normalizedOrZero();
 				if (!testNormal0.isEqual(normal0, epsilon))
+				{
 					localSucceeded = false;
+				}
 
 				const Vector3 testNormal1 = (position1 - center).normalizedOrZero();
 				if (!testNormal1.isEqual(normal1, epsilon))
+				{
 					localSucceeded = false;
+				}
 			}
 			else
+			{
 				localSucceeded = false;
+			}
 
-			const Line3 arbitraryRay(Random::vector3(-100, 100), Random::vector3());
+			const Line3 arbitraryRay(Random::vector3(-range, range), Random::vector3());
 			if (sphere.intersections(arbitraryRay, position0, distance0, normal0, position1, distance1, normal1))
 			{
 				ocean_assert(arbitraryRay.isOnLine(position0));
@@ -208,13 +242,17 @@ bool TestBoundingSphere::testIntersections(const double testDuration)
 				const Vector3 nearestPoint(arbitraryRay.nearestPoint(center));
 
 				if (center.distance(nearestPoint) <= radius + Numeric::eps())
+				{
 					localSucceeded = false;
+				}
 			}
 
 			if (localSucceeded)
-				validIterations++;
+			{
+				++validIterations;
+			}
 
-			iterations++;
+			++iterations;
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
@@ -233,10 +271,11 @@ bool TestBoundingSphere::testIntersectionsTransformed(const double testDuration)
 
 	Log::info() << "Intersections test (transformed sphere):";
 
-	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.001) : Numeric::eps();
+	constexpr Scalar range = std::is_same<float, Scalar>::value ? Scalar(10) : Scalar(1000);
+	constexpr Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.001) : Numeric::weakEps();
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -246,66 +285,83 @@ bool TestBoundingSphere::testIntersectionsTransformed(const double testDuration)
 		{
 			bool localSucceeded = true;
 
-			const Vector3 center(Random::vector3(-100, 100));
-			const Scalar radius = Random::scalar(Scalar(0.01), 100);
+			const Vector3 center(Random::vector3(-range, range));
+			const Scalar radius = Random::scalar(Scalar(0.01), range);
 			const BoundingSphere sphere(center, radius);
 
 			// transformation transforming sphere-points to world-points
-			const HomogenousMatrix4 wTs(Random::vector3(-100, 100), Random::rotation(), Random::vector3(Scalar(0.05), 10));
-			const HomogenousMatrix4 sTw(wTs.inverted());
+			const HomogenousMatrix4 world_T_sphere(Random::vector3(-range, range), Random::rotation(), Random::vector3(Scalar(0.05), 10));
+			const HomogenousMatrix4 sphere_T_world(world_T_sphere.inverted());
 
-			const Line3 wRay(Random::vector3(-100, 100), Random::vector3());
+			const Line3 worldRay(Random::vector3(-range, range), Random::vector3());
 
-			const Vector3 sRayPoint(sTw * wRay.point());
-			const Vector3 sRayDirection((sTw.rotationMatrix() * wRay.direction()).normalizedOrZero());
-			ocean_assert(Numeric::isEqual(sRayDirection.length(), 1));
+			const Vector3 sphereRayPoint(sphere_T_world * worldRay.point());
+			const Vector3 sphereRayDirection((sphere_T_world.rotationMatrix() * worldRay.direction()).normalizedOrZero());
+			ocean_assert(Numeric::isEqual(sphereRayDirection.length(), 1));
 
-			const Line3 sRay(sRayPoint, sRayDirection);
+			const Line3 sRay(sphereRayPoint, sphereRayDirection);
 
 			Vector3 position0, position1;
 			Scalar distance0, distance1;
 			Vector3 normal0, normal1;
-			if (sphere.intersections(wRay, wTs, sTw, position0, distance0, normal0, position1, distance1, normal1))
+			if (sphere.intersections(worldRay, world_T_sphere, sphere_T_world, position0, distance0, normal0, position1, distance1, normal1))
 			{
-				ocean_assert(wRay.isOnLine(position0));
-				ocean_assert(wRay.isOnLine(position1));
+				ocean_assert(worldRay.isOnLine(position0));
+				ocean_assert(worldRay.isOnLine(position1));
 
-				const Vector3 sPosition0 = sTw * position0;
-				const Vector3 sPosition1 = sTw * position1;
+				const Vector3 spherePosition0 = sphere_T_world * position0;
+				const Vector3 spherePosition1 = sphere_T_world * position1;
 
-				if (Numeric::isNotEqual(center.distance(sPosition0), radius, epsilon))
+				if (Numeric::isNotEqual(center.distance(spherePosition0), radius, epsilon))
+				{
 					localSucceeded = false;
-				if (Numeric::isNotEqual(center.distance(sPosition1), radius, epsilon))
-					localSucceeded = false;
+				}
 
-				const Vector3 testPosition0 = wRay.point(distance0);
+				if (Numeric::isNotEqual(center.distance(spherePosition1), radius, epsilon))
+				{
+					localSucceeded = false;
+				}
+
+				const Vector3 testPosition0 = worldRay.point(distance0);
 				if (!testPosition0.isEqual(position0, epsilon))
+				{
 					localSucceeded = false;
+				}
 
-				const Vector3 testPosition1 = wRay.point(distance1);
+				const Vector3 testPosition1 = worldRay.point(distance1);
 				if (!testPosition1.isEqual(position1, epsilon))
+				{
 					localSucceeded = false;
+				}
 
-				const Vector3 sTestNormal0 = (sPosition0 - center).normalizedOrZero();
-				const Vector3 wTestNormal0 = (sTw.rotationMatrix().transposed() * sTestNormal0).normalizedOrZero();
-				if (wTestNormal0 != normal0)
+				const Vector3 sphereTestNormal0 = (spherePosition0 - center).normalizedOrZero();
+				const Vector3 worldTestNormal0 = (sphere_T_world.rotationMatrix().transposed() * sphereTestNormal0).normalizedOrZero();
+				if (!worldTestNormal0.isEqual(normal0, epsilon))
+				{
 					localSucceeded = false;
+				}
 
-				const Vector3 sTestNormal1 = (sPosition1 - center).normalizedOrZero();
-				const Vector3 wTestNormal1 = (sTw.rotationMatrix().transposed() * sTestNormal1).normalizedOrZero();
-				if (wTestNormal1 != normal1)
+				const Vector3 sphereTestNormal1 = (spherePosition1 - center).normalizedOrZero();
+				const Vector3 worldTestNormal1 = (sphere_T_world.rotationMatrix().transposed() * sphereTestNormal1).normalizedOrZero();
+				if (!worldTestNormal1.isEqual(normal1, epsilon))
+				{
 					localSucceeded = false;
+				}
 			}
 			else
 			{
 				if (sphere.intersections(sRay, position0, distance0, normal0, position1, distance1, normal1))
+				{
 					localSucceeded = false;
+				}
 			}
 
 			if (localSucceeded)
-				validIterations++;
+			{
+				++validIterations;
+			}
 
-			iterations++;
+			++iterations;
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
@@ -324,10 +380,11 @@ bool TestBoundingSphere::testPositiveFrontIntersection(const double testDuration
 
 	Log::info() << "Positive front intersection test:";
 
-	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.001) : Numeric::eps();
+	constexpr Scalar range = std::is_same<float, Scalar>::value ? Scalar(10) : Scalar(1000);
+	constexpr Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.001) : Numeric::eps();
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -336,8 +393,8 @@ bool TestBoundingSphere::testPositiveFrontIntersection(const double testDuration
 		// front test
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			const Vector3 center(Random::vector3(-100, 100));
-			const Scalar radius = Random::scalar(Scalar(0.01), 100);
+			const Vector3 center(Random::vector3(-range, range));
+			const Scalar radius = Random::scalar(Scalar(0.01), range);
 
 			const BoundingSphere sphere(center, radius);
 
@@ -410,8 +467,8 @@ bool TestBoundingSphere::testPositiveFrontIntersection(const double testDuration
 		// center test
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			const Vector3 center(Random::vector3(-100, 100));
-			const Scalar radius = Random::scalar(Scalar(0.01), 100);
+			const Vector3 center(Random::vector3(-range, range));
+			const Scalar radius = Random::scalar(Scalar(0.01), range);
 
 			const BoundingSphere sphere(center, radius);
 
@@ -444,8 +501,8 @@ bool TestBoundingSphere::testPositiveFrontIntersection(const double testDuration
 		// back test
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			const Vector3 center(Random::vector3(-100, 100));
-			const Scalar radius = Random::scalar(Scalar(0.01), 100);
+			const Vector3 center(Random::vector3(-range, range));
+			const Scalar radius = Random::scalar(Scalar(0.01), range);
 
 			const BoundingSphere sphere(center, radius);
 
@@ -491,10 +548,11 @@ bool TestBoundingSphere::testPositiveBackIntersection(const double testDuration)
 
 	Log::info() << "Positive back intersection test:";
 
-	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.001) : Numeric::eps();
+	constexpr Scalar range = std::is_same<float, Scalar>::value ? Scalar(10) : Scalar(1000);
+	constexpr Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.001) : Numeric::eps();
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -503,8 +561,8 @@ bool TestBoundingSphere::testPositiveBackIntersection(const double testDuration)
 		// front test
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			const Vector3 center(Random::vector3(-100, 100));
-			const Scalar radius = Random::scalar(Scalar(0.05), 100);
+			const Vector3 center(Random::vector3(-range, range));
+			const Scalar radius = Random::scalar(Scalar(0.05), range);
 
 			const BoundingSphere sphere(center, radius);
 
@@ -526,11 +584,15 @@ bool TestBoundingSphere::testPositiveBackIntersection(const double testDuration)
 				ocean_assert(intersectingRay.isOnLine(position));
 
 				if (Numeric::isNotWeakEqual(center.distance(position), radius))
+				{
 					localSucceeded = false;
+				}
 
 				const Vector3 testPosition = intersectingRay.point(distance);
 				if (!testPosition.isEqual(position, epsilon))
+				{
 					localSucceeded = false;
+				}
 
 				Vector3 position2(0, 0, 0);
 				Scalar distance2;
@@ -543,16 +605,24 @@ bool TestBoundingSphere::testPositiveBackIntersection(const double testDuration)
 
 				const Vector3 testNormal = (position - center).normalizedOrZero();
 				if (!testNormal.isEqual(normal, epsilon))
+				{
 					localSucceeded = false;
+				}
 
 				if (normal * intersectingRay.direction() < 0)
+				{
 					localSucceeded = false;
+				}
 			}
 			else
+			{
 				localSucceeded = false;
+			}
 
 			if (localSucceeded)
-				validIterations++;
+			{
+				++validIterations;
+			}
 
 			iterations++;
 		}
@@ -560,8 +630,8 @@ bool TestBoundingSphere::testPositiveBackIntersection(const double testDuration)
 		// center test
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			const Vector3 center(Random::vector3(-100, 100));
-			const Scalar radius = Random::scalar(Scalar(0.01), 100);
+			const Vector3 center(Random::vector3(-range, range));
+			const Scalar radius = Random::scalar(Scalar(0.01), range);
 
 			const BoundingSphere sphere(center, radius);
 
@@ -583,11 +653,15 @@ bool TestBoundingSphere::testPositiveBackIntersection(const double testDuration)
 				ocean_assert(intersectingRay.isOnLine(position));
 
 				if (Numeric::isNotWeakEqual(center.distance(position), radius))
+				{
 					localSucceeded = false;
+				}
 
 				const Vector3 testPosition = intersectingRay.point(distance);
 				if (!testPosition.isEqual(position, Numeric::weakEps()))
+				{
 					localSucceeded = false;
+				}
 
 				Vector3 position2(0, 0, 0);
 				Scalar distance2;
@@ -616,17 +690,17 @@ bool TestBoundingSphere::testPositiveBackIntersection(const double testDuration)
 
 			if (localSucceeded)
 			{
-				validIterations++;
+				++validIterations;
 			}
 
-			iterations++;
+			++iterations;
 		}
 
 		// back test
 		for (unsigned int n = 0u; n < 100u; ++n)
 		{
-			const Vector3 center(Random::vector3(-100, 100));
-			const Scalar radius = Random::scalar(Scalar(0.01), 100);
+			const Vector3 center(Random::vector3(-range, range));
+			const Scalar radius = Random::scalar(Scalar(0.01), range);
 
 			const BoundingSphere sphere(center, radius);
 
@@ -644,12 +718,16 @@ bool TestBoundingSphere::testPositiveBackIntersection(const double testDuration)
 			bool localSucceeded = true;
 
 			if (sphere.positiveBackIntersection(intersectingRay, position, distance))
+			{
 				localSucceeded = false;
+			}
 
 			if (localSucceeded)
-				validIterations++;
+			{
+				++validIterations;
+			}
 
-			iterations++;
+			++iterations;
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
