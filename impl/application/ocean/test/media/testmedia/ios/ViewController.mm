@@ -36,7 +36,9 @@ using namespace Ocean;
 	const std::string message(Messenger::get().popMessage());
 
 	if (!message.empty())
+	{
 		[_controllerTextView setText:[[_controllerTextView text] stringByAppendingString:StringApple::toNSString(message + std::string("\n"))]];
+	}
 }
 
 - (void)didReceiveMemoryWarning

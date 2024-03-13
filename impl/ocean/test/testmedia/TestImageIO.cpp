@@ -613,7 +613,7 @@ bool TestImageIO::testPngImageEncodeDecode(const double testDuration)
 		Log::info() << " ";
 	}
 
-	if (!testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT), "png", 0.0))
+	if (!testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), "png", 0.0)) // using a pixel format without alpha channel to avoid verification of pre-multiplied pixels
 	{
 		allSucceeded = false;
 	}
@@ -1326,7 +1326,7 @@ bool TestImageIO::testPngImageEncodeDecode(const unsigned int width, const unsig
 		if (compressionSucceeded)
 		{
 			performanceDecoding.start();
-			const Frame targetFrame = Media::ImageIO::Image::decodeImage(buffer.data(), buffer.size(), "png");
+				const Frame targetFrame = Media::ImageIO::Image::decodeImage(buffer.data(), buffer.size(), "png");
 			performanceDecoding.stop();
 
 			if (targetFrame)
@@ -1572,7 +1572,7 @@ bool TestImageIO::testBufferImageRecorder(const FrameType& frameType, const std:
 
 	Frame sourceFrame = CV::CVUtilities::randomizedFrame(frameType, false);
 
-	if (maximalAverageDifference > 0.0 && sourceFrame.width() >= 7 && sourceFrame.height() >= 7u)
+	if (maximalAverageDifference > 0.0 && sourceFrame.width() >= 7u && sourceFrame.height() >= 7u)
 	{
 		CV::FrameFilterGaussian::filter(sourceFrame, 7u, sourceFrame.pixels() >= 50u * 50u ? WorkerPool::get().scopedWorker()() : nullptr);
 	}
