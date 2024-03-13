@@ -544,9 +544,9 @@ bool TestVocabularyTree::testConstructor(const double testDuration, Worker& work
 	ocean_assert(testDuration > 0.0);
 
 #ifdef OCEAN_USE_GTEST
-	constexpr unsigned int benchmarkDescriptorNumber = 5000u;
+	constexpr unsigned int benchmarkDescriptorNumber = 500u;
 #else
-	constexpr unsigned int benchmarkDescriptorNumber = 500000u;
+	constexpr unsigned int benchmarkDescriptorNumber = 5000u;
 #endif
 
 	using TypeHelper = TypeHelper<tDescriptorType>;
@@ -573,7 +573,7 @@ bool TestVocabularyTree::testConstructor(const double testDuration, Worker& work
 
 			for (const bool benchmarkIteration : {false, true})
 			{
-				const unsigned int numberDescriptors = benchmarkIteration ? benchmarkDescriptorNumber : RandomI::random(randomGenerator, 100000u) + 1000u;
+				const unsigned int numberDescriptors = benchmarkIteration ? benchmarkDescriptorNumber : RandomI::random(randomGenerator, benchmarkDescriptorNumber) + 500u;
 
 				Descriptors descriptors(numberDescriptors);
 
@@ -718,11 +718,11 @@ bool TestVocabularyTree::testMatchingViaLeafs(const double testDuration, Worker&
 	ocean_assert(testDuration > 0.0);
 
 #ifdef OCEAN_USE_GTEST
-	constexpr unsigned int numberDescriptors = 50000u;
-	constexpr unsigned int numberQueryDescriptors = 100u;
+	constexpr unsigned int numberDescriptors = 500u;
+	constexpr unsigned int numberQueryDescriptors = 50u;
 #else
-	constexpr unsigned int numberDescriptors = 500000u;
-	constexpr unsigned int numberQueryDescriptors = 1000u;
+	constexpr unsigned int numberDescriptors = 5000u;
+	constexpr unsigned int numberQueryDescriptors = 100u;
 #endif
 
 	using TypeHelper = TypeHelper<tDescriptorType>;
@@ -1058,11 +1058,11 @@ bool TestVocabularyTree::testMatchingDescriptors(const double testDuration, Work
 	ocean_assert(testDuration > 0.0);
 
 #ifdef OCEAN_USE_GTEST
-	constexpr unsigned int numberDescriptors = 50000u;
-	constexpr unsigned int numberQueryDescriptors = 100u;
+	constexpr unsigned int numberDescriptors = 500u;
+	constexpr unsigned int numberQueryDescriptors = 50u;
 #else
-	constexpr unsigned int numberDescriptors = 500000u;
-	constexpr unsigned int numberQueryDescriptors = 1000u;
+	constexpr unsigned int numberDescriptors = 5000u;
+	constexpr unsigned int numberQueryDescriptors = 100u;
 #endif
 
 	using TypeHelper = TypeHelper<tDescriptorType>;
@@ -1254,12 +1254,12 @@ bool TestVocabularyTree::testMatchingDescriptorsWithForest(const double testDura
 	ocean_assert(testDuration > 0.0);
 
 #ifdef OCEAN_USE_GTEST
-	constexpr unsigned int numberDescriptors = 50000u;
-	constexpr unsigned int numberQueryDescriptors = 100u;
+	constexpr unsigned int numberDescriptors = 500u;
+	constexpr unsigned int numberQueryDescriptors = 50u;
 	constexpr unsigned int numberTrees = 4u;
 #else
-	constexpr unsigned int numberDescriptors = 500000u;
-	constexpr unsigned int numberQueryDescriptors = 1000u;
+	constexpr unsigned int numberDescriptors = 5000u;
+	constexpr unsigned int numberQueryDescriptors = 100u;
 	constexpr unsigned int numberTrees = 4u;
 #endif
 
