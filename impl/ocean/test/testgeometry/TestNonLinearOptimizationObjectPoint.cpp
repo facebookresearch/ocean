@@ -404,8 +404,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t succeeded = 0ull;
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -427,7 +427,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 		const Quaternion orientation0(Random::quaternion());
 		const Vector3 viewDirection0(orientation0 * Vector3(0, 0, -1));
 
-		const Geometry::ObjectPoints perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
+		const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
 
 		HomogenousMatrices4 poses;
 		poses.push_back(Utilities::viewPosition(pinholeCamera, perfectObjectPoints, viewDirection0, true));
@@ -445,9 +445,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 			poses.push_back(Utilities::viewPosition(pinholeCamera, perfectObjectPoints, newViewDirection, true));
 		}
 
-		Geometry::ImagePoints imagePoints;
-		Geometry::ImagePoints perfectImagePoints;
-		Geometry::ObjectPoints objectPoints;
+		Vectors2 imagePoints;
+		Vectors2 perfectImagePoints;
+		Vectors3 objectPoints;
 
 		for (unsigned int p = 0u; p < numberPoses; ++p)
 		{
@@ -459,7 +459,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 
 				Vector2 imagePointNoise(0, 0);
 				if (standardDeviation > 0)
+				{
 					imagePointNoise = Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation));
+				}
 
 				perfectImagePoints.push_back(imagePoint);
 				imagePoints.push_back(imagePoint + imagePointNoise);
@@ -472,7 +474,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 		const HomogenousMatrices4 posesIF(PinholeCamera::standard2InvertedFlipped(poses));
 		const Box2 cameraBox(-50, -50, Scalar(pinholeCamera.width()) + Scalar(50), Scalar(pinholeCamera.height()) + Scalar(50));
 
-		for (Geometry::ObjectPoints::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
+		for (Vectors3::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
 		{
 			while (true)
 			{
@@ -515,6 +517,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 #ifdef OCEAN_DEBUG
 		// ensure that the ObjectPointToPoseIndexImagePointCorrespondenceAccessor object holds the correct topology
 		for (size_t g = 0; g < objectPointToPoseIndexImagePointCorrespondenceAccessor.groups(); ++g)
+		{
 			for (size_t p = 0; p < objectPointToPoseIndexImagePointCorrespondenceAccessor.groupElements(g); ++p)
 			{
 				Index32 poseIndex = Index32(-1);
@@ -523,9 +526,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 				objectPointToPoseIndexImagePointCorrespondenceAccessor.element(g, p, poseIndex, imagePoint);
 				ocean_assert(imagePoints[p * objectPoints.size() + g] == imagePoint);
 			}
+		}
 #endif
 
-		Geometry::ObjectPoints optimizedObjectPoints(objectPoints.size());
+		Vectors3 optimizedObjectPoints(objectPoints.size());
 		NonconstArrayAccessor<Vector3> optimizedObjectPointAccessor(optimizedObjectPoints);
 
 		performance.start();
@@ -645,8 +649,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t succeeded = 0ull;
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -668,7 +672,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointF
 		HomogenousMatrices4 poses_world_T_camera;
 
 		Vectors2 imagePoints;
-		Geometry::ImagePoints perfectImagePoints;
+		Vectors2 perfectImagePoints;
 
 		while (poses_world_T_camera.size() < size_t(numberPoses))
 		{
@@ -817,8 +821,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t succeeded = 0ull;
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -838,7 +842,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 		HomogenousMatrices4 world_T_cameras;
 
 		Vectors2 imagePoints;
-		Geometry::ImagePoints perfectImagePoints;
+		Vectors2 perfectImagePoints;
 
 		while (world_T_cameras.size() < size_t(numberPoses))
 		{
@@ -987,8 +991,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t succeeded = 0ull;
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -1015,7 +1019,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 		// let's determine random image points and random poses for the first stereo images
 
 		Vectors2 imagePointsA;
-		Geometry::ImagePoints perfectImagePointsA;
+		Vectors2 perfectImagePointsA;
 
 		while (world_T_camerasA.size() < size_t(numberPosesA))
 		{
@@ -1047,7 +1051,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 		// let's determine random image points and random poses for the second stereo images
 
 		Vectors2 imagePointsB;
-		Geometry::ImagePoints perfectImagePointsB;
+		Vectors2 perfectImagePointsB;
 
 		while (world_T_camerasB.size() < size_t(numberPosesB))
 		{
@@ -1207,8 +1211,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t succeeded = 0ull;
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -1231,7 +1235,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointA
 		HomogenousMatrices4 world_T_cameras;
 
 		Vectors2 imagePoints;
-		Geometry::ImagePoints perfectImagePoints;
+		Vectors2 perfectImagePoints;
 
 		while (world_T_cameras.size() < size_t(numberPoses))
 		{
@@ -1378,8 +1382,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberPoses);
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t succeeded = 0ull;
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -1413,7 +1417,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 		// let's determine random image points and random poses for the first stereo images
 
 		Vectors2 imagePointsA;
-		Geometry::ImagePoints perfectImagePointsA;
+		Vectors2 perfectImagePointsA;
 
 		while (world_T_camerasA.size() < size_t(numberPosesA))
 		{
@@ -1445,7 +1449,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPointS
 		// let's determine random image points and random poses for the second stereo images
 
 		Vectors2 imagePointsB;
-		Geometry::ImagePoints perfectImagePointsB;
+		Vectors2 perfectImagePointsB;
 
 		while (world_T_camerasB.size() < size_t(numberPosesB))
 		{
@@ -1637,8 +1641,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 {
 	ocean_assert(testDuration > 0.0);
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t succeeded = 0ull;
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -1660,7 +1664,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 		const Quaternion orientation0(Random::quaternion());
 		const Vector3 viewDirection0(orientation0 * Vector3(0, 0, -1));
 
-		const Geometry::ObjectPoints perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
+		const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
 
 		const Quaternion offsetRotation(Random::euler(Numeric::deg2rad(5), Numeric::deg2rad(35)));
 		const Quaternion orientation1(orientation0 * offsetRotation);
@@ -1673,13 +1677,13 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 
 		const HomogenousMatrix4 poseIF0(PinholeCamera::standard2InvertedFlipped(pose0));
 
-		Geometry::ImagePoints imagePoints0;
-		Geometry::ImagePoints imagePoints1;
+		Vectors2 imagePoints0;
+		Vectors2 imagePoints1;
 
-		Geometry::ImagePoints perfectImagePoints0;
-		Geometry::ImagePoints perfectImagePoints1;
+		Vectors2 perfectImagePoints0;
+		Vectors2 perfectImagePoints1;
 
-		Geometry::ObjectPoints objectPoints;
+		Vectors3 objectPoints;
 
 		Matrix invertedCovariances0(numberObjectPoints * 2u, 2u);
 		Matrix invertedCovariances1(numberObjectPoints * 2u, 2u);
@@ -1749,7 +1753,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.05);
 		const Box2 cameraBox(-50, -50, Scalar(pinholeCamera.width()) + Scalar(50), Scalar(pinholeCamera.height()) + Scalar(50));
 
-		for (Geometry::ObjectPoints::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
+		for (Vectors3::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
 		{
 			unsigned int randomSteps = 0u;
 
@@ -1783,7 +1787,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 			imagePoints1[*i] += Vector2(Random::gaussianNoise(100), Random::gaussianNoise(100));
 		}
 
-		Geometry::ObjectPoints optimizedObjectPoints(objectPoints.size());
+		Vectors3 optimizedObjectPoints(objectPoints.size());
 		HomogenousMatrix4 optimizedPose1;
 
 		performance.start();
@@ -1827,10 +1831,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMinimalPixelErrorOptimized);
 			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMaximalPixelErrorOptimized);
 
-			const Geometry::ImagePoints outlierFreeImagePoints0(Subset::invertedSubset(perfectImagePoints0, outlierSet));
-			const Geometry::ImagePoints outlierFreeImagePoints1(Subset::invertedSubset(perfectImagePoints1, outlierSet));
-			const Geometry::ObjectPoints outlierFreeObjectPoints(Subset::invertedSubset(perfectObjectPoints, outlierSet));
-			const Geometry::ObjectPoints outlierFreeOptimizedObjectPoints(Subset::invertedSubset(optimizedObjectPoints, outlierSet));
+			const Vectors2 outlierFreeImagePoints0(Subset::invertedSubset(perfectImagePoints0, outlierSet));
+			const Vectors2 outlierFreeImagePoints1(Subset::invertedSubset(perfectImagePoints1, outlierSet));
+			const Vectors3 outlierFreeObjectPoints(Subset::invertedSubset(perfectObjectPoints, outlierSet));
+			const Vectors3 outlierFreeOptimizedObjectPoints(Subset::invertedSubset(optimizedObjectPoints, outlierSet));
 
 			{
 				Scalar sqrAveragePixelError = 0, sqrMinimalPixelError = 0, sqrMaximalPixelError = 0;
@@ -1947,8 +1951,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 {
 	ocean_assert(testDuration > 0.0);
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t succeeded = 0ull;
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -1970,7 +1974,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 		const Quaternion orientation0(Random::quaternion());
 		const Vector3 viewDirection0(orientation0 * Vector3(0, 0, -1));
 
-		const Geometry::ObjectPoints perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
+		const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
 
 		const Quaternion offsetRotation(Random::euler(Numeric::deg2rad(5), Numeric::deg2rad(35)));
 		const Quaternion orientation1(orientation0 * offsetRotation);
@@ -1983,13 +1987,13 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 
 		const HomogenousMatrix4 poseIF0(PinholeCamera::standard2InvertedFlipped(pose0));
 
-		Geometry::ImagePoints imagePoints0;
-		Geometry::ImagePoints imagePoints1;
+		Vectors2 imagePoints0;
+		Vectors2 imagePoints1;
 
-		Geometry::ImagePoints perfectImagePoints0;
-		Geometry::ImagePoints perfectImagePoints1;
+		Vectors2 perfectImagePoints0;
+		Vectors2 perfectImagePoints1;
 
-		Geometry::ObjectPoints objectPoints;
+		Vectors3 objectPoints;
 
 		Matrix invertedCovariances0(numberObjectPoints * 2u, 2u);
 		Matrix invertedCovariances1(numberObjectPoints * 2u, 2u);
@@ -2068,7 +2072,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 		const Box2 cameraBox(-50, -50, Scalar(pinholeCamera.width()) + Scalar(50), Scalar(pinholeCamera.height()) + Scalar(50));
 
 
-		for (Geometry::ObjectPoints::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
+		for (Vectors3::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
 		{
 			unsigned int randomSteps = 0u;
 
@@ -2102,7 +2106,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 			imagePoints1[*i] += Vector2(Random::gaussianNoise(100), Random::gaussianNoise(100));
 		}
 
-		Geometry::ObjectPoints optimizedObjectPoints(objectPoints.size());
+		Vectors3 optimizedObjectPoints(objectPoints.size());
 		HomogenousMatrix4 optimizedPose0, optimizedPose1;
 
 		performance.start();
@@ -2145,10 +2149,10 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMinimalPixelErrorOptimized);
 			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMaximalPixelErrorOptimized);
 
-			const Geometry::ImagePoints outlierFreeImagePoints0(Subset::invertedSubset(perfectImagePoints0, outlierSet));
-			const Geometry::ImagePoints outlierFreeImagePoints1(Subset::invertedSubset(perfectImagePoints1, outlierSet));
-			const Geometry::ObjectPoints outlierFreeObjectPoints(Subset::invertedSubset(perfectObjectPoints, outlierSet));
-			const Geometry::ObjectPoints outlierFreeOptimizedObjectPoints(Subset::invertedSubset(optimizedObjectPoints, outlierSet));
+			const Vectors2 outlierFreeImagePoints0(Subset::invertedSubset(perfectImagePoints0, outlierSet));
+			const Vectors2 outlierFreeImagePoints1(Subset::invertedSubset(perfectImagePoints1, outlierSet));
+			const Vectors3 outlierFreeObjectPoints(Subset::invertedSubset(perfectObjectPoints, outlierSet));
+			const Vectors3 outlierFreeOptimizedObjectPoints(Subset::invertedSubset(optimizedObjectPoints, outlierSet));
 
 			{
 				Scalar sqrAveragePixelError = 0, sqrMinimalPixelError = 0, sqrMaximalPixelError = 0;
@@ -2281,7 +2285,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 		const Quaternion orientation0(Random::quaternion());
 		const Vector3 viewDirection0(orientation0 * Vector3(0, 0, -1));
 
-		const Geometry::ObjectPoints perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
+		const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
 
 		HomogenousMatrices4 world_T_cameras;
 		world_T_cameras.emplace_back(Utilities::viewPosition(*camera, perfectObjectPoints, viewDirection0));
@@ -2299,8 +2303,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 			world_T_cameras.emplace_back(Utilities::viewPosition(*camera, perfectObjectPoints, newViewDirection, false));
 		}
 
-		Geometry::ImagePoints imagePoints;
-		Geometry::ImagePoints perfectImagePoints;
+		Vectors2 imagePoints;
+		Vectors2 perfectImagePoints;
 
 		for (unsigned int p = 0u; p < numberPoses; ++p)
 		{
@@ -2326,7 +2330,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 
 		const HomogenousMatrices4 flippedCameras_T_world(PinholeCamera::standard2InvertedFlipped(world_T_cameras));
 
-		Geometry::ObjectPoints faultyObjectPoints;
+		Vectors3 faultyObjectPoints;
 		faultyObjectPoints.reserve(perfectObjectPoints.size());
 
 		for (const Vector3& perfectObjectPoint : perfectObjectPoints)
@@ -2400,7 +2404,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 		HomogenousMatrices4 world_T_optimizedCameras(world_T_cameras.size());
 		NonconstArrayAccessor<HomogenousMatrix4> access_world_T_optimizedCameras(world_T_optimizedCameras);
 
-		Geometry::ObjectPoints optimizedObjectPoints(faultyObjectPoints.size());
+		Vectors3 optimizedObjectPoints(faultyObjectPoints.size());
 		NonconstArrayAccessor<Vector3> optimizedObjectPointAccessor(optimizedObjectPoints);
 
 		Scalars intermediate;
@@ -2673,7 +2677,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 		const Quaternion orientation0(Random::quaternion(randomGenerator));
 		const Vector3 viewDirection0(orientation0 * Vector3(0, 0, -1));
 
-		const Geometry::ObjectPoints perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints, &randomGenerator));
+		const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints, &randomGenerator));
 
 		HomogenousMatrices4 world_T_cameras;
 		world_T_cameras.emplace_back(Utilities::viewPosition(*cameras.back(), perfectObjectPoints, viewDirection0));
@@ -2700,8 +2704,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 			world_T_cameras.emplace_back(Utilities::viewPosition(*cameras.back(), perfectObjectPoints, newViewDirection, false));
 		}
 
-		Geometry::ImagePoints imagePoints;
-		Geometry::ImagePoints perfectImagePoints;
+		Vectors2 imagePoints;
+		Vectors2 perfectImagePoints;
 
 		for (unsigned int p = 0u; p < numberPoses; ++p)
 		{
@@ -2727,7 +2731,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 
 		const HomogenousMatrices4 flippedCameras_T_world(PinholeCamera::standard2InvertedFlipped(world_T_cameras));
 
-		Geometry::ObjectPoints faultyObjectPoints;
+		Vectors3 faultyObjectPoints;
 		faultyObjectPoints.reserve(perfectObjectPoints.size());
 
 		for (const Vector3& perfectObjectPoint : perfectObjectPoints)
@@ -2815,7 +2819,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 		HomogenousMatrices4 world_T_optimizedCameras(world_T_cameras.size());
 		NonconstArrayAccessor<HomogenousMatrix4> access_world_T_optimizedCameras(world_T_optimizedCameras);
 
-		Geometry::ObjectPoints optimizedObjectPoints(faultyObjectPoints.size());
+		Vectors3 optimizedObjectPoints(faultyObjectPoints.size());
 		NonconstArrayAccessor<Vector3> optimizedObjectPointAccessor(optimizedObjectPoints);
 
 		Scalars intermediate;
@@ -3062,8 +3066,8 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 	Scalars medianInitialErrors;
 	Scalars medianOptimizedErrors;
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t succeeded = 0ull;
 	HighPerformanceStatistic performance;
 
 	RandomGenerator randomGenerator;
@@ -3076,8 +3080,8 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 		const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, iterations % 3u == 1u || iterations % 3u == 2u, iterations % 3u == 2u));
 
 		SquareMatrices3 orientations;
-		Geometry::ImagePoints imagePoints;
-		Geometry::ObjectPoint objectPoint(0, 0, 0);
+		Vectors2 imagePoints;
+		Vector3 objectPoint(0, 0, 0);
 
 		while (orientations.size() < numberObservations)
 		{
@@ -3088,7 +3092,7 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 				const Vector2 roughImagePoint(Random::scalar(40, Scalar(pinholeCamera.width() - 41u)), Random::scalar(40, Scalar(pinholeCamera.height() - 41u)));
 				const Line3 imagePointRay = pinholeCamera.ray(pinholeCamera.undistort<true>(roughImagePoint), HomogenousMatrix4(orientation));
 
-				objectPoint = imagePointRay.direction();
+				objectPoint = imagePointRay.direction() * Random::scalar(2, 5);
 
 				const Vector2 imagePoint = pinholeCamera.projectToImage<true>(HomogenousMatrix4(orientation), objectPoint, true);
 
@@ -3097,17 +3101,22 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 			}
 			else
 			{
-				const Vector2 projectedObjectPoint(pinholeCamera.projectToImage<true>(HomogenousMatrix4(orientation), objectPoint, true));
+				const HomogenousMatrix4 world_T_camera(orientation);
 
-				if (pinholeCamera.isInside(projectedObjectPoint))
+				if (PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), objectPoint))
 				{
-					orientations.push_back(orientation);
-					imagePoints.push_back(projectedObjectPoint);
+					const Vector2 projectedObjectPoint(pinholeCamera.projectToImage<true>(world_T_camera, objectPoint, true));
+
+					if (pinholeCamera.isInside(projectedObjectPoint))
+					{
+						orientations.push_back(orientation);
+						imagePoints.push_back(projectedObjectPoint);
+					}
 				}
 			}
 		}
 
-		Geometry::ImagePoints perfectImagePoints(imagePoints);
+		Vectors2 perfectImagePoints(imagePoints);
 
 		if (standardDeviation > 0)
 		{
@@ -3148,7 +3157,9 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 				succeeded++;
 			}
 			else
+			{
 				performance.skip();
+			}
 		}
 		else
 		{
@@ -3171,7 +3182,9 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 					succeeded++;
 				}
 				else
+				{
 					performance.skip();
+				}
 			}
 		}
 
