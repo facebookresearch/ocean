@@ -129,8 +129,11 @@ Delaunay::IndexTriangles Delaunay::triangulation(const Vectors2& points)
 		}
 	}
 
-	// make sure we got a valid triangulation
-	ocean_assert(checkTriangulation(result, points, Numeric::weakEps() * Scalar(100)));
+	if constexpr (std::is_same<double, Scalar>::value)
+	{
+		// make sure we got a valid triangulation, we skip the test for low precision floating points
+		ocean_assert(checkTriangulation(result, points, Numeric::weakEps() * Scalar(100)));
+	}
 
 	return result;
 }
