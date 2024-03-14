@@ -1772,7 +1772,7 @@ template <typename T>
 OCEAN_FORCE_INLINE VectorT3<T> SquareMatrixT4<T>::operator*(const VectorT3<T>& vector) const
 {
 	const T w = values[3] * vector[0] + values[7] * vector[1] + values[11] * vector[2] + values[15];
-	ocean_assert(Numeric::isNotEqualEps(w) && "Division by zero!");
+	ocean_assert(NumericT<T>::isNotEqualEps(w) && "Division by zero!");
 
 	const T factor = 1 / w;
 
@@ -2460,8 +2460,8 @@ SquareMatrixT4<T> SquareMatrixT4<T>::projectionMatrix(const AnyCameraT<T>& anyCa
 	const T width_2 = T(anyCamera.width()) / T(2);
 	const T height_2 = T(anyCamera.height()) / T(2);
 
-	ocean_assert(Numeric::isNotEqualEps(width_2));
-	ocean_assert(Numeric::isNotEqualEps(height_2));
+	ocean_assert(NumericT<T>::isNotEqualEps(width_2));
+	ocean_assert(NumericT<T>::isNotEqualEps(height_2));
 
 	const T fx = fxPixel / width_2;
 	const T fy = fyPixel / height_2;
