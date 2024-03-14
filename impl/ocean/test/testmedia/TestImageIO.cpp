@@ -306,7 +306,7 @@ TEST_F(TestImageIOGTestInstance, PngImageRGBA32LowerLeft)
 
 TEST_F(TestImageIOGTestInstance, PngImageRGBA32Recorder)
 {
-	EXPECT_TRUE(TestImageIO::testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT), "png", 0.0));
+	EXPECT_TRUE(TestImageIO::testBufferImageRecorder(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), "png", 0.0)); // using a pixel format without alpha channel to avoid verification of pre-multiplied pixels
 }
 
 
