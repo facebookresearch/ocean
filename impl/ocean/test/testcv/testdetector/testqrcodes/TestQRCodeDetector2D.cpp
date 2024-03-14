@@ -5,7 +5,6 @@
 #include "ocean/test/testcv/testdetector/testqrcodes/Utilities.h"
 
 #include "ocean/base/RandomI.h"
-#include "ocean/base/WorkerPool.h"
 
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameFilterGaussian.h"
@@ -95,32 +94,38 @@ bool TestQRCodeDetector2D::test(const double testDuration, Worker& worker)
 
 TEST(TestQRCodeDetector2D, StressTest)
 {
-	EXPECT_TRUE(TestQRCodeDetector2D::testStressTest(GTEST_TEST_DURATION, *WorkerPool::get().scopedWorker()()));
+	Worker worker;
+	EXPECT_TRUE(TestQRCodeDetector2D::testStressTest(GTEST_TEST_DURATION, worker));
 }
 
 TEST(TestQRCodeDetector2D, TestDetectQRCodesSyntheticDataNoGaussianFilter)
 {
-	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(0u, GTEST_TEST_DURATION, *WorkerPool::get().scopedWorker()()));
+	Worker worker;
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(0u, GTEST_TEST_DURATION, worker));
 }
 
 TEST(TestQRCodeDetector2D, TestDetectQRCodesSyntheticDataGaussianFilter1)
 {
-	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(1u, GTEST_TEST_DURATION, *WorkerPool::get().scopedWorker()()));
+	Worker worker;
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(1u, GTEST_TEST_DURATION, worker));
 }
 
 TEST(TestQRCodeDetector2D, TestDetectQRCodesSyntheticDataGaussianFilter3)
 {
-	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(3u, GTEST_TEST_DURATION, *WorkerPool::get().scopedWorker()()));
+	Worker worker;
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(3u, GTEST_TEST_DURATION, worker));
 }
 
 TEST(TestQRCodeDetector2D, TestDetectQRCodesSyntheticDataGaussianFilter5)
 {
-	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(5u, GTEST_TEST_DURATION, *WorkerPool::get().scopedWorker()()));
+	Worker worker;
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(5u, GTEST_TEST_DURATION, worker));
 }
 
 TEST(TestQRCodeDetector2D, TestDetectQRCodesSyntheticDataGaussianFilter7)
 {
-	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(5u, GTEST_TEST_DURATION, *WorkerPool::get().scopedWorker()()));
+	Worker worker;
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(5u, GTEST_TEST_DURATION, worker));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -145,13 +150,11 @@ bool TestQRCodeDetector2D::testStressTest(const double testDuration, Worker& wor
 
 			const unsigned int width = RandomI::random(randomGenerator, 29u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 29u, 1920u);
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
 			const SharedAnyCamera anyCamera = std::make_shared<AnyCameraPinhole>(PinholeCamera(width, height, Numeric::deg2rad(Scalar(60))));
 			ocean_assert(anyCamera != nullptr && anyCamera->isValid());
 
-			Frame frame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-			CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), /* skipPaddingArea */ false, &randomGenerator);
 
 			QRCodeDetector2D::Observations observations;
 			const QRCodes codes = QRCodeDetector2D::detectQRCodes(*anyCamera, frame, &observations, workerToUse);
@@ -267,9 +270,8 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 		// Draw a randomly rotated version of the QR code into the center of the final frame
 		const unsigned int frameWidth = 2u * frameWithCode.width();
 		const unsigned int frameHeight = 2u * frameWithCode.height();
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
-		Frame frame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 		frame.setValue(backgroundValue);
 
 		const Vector2 frameCenterOffset(Scalar(frameWidth) * Scalar(0.5), Scalar(frameHeight) * Scalar(0.5));
@@ -280,7 +282,11 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 		const SquareMatrix3 frameWithCode_T_frameWithCodeCentered = SquareMatrix3(Vector3(Scalar(1), Scalar(0), Scalar(0)), Vector3(Scalar(0), Scalar(1), Scalar(0)), Vector3(Vector2(Scalar(frameWithCode.width() / 2u), Scalar(frameWithCode.height() / 2u)), Scalar(1)));
 		const SquareMatrix3 frameWithCode_T_frame = frameWithCode_T_frameWithCodeCentered * frameWithCodeCentered_R_frameWithCodeCenteredRotated * frameWithCodeCenteredRotated_T_frame;
 
-		CV::FrameInterpolatorBilinear::Comfort::affine(frameWithCode, frame, frameWithCode_T_frame, &backgroundValue, &worker);
+		if (!CV::FrameInterpolatorBilinear::Comfort::affine(frameWithCode, frame, frameWithCode_T_frame, &backgroundValue, &worker))
+		{
+			ocean_assert(false && "This should never happen!");
+			allSucceeded = false;
+		}
 
 		if (gaussianFilterSize != 0u)
 		{

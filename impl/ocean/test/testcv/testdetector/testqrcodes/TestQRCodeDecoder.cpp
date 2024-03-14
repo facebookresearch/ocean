@@ -41,9 +41,13 @@ bool TestQRCodeDecoder::test(const double testDuration)
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "QR code decoding test succeeded.";
+	}
 	else
+	{
 		Log::info() << "QR code decoding test FAILED!";
+	}
 
 	return allSucceeded;
 }
