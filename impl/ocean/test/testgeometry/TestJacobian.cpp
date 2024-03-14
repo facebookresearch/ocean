@@ -200,12 +200,6 @@ bool TestJacobian::test(const double testDuration)
 	}
 	else
 	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "The test failed, however the applied 32 bit floating point value precision is too low for this function so that we rate the result as expected.";
-			return true;
-		}
-
 		Log::info() << "Jacobian test FAILED!";
 	}
 
@@ -593,7 +587,18 @@ bool TestJacobian::testAnyCameraOrientationJacobian2x3(const double testDuration
 	Log::info() << "Performance optimized: " << performanceOptimized.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	return percent >= successThreshold<T>();
+	const bool allSucceeded = percent >= successThreshold();
+
+	if (std::is_same<T, float>::value)
+	{
+		if (!allSucceeded)
+		{
+			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
+			return true;
+		}
+	}
+
+	return allSucceeded;
 }
 
 bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
@@ -919,7 +924,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 	Log::info() << "Performance distorted camera: " << performanceDistortedCamera.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -1185,7 +1190,7 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -1464,7 +1469,7 @@ bool TestJacobian::testAnyCameraPoseJacobian2x6(const double testDuration)
 		Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-		if (percent < successThreshold<Scalar>())
+		if (percent < successThreshold())
 		{
 			allSucceeded = false;
 		}
@@ -1766,7 +1771,7 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 	Log::info() << "Performance distorted camera: " << performanceDistortedCamera.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -2111,7 +2116,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 	Log::info() << "Performance distorted camera: " << performanceDistortedCamera.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>() * 0.975; // making threshold slightly weaker
+	const bool allSucceeded = percent >= successThreshold() * 0.975; // making threshold slightly weaker
 
 	if (!allSucceeded)
 	{
@@ -2426,7 +2431,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -2691,7 +2696,7 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -2928,7 +2933,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 	Log::info() << "Performance distorted camera: " << performanceDistortedCamera.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -3133,7 +3138,7 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 	Log::info() << "Performance optimized: " << performanceOptimized.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -3351,7 +3356,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 		Log::info() << "Performance optimized: " << performanceOptimized.averageMseconds() << "ms";
 		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-		if (percent < successThreshold<Scalar>())
+		if (percent < successThreshold())
 		{
 			allSucceeded = false;
 		}
@@ -4001,7 +4006,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -4142,7 +4147,7 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 
 	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -4327,7 +4332,7 @@ bool TestJacobian::testSphericalObjectPointOrientation2x3(const double testDurat
 
 	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -4504,7 +4509,7 @@ bool TestJacobian::testCameraDistortionJacobian2x4(const double testDuration)
 
 	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -4735,7 +4740,7 @@ bool TestJacobian::testCameraJacobian2x6(const double testDuration)
 
 	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -4985,7 +4990,7 @@ bool TestJacobian::testCameraJacobian2x7(const double testDuration)
 
 	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -5266,7 +5271,7 @@ bool TestJacobian::testCameraJacobian2x8(const double testDuration)
 
 	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -5756,7 +5761,7 @@ bool TestJacobian::testOrientationCameraJacobian2x11(const double testDuration)
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -6276,7 +6281,7 @@ bool TestJacobian::testPoseCameraJacobian2x12(const double testDuration)
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -6844,7 +6849,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -6988,7 +6993,7 @@ bool TestJacobian::testHomography2x8(const double testDuration)
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -7132,7 +7137,7 @@ bool TestJacobian::testHomography2x9(const double testDuration)
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -7264,7 +7269,7 @@ bool TestJacobian::testIdentityHomography2x8(const double testDuration)
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -7396,7 +7401,7 @@ bool TestJacobian::testIdentityHomography2x9(const double testDuration)
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -7580,7 +7585,7 @@ bool TestJacobian::testSimilarity2x4(const double testDuration)
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{
@@ -7723,7 +7728,7 @@ bool TestJacobian::testCalculateFisheyeDistortNormalized2x2(const double testDur
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	const bool allSucceeded = percent >= successThreshold<Scalar>();
+	const bool allSucceeded = percent >= successThreshold();
 
 	if (!allSucceeded)
 	{

@@ -276,9 +276,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		/**
 		 * Returns the minimal threshold necessary to succeed a verification.
 		 * @return The necessary success rate, in percent, with range [0, 1]
-		 * @tparam T The data type of the scalar for which the threshold will be returned
 		 */
-		template <typename T>
 		static constexpr double successThreshold();
 };
 
@@ -387,17 +385,9 @@ void TestJacobian::calculatePointJacobian2x3(Scalar* jx, Scalar* jy, const Pinho
 	}
 }
 
-template <typename T>
 constexpr double TestJacobian::successThreshold()
 {
-	if constexpr (std::is_same<T, float>::value)
-	{
-		return 0.1; // very generous threshold due to precision issues
-	}
-	else
-	{
-		return 0.99;
-	}
+	return 0.99;
 }
 
 }
