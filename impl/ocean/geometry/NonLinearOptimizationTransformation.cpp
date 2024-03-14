@@ -2637,12 +2637,14 @@ bool NonLinearOptimizationTransformation::optimizeObjectTransformationStereoIF(c
 	{
 		ocean_assert(flippedCamerasA_T_world[n].isValid());
 		ocean_assert(objectPointGroupsA[n].size() == imagePointGroupsA[n].size());
+		ocean_assert(objectPointGroupsA[n].size() >= 1);
 	}
 
 	for (size_t n = 0; n < flippedCamerasB_T_world.size(); ++n)
 	{
 		ocean_assert(flippedCamerasB_T_world[n].isValid());
 		ocean_assert(objectPointGroupsB[n].size() == imagePointGroupsB[n].size());
+		ocean_assert(objectPointGroupsB[n].size() >= 1);
 	}
 
 #endif

@@ -1815,7 +1815,7 @@ bool RANSAC::similarityMatrix(const ImagePoint* leftImagePoints, const ImagePoin
 	return geometricTransform(Geometry::Homography::similarityMatrix, leftImagePoints, rightImagePoints, correspondences, randomGenerator, similarity, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
 }
 
-bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const ConstIndexedAccessor<Vector3>& objectPointsA, const ConstIndexedAccessor<Vector3>& objectPointsB, const ConstIndexedAccessor<Vector2>& imagePointsA, const ConstIndexedAccessor<Vector2>& imagePointsB, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_object, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndicesA, Indices32* usedIndicesB, Scalar* sqrAccuracy)
+bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const ConstIndexedAccessor<Vector3>& objectPointsA, const ConstIndexedAccessor<Vector3>& objectPointsB, const ConstIndexedAccessor<Vector2>& imagePointsA, const ConstIndexedAccessor<Vector2>& imagePointsB, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_object, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndicesA, Indices32* usedIndicesB, Scalar* sqrAccuracy, const bool allowMonoObservation)
 {
 	ocean_assert(anyCameraA.isValid() && anyCameraB.isValid());
 	ocean_assert(world_T_cameraA.isValid() && world_T_cameraB.isValid());
@@ -2000,6 +2000,11 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 		return false;
 	}
 
+	if (!allowMonoObservation && (bestIndicesA.empty() || bestIndicesB.empty()))
+	{
+		return false;
+	}
+
 	world_T_object = internal_world_T_object;
 
 	if (sqrAccuracy)
@@ -2011,18 +2016,52 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 	// non linear least square refinement step
 	if (refine)
 	{
-		const HomogenousMatrices4 flippedCamerasA_T_world(1, PinholeCamera::standard2InvertedFlipped(world_T_cameraA));
-		const HomogenousMatrices4 flippedCamerasB_T_world(1, PinholeCamera::standard2InvertedFlipped(world_T_cameraB));
-
-		const std::vector<Vectors3> objectPointGroupsA(1, Subset::subset(memoryObjectPointsA.data(), memoryObjectPointsA.size(), bestIndicesA));
-		const std::vector<Vectors3> objectPointGroupsB(1, Subset::subset(memoryObjectPointsB.data(), memoryObjectPointsB.size(), bestIndicesB));
-
-		const std::vector<Vectors2> imagePointGroupsA(1, Subset::subset(memoryImagePointsA.data(), memoryImagePointsA.size(), bestIndicesA));
-		const std::vector<Vectors2> imagePointGroupsB(1, Subset::subset(memoryImagePointsB.data(), memoryImagePointsB.size(), bestIndicesB));
-
-		if (!NonLinearOptimizationTransformation::optimizeObjectTransformationStereoIF(anyCameraA, anyCameraB, flippedCamerasA_T_world, flippedCamerasB_T_world, internal_world_T_object, objectPointGroupsA, objectPointGroupsB, imagePointGroupsA, imagePointGroupsB, world_T_object, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy))
+		if (bestIndicesA.empty() || bestIndicesB.empty())
 		{
-			return false;
+			// the object is only visible in one of both camera frames
+
+			ocean_assert(allowMonoObservation);
+			ocean_assert(!bestIndicesA.empty() || !bestIndicesB.empty());
+
+			HomogenousMatrices4 flippedCameras_T_world;
+			std::vector<Vectors3> objectPointGroups;
+			std::vector<Vectors2> imagePointGroups;
+
+			const AnyCamera& anyCamera = bestIndicesA.empty() ? anyCameraB : anyCameraA;
+
+			if (bestIndicesA.empty())
+			{
+				flippedCameras_T_world = HomogenousMatrices4(1, PinholeCamera::standard2InvertedFlipped(world_T_cameraB));
+				objectPointGroups = std::vector<Vectors3>(1, Subset::subset(memoryObjectPointsB.data(), memoryObjectPointsB.size(), bestIndicesB));
+				imagePointGroups = std::vector<Vectors2>(1, Subset::subset(memoryImagePointsB.data(), memoryImagePointsB.size(), bestIndicesB));
+			}
+			else
+			{
+				flippedCameras_T_world = HomogenousMatrices4(1, PinholeCamera::standard2InvertedFlipped(world_T_cameraA));
+				objectPointGroups = std::vector<Vectors3>(1, Subset::subset(memoryObjectPointsA.data(), memoryObjectPointsA.size(), bestIndicesA));
+				imagePointGroups = std::vector<Vectors2>(1, Subset::subset(memoryImagePointsA.data(), memoryImagePointsA.size(), bestIndicesA));
+			}
+
+			if (!NonLinearOptimizationTransformation::optimizeObjectTransformationIF(anyCamera, flippedCameras_T_world, internal_world_T_object, objectPointGroups, imagePointGroups, world_T_object, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy))
+			{
+				return false;
+			}
+		}
+		else
+		{
+			const HomogenousMatrices4 flippedCamerasA_T_world(1, PinholeCamera::standard2InvertedFlipped(world_T_cameraA));
+			const HomogenousMatrices4 flippedCamerasB_T_world(1, PinholeCamera::standard2InvertedFlipped(world_T_cameraB));
+
+			const std::vector<Vectors3> objectPointGroupsA(1, Subset::subset(memoryObjectPointsA.data(), memoryObjectPointsA.size(), bestIndicesA));
+			const std::vector<Vectors3> objectPointGroupsB(1, Subset::subset(memoryObjectPointsB.data(), memoryObjectPointsB.size(), bestIndicesB));
+
+			const std::vector<Vectors2> imagePointGroupsA(1, Subset::subset(memoryImagePointsA.data(), memoryImagePointsA.size(), bestIndicesA));
+			const std::vector<Vectors2> imagePointGroupsB(1, Subset::subset(memoryImagePointsB.data(), memoryImagePointsB.size(), bestIndicesB));
+
+			if (!NonLinearOptimizationTransformation::optimizeObjectTransformationStereoIF(anyCameraA, anyCameraB, flippedCamerasA_T_world, flippedCamerasB_T_world, internal_world_T_object, objectPointGroupsA, objectPointGroupsB, imagePointGroupsA, imagePointGroupsB, world_T_object, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy))
+			{
+				return false;
+			}
 		}
 
 		// check whether we need to determine the indices for the optimized pose again

@@ -644,9 +644,10 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param usedIndicesA Optional resulting indices of valid correspondences from the first camera
 		 * @param usedIndicesB Optional resulting indices of valid correspondences from the second camera
 		 * @param sqrAccuracy Optional resulting average square pixel error
+		 * @param allowMonoObservation True, to allow that the object is visible in one of both camera frames only; False, to fail in case the object is visible in only one camera frame
 		 * @return True, if succeeded
 		 */
-		static bool objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const ConstIndexedAccessor<Vector3>& objectPointsA, const ConstIndexedAccessor<Vector3>& objectPointsB, const ConstIndexedAccessor<Vector2>& imagePointsA, const ConstIndexedAccessor<Vector2>& imagePointsB, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_object, const unsigned int minimalValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndicesA = nullptr, Indices32* usedIndicesB = nullptr, Scalar* sqrAccuracy = nullptr);
+		static bool objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const ConstIndexedAccessor<Vector3>& objectPointsA, const ConstIndexedAccessor<Vector3>& objectPointsB, const ConstIndexedAccessor<Vector2>& imagePointsA, const ConstIndexedAccessor<Vector2>& imagePointsB, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_object, const unsigned int minimalValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndicesA = nullptr, Indices32* usedIndicesB = nullptr, Scalar* sqrAccuracy = nullptr, const bool allowMonoObservation = true);
 
 		/**
 		 * Deprecated.

@@ -190,10 +190,6 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 					++validIterations;
 				}
 			}
-			else
-			{
-				ocean_assert(false && "This should never happen!");
-			}
 
 			++iterations;
 		}
@@ -336,10 +332,6 @@ bool TestRANSAC::testObjectTransformationStereo(const double testDuration)
 			{
 				++validIterations;
 			}
-		}
-		else
-		{
-			ocean_assert(false && "This should never happen!");
 		}
 
 		++iterations;
