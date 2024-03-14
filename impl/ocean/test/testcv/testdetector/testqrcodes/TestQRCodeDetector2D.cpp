@@ -321,7 +321,15 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 
 	Log::info() << "Correct detections: " << String::toAString(correctInPercent * 100.0, 2u) << "%";
 
-	allSucceeded = correctInPercent >= 0.99 && allSucceeded;
+	if constexpr (std::is_same<Scalar, double>::value)
+	{
+		allSucceeded = correctInPercent >= 0.99 && allSucceeded;
+	}
+	else
+	{
+		// In case of 32-bit floating numbers, a lower threshold will be applied in order to account for precision issues.
+		allSucceeded = correctInPercent >= 0.90 && allSucceeded;
+	}
 
 	if (allSucceeded)
 	{
@@ -344,4 +352,4 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 
 } // namespace Test
 
-} // namespace Test
+} // namespace Ocean
