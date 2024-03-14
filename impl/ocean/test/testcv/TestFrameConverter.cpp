@@ -5422,8 +5422,14 @@ bool TestFrameConverter::testFrameConversion(const FrameType::PixelFormat& sourc
 		{
 			for (const bool& benchmarkIteration : {true, false})
 			{
+
+#ifdef OCEAN_USE_GTEST
+				const unsigned int testWidth = benchmarkIteration ? width : RandomI::random(randomGenerator, 1u, 1001u) * widthMultiple;
+				const unsigned int testHeight = benchmarkIteration ? height : RandomI::random(randomGenerator, 1u, 41u) * heightMultiple;
+#else
 				const unsigned int testWidth = benchmarkIteration ? width : RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
-				const unsigned int testHeight = benchmarkIteration ? height : RandomI::random(randomGenerator, 1u, 100u) * heightMultiple;
+				const unsigned int testHeight = benchmarkIteration ? height : RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+#endif
 
 				Frame::PlaneInitializers<void> sourcePlaneInitializers;
 				for (unsigned int nPlane = 0u; nPlane < sourceNumberPlanes; ++nPlane)

@@ -29,20 +29,16 @@ namespace Test
  * The Namespace Ocean::Test is used in the entire Ocean Test Library.
  */
 
-// The default test duration for gtest in seconds
-// we select 0.5 seconds to keep a test as short as possible
-// (while still receiving a meaningful result)
+// The default test duration for gtest in seconds we select 0.5 seconds to keep a test as short as possible (while still receiving a meaningful result)
 #define GTEST_TEST_DURATION 0.5
 
-// The default image size for gtest in pixels. For Android, use smaller values
-// because Android instrumentation tests tend to time-out if the images are
-// "too large".
-#ifndef _ANDROID
-	#define GTEST_TEST_IMAGE_WIDTH 1920u
-	#define GTEST_TEST_IMAGE_HEIGHT 320u
-#else
+// The default image size for gtest in pixels. For mobile (Android and iOS), we use smaller values because Android instrumentation tests tend to time-out if the images are "too large".
+#if defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY) || defined(OCEAN_PLATFORM_BUILD_ANDROID)
 	#define GTEST_TEST_IMAGE_WIDTH 320u
 	#define GTEST_TEST_IMAGE_HEIGHT 180u
+#else
+	#define GTEST_TEST_IMAGE_WIDTH 1920u
+	#define GTEST_TEST_IMAGE_HEIGHT 250u
 #endif
 
 // Defines OCEAN_TEST_EXPORT for dll export and import.
