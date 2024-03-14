@@ -156,17 +156,14 @@ bool TestFrameColorAdjustment::testAdjustmentNoMask(const unsigned int width, co
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 1920u);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 1080u);
 
-				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-				Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-				CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+				const unsigned int modificationHorizontalBins = std::min(3u, frame.width());
+				const unsigned int modificationHerticalBins = std::min(3u, frame.height());
 
-				const ObjectLookupCenter2<tChannels> modification(modificationTable<tChannels>(frame.width(), frame.height(), 3u, 3u, -30, 30, randomGenerator));
+				const ObjectLookupCenter2<tChannels> modification(modificationTable<tChannels>(frame.width(), frame.height(), modificationHorizontalBins, modificationHerticalBins, -30, 30, randomGenerator));
 
-				const unsigned int modifiedFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-				Frame modifiedFrame(frame.frameType(), modifiedFramePaddingElements);
-				CV::CVUtilities::randomizeFrame(modifiedFrame, false, &randomGenerator);
+				Frame modifiedFrame = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
 
 				const Frame copyModifiedFrame(modifiedFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -179,9 +176,17 @@ bool TestFrameColorAdjustment::testAdjustmentNoMask(const unsigned int width, co
 
 				Frame modifiedFrameMask;
 
+				const unsigned int horizontalBins = std::min(10u, frame.width());
+				const unsigned int verticalBins = std::min(10u, frame.height());
+
 				performance.startIf(performanceIteration);
-					CV::Advanced::FrameColorAdjustment::adjustFrameBilinear(frame, Frame(), modifiedFrame, modifiedFrameMask, 10u, 10u, Scalar(40), 0xFFu, useWorker);
+					const bool localResult = CV::Advanced::FrameColorAdjustment::adjustFrameBilinear(frame, Frame(), modifiedFrame, modifiedFrameMask, horizontalBins, verticalBins, Scalar(40), 0xFFu, useWorker);
 				performance.stopIf(performanceIteration);
+
+				if (!localResult)
+				{
+					allSucceeded = false;
+				}
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(modifiedFrame, copyModifiedFrame))
 				{
@@ -256,17 +261,14 @@ bool TestFrameColorAdjustment::testAdjustmentWithMask(const unsigned int width, 
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 1920u);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 1080u);
 
-				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-				Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-				CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+				const unsigned int modificationHorizontalBins = std::min(3u, frame.width());
+				const unsigned int modificationHerticalBins = std::min(3u, frame.height());
 
-				const ObjectLookupCenter2<tChannels> modification(modificationTable<tChannels>(frame.width(), frame.height(), 3u, 3u, -30, 30, randomGenerator));
+				const ObjectLookupCenter2<tChannels> modification(modificationTable<tChannels>(frame.width(), frame.height(), modificationHorizontalBins, modificationHerticalBins, -30, 30, randomGenerator));
 
-				const unsigned int modifiedFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-				Frame modifiedFrame(frame.frameType(), modifiedFramePaddingElements);
-				CV::CVUtilities::randomizeFrame(modifiedFrame, false, &randomGenerator);
+				Frame modifiedFrame = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
 
 				const Frame copyModifiedFrame(modifiedFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -303,10 +305,17 @@ bool TestFrameColorAdjustment::testAdjustmentWithMask(const unsigned int width, 
 					randomMask<tChannels>(modifiedFrame, modifiedFrameMask, frame.pixels() / 8u, randomGenerator, 0x00);
 				}
 
+				const unsigned int horizontalBins = std::min(10u, frame.width());
+				const unsigned int verticalBins = std::min(10u, frame.height());
 
 				performance.startIf(performanceIteration);
-					CV::Advanced::FrameColorAdjustment::adjustFrameBilinear(frame, frameMask, modifiedFrame, modifiedFrameMask, 10u, 10u, Scalar(400), 0xFFu, useWorker);
+					const bool localResult = CV::Advanced::FrameColorAdjustment::adjustFrameBilinear(frame, frameMask, modifiedFrame, modifiedFrameMask, horizontalBins, verticalBins, Scalar(400), 0xFFu, useWorker);
 				performance.stopIf(performanceIteration);
+
+				if (!localResult)
+				{
+					allSucceeded = false;
+				}
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(modifiedFrame, copyModifiedFrame))
 				{
