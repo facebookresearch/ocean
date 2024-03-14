@@ -20,7 +20,7 @@
 		93837B1A1FA8E7780009A453 /* Application.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Application.mm; path = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/osx/Application.mm; sourceTree = "<group>"; };
 		93837B1B1FA8E7780009A453 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/osx/AppDelegate.mm; sourceTree = "<group>"; };
 		93837B1E1FA8E78B0009A453 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/osx/AppDelegate.h; sourceTree = "<group>"; };
-		93C38B751FA5C42700848963 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../res/application/ocean/demo/tracking/featuretracker/osx/Info.plist; sourceTree = "<group>"; };
+		93C38B751FA5C42700848963 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/osx/Info.plist; sourceTree = "<group>"; };
 		93C38B7D1FA5C78600848963 /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Application.xib; path = ../../../../../../../../../res/application/ocean/demo/tracking/featuretracker/osx/Application.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -287,7 +287,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					../../../../../../../../../impl,
 				);
-				INFOPLIST_FILE = ../../../../../../../../../res/application/ocean/demo/tracking/featuretracker/osx/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/osx/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = ../../../../../../../../../bin/lib/osx_x64_xc9_static_debug;
 				OBJROOT = ../../../../../../../../../bin/tmp/impl/application/ocean/demo/demotrackingfeaturetrackerosx/osx/osx_x64_xc9_static_debug;
@@ -356,7 +356,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					../../../../../../../../../impl,
 				);
-				INFOPLIST_FILE = ../../../../../../../../../res/application/ocean/demo/tracking/featuretracker/osx/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/osx/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = ../../../../../../../../../bin/lib/osx_x64_xc9_static;
 				OBJROOT = ../../../../../../../../../bin/tmp/impl/application/ocean/demo/demotrackingfeaturetrackerosx/osx/osx_x64_xc9_static;

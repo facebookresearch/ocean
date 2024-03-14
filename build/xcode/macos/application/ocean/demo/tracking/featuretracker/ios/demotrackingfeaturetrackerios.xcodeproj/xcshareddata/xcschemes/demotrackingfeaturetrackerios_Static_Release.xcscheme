@@ -84,6 +84,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D98611C1D8B55AC00DEDB00"
+               BuildableName = "libOceanCVFonts.a"
+               BlueprintName = "cvfonts arm64 (Static)"
+               ReferencedContainer = "container:../../../../../../ocean/cv/fonts/cvfonts.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5D9861A51D8B574E00DEDB00"
                BuildableName = "libOceanGeometry.a"
                BlueprintName = "geometry arm64 (Static)"

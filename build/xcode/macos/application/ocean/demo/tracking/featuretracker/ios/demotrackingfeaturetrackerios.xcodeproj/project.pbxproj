@@ -20,7 +20,7 @@
 		5D50B1B41D92824F009DDDFF /* AppDelegate.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = AppDelegate.mm; path = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/ios/AppDelegate.mm; sourceTree = "<group>"; };
 		5D50B1B61D92824F009DDDFF /* Application.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Application.mm; path = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/ios/Application.mm; sourceTree = "<group>"; };
 		5D50B1BA1D9282A9009DDDFF /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/ios/AppDelegate.h; sourceTree = "<group>"; };
-		5D50B1BC1D9282EE009DDDFF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../res/application/ocean/demo/tracking/featuretracker/ios/Info.plist; sourceTree = "<group>"; };
+		5D50B1BC1D9282EE009DDDFF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/ios/Info.plist; sourceTree = "<group>"; };
 		5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = ../../../../../../../../../res/application/ocean/demo/tracking/featuretracker/ios/LaunchScreen.xib; sourceTree = "<group>"; };
 		936E70742273E933009B9F74 /* FeatureTrackerWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FeatureTrackerWrapper.cpp; path = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/FeatureTrackerWrapper.cpp; sourceTree = "<group>"; };
 		936E70762273E940009B9F74 /* FeatureTrackerWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeatureTrackerWrapper.h; path = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/FeatureTrackerWrapper.h; sourceTree = "<group>"; };
@@ -320,7 +320,7 @@
 					"$(inherited)",
 					../../../../../../../../../impl,
 				);
-				INFOPLIST_FILE = ../../../../../../../../../res/application/ocean/demo/tracking/featuretracker/ios/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
@@ -430,7 +430,7 @@
 					"$(inherited)",
 					../../../../../../../../../impl,
 				);
-				INFOPLIST_FILE = ../../../../../../../../../res/application/ocean/demo/tracking/featuretracker/ios/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
