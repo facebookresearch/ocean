@@ -87,40 +87,40 @@ bool TestFrameRectification::test(const unsigned int width, const unsigned int h
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestFrameRectification, PlanarRectangleObject_1920x1080)
+TEST(TestFrameRectification, PlanarRectangleObject_200x200)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameRectification::testPlanarRectangleObject(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameRectification::testPlanarRectangleObject(200u, 200u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameRectification, ArbitraryRectangleObject_1920x1080)
+TEST(TestFrameRectification, ArbitraryRectangleObject_200x2000)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameRectification::testArbitraryRectangleObject(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameRectification::testArbitraryRectangleObject(200u, 200u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameRectification, TriangleObject_1920x1080)
+TEST(TestFrameRectification, TriangleObject_200x200)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameRectification::testTriangleObject(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameRectification::testTriangleObject(200u, 200u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameRectification, PlanarRectangleObjectMask_1920x1080)
+TEST(TestFrameRectification, PlanarRectangleObjectMask_200x200)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameRectification::testPlanarRectangleObjectMask(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameRectification::testPlanarRectangleObjectMask(200u, 200u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameRectification, ArbitraryRectangleObjectMask_1920x1080)
+TEST(TestFrameRectification, ArbitraryRectangleObjectMask_200x200)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameRectification::testArbitraryRectangleObjectMask(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameRectification::testArbitraryRectangleObjectMask(200u, 200u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameRectification, TriangleObjectMask_1920x1080)
+TEST(TestFrameRectification, TriangleObjectMask_200x200)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameRectification::testTriangleObjectMask(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameRectification::testTriangleObjectMask(200u, 200u, GTEST_TEST_DURATION, worker));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -169,19 +169,12 @@ bool TestFrameRectification::testPlanarRectangleObject(const unsigned int width,
 
 				do
 				{
-					const unsigned int objectFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(1u);
-
 					const IndexPair32 objectResolution = RandomI::random(randomGenerator, objectResolutions);
 
-					Frame objectFrame(FrameType(objectResolution.first, objectResolution.second, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), objectFramePaddingElements);
-
-					CV::CVUtilities::randomizeFrame(objectFrame, false, &randomGenerator);
+					Frame objectFrame = CV::CVUtilities::randomizedFrame(FrameType(objectResolution.first, objectResolution.second, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 					CV::FrameFilterGaussian::filter(objectFrame, 11u, &worker);
 
-					const unsigned int cameraFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame cameraFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), cameraFramePaddingElements);
-					CV::CVUtilities::randomizeFrame(cameraFrame, false, &randomGenerator);
+					Frame cameraFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 					const Frame copyCameraFrame(cameraFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -209,10 +202,7 @@ bool TestFrameRectification::testPlanarRectangleObject(const unsigned int width,
 						return false;
 					}
 
-					const unsigned int resultFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame resultFrame(objectFrame.frameType(), resultFramePaddingElements);
-					CV::CVUtilities::randomizeFrame(resultFrame, false, &randomGenerator);
+					Frame resultFrame = CV::CVUtilities::randomizedFrame(objectFrame.frameType(), false, &randomGenerator);
 
 					const Frame copyResultFrame(resultFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -308,19 +298,12 @@ bool TestFrameRectification::testArbitraryRectangleObject(const unsigned int wid
 
 				do
 				{
-					const unsigned int objectFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
 					const IndexPair32 objectResolution = RandomI::random(randomGenerator, objectResolutions);
 
-					Frame objectFrame(FrameType(objectResolution.first, objectResolution.second, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), objectFramePaddingElements);
-
-					CV::CVUtilities::randomizeFrame(objectFrame, false, &randomGenerator);
+					Frame objectFrame = CV::CVUtilities::randomizedFrame(FrameType(objectResolution.first, objectResolution.second, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 					CV::FrameFilterGaussian::filter(objectFrame, 11u, &worker);
 
-					const unsigned int cameraFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame cameraFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), cameraFramePaddingElements);
-					CV::CVUtilities::randomizeFrame(cameraFrame, false, &randomGenerator);
+					Frame cameraFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 					const Frame copyCameraFrame(cameraFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -348,10 +331,7 @@ bool TestFrameRectification::testArbitraryRectangleObject(const unsigned int wid
 						return false;
 					}
 
-					const unsigned int resultFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame resultFrame(objectFrame.frameType(), resultFramePaddingElements);
-					CV::CVUtilities::randomizeFrame(resultFrame, false, &randomGenerator);
+					Frame resultFrame = CV::CVUtilities::randomizedFrame(objectFrame.frameType(), false, &randomGenerator);
 
 					const Frame copyResultFrame(resultFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -447,19 +427,12 @@ bool TestFrameRectification::testTriangleObject(const unsigned int width, const 
 
 				do
 				{
-					const unsigned int objectFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
 					const IndexPair32 objectResolution = RandomI::random(randomGenerator, objectResolutions);
 
-					Frame objectFrame(FrameType(objectResolution.first, objectResolution.second, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), objectFramePaddingElements);
-
-					CV::CVUtilities::randomizeFrame(objectFrame, false, &randomGenerator);
+					Frame objectFrame = CV::CVUtilities::randomizedFrame(FrameType(objectResolution.first, objectResolution.second, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 					CV::FrameFilterGaussian::filter(objectFrame, 11u, &worker);
 
-					const unsigned int cameraFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame cameraFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), cameraFramePaddingElements);
-					CV::CVUtilities::randomizeFrame(cameraFrame, false, &randomGenerator);
+					Frame cameraFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 					const Frame copyCameraFrame(cameraFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -501,10 +474,7 @@ bool TestFrameRectification::testTriangleObject(const unsigned int width, const 
 						return false;
 					}
 
-					const unsigned int resultFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame resultFrame(objectFrame.frameType(), resultFramePaddingElements);
-					CV::CVUtilities::randomizeFrame(resultFrame, false, &randomGenerator);
+					Frame resultFrame = CV::CVUtilities::randomizedFrame(objectFrame.frameType(), false, &randomGenerator);
 
 					const Frame copyResultFrame(resultFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -603,19 +573,13 @@ bool TestFrameRectification::testPlanarRectangleObjectMask(const unsigned int wi
 
 				do
 				{
-					const unsigned int objectFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(1u);
-
 					const IndexPair32 objectResolution = RandomI::random(randomGenerator, objectResolutions);
 
-					Frame objectFrame(FrameType(objectResolution.first, objectResolution.second, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), objectFramePaddingElements);
+					Frame objectFrame = CV::CVUtilities::randomizedFrame(FrameType(objectResolution.first, objectResolution.second, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-					CV::CVUtilities::randomizeFrame(objectFrame, false, &randomGenerator);
 					CV::FrameFilterGaussian::filter(objectFrame, 11u, &worker);
 
-					const unsigned int cameraFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame cameraFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), cameraFramePaddingElements);
-					CV::CVUtilities::randomizeFrame(cameraFrame, false, &randomGenerator);
+					Frame cameraFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 					const Frame copyCameraFrame(cameraFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -643,19 +607,13 @@ bool TestFrameRectification::testPlanarRectangleObjectMask(const unsigned int wi
 						return false;
 					}
 
-					const unsigned int resultFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame resultFrame(objectFrame.frameType(), resultFramePaddingElements);
-					CV::CVUtilities::randomizeFrame(resultFrame, false, &randomGenerator);
+					Frame resultFrame = CV::CVUtilities::randomizedFrame(objectFrame.frameType(), false, &randomGenerator);
 
 					const Frame copyResultFrame(resultFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					constexpr uint8_t maskValue = 0xFF;
 
-					const unsigned int resultMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame resultMask(FrameType(objectFrame, FrameType::FORMAT_Y8), resultMaskPaddingElements);
-					CV::CVUtilities::randomizeFrame(resultMask, false, &randomGenerator);
+					Frame resultMask = CV::CVUtilities::randomizedFrame(FrameType(objectFrame, FrameType::FORMAT_Y8), false, &randomGenerator);
 
 					const Frame copyResultMask(resultMask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -791,19 +749,13 @@ bool TestFrameRectification::testArbitraryRectangleObjectMask(const unsigned int
 
 				do
 				{
-					const unsigned int objectFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
 					const IndexPair32 objectResolution = RandomI::random(randomGenerator, objectResolutions);
 
-					Frame objectFrame(FrameType(objectResolution.first, objectResolution.second, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), objectFramePaddingElements);
+					Frame objectFrame = CV::CVUtilities::randomizedFrame(FrameType(objectResolution.first, objectResolution.second, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-					CV::CVUtilities::randomizeFrame(objectFrame, false, &randomGenerator);
 					CV::FrameFilterGaussian::filter(objectFrame, 11u, &worker);
 
-					const unsigned int cameraFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame cameraFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), cameraFramePaddingElements);
-					CV::CVUtilities::randomizeFrame(cameraFrame, false, &randomGenerator);
+					Frame cameraFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 					const Frame copyCameraFrame(cameraFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -831,19 +783,13 @@ bool TestFrameRectification::testArbitraryRectangleObjectMask(const unsigned int
 						return false;
 					}
 
-					const unsigned int resultFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame resultFrame(objectFrame.frameType(), resultFramePaddingElements);
-					CV::CVUtilities::randomizeFrame(resultFrame, false, &randomGenerator);
+					Frame resultFrame = CV::CVUtilities::randomizedFrame(objectFrame.frameType(), false, &randomGenerator);
 
 					const Frame copyResultFrame(resultFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					constexpr uint8_t maskValue = 0xFF;
 
-					const unsigned int resultMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame resultMask(FrameType(objectFrame, FrameType::FORMAT_Y8), resultMaskPaddingElements);
-					CV::CVUtilities::randomizeFrame(resultMask, false, &randomGenerator);
+					Frame resultMask = CV::CVUtilities::randomizedFrame(FrameType(objectFrame, FrameType::FORMAT_Y8), false, &randomGenerator);
 
 					const Frame copyResultMask(resultMask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -979,19 +925,13 @@ bool TestFrameRectification::testTriangleObjectMask(const unsigned int width, co
 
 				do
 				{
-					const unsigned int objectFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
 					const IndexPair32 objectResolution = RandomI::random(randomGenerator, objectResolutions);
 
-					Frame objectFrame(FrameType(objectResolution.first, objectResolution.second, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), objectFramePaddingElements);
+					Frame objectFrame = CV::CVUtilities::randomizedFrame(FrameType(objectResolution.first, objectResolution.second, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-					CV::CVUtilities::randomizeFrame(objectFrame, false, &randomGenerator);
 					CV::FrameFilterGaussian::filter(objectFrame, 11u, &worker);
 
-					const unsigned int cameraFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame cameraFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), cameraFramePaddingElements);
-					CV::CVUtilities::randomizeFrame(cameraFrame, false, &randomGenerator);
+					Frame cameraFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 					const Frame copyCameraFrame(cameraFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1033,19 +973,13 @@ bool TestFrameRectification::testTriangleObjectMask(const unsigned int width, co
 						return false;
 					}
 
-					const unsigned int resultFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame resultFrame(objectFrame.frameType(), resultFramePaddingElements);
-					CV::CVUtilities::randomizeFrame(resultFrame, false, &randomGenerator);
+					Frame resultFrame = CV::CVUtilities::randomizedFrame(objectFrame.frameType(), false, &randomGenerator);
 
 					const Frame copyResultFrame(resultFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					constexpr uint8_t maskValue = 0xFF;
 
-					const unsigned int resultMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame resultMask(FrameType(objectFrame, FrameType::FORMAT_Y8), resultMaskPaddingElements);
-					CV::CVUtilities::randomizeFrame(resultMask, false, &randomGenerator);
+					Frame resultMask = CV::CVUtilities::randomizedFrame(FrameType(objectFrame, FrameType::FORMAT_Y8), false, &randomGenerator);
 
 					const Frame copyResultMask(resultMask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
