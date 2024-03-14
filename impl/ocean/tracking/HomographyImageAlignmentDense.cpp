@@ -2567,16 +2567,16 @@ void HomographyImageAlignmentDense::determineHessianAndErrorJacobian8BitPerChann
 }
 
 template <unsigned int tParameters, unsigned int tChannels, bool tUseMeans>
-void HomographyImageAlignmentDense::determineHessianAndErrorJacobianMask8BitPerChannelSubset(const Frame* templateFrame, const CV::SubRegion* templateSubRegion, const Frame* transformedCurrentSubFrame, const Frame* transformedCurrentSubFrameMask, const unsigned int transformedBoundingBoxLeft, const unsigned int transformedBoundingBoxTop, const unsigned int transformedBoundingBoxWidth, const unsigned int transformedBoundingBoxHeight, const Frame* gradientCurrentFrame, const SquareMatrix3* homography, const Scalar* templateMeans, const Scalar* currentMeans, Matrix* hessian, Matrix* jacobianError, Lock* lock, const unsigned int threads, const unsigned int threadIndex, const unsigned int unused)
+void HomographyImageAlignmentDense::determineHessianAndErrorJacobianMask8BitPerChannelSubset(const Frame* templateFrame, const CV::SubRegion* templateSubRegion, const Frame* transformedCurrentSubFrame, const Frame* transformedCurrentSubFrameMask, const unsigned int transformedBoundingBoxLeft, const unsigned int transformedBoundingBoxTop, const unsigned int transformedBoundingBoxWidth, const unsigned int transformedBoundingBoxHeight, const Frame* gradientCurrentFrame, const SquareMatrix3* current_H_template, const Scalar* templateMeans, const Scalar* currentMeans, Matrix* hessian, Matrix* jacobianError, Lock* lock, const unsigned int threads, const unsigned int threadIndex, const unsigned int unused)
 {
 	static_assert(tParameters == 8u || tParameters == 9u, "Invalid parameter number!");
 
 	ocean_assert(templateFrame != nullptr && templateFrame->isValid() && templateFrame->dataType() == FrameType::DT_UNSIGNED_INTEGER_8 && templateFrame->channels() == tChannels);
 
-	ocean_assert(templateSubRegion != nullptr && transformedCurrentSubFrame != nullptr && gradientCurrentFrame != nullptr && homography != nullptr && hessian != nullptr && jacobianError != nullptr);
+	ocean_assert(templateSubRegion != nullptr && transformedCurrentSubFrame != nullptr && gradientCurrentFrame != nullptr && current_H_template != nullptr && hessian != nullptr && jacobianError != nullptr);
 	ocean_assert(!tUseMeans || (templateMeans != nullptr && currentMeans != nullptr));
 
-	ocean_assert(Numeric::isEqual((*homography)[8], 1));
+	ocean_assert(Numeric::isEqual((*current_H_template)[8], 1));
 
 	ocean_assert(threadIndex < threads);
 	ocean_assert_and_suppress_unused(unused == 1u, unused);
@@ -2625,45 +2625,48 @@ void HomographyImageAlignmentDense::determineHessianAndErrorJacobianMask8BitPerC
 							&& (y == boundingBoxTop + boundingBoxHeight - 1u || transformedCurrentSubFrameMaskTopLeft[transformedCurrentSubFrameMaskStrideElements])
 							&& (x == boundingBoxLeft + boundingBoxWidth - 1u || y == boundingBoxTop + boundingBoxHeight - 1u || transformedCurrentSubFrameMaskTopLeft[transformedCurrentSubFrameMaskStrideElements + 1u]))
 				{
-					const Vector2 transformedPoint((*homography) * Vector2(Scalar(x), Scalar(y)));
+					const Vector2 transformedPoint((*current_H_template) * Vector2(Scalar(x), Scalar(y)));
 
-					CV::FrameInterpolatorBilinear::interpolatePixel<int16_t, Scalar, tChannels * 2u>(gradientCurrentData, transformedBoundingBoxWidth, transformedBoundingBoxHeight, gradientCurrentPaddingElements, Vector2(transformedPoint.x() - Scalar(transformedBoundingBoxLeft), transformedPoint.y() - Scalar(transformedBoundingBoxTop)), interpolatedGradientData);
-
-					if constexpr (tParameters == 8u)
+					if (transformedPoint.x() >= Scalar(0) && transformedPoint.x() <= Scalar(transformedBoundingBoxWidth - 1u) && transformedPoint.y() >= Scalar(0) && transformedPoint.y() <= Scalar(transformedBoundingBoxHeight - 1u))
 					{
-						Geometry::Jacobian::calculateHomographyJacobian2x8(localJacobian.template row<0>(), localJacobian.template row<1>(), Scalar(x), Scalar(y), *homography);
-					}
-					else
-					{
-						Geometry::Jacobian::calculateHomographyJacobian2x9(localJacobian.template row<0>(), localJacobian.template row<1>(), Scalar(x), Scalar(y), *homography);
-					}
+						CV::FrameInterpolatorBilinear::interpolatePixel<int16_t, Scalar, tChannels * 2u, CV::PC_TOP_LEFT>(gradientCurrentData, transformedBoundingBoxWidth, transformedBoundingBoxHeight, gradientCurrentPaddingElements, Vector2(transformedPoint.x() - Scalar(transformedBoundingBoxLeft), transformedPoint.y() - Scalar(transformedBoundingBoxTop)), interpolatedGradientData);
 
-					const uint8_t* transformedCurrentSubFrameTopLeft = transformedCurrentSubFrameD + (y - boundingBoxTop) * transformedCurrentSubFrameStrideElements + (x - boundingBoxLeft) * tChannels;
-
-					for (unsigned int n = 0u; n < tChannels; ++n)
-					{
-						// normally, we would have to normalize the gradients by (0.5 / 255), however we normalize the Hessian and jacobian vector at the end as this is simply a scalar factor
-						gradient.element<0, 0>() = Scalar(interpolatedGradientData[2u * n + 0u]);
-						gradient.element<0, 1>() = Scalar(interpolatedGradientData[2u * n + 1u]);
-
-						intermediate = gradient * localJacobian;
-						intermediate.multiplyWithTransposedLeftAndAdd(localHessian);
-
-						ocean_assert(y >= boundingBoxTop && x >= boundingBoxLeft);
-
-						if constexpr (tUseMeans)
+						if constexpr (tParameters == 8u)
 						{
-							// we also normalize (by 1/255) the error at the end as it is a simple scalar factor
-							const Scalar channelError = (Scalar(transformedCurrentSubFrameTopLeft[n]) - currentMeans[n]) - (Scalar(templatePixel[n]) - templateMeans[n]);
-
-							transposedJacobianError += intermediate * channelError;
+							Geometry::Jacobian::calculateHomographyJacobian2x8(localJacobian.template row<0>(), localJacobian.template row<1>(), Scalar(x), Scalar(y), *current_H_template);
 						}
 						else
 						{
-							// we also normalize (by 1/255) the error at the end as it is a simple scalar factor
-							const Scalar channelError = Scalar(int(transformedCurrentSubFrameTopLeft[n]) - int(templatePixel[n]));
+							Geometry::Jacobian::calculateHomographyJacobian2x9(localJacobian.template row<0>(), localJacobian.template row<1>(), Scalar(x), Scalar(y), *current_H_template);
+						}
 
-							transposedJacobianError += intermediate * channelError;
+						const uint8_t* transformedCurrentSubFrameTopLeft = transformedCurrentSubFrameD + (y - boundingBoxTop) * transformedCurrentSubFrameStrideElements + (x - boundingBoxLeft) * tChannels;
+
+						for (unsigned int n = 0u; n < tChannels; ++n)
+						{
+							// normally, we would have to normalize the gradients by (0.5 / 255), however we normalize the Hessian and jacobian vector at the end as this is simply a scalar factor
+							gradient.element<0, 0>() = Scalar(interpolatedGradientData[2u * n + 0u]);
+							gradient.element<0, 1>() = Scalar(interpolatedGradientData[2u * n + 1u]);
+
+							intermediate = gradient * localJacobian;
+							intermediate.multiplyWithTransposedLeftAndAdd(localHessian);
+
+							ocean_assert(y >= boundingBoxTop && x >= boundingBoxLeft);
+
+							if constexpr (tUseMeans)
+							{
+								// we also normalize (by 1/255) the error at the end as it is a simple scalar factor
+								const Scalar channelError = (Scalar(transformedCurrentSubFrameTopLeft[n]) - currentMeans[n]) - (Scalar(templatePixel[n]) - templateMeans[n]);
+
+								transposedJacobianError += intermediate * channelError;
+							}
+							else
+							{
+								// we also normalize (by 1/255) the error at the end as it is a simple scalar factor
+								const Scalar channelError = Scalar(int(transformedCurrentSubFrameTopLeft[n]) - int(templatePixel[n]));
+
+								transposedJacobianError += intermediate * channelError;
+							}
 						}
 					}
 				}

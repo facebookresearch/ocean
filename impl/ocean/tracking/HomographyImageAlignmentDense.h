@@ -459,7 +459,6 @@ class OCEAN_TRACKING_EXPORT HomographyImageAlignmentDense
 
 		/**
 		 * Determines the subset-Hessian matrix and the subset-product of transposed Jacobian matrix and error vector for a template frame and current transformed frame within a sub-region.
-		 * The homography transformed points defined in the template frame to points defined in the current frame (currenttPoint = H * templatePoint).
 		 * @param templateFrame The template frame, must be valid
 		 * @param templateSubRegion The sub-region for which the error is determined, defined in the template frame
 		 * @param transformedCurrentSubFrame The sub-region from the transformed current frame, needs to be transformed with the homography with size and location equal to the sub-region
@@ -469,7 +468,7 @@ class OCEAN_TRACKING_EXPORT HomographyImageAlignmentDense
 		 * @param transformedBoundingBoxWidth The width of the bounding box of the transformed sub-region in pixel, with range [1, currentFrame.width() - transformedBoundingBoxLeft]
 		 * @param transformedBoundingBoxHeight The height of the bounding box of the transformed sub-region in pixel, with range [1, currentFrame.height() - transformedBoundingBoxTop]
 		 * @param gradientCurrentFrame The gradient filter responses of the current frame restricted to the location and size of the transformed bounding box, must be valid
-		 * @param homography The homography to be used to transform the current frame with
+		 * @param current_H_template The homography converting the template image to the current image, must be valid
 		 * @param templateMeans The mean color intensities in the sub-region of the template frame, must be defined if 'tUseMeans' is True; otherwise nullptr
 		 * @param currentMeans The mean color intensities in the current transformed frame, must be defined if 'tUseMeans' is True; otherwise nullptr
 		 * @param hessian The resulting Hessian matrix, with dimension (tParameters x tParameters), must be initialized with 0
@@ -483,7 +482,7 @@ class OCEAN_TRACKING_EXPORT HomographyImageAlignmentDense
 		 * @tparam tUseMeans True, if the mean color intensities are used to determine the errors; False, otherwise
 		 */
 		template <unsigned int tParameters, unsigned int tChannels, bool tUseMeans>
-		static void determineHessianAndErrorJacobianMask8BitPerChannelSubset(const Frame* templateFrame, const CV::SubRegion* templateSubRegion, const Frame* transformedCurrentSubFrame, const Frame* transformedCurrentSubFrameMask, const unsigned int transformedBoundingBoxLeft, const unsigned int transformedBoundingBoxTop, const unsigned int transformedBoundingBoxWidth, const unsigned int transformedBoundingBoxHeight, const Frame* gradientCurrentFrame, const SquareMatrix3* homography, const Scalar* templateMeans, const Scalar* currentMeans, Matrix* hessian, Matrix* jacobianError, Lock* lock, const unsigned int threads, const unsigned int threadIndex, const unsigned int unused);
+		static void determineHessianAndErrorJacobianMask8BitPerChannelSubset(const Frame* templateFrame, const CV::SubRegion* templateSubRegion, const Frame* transformedCurrentSubFrame, const Frame* transformedCurrentSubFrameMask, const unsigned int transformedBoundingBoxLeft, const unsigned int transformedBoundingBoxTop, const unsigned int transformedBoundingBoxWidth, const unsigned int transformedBoundingBoxHeight, const Frame* gradientCurrentFrame, const SquareMatrix3* current_H_template, const Scalar* templateMeans, const Scalar* currentMeans, Matrix* hessian, Matrix* jacobianError, Lock* lock, const unsigned int threads, const unsigned int threadIndex, const unsigned int unused);
 };
 
 inline HomographyImageAlignmentDense::ConsistencyData::ConsistencyData()
