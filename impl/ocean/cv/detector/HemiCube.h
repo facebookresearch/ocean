@@ -69,15 +69,15 @@ class OCEAN_CV_DETECTOR_EXPORT HemiCube
 		 * Check if the Hemi cube is fully initialized
 		 * @return True if the Hemi cube has been fully initialized, otherwise false
 		 */
-		bool isValid() const;
+		inline bool isValid() const;
 
 		/**
 		 * Add a line to the Hemi cube
 		 * The line will be added as-is, it will not be merged with similar lines in the Hemi cube
-		 * There are no checks for duplicate lines.
-		 * @param line Line to be added to the map, line must be valid
+		 * @note There are no checks for duplicate lines.
+		 * @param newLine Line to be added to the map, line must be valid
 		 */
-		inline void insert(const FiniteLine2& line);
+		inline void insert(const FiniteLine2& newLine);
 
 		/**
 		 * Add multiple lines to the Hemi cube
@@ -135,25 +135,31 @@ class OCEAN_CV_DETECTOR_EXPORT HemiCube
 		 * Return the number of lines stored in the Hemi cube
 		 * @return Number of lines stored in the Hemi cube
 		 */
-		size_t size() const;
+		inline size_t size() const;
 
 		/**
 		 * Return the number of bins in the Hemi cube which actually contain data
 		 * @return Number of non-empty bins
 		 */
-		size_t nonEmptyBins() const;
+		inline size_t nonEmptyBins() const;
 
 		/**
 		 * Clear this Hemi cube
 		 */
-		void clear();
+		inline void clear();
 
 		/**
 		 * Get a reference to the lines stored in the Hemi cube
 		 * @return All lines in the Hemi cube
 		 * @sa find()
 		 */
-		const FiniteLines2& lines() const;
+		inline const FiniteLines2& lines() const;
+
+		/**
+		 * Returns a reference to the internal map of lines indices
+		 * @return The map with line indices
+		 */
+		const Map& map() const;
 
 		/**
 		 * Get a const reference to a line in the Hemi cube
@@ -161,7 +167,7 @@ class OCEAN_CV_DETECTOR_EXPORT HemiCube
 		 * @return Const reference a line in the Hemi cube
 		 * @sa find()
 		 */
-		const FiniteLine2& operator[](const unsigned int index) const;
+		inline const FiniteLine2& operator[](const unsigned int index) const;
 
 		/**
 		 * Get a reference to a line in the Hemi cube
@@ -169,7 +175,7 @@ class OCEAN_CV_DETECTOR_EXPORT HemiCube
 		 * @return Reference a line in the Hemi cube
 		 * @sa find()
 		 */
-		FiniteLine2& operator[](const unsigned int index);
+		inline FiniteLine2& operator[](const unsigned int index);
 
 	protected:
 
@@ -179,7 +185,7 @@ class OCEAN_CV_DETECTOR_EXPORT HemiCube
 		 * @return The pixel location of the line segment in the cube map
 		 * @sa computeMapIndex()
 		 */
-		PixelPosition hemiCubeCoordinatesFrom(const MapIndex& mapIndex) const;
+		inline PixelPosition hemiCubeCoordinatesFrom(const MapIndex& mapIndex) const;
 
 		/**
 		 * Given a 2D line segment, compute its location (map index) in the cube map
@@ -187,8 +193,6 @@ class OCEAN_CV_DETECTOR_EXPORT HemiCube
 		 * @return The map index of the input line
 		 */
 		MapIndex mapIndexFrom(const FiniteLine2& line) const;
-
-OCEAN_DISABLE_DOCUMENTATION_DIAGNOSTIC
 
 		/**
 		 * For a given 2D line segment compute its representation as a line equation (3D vector)
@@ -201,14 +205,12 @@ OCEAN_DISABLE_DOCUMENTATION_DIAGNOSTIC
 		template <bool tScale>
 		Vector3 lineEquationFrom(const FiniteLine2& line) const;
 
-OCEAN_RE_ENABLE_DOCUMENTATION_DIAGNOSTIC
-
 		/**
 		 * Compute the point on the ray at a specific depth (3D ray which points from the center of projection to the image point on the project plane)
 		 * @param point Point that is converted into a 3D ray
 		 * @return The 3D ray corresponding to the input point
 		 */
-		Vector3 rayFrom(const Vector2& point) const;
+		inline Vector3 rayFrom(const Vector2& point) const;
 
 		/**
 		 * Update a line segment stored in the Hemi cube
@@ -221,39 +223,45 @@ OCEAN_RE_ENABLE_DOCUMENTATION_DIAGNOSTIC
 	protected:
 
 		/// All lines which are represented by their indices in the map
-		FiniteLines2 linesInMap;
+		FiniteLines2 linesInMap_;
 
 		/// Width of the image in which the lines in the cube map have been found; used to convert 2D image points into 3D rays
-		unsigned int imageWidth;
+		unsigned int imageWidth_ = 0u;
 
 		/// Height of the image in which the lines in the cube map have been found; used to convert 2D image points into 3D rays
-		unsigned int imageHeight;
+		unsigned int imageHeight_ = 0u;
 
 		/// Principal point of the image in which the lines have have been found; using the image center should work just as fine
-		Vector2 principalPoint;
+		Vector2 principalPoint_ = Vector2(Scalar(0), Scalar(0));
 
 		/// Focal length of the original camera; used convert 2D image points into 3D rays.
-		Scalar focalLength;
+		Scalar focalLength_ = Scalar(0);
 
 		/// The actual map data structure
-		Map map;
+		Map map_;
 
 		/// Number of bins along one dimension (cube)
-		unsigned int bins;
+		unsigned int numberBins_ = 0u;
 };
 
-inline void HemiCube::insert(const FiniteLine2& line)
+inline bool HemiCube::isValid() const
+{
+	return numberBins_ != 0u && imageWidth_ != 0u && imageHeight_ != 0u && Numeric::isNotEqualEps(focalLength_) && principalPoint_ != Vector2(Scalar(0), Scalar(0));
+}
+
+inline void HemiCube::insert(const FiniteLine2& newLine)
 {
 	ocean_assert(isValid());
-	ocean_assert(line.isValid());
+	ocean_assert(newLine.isValid());
 
-	const MapIndex mapIndex = mapIndexFrom(line);
-	IndexSet32& bin = map[mapIndex];
+	// Find or create the bin into which the new line will be placed
+	IndexSet32& bin = map_[mapIndexFrom(newLine)];
 
-	const unsigned int currentIndex = (unsigned int)linesInMap.size();
-	ocean_assert(bin.find(currentIndex) == bin.end());
-	bin.insert(currentIndex);
-	linesInMap.emplace_back(line);
+	const unsigned int newLineIndex = (unsigned int)linesInMap_.size();
+	ocean_assert(bin.find(newLineIndex) == bin.end());
+
+	bin.insert(newLineIndex);
+	linesInMap_.emplace_back(newLine);
 }
 
 inline void HemiCube::insert(const FiniteLines2& lines)
@@ -264,8 +272,83 @@ inline void HemiCube::insert(const FiniteLines2& lines)
 	}
 }
 
-} // namespace Detector
-} // namespace CV
-} // namespace Ocean
+inline size_t HemiCube::size() const
+{
+	return linesInMap_.size();
+}
+
+inline size_t HemiCube::nonEmptyBins() const
+{
+	return map_.size();
+}
+
+inline void HemiCube::clear()
+{
+	linesInMap_.clear();
+	map_.clear();
+}
+
+inline const FiniteLines2& HemiCube::lines() const
+{
+	return linesInMap_;
+}
+
+inline const HemiCube::Map& HemiCube::map() const
+{
+	return map_;
+}
+
+inline const FiniteLine2& HemiCube::operator[](const unsigned int index) const
+{
+	ocean_assert(index < (unsigned int)linesInMap_.size());
+	return linesInMap_[index];
+}
+
+inline FiniteLine2& HemiCube::operator[](const unsigned int index)
+{
+	ocean_assert(index < (unsigned int)linesInMap_.size());
+	return linesInMap_[index];
+}
+
+inline CV::PixelPosition HemiCube::hemiCubeCoordinatesFrom(const MapIndex& mapIndex) const
+{
+	ocean_assert(isValid());
+	ocean_assert(mapIndex[0] < numberBins_ && mapIndex[1] < numberBins_ && mapIndex[2] <= 2u);
+	return CV::PixelPosition(mapIndex[2] * numberBins_ + mapIndex[0], mapIndex[1]);
+}
+
+template <bool tScale>
+Vector3 HemiCube::lineEquationFrom(const FiniteLine2& line) const
+{
+	ocean_assert(line.isValid());
+	const Vector3 ray0 = rayFrom(line.point0());
+	const Vector3 ray1 = rayFrom(line.point1());
+	ocean_assert(Numeric::isNotEqualEps(ray0.length()));
+	ocean_assert(Numeric::isNotEqualEps(ray1.length()));
+
+	const Vector3 lineEquation = ray0.cross(ray1);
+	ocean_assert(Numeric::isNotEqualEps(lineEquation.length()));
+
+	if constexpr (tScale)
+	{
+		const Scalar maxValue = std::max(std::abs(lineEquation[0]), std::max(std::abs(lineEquation[1]), std::abs(lineEquation[2])));
+		ocean_assert(Numeric::isNotEqualEps(maxValue));
+		return lineEquation * (Scalar(1.0) / maxValue);
+	}
+
+	return lineEquation;
+}
+
+Vector3 HemiCube::rayFrom(const Vector2& point) const
+{
+	const Scalar inPixels = Scalar(0.5) * Scalar(std::max(imageWidth_, imageHeight_));
+	return Vector3(point - principalPoint_, focalLength_ * inPixels);
+}
+
+}
+
+}
+
+}
 
 #endif // META_OCEAN_CV_DETECTOR_HEMI_CUBE_H

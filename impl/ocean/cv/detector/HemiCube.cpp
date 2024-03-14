@@ -24,21 +24,16 @@ std::size_t HemiCube::MapIndexHash::operator()(const MapIndex& mapIndex) const n
 	return hash;
 }
 
-HemiCube::HemiCube(const unsigned int _bins, const unsigned int _imageWidth, const unsigned int _imageHeight, const Scalar _focalLength) :
-	imageWidth(_imageWidth),
-	imageHeight(_imageHeight),
-	principalPoint(Vector2(Scalar(imageWidth) * Scalar(0.5), Scalar(imageHeight) * Scalar(0.5))),
-	focalLength(_focalLength), // NOTE: This assumes the principal point coincides with the image center
-	bins(_bins)
+HemiCube::HemiCube(const unsigned int bins, const unsigned int imageWidth, const unsigned int imageHeight, const Scalar focalLength) :
+	imageWidth_(imageWidth),
+	imageHeight_(imageHeight),
+	principalPoint_(Vector2(Scalar(imageWidth_) * Scalar(0.5), Scalar(imageHeight_) * Scalar(0.5))),
+	focalLength_(focalLength), // NOTE: This assumes the principal point coincides with the image center
+	numberBins_(bins)
 {
-	ocean_assert(bins != 0u);
-	ocean_assert(imageWidth != 0u && imageHeight != 0u);
-	ocean_assert(focalLength > Scalar(0.0));
-}
-
-bool HemiCube::isValid() const
-{
-	return bins != 0u && imageWidth != 0u && imageHeight != 0u && Numeric::isNotEqualEps(focalLength) && principalPoint != Vector2(Scalar(0), Scalar(0));
+	ocean_assert(numberBins_ != 0u);
+	ocean_assert(imageWidth_ != 0u && imageHeight_ != 0u);
+	ocean_assert(focalLength_ > Scalar(0.0));
 }
 
 FiniteLines2 HemiCube::mergeGreedyBruteForce(const FiniteLines2& lines, const Scalar maxLineDistance, const Scalar maxLineGap, Indices32* mapping, const Scalar cosAngle)
@@ -69,7 +64,7 @@ FiniteLines2 HemiCube::mergeGreedyBruteForce(const FiniteLines2& lines, const Sc
 			FiniteLine2& line1 = mergedLines[mergedLineIndex];
 			ocean_assert(line1.isValid());
 
-			if (line0.isCollinear(line1, maxLineDistance, cosAngle) == false)
+			if (!line0.isCollinear(line1, maxLineDistance, cosAngle))
 			{
 				continue;
 			}
@@ -96,8 +91,8 @@ FiniteLines2 HemiCube::mergeGreedyBruteForce(const FiniteLines2& lines, const Sc
 			break;
 		}
 
-		// Add current line as is
-		if (foundMatch == false)
+		// Add the current line as-is
+		if (!foundMatch)
 		{
 			mergedLines.emplace_back(line0);
 
@@ -140,10 +135,10 @@ void HemiCube::merge(const FiniteLines2& lines, const Scalar maxLineDistance, co
 
 		for (const Index32& similarLineIndex : similarLineIndices)
 		{
-			ocean_assert(similarLineIndex < (Index32)linesInMap.size());
-			const FiniteLine2& similarLine = linesInMap[similarLineIndex];
+			ocean_assert(similarLineIndex < (Index32)linesInMap_.size());
+			const FiniteLine2& similarLine = linesInMap_[similarLineIndex];
 
-			if (line.isCollinear(similarLine, maxLineDistance, cosAngle) == false)
+			if (!line.isCollinear(similarLine, maxLineDistance, cosAngle))
 			{
 				continue;
 			}
@@ -176,8 +171,8 @@ void HemiCube::merge(const FiniteLines2& lines, const Scalar maxLineDistance, co
 
 		if (foundMatch == true)
 		{
-			ocean_assert(bestMatchLineIndex < (Index32)linesInMap.size());
-			const FiniteLine2& mergedLine = fuse(line, linesInMap[bestMatchLineIndex]);
+			ocean_assert(bestMatchLineIndex < (Index32)linesInMap_.size());
+			const FiniteLine2& mergedLine = fuse(line, linesInMap_[bestMatchLineIndex]);
 			updateLine(bestMatchLineIndex, mergedLine);
 
 			if (mapping)
@@ -193,8 +188,8 @@ void HemiCube::merge(const FiniteLines2& lines, const Scalar maxLineDistance, co
 			if (mapping)
 			{
 				ocean_assert(lineIndex < mapping->size());
-				ocean_assert(linesInMap.size() != 0);
-				(*mapping)[lineIndex] = (Index32)(linesInMap.size() - 1);
+				ocean_assert(linesInMap_.size() != 0);
+				(*mapping)[lineIndex] = (Index32)(linesInMap_.size() - 1);
 			}
 		}
 	}
@@ -203,83 +198,6 @@ void HemiCube::merge(const FiniteLines2& lines, const Scalar maxLineDistance, co
 FiniteLine2 HemiCube::fuse(const FiniteLine2& line0, const FiniteLine2& line1)
 {
 	ocean_assert(line0.isValid() && line1.isValid());
-
-#if 0
-	// TODO nilsplath@ In some cases the result doesn't look right, why? Disabled this section until the issue has been investigated.
-
-	const Scalar totalLineLengths = line0.length() + line1.length();
-	ocean_assert(Numeric::isNotEqualEps(totalLineLengths));
-
-	// Line end-points in homogeneous coordinates
-	const Vectors3 points = {
-		Vector3(line0.point0(), Scalar(1)),
-		Vector3(line0.point1(), Scalar(1)),
-		Vector3(line1.point0(), Scalar(1)),
-		Vector3(line1.point1(), Scalar(1))
-	};
-
-	// Scatter matrix
-	const Scalar weight0 = line0.length() / totalLineLengths;
-	const Scalar weight1 = line1.length() / totalLineLengths;
-	ocean_assert(Numeric::isNotEqualEps(weight0) && Numeric::isNotEqualEps(weight1));
-	const Scalars weights = { weight0, weight0, weight1, weight1 };
-
-	SquareMatrix3 scatterMatrix(false);
-
-	for (unsigned int i = 0u; i < 4u; ++i)
-	{
-		scatterMatrix[0] += weights[i] * points[i].x() * points[i].x();
-		scatterMatrix[1] += weights[i] * points[i].y() * points[i].x();
-		scatterMatrix[2] += weights[i] * points[i].z() * points[i].x();
-
-		scatterMatrix[3] += weights[i] * points[i].x() * points[i].y();
-		scatterMatrix[4] += weights[i] * points[i].y() * points[i].y();
-		scatterMatrix[5] += weights[i] * points[i].z() * points[i].y();
-
-		scatterMatrix[6] += weights[i] * points[i].x() * points[i].z();
-		scatterMatrix[7] += weights[i] * points[i].y() * points[i].z();
-		scatterMatrix[8] += weights[i] * points[i].z() * points[i].z();
-	}
-
-	ocean_assert(scatterMatrix.isSymmetric(Numeric::weakEps()));
-
-	// Normalize the scatter matrix
-	const Scalar absoluteSum = scatterMatrix.absSum();
-	ocean_assert(Numeric::isNotEqualEps(absoluteSum));
-
-	scatterMatrix *= Scalar(1) / absoluteSum;
-
-	// Compute the Eigen values and vectors of the scatter matrix
-	Scalars eigenValues(3, -1);
-	Vectors3 eigenVectors(3, Vector3(0, 0, 0));
-
-	if (scatterMatrix.eigenSystem(eigenValues.data(), eigenVectors.data()) == false)
-	{
-		return FiniteLine2();
-	}
-
-	ocean_assert(eigenValues[0] >= eigenValues[1] && eigenValues[1] >= eigenValues[2] && "Eigen values not sorted in descending order");
-	ocean_assert(eigenValues[2] > -Numeric::weakEps() && "The eigenvalues must not be negative (up to numerical error)");
-
-	// If the eigenvalues are (s0, s1, s2) then should have s0 >= s1 >= s2 >= 0.
-	// The vp corresponds to the eigenvector of s2.
-	// We'll have a good fit if:
-	//   s1 is sufficiently positive, and
-	//   s1 is sufficiently bigger than s2
-	if (!(eigenValues[1] > std::abs(eigenValues[2])))
-	{
-		// s1 is either negative, or smaller in magnitude than s2, so we have a bad
-		// fit
-		return FiniteLine2();
-	}
-
-	// Determine the infinite line, that minimizes the distances to the end-points of both line segments
-	const Scalar normalLength = Vector2(eigenVectors[2].x(), eigenVectors[2].y()).length();
-	ocean_assert(Numeric::isNotEqualEps(normalLength));
-	const Vector3 lineParameters = eigenVectors[2] * (Scalar(1) / normalLength);
-	const Line2 infiniteLine(lineParameters);
-
-#else
 
 	const Scalar sumLineLengths = line0.length() + line1.length();
 
@@ -295,8 +213,6 @@ FiniteLine2 HemiCube::fuse(const FiniteLine2& line0, const FiniteLine2& line1)
 	const Vector2 weightedDirection = line0.direction() * weight0 + line1Direction * weight1;
 
 	const Line2 infiniteLine(weightedCentroid, weightedDirection.normalized());
-
-#endif
 
 	ocean_assert(infiniteLine.isValid());
 
@@ -360,9 +276,9 @@ IndexSet32 HemiCube::find(const FiniteLine2& line, const Scalar radius) const
 
 	const unsigned int radiusCeil = (unsigned int)Numeric::ceil(radius);
 	const unsigned int yStart = (mapIndex.y() >= radiusCeil ? mapIndex.y() - radiusCeil : 0u);
-	const unsigned int yEnd = std::min(mapIndex.y() + radiusCeil, bins);
+	const unsigned int yEnd = std::min(mapIndex.y() + radiusCeil, numberBins_);
 	const unsigned int xStart = (mapIndex.x() >= radiusCeil ? mapIndex.x() - radiusCeil : 0u);
-	const unsigned int xEnd = std::min(mapIndex.x() + radiusCeil, bins);
+	const unsigned int xEnd = std::min(mapIndex.x() + radiusCeil, numberBins_);
 
 	for (unsigned int y = yStart; y < yEnd; ++y)
 	{
@@ -376,9 +292,9 @@ IndexSet32 HemiCube::find(const FiniteLine2& line, const Scalar radius) const
 			}
 
 			const MapIndex currentMapIndex(x, y, mapIndex.z());
-			const Map::const_iterator binIter = map.find(currentMapIndex);
+			const Map::const_iterator binIter = map_.find(currentMapIndex);
 
-			if (binIter != map.end())
+			if (binIter != map_.end())
 			{
 				similarLineIndices.insert(binIter->second.begin(), binIter->second.end());
 			}
@@ -386,46 +302,6 @@ IndexSet32 HemiCube::find(const FiniteLine2& line, const Scalar radius) const
 	}
 
 	return similarLineIndices;
-}
-
-size_t HemiCube::size() const
-{
-	return linesInMap.size();
-}
-
-size_t HemiCube::nonEmptyBins() const
-{
-	return map.size();
-}
-
-void HemiCube::clear()
-{
-	linesInMap.clear();
-	map.clear();
-}
-
-const FiniteLines2& HemiCube::lines() const
-{
-	return linesInMap;
-}
-
-const FiniteLine2& HemiCube::operator[](const unsigned int index) const
-{
-	ocean_assert(index < (unsigned int)linesInMap.size());
-	return linesInMap[index];
-}
-
-FiniteLine2& HemiCube::operator[](const unsigned int index)
-{
-	ocean_assert(index < (unsigned int)linesInMap.size());
-	return linesInMap[index];
-}
-
-Ocean::CV::PixelPosition HemiCube::hemiCubeCoordinatesFrom(const MapIndex& mapIndex) const
-{
-	ocean_assert(isValid());
-	ocean_assert(mapIndex[0] < bins && mapIndex[1] < bins && mapIndex[2] <= 2u);
-	return Ocean::CV::PixelPosition(mapIndex[2] * bins + mapIndex[0], mapIndex[1]);
 }
 
 HemiCube::MapIndex HemiCube::mapIndexFrom(const FiniteLine2& line) const
@@ -446,45 +322,14 @@ HemiCube::MapIndex HemiCube::mapIndexFrom(const FiniteLine2& line) const
 	ocean_assert(Numeric::isEqual(normalizedLineEquation[face0], Scalar(1.0)) && std::abs(normalizedLineEquation[face1]) <= Scalar(1.0) && std::abs(normalizedLineEquation[face2]) <= Scalar(1.0));
 
 	// Compute the discrete coordinates of the bin that this line falls into.
-	const Scalar scale = Scalar(0.5) * Scalar(bins);
+	const Scalar scale = Scalar(0.5) * Scalar(numberBins_);
 	const Scalar sx = (scale * (Scalar(1.0) + normalizedLineEquation[face1]));
 	const Scalar sy = (scale * (Scalar(1.0) + normalizedLineEquation[face2]));
-	const unsigned int x = std::min((bins - 1u), (unsigned int)sx); // std::floor() or cast-only work as well
-	const unsigned int y = std::min((bins - 1u), (unsigned int)sy); // std::floor() or cast-only work as well
-	ocean_assert(x < bins && y < bins);
+	const unsigned int x = std::min((numberBins_ - 1u), (unsigned int)sx); // std::floor() or cast-only work as well
+	const unsigned int y = std::min((numberBins_ - 1u), (unsigned int)sy); // std::floor() or cast-only work as well
+	ocean_assert(x < numberBins_ && y < numberBins_);
 
 	return MapIndex(x, y, face0);
-}
-
-template <bool tScale>
-Vector3 HemiCube::lineEquationFrom(const FiniteLine2& line) const
-{
-	ocean_assert(line.isValid());
-	const Vector3 ray0 = rayFrom(line.point0());
-	const Vector3 ray1 = rayFrom(line.point1());
-	ocean_assert(Numeric::isNotEqualEps(ray0.length()));
-	ocean_assert(Numeric::isNotEqualEps(ray1.length()));
-
-	const Vector3 lineEquation = ray0.cross(ray1);
-	ocean_assert(Numeric::isNotEqualEps(lineEquation.length()));
-
-	if constexpr (tScale)
-	{
-		const Scalar maxValue = std::max(std::abs(lineEquation[0]), std::max(std::abs(lineEquation[1]), std::abs(lineEquation[2])));
-		ocean_assert(Numeric::isNotEqualEps(maxValue));
-		return lineEquation * (Scalar(1.0) / maxValue);
-	}
-
-	return lineEquation;
-}
-
-template Vector3 HemiCube::lineEquationFrom<true>(const FiniteLine2& line) const;
-template Vector3 HemiCube::lineEquationFrom<false>(const FiniteLine2& line) const;
-
-Vector3 HemiCube::rayFrom(const Vector2& point) const
-{
-	const Scalar inPixels = Scalar(0.5) * Scalar(std::max(imageWidth, imageHeight));
-	return Vector3(point - principalPoint, focalLength * inPixels);
 }
 
 void HemiCube::updateLine(unsigned int index, const FiniteLine2& updatedLine)
@@ -492,22 +337,26 @@ void HemiCube::updateLine(unsigned int index, const FiniteLine2& updatedLine)
 	ocean_assert(updatedLine.isValid());
 
 	// Remove the selected line from the map
-	ocean_assert(index < linesInMap.size());
-	const MapIndex mapIndex = mapIndexFrom(linesInMap[index]);
+	ocean_assert(index < linesInMap_.size());
+	const MapIndex mapIndex = mapIndexFrom(linesInMap_[index]);
 
-	Map::iterator bin = map.find(mapIndex);
-	ocean_assert(bin != map.end());
+	Map::iterator bin = map_.find(mapIndex);
+	ocean_assert(bin != map_.end());
+
 	IndexSet32& indicesInBin = bin->second;
+
 	ocean_assert(indicesInBin.find(index) != indicesInBin.end());
 	indicesInBin.erase(index);
 
 	// Update the map index and add back to the map
 	const MapIndex updatedMapIndex = mapIndexFrom(updatedLine);
-	map[updatedMapIndex].insert(index);
+	map_[updatedMapIndex].insert(index);
 
-	linesInMap[index] = updatedLine;
+	linesInMap_[index] = updatedLine;
 }
 
-} // namespace Detector
-} // namespace CV
-} // namespace Ocean
+}
+
+}
+
+}

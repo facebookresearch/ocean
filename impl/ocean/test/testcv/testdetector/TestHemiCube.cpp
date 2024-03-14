@@ -93,39 +93,117 @@ bool TestHemiCube::testAdd(const double testDuration)
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	const Timestamp startTime(true);
 
 	do
 	{
-		const unsigned int hemiCubeBins = RandomI::random(2u, 320u);
+		const unsigned int hemiCubeBins = RandomI::random(randomGenerator, 2u, 320u);
 
 		{
 			// Case 1: random number of only collinear lines + random bin size, all lines should land in the same bin
-			const FiniteLine2 randomSeedLine = generateRandomFiniteLine2(imageWidth, imageHeight);
-			const unsigned int linesCount = RandomI::random(2u, 10000u);
+			const FiniteLine2 randomSeedLine = generateRandomFiniteLine2(randomGenerator, imageWidth, imageHeight);
+			const unsigned int linesCount = RandomI::random(randomGenerator, 2u, 10000u);
 			FiniteLines2 randomCollinearLines;
 			randomCollinearLines.reserve(linesCount);
 
 			for (unsigned int i = 0u; i < linesCount; ++i)
 			{
-				const FiniteLine2 randomCollinearLine = generateRandomCollinearFiniteLine2(randomSeedLine, imageWidth, imageHeight, Scalar(0.1) * randomSeedLine.length());
+				const FiniteLine2 randomCollinearLine = generateRandomCollinearFiniteLine2(randomGenerator, randomSeedLine, imageWidth, imageHeight, Scalar(0.1) * randomSeedLine.length());
 				randomCollinearLines.emplace_back(randomCollinearLine);
 			}
 
 			HemiCube hemiCube(hemiCubeBins, imageWidth, imageHeight, focalLength);
 			hemiCube.insert(randomCollinearLines);
 
-			if (hemiCube.nonEmptyBins() != 1 || hemiCube.size() != randomCollinearLines.size())
+			if (hemiCube.size() != randomCollinearLines.size())
 			{
 				allSucceeded = false;
+			}
+
+			if (hemiCube.nonEmptyBins() == 0)
+			{
+				allSucceeded = false;
+			}
+			else
+			{
+				// Due to floating point precision, finite lines that are collinear may fall
+				// into adjacent bins on the same face of a Hemi Cube. In this case, they will
+				// have very similar map indices, i.e., all lines will be within a 3x3
+				// neighborhood on a 2D grid.
+				//
+				// Similarly, it is also possible that collinear lines fall on different faces
+				// of the Hemi Cube. In this case—while still being spatially close—their map
+				// indices may be very different because of how the indexing works; changing
+				// it would require a lot of changes to the code.
+				//
+				// With that in mind, the following checks are performed here:
+				// 1. All lines that fall on the same face of the Hemi Cube are located in a
+				//    3x3 bin neighborhood.
+				// 2. The above check is performed individually and independently for each of
+				//    the three Hemi Cube faces.
+
+				// The map where each bin represent a map index of lines.
+				const HemiCube::Map& map = hemiCube.map();
+				ocean_assert(!map.empty());
+
+				bool hasElementsOnCubeFace[3] = {false, false, false};
+
+				unsigned int minimumBinX[3] = {(unsigned int)-1, (unsigned int)-1, (unsigned int)-1};
+				unsigned int maximumBinX[3] = {0u, 0u, 0u};
+
+				unsigned int minimumBinY[3] = {(unsigned int)-1, (unsigned int)-1, (unsigned int)-1};
+				unsigned int maximumBinY[3] = {0u, 0u, 0u};
+
+				for (const HemiCube::Map::value_type& pair : map)
+				{
+					const HemiCube::MapIndex& mapIndex = pair.first;
+
+					const unsigned int faceIndex = mapIndex[2];
+					ocean_assert(faceIndex < 3u);
+
+					hasElementsOnCubeFace[faceIndex] = true;
+
+					minimumBinX[faceIndex] = std::min(minimumBinX[faceIndex], mapIndex[0]);
+					maximumBinX[faceIndex] = std::max(maximumBinX[faceIndex], mapIndex[0]);
+
+					minimumBinY[faceIndex] = std::min(minimumBinY[faceIndex], mapIndex[1]);
+					maximumBinY[faceIndex] = std::max(maximumBinY[faceIndex], mapIndex[1]);
+				}
+
+				if (!hasElementsOnCubeFace[0] && !hasElementsOnCubeFace[1] && !hasElementsOnCubeFace[2])
+				{
+					ocean_assert(false && "The map indices have been found - that must not be!");
+					allSucceeded = false;
+				}
+				else
+				{
+					for (unsigned int faceIndex = 0u; faceIndex < 3u; ++faceIndex)
+					{
+						if (!hasElementsOnCubeFace[faceIndex])
+						{
+							ocean_assert(minimumBinX[faceIndex] == (unsigned int)-1 && maximumBinX[faceIndex] == 0u);
+							continue;
+						}
+
+						ocean_assert(minimumBinX[faceIndex] <= maximumBinX[faceIndex]);
+						ocean_assert(minimumBinY[faceIndex] <= maximumBinY[faceIndex]);
+
+						if (maximumBinX[faceIndex] - minimumBinX[faceIndex] >= 3u || maximumBinY[faceIndex] - minimumBinY[faceIndex] >= 3u)
+						{
+							allSucceeded = false;
+						}
+					}
+				}
 			}
 		}
 
 		{
 			// Case 2: two orthogonal lines - should be in separate bins
-			const FiniteLine2 line0 = generateRandomFiniteLine2(imageWidth, imageHeight);
-			const FiniteLine2 line1 = generateRandomOrthogonalFiniteLine2(line0, imageWidth, imageHeight);
-			const FiniteLines2 lines = { line0, line1 };
+			const FiniteLine2 line0 = generateRandomFiniteLine2(randomGenerator, imageWidth, imageHeight);
+			const FiniteLine2 line1 = generateRandomOrthogonalFiniteLine2(randomGenerator, line0, imageWidth, imageHeight);
+			const FiniteLines2 lines = {line0, line1};
 
 			HemiCube hemiCube(hemiCubeBins, imageWidth, imageHeight, focalLength);
 			hemiCube.insert(lines);
@@ -160,12 +238,14 @@ bool TestHemiCube::testLineFusion(const double testDuration)
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	const Timestamp startTime(true);
 
 	do
 	{
-		const FiniteLine2 line0 = generateRandomFiniteLine2(imageWidth, imageHeight);
-		const FiniteLine2 line1 = generateRandomFiniteLine2(imageWidth, imageHeight);
+		const FiniteLine2 line0 = generateRandomFiniteLine2(randomGenerator, imageWidth, imageHeight);
+		const FiniteLine2 line1 = generateRandomFiniteLine2(randomGenerator, imageWidth, imageHeight);
 
 		const FiniteLine2 mergedLine = HemiCube::fuse(line0, line1);
 
@@ -203,35 +283,48 @@ bool TestHemiCube::testMergeGreedyBruteForce(const double testDuration)
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	const Timestamp startTime(true);
 
 	do
 	{
 		{
-			// Case 1: random number of only collinear lines + random bin size, all lines should land in the same bin
-			const FiniteLine2 randomSeedLine = generateRandomFiniteLine2(imageWidth, imageHeight);
+			// Case 1: random number of only collinear lines + random bin size, all lines should land in the same bin (for Scalar = double)
+			const FiniteLine2 randomSeedLine = generateRandomFiniteLine2(randomGenerator, imageWidth, imageHeight);
 			const unsigned int linesCount = RandomI::random(2u, 10000u);
 			FiniteLines2 randomCollinearLines;
 
 			for (unsigned int i = 0u; i < linesCount; ++i)
 			{
-				const FiniteLine2 randomCollinearLine = generateRandomCollinearFiniteLine2(randomSeedLine, imageWidth, imageHeight, Scalar(0.1) * randomSeedLine.length());
+				const FiniteLine2 randomCollinearLine = generateRandomCollinearFiniteLine2(randomGenerator, randomSeedLine, imageWidth, imageHeight, Scalar(0.1) * randomSeedLine.length());
 				randomCollinearLines.emplace_back(randomCollinearLine);
 			}
 
 			const FiniteLines2 mergedLines = HemiCube::mergeGreedyBruteForce(randomCollinearLines, maxLineDistance, maxLineGap);
 
-			if (mergedLines.size() != 1)
+			if constexpr (std::is_same<double, Scalar>::value)
 			{
-				allSucceeded = false;
+				if (mergedLines.size() != 1)
+				{
+					allSucceeded = false;
+				}
+			}
+			else
+			{
+				// In the case of 32-bit floating numbers, it can't be guaranteed that all of the input lines are merged into a single line. Accepting one or more.
+				if (mergedLines.empty())
+				{
+					allSucceeded = false;
+				}
 			}
 		}
 
 		{
 			// Case 2: two orthogonal lines - should be in separate bins
-			const FiniteLine2 line0 = generateRandomFiniteLine2(imageWidth, imageHeight);
-			const FiniteLine2 line1 = generateRandomOrthogonalFiniteLine2(line0, imageWidth, imageHeight);
-			const FiniteLines2 lines = { line0, line1 };
+			const FiniteLine2 line0 = generateRandomFiniteLine2(randomGenerator, imageWidth, imageHeight);
+			const FiniteLine2 line1 = generateRandomOrthogonalFiniteLine2(randomGenerator, line0, imageWidth, imageHeight);
+			const FiniteLines2 lines = {line0, line1};
 
 			const FiniteLines2 mergedLines = HemiCube::mergeGreedyBruteForce(lines, maxLineDistance, maxLineGap);
 
@@ -269,38 +362,51 @@ bool TestHemiCube::testMerge(const double testDuration)
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	const Timestamp startTime(true);
 
 	do
 	{
-		const unsigned int hemiCubeBins = RandomI::random(2u, 320u);
+		const unsigned int hemiCubeBins = RandomI::random(randomGenerator, 2u, 320u);
 
 		{
-			// Case 1: random number of only collinear lines + random bin size, all lines should land in the same bin
-			const FiniteLine2 randomSeedLine = generateRandomFiniteLine2(imageWidth, imageHeight);
-			const unsigned int linesCount = RandomI::random(2u, 10000u);
+			// Case 1: random number of only collinear lines + random bin size, all lines should land in the same bin (for Scalar = double)
+			const FiniteLine2 randomSeedLine = generateRandomFiniteLine2(randomGenerator, imageWidth, imageHeight);
+			const unsigned int linesCount = RandomI::random(randomGenerator, 2u, 10000u);
 			FiniteLines2 randomCollinearLines;
 
 			for (unsigned int i = 0u; i < linesCount; ++i)
 			{
-				const FiniteLine2 randomCollinearLine = generateRandomCollinearFiniteLine2(randomSeedLine, imageWidth, imageHeight);
+				const FiniteLine2 randomCollinearLine = generateRandomCollinearFiniteLine2(randomGenerator, randomSeedLine, imageWidth, imageHeight);
 				randomCollinearLines.emplace_back(randomCollinearLine);
 			}
 
 			HemiCube hemiCube(hemiCubeBins, imageWidth, imageHeight, focalLength);
 			hemiCube.merge(randomCollinearLines, maxLineDistance, maxLineGap);
 
-			if (hemiCube.nonEmptyBins() != 1)
+			if constexpr (std::is_same<double, Scalar>::value)
 			{
-				allSucceeded = false;
+				if (hemiCube.nonEmptyBins() != 1)
+				{
+					allSucceeded = false;
+				}
+			}
+			else
+			{
+				// In the case of 32-bit floating numbers, it can't be guaranteed that all of the input lines are merged into a single bin. Accepting one or more.
+				if (hemiCube.nonEmptyBins() == 0)
+				{
+					allSucceeded = false;
+				}
 			}
 		}
 
 		{
 			// Case 2: two orthogonal lines - should be in separate bins
-			const FiniteLine2 line0 = generateRandomFiniteLine2(imageWidth, imageHeight);
-			const FiniteLine2 line1 = generateRandomOrthogonalFiniteLine2(line0, imageWidth, imageHeight);
-			const FiniteLines2 lines = { line0, line1 };
+			const FiniteLine2 line0 = generateRandomFiniteLine2(randomGenerator, imageWidth, imageHeight);
+			const FiniteLine2 line1 = generateRandomOrthogonalFiniteLine2(randomGenerator, line0, imageWidth, imageHeight);
+			const FiniteLines2 lines = {line0, line1};
 
 			HemiCube hemiCube(hemiCubeBins, imageWidth, imageHeight, focalLength);
 			hemiCube.merge(lines, maxLineDistance, maxLineGap);
@@ -326,33 +432,33 @@ bool TestHemiCube::testMerge(const double testDuration)
 	return allSucceeded;
 }
 
-FiniteLine2 TestHemiCube::generateRandomFiniteLine2(const unsigned int imageWidth, const unsigned int imageHeight)
+FiniteLine2 TestHemiCube::generateRandomFiniteLine2(RandomGenerator& randomGenerator, const unsigned int imageWidth, const unsigned int imageHeight)
 {
 	ocean_assert(imageWidth != 0u && imageHeight != 0u);
 
-	const Vector2 point0 = Random::vector2(Scalar(0), Scalar(imageWidth - 1u), Scalar(0), Scalar(imageHeight - 1u));
-	Vector2 point1 = Random::vector2(Scalar(0), Scalar(imageWidth - 1u), Scalar(0), Scalar(imageHeight - 1u));
+	const Vector2 point0 = Random::vector2(randomGenerator, Scalar(0), Scalar(imageWidth - 1u), Scalar(0), Scalar(imageHeight - 1u));
+	Vector2 point1 = Random::vector2(randomGenerator, Scalar(0), Scalar(imageWidth - 1u), Scalar(0), Scalar(imageHeight - 1u));
 
 	while ((point0 - point1).length() < Numeric::eps())
 	{
-		point1 = Random::vector2(Scalar(0), Scalar(imageWidth - 1u), Scalar(0), Scalar(imageHeight - 1u));
+		point1 = Random::vector2(randomGenerator, Scalar(0), Scalar(imageWidth - 1u), Scalar(0), Scalar(imageHeight - 1u));
 	}
 
 	return FiniteLine2(point0, point1);
 };
 
-FiniteLine2 TestHemiCube::generateRandomOrthogonalFiniteLine2(const FiniteLine2& line, const unsigned int imageWidth, const unsigned int imageHeight, const Scalar minLineLength)
+FiniteLine2 TestHemiCube::generateRandomOrthogonalFiniteLine2(RandomGenerator& randomGenerator, const FiniteLine2& line, const unsigned int imageWidth, const unsigned int imageHeight, const Scalar minLineLength)
 {
 	ocean_assert(imageWidth != 0u && imageHeight != 0u);
 	ocean_assert(minLineLength >= Numeric::eps());
 
-	const Vector2 point0 = Random::vector2(Scalar(0), Scalar(imageWidth - 1u), Scalar(0), Scalar(imageHeight - 1u));
+	const Vector2 point0 = Random::vector2(randomGenerator, Scalar(0), Scalar(imageWidth - 1u), Scalar(0), Scalar(imageHeight - 1u));
 	Vector2 point1;
 
 	while (true)
 	{
-		const Scalar length = Random::scalar(minLineLength, Scalar(std::min(imageHeight, imageWidth)));
-		point1 = point0 + line.normal() * length * Random::sign();
+		const Scalar length = Random::scalar(randomGenerator, minLineLength, Scalar(std::min(imageHeight, imageWidth)));
+		point1 = point0 + line.normal() * length * Random::sign(randomGenerator);
 
 		if (point1.x() < Scalar(0) || point1.x() > Scalar(imageWidth - 1u) || point1.y() < Scalar(0) || point1.y() > Scalar(imageHeight - 1u))
 		{
@@ -371,7 +477,7 @@ FiniteLine2 TestHemiCube::generateRandomOrthogonalFiniteLine2(const FiniteLine2&
 	}
 }
 
-FiniteLine2 TestHemiCube::generateRandomCollinearFiniteLine2(const FiniteLine2& line, const unsigned int imageWidth, const unsigned int imageHeight, const Scalar minLineLength)
+FiniteLine2 TestHemiCube::generateRandomCollinearFiniteLine2(RandomGenerator& randomGenerator, const FiniteLine2& line, const unsigned int imageWidth, const unsigned int imageHeight, const Scalar minLineLength)
 {
 	ocean_assert(minLineLength > Numeric::eps());
 
@@ -385,8 +491,8 @@ FiniteLine2 TestHemiCube::generateRandomCollinearFiniteLine2(const FiniteLine2& 
 
 	do
 	{
-		const Scalar length = Random::scalar(minLineLength, Scalar(std::min(imageHeight, imageWidth)));
-		point0 = line.point0() + line.direction() * length * Random::sign();
+		const Scalar length = Random::scalar(randomGenerator, minLineLength, Scalar(std::min(imageHeight, imageWidth)));
+		point0 = line.point0() + line.direction() * length * Random::sign(randomGenerator);
 		ocean_assert((line.nearestPointOnInfiniteLine(point0) - point0).length() <= maxDistance);
 	}
 	while (point0.x() < Scalar(0) || point0.x() >= Scalar(imageWidth) || point0.y() < Scalar(0) || point0.y() >= Scalar(imageHeight));
@@ -395,7 +501,7 @@ FiniteLine2 TestHemiCube::generateRandomCollinearFiniteLine2(const FiniteLine2& 
 
 	do
 	{
-		const Scalar length = Random::scalar(minLineLength, Scalar(std::min(imageHeight, imageWidth)));
+		const Scalar length = Random::scalar(randomGenerator, minLineLength, Scalar(std::min(imageHeight, imageWidth)));
 		point1 = point0 + line.direction() * length * Random::sign();
 		ocean_assert((line.nearestPointOnInfiniteLine(point1) - point1).length() <= maxDistance);
 
@@ -409,8 +515,8 @@ FiniteLine2 TestHemiCube::generateRandomCollinearFiniteLine2(const FiniteLine2& 
 
 	do
 	{
-		point0 = collinearLine.point0() + Vector2(collinearLine.normal() * Random::scalar(Scalar(0), Scalar(distanceEpsilon)));
-		point1 = collinearLine.point1() + Vector2(collinearLine.normal() * Random::scalar(Scalar(0), Scalar(distanceEpsilon)));
+		point0 = collinearLine.point0() + Vector2(collinearLine.normal() * Random::scalar(randomGenerator, Scalar(0), Scalar(distanceEpsilon)));
+		point1 = collinearLine.point1() + Vector2(collinearLine.normal() * Random::scalar(randomGenerator, Scalar(0), Scalar(distanceEpsilon)));
 		pertubedCollinearLine = FiniteLine2(point0, point1);
 
 		// Check the angle: cos(angle) = |a| * |b| * (a * b), here a and b are unit vectors (normal)

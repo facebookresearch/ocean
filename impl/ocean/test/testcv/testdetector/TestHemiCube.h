@@ -5,6 +5,8 @@
 
 #include "ocean/test/testcv/testdetector/TestCVDetector.h"
 
+#include "ocean/base/RandomGenerator.h"
+
 #include "ocean/math/FiniteLine2.h"
 
 namespace Ocean
@@ -66,31 +68,34 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestHemiCube
 
 		/**
 		 * Generate a random 2D line segment inside the boundaries of an image/rectangle.
+		 * @param randomGenerator The random generator to be used for the generation of the test data
 		 * @param imageWidth Width of the image
 		 * @param imageHeight Height of the image
 		 * @return A line segment within the image boundaries
 		 */
-		static FiniteLine2 generateRandomFiniteLine2(const unsigned int imageWidth, const unsigned int imageHeight);
+		static FiniteLine2 generateRandomFiniteLine2(RandomGenerator& randomGenerator, const unsigned int imageWidth, const unsigned int imageHeight);
 
 		/**
 		 * Generate a random 2D line segment inside the boundaries of an image/rectangle that is orthogonal to a reference line segment.
+		 * @param randomGenerator The random generator to be used for the generation of the test data
 		 * @param line Line for which a orthogonal line will be generated randomly
 		 * @param imageWidth Width of the image
 		 * @param imageHeight Height of the image
 		 * @param minLineLength Minimum length of the random line segments that are generated, default: 0.5, range: (0, infinity)
 		 * @return A line segment within the image boundaries
 		 */
-		static FiniteLine2 generateRandomOrthogonalFiniteLine2(const FiniteLine2& line, const unsigned int imageWidth, const unsigned int imageHeight, const Scalar minLineLength = Scalar(0.5));
+		static FiniteLine2 generateRandomOrthogonalFiniteLine2(RandomGenerator& randomGenerator, const FiniteLine2& line, const unsigned int imageWidth, const unsigned int imageHeight, const Scalar minLineLength = Scalar(0.5));
 
 		/**
 		 * Generate a random 2D line segment inside the boundaries of an image/rectangle that is collinear with a reference line segment.
+		 * @param randomGenerator The random generator to be used for the generation of the test data
 		 * @param line Line for which a collinear line will be generated randomly
 		 * @param imageWidth Width of the image
 		 * @param imageHeight Height of the image
 		 * @param minLineLength Minimum length of the random line segments that are generated, default: 0.5, range: (0, infinity)
 		 * @return A line segment within the image boundaries
 		 */
-		static FiniteLine2 generateRandomCollinearFiniteLine2(const FiniteLine2& line, const unsigned int imageWidth, const unsigned int imageHeight, const Scalar minLineLength = Scalar(0.5));
+		static FiniteLine2 generateRandomCollinearFiniteLine2(RandomGenerator& randomGenerator, const FiniteLine2& line, const unsigned int imageWidth, const unsigned int imageHeight, const Scalar minLineLength = Scalar(0.5));
 
 		/**
 		 * Validation for line merging function
