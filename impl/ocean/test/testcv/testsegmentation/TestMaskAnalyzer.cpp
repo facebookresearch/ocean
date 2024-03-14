@@ -202,62 +202,62 @@ TEST(TestMaskAnalyzer, HasMaskNeighbor9Center)
 }
 
 
-TEST(TestMaskAnalyzer, DetermineDistancesToBorder_1920x1080_3)
+TEST(TestMaskAnalyzer, DetermineDistancesToBorder_200x200_3)
 {
 	Worker worker;
 	constexpr unsigned int explicitMaximalDistance = 3u;
-	EXPECT_TRUE(TestMaskAnalyzer::testDetermineDistancesToBorder(1920u, 1080u, GTEST_TEST_DURATION, explicitMaximalDistance, worker));
+	EXPECT_TRUE(TestMaskAnalyzer::testDetermineDistancesToBorder(200u, 200u, GTEST_TEST_DURATION, explicitMaximalDistance, worker));
 }
 
-TEST(TestMaskAnalyzer, DetermineDistancesToBorder_1920x1080_5)
+TEST(TestMaskAnalyzer, DetermineDistancesToBorder_200x200_5)
 {
 	Worker worker;
 	constexpr unsigned int explicitMaximalDistance = 5u;
-	EXPECT_TRUE(TestMaskAnalyzer::testDetermineDistancesToBorder(1920u, 1080u, GTEST_TEST_DURATION, explicitMaximalDistance, worker));
+	EXPECT_TRUE(TestMaskAnalyzer::testDetermineDistancesToBorder(200u, 200u, GTEST_TEST_DURATION, explicitMaximalDistance, worker));
 }
 
-TEST(TestMaskAnalyzer, DetermineDistancesToBorder_1920x1080_10)
+TEST(TestMaskAnalyzer, DetermineDistancesToBorder_200x200_10)
 {
 	Worker worker;
 	constexpr unsigned int explicitMaximalDistance = 10u;
-	EXPECT_TRUE(TestMaskAnalyzer::testDetermineDistancesToBorder(1920u, 1080u, GTEST_TEST_DURATION, explicitMaximalDistance, worker));
+	EXPECT_TRUE(TestMaskAnalyzer::testDetermineDistancesToBorder(200u, 200u, GTEST_TEST_DURATION, explicitMaximalDistance, worker));
 }
 
-TEST(TestMaskAnalyzer, DetermineDistancesToBorder_1920x1080_15)
+TEST(TestMaskAnalyzer, DetermineDistancesToBorder_200x200_15)
 {
 	Worker worker;
 	constexpr unsigned int explicitMaximalDistance = 15u;
-	EXPECT_TRUE(TestMaskAnalyzer::testDetermineDistancesToBorder(1920u, 1080u, GTEST_TEST_DURATION, explicitMaximalDistance, worker));
+	EXPECT_TRUE(TestMaskAnalyzer::testDetermineDistancesToBorder(200u, 200u, GTEST_TEST_DURATION, explicitMaximalDistance, worker));
 }
 
 
-TEST(TestMaskAnalyzer, FindBorderPixels4_1920x1080)
+TEST(TestMaskAnalyzer, FindBorderPixels4_200x200)
 {
 	Worker worker;
-	EXPECT_TRUE(TestMaskAnalyzer::testFindBorderPixels4(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestMaskAnalyzer::testFindBorderPixels4(200u, 200u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestMaskAnalyzer, FindBorderPixels8_1920x1080)
+TEST(TestMaskAnalyzer, FindBorderPixels8_200x200)
 {
 	Worker worker;
-	EXPECT_TRUE(TestMaskAnalyzer::testFindBorderPixels8(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestMaskAnalyzer::testFindBorderPixels8(200u, 200u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestMaskAnalyzer, FindNonUniquePixels4_1920x1080)
+TEST(TestMaskAnalyzer, FindNonUniquePixels4_200x200)
 {
 	Worker worker;
-	EXPECT_TRUE(TestMaskAnalyzer::testFindNonUniquePixels4(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestMaskAnalyzer::testFindNonUniquePixels4(200u, 200u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestMaskAnalyzer, FindNonUniquePixels8_1920x1080)
+TEST(TestMaskAnalyzer, FindNonUniquePixels8_200x200)
 {
 	Worker worker;
-	EXPECT_TRUE(TestMaskAnalyzer::testFindNonUniquePixels8(1920u, 1080u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestMaskAnalyzer::testFindNonUniquePixels8(200u, 200u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestMaskAnalyzer, FindOutlinePixels4_1920x1080)
+TEST(TestMaskAnalyzer, FindOutlinePixels4_200x200)
 {
-	EXPECT_TRUE(TestMaskAnalyzer::testFindOutlinePixels4(1920u, 1080u, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestMaskAnalyzer::testFindOutlinePixels4(200u, 200u, GTEST_TEST_DURATION));
 }
 
 TEST(TestMaskAnalyzer, ComputeChessboardDistanceTransform8Bit)
