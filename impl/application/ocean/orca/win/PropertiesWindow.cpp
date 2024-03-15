@@ -50,10 +50,10 @@ void PropertiesWindow::PropertyControl::setPropertyColumnWidth(const int width)
 
 BOOL PropertiesWindow::PropertyControl::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	unsigned int hwParam = HIWORD(wParam);
-	unsigned int lwParam = LOWORD(wParam);
+	const unsigned int hwParam = HIWORD(wParam);
+	const unsigned int lwParam = LOWORD(wParam);
 
-	if (hwParam == 0)
+	if (hwParam == 0u)
 	{
 		switch (lwParam)
 		{
@@ -280,7 +280,7 @@ PropertiesWindow::~PropertiesWindow()
 
 void PropertiesWindow::applyConfiguration()
 {
-	Config::Value& propertiesWindowConfig = (*config)["propertieswindow"];
+	Config::Value& propertiesWindowConfig = Application::get().config()["propertieswindow"];
 
 	int left = propertiesWindowConfig["left"](invalidWindowValue_);
 	int top = propertiesWindowConfig["top"](invalidWindowValue_);
@@ -298,7 +298,7 @@ void PropertiesWindow::applyConfiguration()
 	}
 	SetWindowPos(nullptr, left, top, width, height, flag);
 
-	const bool visible = propertiesWindowConfig["visible"](true) && !(*config)["application"]["startfullscreen"](false);
+	const bool visible = propertiesWindowConfig["visible"](true) && !Application::get().config()["application"]["startfullscreen"](false);
 
 	std::string dockingPosition = propertiesWindowConfig["dockingPosition"]("bottom");
 	if (dockingPosition == "none")
@@ -327,7 +327,7 @@ void PropertiesWindow::applyConfiguration()
 	ShowPane(visible, false, true);
 
 	propertyList_.UpdateWindow();
-	propertyList_.setPropertyColumnWidth((*config)["propertieswindow"]["propertywidth"](100));
+	propertyList_.setPropertyColumnWidth(Application::get().config()["propertieswindow"]["propertywidth"](100));
 	propertyList_.RedrawWindow();
 
 	configurationApplied_ = true;
@@ -337,8 +337,8 @@ void PropertiesWindow::storeConfiguration()
 {
 	ocean_assert(configurationApplied_);
 
-	(*config)["propertieswindow"]["propertywidth"] = propertyList_.GetPropertyColumnWidth();
-	(*config)["propertieswindow"]["descriptionheight"] = propertyList_.GetDescriptionHeight();
+	Application::get().config()["propertieswindow"]["propertywidth"] = propertyList_.GetPropertyColumnWidth();
+	Application::get().config()["propertieswindow"]["descriptionheight"] = propertyList_.GetDescriptionHeight();
 }
 
 void PropertiesWindow::AdjustLayout()
@@ -411,7 +411,7 @@ void PropertiesWindow::OnShowWindow(BOOL show, UINT status)
 
 	if (configurationApplied_ && show == TRUE)
 	{
-		(*config)["propertieswindow"]["visible"] = true;
+		Application::get().config()["propertieswindow"]["visible"] = true;
 	}
 }
 
@@ -422,8 +422,8 @@ void PropertiesWindow::OnSize(UINT type, int width, int height)
 
 	if (configurationApplied_)
 	{
-		(*config)["propertieswindow"]["width"] = width;
-		(*config)["propertieswindow"]["height"] = height;
+		Application::get().config()["propertieswindow"]["width"] = width;
+		Application::get().config()["propertieswindow"]["height"] = height;
 	}
 }
 
@@ -433,7 +433,7 @@ void PropertiesWindow::OnPressCloseButton()
 
 	if (configurationApplied_)
 	{
-		(*config)["propertieswindow"]["visible"] = false;
+		Application::get().config()["propertieswindow"]["visible"] = false;
 	}
 }
 
@@ -473,7 +473,7 @@ void PropertiesWindow::addApplicationProperties(CMFCPropertyGridCtrl& group)
 	applicationGroup_->AddSubItem(applicationDoubleClickFullscreen_);
 
 	ocean_assert(applicationCameraCalibrationFile_ == nullptr);
-	applicationCameraCalibrationFile_ = new FilePropertyItem(applicationCallback_, L"Camera calibration file", TRUE, String::toWString((*config)["application"]["cameracalibrationfile"]("")).c_str(), nullptr, 4 | 2, L"Ocean camera calibration (*.occ)|*.occ", L"Specifies a camera calibration file.");
+	applicationCameraCalibrationFile_ = new FilePropertyItem(applicationCallback_, L"Camera calibration file", TRUE, String::toWString(Application::get().config()["application"]["cameracalibrationfile"]("")).c_str(), nullptr, 4 | 2, L"Ocean camera calibration (*.occ)|*.occ", L"Specifies a camera calibration file.");
 	applicationGroup_->AddSubItem(applicationCameraCalibrationFile_);
 
 	group.AddProperty(applicationGroup_);
@@ -481,7 +481,7 @@ void PropertiesWindow::addApplicationProperties(CMFCPropertyGridCtrl& group)
 
 void PropertiesWindow::applyApplicationProperties()
 {
-	Config::Value& application = (*config)["application"];
+	Config::Value& application = Application::get().config()["application"];
 
 	ocean_assert(applicationSceneFitting_ != nullptr);
 	applicationSceneFitting_->SetValue(_variant_t(application["fittingafterloading"](true)));
@@ -577,7 +577,7 @@ void PropertiesWindow::addViewDisplayProperties(CMFCPropertyGridProperty& group)
 
 void PropertiesWindow::applyViewDisplayProperties()
 {
-	Config::Value& display = (*config)["view"]["display"];
+	Config::Value& display = Application::get().config()["view"]["display"];
 
 	ocean_assert(viewDisplayFieldOfView_ != nullptr);
 	View::mainView().setHorizontalFieldOfView(NumericD::deg2rad(display["fovx"](45.0)));
@@ -676,7 +676,7 @@ void PropertiesWindow::addViewBackgroundProperties(CMFCPropertyGridProperty& gro
 
 void PropertiesWindow::applyViewBackgroundProperties()
 {
-	Config::Value& background = (*config)["view"]["background"];
+	Config::Value& background = Application::get().config()["view"]["background"];
 
 	ocean_assert(viewBackgroundColor_ != nullptr);
 	View::mainView().setBackgroundColor(background["color"](0));
@@ -808,7 +808,7 @@ void PropertiesWindow::addViewBackgroundDisplayTypeProperty(CMFCPropertyGridProp
 
 void PropertiesWindow::applyViewBackgroundDisplayTypeProperty()
 {
-	Config::Value& background = (*config)["view"]["background"];
+	Config::Value& background = Application::get().config()["view"]["background"];
 
 	ocean_assert(viewBackgroundDisplayType_ != nullptr);
 	std::string typeString = background["displaytype"]("Fastest");
@@ -850,7 +850,7 @@ void PropertiesWindow::addViewBackgroundDeviceProperties(CMFCPropertyGridPropert
 
 void PropertiesWindow::applyViewBackgroundDeviceProperties()
 {
-	Config::Value& device = (*config)["view"]["background"]["device"];
+	Config::Value& device = Application::get().config()["view"]["background"]["device"];
 
 	ocean_assert(viewBackgroundDeviceName_ != nullptr);
 	const std::wstring name = String::toWString(device["name"](""));
@@ -895,7 +895,7 @@ void PropertiesWindow::addViewBackgroundMediaProperties(CMFCPropertyGridProperty
 
 void PropertiesWindow::applyViewBackgroundMediaProperties()
 {
-	Config::Value& media = (*config)["view"]["background"]["media"];
+	Config::Value& media = Application::get().config()["view"]["background"]["media"];
 
 	ocean_assert(viewBackgroundMediaFile_ != nullptr);
 	Media::FrameMediumRef medium;
@@ -955,7 +955,7 @@ void PropertiesWindow::addViewNavigationProperties(CMFCPropertyGridProperty& gro
 
 void PropertiesWindow::applyViewNavigationProperties()
 {
-	Config::Value& navigation = (*config)["view"]["navigation"];
+	Config::Value& navigation = Application::get().config()["view"]["navigation"];
 
 	ocean_assert(viewNavigationCursorMode_ != nullptr);
 	std::string cursorModeString = navigation["cursorfullscreenmode"]("Hide while inactive");
@@ -1057,7 +1057,7 @@ void PropertiesWindow::updateViewRenderer()
 
 void PropertiesWindow::applyViewRendererProperties()
 {
-	Config::Value& renderer = (*config)["view"]["renderer"];
+	Config::Value& renderer = Application::get().config()["view"]["renderer"];
 
 	ocean_assert(viewRendererSupportQuadbufferedStereo_ != nullptr);
 	const bool supportQuadbufferedStereo = renderer["supportquadbufferedstereo"](false);
@@ -1351,7 +1351,7 @@ void PropertiesWindow::removeViewRecorderImageSequenceProperties()
 
 void PropertiesWindow::applyViewRecorderProperties()
 {
-	Config::Value& recorder = (*config)["view"]["recorder"];
+	Config::Value& recorder = Application::get().config()["view"]["recorder"];
 
 	ocean_assert(viewRecorderType_ != nullptr);
 	std::string recorderTypeString = recorder["type"]("None");
@@ -1402,7 +1402,7 @@ void PropertiesWindow::applyViewRecorderProperties()
 
 void PropertiesWindow::applyViewRecorderMovieProperties()
 {
-	Config::Value& movieRecorder = (*config)["view"]["recorder"]["movierecorder"];
+	Config::Value& movieRecorder = Application::get().config()["view"]["recorder"]["movierecorder"];
 
 	ocean_assert(viewMovieRecorderFilename_ != nullptr);
 	const std::string filename = movieRecorder["filename"]("");
@@ -1433,7 +1433,7 @@ void PropertiesWindow::applyViewRecorderMovieProperties()
 
 void PropertiesWindow::applyViewRecorderMemoryProperties()
 {
-	Config::Value& memoryRecorder = (*config)["view"]["recorder"]["memoryrecorder"];
+	Config::Value& memoryRecorder = Application::get().config()["view"]["recorder"]["memoryrecorder"];
 
 	ocean_assert(viewMemoryRecorderFps_ != nullptr);
 	View::mainView().setRecorderFrameRate(float(memoryRecorder["framerate"](25.0)));
@@ -1442,7 +1442,7 @@ void PropertiesWindow::applyViewRecorderMemoryProperties()
 
 void PropertiesWindow::applyViewRecorderImageProperties()
 {
-	Config::Value& imageRecorder = (*config)["view"]["recorder"]["imagerecorder"];
+	Config::Value& imageRecorder = Application::get().config()["view"]["recorder"]["imagerecorder"];
 
 	ocean_assert(viewImageRecorderFilename_ != nullptr);
 	const std::string filename = imageRecorder["filename"]("");
@@ -1457,7 +1457,7 @@ void PropertiesWindow::applyViewRecorderImageProperties()
 
 void PropertiesWindow::applyViewRecorderImageSequenceProperties()
 {
-	Config::Value& imageSequenceRecorder = (*config)["view"]["recorder"]["imagesequencerecorder"];
+	Config::Value& imageSequenceRecorder = Application::get().config()["view"]["recorder"]["imagesequencerecorder"];
 
 	ocean_assert(viewImageSequenceRecorderFilename_ != nullptr);
 	const std::string filename = imageSequenceRecorder["filename"]("");
@@ -1481,10 +1481,10 @@ void PropertiesWindow::addPluginProperties(CMFCPropertyGridCtrl& group)
 
 	std::wstring plugindirectory = L"\\plugins";
 
-	const bool useDefaultPluginDirectory = Application::application().usesDefaultPluginDirectory();
+	const bool useDefaultPluginDirectory = Application::get().usesDefaultPluginDirectory();
 
 	if (!useDefaultPluginDirectory)
-		plugindirectory = String::toWString((*config)["plugins"]["version"][Build::buildString()]["plugindirectory"](""));
+		plugindirectory = String::toWString(Application::get().config()["plugins"]["version"][Build::buildString()]["plugindirectory"](""));
 
 	ocean_assert(pluginDirectory_ == nullptr);
 	pluginDirectory_ = new FilePropertyItem(pluginCallback_, L"Plugin directory", plugindirectory.c_str(), DWORD(0), L"Specifies the directory plugins are loaded from.");
@@ -1509,13 +1509,13 @@ void PropertiesWindow::onApplicationPropertyChanged(CMFCPropertyGridProperty* it
 
 	// application properties
 	if (item == applicationSceneFitting_)
-		(*config)["application"]["fittingafterloading"] = item->GetValue().boolVal == -1;
+		Application::get().config()["application"]["fittingafterloading"] = item->GetValue().boolVal == -1;
 	else if (item == applicationLoadLastScene_)
-		(*config)["application"]["loadlastscene"] = item->GetValue().boolVal == -1;
+		Application::get().config()["application"]["loadlastscene"] = item->GetValue().boolVal == -1;
 	else if (item == applicationStartFullscreen_)
-		(*config)["application"]["startfullscreen"] = item->GetValue().boolVal == -1;
+		Application::get().config()["application"]["startfullscreen"] = item->GetValue().boolVal == -1;
 	else if (item == applicationDoubleClickFullscreen_)
-		(*config)["application"]["doubleclickfullscreen"] = item->GetValue().boolVal == -1;
+		Application::get().config()["application"]["doubleclickfullscreen"] = item->GetValue().boolVal == -1;
 	else if (item == applicationCameraCalibrationFile_)
 	{
 		IO::File file(String::toAString(applicationCameraCalibrationFile_->GetValue().bstrVal));
@@ -1531,7 +1531,7 @@ void PropertiesWindow::onApplicationPropertyChanged(CMFCPropertyGridProperty* it
 				Log::warning() << "Failed to load the camera calibration file \"" << file() << "\".";
 			}
 
-			(*config)["application"]["cameracalibrationfile"] = file();
+			Application::get().config()["application"]["cameracalibrationfile"] = file();
 		}
 		else
 		{
@@ -1565,7 +1565,7 @@ void PropertiesWindow::onViewDisplayPropertyChanged(CMFCPropertyGridProperty* it
 		if (fovx > 0 && fovx < 180)
 		{
 			View::mainView().setHorizontalFieldOfView(NumericD::deg2rad(fovx));
-			(*config)["view"]["display"]["fovx"] = NumericD::rad2deg(View::mainView().horizontalFieldOfView());
+			Application::get().config()["view"]["display"]["fovx"] = NumericD::rad2deg(View::mainView().horizontalFieldOfView());
 		}
 	}
 	else if (item == viewDisplayNearDistance_)
@@ -1575,7 +1575,7 @@ void PropertiesWindow::onViewDisplayPropertyChanged(CMFCPropertyGridProperty* it
 		if (nearDistance > 0)
 		{
 			View::mainView().setNearDistance(nearDistance);
-			(*config)["view"]["display"]["near"] = View::mainView().nearDistance();
+			Application::get().config()["view"]["display"]["near"] = View::mainView().nearDistance();
 		}
 	}
 	else if (item == viewDisplayFarDistance_)
@@ -1585,13 +1585,13 @@ void PropertiesWindow::onViewDisplayPropertyChanged(CMFCPropertyGridProperty* it
 		if (farDistance > 0)
 		{
 			View::mainView().setFarDistance(farDistance);
-			(*config)["view"]["display"]["far"] = View::mainView().farDistance();
+			Application::get().config()["view"]["display"]["far"] = View::mainView().farDistance();
 		}
 	}
 	else if (item == viewDisplayFocus_)
 	{
 		View::mainView().setFocusDistance(item->GetValue().dblVal);
-		(*config)["view"]["display"]["focus"] = View::mainView().focusDistance();
+		Application::get().config()["view"]["display"]["focus"] = View::mainView().focusDistance();
 	}
 	else if (item == viewDisplayFramerate_)
 	{
@@ -1600,7 +1600,7 @@ void PropertiesWindow::onViewDisplayPropertyChanged(CMFCPropertyGridProperty* it
 		if (framerate >= 0 || framerate <= 10000)
 		{
 			View::mainView().setPreferredFramerate(framerate);
-			(*config)["view"]["display"]["framerate"] = View::mainView().preferredFramerate();
+			Application::get().config()["view"]["display"]["framerate"] = View::mainView().preferredFramerate();
 		}
 	}
 	else if (item == viewDisplayType_)
@@ -1621,17 +1621,17 @@ void PropertiesWindow::onViewDisplayPropertyChanged(CMFCPropertyGridProperty* it
 
 		View::mainView().setType(type);
 
-		(*config)["view"]["display"]["type"] = typeString;
+		Application::get().config()["view"]["display"]["type"] = typeString;
 	}
 	else if (item == viewDisplayEyesReversed_)
 	{
 		View::mainView().setEyesReversed(item->GetValue().boolVal == -1);
-		(*config)["view"]["display"]["eyesreversed"] = item->GetValue().boolVal == -1;
+		Application::get().config()["view"]["display"]["eyesreversed"] = item->GetValue().boolVal == -1;
 	}
 	else if (item == viewDisplayHeadlight_)
 	{
 		View::mainView().setUseHeadlight(item->GetValue().boolVal == -1);
-		(*config)["view"]["display"]["useheadlight"] = View::mainView().useHeadlight();
+		Application::get().config()["view"]["display"]["useheadlight"] = View::mainView().useHeadlight();
 	}
 	else if (item == viewDisplayPhantomMode_)
 	{
@@ -1645,7 +1645,7 @@ void PropertiesWindow::onViewDisplayPropertyChanged(CMFCPropertyGridProperty* it
 			phantomMode = Rendering::PhantomAttribute::PM_VIDEO;
 		View::mainView().setPhantomMode(phantomMode);
 
-		(*config)["view"]["display"]["phantommode"] = phantomModeString;
+		Application::get().config()["view"]["display"]["phantommode"] = phantomModeString;
 	}
 }
 
@@ -1665,7 +1665,7 @@ void PropertiesWindow::onViewBackgroundPropertyChanged(CMFCPropertyGridProperty*
 		ColorPropertyItem* colorItem = (ColorPropertyItem*)item;
 
 		View::mainView().setBackgroundColor(colorItem->GetColor());
-		(*config)["view"]["background"]["color"] = int(View::mainView().backgroundColor());
+		Application::get().config()["view"]["background"]["color"] = int(View::mainView().backgroundColor());
 	}
 	else if (item == viewBackgroundType_)
 	{
@@ -1680,7 +1680,7 @@ void PropertiesWindow::onViewBackgroundPropertyChanged(CMFCPropertyGridProperty*
 			}
 		}
 
-		(*config)["view"]["background"]["type"] = String::toAString(item->GetValue().bstrVal);
+		Application::get().config()["view"]["background"]["type"] = String::toAString(item->GetValue().bstrVal);
 
 		ocean_assert(item->GetParent() != nullptr);
 		addViewBackgroundProperties(index, *item->GetParent());
@@ -1698,7 +1698,7 @@ void PropertiesWindow::onViewBackgroundPropertyChanged(CMFCPropertyGridProperty*
 
 		View::mainView().setBackgroundDisplayType(type);
 
-		(*config)["view"]["background"]["displaytype"] = String::toAString(item->GetValue().bstrVal);
+		Application::get().config()["view"]["background"]["displaytype"] = String::toAString(item->GetValue().bstrVal);
 	}
 
 	// view background device properties
@@ -1713,7 +1713,7 @@ void PropertiesWindow::onViewBackgroundPropertyChanged(CMFCPropertyGridProperty*
 			medium = (Media::Manager::get().newMedium(name, Media::Medium::LIVE_VIDEO, true));
 		}
 
-		(*config)["view"]["background"]["device"]["name"] = name;
+		Application::get().config()["view"]["background"]["device"]["name"] = name;
 
 		View::mainView().setBackgroundMedium(medium);
 	}
@@ -1731,7 +1731,7 @@ void PropertiesWindow::onViewBackgroundPropertyChanged(CMFCPropertyGridProperty*
 			medium = (Media::Manager::get().newMedium(file, true));
 		}
 
-		(*config)["view"]["background"]["media"]["file"] = file;
+		Application::get().config()["view"]["background"]["media"]["file"] = file;
 
 		Media::FiniteMediumRef finiteMedium(medium);
 		if (finiteMedium)
@@ -1763,7 +1763,7 @@ void PropertiesWindow::onViewBackgroundPropertyChanged(CMFCPropertyGridProperty*
 			finiteMedium->start();
 		}
 
-		(*config)["view"]["background"]["media"]["loop"] = loop;
+		Application::get().config()["view"]["background"]["media"]["loop"] = loop;
 	}
 	else if (item == viewBackgroundMediaSound_)
 	{
@@ -1778,7 +1778,7 @@ void PropertiesWindow::onViewBackgroundPropertyChanged(CMFCPropertyGridProperty*
 			soundMedium->setSoundMute(!sound);
 		}
 
-		(*config)["view"]["background"]["media"]["sound"] = sound;
+		Application::get().config()["view"]["background"]["media"]["sound"] = sound;
 	}
 
 	EndWaitCursor();
@@ -1805,14 +1805,14 @@ void PropertiesWindow::onViewNavigationPropertyChanged(CMFCPropertyGridProperty*
 		}
 
 		View::mainView().setCursorMode(cursorMode);
-		(*config)["view"]["navigation"]["cursorfullscreenmode"] = cursorModeString;
+		Application::get().config()["view"]["navigation"]["cursorfullscreenmode"] = cursorModeString;
 	}
 
 	if (item == viewNavigationStorePosition_)
 	{
 		const bool storePosition = viewNavigationStorePosition_->GetValue().boolVal == -1;
 		View::mainView().setStorePosition(storePosition);
-		(*config)["view"]["navigation"]["storeposition"] = storePosition;
+		Application::get().config()["view"]["navigation"]["storeposition"] = storePosition;
 	}
 }
 
@@ -1864,7 +1864,7 @@ void PropertiesWindow::onViewRendererPropertyChanged(CMFCPropertyGridProperty* i
 
 		View::mainView().setRenderer(name, supportedGraphicAPI);
 
-		(*config)["view"]["renderer"]["name"] = name;
+		Application::get().config()["view"]["renderer"]["name"] = name;
 	}
 	else if (item == viewRendererAPI_)
 	{
@@ -1882,7 +1882,7 @@ void PropertiesWindow::onViewRendererPropertyChanged(CMFCPropertyGridProperty* i
 		else if (graphicAPIString == "Raytracer")
 			graphicAPI = Rendering::Engine::API_RAYTRACER;
 
-		(*config)["view"]["renderer"]["graphicapi"] = graphicAPIString;
+		Application::get().config()["view"]["renderer"]["graphicapi"] = graphicAPIString;
 	}
 	else if (item == viewRendererFaceMode_)
 	{
@@ -1896,7 +1896,7 @@ void PropertiesWindow::onViewRendererPropertyChanged(CMFCPropertyGridProperty* i
 			faceMode = Rendering::PrimitiveAttribute::MODE_POINT;
 		View::mainView().setRendererFaceMode(faceMode);
 
-		(*config)["view"]["renderer"]["facemode"] = faceModeString;
+		Application::get().config()["view"]["renderer"]["facemode"] = faceModeString;
 	}
 	else if (item == viewRendererCullingMode_)
 	{
@@ -1912,7 +1912,7 @@ void PropertiesWindow::onViewRendererPropertyChanged(CMFCPropertyGridProperty* i
 			cullingMode = Rendering::PrimitiveAttribute::CULLING_NONE;
 		View::mainView().setRendererCullingMode(cullingMode);
 
-		(*config)["view"]["renderer"]["cullingmode"] = cullingModeString;
+		Application::get().config()["view"]["renderer"]["cullingmode"] = cullingModeString;
 	}
 	else if (item == viewRendererTechnique_)
 	{
@@ -1926,7 +1926,7 @@ void PropertiesWindow::onViewRendererPropertyChanged(CMFCPropertyGridProperty* i
 			technique = Rendering::Framebuffer::TECHNIQUE_UNLIT;
 		View::mainView().setRendererTechnique(technique);
 
-		(*config)["view"]["renderer"]["technique"] = techniqueString;
+		Application::get().config()["view"]["renderer"]["technique"] = techniqueString;
 	}
 	else if (item == viewRendererSupportQuadbufferedStereo_)
 	{
@@ -1936,7 +1936,7 @@ void PropertiesWindow::onViewRendererPropertyChanged(CMFCPropertyGridProperty* i
 			const bool supportQuadbufferedStereo = viewRendererSupportQuadbufferedStereo_->GetValue().boolVal == -1;
 
 			//View::mainView().setSupportQuadbufferedStereo(supportQuadbufferedStereo);
-			(*config)["view"]["renderer"]["supportquadbufferedstereo"] = supportQuadbufferedStereo;
+			Application::get().config()["view"]["renderer"]["supportquadbufferedstereo"] = supportQuadbufferedStereo;
 		}
 		//else
 		//	viewRendererSupportQuadbufferedStereo->SetValue(_variant_t(View::mainView().supportsQuadbufferedStereo()));
@@ -1953,7 +1953,7 @@ void PropertiesWindow::onViewRendererPropertyChanged(CMFCPropertyGridProperty* i
 				buffers = atoi(antialiasingString.c_str());
 
 			View::mainView().setSupportAntialiasing(buffers);
-			(*config)["view"]["renderer"]["supportantialiasing"] = antialiasingString;
+			Application::get().config()["view"]["renderer"]["supportantialiasing"] = antialiasingString;
 		}
 		//else
 		//	viewRendererSupportStereo->SetValue(_variant_t(View::mainView().supportsStereo()));
@@ -1964,7 +1964,7 @@ void PropertiesWindow::onViewRendererPropertyChanged(CMFCPropertyGridProperty* i
 
 		const bool enabled = View::mainView().antialiasing();
 		item->SetValue(_variant_t(enabled));
-		(*config)["view"]["renderer"]["enableantialiasing"] = enabled;
+		Application::get().config()["view"]["renderer"]["enableantialiasing"] = enabled;
 	}
 }
 
@@ -1987,12 +1987,12 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		if (value == L"None")
 		{
 			View::mainView().setRecorderType(View::TYPE_NONE);
-			(*config)["view"]["recorder"]["type"] = "None";
+			Application::get().config()["view"]["recorder"]["type"] = "None";
 		}
 		else if (value == L"Image Recorder")
 		{
 			View::mainView().setRecorderType(View::TYPE_IMAGE);
-			(*config)["view"]["recorder"]["type"] = "Image Recorder";
+			Application::get().config()["view"]["recorder"]["type"] = "Image Recorder";
 
 			ocean_assert(viewRecorderGroup_ != nullptr);
 			addViewRecorderImageProperties(*viewRecorderGroup_);
@@ -2001,7 +2001,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		else if (value == L"Image Sequence Recorder")
 		{
 			View::mainView().setRecorderType(View::TYPE_IMAGE_SEQUENCE);
-			(*config)["view"]["recorder"]["type"] = "Image Sequence Recorder";
+			Application::get().config()["view"]["recorder"]["type"] = "Image Sequence Recorder";
 
 			ocean_assert(viewRecorderGroup_ != nullptr);
 			addViewRecorderImageSequenceProperties(*viewRecorderGroup_);
@@ -2010,7 +2010,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		else if (value == L"Movie Recorder")
 		{
 			View::mainView().setRecorderType(View::TYPE_MOVIE);
-			(*config)["view"]["recorder"]["type"] = "Movie Recorder";
+			Application::get().config()["view"]["recorder"]["type"] = "Movie Recorder";
 
 			ocean_assert(viewRecorderGroup_ != nullptr);
 			addViewRecorderMovieProperties(*viewRecorderGroup_);
@@ -2019,7 +2019,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		else if (value == L"Memory Recorder")
 		{
 			View::mainView().setRecorderType(View::TYPE_MEMORY);
-			(*config)["view"]["recorder"]["type"] = "Memory Recorder";
+			Application::get().config()["view"]["recorder"]["type"] = "Memory Recorder";
 
 			ocean_assert(viewRecorderGroup_ != nullptr);
 			addViewRecorderMemoryProperties(*viewRecorderGroup_);
@@ -2032,7 +2032,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		const std::string value(String::toAString(item->GetValue().bstrVal));
 		View::mainView().setRecorderEncoder(value);
 
-		(*config)["view"]["recorder"]["movierecorder"]["encoder"]["name"] = value;
+		Application::get().config()["view"]["recorder"]["movierecorder"]["encoder"]["name"] = value;
 	}
 
 	if (item == viewMovieRecorderFps_)
@@ -2040,7 +2040,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		const double value = item->GetValue().dblVal;
 		View::mainView().setRecorderFrameRate(value);
 
-		(*config)["view"]["recorder"]["movierecorder"]["framerate"] = value;
+		Application::get().config()["view"]["recorder"]["movierecorder"]["framerate"] = value;
 	}
 
 	if (item == viewMemoryRecorderFps_)
@@ -2048,7 +2048,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		const float value = item->GetValue().fltVal;
 		View::mainView().setRecorderFrameRate(value);
 
-		(*config)["view"]["recorder"]["memoryrecorder"]["framerate"] = value;
+		Application::get().config()["view"]["recorder"]["memoryrecorder"]["framerate"] = value;
 	}
 
 	if (item == viewImageSequenceRecorderFps_)
@@ -2056,7 +2056,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		const float value = item->GetValue().fltVal;
 		View::mainView().setRecorderFrameRate(value);
 
-		(*config)["view"]["recorder"]["imagesequencerecorder"]["framerate"] = value;
+		Application::get().config()["view"]["recorder"]["imagesequencerecorder"]["framerate"] = value;
 	}
 
 	if (item == viewMovieRecorderFilename_)
@@ -2064,7 +2064,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		const std::string value(String::toAString(item->GetValue().bstrVal));
 		View::mainView().setRecorderFilename(value);
 
-		(*config)["view"]["recorder"]["movierecorder"]["filename"] = value;
+		Application::get().config()["view"]["recorder"]["movierecorder"]["filename"] = value;
 	}
 
 	if (item == viewMovieRecorderFilenameSuffix_)
@@ -2072,7 +2072,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		const bool value = item->GetValue().boolVal == -1;
 		View::mainView().setRecorderExtendedFilename(value);
 
-		(*config)["view"]["recorder"]["movierecorder"]["extendedfilename"] = value;
+		Application::get().config()["view"]["recorder"]["movierecorder"]["extendedfilename"] = value;
 	}
 
 	if (item == viewImageRecorderFilename_)
@@ -2080,7 +2080,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		const std::string value(String::toAString(item->GetValue().bstrVal));
 		View::mainView().setRecorderFilename(value);
 
-		(*config)["view"]["recorder"]["imagerecorder"]["filename"] = value;
+		Application::get().config()["view"]["recorder"]["imagerecorder"]["filename"] = value;
 	}
 
 	if (item == viewImageSequenceRecorderFilename_)
@@ -2088,7 +2088,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		const std::string value(String::toAString(item->GetValue().bstrVal));
 		View::mainView().setRecorderFilename(value);
 
-		(*config)["view"]["recorder"]["imagesequencerecorder"]["filename"] = value;
+		Application::get().config()["view"]["recorder"]["imagesequencerecorder"]["filename"] = value;
 	}
 
 	if (item == viewImageRecorderFilenameSuffix_)
@@ -2096,7 +2096,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		const bool value = item->GetValue().boolVal == -1;
 		View::mainView().setRecorderExtendedFilename(value);
 
-		(*config)["view"]["recorder"]["imagerecorder"]["extendedfilename"] = value;
+		Application::get().config()["view"]["recorder"]["imagerecorder"]["extendedfilename"] = value;
 	}
 
 	if (item == viewImageSequenceRecorderFilenameSuffix_)
@@ -2104,7 +2104,7 @@ void PropertiesWindow::onViewRecorderPropertyChanged(CMFCPropertyGridProperty* i
 		const bool value = item->GetValue().boolVal == -1;
 		View::mainView().setRecorderExtendedFilename(value);
 
-		(*config)["view"]["recorder"]["imagesequencerecorder"]["extendedfilename"] = value;
+		Application::get().config()["view"]["recorder"]["imagesequencerecorder"]["extendedfilename"] = value;
 	}
 }
 
@@ -2133,7 +2133,7 @@ void PropertiesWindow::onPluginPropertyChanged(CMFCPropertyGridProperty* item)
 				Log::error() << "Could not unload all plugins, some resource seem still to be in use! Restart the viewer to handle the problem!";
 			}
 
-			(*config)["plugins"]["version"][Build::buildString()]["plugindirectory"] = directory();
+			Application::get().config()["plugins"]["version"][Build::buildString()]["plugindirectory"] = directory();
 		}
 		else
 		{

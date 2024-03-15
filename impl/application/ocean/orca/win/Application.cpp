@@ -45,7 +45,6 @@ namespace Orca
 namespace Win
 {
 
-Config* config = nullptr;
 Application application;
 
 BEGIN_MESSAGE_MAP(Application, CWinApp)
@@ -58,16 +57,14 @@ BEGIN_MESSAGE_MAP(Application, CWinApp)
 END_MESSAGE_MAP()
 
 Application::Application() :
-	CWinApp(),
-	applicationConfig(nullptr)
+	CWinApp()
 {
-	applicationConfigurations.insert(L"defaultplugindirectory");
+	configurationSet_.emplace(L"defaultplugindirectory");
 }
 
 Application::~Application()
 {
-	delete applicationConfig;
-	ocean_assert((applicationConfig = nullptr) == nullptr);
+	// nothing to do here
 }
 
 std::string Application::convertFilenames(const Filenames& filenames)
@@ -102,7 +99,7 @@ Application::Filenames Application::convertFilenames(const std::string& filename
 			break;
 		}
 
-		result.push_back(filename);
+		result.emplace_back(std::move(filename));
 
 		if (pos == std::string::npos)
 		{
@@ -117,9 +114,9 @@ Application::Filenames Application::convertFilenames(const std::string& filename
 
 bool Application::usesDefaultPluginDirectory() const
 {
-	for (Platform::Utilities::Commands::const_iterator i = applicationCommands.begin(); i != applicationCommands.end(); ++i)
+	for (const std::wstring& command : commands_)
 	{
-		if (*i == L"defaultplugindirectory")
+		if (command == L"defaultplugindirectory")
 		{
 			return true;
 		}
@@ -128,7 +125,7 @@ bool Application::usesDefaultPluginDirectory() const
 	return false;
 }
 
-Application& Application::application()
+Application& Application::get()
 {
 	ocean_assert(AfxGetApp() != nullptr);
 	ocean_assert(dynamic_cast<Application*>(AfxGetApp()) != nullptr);
@@ -138,7 +135,7 @@ Application& Application::application()
 
 BOOL Application::InitInstance()
 {
-	INITCOMMONCONTROLSEX InitCtrls;
+	INITCOMMONCONTROLSEX InitCtrls = {};
 	InitCtrls.dwSize = sizeof(InitCtrls);
 	InitCtrls.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&InitCtrls);
@@ -147,20 +144,19 @@ BOOL Application::InitInstance()
 
 	Messenger::get().setOutputType(Messenger::MessageOutput(Messenger::OUTPUT_DEBUG_WINDOW | Messenger::OUTPUT_QUEUED));
 
-	applicationCommands = Platform::Utilities::parseCommandLine(m_lpCmdLine);
+	commands_ = Platform::Utilities::parseCommandLine(m_lpCmdLine);
 
-	for (Platform::Utilities::Commands::const_iterator i = applicationCommands.begin(); i != applicationCommands.end(); ++i)
+	for (const std::wstring& command : commands_)
 	{
-		if (applicationConfigurations.find(*i) == applicationConfigurations.end())
+		if (configurationSet_.find(command) == configurationSet_.cend())
 		{
-			const IO::File configFile(String::toAString(*i));
+			const IO::File configFile(String::toAString(command));
 
 			if (String::toLower(configFile.extension()) == "ocf")
 			{
 				if (configFile.exists())
 				{
-					IO::FileConfig* fileConfig = new IO::FileConfig(configFile());
-					applicationConfig = fileConfig;
+					config_ = std::make_unique<IO::FileConfig>(configFile());
 					break;
 				}
 				else
@@ -171,14 +167,12 @@ BOOL Application::InitInstance()
 		}
 	}
 
-	if (applicationConfig == nullptr)
+	if (!config_)
 	{
-		applicationConfig = new Platform::Win::RegistryConfig("Software\\fayteq\\Orca\\0.9");
+		config_ = std::make_unique<Platform::Win::RegistryConfig>("Software\\fayteq\\Orca\\0.9");
 	}
 
-	ocean_assert(config == nullptr);
-	ocean_assert(applicationConfig != nullptr);
-	config = applicationConfig;
+	ocean_assert(config_);
 
 	WorkerPool::get().setCapacity(4);
 
@@ -192,7 +186,7 @@ BOOL Application::InitInstance()
 	IO::FileResolver::get().addReferencePath(processDirectory);
 	Log::info() << "Added the process path \"" << processDirectory() << "\" to the file resolver.";
 
-	const IO::File cameraCalibrationFile((*config)["application"]["cameracalibrationfile"](""));
+	const IO::File cameraCalibrationFile((*config_)["application"]["cameracalibrationfile"](""));
 
 	if (cameraCalibrationFile.isValid())
 	{
@@ -220,23 +214,27 @@ BOOL Application::InitInstance()
 	}
 
 #ifdef OCEAN_RUNTIME_STATIC
-		Media::WIC::registerWICLibrary();
-		Media::DirectShow::registerDirectShowLibrary();
-		Media::MediaFoundation::registerMediaFoundationLibrary();
+	Media::WIC::registerWICLibrary();
+	Media::DirectShow::registerDirectShowLibrary();
+	Media::MediaFoundation::registerMediaFoundationLibrary();
 
-		Rendering::GLESceneGraph::Windows::registerGLESceneGraphEngine();
-		Rendering::GlobalIllumination::registerGlobalIlluminationEngine();
+	Rendering::GLESceneGraph::Windows::registerGLESceneGraphEngine();
+	Rendering::GlobalIllumination::registerGlobalIlluminationEngine();
 
-		SceneDescription::SDL::OBJ::registerOBJLibrary();
-		SceneDescription::SDX::X3D::registerX3DLibrary();
-		SceneDescription::SDL::Assimp::registerAssimpLibrary();
+	SceneDescription::SDL::OBJ::registerOBJLibrary();
+	SceneDescription::SDX::X3D::registerX3DLibrary();
+	SceneDescription::SDL::Assimp::registerAssimpLibrary();
 #else
 	IO::Directory directory((*config)["plugins"]["version"][Build::buildString()]["plugindirectory"](""));
 	if (directory.isNull())
+	{
 		directory = IO::Directory((*config)["plugins"]["plugindirectory"](""));
+	}
 
 	if (usesDefaultPluginDirectory() || directory.isValid() == false)
+	{
 		directory = IO::Directory(processDirectory + IO::Directory("plugins\\"));
+	}
 
 	PluginManager::get().collectPlugins(directory());
 	PluginManager::get().loadAllPlugins();
@@ -252,14 +250,16 @@ BOOL Application::InitInstance()
 
 	MainWindow::Filenames files;
 
-	for (Platform::Utilities::Commands::const_iterator i = applicationCommands.begin(); i != applicationCommands.end(); ++i)
+	for (const std::wstring& command : commands_)
 	{
-		if (applicationConfigurations.find(*i) == applicationConfigurations.end())
+		if (configurationSet_.find(command) == configurationSet_.end())
 		{
-			const IO::File configFile(String::toAString(*i));
+			const IO::File configFile(String::toAString(command));
 
 			if (String::toLower(configFile.extension()) != std::string("ocf"))
-				files.push_back(String::toAString(*i));
+			{
+				files.emplace_back(String::toAString(command));
+			}
 		}
 	}
 
@@ -334,8 +334,14 @@ void Application::openFiles(const bool replace)
 
 Application::Filenames Application::openFileDialog(const IO::FileManager::FileExtensions& fileExtensions)
 {
+	ocean_assert(config_);
+	if (!config_)
+	{
+		return Filenames();
+	}
+
 	const std::string filter(fileFilter(fileExtensions));
-	const std::string initialFilepath = (*config)["application"]["lastfilepath"]("");
+	const std::string initialFilepath = (*config_)["application"]["lastfilepath"]("");
 
 	CFileDialog openDialog(TRUE, nullptr, nullptr, OFN_EXPLORER | OFN_ALLOWMULTISELECT | OFN_ENABLESIZING, String::toWString(filter).c_str(), nullptr, 0, TRUE);
 
@@ -379,7 +385,13 @@ void Application::onFileAdd()
 
 void Application::onFileReload()
 {
-	Filenames filenames(convertFilenames((*config)["application"]["lastfilenames"]("")));
+	ocean_assert(config_);
+	if (!config_)
+	{
+		return;
+	}
+
+	Filenames filenames(convertFilenames((*config_)["application"]["lastfilenames"]("")));
 
 	if (filenames.empty())
 	{

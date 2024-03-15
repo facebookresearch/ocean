@@ -107,28 +107,28 @@ class MessageWindow : public CDockablePane
 	protected:
 
 		/**
-		 * The gui framework calls this function when an application requests a window creation.
+		 * The GUI framework calls this function when an application requests a window creation.
 		 * @param createStruct Create structure
 		 * @return Creation result
 		 */
 		afx_msg int OnCreate(LPCREATESTRUCT createStruct);
 
 		/**
-		 * The gui framework calls this function when the CWnd object is about to be hidden or shown.
+		 * The GUI framework calls this function when the CWnd object is about to be hidden or shown.
 		 * @param show Specifies whether a window is being shown or not.
 		 * @param status Specifies the status of the window being shown.
 		 */
 		afx_msg void OnShowWindow(BOOL show, UINT status);
 
 		/**
-		 * The gui framework calls this function after the CWnd object has been moved.
+		 * The GUI framework calls this function after the CWnd object has been moved.
 		 * @param left New left window position
 		 * @param top New top window position
 		 */
 		afx_msg void OnMove(int left, int top);
 
 		/**
-		 * The gui framework calls this function after the window's size has changed.
+		 * The GUI framework calls this function after the window's size has changed.
 		 * @param type Of the size change
 		 * @param width New client width
 		 * @param height New client height
@@ -146,7 +146,7 @@ class MessageWindow : public CDockablePane
 		virtual void OnAfterFloat();
 
 		/**
-		 * Called by the gui framework when a pane has been docked.
+		 * Called by the GUI framework when a pane has been docked.
 		 * @param bar Unused parameter
 		 * @param rect Unused parameter
 		 * @param method Unused parameter

@@ -172,7 +172,7 @@ void MessageWindow::OnShowWindow(BOOL show, UINT status)
 
 	if (configurationApplied_ && show == TRUE)
 	{
-		(*config)["messagewindow"]["visible"] = true;
+		Application::get().config()["messagewindow"]["visible"] = true;
 	}
 }
 
@@ -182,7 +182,7 @@ void MessageWindow::OnMove(int left, int top)
 
 	if (configurationApplied_ && left > 0 && top > 0)
 	{
-		Config::Value& messageConfig = (*config)["messagewindow"];
+		Config::Value& messageConfig = Application::get().config()["messagewindow"];
 
 		messageConfig["left"] = left;
 		messageConfig["top"] = top;
@@ -196,7 +196,7 @@ void MessageWindow::OnSize(UINT type, int width, int height)
 
 	if (configurationApplied_)
 	{
-		Config::Value& messageConfig = (*config)["messagewindow"];
+		Config::Value& messageConfig = Application::get().config()["messagewindow"];
 
 		messageConfig["width"] = width;
 		messageConfig["height"] = height;
@@ -209,7 +209,7 @@ void MessageWindow::OnPressCloseButton()
 
 	if (configurationApplied_)
 	{
-		(*config)["messagewindow"]["visible"] = false;
+		Application::get().config()["messagewindow"]["visible"] = false;
 	}
 }
 
@@ -219,7 +219,7 @@ void MessageWindow::OnAfterFloat()
 
 	if (configurationApplied_)
 	{
-		(*config)["messagewindow"]["dockingPosition"] = "none";
+		Application::get().config()["messagewindow"]["dockingPosition"] = "none";
 	}
 }
 
@@ -229,13 +229,13 @@ void MessageWindow::OnAfterDock(CBasePane* bar, LPCRECT rect, AFX_DOCK_METHOD me
 
 	if (configurationApplied_)
 	{
-		(*config)["messagewindow"]["dockingPosition"] = "bottom";
+		Application::get().config()["messagewindow"]["dockingPosition"] = "bottom";
 	}
 }
 
 void MessageWindow::applyConfiguration()
 {
-	Config::Value& messageConfig = (*config)["messagewindow"];
+	Config::Value& messageConfig = Application::get().config()["messagewindow"];
 
 	int left = messageConfig["left"](invalidWindowValue_);
 	int top = messageConfig["top"](invalidWindowValue_);
@@ -253,7 +253,7 @@ void MessageWindow::applyConfiguration()
 	}
 	SetWindowPos(nullptr, left, top, width, height, flag);
 
-	const bool visible = messageConfig["visible"](true) && !(*config)["application"]["startfullscreen"](false);
+	const bool visible = messageConfig["visible"](true) && !Application::get().config()["application"]["startfullscreen"](false);
 
 	std::string dockingPosition = messageConfig["dockingPosition"]("bottom");
 	if (dockingPosition == "none")

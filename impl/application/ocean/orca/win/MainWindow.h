@@ -41,11 +41,6 @@ class MainWindow : public CFrameWndEx
 		 */
 		typedef std::vector<std::string> Filenames;
 
-		/**
-		 * Definition of a set holding filenames.
-		 */
-		typedef std::set<std::string> FileSet;
-
 	private:
 
 		/**
@@ -63,6 +58,9 @@ class MainWindow : public CFrameWndEx
 		 */
 		typedef std::vector< std::pair<ContentManager::ContentId, ApplicationInterface::EventId> > ContentEventIds;
 
+		/// Definition of an invalid window value.
+		static constexpr int invalidWindowValue_ = 2147483647;
+
 	public:
 
 		/**
@@ -73,7 +71,7 @@ class MainWindow : public CFrameWndEx
 		/**
 		 * Destructs a main window object.
 		 */
-		virtual ~MainWindow();
+		~MainWindow() override;
 
 		/**
 		 * Returns the main view of this main windows.
@@ -92,27 +90,27 @@ class MainWindow : public CFrameWndEx
 		ContentManager::ContentIds loadFiles(const Filenames& filenames, const bool add = false);
 
 		/**
-		 * Sets the dimension column of the statusbar.
+		 * Sets the dimension column of the status bar.
 		 * @param width Window width in pixel
 		 * @param height Window height in pixel
 		 */
 		void setStatusBarSize(const unsigned int width, const unsigned int height);
 
 		/**
-		 * Sets the position and orientation column of the statusbar.
+		 * Sets the position and orientation column of the status bar.
 		 * @param position Current position
 		 * @param orientation Current orientation
 		 */
 		void setStatusBarPosition(const Ocean::Vector3& position, const Ocean::Quaternion& orientation);
 
 		/**
-		 * Sets the progress column of the statusbar.
-		 * @param progress Progress state to set with range [0, 1]
+		 * Sets the progress column of the status bar.
+		 * @param progress The progress state to set with range [0, 1]
 		 */
 		void setStatusBarProgress(const float progress);
 
 		/**
-		 * Sets the framerate column of the statusbar.
+		 * Sets the framerate column of the status bar.
 		 * @param fps Framerate in Hz
 		 */
 		 void setStatusBarFramerate(const float fps);
@@ -124,7 +122,7 @@ class MainWindow : public CFrameWndEx
 		bool onIdle();
 
 		/**
-		 * The gui framework calls this function to toggle the fullscreen state of this main window.
+		 * The GUI framework calls this function to toggle the fullscreen state of this main window.
 		 */
 		void onToggleFullscreen();
 
@@ -159,38 +157,38 @@ class MainWindow : public CFrameWndEx
 	private:
 
 		/**
-		 * Called by the gui framework before the creation of the Windows window attached to this CWnd object.
+		 * Called by the GUI framework before the creation of the Windows window attached to this CWnd object.
 		 * @param createStruct Structure holding informations about the behavior and appearance of the window to create
 		 * @return True, if succeeded
 		 */
-		virtual BOOL PreCreateWindow(CREATESTRUCT& createStruct);
+		BOOL PreCreateWindow(CREATESTRUCT& createStruct) override;
 
 		/**
-		 * Called by the gui framework to route and dispatch command messages and to handle the update of command user-interface objects.
+		 * Called by the GUI framework to route and dispatch command messages and to handle the update of command user-interface objects.
 		 * @param id Command id
 		 * @param code Command notification code
-		 * @param extra Extra data according to the value of code
+		 * @param extra The extra data according to the value of code
 		 * @param handlerInfo Optional handling information which is normally not used and therefore nullptr
 		 * @return True, if succeeded
 		 */
-		virtual BOOL OnCmdMsg(UINT id, int code, void* extra, AFX_CMDHANDLERINFO* handlerInfo);
+		BOOL OnCmdMsg(UINT id, int code, void* extra, AFX_CMDHANDLERINFO* handlerInfo) override;
 
 		/**
-		 * The gui framework calls this function when an application requests a window creation.
+		 * The GUI framework calls this function when an application requests a window creation.
 		 * @param createStruct Create structure
 		 * @return Creation result
 		 */
 		afx_msg int OnCreate(LPCREATESTRUCT createStruct);
 
 		/**
-		 * The gui framework calls this function after the CWnd object has been moved.
+		 * The GUI framework calls this function after the CWnd object has been moved.
 		 * @param left New left window position
 		 * @param top New top window position
 		 */
 		afx_msg void OnMove(int left, int top);
 
 		/**
-		 * The gui framework calls this function after the window's size has changed.
+		 * The GUI framework calls this function after the window's size has changed.
 		 * @param type Window size change type
 		 * @param width New window width
 		 * @param height New window height
@@ -198,24 +196,24 @@ class MainWindow : public CFrameWndEx
 		afx_msg void OnSize(UINT type, int width, int height);
 
 		/**
-		 * The gui framework calls this function as a signal that the CWnd or an application is to terminate.
+		 * The GUI framework calls this function as a signal that the CWnd or an application is to terminate.
 		 */
 		afx_msg void OnClose();
 
 		/**
-		 * The gui framework calls this function after gaining the input focus.
+		 * The GUI framework calls this function after gaining the input focus.
 		 * @param lastWindow Window that loses the focus state
 		 */
 		afx_msg void OnSetFocus(CWnd* lastWindow);
 
 		/**
-		 * The gui framework calls this function when the user releases the left mouse button over a window that has registered itself as the recipient of dropped files.
+		 * The GUI framework calls this function when the user releases the left mouse button over a window that has registered itself as the recipient of dropped files.
 		 * @param info Internal data structure that describes the dropped files
 		 */
 		afx_msg void OnDropFiles(HDROP info);
 
 		/**
-		 * The gui framework calls this function to toggle the properties window.
+		 * The GUI framework calls this function to toggle the properties window.
 		 */
 		void onTogglePropertiesWindow();
 
@@ -232,14 +230,14 @@ class MainWindow : public CFrameWndEx
 		/**
 		 * Event function for loaded content events.
 		 * @param contentId Id of the content loaded
-		 * @param state State determining whether the content has been loaded successfully
+		 * @param state The state determining whether the content has been loaded successfully
 		 */
 		void onContentLoaded(const ContentManager::ContentId contentId, const bool state);
 
 		/**
 		 * Event function for unloaded content events.
 		 * @param contentId Id of the content unloaded
-		 * @param state State determining whether the content has been unloaded successfully
+		 * @param state The state determining whether the content has been unloaded successfully
 		 */
 		void onContentUnloaded(const ContentManager::ContentId contentId, const bool state);
 
@@ -269,28 +267,28 @@ class MainWindow : public CFrameWndEx
 
 		/**
 		 * Application interface event function for content add callbacks.
-		 * @param content Content to be loaded
+		 * @param content The content to be loaded
 		 * @return Corresponding content event id
 		 */
 		ApplicationInterface::EventIds onApplicationInterfaceContentAdd(const ApplicationInterface::StringVector& content);
 
 		/**
 		 * Application interface event function for content remove callbacks.
-		 * @param content Content to be removed
+		 * @param content The content to be removed
 		 * @return Corresponding content event id
 		 */
 		ApplicationInterface::EventIds onApplicationInterfaceContentRemove(const ApplicationInterface::StringVector& content);
 
 		/**
 		 * Application interface function for content add events.
-		 * @param content Content to be added
+		 * @param content The content to be added
 		 * @param eventIds Corresponding content event ids
 		 */
 		void applicationInterfaceContentAdd(const ApplicationInterface::StringVector content, const ApplicationInterface::EventIds eventIds);
 
 		/**
 		 * Application interface function for content remove events.
-		 * @param content Content to be removed
+		 * @param content The content to be removed
 		 * @param eventIds Corresponding content event ids
 		 */
 		void applicationInterfaceContentRemove(const ApplicationInterface::StringVector content, const ApplicationInterface::EventIds eventIds);
@@ -317,61 +315,58 @@ class MainWindow : public CFrameWndEx
 	private:
 
 		/// Dockable message window providing error, warning or information message.
-		MessageWindow mainWindowMessageWindow;
+		MessageWindow messageWindow_;
 
 		/// Main window view.
-		View mainWindowView;
+		View view_;
 
 		/// Properties window.
-		PropertiesWindow mainWindowPropertiesWindow;
+		PropertiesWindow propertiesWindow_;
 
 		/// Main window menu bar.
-		CMFCMenuBar mainWindowMenuBar;
+		CMFCMenuBar nenuBar_;
 
 		/// Main window status bar.
-		CMFCStatusBar mainWindowStatusBar;
+		CMFCStatusBar statusBar_;
 
 		/// Flag determines whether the main window is in full screen state.
-		bool mainWindowIsFullscreen;
+		bool isFullscreen_ = false;
 
 		/// Non fullscreen main window style.
-		int mainWindowNonFullScreenStyle;
+		int nonFullScreenStyle_ = 0;
 
 		/// Flag determines whether the configuration has been applied.
-		bool configurationApplied_;
+		bool configurationApplied_ = false;;
 
 		/// State determining whether this window has been started to release.
-		bool mainWindowReleased;
-
-		/// Definition of an invalid window value.
-		const static int mainWindowInvalidWindowValue;
+		bool released_ = false;
 
 		/// Application interface events.
-		ApplicationEventCallers mainWindowApplicationEvents;
+		ApplicationEventCallers applicationEvents_;
 
 		/// Vector holding the content ids and event ids.
-		ContentEventIds mainWindowContentEventIds;
+		ContentEventIds contentEventIds_;
 
 		/// Counter of content events.
-		unsigned int contentEventCounter;
+		unsigned int contentEventCounter_ = 0;
 
 		/// Application interface events lock.
-		Lock mainWindowApplicationEventLock;
+		Lock applicationEventLock_;
 };
 
 inline PropertiesWindow& MainWindow::propertiesWindow()
 {
-	return mainWindowPropertiesWindow;
+	return propertiesWindow_;
 }
 
 inline View& MainWindow::mainView()
 {
-	return mainWindowView;
+	return view_;
 }
 
 inline bool MainWindow::fullscreen() const
 {
-	return mainWindowIsFullscreen;
+	return isFullscreen_;
 }
 
 }

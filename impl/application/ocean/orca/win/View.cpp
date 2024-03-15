@@ -391,7 +391,7 @@ bool View::setType(const ViewType newType)
 	{
 		try
 		{
-			Config::Value& display = (*config)["view"]["display"];
+			Config::Value& display = Application::get().config()["view"]["display"];
 			Rendering::ViewRef view;
 
 			switch (newType)
@@ -437,21 +437,25 @@ bool View::setType(const ViewType newType)
 
 			Rendering::PerspectiveViewRef perspectiveView(view);
 			if (perspectiveView)
+			{
 				perspectiveView->setFovX(Scalar(NumericD::deg2rad(display["fovx"](45.0))));
+			}
 
 			Rendering::StereoViewRef stereoView(view);
 			if (stereoView)
-				stereoView->setFocusDistance(Scalar(display["focus"](1.0)));
-
-			if (renderingFramebuffer_->view().isNull() && (*config)["view"]["navigation"]["storeposition"](false))
 			{
-				const double positionX = (*config)["view"]["navigation"]["positionX"](0.0);
-				const double positionY = (*config)["view"]["navigation"]["positionY"](0.0);
-				const double positionZ = (*config)["view"]["navigation"]["positionZ"](0.0);
+				stereoView->setFocusDistance(Scalar(display["focus"](1.0)));
+			}
 
-				const double orientationYaw = NumericD::deg2rad((*config)["view"]["navigation"]["orientationYaw"](0.0));
-				const double orientationPitch = NumericD::deg2rad((*config)["view"]["navigation"]["orientationPitch"](0.0));
-				const double orientationRoll = NumericD::deg2rad((*config)["view"]["navigation"]["orientationRoll"](0.0));
+			if (renderingFramebuffer_->view().isNull() && Application::get().config()["view"]["navigation"]["storeposition"](false))
+			{
+				const double positionX = Application::get().config()["view"]["navigation"]["positionX"](0.0);
+				const double positionY = Application::get().config()["view"]["navigation"]["positionY"](0.0);
+				const double positionZ = Application::get().config()["view"]["navigation"]["positionZ"](0.0);
+
+				const double orientationYaw = NumericD::deg2rad(Application::get().config()["view"]["navigation"]["orientationYaw"](0.0));
+				const double orientationPitch = NumericD::deg2rad(Application::get().config()["view"]["navigation"]["orientationPitch"](0.0));
+				const double orientationRoll = NumericD::deg2rad(Application::get().config()["view"]["navigation"]["orientationRoll"](0.0));
 
 				const Vector3 viewingPosition = Vector3(Scalar(positionX), Scalar(positionY), Scalar(positionZ));
 				const Euler viewingEuler = Euler(Scalar(orientationYaw), Scalar(orientationPitch), Scalar(orientationRoll));
@@ -962,7 +966,9 @@ bool View::setCursorMode(const CursorMode mode)
 	else if (mode == CM_HIDE_ALWAYS)
 	{
 		if (cursorVisible_)
+		{
 			ShowCursor(FALSE);
+		}
 
 		cursorVisible_ = false;
 	}
@@ -997,8 +1003,10 @@ bool View::setRecorderType(const RecorderType type)
 	switch (type)
 	{
 		case TYPE_IMAGE:
+		{
 			recorder_ = Media::Manager::get().newRecorder(Media::Recorder::IMAGE_RECORDER);
 			break;
+		}
 
 		case TYPE_IMAGE_SEQUENCE:
 		{
@@ -1012,15 +1020,22 @@ bool View::setRecorderType(const RecorderType type)
 		}
 
 		case TYPE_MOVIE:
+		{
 			recorder_ = Media::Manager::get().newRecorder(Media::Recorder::MOVIE_RECORDER);
 			break;
+		}
 
 		case TYPE_MEMORY:
+		{
 			recorder_ = Media::Manager::get().newRecorder(Media::Recorder::FRAME_MEMORY_RECORDER);
 			break;
+		}
 
 		default:
+		{
 			ocean_assert(false && "Invalid recorder type.");
+			break;
+		}
 	}
 
 	Media::FrameRecorderRef frameRecorder(recorder_);
@@ -1136,13 +1151,13 @@ void View::storeConfiguration()
 		const Vector3 position = transformation.translation();
 		const Euler euler(transformation.rotation());
 
-		(*config)["view"]["navigation"]["positionX"] = float(position.x());
-		(*config)["view"]["navigation"]["positionY"] = float(position.y());
-		(*config)["view"]["navigation"]["positionZ"] = float(position.z());
+		Application::get().config()["view"]["navigation"]["positionX"] = float(position.x());
+		Application::get().config()["view"]["navigation"]["positionY"] = float(position.y());
+		Application::get().config()["view"]["navigation"]["positionZ"] = float(position.z());
 
-		(*config)["view"]["navigation"]["orientationYaw"] = float(Numeric::rad2deg(euler.yaw()));
-		(*config)["view"]["navigation"]["orientationPitch"] = float(Numeric::rad2deg(euler.pitch()));
-		(*config)["view"]["navigation"]["orientationRoll"] = float(Numeric::rad2deg(euler.roll()));
+		Application::get().config()["view"]["navigation"]["orientationYaw"] = float(Numeric::rad2deg(euler.yaw()));
+		Application::get().config()["view"]["navigation"]["orientationPitch"] = float(Numeric::rad2deg(euler.pitch()));
+		Application::get().config()["view"]["navigation"]["orientationRoll"] = float(Numeric::rad2deg(euler.roll()));
 	}
 }
 
@@ -1463,7 +1478,7 @@ void View::OnLButtonDblClk(UINT flags, CPoint point)
 	// Sets the focus to enable mouse wheel messages
 	SetFocus();
 
-	if ((*config)["application"]["doubleclickfullscreen"](true))
+	if (Application::get().config()["application"]["doubleclickfullscreen"](true))
 		MainWindow::mainWindow().onToggleFullscreen();
 
 	CWnd::OnLButtonDblClk(flags, point);

@@ -14,9 +14,6 @@
 
 #include "ocean/scenedescription/SDLScene.h"
 
-#include <set>
-#include <vector>
-
 namespace Ocean
 {
 
@@ -25,8 +22,6 @@ namespace Orca
 
 namespace Win
 {
-
-extern Config* config;
 
 /**
  * This class implements the main application for the ocean orca viewer.
@@ -39,10 +34,10 @@ class Application : public CWinApp
 		/**
 		 * Definition of different file types.
 		 */
-		enum FileType
+		enum FileType : uint32_t
 		{
 			/// Invalid file type.
-			TYPE_INVALID,
+			TYPE_INVALID = 0u,
 			/// Scene file type.
 			TYPE_SCENE,
 			/// Interaction file type.
@@ -59,7 +54,7 @@ class Application : public CWinApp
 		/**
 		 * Definition of a set holding predefined configuration parameters.
 		 */
-		typedef std::set<std::wstring> Configurations;
+		typedef std::unordered_set<std::wstring> ConfigurationSet;
 
 	public:
 
@@ -71,22 +66,7 @@ class Application : public CWinApp
 		/**
 		 * Destructs the application.
 		 */
-		virtual ~Application();
-
-		/**
-		 * Converts filenames into one single string.
-		 * The filesnames will be seperated by a ';'.
-		 * @param filenames Filenames to convert
-		 * @return Converted single string
-		 */
-		static std::string convertFilenames(const Filenames& filenames);
-
-		/**
-		 * Converts a single string holding several filenames seperated by a ';' into a list of filenames.
-		 * @param filenames Single string to convert
-		 * @return Converted filenames
-		 */
-		static Filenames convertFilenames(const std::string& filenames);
+		~Application() override;
 
 		/**
 		 * Returns whether the application uses the default plugin directory.
@@ -95,10 +75,31 @@ class Application : public CWinApp
 		bool usesDefaultPluginDirectory() const;
 
 		/**
+		 * Returns the configuration of the application.
+		 * @return The application's configuration
+		 */
+		inline Config& config();
+
+		/**
+		 * Converts filenames into one single string.
+		 * The filenames will be separated by a ';'.
+		 * @param filenames The filenames to convert
+		 * @return Converted single string
+		 */
+		static std::string convertFilenames(const Filenames& filenames);
+
+		/**
+		 * Converts a single string holding several filenames separated by a ';' into a list of filenames.
+		 * @param filenames Single string to convert
+		 * @return Converted filenames
+		 */
+		static Filenames convertFilenames(const std::string& filenames);
+
+		/**
 		 * Returns the unique application object.
 		 * @return Application object
 		 */
-		static Application& application();
+		static Application& get();
 
 	private:
 
@@ -106,14 +107,14 @@ class Application : public CWinApp
 		 * Initializes the application instance.
 		 * @return True, if succeeded
 		 */
-		virtual BOOL InitInstance();
+		BOOL InitInstance() override;
 
 		/**
-		 * The gui framework calls this function if the application is in an idle state.
+		 * The GUI framework calls this function if the application is in an idle state.
 		 * @param count Idle iteration counter
 		 * @return True, if more idle time is needed
 		 */
-		virtual BOOL OnIdle(LONG count);
+		BOOL OnIdle(LONG count) override;
 
 		/**
 		 * Opens one or more files.
@@ -123,50 +124,50 @@ class Application : public CWinApp
 
 		/**
 		 * Opens a file dialog and returns a list of files to load.
-		 * @param fileExtensions File extentions to create the filter for
+		 * @param fileExtensions File extensions to create the filter for
 		 * @return Selected files
 		 */
 		Filenames openFileDialog(const IO::FileManager::FileExtensions& fileExtensions);
 
 		/**
-		 * The gui framework calls this function if the application has to open a file.
+		 * The GUI framework calls this function if the application has to open a file.
 		 */
 		afx_msg void OnFileOpen();
 
 		/**
-		 * The gui framework calls this function if the application has to add a file.
+		 * The GUI framework calls this function if the application has to add a file.
 		 */
 		void onFileAdd();
 
 		/**
-		 * The gui framework calls this function if the application has to reload the most recent file.
+		 * The GUI framework calls this function if the application has to reload the most recent file.
 		 */
 		void onFileReload();
 
 		/**
-		 * The gui framework calls this function if the application has to close all loaded file.
+		 * The GUI framework calls this function if the application has to close all loaded file.
 		 */
 		void onFileClose();
 
 		/**
-		 * The gui framework calls this function if the application has to show the about window.
+		 * The GUI framework calls this function if the application has to show the about window.
 		 */
 		void onAboutWindow();
 
 		/**
-		 * The gui framework calls this function if the application has to fit the scene to the current screen.
+		 * The GUI framework calls this function if the application has to fit the scene to the current screen.
 		 */
 		void onNavigationFitToScreen();
 
 		/**
-		 * Called by the gui framework from within the Run member function to exit this instance of the application.
+		 * Called by the GUI framework from within the Run member function to exit this instance of the application.
 		 * @return The application's exit code; 0 indicates no errors
 		 */
-		virtual int ExitInstance();
+		int ExitInstance() override;
 
 		/**
 		 * Returns the filter for an open file dialog.
-		 * @param fileExtensions File extentions to create the filter for
+		 * @param fileExtensions File extensions to create the filter for
 		 * @return File filter
 		 */
 		static std::string fileFilter(const IO::FileManager::FileExtensions& fileExtensions);
@@ -179,14 +180,21 @@ class Application : public CWinApp
 	protected:
 
 		/// Configuration object.
-		Config* applicationConfig;
+		std::unique_ptr<Config> config_;
 
 		/// Application commands.
-		Platform::Utilities::Commands applicationCommands;
+		Platform::Utilities::Commands commands_;
 
 		/// Predefined application properties.
-		Configurations applicationConfigurations;
+		ConfigurationSet configurationSet_;
 };
+
+inline Config& Application::config()
+{
+	ocean_assert(config_);
+
+	return *config_.get();
+}
 
 }
 
