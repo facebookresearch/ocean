@@ -298,7 +298,7 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 
 	if (bestIndices.empty())
 	{
-		ocean_assert(world_T_camera1.isNull());
+		ocean_assert(world_T_camera1 == world_T_roughCamera1);
 
 		// we start with a SQUARE estimator followed by a HUBER estimator
 
