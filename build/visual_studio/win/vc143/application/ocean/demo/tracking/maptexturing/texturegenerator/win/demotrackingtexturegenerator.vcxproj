@@ -51,7 +51,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\tracking\maptexturing\texturegenerator\TextureGeneratorMain.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\demo\tracking\maptexturing\texturegenerator\TextureGeneratorMain.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{40E1A810-61F0-4EC7-A509-D9CFE5DC03E4}</ProjectGuid>

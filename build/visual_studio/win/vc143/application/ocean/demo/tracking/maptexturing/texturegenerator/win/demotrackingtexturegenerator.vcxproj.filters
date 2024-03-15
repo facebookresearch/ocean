@@ -11,7 +11,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\tracking\maptexturing\texturegenerator\TextureGeneratorMain.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\demo\tracking\maptexturing\texturegenerator\TextureGeneratorMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
