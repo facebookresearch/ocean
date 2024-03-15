@@ -1326,7 +1326,7 @@ bool TestMaskAnalyzer::testFindNonUniquePixels4(const unsigned int width, const 
 
 	do
 	{
-		for (const bool performanceIteration : {false, true})
+		for (const bool performanceIteration : {true, false})
 		{
 			const unsigned int widthToUse = performanceIteration ? width : RandomI::random(randomGenerator, 3u, 1920u);
 			const unsigned int heightToUse = performanceIteration ? height : RandomI::random(randomGenerator, 3u, 1080u);
@@ -2374,7 +2374,7 @@ bool TestMaskAnalyzer::validateFindNonUniquePixels4(const Frame& mask, const CV:
 	{
 		const uint8_t value = mask.constpixel<uint8_t>(0u, height_1)[0];
 
-		if (value != mask.constpixel<uint8_t>(1u, height_1)[0] || mask.constpixel<uint8_t>(0u, height_1 - 1u)[0])
+		if (value != mask.constpixel<uint8_t>(1u, height_1)[0] || value != mask.constpixel<uint8_t>(0u, height_1 - 1u)[0])
 		{
 			testPixels.emplace_back(0u, height_1);
 		}
@@ -2385,7 +2385,7 @@ bool TestMaskAnalyzer::validateFindNonUniquePixels4(const Frame& mask, const CV:
 	{
 		const uint8_t value = mask.constpixel<uint8_t>(width_1, height_1)[0];
 
-		if (value != mask.constpixel<uint8_t>(width_1 - 1u, height_1)[0] || mask.constpixel<uint8_t>(width_1, height_1 - 1u)[0])
+		if (value != mask.constpixel<uint8_t>(width_1 - 1u, height_1)[0] || value != mask.constpixel<uint8_t>(width_1, height_1 - 1u)[0])
 		{
 			testPixels.emplace_back(width_1, height_1);
 		}
