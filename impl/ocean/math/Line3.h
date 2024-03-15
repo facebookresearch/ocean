@@ -75,7 +75,7 @@ class LineT3
 		/**
 		 * Creates an invalid line.
 		 */
-		LineT3();
+		LineT3() = default;
 
 		/**
 		 * Creates a line defined by two different intersection points.
@@ -238,78 +238,70 @@ class LineT3
 	protected:
 
 		/// Point on the line.
-		VectorT3<T> linePoint;
+		VectorT3<T> point_ = VectorT3<T>(0, 0, 0);
 
 		/// Direction of the line.
-		VectorT3<T> lineDirection;
+		VectorT3<T> direction_ = VectorT3<T>(0, 0, 0);
 };
 
 template <typename T>
-LineT3<T>::LineT3() :
-	linePoint(T(0), T(0), T(0)),
-	lineDirection(T(0), T(0), T(0))
-{
-	// nothing to do here
-}
-
-template <typename T>
 LineT3<T>::LineT3(const VectorT3<T>& first, const VectorT3<T>& direction) :
-	linePoint(first),
-	lineDirection(direction)
+	point_(first),
+	direction_(direction)
 {
-	ocean_assert(!lineDirection.isNull());
+	ocean_assert(!direction_.isNull());
 }
 
 template <typename T>
 template <typename U>
 inline LineT3<T>::LineT3(const LineT3<U>& line)
 {
-	linePoint = VectorT3<T>(line.linePoint);
-	lineDirection = VectorT3<T>(line.lineDirection);
+	point_ = VectorT3<T>(line.point_);
+	direction_ = VectorT3<T>(line.direction_);
 }
 
 template <typename T>
 inline const VectorT3<T>& LineT3<T>::point() const
 {
-	return linePoint;
+	return point_;
 }
 
 template <typename T>
 inline const VectorT3<T> LineT3<T>::point(const T distance) const
 {
 	ocean_assert(isValid());
-	return linePoint + lineDirection * distance;
+	return point_ + direction_ * distance;
 }
 
 template <typename T>
 inline const VectorT3<T>& LineT3<T>::direction() const
 {
-	return lineDirection;
+	return direction_;
 }
 
 template <typename T>
 inline void LineT3<T>::setPoint(const VectorT3<T>& point)
 {
-	linePoint = point;
+	point_ = point;
 }
 
 template <typename T>
 inline void LineT3<T>::setDirection(const VectorT3<T>& direction)
 {
 	ocean_assert(NumericT<T>::isEqual(direction.length(), T(1.0)));
-	lineDirection = direction;
+	direction_ = direction;
 }
 
 template <typename T>
 bool LineT3<T>::isValid() const
 {
-	return !lineDirection.isNull();
+	return !direction_.isNull();
 }
 
 template <typename T>
 inline bool LineT3<T>::hasUnitDirection() const
 {
-	return NumericT<T>::isEqual(lineDirection.length(), T(1.0));
+	return NumericT<T>::isEqual(direction_.length(), T(1.0));
 }
 
 template <typename T>
@@ -318,7 +310,8 @@ inline bool LineT3<T>::isParallel(const LineT3<T>& right) const
 	ocean_assert(isValid() && right.isValid());
 	ocean_assert(hasUnitDirection() && right.hasUnitDirection());
 
-	const T scalarProduct = lineDirection * right.lineDirection;
+	const T scalarProduct = direction_ * right.direction_;
+
 	return NumericT<T>::isEqual(NumericT<T>::abs(scalarProduct), T(1.0));
 }
 
@@ -328,7 +321,8 @@ inline bool LineT3<T>::isParallel(const VectorT3<T>& right) const
 	ocean_assert(isValid());
 	ocean_assert(hasUnitDirection() && NumericT<T>::isEqual(right.length(), T(1.0)));
 
-	const T scalarProduct = lineDirection * right;
+	const T scalarProduct = direction_ * right;
+
 	return NumericT<T>::isEqual(NumericT<T>::abs(scalarProduct), T(1.0));
 }
 
@@ -336,6 +330,7 @@ template <typename T>
 inline bool LineT3<T>::operator==(const LineT3<T>& right) const
 {
 	ocean_assert(isValid() && right.isValid());
+
 	return isParallel(right) && isOnLine(right.point());
 }
 
@@ -357,7 +352,7 @@ bool LineT3<T>::isOnLine(const VectorT3<T>& point) const
 	ocean_assert(isValid());
 	ocean_assert(hasUnitDirection());
 
-	const VectorT3<T> offset(point - linePoint);
+	const VectorT3<T> offset(point - point_);
 	const T length = offset.length();
 
 	if (NumericT<T>::isEqualEps(length))
@@ -368,13 +363,13 @@ bool LineT3<T>::isOnLine(const VectorT3<T>& point) const
 #ifdef OCEAN_DEBUG
 	if (!std::is_same<T, float>::value)
 	{
-		ocean_assert(NumericT<T>::isEqual(NumericT<T>::abs((offset / length) * lineDirection), T(1.0))
-					== NumericT<T>::isEqual(NumericT<T>::abs(offset * lineDirection), length, NumericT<T>::eps() * length));
+		ocean_assert(NumericT<T>::isEqual(NumericT<T>::abs((offset / length) * direction_), T(1.0))
+					== NumericT<T>::isEqual(NumericT<T>::abs(offset * direction_), length, NumericT<T>::eps() * length));
 	}
 #endif
 
 	// we explicitly adjust the epsilon by the length of the offset vector ensuring that the result is still correct for long vectors (short vectors would have been caught before)
-	return NumericT<T>::isEqual(NumericT<T>::abs(offset * lineDirection), length, NumericT<T>::eps() * length);
+	return NumericT<T>::isEqual(NumericT<T>::abs(offset * direction_), length, NumericT<T>::eps() * length);
 }
 
 template <>
@@ -383,7 +378,7 @@ inline bool LineT3<float>::isOnLine(const VectorT3<float>& point) const
 	ocean_assert(isValid());
 	ocean_assert(hasUnitDirection());
 
-	const VectorT3<float> offset(point - linePoint);
+	const VectorT3<float> offset(point - point_);
 	const float length = offset.length();
 
 	if (NumericT<float>::isEqualEps(length))
@@ -394,10 +389,10 @@ inline bool LineT3<float>::isOnLine(const VectorT3<float>& point) const
 	if (length > 1.0f)
 	{
 		// we explicitly adjust the epsilon by the length of the offset vector ensuring that the result is still correct for long vectors (short vectors would have been caught before)
-		return NumericT<float>::isEqual(NumericT<float>::abs(offset * lineDirection), length, NumericT<float>::eps() * length);
+		return NumericT<float>::isEqual(NumericT<float>::abs(offset * direction_), length, NumericT<float>::eps() * length);
 	}
 
-	return NumericT<float>::isEqual(NumericT<float>::abs(offset * lineDirection), length, NumericT<float>::eps());
+	return NumericT<float>::isEqual(NumericT<float>::abs(offset * direction_), length, NumericT<float>::eps());
 }
 
 template <typename T>
@@ -420,7 +415,7 @@ T LineT3<T>::distance(const LineT3<T>& line) const
 	ocean_assert(isValid() && line.isValid());
 	ocean_assert(hasUnitDirection() && line.hasUnitDirection());
 
-	const VectorT3<T> offset(linePoint - line.linePoint);
+	const VectorT3<T> offset(point_ - line.point_);
 
 	// if the base points of the two lines are identical
 	if (NumericT<T>::isEqualEps(offset.sqr()))
@@ -430,11 +425,11 @@ T LineT3<T>::distance(const LineT3<T>& line) const
 
 	if (isParallel(line))
 	{
-		return (line.linePoint - linePoint + lineDirection * (lineDirection * offset)).length();
+		return (line.point_ - point_ + direction_ * (direction_ * offset)).length();
 	}
 
 	// plane normal
-	const VectorT3<T> normal(lineDirection.cross(line.lineDirection).normalizedOrZero());
+	const VectorT3<T> normal(direction_.cross(line.direction_).normalizedOrZero());
 
 	// projection of point offset onto plane normal
 	return NumericT<T>::abs(offset * normal);
@@ -457,9 +452,9 @@ VectorT3<T> LineT3<T>::nearestPoint(const VectorT3<T>& point) const
 	ocean_assert(isValid());
 	ocean_assert(hasUnitDirection());
 
-	const VectorT3<T> offset(point - linePoint);
+	const VectorT3<T> offset(point - point_);
 
-	return linePoint + lineDirection * (lineDirection * offset);
+	return point_ + direction_ * (direction_ * offset);
 }
 
 template <typename T>
@@ -489,13 +484,19 @@ bool LineT3<T>::nearestPoints(const LineT3<T>& line, VectorT3<T>& first, VectorT
 		return false;
 	}
 
-	const VectorT3<T> d = line.lineDirection - lineDirection * (lineDirection * line.lineDirection);
-	const VectorT3<T> p = line.linePoint - linePoint + lineDirection * (lineDirection * linePoint);
+	const VectorT3<T> d = line.direction_ - direction_ * (direction_ * line.direction_);
+	const VectorT3<T> p = line.point_ - point_ + direction_ * (direction_ * point_);
 
-	ocean_assert(NumericT<T>::isNotEqualEps(d.sqr()));
-	const T factor = - (p * d) / d.sqr();
+	const T denominator = d.sqr();
 
-	second = line.linePoint + line.lineDirection * factor;
+	if (NumericT<T>::isEqualEps(denominator))
+	{
+		return false;
+	}
+
+	const T factor = - (p * d) / denominator;
+
+	second = line.point_ + line.direction_ * factor;
 	first = nearestPoint(second);
 
 	return true;
