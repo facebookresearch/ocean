@@ -1979,12 +1979,12 @@ typename VocabularyTree<TDescriptor, TDistance, tDistanceFunction>::TDescriptors
 		}
 		else
 		{
-			memset(meanDescriptor, 0, sizeof(uint8_t) * tSize);
+			memset(meanDescriptor, 0, sizeof(float) * tSize);
 
 #ifdef OCEAN_DEBUG
 			for (unsigned int nElement = 0u; nElement < tSize; ++nElement)
 			{
-				ocean_assert(meanDescriptor[nElement] = 0.0f);
+				ocean_assert(meanDescriptor[nElement] == 0.0f);
 			}
 #endif
 		}
