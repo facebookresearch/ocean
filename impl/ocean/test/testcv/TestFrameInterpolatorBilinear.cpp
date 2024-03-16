@@ -3886,6 +3886,8 @@ bool TestFrameInterpolatorBilinear::validatePatchIntensitySum1Channel(const Fram
 		return false;
 	}
 
+	ocean_assert(patchWidth >= 1u && patchHeight >= 1u);
+
 	Scalar sum = 0;
 
 	for (unsigned int y = 0u; y < patchHeight; ++y)
@@ -3907,7 +3909,18 @@ bool TestFrameInterpolatorBilinear::validatePatchIntensitySum1Channel(const Fram
 		}
 	}
 
-	if (NumericD::isNotEqual(double(intensity), double(sum), 0.1))
+	double threshold = 0.1;
+
+	if constexpr (std::is_same<float, Scalar>::value)
+	{
+		// the larger the patch the larger the threshold
+
+		const unsigned int patchArea = patchWidth * patchHeight;
+
+		threshold = std::max(threshold, double(patchArea) * 0.001);
+	}
+
+	if (NumericD::isNotEqual(double(intensity), double(sum), threshold))
 	{
 		return false;
 	}
