@@ -1843,7 +1843,7 @@ bool TestFrameInterpolatorBilinear::testHomography(const unsigned int width, con
 
 			double averageAbsError = NumericD::maxValue();
 			double maximalAbsError = NumericD::maxValue();
-			validateHomography<T>(sourceFrame.constdata<T>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), targetFrame.constdata<T>(), targetFrame.width(), targetFrame.height(), input_H_output, backgroundColor.data(), targetFrameOriginOffset, sourceFrame.paddingElements(), targetFrame.paddingElements(), &averageAbsError, &maximalAbsError, groundTruth.data<T>());
+			validateHomography<T>(sourceFrame, targetFrame, input_H_output, backgroundColor.data(), targetFrameOriginOffset, &averageAbsError, &maximalAbsError, &groundTruth);
 
 			sumAverageError += averageAbsError;
 			maximalError = max(maximalError, maximalAbsError);

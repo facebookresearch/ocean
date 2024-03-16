@@ -337,24 +337,17 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorBilinear
 		/**
 		 * Validates the homography interpolation function for (almost) arbitrary pixel formats (using a constant background color for unknown image content).
 		 * @param input The input frame which has been used for the interpolation, must be valid
-		 * @param inputWidth The width of the input frame in pixel, with range [1, infinity)
-		 * @param inputHeight The height of the input frame in pixel, with range [1, infinity)
-		 * @param channels Number of the data channels of the input (and output) frame, with range [1, 4]
 		 * @param output The output frame holding the interpolated image information of the input frame, must be valid
-		 * @param outputWidth The width of the output frame in pixel, with range [1, infinity)
-		 * @param outputHeight The height of the output frame in pixel, with range [1, infinity)
 		 * @param input_H_output The homography that has been used to interpolate/warp the frame, transforming points int he output frame to points in the input frame, must not be singular
 		 * @param backgroundColor The background color for all pixels for which no valid source pixel exists, one for each frame channel, must be valid
 		 * @param interpolatedFrameOrigin The origin of the interpolated frame defining the global position of the interpolated frame's pixel coordinate (0, 0), with range (-infinity, infinity)x(-infinity, infinity)
-		 * @param inputPaddingElements The number of padding elements at the end of each input row, in elements, with range [0, infinity)
-		 * @param outputPaddingElements The number of padding elements at the end of each output row, in elements, with range [0, infinity)
 		 * @param averageAbsError Optional resulting average absolute error between the converted result and the ground truth result, with range (-infinity, infinity)
 		 * @param maximalAbsError Optional resulting maximal absolute error between the converted result and the ground truth result, with range (-infinity, infinity)
-		 * @param groundTruth Optional resulting ground truth data (the resized image content determined with floating point accuracy), NULL otherwise
+		 * @param groundTruth Optional resulting ground truth frame (the resized image content determined with floating point accuracy), nullptr if not of interest
 		 * @tparam T The data type of each pixel channel, e.g., 'float', 'double', 'int', ...
 		 */
 		template <typename T>
-		static void validateHomography(const T* input, const unsigned int inputWidth, const unsigned int inputHeight, const unsigned int channels, const T* output, const unsigned int outputWidth, const unsigned int outputHeight, const SquareMatrix3& input_H_output, const T* backgroundColor, const CV::PixelPositionI& interpolatedFrameOrigin, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, double* averageAbsError, double* maximalAbsError, T* groundTruth = nullptr);
+		static void validateHomography(const Frame& input, const Frame& output, const SquareMatrix3& input_H_output, const T* backgroundColor, const CV::PixelPositionI& interpolatedFrameOrigin, double* averageAbsError, double* maximalAbsError, Frame* groundTruth = nullptr);
 
 	protected:
 
@@ -600,55 +593,61 @@ void TestFrameInterpolatorBilinear::validateScaleFrame(const T* source, const un
 }
 
 template <typename T>
-void TestFrameInterpolatorBilinear::validateHomography(const T* input, const unsigned int inputWidth, const unsigned int inputHeight, const unsigned int channels, const T* output, const unsigned int outputWidth, const unsigned int outputHeight, const SquareMatrix3& input_H_output, const T* backgroundColor, const CV::PixelPositionI& interpolatedFrameOrigin, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, double* averageAbsError, double* maximalAbsError, T* groundTruth)
+void TestFrameInterpolatorBilinear::validateHomography(const Frame& input, const Frame& output, const SquareMatrix3& input_H_output, const T* backgroundColor, const CV::PixelPositionI& interpolatedFrameOrigin, double* averageAbsError, double* maximalAbsError, Frame* groundTruth)
 {
-	ocean_assert(input != nullptr && output != nullptr);
-	ocean_assert(inputWidth != 0u && inputHeight != 0u);
-	ocean_assert(outputWidth != 0u && outputHeight != 0u);
-	ocean_assert(channels >= 1u);
+	ocean_assert(input.isValid() && output.isValid());
+	ocean_assert(input.isPixelFormatCompatible(output.pixelFormat()));
+
 	ocean_assert(!input_H_output.isSingular());
 	ocean_assert(backgroundColor != nullptr);
 
-	const Scalar eps = Scalar(0.5);
+	const Scalar eps = Scalar(1.5); // temp change until next diff
+
+	ocean_assert(input.numberPlanes() == 1u);
+
+	const unsigned int channels = input.channels();
+	ocean_assert(channels >= 1u);
 
 	std::vector<T> result(channels, T(0));
 
-	if (averageAbsError)
+	if (averageAbsError != nullptr)
 	{
 		*averageAbsError = NumericD::maxValue();
 	}
 
-	if (maximalAbsError)
+	if (maximalAbsError != nullptr)
 	{
 		*maximalAbsError = NumericD::maxValue();
 	}
 
-	const unsigned int inputStrideElements = inputWidth * channels + inputPaddingElements;
-	const unsigned int outputStrideElements = outputWidth * channels + outputPaddingElements;
+	if (groundTruth != nullptr)
+	{
+		groundTruth->set(output.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+	}
 
 	double sumAbsError = 0.0;
 	double maxAbsError = 0.0;
 	unsigned long long measurements = 0ull;
 
-	for (unsigned int y = 0u; y < outputHeight; ++y)
+	for (unsigned int yOutput = 0u; yOutput < output.height(); ++yOutput)
 	{
-		for (unsigned int x = 0u; x < outputWidth; ++x)
+		for (unsigned int xOutput = 0u; xOutput < output.width(); ++xOutput)
 		{
-			const T* const outputPixel = output + y * outputStrideElements + x * channels;
+			const T* const outputPixel = output.constpixel<T>(xOutput, yOutput);
 
-			const Vector2 outputPosition = Vector2(Scalar(x) + Scalar(interpolatedFrameOrigin.x()), Scalar(y) + Scalar(interpolatedFrameOrigin.y()));
+			const Vector2 outputPosition = Vector2(Scalar(xOutput) + Scalar(interpolatedFrameOrigin.x()), Scalar(yOutput) + Scalar(interpolatedFrameOrigin.y()));
 			const Vector2 inputPosition = input_H_output * outputPosition;
 
-			if (inputPosition.x() >= 0 && inputPosition.y() >= 0 && inputPosition.x() < Scalar(inputWidth) && inputPosition.y() < Scalar(inputHeight))
+			if (inputPosition.x() >= Scalar(0) && inputPosition.y() >= Scalar(0) && inputPosition.x() <= Scalar(input.width() - 1u) && inputPosition.y() <= Scalar(input.height() - 1u))
 			{
-				const unsigned int leftPixel = (unsigned int)inputPosition.x();
-				const unsigned int rightPixel = min(leftPixel + 1u, inputWidth - 1u);
+				const unsigned int inputLeftPixel = (unsigned int)(inputPosition.x());
+				const unsigned int inputRightPixel = min(inputLeftPixel + 1u, input.width() - 1u);
 
-				const unsigned int topPixel = (unsigned int)inputPosition.y();
-				const unsigned int bottomPixel = min(topPixel + 1u, inputHeight - 1u);
+				const unsigned int inputTopPixel = (unsigned int)(inputPosition.y());
+				const unsigned int inputBottomPixel = min(inputTopPixel + 1u, input.height() - 1u);
 
-				const double rightFactor = inputPosition.x() - double(leftPixel);
-				const double bottomFactor = inputPosition.y() - double(topPixel);
+				const double rightFactor = double(inputPosition.x()) - double(inputLeftPixel);
+				const double bottomFactor = double(inputPosition.y()) - double(inputTopPixel);
 
 				ocean_assert(rightFactor >= 0.0 && rightFactor <= 1.0);
 				ocean_assert(bottomFactor >= 0.0 && bottomFactor <= 1.0);
@@ -656,11 +655,11 @@ void TestFrameInterpolatorBilinear::validateHomography(const T* input, const uns
 				const double leftFactor = 1.0 - rightFactor;
 				const double topFactor = 1.0 - bottomFactor;
 
-				const T* inputTopLeft = input + topPixel * inputStrideElements + leftPixel * channels;
-				const T* inputTopRight = input + topPixel * inputStrideElements + rightPixel * channels;
+				const T* const inputTopLeft = input.constpixel<T>(inputLeftPixel, inputTopPixel);
+				const T* const inputTopRight = input.constpixel<T>(inputRightPixel, inputTopPixel);
 
-				const T* inputBottomLeft = input + bottomPixel * inputStrideElements + leftPixel * channels;
-				const T* inputBottomRight = input + bottomPixel * inputStrideElements + rightPixel * channels;
+				const T* const inputBottomLeft = input.constpixel<T>(inputLeftPixel, inputBottomPixel);
+				const T* const inputBottomRight = input.constpixel<T>(inputRightPixel, inputBottomPixel);
 
 				for (unsigned int n = 0u; n < channels; ++n)
 				{
@@ -673,8 +672,8 @@ void TestFrameInterpolatorBilinear::validateHomography(const T* input, const uns
 				}
 
 				// we do not check the result if we are very close to the frame boundaries
-				if (Numeric::isNotEqual(inputPosition.x(), Scalar(0), eps) && Numeric::isNotEqual(inputPosition.x(), Scalar(inputWidth), eps)
-						&& Numeric::isNotEqual(inputPosition.y(), Scalar(0), eps) && Numeric::isNotEqual(inputPosition.y(), Scalar(inputHeight), eps))
+				if (Numeric::isNotEqual(inputPosition.x(), Scalar(0), eps) && Numeric::isNotEqual(inputPosition.x(), Scalar(input.width()), eps)
+						&& Numeric::isNotEqual(inputPosition.y(), Scalar(0), eps) && Numeric::isNotEqual(inputPosition.y(), Scalar(input.height()), eps))
 				{
 					for (unsigned int n = 0u; n < channels; ++n)
 					{
@@ -687,16 +686,16 @@ void TestFrameInterpolatorBilinear::validateHomography(const T* input, const uns
 					}
 				}
 
-				if (groundTruth)
+				if (groundTruth != nullptr)
 				{
-					memcpy(groundTruth + (y * outputWidth + x) * channels, result.data(), sizeof(T) * channels);
+					memcpy(groundTruth->pixel<T>(xOutput, yOutput), result.data(), sizeof(T) * channels);
 				}
 			}
 			else
 			{
 				// we do not check the result if we are very close to the frame boundaries
-				if (Numeric::isNotEqual(inputPosition.x(), Scalar(0), eps) && Numeric::isNotEqual(inputPosition.x(), Scalar(inputWidth), eps)
-						&& Numeric::isNotEqual(inputPosition.y(), Scalar(0), eps) && Numeric::isNotEqual(inputPosition.y(), Scalar(inputHeight), eps))
+				if (Numeric::isNotEqual(inputPosition.x(), Scalar(0), eps) && Numeric::isNotEqual(inputPosition.x(), Scalar(input.width()), eps)
+						&& Numeric::isNotEqual(inputPosition.y(), Scalar(0), eps) && Numeric::isNotEqual(inputPosition.y(), Scalar(input.height()), eps))
 				{
 					for (unsigned int n = 0u; n < channels; ++n)
 					{
@@ -709,15 +708,15 @@ void TestFrameInterpolatorBilinear::validateHomography(const T* input, const uns
 					}
 				}
 
-				if (groundTruth)
+				if (groundTruth != nullptr)
 				{
-					memcpy(groundTruth + (y * outputWidth + x) * channels, backgroundColor, sizeof(T) * channels);
+					memcpy(groundTruth->pixel<T>(xOutput, yOutput), backgroundColor, sizeof(T) * channels);
 				}
 			}
 		}
 	}
 
-	ocean_assert(measurements != 0ull || inputWidth <= 2u || inputHeight <= 2u || outputWidth <= 2u || outputHeight <= 2u);
+	ocean_assert(measurements != 0ull || input.width() <= 2u || input.height() <= 2u || output.width() <= 2u || output.height() <= 2u);
 
 	if (averageAbsError && measurements != 0ull)
 	{

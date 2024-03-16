@@ -165,12 +165,12 @@ void TestFrameInterpolatorBilinear::testHomography(const unsigned int width, con
 		if (iteration % 2u == 0u)
 		{
 			performanceOceanSingleCore.start();
-			CV::FrameInterpolatorBilinear::Comfort::homography(sourceFrame, targetFrame, transformation, backgroundColor.data(), nullptr);
+				CV::FrameInterpolatorBilinear::Comfort::homography(sourceFrame, targetFrame, transformation, backgroundColor.data(), nullptr);
 			performanceOceanSingleCore.stop();
 
 			double averageError = 0.0;
 			double maximalError = 0u;
-			Test::TestCV::TestFrameInterpolatorBilinear::validateHomography<uint8_t>(sourceFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), targetFrame.constdata<uint8_t>(), targetFrame.width(), targetFrame.height(), transformation, backgroundColor.data(), CV::PixelPositionI(0u, 0u), sourceFrame.paddingElements(), targetFrame.paddingElements(), &averageError, &maximalError);
+			Test::TestCV::TestFrameInterpolatorBilinear::validateHomography<uint8_t>(sourceFrame, targetFrame, transformation, backgroundColor.data(), CV::PixelPositionI(0u, 0u), &averageError, &maximalError);
 
 			oceanSumAverageError += averageError;
 			oceanMaxError = max(oceanMaxError, maximalError);
@@ -179,12 +179,12 @@ void TestFrameInterpolatorBilinear::testHomography(const unsigned int width, con
 			const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
 
 			performanceOceanMultiCore.start();
-			CV::FrameInterpolatorBilinear::Comfort::homography(sourceFrame, targetFrame, transformation, backgroundColor.data(), scopedWorker());
+				CV::FrameInterpolatorBilinear::Comfort::homography(sourceFrame, targetFrame, transformation, backgroundColor.data(), scopedWorker());
 			performanceOceanMultiCore.stop();
 
 			averageError = 0.0;
 			maximalError = 0u;
-			Test::TestCV::TestFrameInterpolatorBilinear::validateHomography<uint8_t>(sourceFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), targetFrame.constdata<uint8_t>(), targetFrame.width(), targetFrame.height(), transformation, backgroundColor.data(), CV::PixelPositionI(0u, 0u), sourceFrame.paddingElements(), targetFrame.paddingElements(), &averageError, &maximalError);
+			Test::TestCV::TestFrameInterpolatorBilinear::validateHomography<uint8_t>(sourceFrame, targetFrame, transformation, backgroundColor.data(), CV::PixelPositionI(0u, 0u), &averageError, &maximalError);
 
 			oceanSumAverageError += averageError;
 			oceanMaxError = max(oceanMaxError, maximalError);
@@ -202,13 +202,13 @@ void TestFrameInterpolatorBilinear::testHomography(const unsigned int width, con
 			}
 
 			performanceOpenCV.start();
-			cv::warpPerspective(cvSourceFrame, cvTargetFrame, cvTransformation, cv::Size(targetFrame.width(), targetFrame.height()), cv::WARP_INVERSE_MAP | cv::INTER_LINEAR, cv::BORDER_CONSTANT, cvBackgroundColor);
+				cv::warpPerspective(cvSourceFrame, cvTargetFrame, cvTransformation, cv::Size(targetFrame.width(), targetFrame.height()), cv::WARP_INVERSE_MAP | cv::INTER_LINEAR, cv::BORDER_CONSTANT, cvBackgroundColor);
 			performanceOpenCV.stop();
 
 			double averageError = 0.0;
 			double maximalError = 0u;
 
-			Test::TestCV::TestFrameInterpolatorBilinear::validateHomography<uint8_t>(sourceFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), cvTargetFrame.data, targetFrame.width(), targetFrame.height(), transformation, backgroundColor.data(), CV::PixelPositionI(0u, 0u), sourceFrame.paddingElements(), sourceFrame.paddingElements(), &averageError, &maximalError);
+			Test::TestCV::TestFrameInterpolatorBilinear::validateHomography<uint8_t>(sourceFrame, CV::OpenCVUtilities::toOceanFrame(cvTargetFrame), transformation, backgroundColor.data(), CV::PixelPositionI(0u, 0u), &averageError, &maximalError);
 
 			opencvSumAverageError += averageError;
 			opencvMaxError = max(opencvMaxError, maximalError);
@@ -304,12 +304,12 @@ void TestFrameInterpolatorBilinear::testAffine(const unsigned int width, const u
 		if (iteration % 2u == 0u)
 		{
 			performanceOceanSingleCore.start();
-			CV::FrameInterpolatorBilinear::Comfort::affine(sourceFrame, targetFrame, transformation, backgroundColor.data(), nullptr);
+				CV::FrameInterpolatorBilinear::Comfort::affine(sourceFrame, targetFrame, transformation, backgroundColor.data(), nullptr);
 			performanceOceanSingleCore.stop();
 
 			double averageError = 0.0;
 			double maximalError = 0u;
-			Test::TestCV::TestFrameInterpolatorBilinear::validateHomography<uint8_t>(sourceFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), targetFrame.constdata<uint8_t>(), targetFrame.width(), targetFrame.height(), transformation, backgroundColor.data(), CV::PixelPositionI(0u, 0u), sourceFrame.paddingElements(), targetFrame.paddingElements(), &averageError, &maximalError);
+			Test::TestCV::TestFrameInterpolatorBilinear::validateHomography<uint8_t>(sourceFrame, targetFrame, transformation, backgroundColor.data(), CV::PixelPositionI(0u, 0u), &averageError, &maximalError);
 
 			oceanSumAverageError += averageError;
 			oceanMaxError = max(oceanMaxError, maximalError);
@@ -318,12 +318,12 @@ void TestFrameInterpolatorBilinear::testAffine(const unsigned int width, const u
 			const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
 
 			performanceOceanMultiCore.start();
-			CV::FrameInterpolatorBilinear::Comfort::affine(sourceFrame, targetFrame, transformation, backgroundColor.data(), scopedWorker());
+				CV::FrameInterpolatorBilinear::Comfort::affine(sourceFrame, targetFrame, transformation, backgroundColor.data(), scopedWorker());
 			performanceOceanMultiCore.stop();
 
 			averageError = 0.0;
 			maximalError = 0u;
-			Test::TestCV::TestFrameInterpolatorBilinear::validateHomography<uint8_t>(sourceFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), targetFrame.constdata<uint8_t>(), targetFrame.width(), targetFrame.height(), transformation, backgroundColor.data(), CV::PixelPositionI(0u, 0u), sourceFrame.paddingElements(), targetFrame.paddingElements(), &averageError, &maximalError);
+			Test::TestCV::TestFrameInterpolatorBilinear::validateHomography<uint8_t>(sourceFrame, targetFrame, transformation, backgroundColor.data(), CV::PixelPositionI(0u, 0u), &averageError, &maximalError);
 
 			oceanSumAverageError += averageError;
 			oceanMaxError = max(oceanMaxError, maximalError);
@@ -358,7 +358,7 @@ void TestFrameInterpolatorBilinear::testAffine(const unsigned int width, const u
 
 			double averageError = 0.0;
 			double maximalError = 0u;
-			Test::TestCV::TestFrameInterpolatorBilinear::validateHomography<uint8_t>(sourceFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), (const uint8_t*)cvTargetFrame.data, targetFrame.width(), targetFrame.height(), transformation, backgroundColor.data(), CV::PixelPositionI(0u, 0u), sourceFrame.paddingElements(), cvTargetFramePaddingElements, &averageError, &maximalError);
+			Test::TestCV::TestFrameInterpolatorBilinear::validateHomography<uint8_t>(sourceFrame, CV::OpenCVUtilities::toOceanFrame(cvTargetFrame), transformation, backgroundColor.data(), CV::PixelPositionI(0u, 0u), &averageError, &maximalError);
 
 			opencvSumAverageError += averageError;
 			opencvMaxError = max(opencvMaxError, maximalError);
@@ -531,7 +531,7 @@ void TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 			cv::Mat cvTargetFrame = CV::OpenCVUtilities::toCvMat(targetFrame);
 
 			performanceOpenCV.start();
-			cv::resize(cvSourceFrame, cvTargetFrame, cv::Size(targetWidth, targetHeight), -1., -1.);
+				cv::resize(cvSourceFrame, cvTargetFrame, cv::Size(targetWidth, targetHeight), -1., -1.);
 			performanceOpenCV.stop();
 
 			targetFrame = CV::OpenCVUtilities::toOceanFrame(cvTargetFrame, true, targetFrame.pixelFormat());
@@ -553,7 +553,7 @@ void TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 			cv::Mat cvTargetFrame = CV::OpenCVUtilities::toCvMat(targetFrame);
 
 			performanceAML.start();
-			amlFacetrackerResize(cvSourceFrame, cvTargetFrame, cv::Size(targetWidth, targetHeight), -1., -1.);
+				amlFacetrackerResize(cvSourceFrame, cvTargetFrame, cv::Size(targetWidth, targetHeight), -1., -1.);
 			performanceAML.stop();
 
 			targetFrame = CV::OpenCVUtilities::toOceanFrame(cvTargetFrame, true, targetFrame.pixelFormat());
