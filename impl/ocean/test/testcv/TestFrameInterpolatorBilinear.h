@@ -601,7 +601,7 @@ void TestFrameInterpolatorBilinear::validateHomography(const Frame& input, const
 	ocean_assert(!input_H_output.isSingular());
 	ocean_assert(backgroundColor != nullptr);
 
-	const Scalar eps = Scalar(1.5); // temp change until next diff
+	const Scalar frameBorderEps = Scalar(0.5);
 
 	ocean_assert(input.numberPlanes() == 1u);
 
@@ -672,8 +672,8 @@ void TestFrameInterpolatorBilinear::validateHomography(const Frame& input, const
 				}
 
 				// we do not check the result if we are very close to the frame boundaries
-				if (Numeric::isNotEqual(inputPosition.x(), Scalar(0), eps) && Numeric::isNotEqual(inputPosition.x(), Scalar(input.width()), eps)
-						&& Numeric::isNotEqual(inputPosition.y(), Scalar(0), eps) && Numeric::isNotEqual(inputPosition.y(), Scalar(input.height()), eps))
+				if (Numeric::isNotEqual(inputPosition.x(), Scalar(0), frameBorderEps) && Numeric::isNotEqual(inputPosition.x(), Scalar(input.width() - 1u), frameBorderEps)
+						&& Numeric::isNotEqual(inputPosition.y(), Scalar(0), frameBorderEps) && Numeric::isNotEqual(inputPosition.y(), Scalar(input.height() - 1u), frameBorderEps))
 				{
 					for (unsigned int n = 0u; n < channels; ++n)
 					{
@@ -694,8 +694,8 @@ void TestFrameInterpolatorBilinear::validateHomography(const Frame& input, const
 			else
 			{
 				// we do not check the result if we are very close to the frame boundaries
-				if (Numeric::isNotEqual(inputPosition.x(), Scalar(0), eps) && Numeric::isNotEqual(inputPosition.x(), Scalar(input.width()), eps)
-						&& Numeric::isNotEqual(inputPosition.y(), Scalar(0), eps) && Numeric::isNotEqual(inputPosition.y(), Scalar(input.height()), eps))
+				if (Numeric::isNotEqual(inputPosition.x(), Scalar(0), frameBorderEps) && Numeric::isNotEqual(inputPosition.x(), Scalar(input.width() - 1u), frameBorderEps)
+						&& Numeric::isNotEqual(inputPosition.y(), Scalar(0), frameBorderEps) && Numeric::isNotEqual(inputPosition.y(), Scalar(input.height() - 1u), frameBorderEps))
 				{
 					for (unsigned int n = 0u; n < channels; ++n)
 					{

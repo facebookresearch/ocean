@@ -1964,8 +1964,13 @@ bool TestFrameInterpolatorBilinear::testHomographyMask(const unsigned int width,
 			constexpr uint8_t maskValue = 0xFF;
 
 			performance.start();
-				CV::FrameInterpolatorBilinear::Comfort::homographyMask(sourceFrame, targetFrame, targetMask, input_H_output, useWorker, maskValue, targetFrameOriginOffset);
+				const bool localResult = CV::FrameInterpolatorBilinear::Comfort::homographyMask(sourceFrame, targetFrame, targetMask, input_H_output, useWorker, maskValue, targetFrameOriginOffset);
 			performance.stop();
+
+			if (!localResult)
+			{
+				allSucceeded = false;
+			}
 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
 			{
@@ -1990,6 +1995,15 @@ bool TestFrameInterpolatorBilinear::testHomographyMask(const unsigned int width,
 	if (performanceMulticore.measurements() != 0u)
 	{
 		Log::info() << "Median performance (multicore): " << performanceMulticore.medianMseconds() << "ms";
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
 	}
 
 	return allSucceeded;
@@ -3539,10 +3553,13 @@ bool TestFrameInterpolatorBilinear::validateHomographyMask8BitPerChannel(const F
 
 	ocean_assert(!input_H_output.isSingular());
 
+	const Scalar frameBorderEps = Scalar(0.5);
+
 	ocean_assert(interpolatedFrame.channels() <= 4u);
 	uint8_t pixelResults[4] = {0x00, 0x00, 0x00, 0x00};
 
 	unsigned int invalidValues = 0u;
+	unsigned int skippedPixels = 0u;
 
 	for (unsigned int y = 0u; y < interpolatedFrame.height(); ++y)
 	{
@@ -3556,7 +3573,12 @@ bool TestFrameInterpolatorBilinear::validateHomographyMask8BitPerChannel(const F
 			const Vector2 outputPosition = Vector2(Scalar(x) + Scalar(interpolatedFrameOrigin.x()), Scalar(y) + Scalar(interpolatedFrameOrigin.y()));
 			const Vector2 inputPosition = input_H_output * outputPosition;
 
-			if (inputPosition.x() >= 0 && inputPosition.y() >= 0 && inputPosition.x() <= Scalar(frame.width() - 1u) && inputPosition.y() <= Scalar(frame.height() - 1u))
+			const bool isAtFrameBorder = Numeric::isNotEqual(inputPosition.x(), Scalar(0), frameBorderEps)
+											&& Numeric::isNotEqual(inputPosition.x(), Scalar(frame.width() - 1u), frameBorderEps)
+											&& Numeric::isNotEqual(inputPosition.y(), Scalar(0), frameBorderEps)
+											&& Numeric::isNotEqual(inputPosition.y(), Scalar(frame.height() - 1u), frameBorderEps);
+
+			if (inputPosition.x() >= Scalar(0) && inputPosition.y() >= Scalar(0) && inputPosition.x() <= Scalar(frame.width() - 1u) && inputPosition.y() <= Scalar(frame.height() - 1u))
 			{
 				switch (frame.channels())
 				{
@@ -3583,9 +3605,16 @@ bool TestFrameInterpolatorBilinear::validateHomographyMask8BitPerChannel(const F
 
 				for (unsigned int n = 0u; n < interpolatedFrame.channels(); ++n)
 				{
-					if (interpolatedFramePixel[n] != pixelResults[n] || interpolatedMaskPixel != 0xFF)
+					if (interpolatedFramePixel[n] != pixelResults[n] || interpolatedMaskPixel != 0xFFu)
 					{
-						invalidValues++;
+						if (isAtFrameBorder)
+						{
+							++skippedPixels;
+						}
+						else
+						{
+							++invalidValues;
+						}
 					}
 				}
 			}
@@ -3593,7 +3622,14 @@ bool TestFrameInterpolatorBilinear::validateHomographyMask8BitPerChannel(const F
 			{
 				if (interpolatedMaskPixel != 0x00)
 				{
-					invalidValues++;
+					if (isAtFrameBorder)
+					{
+						++skippedPixels;
+					}
+					else
+					{
+						++invalidValues;
+					}
 				}
 			}
 		}
@@ -3601,6 +3637,12 @@ bool TestFrameInterpolatorBilinear::validateHomographyMask8BitPerChannel(const F
 
 	ocean_assert(invalidValues <= interpolatedFrame.size()); // size - as we determine invalid values per pixel and channel
 	const double percent = double(interpolatedFrame.size() - invalidValues) / double(interpolatedFrame.size());
+
+	if (skippedPixels > frame.pixels() * 10u / 100u)
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
 	return percent >= 0.995;
 }

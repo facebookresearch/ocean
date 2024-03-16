@@ -681,7 +681,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorBilinear
 		 * @param width The width of the frame in pixel, with range [1, infinity)
 		 * @param height The height of the frame in pixel, with range [1, infinity)
 		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
-		 * @param position The position to determine the interpolated pixel values for, with range [0, width)x[0, height)
+		 * @param position The position for which the interpolated pixel will be determined, with ranges [0, width - 1]x[0, height - 1] for PC_TOP_LEFT, [0, width]x[0, height] for PC_CENTER
 		 * @param result Resulting interpolated pixel value(s), must be valid
 		 * @param resultBias Optional bias value which will be added to the interpolation result e.g. to handle rounding, with range (-infinity, infinity), default is zero
 		 * @tparam TSource The data type of the provided pixel values in the (source) frame
@@ -2488,16 +2488,18 @@ void FrameInterpolatorBilinear::homographySubset(const T* input, const unsigned 
 
 	const unsigned int outputStrideElements = outputWidth * tChannels + outputPaddingElements;
 
-	const Scalar scalarInputWidth = Scalar(inputWidth);
-	const Scalar scalarInputHeight = Scalar(inputHeight);
+	const Scalar scalarInputWidth1 = Scalar(inputWidth - 1u);
+	const Scalar scalarInputHeight1 = Scalar(inputHeight - 1u);
 
 	// we need to find a best matching floating point data type for the intermediate interpolation results
 	typedef typename FloatTyper<T>::Type TIntermediate;
 
 	typedef typename DataType<T, tChannels>::Type PixelType;
 
-	T zeroColor[tChannels] = {T(0)};
-	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
+	constexpr T zeroColor[tChannels] = {T(0)};
+	const PixelType* const bColor = borderColor ? (PixelType*)(borderColor) : (PixelType*)(zeroColor);
+
+	constexpr TIntermediate bias = TIntermediate(0);
 
 	for (unsigned int y = firstOutputRow; y < firstOutputRow + numberOutputRows; ++y)
 	{
@@ -2540,15 +2542,13 @@ void FrameInterpolatorBilinear::homographySubset(const T* input, const unsigned 
 			ocean_assert((std::is_same<float, Scalar>::value) || inputPosition.isEqual(debugInputPosition, Scalar(0.01)));
 #endif
 
-			if (inputPosition.x() < Scalar(0) || inputPosition.x() >= scalarInputWidth || inputPosition.y() < Scalar(0) || inputPosition.y() >= scalarInputHeight)
+			if (inputPosition.x() >= Scalar(0) && inputPosition.x() <= scalarInputWidth1 && inputPosition.y() >= Scalar(0) && inputPosition.y() <= scalarInputHeight1)
 			{
-				*outputRowPixel = *bColor;
+				interpolatePixel<T, T, tChannels, CV::PC_TOP_LEFT, Scalar, TIntermediate>(input, inputWidth, inputHeight, inputPaddingElements, inputPosition, (T*)(outputRowPixel), bias);
 			}
 			else
 			{
-				constexpr TIntermediate bias = TIntermediate(0);
-
-				interpolatePixel<T, T, tChannels, CV::PC_TOP_LEFT, Scalar, TIntermediate>(input, inputWidth, inputHeight, inputPaddingElements, inputPosition, (T*)(outputRowPixel), bias);
+				*outputRowPixel = *bColor;
 			}
 
 			++outputRowPixel;
@@ -2788,9 +2788,9 @@ inline void FrameInterpolatorBilinear::homography8BitPerChannelSSESubset(const u
 	const __m128i m128_i_inputWidth_1 = _mm_set1_epi32(int(inputWidth) - 1);
 	const __m128i m128_i_inputHeight_1 = _mm_set1_epi32(int(inputHeight) - 1);
 
-	// we store 4 floats: [inputWidth, inputWidth, inputWidth, inputWidth], and same with inputHeight
-	const __m128 m128_f_inputWidth = _mm_set_ps1(float(inputWidth));
-	const __m128 m128_f_inputHeight = _mm_set_ps1(float(inputHeight));
+	// we store 4 floats: [inputWidth - 1, inputWidth - 1, inputWidth - 1, inputWidth - 1], and same with inputHeight
+	const __m128 m128_f_inputWidth_1 = _mm_set_ps1(float(inputWidth - 1u));
+	const __m128 m128_f_inputHeight_1 = _mm_set_ps1(float(inputHeight - 1u));
 
 	for (unsigned int y = firstOutputRow; y < firstOutputRow + numberOutputRows; ++y)
 	{
@@ -2872,8 +2872,8 @@ inline void FrameInterpolatorBilinear::homography8BitPerChannelSSESubset(const u
 
 
 			// now we check whether we are inside the input frame
-			const __m128 m128_f_validPixelX = _mm_and_ps(_mm_cmplt_ps(m128_f_inputX, m128_f_inputWidth), _mm_cmpge_ps(m128_f_inputX, m128_f_zero)); // inputPosition.x() < inputWidth && inputPosition.x() >= 0 ? 0xFFFFFF : 0x000000
-			const __m128 m128_f_validPixelY = _mm_and_ps(_mm_cmplt_ps(m128_f_inputY, m128_f_inputHeight), _mm_cmpge_ps(m128_f_inputY, m128_f_zero)); // inputPosition.y() < inputHeight && inputPosition.y() >= 0 ? 0xFFFFFF : 0x000000
+			const __m128 m128_f_validPixelX = _mm_and_ps(_mm_cmple_ps (m128_f_inputX, m128_f_inputWidth_1), _mm_cmpge_ps(m128_f_inputX, m128_f_zero)); // inputPosition.x() <= (inputWidth-1) && inputPosition.x() >= 0 ? 0xFFFFFF : 0x000000
+			const __m128 m128_f_validPixelY = _mm_and_ps(_mm_cmple_ps (m128_f_inputY, m128_f_inputHeight_1), _mm_cmpge_ps(m128_f_inputY, m128_f_zero)); // inputPosition.y() <= (inputHeight-1) && inputPosition.y() >= 0 ? 0xFFFFFF : 0x000000
 
 			const __m128i m128_i_validPixel = _mm_castps_si128(_mm_and_ps(m128_f_validPixelX, m128_f_validPixelY)); // is_inside_input_frame(inputPosition) ? 0xFFFFFF : 0x000000
 
@@ -3745,9 +3745,9 @@ void FrameInterpolatorBilinear::homography8BitPerChannelNEONSubset(const uint8_t
 		const uint32x4_t m128_u_inputWidth_1 = vdupq_n_u32(inputWidth - 1u);
 		const uint32x4_t m128_u_inputHeight_1 = vdupq_n_u32(inputHeight - 1u);
 
-		// we store 4 floats: [inputWidth, inputWidth, inputWidth, inputWidth], and same with inputHeight
-		const float32x4_t m128_f_inputWidth = vdupq_n_f32(float(inputWidth));
-		const float32x4_t m128_f_inputHeight = vdupq_n_f32(float(inputHeight));
+		// we store 4 floats: [inputWidth - 1, inputWidth - 1, inputWidth - 1, inputWidth - 1], and same with inputHeight
+		const float32x4_t m128_f_inputWidth_1 = vdupq_n_f32(float(inputWidth - 1u));
+		const float32x4_t m128_f_inputHeight_1 = vdupq_n_f32(float(inputHeight - 1u));
 
 		for (unsigned int x = 0u; x < outputWidth; x += 4u)
 		{
@@ -3800,8 +3800,8 @@ void FrameInterpolatorBilinear::homography8BitPerChannelNEONSubset(const uint8_t
 
 
 			// now we check whether we are inside the input frame
-			const uint32x4_t m128_u_validPixelX = vandq_u32(vcltq_f32(m128_f_inputX, m128_f_inputWidth), vcgeq_f32(m128_f_inputX, m128_f_zero)); // inputPosition.x() >= 0 && inputPosition.x() < inputWidth ? 0xFFFFFF : 0x000000
-			const uint32x4_t m128_u_validPixelY = vandq_u32(vcltq_f32(m128_f_inputY, m128_f_inputHeight), vcgeq_f32(m128_f_inputY, m128_f_zero)); // inputPosition.y() >= 0 && inputPosition.y() < inputHeight ? 0xFFFFFF : 0x000000
+			const uint32x4_t m128_u_validPixelX = vandq_u32(vcleq_f32(m128_f_inputX, m128_f_inputWidth_1), vcgeq_f32(m128_f_inputX, m128_f_zero)); // inputPosition.x() >= 0 && inputPosition.x() <= (inputWidth - 1) ? 0xFFFFFF : 0x000000
+			const uint32x4_t m128_u_validPixelY = vandq_u32(vcleq_f32(m128_f_inputY, m128_f_inputHeight_1), vcgeq_f32(m128_f_inputY, m128_f_zero)); // inputPosition.y() >= 0 && inputPosition.y() <= (inputHeight - 1) ? 0xFFFFFF : 0x000000
 
 			const uint32x4_t m128_u_validPixel = vandq_u32(m128_u_validPixelX, m128_u_validPixelY); // is_inside_input_frame(inputPosition) ? 0xFFFFFF : 0x000000
 
@@ -5122,8 +5122,8 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 
 	const uint32x4_t constantChannels_u_32x4 = vdupq_n_u32(tChannels);
 
-	const float32x4_t constantInputWidth_f_32x4 = vdupq_n_f32(float(inputWidth));
-	const float32x4_t constantInputHeight_f_32x4 = vdupq_n_f32(float(inputHeight));
+	const float32x4_t constantInputWidth1_f_32x4 = vdupq_n_f32(float(inputWidth - 1u));
+	const float32x4_t constantInputHeight1_f_32x4 = vdupq_n_f32(float(inputHeight - 1u));
 
 	const uint32x4_t constantInputStrideElements_u_32x4 = vdupq_n_u32(inputStrideElements);
 	const uint32x4_t constantInputWidth1_u_32x4 = vdupq_n_u32(inputWidth - 1u);
@@ -5185,8 +5185,8 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 			}
 
 			// now we check whether we are inside the input frame
-			const uint32x4_t validPixelsX_u_32x4 = vandq_u32(vcltq_f32(inputPositionsX_f_32x4, constantInputWidth_f_32x4), vcgeq_f32(inputPositionsX_f_32x4, constantZero_f_32x4)); // inputPosition.x() >= 0 && inputPosition.x() < inputWidth ? 0xFFFFFF : 0x000000
-			const uint32x4_t validPixelsY_u_32x4 = vandq_u32(vcltq_f32(inputPositionsY_f_32x4, constantInputHeight_f_32x4), vcgeq_f32(inputPositionsY_f_32x4, constantZero_f_32x4)); // inputPosition.y() >= 0 && inputPosition.y() < inputHeight ? 0xFFFFFF : 0x000000
+			const uint32x4_t validPixelsX_u_32x4 = vandq_u32(vcleq_f32(inputPositionsX_f_32x4, constantInputWidth1_f_32x4), vcgeq_f32(inputPositionsX_f_32x4, constantZero_f_32x4)); // inputPosition.x() >= 0 && inputPosition.x() <= (inputWidth - 1) ? 0xFFFFFF : 0x000000
+			const uint32x4_t validPixelsY_u_32x4 = vandq_u32(vcleq_f32(inputPositionsY_f_32x4, constantInputHeight1_f_32x4), vcgeq_f32(inputPositionsY_f_32x4, constantZero_f_32x4)); // inputPosition.y() >= 0 && inputPosition.y() <= (inputHeight - 1) ? 0xFFFFFF : 0x000000
 
 			const uint32x4_t validPixels_u_32x4 = vandq_u32(validPixelsX_u_32x4, validPixelsY_u_32x4); // is_inside_input_frame(inputPosition) ? 0xFFFFFF : 0x000000
 
