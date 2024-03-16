@@ -22,6 +22,7 @@ namespace CV
 class OCEAN_CV_EXPORT FrameConverterRGB24 : public FrameConverter
 {
 	public:
+
 	/**
 		* Converts a RGB 24 bit frame to a ARGB 32 bit frame.
 		* @param source The source frame buffer, must be valid
@@ -35,7 +36,7 @@ class OCEAN_CV_EXPORT FrameConverterRGB24 : public FrameConverter
 		* @param worker Optional worker object to distribute the computational load
 		*/
 	   static inline void convertRGB24ToARGB32(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const uint8_t alphaValue = 0xFF, Worker* worker = nullptr);
-	
+
 		/**
 		 * Converts a RGB 24 bit frame to a BGR 24 bit frame.
 		 * @param source The source frame buffer, must be valid
@@ -377,7 +378,7 @@ inline void FrameConverterRGB24::convertRGB24ToARGB32(const uint8_t* source, uin
 {
 	ocean_assert(source != nullptr && target != nullptr);
 	ocean_assert(width >= 1u && height >= 1u);
-	
+
 	FrameChannels::addFirstChannelValue<uint8_t, 3u>(source, alphaValue, target, width, height, flag, sourcePaddingElements, targetPaddingElements, worker);
 }
 

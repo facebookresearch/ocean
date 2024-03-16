@@ -23,20 +23,21 @@ namespace TestOpenCV
  */
 class OCEAN_TEST_CV_OPENCV_EXPORT TestHistogram
 {
-public:
-	/**
-	 * Test histogram functions
-	 * @param testDuration Number of seconds for each subtest, range: (0, infinity)
-	 * @return True if all subtests finished successfully, otherwise false
-	 */
-	static bool test(const double testDuration);
+	public:
 
-	/**
-	 * Test Ocean's implementation of Contrast-Limited Adaptive Histogram Equalization (CLAHE)
-	 * @param testDuration Number of of seconds for each subtest, range: (0, infinity)
-	 * @return True if all subtests finished successfully, otherwise false
-	 */
-	static bool testCLAHE(const double testDuration);
+		/**
+		 * Test histogram functions
+		 * @param testDuration Number of seconds for each subtest, range: (0, infinity)
+		 * @return True if all subtests finished successfully, otherwise false
+		 */
+		static bool test(const double testDuration);
+
+		/**
+		 * Test Ocean's implementation of Contrast-Limited Adaptive Histogram Equalization (CLAHE)
+		 * @param testDuration Number of of seconds for each subtest, range: (0, infinity)
+		 * @return True if all subtests finished successfully, otherwise false
+		 */
+		static bool testCLAHE(const double testDuration);
 };
 
 } // namespace TestOpenCV

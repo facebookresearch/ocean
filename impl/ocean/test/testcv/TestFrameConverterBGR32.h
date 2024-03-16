@@ -25,39 +25,39 @@ namespace TestCV
  */
 class OCEAN_TEST_CV_EXPORT TestFrameConverterBGR32
 {
-public:
+	public:
 
-	/**
-	 * Tests all BGR 32 bit frame conversion functions.
-	 * @param width The width of the original frame in pixel, with range [1, infinity)
-	 * @param height The height of the original frame in pixel, with range [1, infinity)
-	 * @param testDuration Number of seconds for each test, with range (0, infinity)
-	 * @param worker The worker object to distribute the computation
-	 * @return True, if succeeded
-	 */
-	static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
-	
-	/**
-	 * Tests BGR32 to RGB24 conversion.
-	 * @param width The width of the original frame in pixel, with range [1, infinity)
-	 * @param height The height of the original frame in pixel, with range [1, infinity)
-	 * @param flag The conversion flag that has been applied during conversion
-	 * @param testDuration Number of seconds for each test, with range (0, infinity)
-	 * @param worker The worker object to distribute the computation
-	 * @return True, if succeeded
-	 */
-	static bool testBGR32ToRGB24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
+		/**
+		 * Tests all BGR 32 bit frame conversion functions.
+		 * @param width The width of the original frame in pixel, with range [1, infinity)
+		 * @param height The height of the original frame in pixel, with range [1, infinity)
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool test(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker);
 
-	/**
-	 * Tests BGR32 to RGBA32 conversion.
-	 * @param width The width of the original frame in pixel, with range [1, infinity)
-	 * @param height The height of the original frame in pixel, with range [1, infinity)
-	 * @param flag The conversion flag that has been applied during conversion
-	 * @param testDuration Number of seconds for each test, with range (0, infinity)
-	 * @param worker The worker object to distribute the computation
-	 * @return True, if succeeded
-	 */
-	static bool testBGR32ToRGBA32(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
+		/**
+		 * Tests BGR32 to RGB24 conversion.
+		 * @param width The width of the original frame in pixel, with range [1, infinity)
+		 * @param height The height of the original frame in pixel, with range [1, infinity)
+		 * @param flag The conversion flag that has been applied during conversion
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool testBGR32ToRGB24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
+
+		/**
+		 * Tests BGR32 to RGBA32 conversion.
+		 * @param width The width of the original frame in pixel, with range [1, infinity)
+		 * @param height The height of the original frame in pixel, with range [1, infinity)
+		 * @param flag The conversion flag that has been applied during conversion
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool testBGR32ToRGBA32(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
 };
 
 }
