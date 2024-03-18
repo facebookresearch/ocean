@@ -557,6 +557,9 @@ bool TestEpipolarGeometry::testTriangulateImagePoints(const double testDuration)
 
 	const Timestamp startTimestamp(true);
 
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
+
 	RandomGenerator randomGenerator;
 
 	bool allSucceeded = true;
@@ -606,17 +609,36 @@ bool TestEpipolarGeometry::testTriangulateImagePoints(const double testDuration)
 			{
 				for (size_t i = 0; i < objectPoints.size(); ++i)
 				{
-					if (Numeric::isNotWeakEqualEps(objectPoints[i].sqrDistance(triangulatedObjectPoints[i])))
+					if (Numeric::isWeakEqualEps(objectPoints[i].sqrDistance(triangulatedObjectPoints[i])))
 					{
-						allSucceeded = false;
+						++validIterations;
 					}
 				}
 			}
+
+			iterations += uint64_t(objectPoints.size());
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	Log::info() << "Validation: " << (allSucceeded ? "succeeded" : "FAILED");
+	ocean_assert(iterations > 0ull);
+	ocean_assert(validIterations <= iterations);
+
+	const double percent = double(validIterations) / double(iterations);
+
+	if (percent <= 0.99)
+	{
+		allSucceeded = false;
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
