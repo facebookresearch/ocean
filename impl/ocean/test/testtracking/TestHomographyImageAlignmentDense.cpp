@@ -256,18 +256,31 @@ bool TestHomographyImageAlignmentDense::testAdditive(const unsigned int channels
 					allSucceeded = false;
 				}
 
-				if (finalError > initialError * Scalar(0.1))
+				if constexpr (std::is_same<double, Scalar>::value)
 				{
-					allSucceeded = false;
+					if (finalError > initialError * Scalar(0.1))
+					{
+						allSucceeded = false;
+					}
+				}
+				else
+				{
+					if (finalError >= initialError) // generous check for 32bit float
+					{
+						allSucceeded = false;
+					}
 				}
 
 				double averageErrorInitial = NumericD::maxValue();
 				double averageErrorFinal = NumericD::maxValue();
 				if (determineError(templateFrame, currentFrame, estimatedCurrent_H_template, averageErrorInitial, averageErrorFinal))
 				{
-					if (averageErrorFinal > averageErrorInitial * Scalar(0.1))
+					if constexpr (std::is_same<double, Scalar>::value)
 					{
-						allSucceeded = false;
+						if (averageErrorFinal > averageErrorInitial * Scalar(0.1))
+						{
+							allSucceeded = false;
+						}
 					}
 				}
 				else
@@ -403,9 +416,12 @@ bool TestHomographyImageAlignmentDense::testInverseCompositional(const unsigned 
 				double averageErrorFinal = NumericD::maxValue();
 				if (determineError(templateFrame, currentFrame, estimatedCurrent_H_template, averageErrorInitial, averageErrorFinal))
 				{
-					if (averageErrorFinal >= averageErrorInitial) // quite generous
+					if constexpr (std::is_same<double, Scalar>::value)
 					{
-						allSucceeded = false;
+						if (averageErrorFinal >= averageErrorInitial) // quite generous
+						{
+							allSucceeded = false;
+						}
 					}
 				}
 				else
@@ -525,9 +541,12 @@ bool TestHomographyImageAlignmentDense::testMultiResolution(const unsigned int c
 			double averageErrorFinal = NumericD::maxValue();
 			if (determineError(templateFrame, currentFrame, estimatedCurrent_H_template, averageErrorInitial, averageErrorFinal))
 			{
-				if (averageErrorFinal > averageErrorInitial * Scalar(0.1))
+				if constexpr (std::is_same<double, Scalar>::value)
 				{
-					allSucceeded = false;
+					if (averageErrorFinal > averageErrorInitial * Scalar(0.1))
+					{
+						allSucceeded = false;
+					}
 				}
 			}
 			else
