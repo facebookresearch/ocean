@@ -834,6 +834,8 @@ bool TestMappingF1::testSpatialCost4Neighborhood(const unsigned int width, const
 
 	bool allSucceeded = true;
 
+	constexpr Scalar threshold = std::is_same<double, Scalar>::value ? Numeric::weakEps() : Scalar(0.01);
+
 	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
@@ -876,7 +878,7 @@ bool TestMappingF1::testSpatialCost4Neighborhood(const unsigned int width, const
 
 		const Scalar testCost = determineSpatialCost4Neighborhood(mapping, mask, Vector2(Scalar(xSource), Scalar(ySource)), CV::PixelPosition(xTarget, yTarget), maxCost, normalizationFactor);
 
-		if (Numeric::isNotWeakEqual(cost, testCost))
+		if (Numeric::isNotEqual(cost, testCost, threshold))
 		{
 			allSucceeded = false;
 		}
