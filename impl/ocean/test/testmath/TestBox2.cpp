@@ -31,17 +31,25 @@ bool TestBox2::test(const double testDuration)
 	allSucceeded = testConsturctors(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 
 	allSucceeded = testIntersects(testDuration) && allSucceeded;
 
+	Log::info() << " ";
+	Log::info() << "-";
 	Log::info() << " ";
 
 	allSucceeded = testUnsignedBox2integer(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 
 	allSucceeded = testSignedBox2integer(testDuration) && allSucceeded;
 
+	Log::info() << " ";
+	Log::info() << "-";
 	Log::info() << " ";
 
 	allSucceeded = testMultiplicationOperators(testDuration) && allSucceeded;
@@ -347,9 +355,13 @@ bool TestBox2::testUnsignedBox2integer(const double testDuration)
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -405,75 +417,113 @@ bool TestBox2::testSignedBox2integer(const double testDuration)
 			int left, top, right, bottom;
 
 			if (boxLeft < Scalar(areaLeft))
+			{
 				left = areaLeft;
+			}
 			else
 			{
 				if (boxLeft < 0)
 				{
 					if (Scalar(int(boxLeft)) == boxLeft)
+					{
 						left = int(boxLeft);
+					}
 					else
+					{
 						left = int(boxLeft) - 1;
+					}
 				}
 				else
+				{
 					left = int(boxLeft);
+				}
 			}
 
 			if (boxTop < Scalar(areaTop))
+			{
 				top = areaTop;
+			}
 			else
 			{
 				if (boxTop < 0)
 				{
 					if (Scalar(int(boxTop)) == boxTop)
+					{
 						top = int(boxTop);
+					}
 					else
+					{
 						top = int(boxTop) - 1;
+					}
 				}
 				else
+				{
 					top = int(boxTop);
+				}
 			}
 
 			if (boxRight > Scalar(areaRight))
+			{
 				right = areaRight;
+			}
 			else
 			{
 				if (boxRight < 0)
 				{
 					if (Scalar(int(boxRight)) == boxRight)
+					{
 						right = int(boxRight);
+					}
 					else
+					{
 						right = int(boxRight) - 1;
+					}
 				}
 				else
+				{
 					right = int(boxRight);
+				}
 			}
 
 			if (boxBottom > Scalar(areaBottom))
+			{
 				bottom = areaBottom;
+			}
 			else
 			{
 				if (boxBottom < 0)
 				{
 					if (Scalar(int(boxBottom)) == boxBottom)
+					{
 						bottom = int(boxBottom);
+					}
 					else
+					{
 						bottom = int(boxBottom) - 1;
+					}
 				}
 				else
+				{
 					bottom = int(boxBottom);
+				}
 			}
 
 			if (left != testLeft || top != testTop || testWidth != (right - left + 1u) || testHeight != (bottom - top + 1u))
+			{
 				allSucceeded = false;
+			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
