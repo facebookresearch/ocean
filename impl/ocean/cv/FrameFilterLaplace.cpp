@@ -179,7 +179,7 @@ void FrameFilterLaplace::varianceRow1Channel8BitNEON(const uint8_t* row, const u
 {
 	ocean_assert(row != nullptr);
 
-	ocean_assert(width >= 3u && width <=  4128u * 2u + 2u);
+	ocean_assert(width >= 3u && width <= 33026u);
 
 	const uint8_t* top = row - rowStrideElements + 1u; // top row, second pixel
 	const uint8_t* bottom = row + rowStrideElements + 1u; // bottom row, second pixel
@@ -243,7 +243,7 @@ void FrameFilterLaplace::varianceRow1Channel8BitNEON(const uint8_t* row, const u
 	}
 }
 
-#if 0
+#if 0 // slower implementation for reference
 void FrameFilterLaplace::varianceRow1Channel8BitNEON(const uint8_t* row, const unsigned int width, const unsigned int rowStrideElements, int64x2x2_t& sumResponse_s_64x2x2, uint64x2x2_t& sumSqrResponse_u_64x2x2, int64_t& sumResponse_s_64x1, uint64_t& sumSqrResponse_u_64x1)
 {
 	const uint8_t* top = row - rowStrideElements + 1u; // top row, second pixel
