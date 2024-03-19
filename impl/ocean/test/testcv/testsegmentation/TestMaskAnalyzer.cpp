@@ -2324,7 +2324,7 @@ bool TestMaskAnalyzer::validateFindNonUniquePixels4(const Frame& mask, const CV:
 	}
 
 	// left and right column
-	for (unsigned int y = max(1u, boundingBox.top()); y < min(boundingBox.bottom(), height_1); ++y)
+	for (unsigned int y = max(1u, boundingBox.top()); y < min(boundingBox.bottomEnd(), height_1); ++y)
 	{
 		if (boundingBox.left() == 0u)
 		{

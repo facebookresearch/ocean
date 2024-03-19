@@ -491,7 +491,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT MaskAnalyzer
 		 * @param width The width of the entire mask frame in pixel, with range [2, infinity)
 		 * @param height The height of the entire mask frame in pixel, with range [2, infinity)
 		 * @param maskPaddingElements The number of padding elements at the end of each mask row, in elements, with range [0, infinity)
-		 * @param nonUniquePixels Resulting non unique pixels
+		 * @param nonUniquePixels The resulting non unique pixels
 		 * @param boundingBox Optional bounding box object shrinking the operation area
 		 */
 		static void findNonUniquePixels4(const uint8_t* mask, const unsigned int width, const unsigned int height, const unsigned int maskPaddingElements, PixelPositions& nonUniquePixels, const PixelBoundingBox& boundingBox = PixelBoundingBox());
@@ -502,7 +502,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT MaskAnalyzer
 		 * @param width The width of the entire mask frame in pixel, with range [2, infinity)
 		 * @param height The height of the entire mask frame in pixel, with range [2, infinity)
 		 * @param maskPaddingElements The number of padding elements at the end of each mask row, in elements, with range [0, infinity)
-		 * @param nonUniquePixels Resulting non unique pixels
+		 * @param nonUniquePixels The resulting non unique pixels
 		 * @param boundingBox Optional bounding box object shrinking the operation area
 		 */
 		static void findNonUniquePixels8(const uint8_t* mask, const unsigned int width, const unsigned int height, const unsigned int maskPaddingElements, PixelPositions& nonUniquePixels, const PixelBoundingBox& boundingBox = PixelBoundingBox());
