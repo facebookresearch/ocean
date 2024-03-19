@@ -802,7 +802,10 @@ FramePyramid FramePyramid::create8BitPerChannel(const FramePyramid& framePyramid
 
 		ocean_assert(framePyramid.memory_.isInside(firstLayer.constdata(), firstLayer.size()));
 		ocean_assert(framePyramid.memory_.isInside(lastLayer.constdata(), lastLayer.size()));
-		ocean_assert_and_suppress_unused((lastLayer.constdata() == firstLayer.constdata() && lastLayer.size() == firstLayer.size()) || lastLayer.constdata() >= firstLayer.constdata() + firstLayer.size(), lastLayer);
+		ocean_assert((lastLayer.constdata() == firstLayer.constdata() && lastLayer.size() == firstLayer.size()) || lastLayer.constdata() >= firstLayer.constdata() + firstLayer.size());
+
+		ocean_assert(lastLayer.constdata() - firstLayer.constdata() >= 0);
+		newPyramid.memory_ = Memory(firstLayer.constdata(), lastLayer.constdata() - firstLayer.constdata() + lastLayer.size());
 
 		newPyramid.layers_.reserve(selectedSourceLayers);
 		newPyramid.layers_.push_back(LegacyFrame(firstLayer.frameType(), firstLayer.timestamp(), firstLayer.constdata(), false));

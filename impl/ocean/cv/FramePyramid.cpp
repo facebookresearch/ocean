@@ -36,6 +36,11 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid) :
 	{
 		layers_ = framePyramid.layers_;
 	}
+
+	if (framePyramid.memory_)
+	{
+		memory_ = Memory(framePyramid.memory_.constdata(), framePyramid.memory_.size());
+	}
 }
 
 FramePyramid::FramePyramid(const FrameType& frameType, const unsigned int layers)
@@ -113,7 +118,10 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid, bool copyData,	cons
 
 		ocean_assert(framePyramid.memory_.isInside(firstLayer.constdata(), firstLayer.size()));
 		ocean_assert(framePyramid.memory_.isInside(lastLayer.constdata(), lastLayer.size()));
-		ocean_assert_and_suppress_unused((lastLayer.constdata() == firstLayer.constdata() && lastLayer.size() == firstLayer.size()) || lastLayer.constdata() >= firstLayer.constdata() + firstLayer.size(), lastLayer);
+		ocean_assert((lastLayer.constdata() == firstLayer.constdata() && lastLayer.size() == firstLayer.size()) || lastLayer.constdata() >= firstLayer.constdata() + firstLayer.size());
+
+		ocean_assert(lastLayer.constdata() - firstLayer.constdata() >= 0);
+		memory_ = Memory(firstLayer.constdata(), lastLayer.constdata() - firstLayer.constdata() + lastLayer.size());
 
 		layers_.reserve(selectedSourceLayers);
 		layers_.push_back(LegacyFrame(firstLayer.frameType(), firstLayer.timestamp(), firstLayer.constdata(), false));
@@ -416,7 +424,12 @@ bool FramePyramid::isOwner(const unsigned int layerIndex) const
 
 		for (const LegacyFrame& layer : layers_)
 		{
-			if (layer.isOwner() || memory_.isInside(layer.constdata(), layer.size()))
+			if (layer.isOwner())
+			{
+				continue;
+			}
+
+			if (memory_.isOwner() && memory_.isInside(layer.constdata(), layer.size()))
 			{
 				continue;
 			}
@@ -431,7 +444,15 @@ bool FramePyramid::isOwner(const unsigned int layerIndex) const
 	{
 		const LegacyFrame& layer = layers_[layerIndex];
 
-		return layer.isOwner() || memory_.isInside(layer.constdata(), layer.size());
+		if (layer.isOwner())
+		{
+			return true;
+		}
+
+		if (memory_.isOwner() && memory_.isInside(layer.constdata(), layer.size()))
+		{
+			return true;
+		}
 	}
 
 	return false;
