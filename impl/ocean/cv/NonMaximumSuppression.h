@@ -801,7 +801,7 @@ bool NonMaximumSuppression<T>::determinePrecisePeakLocation2(const T* const topV
 
 	const TFloat denominator = dxx * dyy - dxy * dxy;
 
-	if (Numeric::isEqualEps(denominator))
+	if (NumericT<TFloat>::isEqualEps(denominator))
 	{
 		location = VectorT2<TFloat>(0, 0);
 		return true;

@@ -59,13 +59,17 @@ bool TestNonMaximumSuppression::test(const unsigned int width, const unsigned in
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testDeterminePrecisePeakLocation1() && allSucceeded;
+	allSucceeded = testDeterminePrecisePeakLocation1<float>() && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testDeterminePrecisePeakLocation1<double>() && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testDeterminePrecisePeakLocation2() && allSucceeded;
+	allSucceeded = testDeterminePrecisePeakLocation2<float>() && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testDeterminePrecisePeakLocation2<double>() && allSucceeded;
 
 	Log::info() << " ";
 
@@ -119,14 +123,25 @@ TEST(TestNonMaximumSuppression, testSuppressionInStrengthPositions_double_double
 }
 
 
-TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation1)
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation1_Float)
 {
-	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocation1());
+	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocation1<float>());
 }
 
-TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation2)
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation1_Double)
 {
-	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocation2());
+	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocation1<double>());
+}
+
+
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation2_Float)
+{
+	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocation2<float>());
+}
+
+TEST(TestNonMaximumSuppression, DeterminePrecisePeakLocation2_Double)
+{
+	EXPECT_TRUE(TestNonMaximumSuppression::testDeterminePrecisePeakLocation2<double>());
 }
 
 #endif // OCEAN_USE_GTEST
@@ -377,33 +392,33 @@ bool TestNonMaximumSuppression::testSuppressionInStrengthPositions(const double 
 	return allSucceeded;
 }
 
+template <typename T>
 bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation1()
 {
-	Log::info() << "Test 1D precise peak location:";
-	Log::info() << " ";
+	Log::info() << "Test 1D precise peak location, with " << TypeNamer::name<T>() << ":";
 
 	bool allSucceeded = true;
 
-	Scalar precisePeak = Numeric::minValue();
-	if (!CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation1(0, 0, 0, precisePeak) || precisePeak != 0)
+	T precisePeak = NumericT<T>::minValue();
+	if (!CV::NonMaximumSuppression<T>::determinePrecisePeakLocation1(0, 0, 0, precisePeak) || precisePeak != 0)
 	{
 		allSucceeded = false;
 	}
 
-	precisePeak = Numeric::minValue();
-	if (!CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation1(0, 1, 0, precisePeak) || precisePeak != 0)
+	precisePeak = NumericT<T>::minValue();
+	if (!CV::NonMaximumSuppression<T>::determinePrecisePeakLocation1(0, 1, 0, precisePeak) || precisePeak != 0)
 	{
 		allSucceeded = false;
 	}
 
-	precisePeak = Numeric::minValue();
-	if (!CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation1(1, 2, 0, precisePeak) || precisePeak < Scalar(-0.5) || precisePeak >= 0)
+	precisePeak = NumericT<T>::minValue();
+	if (!CV::NonMaximumSuppression<T>::determinePrecisePeakLocation1(1, 2, 0, precisePeak) || precisePeak < T(-0.5) || precisePeak >= 0)
 	{
 		allSucceeded = false;
 	}
 
-	precisePeak = Numeric::minValue();
-	if (!CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation1(0, 2, 1, precisePeak) || precisePeak > Scalar(0.5) || precisePeak <= 0)
+	precisePeak = NumericT<T>::minValue();
+	if (!CV::NonMaximumSuppression<T>::determinePrecisePeakLocation1(0, 2, 1, precisePeak) || precisePeak > T(0.5) || precisePeak <= 0)
 	{
 		allSucceeded = false;
 	}
@@ -411,29 +426,39 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation1()
 	{
 		// testing a 1D Gaussian distribution (bell)
 
-		const Scalars offsets =
+		const std::vector<T> offsets =
 		{
-			Scalar(0),
-			Scalar(-0.5),
-			Scalar(0.5)
+			T(0),
+			T(-0.5),
+			T(0.5)
 		};
 
-		for (const Scalar offset : offsets)
+		for (const T offset : offsets)
 		{
-			const Scalar sigma = Scalar(1);
+			const T sigma = T(1);
 
-			Scalar values[3];
-			unsigned int index = 0u;
+			std::vector<T> values;
+			T sum = T(0);
 
 			for (int x = -1; x <= 1; ++x)
 			{
-				values[index++] = Scalar(1) / (sigma * Numeric::sqr(2 * Numeric::pi())) * Numeric::exp(Scalar(-0.5) * Numeric::sqr((x - offset) / sigma));
+				const T value = T(1) / (sigma * NumericT<T>::sqr(2 * NumericT<T>::pi())) * NumericT<T>::exp(T(-0.5) * NumericT<T>::sqr((x - offset) / sigma));
+
+				values.push_back(value);
+				sum += value;
 			}
 
-			precisePeak = Numeric::minValue();
-			if (CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation1(values[0], values[1], values[2], precisePeak))
+			ocean_assert(NumericT<T>::isNotEqualEps(sum));
+
+			for (T& value : values) // normalizing the values
 			{
-				if (Numeric::isNotEqual(precisePeak, offset, Scalar(0.01)))
+				value /= sum;
+			}
+
+			precisePeak = NumericT<T>::minValue();
+			if (CV::NonMaximumSuppression<T>::determinePrecisePeakLocation1(values[0], values[1], values[2], precisePeak))
+			{
+				if (NumericT<T>::isNotEqual(precisePeak, offset, T(0.01)))
 				{
 					allSucceeded = false;
 				}
@@ -457,104 +482,104 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation1()
 	return allSucceeded;
 }
 
+template <typename T>
 bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 {
-	Log::info() << "Test 2D precise peak location:";
-	Log::info() << " ";
+	Log::info() << "Test 2D precise peak location, with " << TypeNamer::name<T>() << ":";
 
 	bool allSucceeded = true;
 
 	{
-		const Scalar    topValues[3] = {0, 0, 0};
-		const Scalar centerValues[3] = {0, 0, 0};
-		const Scalar bottomValues[3] = {0, 0, 0};
+		const T    topValues[3] = {0, 0, 0};
+		const T centerValues[3] = {0, 0, 0};
+		const T bottomValues[3] = {0, 0, 0};
 
-		Vector2 precisePeak(Numeric::minValue(), Numeric::minValue());
-		if (!CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak != Vector2(0, 0))
+		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
+		if (!CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak != VectorT2<T>(0, 0))
 		{
 			allSucceeded = false;
 		}
 	}
 
 	{
-		const Scalar    topValues[3] = {0, 0, 0};
-		const Scalar centerValues[3] = {0, 1, 0};
-		const Scalar bottomValues[3] = {0, 0, 0};
+		const T    topValues[3] = {0, 0, 0};
+		const T centerValues[3] = {0, 1, 0};
+		const T bottomValues[3] = {0, 0, 0};
 
-		Vector2 precisePeak(Numeric::minValue(), Numeric::minValue());
-		if (!CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak != Vector2(0, 0))
+		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
+		if (!CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak != VectorT2<T>(0, 0))
 		{
 			allSucceeded = false;
 		}
 	}
 
 	{
-		const Scalar    topValues[3] = {0, 0, 0};
-		const Scalar centerValues[3] = {1, 1, 1};
-		const Scalar bottomValues[3] = {0, 0, 0};
+		const T    topValues[3] = {0, 0, 0};
+		const T centerValues[3] = {1, 1, 1};
+		const T bottomValues[3] = {0, 0, 0};
 
-		Vector2 precisePeak(Numeric::minValue(), Numeric::minValue());
-		if (!CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak != Vector2(0, 0))
+		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
+		if (!CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak != VectorT2<T>(0, 0))
 		{
 			allSucceeded = false;
 		}
 	}
 
 	{
-		const Scalar    topValues[3] = {0, 1, 0};
-		const Scalar centerValues[3] = {0, 1, 0};
-		const Scalar bottomValues[3] = {0, 1, 0};
+		const T    topValues[3] = {0, 1, 0};
+		const T centerValues[3] = {0, 1, 0};
+		const T bottomValues[3] = {0, 1, 0};
 
-		Vector2 precisePeak(Numeric::minValue(), Numeric::minValue());
-		if (!CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak != Vector2(0, 0))
+		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
+		if (!CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak != VectorT2<T>(0, 0))
 		{
 			allSucceeded = false;
 		}
 	}
 
 	{
-		const Scalar    topValues[3] = {1, 2, 0};
-		const Scalar centerValues[3] = {1, 2, 0};
-		const Scalar bottomValues[3] = {1, 2, 0};
+		const T    topValues[3] = {1, 2, 0};
+		const T centerValues[3] = {1, 2, 0};
+		const T bottomValues[3] = {1, 2, 0};
 
-		Vector2 precisePeak(Numeric::minValue(), Numeric::minValue());
-		if (!CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak != Vector2(0, 0))
+		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
+		if (!CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak != VectorT2<T>(0, 0))
 		{
 			allSucceeded = false;
 		}
 	}
 
 	{
-		const Scalar    topValues[3] = {1, 1, 1};
-		const Scalar centerValues[3] = {2, 2, 2};
-		const Scalar bottomValues[3] = {0, 0, 0};
+		const T    topValues[3] = {1, 1, 1};
+		const T centerValues[3] = {2, 2, 2};
+		const T bottomValues[3] = {0, 0, 0};
 
-		Vector2 precisePeak(Numeric::minValue(), Numeric::minValue());
-		if (!CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak != Vector2(0, 0))
+		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
+		if (!CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak != VectorT2<T>(0, 0))
 		{
 			allSucceeded = false;
 		}
 	}
 
 	{
-		const Scalar    topValues[3] = {1, 1, 2};
-		const Scalar centerValues[3] = {1, 2, 0};
-		const Scalar bottomValues[3] = {2, 0, 0};
+		const T    topValues[3] = {1, 1, 2};
+		const T centerValues[3] = {1, 2, 0};
+		const T bottomValues[3] = {2, 0, 0};
 
-		Vector2 precisePeak(Numeric::minValue(), Numeric::minValue());
-		if (!CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak.x() < Scalar(-0.5) || precisePeak.x() >= Scalar(0) || precisePeak.y() < Scalar(-0.5) || precisePeak.y() >= Scalar(0))
+		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
+		if (!CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak.x() < T(-0.5) || precisePeak.x() >= T(0) || precisePeak.y() < T(-0.5) || precisePeak.y() >= T(0))
 		{
 			allSucceeded = false;
 		}
 	}
 
 	{
-		const Scalar    topValues[3] = {0, 0, 2};
-		const Scalar centerValues[3] = {0, 2, 1};
-		const Scalar bottomValues[3] = {2, 1, 1};
+		const T    topValues[3] = {0, 0, 2};
+		const T centerValues[3] = {0, 2, 1};
+		const T bottomValues[3] = {2, 1, 1};
 
-		Vector2 precisePeak(Numeric::minValue(), Numeric::minValue());
-		if (!CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak.x() > Scalar(0.5) || precisePeak.x() < Scalar(0) || precisePeak.y() > Scalar(0.5) || precisePeak.y() < Scalar(0))
+		VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
+		if (!CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(topValues, centerValues, bottomValues, precisePeak) || precisePeak.x() > T(0.5) || precisePeak.x() < T(0) || precisePeak.y() > T(0.5) || precisePeak.y() < T(0))
 		{
 			allSucceeded = false;
 		}
@@ -563,38 +588,51 @@ bool TestNonMaximumSuppression::testDeterminePrecisePeakLocation2()
 	{
 		// testing a 2D Gaussian distribution (bell)
 
-		const Vectors2 offsets =
+		const VectorsT2<T> offsets =
 		{
-			Vector2(0, 0),
-			Vector2(-1, -1) * Scalar(0.5),
-			Vector2(-1, 1) * Scalar(0.5),
-			Vector2(1, 1) * Scalar(0.5),
-			Vector2(1, -1) * Scalar(0.5)
+			VectorT2<T>(0, 0),
+			VectorT2<T>(-1, -1) * T(0.5),
+			VectorT2<T>(-1, 1) * T(0.5),
+			VectorT2<T>(1, 1) * T(0.5),
+			VectorT2<T>(1, -1) * T(0.5)
 		};
 
-		for (const Vector2& offset : offsets)
+		for (const VectorT2<T>& offset : offsets)
 		{
-			const Scalar sigma = Scalar(1);
+			const T sigma = T(1);
 
-			Scalar values[9];
-			unsigned int index = 0u;
+			std::vector<T> values;
+			T sum = 0;
 
 			for (int y = -1; y <= 1; ++y)
 			{
-				const Scalar yValue = Scalar(1) / (sigma * Numeric::sqr(2 * Numeric::pi())) * Numeric::exp(Scalar(-0.5) * Numeric::sqr((y - offset.y()) / sigma));
+				const T yValue = T(1) / (sigma * NumericT<T>::sqr(2 * NumericT<T>::pi())) * NumericT<T>::exp(T(-0.5) * NumericT<T>::sqr((y - offset.y()) / sigma));
 
 				for (int x = -1; x <= 1; ++x)
 				{
-					const Scalar xValue = Scalar(1) / (sigma * Numeric::sqr(2 * Numeric::pi())) * Numeric::exp(Scalar(-0.5) * Numeric::sqr((x - offset.x()) / sigma));
+					const T xValue = T(1) / (sigma * NumericT<T>::sqr(2 * NumericT<T>::pi())) * NumericT<T>::exp(T(-0.5) * NumericT<T>::sqr((x - offset.x()) / sigma));
 
-					values[index++] = xValue * yValue;
+					const T value = xValue * yValue;
+
+					values.push_back(value);
+
+					sum += value;
 				}
 			}
 
-			Vector2 precisePeak(Numeric::minValue(), Numeric::minValue());
-			if (CV::NonMaximumSuppression<Scalar>::determinePrecisePeakLocation2(values + 0, values + 3, values + 6, precisePeak))
+			ocean_assert(NumericT<T>::isNotEqualEps(sum));
+
+			for (T& value : values) // normalizing the values
 			{
-				if (precisePeak.distance(offset) > Scalar(0.25))
+				value /= sum;
+			}
+
+			VectorT2<T> precisePeak(NumericT<T>::minValue(), NumericT<T>::minValue());
+			if (CV::NonMaximumSuppression<T>::determinePrecisePeakLocation2(values.data() + 0, values.data() + 3, values.data() + 6, precisePeak))
+			{
+				const T distance = precisePeak.distance(offset);
+
+				if (distance > T(0.25))
 				{
 					allSucceeded = false;
 				}

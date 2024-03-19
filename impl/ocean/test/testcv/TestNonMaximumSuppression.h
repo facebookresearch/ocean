@@ -87,13 +87,17 @@ class OCEAN_TEST_CV_EXPORT TestNonMaximumSuppression
 		/**
 		 * Tests the 1D precise peak location function.
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testDeterminePrecisePeakLocation1();
 
 		/**
 		 * Tests the 2D precise peak location function.
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testDeterminePrecisePeakLocation2();
 
 	protected:
