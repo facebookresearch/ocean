@@ -51,7 +51,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\geometry\multiviewcalibration\CalibrationMain.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\demo\geometry\multiviewcalibration\CalibrationMain.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F71DD922-CBC5-4670-9CAC-76123E1FD8F1}</ProjectGuid>
