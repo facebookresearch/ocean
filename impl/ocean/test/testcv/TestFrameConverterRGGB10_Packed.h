@@ -92,13 +92,13 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterRGGB10_Packed
 			protected:
 
 				/// The black level value that is subtracted from each element of the raw image before any other operation, range: [0, 1024)
-				uint16_t blackLevel_;
+				uint16_t blackLevel_ = 0u;
 
 				/// The white balancing scalars of the red, green, and blue channel (in that order), range: [0, infinity), will be ignored channel-wise for values < 0
-				double whiteBalance_[3];
+				double whiteBalance_[3] = {0.0, 0.0, 0.0};
 
 				/// The gamma value that each pixel will be encoded with, range: [0, infinity)
-				double gamma_;
+				double gamma_ = 0.0;
 		};
 
 	public:

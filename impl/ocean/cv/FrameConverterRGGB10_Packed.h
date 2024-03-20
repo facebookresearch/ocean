@@ -117,7 +117,7 @@ inline void FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24BlacklevelWh
 
 	const FrameConverter::RGGB10ToRGB24AdvancedOptions options{blackLevel, {whiteBalance7[0], whiteBalance7[1], whiteBalance7[2]}, gammaLookupValues, sourcePaddingElements, targetPaddingElements};
 
-	FrameConverter::convertArbitraryPixelFormat((const void**)&source, (void**)&target, width, height, flag, 2u, FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels8BitAdvanced<0u, 1u, 2u>, &options, worker);
+	FrameConverter::convertArbitraryPixelFormat((const void**)(&source), (void**)(&target), width, height, flag, 2u, FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels8BitAdvanced<0u, 1u, 2u>, &options, worker);
 }
 
 }

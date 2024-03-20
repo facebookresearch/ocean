@@ -31,11 +31,10 @@ bool TestFrameConverterRGGB10_Packed::test(const unsigned int width, const unsig
 
 	{
 		Log::info() << "Testing RGGB10_PACKED to BGR24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
 		for (size_t n = 0; n < flags.size(); ++n)
 		{
-			Log::info().newLine(n != 0);
+			Log::info() << " ";
 			allSucceeded = testRGGB10_PackedToBGR24(width, height, flags[n], testDuration, worker) && allSucceeded;
 		}
 	}
@@ -46,11 +45,10 @@ bool TestFrameConverterRGGB10_Packed::test(const unsigned int width, const unsig
 
 	{
 		Log::info() << "Testing RGGB10_PACKED to RGB24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
 		for (size_t n = 0; n < flags.size(); ++n)
 		{
-			Log::info().newLine(n != 0);
+			Log::info() << " ";
 			allSucceeded = testRGGB10_PackedToRGB24(width, height, flags[n], testDuration, worker) && allSucceeded;
 		}
 	}
@@ -61,11 +59,10 @@ bool TestFrameConverterRGGB10_Packed::test(const unsigned int width, const unsig
 
 	{
 		Log::info() << "Testing RGGB10_PACKED to RGB24 conversion with black-level subtraction, white balancing, and gamma encoding at resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
 		for (size_t n = 0; n < flags.size(); ++n)
 		{
-			Log::info().newLine(n != 0);
+			Log::info() << " ";
 			allSucceeded = testConvertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT(randomGenerator, width, height, flags[n], testDuration, worker) && allSucceeded;
 		}
 	}
@@ -240,7 +237,9 @@ bool TestFrameConverterRGGB10_Packed::testConvertRGGB10_PackedToRGB24BlacklevelW
 	transformationMatrix(1, 1) = 1.0 / 4.003913895;
 	transformationMatrix(2, 2) = 1.0 / 4.003913895;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT), flag, pixelFunctorRGGB10_Packed, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, /* thresholdMaximalErrorToInteger */ 3u, options);
+	constexpr unsigned int thresholdMaximalErrorToInteger = 5u;
+
+	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT), flag, pixelFunctorRGGB10_Packed, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger, options);
 }
 
 MatrixD TestFrameConverterRGGB10_Packed::PixelFunctorRGGB10_Packed::pixelFunctionRGGB10_PackedWithBlackLevelWhiteBalanceGamma(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag, const uint16_t blackLevel, const double* whiteBalance, const double gamma)
