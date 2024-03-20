@@ -741,7 +741,7 @@ class OCEAN_CV_ADVANCED_EXPORT PanoramaFrame
 		 * @see mergeAverageGlobal8BitPerChannelSubset().
 		 */
 		template <unsigned int tChannels>
-		static inline void mergeAverageGlobal8BitPerChannel(const uint8_t* panoramaSubFrame, const uint8_t* panoramaSubMask, const unsigned int subFrameWidth, const unsigned int subFrameHeight, const unsigned int panoramaSubFramePaddingElements, const unsigned panoramaSubMaskPaddingElements, const PixelPosition& subTopLeft, unsigned int* panoramaNominatorFrame, unsigned int* panoramaDenominatorFrame, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaWidth, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const PixelPosition& panoramaTopLeft, const uint8_t maskValue, Worker* worker = nullptr);
+		static inline void mergeAverageGlobal8BitPerChannel(const uint8_t* panoramaSubFrame, const uint8_t* panoramaSubMask, const unsigned int subFrameWidth, const unsigned int subFrameHeight, const unsigned int panoramaSubFramePaddingElements, const unsigned panoramaSubMaskPaddingElements, const PixelPosition& subTopLeft, uint32_t* panoramaNominatorFrame, uint32_t* panoramaDenominatorFrame, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaWidth, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const PixelPosition& panoramaTopLeft, const uint8_t maskValue, Worker* worker = nullptr);
 
 		/**
 		 * Merges a subset of a given panorama sub frame with the already existing panorama frame by setting all valid pixels of the sub frame.
@@ -843,7 +843,7 @@ class OCEAN_CV_ADVANCED_EXPORT PanoramaFrame
 		 * @see mergeAverageGlobal8BitPerChannel().
 		 */
 		template <unsigned int tChannels>
-		static void mergeAverageGlobal8BitPerChannelSubset(const uint8_t* panoramaSubFrame, const uint8_t* panoramaSubMask, const unsigned int subFrameWidth, const unsigned int panoramaSubFramePaddingElements, const unsigned int panoramaSubMaskPaddingElements, const unsigned int subTopLeftX, const unsigned int subTopLeftY, unsigned int* panoramaNominatorFrame, unsigned int* panoramaDenominatorFrame, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaWidth, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const unsigned int panoramaTopLeftX, const unsigned int panoramaTopLeftY, const uint8_t maskValue, const unsigned int firstSubRow, const unsigned int numberSubRows);
+		static void mergeAverageGlobal8BitPerChannelSubset(const uint8_t* panoramaSubFrame, const uint8_t* panoramaSubMask, const unsigned int subFrameWidth, const unsigned int panoramaSubFramePaddingElements, const unsigned int panoramaSubMaskPaddingElements, const unsigned int subTopLeftX, const unsigned int subTopLeftY, uint32_t* panoramaNominatorFrame, uint32_t* panoramaDenominatorFrame, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaWidth, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const unsigned int panoramaTopLeftX, const unsigned int panoramaTopLeftY, const uint8_t maskValue, const unsigned int firstSubRow, const unsigned int numberSubRows);
 
 		/**
 		 * Converts a subset of a given input camera frame with 8 bit per channel captured with a given orientation into a corresponding camera frame with different orientation.
@@ -1616,7 +1616,7 @@ inline void PanoramaFrame::mergeAverageLocal8BitPerChannel(const uint8_t* panora
 }
 
 template <unsigned int tChannels>
-inline void PanoramaFrame::mergeAverageGlobal8BitPerChannel(const uint8_t* panoramaSubFrame, const uint8_t* panoramaSubMask, const unsigned int subFrameWidth, const unsigned int subFrameHeight, const unsigned int panoramaSubFramePaddingElements, const unsigned int panoramaSubMaskPaddingElements, const PixelPosition& subTopLeft, unsigned int* panoramaNominatorFrame, unsigned int* panoramaDenominatorFrame, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaWidth, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const PixelPosition& panoramaTopLeft, const uint8_t maskValue, Worker* worker)
+inline void PanoramaFrame::mergeAverageGlobal8BitPerChannel(const uint8_t* panoramaSubFrame, const uint8_t* panoramaSubMask, const unsigned int subFrameWidth, const unsigned int subFrameHeight, const unsigned int panoramaSubFramePaddingElements, const unsigned int panoramaSubMaskPaddingElements, const PixelPosition& subTopLeft, uint32_t* panoramaNominatorFrame, uint32_t* panoramaDenominatorFrame, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaWidth, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const PixelPosition& panoramaTopLeft, const uint8_t maskValue, Worker* worker)
 {
 	static_assert(tChannels >= 1u, "Invalid channel number!");
 

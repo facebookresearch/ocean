@@ -100,7 +100,7 @@ bool PanoramaFrame::cameraFrame2panoramaSubFrame(const PinholeCamera& pinholeCam
 {
 	ocean_assert(pinholeCamera.isValid() && frame.isValid() && !orientation.isSingular());
 	ocean_assert(pinholeCamera.width() == frame.width() && pinholeCamera.height() == frame.height());
-	ocean_assert(fineAdjustment == nullptr || ((unsigned int)fineAdjustment->sizeX() == pinholeCamera.width() && (unsigned int)fineAdjustment->sizeY() == pinholeCamera.height()));
+	ocean_assert(fineAdjustment == nullptr || ((unsigned int)(fineAdjustment->sizeX()) == pinholeCamera.width() && (unsigned int)(fineAdjustment->sizeY()) == pinholeCamera.height()));
 
 	ocean_assert(mask.isNull() || FrameType(frame, FrameType::FORMAT_Y8) == mask.frameType());
 
@@ -724,19 +724,19 @@ bool PanoramaFrame::merge(const Frame& panoramaSubFrame, const Frame& panoramaSu
 				switch (frame_.channels())
 				{
 					case 1u:
-						mergeAverageGlobal8BitPerChannel<1u>(panoramaSubFrame.constdata<uint8_t>(), panoramaSubMask.constdata<uint8_t>(), panoramaSubFrame.width(), panoramaSubFrame.height(), panoramaSubFrame.paddingElements(), panoramaSubMask.paddingElements(), subTopLeft, nominatorFrame_.data<unsigned int>(), denominatorFrame_.data<unsigned int>(), frame_.data<uint8_t>(), mask_.data<uint8_t>(), frame_.width(), frame_.paddingElements(), mask_.paddingElements(), frameTopLeft_, maskValue_, worker);
+						mergeAverageGlobal8BitPerChannel<1u>(panoramaSubFrame.constdata<uint8_t>(), panoramaSubMask.constdata<uint8_t>(), panoramaSubFrame.width(), panoramaSubFrame.height(), panoramaSubFrame.paddingElements(), panoramaSubMask.paddingElements(), subTopLeft, nominatorFrame_.data<uint32_t>(), denominatorFrame_.data<uint32_t>(), frame_.data<uint8_t>(), mask_.data<uint8_t>(), frame_.width(), frame_.paddingElements(), mask_.paddingElements(), frameTopLeft_, maskValue_, worker);
 						return true;
 
 					case 2u:
-						mergeAverageGlobal8BitPerChannel<2u>(panoramaSubFrame.constdata<uint8_t>(), panoramaSubMask.constdata<uint8_t>(), panoramaSubFrame.width(), panoramaSubFrame.height(), panoramaSubFrame.paddingElements(), panoramaSubMask.paddingElements(), subTopLeft, nominatorFrame_.data<unsigned int>(), denominatorFrame_.data<unsigned int>(), frame_.data<uint8_t>(), mask_.data<uint8_t>(), frame_.width(), frame_.paddingElements(), mask_.paddingElements(), frameTopLeft_, maskValue_, worker);
+						mergeAverageGlobal8BitPerChannel<2u>(panoramaSubFrame.constdata<uint8_t>(), panoramaSubMask.constdata<uint8_t>(), panoramaSubFrame.width(), panoramaSubFrame.height(), panoramaSubFrame.paddingElements(), panoramaSubMask.paddingElements(), subTopLeft, nominatorFrame_.data<uint32_t>(), denominatorFrame_.data<uint32_t>(), frame_.data<uint8_t>(), mask_.data<uint8_t>(), frame_.width(), frame_.paddingElements(), mask_.paddingElements(), frameTopLeft_, maskValue_, worker);
 						return true;
 
 					case 3u:
-						mergeAverageGlobal8BitPerChannel<3u>(panoramaSubFrame.constdata<uint8_t>(), panoramaSubMask.constdata<uint8_t>(), panoramaSubFrame.width(), panoramaSubFrame.height(), panoramaSubFrame.paddingElements(), panoramaSubMask.paddingElements(), subTopLeft, nominatorFrame_.data<unsigned int>(), denominatorFrame_.data<unsigned int>(), frame_.data<uint8_t>(), mask_.data<uint8_t>(), frame_.width(), frame_.paddingElements(), mask_.paddingElements(), frameTopLeft_, maskValue_, worker);
+						mergeAverageGlobal8BitPerChannel<3u>(panoramaSubFrame.constdata<uint8_t>(), panoramaSubMask.constdata<uint8_t>(), panoramaSubFrame.width(), panoramaSubFrame.height(), panoramaSubFrame.paddingElements(), panoramaSubMask.paddingElements(), subTopLeft, nominatorFrame_.data<uint32_t>(), denominatorFrame_.data<uint32_t>(), frame_.data<uint8_t>(), mask_.data<uint8_t>(), frame_.width(), frame_.paddingElements(), mask_.paddingElements(), frameTopLeft_, maskValue_, worker);
 						return true;
 
 					case 4u:
-						mergeAverageGlobal8BitPerChannel<4u>(panoramaSubFrame.constdata<uint8_t>(), panoramaSubMask.constdata<uint8_t>(), panoramaSubFrame.width(), panoramaSubFrame.height(), panoramaSubFrame.paddingElements(), panoramaSubMask.paddingElements(), subTopLeft, nominatorFrame_.data<unsigned int>(), denominatorFrame_.data<unsigned int>(), frame_.data<uint8_t>(), mask_.data<uint8_t>(), frame_.width(), frame_.paddingElements(), mask_.paddingElements(), frameTopLeft_, maskValue_, worker);
+						mergeAverageGlobal8BitPerChannel<4u>(panoramaSubFrame.constdata<uint8_t>(), panoramaSubMask.constdata<uint8_t>(), panoramaSubFrame.width(), panoramaSubFrame.height(), panoramaSubFrame.paddingElements(), panoramaSubMask.paddingElements(), subTopLeft, nominatorFrame_.data<uint32_t>(), denominatorFrame_.data<uint32_t>(), frame_.data<uint8_t>(), mask_.data<uint8_t>(), frame_.width(), frame_.paddingElements(), mask_.paddingElements(), frameTopLeft_, maskValue_, worker);
 						return true;
 				}
 			}
@@ -891,7 +891,7 @@ void PanoramaFrame::mergeAverageLocal8BitPerChannelSubset(const uint8_t* panoram
 }
 
 template <unsigned int tChannels>
-void PanoramaFrame::mergeAverageGlobal8BitPerChannelSubset(const uint8_t* panoramaSubFrame, const uint8_t* panoramaSubMask, const unsigned int subFrameWidth, const unsigned int panoramaSubFramePaddingElements, const unsigned int panoramaSubMaskPaddingElements, const unsigned int subTopLeftX, const unsigned int subTopLeftY, unsigned int* panoramaNominatorFrame, unsigned int* panoramaDenominatorFrame, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaWidth, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const unsigned int panoramaTopLeftX, const unsigned int panoramaTopLeftY, const uint8_t maskValue, const unsigned int firstSubRow, const unsigned int numberSubRows)
+void PanoramaFrame::mergeAverageGlobal8BitPerChannelSubset(const uint8_t* panoramaSubFrame, const uint8_t* panoramaSubMask, const unsigned int subFrameWidth, const unsigned int panoramaSubFramePaddingElements, const unsigned int panoramaSubMaskPaddingElements, const unsigned int subTopLeftX, const unsigned int subTopLeftY, uint32_t* panoramaNominatorFrame, uint32_t* panoramaDenominatorFrame, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaWidth, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const unsigned int panoramaTopLeftX, const unsigned int panoramaTopLeftY, const uint8_t maskValue, const unsigned int firstSubRow, const unsigned int numberSubRows)
 {
 	ocean_assert(subTopLeftX >= panoramaTopLeftX && subTopLeftY >= panoramaTopLeftY);
 	ocean_assert(panoramaWidth >= subFrameWidth);
@@ -919,8 +919,8 @@ void PanoramaFrame::mergeAverageGlobal8BitPerChannelSubset(const uint8_t* panora
 		uint8_t* panoramaFrameRow = panoramaFrame + y * panoramaFrameStrideElements;
 		uint8_t* panoramaMaskRow = panoramaMask + y * panoramaMaskStrideElements;
 
-		unsigned int* panoramaNominatorFrameRow = panoramaNominatorFrame + y * panoramaNominatorFrameStrideElements;
-		unsigned int* panoramaDenominatorFrameRow = panoramaDenominatorFrame + y * panoramaDenominatorFrameStrideElements;
+		uint32_t* panoramaNominatorFrameRow = panoramaNominatorFrame + y * panoramaNominatorFrameStrideElements;
+		uint32_t* panoramaDenominatorFrameRow = panoramaDenominatorFrame + y * panoramaDenominatorFrameStrideElements;
 
 		for (unsigned int x = 0u; x < subFrameWidth; ++x)
 		{
