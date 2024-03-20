@@ -25,9 +25,9 @@ MovieFrameProviderInterface::MovieFrameProviderInterface(const MovieFrameProvide
 
 MovieFrameProviderInterface::~MovieFrameProviderInterface()
 {
-	release();
-
 	Scheduler::get().unregisterFunction(Scheduler::Callback::create(*this, &MovieFrameProviderInterface::onScheduler));
+
+	release();
 }
 
 bool MovieFrameProviderInterface::isInitialized()
