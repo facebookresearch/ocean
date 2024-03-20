@@ -181,10 +181,10 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\io\cameracalibrationmanager\CameraCalibrationManager.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\io\cameracalibrationmanager\CameraCalibrationManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\io\cameracalibrationmanager\CameraCalibrationManager.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\io\cameracalibrationmanager\CameraCalibrationManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
