@@ -1380,16 +1380,18 @@ inline Vector3 PanoramaFrame::angle2rayStrict(const Vector2& angle)
 template <unsigned int tChannels>
 inline void PanoramaFrame::cameraFrame2cameraFrame8BitPerChannel(const PinholeCamera& inputCamera, const SquareMatrix3& inputOrientation, const uint8_t* inputFrame, const uint8_t* inputMask, const unsigned int inputFramePaddingElements, const unsigned int inputMaskPaddingElements, const PinholeCamera& outputCamera, const SquareMatrix3& outputOrientation, uint8_t* outputFrame, uint8_t* outputMask, const unsigned int outputFramePaddingElements, const unsigned int outputMaskPaddingElements, const uint8_t maskValue, const unsigned int approximationBinSize, Worker* worker)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(inputCamera.isValid() && !inputOrientation.isSingular());
 	ocean_assert(outputCamera.isValid() && !outputOrientation.isSingular());
 
-	ocean_assert(inputFrame && outputFrame && outputMask);
+	ocean_assert(inputFrame != nullptr && outputFrame != nullptr && outputMask != nullptr);
 
 	if (approximationBinSize <= 1u)
 	{
-		if (inputMask)
+		if (inputMask != nullptr)
 		{
-			if (worker)
+			if (worker != nullptr)
 			{
 				worker->executeFunction(Worker::Function::createStatic(&PanoramaFrame::cameraFrame2cameraFrameMask8BitPerChannelSubset<tChannels>, &inputCamera, &inputOrientation, inputFrame, inputMask, inputFramePaddingElements, inputMaskPaddingElements, &outputCamera, &outputOrientation, outputFrame, outputMask, outputFramePaddingElements, outputMaskPaddingElements, maskValue, 0u, 0u), 0u, outputCamera.height());
 			}
@@ -1400,7 +1402,7 @@ inline void PanoramaFrame::cameraFrame2cameraFrame8BitPerChannel(const PinholeCa
 		}
 		else
 		{
-			if (worker)
+			if (worker != nullptr)
 			{
 				worker->executeFunction(Worker::Function::createStatic(&PanoramaFrame::cameraFrame2cameraFrame8BitPerChannelSubset<tChannels>, &inputCamera, &inputOrientation, inputFrame, inputFramePaddingElements, &outputCamera, &outputOrientation, outputFrame, outputMask, outputFramePaddingElements, outputMaskPaddingElements, maskValue, 0u, 0u), 0u, outputCamera.height());
 			}
@@ -1418,9 +1420,9 @@ inline void PanoramaFrame::cameraFrame2cameraFrame8BitPerChannel(const PinholeCa
 
 		cameraFrame2cameraFrameLookupTable(inputCamera, inputOrientation, outputCamera, outputOrientation, lookupTable);
 
-		if (inputMask)
+		if (inputMask != nullptr)
 		{
-			if (worker)
+			if (worker != nullptr)
 			{
 				worker->executeFunction(Worker::Function::createStatic(&cameraFrame2cameraFrameMaskLookup8BitPerChannelSubset<tChannels>, (const LookupTable*)&lookupTable, inputFrame, inputMask, inputCamera.width(), inputCamera.height(), inputFramePaddingElements, inputMaskPaddingElements, outputFrame, outputMask, outputFramePaddingElements, outputMaskPaddingElements, maskValue, 0u, 0u), 0u, outputCamera.height());
 			}
@@ -1431,7 +1433,7 @@ inline void PanoramaFrame::cameraFrame2cameraFrame8BitPerChannel(const PinholeCa
 		}
 		else
 		{
-			if (worker)
+			if (worker != nullptr)
 			{
 				worker->executeFunction(Worker::Function::createStatic(&cameraFrame2cameraFrameLookup8BitPerChannelSubset<tChannels>, (const LookupTable*)&lookupTable, inputFrame, inputCamera.width(), inputCamera.height(), inputFramePaddingElements, outputFrame, outputMask, outputFramePaddingElements, outputMaskPaddingElements, maskValue, 0u, 0u), 0u, outputCamera.height());
 			}
@@ -1446,6 +1448,8 @@ inline void PanoramaFrame::cameraFrame2cameraFrame8BitPerChannel(const PinholeCa
 template <unsigned int tChannels>
 inline void PanoramaFrame::panoramaFrame2cameraFrame8BitPerChannel(const PinholeCamera& pinholeCamera, const uint8_t* panoramaFrame, const uint8_t* panoramaMask, const unsigned int panoramaFrameWidth, const unsigned int panoramaFrameHeight, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const unsigned int panoramaDimensionWidth, const unsigned int panoramaDimensionHeight, const PixelPosition& panoramaFrameTopLeft, const SquareMatrix3& orientation, uint8_t* cameraFrame, uint8_t* cameraMask, const unsigned int cameraFramePaddingElements, const unsigned int cameraMaskPaddingElements, const uint8_t maskValue, const unsigned int approximationBinSize, Worker* worker, const LookupTable* fineAdjustment)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(pinholeCamera.isValid() && !orientation.isSingular());
 	ocean_assert(panoramaFrame != nullptr && panoramaMask != nullptr);
 	ocean_assert(panoramaFrameWidth != 0u && panoramaFrameHeight != 0u);
@@ -1453,7 +1457,7 @@ inline void PanoramaFrame::panoramaFrame2cameraFrame8BitPerChannel(const Pinhole
 
 	if (approximationBinSize <= 1u)
 	{
-		if (worker)
+		if (worker != nullptr)
 		{
 			worker->executeFunction(Worker::Function::createStatic(&PanoramaFrame::panoramaFrame2cameraFrame8BitPerChannelSubset<tChannels>, &pinholeCamera, panoramaFrame, panoramaMask, panoramaFrameWidth, panoramaFrameHeight, panoramaFramePaddingElements, panoramaMaskPaddingElements, panoramaDimensionWidth, panoramaDimensionHeight, panoramaFrameTopLeft.x(), panoramaFrameTopLeft.y(), &orientation, cameraFrame, cameraMask, cameraFramePaddingElements, cameraMaskPaddingElements, maskValue, fineAdjustment, 0u, 0u), 0u, pinholeCamera.height());
 		}
@@ -1470,13 +1474,13 @@ inline void PanoramaFrame::panoramaFrame2cameraFrame8BitPerChannel(const Pinhole
 
 		panoramaFrame2cameraFrameLookupTable(pinholeCamera, orientation, panoramaDimensionWidth, panoramaDimensionHeight, panoramaFrameTopLeft, lookupTable, fineAdjustment);
 
-		if (worker)
+		if (worker != nullptr)
 		{
-			worker->executeFunction(Worker::Function::createStatic(&panoramaFrame2cameraFrameLookup8BitPerChannelSubset<tChannels>, (const LookupTable*)&lookupTable, panoramaFrame, panoramaMask, panoramaFramePaddingElements, panoramaMaskPaddingElements, panoramaDimensionWidth, panoramaDimensionHeight, panoramaFrameTopLeft.x(), panoramaFrameTopLeft.y(), panoramaFrameWidth, panoramaFrameHeight, cameraFrame, cameraMask, cameraFramePaddingElements, cameraMaskPaddingElements, maskValue, 0u, 0u), 0u, pinholeCamera.height());
+			worker->executeFunction(Worker::Function::createStatic(&panoramaFrame2cameraFrameLookup8BitPerChannelSubset<tChannels>, (const LookupTable*)(&lookupTable), panoramaFrame, panoramaMask, panoramaFramePaddingElements, panoramaMaskPaddingElements, panoramaDimensionWidth, panoramaDimensionHeight, panoramaFrameTopLeft.x(), panoramaFrameTopLeft.y(), panoramaFrameWidth, panoramaFrameHeight, cameraFrame, cameraMask, cameraFramePaddingElements, cameraMaskPaddingElements, maskValue, 0u, 0u), 0u, pinholeCamera.height());
 		}
 		else
 		{
-			panoramaFrame2cameraFrameLookup8BitPerChannelSubset<tChannels>((const LookupTable*)&lookupTable, panoramaFrame, panoramaMask, panoramaFramePaddingElements, panoramaMaskPaddingElements, panoramaDimensionWidth, panoramaDimensionHeight, panoramaFrameTopLeft.x(), panoramaFrameTopLeft.y(), panoramaFrameWidth, panoramaFrameHeight, cameraFrame, cameraMask, cameraFramePaddingElements, cameraMaskPaddingElements, maskValue, 0u, pinholeCamera.height());
+			panoramaFrame2cameraFrameLookup8BitPerChannelSubset<tChannels>((const LookupTable*)(&lookupTable), panoramaFrame, panoramaMask, panoramaFramePaddingElements, panoramaMaskPaddingElements, panoramaDimensionWidth, panoramaDimensionHeight, panoramaFrameTopLeft.x(), panoramaFrameTopLeft.y(), panoramaFrameWidth, panoramaFrameHeight, cameraFrame, cameraMask, cameraFramePaddingElements, cameraMaskPaddingElements, maskValue, 0u, pinholeCamera.height());
 		}
 	}
 }
@@ -1484,6 +1488,8 @@ inline void PanoramaFrame::panoramaFrame2cameraFrame8BitPerChannel(const Pinhole
 template <unsigned int tChannels>
 inline void PanoramaFrame::cameraFrame2panoramaFrame8BitPerChannel(const PinholeCamera& pinholeCamera, const uint8_t* cameraFrame, const unsigned int cameraFramePaddingElements, const SquareMatrix3& orientation, const unsigned int panoramaDimensionWidth, const unsigned int panoramaDimensionHeight, const PixelPositionI& panoramaFrameTopLeft, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaFrameWidth, const unsigned int panoramaFrameHeight, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const uint8_t maskValue, const unsigned int approximationBinSize, Worker* worker, const LookupTable* fineAdjustment)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(pinholeCamera.isValid() && !orientation.isSingular());
 	ocean_assert(cameraFrame != nullptr);
 	ocean_assert(panoramaFrame != nullptr && panoramaMask != nullptr);
@@ -1491,7 +1497,7 @@ inline void PanoramaFrame::cameraFrame2panoramaFrame8BitPerChannel(const Pinhole
 
 	if (approximationBinSize <= 1u)
 	{
-		if (worker)
+		if (worker != nullptr)
 		{
 			worker->executeFunction(Worker::Function::createStatic(&cameraFrame2panoramaFrame8BitPerChannelSubset<tChannels>, &pinholeCamera, cameraFrame, cameraFramePaddingElements, &orientation, panoramaDimensionWidth, panoramaDimensionHeight, panoramaFrameTopLeft.x(), panoramaFrameTopLeft.y(), panoramaFrame, panoramaMask, panoramaFrameWidth, panoramaFrameHeight, panoramaFramePaddingElements, panoramaMaskPaddingElements, maskValue, fineAdjustment, 0u, 0u), 0u, panoramaFrameHeight);
 		}
@@ -1510,7 +1516,7 @@ inline void PanoramaFrame::cameraFrame2panoramaFrame8BitPerChannel(const Pinhole
 
 		cameraFrame2panoramaFrameLookupTable(pinholeCamera, orientation, panoramaDimensionWidth, panoramaDimensionHeight, panoramaFrameTopLeft, lookupTable, fineAdjustment);
 
-		if (worker)
+		if (worker != nullptr)
 		{
 			worker->executeFunction(Worker::Function::createStatic(&cameraFrame2panoramaFrameLookup8BitPerChannelSubset<tChannels>, (const LookupTable*)(&lookupTable), cameraFrame, pinholeCamera.width(), pinholeCamera.height(), cameraFramePaddingElements, panoramaFrame, panoramaMask, panoramaFramePaddingElements, panoramaMaskPaddingElements, maskValue, 0u, 0u), 0u, panoramaFrameHeight);
 		}
@@ -1524,6 +1530,8 @@ inline void PanoramaFrame::cameraFrame2panoramaFrame8BitPerChannel(const Pinhole
 template <unsigned int tChannels>
 inline void PanoramaFrame::cameraFrame2panoramaFrameMask8BitPerChannel(const PinholeCamera& pinholeCamera, const uint8_t* cameraFrame, const uint8_t* cameraMask, const unsigned int cameraFramePaddingElements, const unsigned int cameraMaskPaddingElements, const SquareMatrix3& orientation, const unsigned int panoramaDimensionWidth, const unsigned int panoramaDimensionHeight, const PixelPositionI& panoramaFrameTopLeft, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaFrameWidth, const unsigned int panoramaFrameHeight, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const uint8_t maskValue, const unsigned int approximationBinSize, Worker* worker, const LookupTable* fineAdjustment)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(pinholeCamera.isValid() && !orientation.isSingular());
 
 	ocean_assert(cameraFrame != nullptr && cameraMask != nullptr);
@@ -1532,7 +1540,7 @@ inline void PanoramaFrame::cameraFrame2panoramaFrameMask8BitPerChannel(const Pin
 
 	if (approximationBinSize <= 1u)
 	{
-		if (worker)
+		if (worker != nullptr)
 		{
 			worker->executeFunction(Worker::Function::createStatic(&cameraFrame2panoramaFrameMask8BitPerChannelSubset<tChannels>, &pinholeCamera, cameraFrame, cameraMask, cameraFramePaddingElements, cameraMaskPaddingElements, &orientation, panoramaDimensionWidth, panoramaDimensionHeight, panoramaFrameTopLeft.x(), panoramaFrameTopLeft.y(), panoramaFrame, panoramaMask, panoramaFrameWidth, panoramaFrameHeight, panoramaFramePaddingElements, panoramaMaskPaddingElements, maskValue, fineAdjustment, 0u, 0u), 0u, panoramaFrameHeight);
 		}
@@ -1551,7 +1559,7 @@ inline void PanoramaFrame::cameraFrame2panoramaFrameMask8BitPerChannel(const Pin
 
 		cameraFrame2panoramaFrameLookupTable(pinholeCamera, orientation, panoramaDimensionWidth, panoramaDimensionHeight, panoramaFrameTopLeft, lookupTable, fineAdjustment);
 
-		if (worker)
+		if (worker != nullptr)
 		{
 			worker->executeFunction(Worker::Function::createStatic(&cameraFrame2panoramaFrameMaskLookup8BitPerChannelSubset<tChannels>, (const LookupTable*)(&lookupTable), cameraFrame, cameraMask, pinholeCamera.width(), pinholeCamera.height(), cameraFramePaddingElements, cameraMaskPaddingElements, panoramaFrame, panoramaMask, panoramaFramePaddingElements, panoramaMaskPaddingElements, maskValue, 0u, 0u), 0u, panoramaFrameHeight);
 		}
@@ -1565,7 +1573,9 @@ inline void PanoramaFrame::cameraFrame2panoramaFrameMask8BitPerChannel(const Pin
 template <unsigned int tChannels>
 inline void PanoramaFrame::mergeSetAll8BitPerChannel(const uint8_t* panoramaSubFrame, const uint8_t* panoramaSubMask, const unsigned int subFrameWidth, const unsigned int subFrameHeight, const unsigned int panoramaSubFramePaddingElements, const unsigned panoramaSubMaskPaddingElements, const PixelPosition& subTopLeft, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaWidth, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const PixelPosition& panoramaTopLeft, const uint8_t maskValue, Worker* worker)
 {
-	if (worker)
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
+	if (worker != nullptr)
 	{
 		worker->executeFunction(Worker::Function::createStatic(&PanoramaFrame::mergeSetAll8BitPerChannelSubset<tChannels>, panoramaSubFrame, panoramaSubMask, subFrameWidth, panoramaSubFramePaddingElements, panoramaSubMaskPaddingElements, subTopLeft.x(), subTopLeft.y(), panoramaFrame, panoramaMask, panoramaWidth, panoramaFramePaddingElements, panoramaMaskPaddingElements, panoramaTopLeft.x(), panoramaTopLeft.y(), maskValue, 0u, 0u), 0u, subFrameHeight, 15u, 16u, 20u);
 	}
@@ -1578,7 +1588,9 @@ inline void PanoramaFrame::mergeSetAll8BitPerChannel(const uint8_t* panoramaSubF
 template <unsigned int tChannels>
 inline void PanoramaFrame::mergeSetNew8BitPerChannel(const uint8_t* panoramaSubFrame, const uint8_t* panoramaSubMask, const unsigned int subFrameWidth, const unsigned int subFrameHeight, const unsigned int panoramaSubFramePaddingElements, const unsigned panoramaSubMaskPaddingElements, const PixelPosition& subTopLeft, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaWidth, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const PixelPosition& panoramaTopLeft, const uint8_t maskValue, Worker* worker)
 {
-	if (worker)
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
+	if (worker != nullptr)
 	{
 		worker->executeFunction(Worker::Function::createStatic(&PanoramaFrame::mergeSetNew8BitPerChannelSubset<tChannels>, panoramaSubFrame, panoramaSubMask, subFrameWidth, panoramaSubFramePaddingElements, panoramaSubMaskPaddingElements, subTopLeft.x(), subTopLeft.y(), panoramaFrame, panoramaMask, panoramaWidth, panoramaFramePaddingElements, panoramaMaskPaddingElements, panoramaTopLeft.x(), panoramaTopLeft.y(), maskValue, 0u, 0u), 0u, subFrameHeight, 15u, 16u, 20u);
 	}
@@ -1591,7 +1603,9 @@ inline void PanoramaFrame::mergeSetNew8BitPerChannel(const uint8_t* panoramaSubF
 template <unsigned int tChannels>
 inline void PanoramaFrame::mergeAverageLocal8BitPerChannel(const uint8_t* panoramaSubFrame, const uint8_t* panoramaSubMask, const unsigned int subFrameWidth, const unsigned int subFrameHeight, const unsigned int panoramaSubFramePaddingElements, const unsigned panoramaSubMaskPaddingElements, const PixelPosition& subTopLeft, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaWidth, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const PixelPosition& panoramaTopLeft, const uint8_t maskValue, Worker* worker)
 {
-	if (worker)
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
+	if (worker != nullptr)
 	{
 		worker->executeFunction(Worker::Function::createStatic(&PanoramaFrame::mergeAverageLocal8BitPerChannelSubset<tChannels>, panoramaSubFrame, panoramaSubMask, subFrameWidth, panoramaSubFramePaddingElements, panoramaSubMaskPaddingElements, subTopLeft.x(), subTopLeft.y(), panoramaFrame, panoramaMask, panoramaWidth, panoramaFramePaddingElements, panoramaMaskPaddingElements, panoramaTopLeft.x(), panoramaTopLeft.y(), maskValue, 0u, 0u), 0u, subFrameHeight, 15u, 16u, 20u);
 	}
@@ -1604,7 +1618,9 @@ inline void PanoramaFrame::mergeAverageLocal8BitPerChannel(const uint8_t* panora
 template <unsigned int tChannels>
 inline void PanoramaFrame::mergeAverageGlobal8BitPerChannel(const uint8_t* panoramaSubFrame, const uint8_t* panoramaSubMask, const unsigned int subFrameWidth, const unsigned int subFrameHeight, const unsigned int panoramaSubFramePaddingElements, const unsigned int panoramaSubMaskPaddingElements, const PixelPosition& subTopLeft, unsigned int* panoramaNominatorFrame, unsigned int* panoramaDenominatorFrame, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaWidth, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const PixelPosition& panoramaTopLeft, const uint8_t maskValue, Worker* worker)
 {
-	if (worker)
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
+	if (worker != nullptr)
 	{
 		worker->executeFunction(Worker::Function::createStatic(&PanoramaFrame::mergeAverageGlobal8BitPerChannelSubset<tChannels>, panoramaSubFrame, panoramaSubMask, subFrameWidth, panoramaSubFramePaddingElements, panoramaSubMaskPaddingElements, subTopLeft.x(), subTopLeft.y(), panoramaNominatorFrame, panoramaDenominatorFrame, panoramaFrame, panoramaMask, panoramaWidth, panoramaFramePaddingElements, panoramaMaskPaddingElements, panoramaTopLeft.x(), panoramaTopLeft.y(), maskValue, 0u, 0u), 0u, subFrameHeight, 17u, 18u, 20u);
 	}
@@ -1617,13 +1633,15 @@ inline void PanoramaFrame::mergeAverageGlobal8BitPerChannel(const uint8_t* panor
 template <unsigned int tChannels>
 void PanoramaFrame::cameraFrame2cameraFrame8BitPerChannelSubset(const PinholeCamera* inputCamera, const SquareMatrix3* inputOrientation, const uint8_t* inputFrame, const unsigned int inputFramePaddingElements, const PinholeCamera* outputCamera, const SquareMatrix3* outputOrientation, uint8_t* outputFrame, uint8_t* outputMask, const unsigned int outputFramePaddingElements, const unsigned int outputMaskPaddingElements, const uint8_t maskValue, const unsigned int firstOutputRow, const unsigned int numberOutputRows)
 {
-	ocean_assert(inputCamera && inputCamera->isValid());
-	ocean_assert(inputOrientation && !inputOrientation->isSingular());
+	static_assert(tChannels >= 1u, "Invalid channel number!");
 
-	ocean_assert(outputCamera && outputCamera->isValid());
-	ocean_assert(outputOrientation && !outputOrientation->isSingular());
+	ocean_assert(inputCamera != nullptr && inputCamera->isValid());
+	ocean_assert(inputOrientation != nullptr && !inputOrientation->isSingular());
 
-	ocean_assert(inputFrame && outputFrame && outputMask);
+	ocean_assert(outputCamera != nullptr && outputCamera->isValid());
+	ocean_assert(outputOrientation != nullptr && !outputOrientation->isSingular());
+
+	ocean_assert(inputFrame != nullptr && outputFrame != nullptr && outputMask != nullptr);
 
 	ocean_assert(firstOutputRow + numberOutputRows <= outputCamera->height());
 
@@ -1666,6 +1684,8 @@ void PanoramaFrame::cameraFrame2cameraFrame8BitPerChannelSubset(const PinholeCam
 template <unsigned int tChannels>
 void PanoramaFrame::cameraFrame2cameraFrameLookup8BitPerChannelSubset(const LookupTable* lookupTable, const uint8_t* inputFrame, const unsigned int inputWidth, const unsigned int inputHeight, const unsigned int inputFramePaddingElements, uint8_t* outputFrame, uint8_t* outputMask, const unsigned int outputFramePaddingElements, const unsigned int outputMaskPaddingElements, const uint8_t maskValue, const unsigned int firstOutputRow, const unsigned int numberOutputRows)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(lookupTable && !lookupTable->isEmpty());
 	ocean_assert(inputFrame);
 	ocean_assert(outputFrame && outputMask);
@@ -1704,6 +1724,8 @@ void PanoramaFrame::cameraFrame2cameraFrameLookup8BitPerChannelSubset(const Look
 template <unsigned int tChannels>
 void PanoramaFrame::cameraFrame2cameraFrameMask8BitPerChannelSubset(const PinholeCamera* inputCamera, const SquareMatrix3* inputOrientation, const uint8_t* inputFrame, const uint8_t* inputMask, const unsigned int inputFramePaddingElements, const unsigned int inputMaskPaddingElements,const PinholeCamera* outputCamera, const SquareMatrix3* outputOrientation, uint8_t* outputFrame, uint8_t* outputMask, const unsigned int outputFramePaddingElements, const unsigned int outputMaskPaddingElements, const uint8_t maskValue, const unsigned int firstOutputRow, const unsigned int numberOutputRows)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(inputCamera != nullptr  && inputCamera->isValid());
 	ocean_assert(inputOrientation != nullptr  && !inputOrientation->isSingular());
 
@@ -1743,6 +1765,8 @@ void PanoramaFrame::cameraFrame2cameraFrameMask8BitPerChannelSubset(const Pinhol
 template <unsigned int tChannels>
 void PanoramaFrame::cameraFrame2cameraFrameMaskLookup8BitPerChannelSubset(const LookupTable* lookupTable, const uint8_t* inputFrame, const uint8_t* inputMask, const unsigned int inputWidth, const unsigned int inputHeight, const unsigned int inputFramePaddingElements, const unsigned int inputMaskPaddingElements, uint8_t* outputFrame, uint8_t* outputMask, const unsigned int outputFramePaddingElements, const unsigned int outputMaskPaddingElements, const uint8_t maskValue, const unsigned int firstOutputRow, const unsigned int numberOutputRows)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(lookupTable != nullptr && !lookupTable->isEmpty());
 	ocean_assert(inputFrame != nullptr && inputMask != nullptr);
 	ocean_assert(outputFrame != nullptr && outputMask != nullptr);
@@ -1772,6 +1796,8 @@ void PanoramaFrame::cameraFrame2cameraFrameMaskLookup8BitPerChannelSubset(const 
 template <unsigned int tChannels>
 void PanoramaFrame::panoramaFrame2cameraFrame8BitPerChannelSubset(const PinholeCamera* pinholeCamera, const uint8_t* panoramaFrame, const uint8_t* panoramaMask, const unsigned int panoramaFrameWidth, const unsigned int panoramaFrameHeight, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const unsigned int panoramaDimensionWidth, const unsigned int panoramaDimensionHeight, const unsigned int panoramaFrameTopLeftX, const unsigned int panoramaFrameTopLeftY, const SquareMatrix3* orientation, uint8_t* cameraFrame, uint8_t* cameraMask, const unsigned int cameraFramePaddingElements, const unsigned int cameraMaskPaddingElements, const uint8_t maskValue, const LookupTable* fineAdjustment, const unsigned int firstCameraRow, const unsigned int numberCameraRows)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(pinholeCamera != nullptr && pinholeCamera->isValid());
 	ocean_assert(orientation != nullptr && !orientation->isSingular());
 	ocean_assert(firstCameraRow + numberCameraRows <= pinholeCamera->height());
@@ -1814,6 +1840,8 @@ void PanoramaFrame::panoramaFrame2cameraFrame8BitPerChannelSubset(const PinholeC
 template <unsigned int tChannels>
 void PanoramaFrame::panoramaFrame2cameraFrameLookup8BitPerChannelSubset(const LookupTable* lookupTable, const uint8_t* panoramaFrame, const uint8_t* panoramaMask, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const unsigned int panoramaDimensionWidth, const unsigned int panoramaDimensionHeight, const unsigned int panoramaFrameTopLeftX, const unsigned int panoramaFrameTopLeftY, const unsigned int panoramaFrameWidth, const unsigned int panoramaFrameHeight, uint8_t* cameraFrame, uint8_t* cameraMask, const unsigned int cameraFramePaddingElements, const unsigned int cameraMaskPaddingElements, const uint8_t maskValue, const unsigned int firstCameraRow, const unsigned int numberCameraRows)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(lookupTable != nullptr && *lookupTable);
 	ocean_assert(firstCameraRow + numberCameraRows <= lookupTable->sizeY());
 
@@ -1918,6 +1946,8 @@ void PanoramaFrame::panoramaFrame2cameraFrameLookup8BitPerChannelSubset(const Lo
 template <unsigned int tChannels>
 void PanoramaFrame::cameraFrame2panoramaFrame8BitPerChannelSubset(const PinholeCamera* pinholeCamera, const uint8_t* cameraFrame, const unsigned int cameraFramePaddingElements, const SquareMatrix3* orientation, const unsigned int panoramaDimensionWidth, const unsigned int panoramaDimensionHeight, const int panoramaFrameTopLeftX, const int panoramaFrameTopLeftY, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaFrameWidth, const unsigned int panoramaFrameHeight, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const uint8_t maskValue, const LookupTable* fineAdjustment, const unsigned int firstPanoramaRow, const unsigned int numberPanoramaRows)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(pinholeCamera != nullptr  && pinholeCamera->isValid());
 	ocean_assert(orientation != nullptr  && !orientation->isSingular());
 	ocean_assert_and_suppress_unused(firstPanoramaRow + numberPanoramaRows <= panoramaFrameHeight, panoramaFrameHeight);
@@ -1988,6 +2018,8 @@ void PanoramaFrame::cameraFrame2panoramaFrame8BitPerChannelSubset(const PinholeC
 template <unsigned int tChannels>
 void PanoramaFrame::cameraFrame2panoramaFrameLookup8BitPerChannelSubset(const LookupTable* lookupTable, const uint8_t* cameraFrame, const unsigned int cameraFrameWidth, const unsigned int cameraFrameHeight, const unsigned int cameraFramePaddingElements, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const uint8_t maskValue, const unsigned int firstPanoramaRow, const unsigned int numberPanoramaRows)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(lookupTable != nullptr && !lookupTable->isEmpty());
 	ocean_assert(firstPanoramaRow + numberPanoramaRows <= lookupTable->sizeY());
 
@@ -2023,6 +2055,8 @@ void PanoramaFrame::cameraFrame2panoramaFrameLookup8BitPerChannelSubset(const Lo
 template <unsigned int tChannels>
 void PanoramaFrame::cameraFrame2panoramaFrameMask8BitPerChannelSubset(const PinholeCamera* pinholeCamera, const uint8_t* cameraFrame, const uint8_t* cameraMask, const unsigned int cameraFramePaddingElements, const unsigned int cameraMaskPaddingElements, const SquareMatrix3* orientation, const unsigned int panoramaDimensionWidth, const unsigned int panoramaDimensionHeight, const int panoramaFrameTopLeftX, const int panoramaFrameTopLeftY, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaFrameWidth, const unsigned int panoramaFrameHeight, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const uint8_t maskValue, const LookupTable* fineAdjustment, const unsigned int firstPanoramaRow, const unsigned int numberPanoramaRows)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(pinholeCamera && pinholeCamera->isValid());
 	ocean_assert(orientation && !orientation->isSingular());
 	ocean_assert_and_suppress_unused(firstPanoramaRow + numberPanoramaRows <= panoramaFrameHeight, panoramaFrameHeight);
@@ -2073,6 +2107,8 @@ void PanoramaFrame::cameraFrame2panoramaFrameMask8BitPerChannelSubset(const Pinh
 template <unsigned int tChannels>
 void PanoramaFrame::cameraFrame2panoramaFrameMaskLookup8BitPerChannelSubset(const LookupTable* lookupTable, const uint8_t* cameraFrame, const uint8_t* cameraMask, const unsigned int cameraFrameWidth, const unsigned int cameraFrameHeight, const unsigned int cameraFramePaddingElements, const unsigned int cameraMaskPaddingElements, uint8_t* panoramaFrame, uint8_t* panoramaMask, const unsigned int panoramaFramePaddingElements, const unsigned int panoramaMaskPaddingElements, const uint8_t maskValue, const unsigned int firstPanoramaRow, const unsigned int numberPanoramaRows)
 {
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+
 	ocean_assert(lookupTable != nullptr && !lookupTable->isEmpty());
 	ocean_assert(firstPanoramaRow + numberPanoramaRows <= lookupTable->sizeY());
 

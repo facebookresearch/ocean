@@ -144,7 +144,9 @@ void SEMainWindow::onIdle()
 		panoramaFrameWindowOptimizedCameraFineAdjustment.show();
 	}
 	else
+	{
 		Thread::sleep(1);
+	}
 }
 
 void SEMainWindow::onFrame(const Frame& frame)
@@ -154,6 +156,9 @@ void SEMainWindow::onFrame(const Frame& frame)
 	performance_.start();
 	if (!sphericalEnvironment_.extendEnvironment(camera_, frame, 20u, Geometry::Estimator::ET_INVALID, false, WorkerPool::get().scopedWorker()()))
 	{
+		performance_.skip();
+
+		Log::error() << "Failed to extend environment";
 		return;
 	}
 	performance_.stop();
@@ -161,6 +166,9 @@ void SEMainWindow::onFrame(const Frame& frame)
 	performanceFineAdjustment_.start();
 	if (!sphericalEnvironmentFineAdjustment_.extendEnvironment(camera_, frame, 20u, Geometry::Estimator::ET_HUBER, false, WorkerPool::get().scopedWorker()(), &orientations_[frameIndex_], nullptr, Tracking::SphericalEnvironment::FrameCallback::createStatic(Tracking::SphericalEnvironment::nonHomographyMask)))
 	{
+		performanceFineAdjustment_.skip();
+
+		Log::error() << "Failed to extend environment";
 		return;
 	}
 	performanceFineAdjustment_.stop();
@@ -181,11 +189,11 @@ void SEMainWindow::onFrameOptimizedCamera(const Frame& frame)
 	setFrame(frame);
 
 	performanceOptimizedCamera_.start();
-	sphericalEnvironmentOptimizedCamera_.extendEnvironment(camera_, frame, 20u, Geometry::Estimator::ET_INVALID, false, WorkerPool::get().scopedWorker()(), nullptr, nullptr, Tracking::SphericalEnvironment::FrameCallback::createStatic(Tracking::SphericalEnvironment::nonHomographyMask));
+		sphericalEnvironmentOptimizedCamera_.extendEnvironment(camera_, frame, 20u, Geometry::Estimator::ET_INVALID, false, WorkerPool::get().scopedWorker()(), nullptr, nullptr, Tracking::SphericalEnvironment::FrameCallback::createStatic(Tracking::SphericalEnvironment::nonHomographyMask));
 	performanceOptimizedCamera_.stop();
 
 	performanceOptimizedCameraFineAdjustment_.start();
-	sphericalEnvironmentOptimizedCameraFineAdjustment_.extendEnvironment(camera_, frame, 20u, Geometry::Estimator::ET_HUBER, false, WorkerPool::get().scopedWorker()(), nullptr, nullptr, Tracking::SphericalEnvironment::FrameCallback::createStatic(Tracking::SphericalEnvironment::nonHomographyMask));
+		sphericalEnvironmentOptimizedCameraFineAdjustment_.extendEnvironment(camera_, frame, 20u, Geometry::Estimator::ET_HUBER, false, WorkerPool::get().scopedWorker()(), nullptr, nullptr, Tracking::SphericalEnvironment::FrameCallback::createStatic(Tracking::SphericalEnvironment::nonHomographyMask));
 	performanceOptimizedCameraFineAdjustment_.stop();
 
 	panoramaFrameWindowOptimizedCamera.setFrame(sphericalEnvironmentOptimizedCamera_.frame());

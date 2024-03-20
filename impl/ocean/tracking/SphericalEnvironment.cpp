@@ -455,9 +455,11 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 		// we copy the given camera profile as the optimization may be necessary
 		PinholeCamera currentCamera(pinholeCamera);
 
+		constexpr unsigned int featureStengthThreshold = 15u;
+
 		// track 2D points from (successive) frame to frame
 		Vectors2 previousImagePoints, currentImagePoints;
-		if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackArbitraryPointsBidirectionalSubPixelMirroredBorder<15u>(CV::FramePyramid(previousFramePyramid_, false, 0u, 6u), CV::FramePyramid(currentFramePyramid, false, 0u, 6u), 2u, previousImagePoints, currentImagePoints, Scalar(0.9 * 0.9), CV::SubRegion(), 20u, 20u, 30u, worker) || previousImagePoints.size() < 10)
+		if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackArbitraryPointsBidirectionalSubPixelMirroredBorder<15u>(CV::FramePyramid(previousFramePyramid_, false, 0u, 6u), CV::FramePyramid(currentFramePyramid, false, 0u, 6u), 2u, previousImagePoints, currentImagePoints, Scalar(0.9 * 0.9), CV::SubRegion(), 20u, 20u, featureStengthThreshold, worker) || previousImagePoints.size() < 10)
 		{
 			return false;
 		}
@@ -505,7 +507,7 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 		currentImagePoints.clear();
 
 		// again track 2D points from the extracted frame to the current frame (now previousImagePoints are defined in the extracted panorama frame matching with the current orientation)
-		if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackArbitraryPointsBidirectionalSubPixelMirroredBorder<15u>(correspondingFramePyramid, currentFramePyramid, 2u, previousImagePoints, currentImagePoints, Scalar(0.9 * 0.9), CV::SubRegion(correspondingPanoramaMask, CV::PixelBoundingBox(), 0xFF), 20u, 20u, 30u, worker) || previousImagePoints.size() < 10)
+		if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackArbitraryPointsBidirectionalSubPixelMirroredBorder<15u>(correspondingFramePyramid, currentFramePyramid, 2u, previousImagePoints, currentImagePoints, Scalar(0.9 * 0.9), CV::SubRegion(correspondingPanoramaMask, CV::PixelBoundingBox(), 0xFF), 20u, 20u, featureStengthThreshold, worker) || previousImagePoints.size() < 10)
 		{
 			return false;
 		}
@@ -557,7 +559,7 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 			previousImagePoints.clear();
 			currentImagePoints.clear();
 
-			if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackArbitraryPointsBidirectionalSubPixelMirroredBorder<15u>(correspondingFramePyramid, currentFramePyramid, 2u, previousImagePoints, currentImagePoints, Scalar(0.9 * 0.9), CV::SubRegion(correspondingPanoramaMask, CV::PixelBoundingBox(), 0xFF), 30u, 30u, 15u, worker) || previousImagePoints.size() < 10)
+			if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackArbitraryPointsBidirectionalSubPixelMirroredBorder<15u>(correspondingFramePyramid, currentFramePyramid, 2u, previousImagePoints, currentImagePoints, Scalar(0.9 * 0.9), CV::SubRegion(correspondingPanoramaMask, CV::PixelBoundingBox(), 0xFF), 30u, 30u, featureStengthThreshold, worker) || previousImagePoints.size() < 10)
 			{
 				return false;
 			}
@@ -1345,8 +1347,6 @@ bool SphericalEnvironment::optimizeCamera(const PinholeCamera& pinholeCamera, co
 				}
 			}
 		}
-
-		Platform::Win::Utilities::desktopFrameOutput(0, 0, 1920, 1080, panoramaFrame);
 	}
 #endif
 
@@ -1401,8 +1401,6 @@ bool SphericalEnvironment::optimizeCamera(const PinholeCamera& pinholeCamera, co
 				}
 			}
 		}
-
-		Platform::Win::Utilities::desktopFrameOutput(0, 0, 1920, 1080, panoramaFrame);
 	}
 #endif
 

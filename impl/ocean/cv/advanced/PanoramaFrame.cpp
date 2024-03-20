@@ -43,10 +43,10 @@ PanoramaFrame::PanoramaFrame(Frame&& frame, Frame&& mask, const uint8_t maskValu
 	if (updateMode_ == UM_AVERAGE_GLOBAL)
 	{
 		nominatorFrame_.set(FrameType(frame_, FrameType::genericPixelFormat<uint32_t>(frame_.channels())), true, true);
-		nominatorFrame_.setValue(0x00);
+		nominatorFrame_.setValue(0x00u);
 
 		denominatorFrame_.set(FrameType(mask_, FrameType::FORMAT_Y32), true, true);
-		denominatorFrame_.setValue(0x00);
+		denominatorFrame_.setValue(0x00u);
 
 		const uint8_t nonMaskValue = 0xFFu - maskValue_;
 
@@ -519,10 +519,10 @@ bool PanoramaFrame::reset(const PinholeCamera& pinholeCamera, const Frame& frame
 	if (updateMode_ == UM_AVERAGE_GLOBAL)
 	{
 		nominatorFrame_.set(FrameType(frame_, FrameType::genericPixelFormat<uint32_t>(frame.channels())), true, true);
-		nominatorFrame_.setValue(0x00);
+		nominatorFrame_.setValue(0x00u);
 
 		denominatorFrame_.set(FrameType(mask_, FrameType::FORMAT_Y32), true, true);
-		denominatorFrame_.setValue(0x00);
+		denominatorFrame_.setValue(0x00u);
 
 		const uint8_t nonMaskValue = 0xFFu - maskValue_;
 
@@ -555,10 +555,10 @@ bool PanoramaFrame::reset(const PixelPosition& topLeft, const Frame& frame, cons
 	if (updateMode_ == UM_AVERAGE_GLOBAL)
 	{
 		nominatorFrame_.set(FrameType(frame_, FrameType::genericPixelFormat<uint32_t>(frame.channels())), true, true);
-		nominatorFrame_.setValue(0x00);
+		nominatorFrame_.setValue(0x00u);
 
 		denominatorFrame_.set(FrameType(mask_, FrameType::FORMAT_Y32), true, true);
-		denominatorFrame_.setValue(0x00);
+		denominatorFrame_.setValue(0x00u);
 
 		const uint8_t nonMaskValue = 0xFFu - maskValue_;
 
@@ -580,6 +580,15 @@ void PanoramaFrame::resize(const PixelPosition& topLeft, const unsigned int widt
 	newFrame.setValue(0x00);
 	newMask.setValue(0xFFu - maskValue_);
 
+	const int targetLeft = int(frameTopLeft_.x()) - int(topLeft.x());
+	const int targetTop = int(frameTopLeft_.y()) - int(topLeft.y());
+
+	const bool copyResult0 = newFrame.copy(targetLeft, targetTop, frame_);
+	const bool copyResult1 = newMask.copy(targetLeft, targetTop, mask_);
+
+	ocean_assert_and_suppress_unused(copyResult0, copyResult0);
+	ocean_assert_and_suppress_unused(copyResult1, copyResult1);
+
 	Frame newNominatorFrame, newDenominatorFrame;
 
 	if (nominatorFrame_)
@@ -589,56 +598,14 @@ void PanoramaFrame::resize(const PixelPosition& topLeft, const unsigned int widt
 		newNominatorFrame.set(FrameType(nominatorFrame_, width, height), true, true);
 		newDenominatorFrame.set(FrameType(denominatorFrame_, width, height), true, true);
 
-		newNominatorFrame.setValue(0x00);
-		newDenominatorFrame.setValue(0x00);
-	}
+		newNominatorFrame.setValue(0x00u);
+		newDenominatorFrame.setValue(0x00u);
 
-	ocean_assert(frame_.numberPlanes() == 1u);
-	ocean_assert(FrameType::formatIsGeneric(frame_.pixelFormat()));
+		const bool copyResult2 = newNominatorFrame.copy(targetLeft, targetTop, nominatorFrame_);
+		const bool copyResult3 = newDenominatorFrame.copy(targetLeft, targetTop, denominatorFrame_);
 
-	ocean_assert(!nominatorFrame_.isValid() || nominatorFrame_.numberPlanes() == 1u);
-	ocean_assert(!nominatorFrame_.isValid() || FrameType::formatIsGeneric(nominatorFrame_.pixelFormat()));
-
-	const unsigned int bytesPerPixel = frame_.bytesPerDataType() * frame_.channels();
-	const unsigned int nominatorBytesPerPixel = nominatorFrame_ ? denominatorFrame_.bytesPerDataType() * denominatorFrame_.channels() : 0u;
-	const unsigned int denominatorBytesPerPixel = denominatorFrame_ ? denominatorFrame_.bytesPerDataType() * denominatorFrame_.channels() : 0u;
-
-	for (unsigned int y = 0u; y < height; ++y)
-	{
-		if (y + topLeft.y() >= frameTopLeft_.y() && y + topLeft.y() < frameTopLeft_.y() + frame_.height())
-		{
-			const unsigned int start = max(topLeft.x(), frameTopLeft_.x());
-			const unsigned int end = min(topLeft.x() + width, frameTopLeft_.x() + frame_.width());
-
-			if (end > start)
-			{
-				ocean_assert(start >= frameTopLeft_.x());
-				ocean_assert(end <= frameTopLeft_.x() + frame_.width());
-
-				ocean_assert(start >= topLeft.x());
-				ocean_assert(start >= frameTopLeft_.x());
-
-				const unsigned int pixels = end - start;
-				ocean_assert(pixels <= frame_.width() && pixels <= newFrame.width());
-
-				const unsigned int xSource = start - frameTopLeft_.x();
-				const unsigned int ySource = y + topLeft.y() - frameTopLeft_.y();
-
-				const unsigned int xTarget = start - topLeft.x();
-				const unsigned int yTarget = y;
-
-				memcpy(newFrame.pixel<void>(xTarget, yTarget), frame_.constpixel<void>(xSource, ySource), pixels * bytesPerPixel);
-				memcpy(newMask.pixel<void>(xTarget, yTarget), mask_.constpixel<void>(xSource, ySource), pixels);
-
-				if (nominatorBytesPerPixel != 0u)
-				{
-					ocean_assert(denominatorBytesPerPixel != 0u);
-
-					memcpy(newNominatorFrame.pixel<void>(xTarget, yTarget), nominatorFrame_.constpixel<void>(xSource, ySource), pixels * nominatorBytesPerPixel);
-					memcpy(newDenominatorFrame.pixel<void>(xTarget, yTarget), denominatorFrame_.constpixel<void>(xSource, ySource), pixels * denominatorBytesPerPixel);
-				}
-			}
-		}
+		ocean_assert_and_suppress_unused(copyResult2, copyResult2);
+		ocean_assert_and_suppress_unused(copyResult3, copyResult3);
 	}
 
 	frameTopLeft_ = topLeft;
@@ -935,13 +902,13 @@ void PanoramaFrame::mergeAverageGlobal8BitPerChannelSubset(const uint8_t* panora
 	const unsigned int panoramaFrameStrideElements = panoramaWidth * tChannels + panoramaFramePaddingElements;
 	const unsigned int panoramaMaskStrideElements = panoramaWidth + panoramaMaskPaddingElements;
 
-	const unsigned int panoramaNominatorFrameStrideElements = panoramaWidth;
+	const unsigned int panoramaNominatorFrameStrideElements = panoramaWidth * tChannels;
 	const unsigned int panoramaDenominatorFrameStrideElements = panoramaWidth;
 
 	panoramaFrame += (subTopLeftY - panoramaTopLeftY) * panoramaFrameStrideElements + (subTopLeftX - panoramaTopLeftX) * tChannels;
 	panoramaMask += (subTopLeftY - panoramaTopLeftY) * panoramaMaskStrideElements + (subTopLeftX - panoramaTopLeftX);
 
-	panoramaNominatorFrame += (subTopLeftY - panoramaTopLeftY) * panoramaNominatorFrameStrideElements + (subTopLeftX - panoramaTopLeftX);
+	panoramaNominatorFrame += (subTopLeftY - panoramaTopLeftY) * panoramaNominatorFrameStrideElements + (subTopLeftX - panoramaTopLeftX) * tChannels;
 	panoramaDenominatorFrame += (subTopLeftY - panoramaTopLeftY) * panoramaDenominatorFrameStrideElements + (subTopLeftX - panoramaTopLeftX);
 
 	for (unsigned int y = firstSubRow; y < firstSubRow + numberSubRows; ++y)
@@ -961,12 +928,16 @@ void PanoramaFrame::mergeAverageGlobal8BitPerChannelSubset(const uint8_t* panora
 			{
 				++(*panoramaDenominatorFrameRow);
 
-				const unsigned int denominator_2 = (*panoramaDenominatorFrameRow + 1u) / 2u;
+				const unsigned int denominator_2 = *panoramaDenominatorFrameRow / 2u;
 
 				for (unsigned int n = 0u; n < tChannels; ++n)
 				{
 					panoramaNominatorFrameRow[n] += panoramaSubFrameRow[n];
-					panoramaFrameRow[n] = (uint8_t)((panoramaNominatorFrameRow[n] + denominator_2) / *panoramaDenominatorFrameRow);
+
+					const unsigned int normalizedValue = (panoramaNominatorFrameRow[n] + denominator_2) / *panoramaDenominatorFrameRow;
+					ocean_assert(normalizedValue <= 255u);
+
+					panoramaFrameRow[n] = (uint8_t)(normalizedValue);
 				}
 
 				*panoramaMaskRow = maskValue;
