@@ -14,7 +14,7 @@ jboolean Java_com_facebook_ocean_platform_android_application_GLView_initialize(
 	return GLView::get().initialize();
 }
 
-jboolean Java_com_facebook_ocean_platform_android_application_GLFView_release(JNIEnv* env, jobject javaThis)
+jboolean Java_com_facebook_ocean_platform_android_application_GLView_release(JNIEnv* env, jobject javaThis)
 {
 	return GLView::get().release();
 }
