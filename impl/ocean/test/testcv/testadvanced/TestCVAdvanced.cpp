@@ -34,8 +34,6 @@
 	#include "ocean/platform/android/ProcessorMonitor.h"
 #endif
 
-#include <set>
-
 namespace Ocean
 {
 

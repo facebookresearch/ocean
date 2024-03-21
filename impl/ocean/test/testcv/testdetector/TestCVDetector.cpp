@@ -22,6 +22,7 @@
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Frame.h"
 #include "ocean/base/PluginManager.h"
+#include "ocean/base/Processor.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/String.h"
 #include "ocean/base/TaskQueue.h"
@@ -72,6 +73,30 @@ bool testCVDetector(const double testDuration, Worker& worker, const std::string
 	bool allSucceeded = true;
 
 	Log::info() << "+++   Ocean Computer Vision Detector Library test:   +++";
+	Log::info() << " ";
+
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+	Log::info() << "The binary contains at most SSE4.1 instructions.";
+#endif
+
+#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+	Log::info() << "The binary contains at most NEON1 instructions.";
+#endif
+
+#if defined(OCEAN_HARDWARE_AVX_VERSION) && OCEAN_HARDWARE_AVX_VERSION >= 20
+	Log::info() << "The binary contains at most AVX2 instructions.";
+#elif defined(OCEAN_HARDWARE_AVX_VERSION) && OCEAN_HARDWARE_AVX_VERSION >= 10
+	Log::info() << "The binary contains at most AVX1 instructions.";
+#endif
+
+#if (!defined(OCEAN_HARDWARE_SSE_VERSION) || OCEAN_HARDWARE_SSE_VERSION == 0) && (!defined(OCEAN_HARDWARE_NEON_VERSION) || OCEAN_HARDWARE_NEON_VERSION == 0)
+	static_assert(OCEAN_HARDWARE_AVX_VERSION == 0, "Invalid AVX version");
+	Log::info() << "The binary does not contain any SIMD instructions.";
+#endif
+
+	Log::info() << "While the hardware supports the following SIMD instructions:";
+	Log::info() << Processor::translateInstructions(Processor::get().instructions());
+
 	Log::info() << " ";
 
 	Frame testFrame;
