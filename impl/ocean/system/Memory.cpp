@@ -10,7 +10,7 @@
 	#include <mach/mach.h>
 #elif defined(__linux__)
 	#include <fstream>
-	#include <regex>
+	#include <sstream>
 #endif
 
 namespace Ocean
@@ -235,27 +235,34 @@ uint64_t Memory::processVirtualMemory()
 	}
 
 	std::string line;
-	std::regex virtualMemoryRegex("VmSize:\\s+(\\d+)\\s+(\\w+)");
-	std::smatch regexMatch;
-	bool foundMatch = false;
 
 	while (std::getline(statusFile, line))
 	{
-		if (std::regex_search(line, regexMatch, virtualMemoryRegex))
+		// Expected format: VmSize:    16400 kB
+		std::istringstream stream(line);
+
+		std::string fieldName;
+		stream >> fieldName;
+
+		if (fieldName == "VmSize:")
 		{
-			foundMatch = true;
-			break;
+			uint64_t value = 0ull;
+			std::string unitName;
+			stream >> value >> unitName;
+
+			if (unitName == "kB")
+			{
+				return 1000ull * value; // kB = 1000, KB = KiB = 1024
+			}
+			else
+			{
+				ocean_assert(false && "Unknown memory unit!");
+			}
 		}
 	}
 
-	if (!foundMatch)
-	{
-		ocean_assert(false && "Failed to query virtual memory used by this process");
-		return 0ull;
-	}
-
-	ocean_assert(regexMatch[2] == "kB" && "Unknown memory unit");
-	return 1000ull * std::stoull(regexMatch[1]); // kB = 1000, KB = KiB = 1024
+	ocean_assert(false && "Failed to query virtual memory used by this process");
+	return 0ull;
 
 #else
 
