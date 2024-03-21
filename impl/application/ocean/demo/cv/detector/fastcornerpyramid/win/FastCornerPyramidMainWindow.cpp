@@ -14,8 +14,6 @@
 #include "ocean/platform/win/Keyboard.h"
 #include "ocean/platform/win/Utilities.h"
 
-using namespace Ocean;
-
 FASTCornerPyramidMainWindow::FASTCornerPyramidMainWindow(HINSTANCE instance, const std::wstring& name, const std::string& file) :
 	Window(instance, name),
 	BitmapWindow(instance, name),
@@ -33,16 +31,24 @@ FASTCornerPyramidMainWindow::~FASTCornerPyramidMainWindow()
 void FASTCornerPyramidMainWindow::onInitialized()
 {
 	if (!mediaFile_.empty())
+	{
 		frameMedium_ = Media::Manager::get().newMedium(mediaFile_);
+	}
 
 	if (frameMedium_.isNull())
+	{
 		frameMedium_ = Media::Manager::get().newMedium("LiveVideoId:1");
+	}
 
 	if (frameMedium_.isNull())
+	{
 		frameMedium_ = Media::Manager::get().newMedium("LiveVideoId:0");
+	}
 
 	if (frameMedium_)
+	{
 		frameMedium_->start();
+	}
 }
 
 void FASTCornerPyramidMainWindow::onIdle()
@@ -71,33 +77,45 @@ void FASTCornerPyramidMainWindow::onKeyDown(const int key)
 	{
 		if (keyString == "up")
 		{
-			if (fastCornerThreshold_ < 200)
-				fastCornerThreshold_ += 5;
+			if (fastCornerThreshold_ < 200u)
+			{
+				fastCornerThreshold_ += 5u;
+			}
 		}
 		else if (keyString == "down")
 		{
-			if (fastCornerThreshold_ > 5)
-				fastCornerThreshold_ -= 5;
+			if (fastCornerThreshold_ > 5u)
+			{
+				fastCornerThreshold_ -= 5u;
+			}
 		}
 		else if (keyString == "right")
 		{
-			if (fastCornerNumberVisible_ < 2000)
-				fastCornerNumberVisible_ += 5;
+			if (fastCornerNumberVisible_ < 2000u)
+			{
+				fastCornerNumberVisible_ += 5u;
+			}
 		}
 		else if (keyString == "left")
 		{
-			if (fastCornerNumberVisible_ > 5)
-				fastCornerNumberVisible_ -= 5;
+			if (fastCornerNumberVisible_ > 5u)
+			{
+				fastCornerNumberVisible_ -= 5u;
+			}
 		}
 		else if (keyString == "page up")
 		{
-			if (fastCornerPyramids_ < 20)
-				++fastCornerPyramids_;
+			if (fastCornerPyramidLayers_ < 20)
+			{
+				++fastCornerPyramidLayers_;
+			}
 		}
 		else if (keyString == "page down")
 		{
-			if (fastCornerPyramids_ > 1)
-				--fastCornerPyramids_;
+			if (fastCornerPyramidLayers_ > 1u)
+			{
+				--fastCornerPyramidLayers_;
+			}
 		}
 		else if (keyString == "F")
 		{
@@ -116,33 +134,41 @@ void FASTCornerPyramidMainWindow::onKeyDown(const int key)
 
 void FASTCornerPyramidMainWindow::onFrame(const Frame& frame)
 {
-	Frame pyramidFrame(frame);
+	ocean_assert(frame.isValid());
 
-	unsigned int width = 0;
-	for (unsigned int n = 0; n < fastCornerPyramids_; ++n)
-	{
-		width += frame.width() >> n;
-	}
+	Frame pyramidFrame(frame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+
+	const unsigned int width = frame.width() + frame.width() / 2u;
 
 	bitmap_.set(width, frame.height(), frame.pixelFormat(), FrameType::ORIGIN_UPPER_LEFT);
 
-	unsigned int xPos = 0;
-	for (unsigned int n = 0; n < fastCornerPyramids_; ++n)
+	int xPos = 0;
+	int yPos = 0;
+
+	for (unsigned int nLayer = 0u; nLayer < fastCornerPyramidLayers_; ++nLayer)
 	{
 		const Platform::Win::Bitmap featureBitmap(detectFeatures(pyramidFrame));
-		BitBlt(bitmap().dc(), xPos, 0, featureBitmap.width(), featureBitmap.height(), featureBitmap.dc(), 0, 0, SRCCOPY);
+		BitBlt(bitmap().dc(), xPos, yPos, featureBitmap.width(), featureBitmap.height(), featureBitmap.dc(), 0, 0, SRCCOPY);
 
-		xPos += featureBitmap.width();
+		if (nLayer == 0u)
+		{
+			xPos = int(pyramidFrame.width());
+		}
+		else
+		{
+			yPos += int(featureBitmap.height());
+		}
+
 		CV::FrameShrinker::downsampleByTwo11(pyramidFrame, &worker_);
 	}
 
 	Platform::Win::Utilities::textOutput(bitmap().dc(), 5, 5, std::string("Threshold: ") + String::toAString(fastCornerThreshold_));
 	Platform::Win::Utilities::textOutput(bitmap().dc(), 5, 25, std::string("Visible: ") + String::toAString(fastCornerNumberVisible_));
 
-	if (fastCornerPreviousPyramids_ != fastCornerPyramids_)
+	if (fastCornerPreviousPyramidLayers_ != fastCornerPyramidLayers_)
 	{
 		adjustToBitmapSize();
-		fastCornerPreviousPyramids_ = fastCornerPyramids_;
+		fastCornerPreviousPyramidLayers_ = fastCornerPyramidLayers_;
 	}
 
 	repaint();

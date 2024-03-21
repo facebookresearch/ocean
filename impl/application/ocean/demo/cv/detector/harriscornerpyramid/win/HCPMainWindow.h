@@ -92,11 +92,11 @@ class HCPMainWindow :
 		/// Number of visible features.
 		unsigned int fastCornerNumberVisible_ = 100u;
 
-		/// Number of pyramids.
-		unsigned int harrisCornerPyramids_ = 6u;
+		/// Number of pyramid layers.
+		unsigned int harrisCornerPyramidLayers_ = 6u;
 
-		/// Previous pyramid number.
-		unsigned int harrisCornerPreviousPyramids_ = 0u;
+		/// Previous number of pyramid layers.
+		unsigned int harrisCornerPreviousPyramidLayers_ = 0u;
 
 		/// Frame smoothing.
 		bool harrisCornerFrameSmoothing_ = false;

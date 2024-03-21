@@ -92,11 +92,11 @@ class FASTCornerPyramidMainWindow :
 		/// Number of visible features.
 		unsigned int fastCornerNumberVisible_ = 100u;
 
-		/// Number of pyramids.
-		unsigned int fastCornerPyramids_ = 6u;
+		/// Number of pyramid layers.
+		unsigned int fastCornerPyramidLayers_ = 6u;
 
-		/// Previous pyramid number.
-		unsigned int fastCornerPreviousPyramids_ = 0u;
+		/// Previous number of pyramid layers.
+		unsigned int fastCornerPreviousPyramidLayers_ = 0u;
 
 		/// Frame smoothing.
 		bool fastCornerFrameSmoothing_ = false;

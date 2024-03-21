@@ -13,8 +13,6 @@
 #include "ocean/platform/win/Keyboard.h"
 #include "ocean/platform/win/Utilities.h"
 
-using namespace Ocean;
-
 HCPMainWindow::HCPMainWindow(HINSTANCE instance, const std::wstring& name, const std::string& file) :
 	Window(instance, name),
 	BitmapWindow(instance, name),
@@ -106,16 +104,16 @@ void HCPMainWindow::onKeyDown(const int key)
 		}
 		else if (keyString == "page up")
 		{
-			if (harrisCornerPyramids_ < 20u)
+			if (harrisCornerPyramidLayers_ < 20u)
 			{
-				++harrisCornerPyramids_;
+				++harrisCornerPyramidLayers_;
 			}
 		}
 		else if (keyString == "page down")
 		{
-			if (harrisCornerPyramids_ > 1u)
+			if (harrisCornerPyramidLayers_ > 1u)
 			{
-				--harrisCornerPyramids_;
+				--harrisCornerPyramidLayers_;
 			}
 		}
 		else if (keyString == "F")
@@ -135,33 +133,41 @@ void HCPMainWindow::onKeyDown(const int key)
 
 void HCPMainWindow::onFrame(const Frame& frame)
 {
+	ocean_assert(frame.isValid());
+
 	Frame pyramidFrame(frame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
-	unsigned int width = 0u;
-	for (unsigned int n = 0u; n < harrisCornerPyramids_; ++n)
-	{
-		width += frame.width() >> n;
-	}
+	const unsigned int width = frame.width() + frame.width() / 2u;
 
 	bitmap_.set(width, frame.height(), frame.pixelFormat(), FrameType::ORIGIN_UPPER_LEFT);
 
-	unsigned int xPos = 0u;
-	for (unsigned int n = 0u; n < harrisCornerPyramids_; ++n)
+	int xPos = 0;
+	int yPos = 0;
+
+	for (unsigned int nLayer = 0u; nLayer < harrisCornerPyramidLayers_; ++nLayer)
 	{
 		const Platform::Win::Bitmap featureBitmap(detectFeatures(pyramidFrame));
-		BitBlt(bitmap().dc(), xPos, 0, featureBitmap.width(), featureBitmap.height(), featureBitmap.dc(), 0, 0, SRCCOPY);
+		BitBlt(bitmap().dc(), xPos, yPos, featureBitmap.width(), featureBitmap.height(), featureBitmap.dc(), 0, 0, SRCCOPY);
 
-		xPos += featureBitmap.width();
+		if (nLayer == 0u)
+		{
+			xPos = int(pyramidFrame.width());
+		}
+		else
+		{
+			yPos += int(featureBitmap.height());
+		}
+
 		CV::FrameShrinker::downsampleByTwo11(pyramidFrame, &worker_);
 	}
 
 	Platform::Win::Utilities::textOutput(bitmap().dc(), 5, 5, std::string("Threshold: ") + String::toAString(harrisCornerThreshold_));
 	Platform::Win::Utilities::textOutput(bitmap().dc(), 5, 25, std::string("Visible: ") + String::toAString(fastCornerNumberVisible_));
 
-	if (harrisCornerPreviousPyramids_ != harrisCornerPyramids_)
+	if (harrisCornerPreviousPyramidLayers_ != harrisCornerPyramidLayers_)
 	{
 		adjustToBitmapSize();
-		harrisCornerPreviousPyramids_ = harrisCornerPyramids_;
+		harrisCornerPreviousPyramidLayers_ = harrisCornerPyramidLayers_;
 	}
 
 	repaint();
