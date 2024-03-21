@@ -14,9 +14,8 @@
 #include "ocean/cv/NEON.h"
 #include "ocean/cv/NonMaximumSuppression.h"
 
+#include "ocean/math/Numeric.h"
 #include "ocean/math/Vector2.h"
-
-#include <numeric>
 
 namespace Ocean
 {
@@ -62,7 +61,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		/**
 		 * Definition of a maximum suppression object holding integer strength parameters.
 		 */
-		typedef NonMaximumSuppression<int> NonMaximumSuppressionVote;
+		typedef NonMaximumSuppression<int32_t> NonMaximumSuppressionVote;
 
 		/**
 		 * This class implements a helper object allowing to determine the precise 2D position of Harris corners.
@@ -90,7 +89,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 				 * @param preciseStrength The resulting strength value of the precise Harris corner
 				 * @return True, if succeeded
 				 */
-				bool precisePosition(const unsigned int x, const unsigned int y, const int strength, Scalar& preciseX, Scalar& preciseY, int& preciseStrength);
+				bool precisePosition(const unsigned int x, const unsigned int y, const int32_t strength, Scalar& preciseX, Scalar& preciseY, int32_t& preciseStrength);
 
 			protected:
 
@@ -212,7 +211,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		 * @param votes Resulting Harris votes values, one for each given position in the same order, make sure that enough buffer is available
 		 * @param worker Optional worker object to distribute the computational load to several CPU cores
 		 */
-		static void harrisVotes(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const PixelPosition* positions, const size_t numberPositions, int* votes, Worker* worker = nullptr);
+		static void harrisVotes(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const PixelPosition* positions, const size_t numberPositions, int32_t* votes, Worker* worker = nullptr);
 
 		/**
 		 * Calculates the Harris corner vote for one specific pixel from an 8 bit grayscale frame.
@@ -223,7 +222,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		 * @param yFramePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 		 * @return Resulting Harris vote
 		 */
-		static int harrisVotePixel(const uint8_t* yFrame, const unsigned int width, const unsigned int x, const unsigned int y, const unsigned int yFramePaddingElements);
+		static int32_t harrisVotePixel(const uint8_t* yFrame, const unsigned int width, const unsigned int x, const unsigned int y, const unsigned int yFramePaddingElements);
 
 		/**
 		 * Calculates the Harris corner vote for one specific sub-pixel position from an 8 bit grayscale frame.
@@ -234,7 +233,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		 * @param yFramePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 		 * @return Resulting Harris vote
 		 */
-		static int harrisVoteSubPixel(const uint8_t* yFrame, const unsigned int width, const Scalar x, const Scalar y, const unsigned int yFramePaddingElements);
+		static int32_t harrisVoteSubPixel(const uint8_t* yFrame, const unsigned int width, const Scalar x, const Scalar y, const unsigned int yFramePaddingElements);
 
 		/**
 		 * Calculates the Harris corner votes for specified sub-pixel positions from an 8 bit grayscale frame.
@@ -245,16 +244,16 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		 * @param worker Optional worker object to distribute the computation
 		 * @return The resulting Harris votes, one vote for each position
 		 */
-		static std::vector<int> harrisVotesSubPixel(const uint8_t* yFrame, const unsigned int width, const Vectors2& positions, const unsigned int yFramePaddingElements, Worker* worker = nullptr);
+		static std::vector<int32_t> harrisVotesSubPixel(const uint8_t* yFrame, const unsigned int width, const Vectors2& positions, const unsigned int yFramePaddingElements, Worker* worker = nullptr);
 
 		/**
 		 * Calculates one Harris Corner vote for one specific pixel from a frame storing sobel responses (Sx, Sy).
 		 * @param sobelResponses The 2 x 8bit sobel filter responses (8 bit for the horizontal response and 8 bit for the vertical response) to be used for Harris application pointing to the pixel of interest
-		 * @param width The width of the given response frame in pixel, with range [5, infinity)
+		 * @param width The width of the given response frame in pixel, with range [3, infinity)
 		 * @param sobelResponsesPaddingElements The number of padding elements at the end of each response row, in elements, with range [0, infinity)
 		 * @return Resulting Harris vote
 		 */
-		static inline int harrisVotePixel(const int8_t* sobelResponses, const unsigned int width, const unsigned int sobelResponsesPaddingElements);
+		static inline int32_t harrisVotePixel(const int8_t* sobelResponses, const unsigned int width, const unsigned int sobelResponsesPaddingElements);
 
 		/**
 		 * Calculates one Harris Corner vote for one specific pixel for a 3x3 region from a buffer storing interleaved squared sobel responses (Ixx, Iyy, Ixy).
@@ -263,7 +262,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		 * @param squaredSobelResponsesPaddingElements The number of padding elements at the end of each response row, in elements, with range [0, infinity)
 		 * @return Resulting Harris vote
 		 */
-		static inline int harrisVotePixel(const int* squaredSobelResponses, const unsigned int width, const unsigned int squaredSobelResponsesPaddingElements);
+		static inline int32_t harrisVotePixel(const int32_t* squaredSobelResponses, const unsigned int width, const unsigned int squaredSobelResponsesPaddingElements);
 
 		/**
 		 * Calculates one Harris Corner vote for a 3x3 region from three buffers storing Sobel responses products Ixx, Iyy, and Ixy.
@@ -278,7 +277,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		 * @param responsesXY2 The third row of products of horizontal and vertical Sobel responses (Ixy), at least three, must be valid
 		 * @return Resulting Harris vote
 		 */
-		static inline int harrisVote(const int16_t* const responsesXX0, const int16_t* const responsesXX1, const int16_t* const responsesXX2, const int16_t* const responsesYY0, const int16_t* const responsesYY1, const int16_t* const responsesYY2, const int16_t* const responsesXY0, const int16_t* const responsesXY1, const int16_t* const responsesXY2);
+		static inline int32_t harrisVote(const int16_t* const responsesXX0, const int16_t* const responsesXX1, const int16_t* const responsesXX2, const int16_t* const responsesYY0, const int16_t* const responsesYY1, const int16_t* const responsesYY2, const int16_t* const responsesXY0, const int16_t* const responsesXY1, const int16_t* const responsesXY2);
 
 		/**
 		 * Returns the threshold used internally for a given threshold.
@@ -316,7 +315,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		 * @param firstRow First row to be handled, with range [0, height - 1]
 		 * @param numberRows Number of rows to be handled, with range [1u, height - firstRow]
 		 */
-		static void harrisVotesByResponseSubset(const int8_t* response, const unsigned int width, const unsigned int height, const unsigned int responsePaddingElements, int* votes, const unsigned int votesPaddingElements, const unsigned int firstRow, const unsigned int numberRows);
+		static void harrisVotesByResponseSubset(const int8_t* response, const unsigned int width, const unsigned int height, const unsigned int responsePaddingElements, int32_t* votes, const unsigned int votesPaddingElements, const unsigned int firstRow, const unsigned int numberRows);
 
 		/**
 		 * Creates the Harris corner votes for a subset of specified sub-pixel positions from an 8 bit grayscale frame.
@@ -328,7 +327,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		 * @param firstPosition The first position to handle
 		 * @param numberPositions The number of positions to handle
 		 */
-		static void harrisVotesSubPixelSubset(const uint8_t* yFrame, const unsigned int width, const unsigned int yFramePaddingElements, const Vector2* positions, int* votes, const unsigned int firstPosition, const unsigned int numberPositions);
+		static void harrisVotesSubPixelSubset(const uint8_t* yFrame, const unsigned int width, const unsigned int yFramePaddingElements, const Vector2* positions, int32_t* votes, const unsigned int firstPosition, const unsigned int numberPositions);
 
 		/**
 		 * Detects Harris corners inside a sub-frame of a given frame.
@@ -343,7 +342,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		 * @param firstRow First row to be handled
 		 * @param numberRows Number of rows to be handled
 		 */
-		static void detectCornerCandidatesSubset(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const int internalThreshold, NonMaximumSuppressionVote* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows);
+		static void detectCornerCandidatesSubset(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const int32_t internalThreshold, NonMaximumSuppressionVote* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows);
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
@@ -352,32 +351,32 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		 * @param Ixx_s_32x4 The four individual sums of squared horizontal Sobel responses (Ixx)
 		 * @param Iyy_s_32x4 The four individual sums of squared vertical Sobel responses (Iyy)
 		 * @param Ixy_s_32x4 The four individual sums of products of horizontal and vertical Sobel responses (Ixy)
-		 * @param votes The resulting four individual Harris corner votes, must be vlaid
+		 * @param votes The resulting four individual Harris corner votes, must be valid
 		 */
-		static void determine4VotesNEON(const int32x4_t& Ixx_s_32x4, const int32x4_t& Iyy_s_32x4, const int32x4_t& Ixy_s_32x4, int* votes);
+		static void determine4VotesNEON(const int32x4_t& Ixx_s_32x4, const int32x4_t& Iyy_s_32x4, const int32x4_t& Ixy_s_32x4, int32_t* votes);
 
 #endif // OCEAN_HARDWARE_NEON_VERSION >= 10
 
 		/**
 		 * Returns the square value.
-		 * @param value The value to be squared
+		 * @param value The value to be squared, with range [-65535, 65535]
 		 * @return Square value
 		 */
-		static constexpr int sqr(const int value);
+		static constexpr uint32_t sqr(const int32_t value);
 
 		/**
 		 * Returns the square value.
-		 * @param value The value to be squared
+		 * @param value The value to be squared, with range [0, 65535]
 		 * @return Square value
 		 */
-		static constexpr unsigned int sqr(const unsigned int value);
+		static constexpr uint32_t sqr(const uint32_t value);
 
 		/**
 		 * Returns the square value.
-		 * @param value The value to be squared
+		 * @param value The value to be squared, with range [-4294967295, 4294967295]
 		 * @return Square value
 		 */
-		static constexpr long long sqr(const long long value);
+		static constexpr uint64_t sqr(const int64_t value);
 };
 
 inline HarrisCornerDetector::PreciseCornerPosition::PreciseCornerPosition(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int framePaddingElements) :
@@ -424,10 +423,10 @@ inline bool HarrisCornerDetector::detectCorners(const Frame& frame, const unsign
 	return detectCorners(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), subFrameLeft, subFrameTop, subFrameWidth, subFrameHeight, threshold, frameIsUndistorted, corners, determineExactPosition, worker);
 }
 
-inline int HarrisCornerDetector::harrisVotePixel(const int8_t* sobelResponse, const unsigned int width, const unsigned int sobelResponsesPaddingElements)
+inline int32_t HarrisCornerDetector::harrisVotePixel(const int8_t* sobelResponse, const unsigned int width, const unsigned int sobelResponsesPaddingElements)
 {
-	ocean_assert(sobelResponse);
-	ocean_assert(width >= 5u);
+	ocean_assert(sobelResponse != nullptr);
+	ocean_assert(width >= 3u);
 
 	const unsigned int sobelResponsesStrideElements = width * 2u + sobelResponsesPaddingElements;
 
@@ -435,60 +434,58 @@ inline int HarrisCornerDetector::harrisVotePixel(const int8_t* sobelResponse, co
 	const int8_t* const response1 = sobelResponse;
 	const int8_t* const response2 = sobelResponse + sobelResponsesStrideElements;
 
-	const unsigned int Ixx = (unsigned int)sqr(*(response0 - 2)) + (unsigned int)sqr(*(response0 + 0)) + (unsigned int)sqr(*(response0 + 2))
-						+ (unsigned int)sqr(*(response1 - 2)) + (unsigned int)sqr(*(response1 + 0)) + (unsigned int)sqr(*(response1 + 2))
-						+ (unsigned int)sqr(*(response2 - 2)) + (unsigned int)sqr(*(response2 + 0)) + (unsigned int)sqr(*(response2 + 2));
+	const uint32_t Ixx = sqr(*(response0 - 2)) + sqr(*(response0 + 0)) + sqr(*(response0 + 2))
+							+ sqr(*(response1 - 2)) + sqr(*(response1 + 0)) + sqr(*(response1 + 2))
+							+ sqr(*(response2 - 2)) + sqr(*(response2 + 0)) + sqr(*(response2 + 2));
 
-	const unsigned int Iyy = (unsigned int)sqr(*(response0 - 1)) + (unsigned int)sqr(*(response0 + 1)) + (unsigned int)sqr(*(response0 + 3))
-						+ (unsigned int)sqr(*(response1 - 1)) + (unsigned int)sqr(*(response1 + 1)) + (unsigned int)sqr(*(response1 + 3))
-						+ (unsigned int)sqr(*(response2 - 1)) + (unsigned int)sqr(*(response2 + 1)) + (unsigned int)sqr(*(response2 + 3));
+	const uint32_t Iyy = sqr(*(response0 - 1)) + sqr(*(response0 + 1)) + sqr(*(response0 + 3))
+							+ sqr(*(response1 - 1)) + sqr(*(response1 + 1)) + sqr(*(response1 + 3))
+							+ sqr(*(response2 - 1)) + sqr(*(response2 + 1)) + sqr(*(response2 + 3));
 
-	const int Ixy = *(response0 - 2) * *(response0 - 1) + *(response0 + 0) * *(response0 + 1) + *(response0 + 2) * *(response0 + 3)
-						+ *(response1 - 2) * *(response1 - 1) + *(response1 + 0) * *(response1 + 1) + *(response1 + 2) * *(response1 + 3)
-						+ *(response2 - 2) * *(response2 - 1) + *(response2 + 0) * *(response2 + 1) + *(response2 + 2) * *(response2 + 3);
+	const int32_t Ixy = *(response0 - 2) * *(response0 - 1) + *(response0 + 0) * *(response0 + 1) + *(response0 + 2) * *(response0 + 3)
+							+ *(response1 - 2) * *(response1 - 1) + *(response1 + 0) * *(response1 + 1) + *(response1 + 2) * *(response1 + 3)
+							+ *(response2 - 2) * *(response2 - 1) + *(response2 + 0) * *(response2 + 1) + *(response2 + 2) * *(response2 + 3);
 
-	const int determinant = int((Ixx >> 3u) * (Iyy >> 3u)) - sqr((Ixy / 8));
-	const unsigned int sqrTrace = sqr((Ixx + Iyy) >> 3u);
+	const int32_t determinant = int32_t((Ixx / 8u) * (Iyy / 8u)) - int32_t(sqr((Ixy / 8)));
+	const uint32_t sqrTrace = sqr((Ixx + Iyy) / 8u);
 
-	ocean_assert(((long long)sqrTrace) * 3ll >= (long long)(NumericT<int>::minValue())
-				&& ((long long)sqrTrace) * 3ll <= (long long)(NumericT<int>::maxValue()));
+	ocean_assert(NumericT<int32_t>::isInsideValueRange(int64_t(sqrTrace) * 3ll));
 
-	return determinant - ((sqrTrace * 3u) >> 6u);
+	return determinant - int32_t((sqrTrace * 3u) / 64u);
 }
 
-inline int HarrisCornerDetector::harrisVotePixel(const int* squaredSobelResponses, const unsigned int width, const unsigned int squaredSobelResponsesPaddingElements)
+inline int32_t HarrisCornerDetector::harrisVotePixel(const int32_t* squaredSobelResponses, const unsigned int width, const unsigned int squaredSobelResponsesPaddingElements)
 {
-	ocean_assert(squaredSobelResponses);
+	ocean_assert(squaredSobelResponses != nullptr);
 	ocean_assert(width >= 3u);
 
 	const unsigned int squaredSobelResponsesStrideElements = width * 3u + squaredSobelResponsesPaddingElements;
 
-	const int* const response0 = squaredSobelResponses - squaredSobelResponsesStrideElements;
-	const int* const response1 = squaredSobelResponses;
-	const int* const response2 = squaredSobelResponses + squaredSobelResponsesStrideElements;
+	const int32_t* const response0 = squaredSobelResponses - squaredSobelResponsesStrideElements;
+	const int32_t* const response1 = squaredSobelResponses;
+	const int32_t* const response2 = squaredSobelResponses + squaredSobelResponsesStrideElements;
 
-	const unsigned int Ixx = (unsigned int)*(response0 - 3) + (unsigned int)*(response0 + 0) + (unsigned int)*(response0 + 3)
-						+ (unsigned int)*(response1 - 3) + (unsigned int)*(response1 + 0) + (unsigned int)*(response1 + 3)
-						+ (unsigned int)*(response2 - 3) + (unsigned int)*(response2 + 0) + (unsigned int)*(response2 + 3);
+	const uint32_t Ixx = uint32_t(*(response0 - 3) + *(response0 + 0) + *(response0 + 3)
+							+ *(response1 - 3) + *(response1 + 0) + *(response1 + 3)
+							+ *(response2 - 3) + *(response2 + 0) + *(response2 + 3));
 
-	const unsigned int Iyy = (unsigned int)*(response0 - 2) + (unsigned int)*(response0 + 1) + (unsigned int)*(response0 + 4)
-						+ (unsigned int)*(response1 - 2) + (unsigned int)*(response1 + 1) + (unsigned int)*(response1 + 4)
-						+ (unsigned int)*(response2 - 2) + (unsigned int)*(response2 + 1) + (unsigned int)*(response2 + 4);
+	const uint32_t Iyy = uint32_t(*(response0 - 2) + *(response0 + 1) + *(response0 + 4)
+							+ *(response1 - 2) + *(response1 + 1) + *(response1 + 4)
+							+ *(response2 - 2) + *(response2 + 1) + *(response2 + 4));
 
-	const int Ixy = *(response0 - 1) + *(response0 + 2) + *(response0 + 5)
-						+ *(response1 - 1) + *(response1 + 2) + *(response1 + 5)
-						+ *(response2 - 1) + *(response2 + 2) + *(response2 + 5);
+	const int32_t Ixy = *(response0 - 1) + *(response0 + 2) + *(response0 + 5)
+							+ *(response1 - 1) + *(response1 + 2) + *(response1 + 5)
+							+ *(response2 - 1) + *(response2 + 2) + *(response2 + 5);
 
-	const int determinant = int((Ixx >> 3u) * (Iyy >> 3u)) - sqr((Ixy / 8));
-	const unsigned int sqrTrace = sqr((Ixx + Iyy) >> 3u);
+	const int32_t determinant = int32_t((Ixx / 8u) * (Iyy / 8u)) - int32_t(sqr((Ixy / 8)));
+	const uint32_t sqrTrace = sqr((Ixx + Iyy) / 8u);
 
-	ocean_assert(((long long)sqrTrace) * 3ll >= (long long)(NumericT<int>::minValue())
-				&& ((long long)sqrTrace) * 3ll <= (long long)(NumericT<int>::maxValue()));
+	ocean_assert(NumericT<int32_t>::isInsideValueRange(int64_t(sqrTrace) * 3ll));
 
-	return determinant - ((sqrTrace * 3u) >> 6u);
+	return determinant - int32_t((sqrTrace * 3u) / 64u);
 }
 
-inline int HarrisCornerDetector::harrisVote(const int16_t* const responsesXX0, const int16_t* const responsesXX1, const int16_t* const responsesXX2, const int16_t* const responsesYY0, const int16_t* const responsesYY1, const int16_t* const responsesYY2, const int16_t* const responsesXY0, const int16_t* const responsesXY1, const int16_t* const responsesXY2)
+inline int32_t HarrisCornerDetector::harrisVote(const int16_t* const responsesXX0, const int16_t* const responsesXX1, const int16_t* const responsesXX2, const int16_t* const responsesYY0, const int16_t* const responsesYY1, const int16_t* const responsesYY2, const int16_t* const responsesXY0, const int16_t* const responsesXY1, const int16_t* const responsesXY2)
 {
 	ocean_assert(responsesXX0 != nullptr && responsesXX1 != nullptr && responsesXX2 != nullptr);
 	ocean_assert(responsesYY0 != nullptr && responsesYY1 != nullptr && responsesYY2 != nullptr);
@@ -502,25 +499,24 @@ inline int HarrisCornerDetector::harrisVote(const int16_t* const responsesXX0, c
 	ocean_assert(responsesYY1[0] >= 0 && responsesYY1[1] >= 0 && responsesYY1[2] >= 0);
 	ocean_assert(responsesYY2[0] >= 0 && responsesYY2[1] >= 0 && responsesYY2[2] >= 0);
 
-	const unsigned int Ixx = (unsigned int)(responsesXX0[0]) + (unsigned int)(responsesXX0[1]) + (unsigned int)(responsesXX0[2])
-						+ (unsigned int)(responsesXX1[0]) + (unsigned int)(responsesXX1[1]) + (unsigned int)(responsesXX1[2])
-						+ (unsigned int)(responsesXX2[0]) + (unsigned int)(responsesXX2[1]) + (unsigned int)(responsesXX2[2]);
+	const uint32_t Ixx = uint32_t(responsesXX0[0]) + uint32_t(responsesXX0[1]) + uint32_t(responsesXX0[2])
+							+ uint32_t(responsesXX1[0]) + uint32_t(responsesXX1[1]) + uint32_t(responsesXX1[2])
+							+ uint32_t(responsesXX2[0]) + uint32_t(responsesXX2[1]) + uint32_t(responsesXX2[2]);
 
-	const unsigned int Iyy = (unsigned int)(responsesYY0[0]) + (unsigned int)(responsesYY0[1]) + (unsigned int)(responsesYY0[2])
-						+ (unsigned int)(responsesYY1[0]) + (unsigned int)(responsesYY1[1]) + (unsigned int)(responsesYY1[2])
-						+ (unsigned int)(responsesYY2[0]) + (unsigned int)(responsesYY2[1]) + (unsigned int)(responsesYY2[2]);
+	const uint32_t Iyy = uint32_t(responsesYY0[0]) + uint32_t(responsesYY0[1]) + uint32_t(responsesYY0[2])
+							+ uint32_t(responsesYY1[0]) + uint32_t(responsesYY1[1]) + uint32_t(responsesYY1[2])
+							+ uint32_t(responsesYY2[0]) + uint32_t(responsesYY2[1]) + uint32_t(responsesYY2[2]);
 
-	const int Ixy = (unsigned int)(responsesXY0[0]) + (unsigned int)(responsesXY0[1]) + (unsigned int)(responsesXY0[2])
-						+ (unsigned int)(responsesXY1[0]) + (unsigned int)(responsesXY1[1]) + (unsigned int)(responsesXY1[2])
-						+ (unsigned int)(responsesXY2[0]) + (unsigned int)(responsesXY2[1]) + (unsigned int)(responsesXY2[2]);
+	const int32_t Ixy = int32_t(responsesXY0[0]) + int32_t(responsesXY0[1]) + int32_t(responsesXY0[2])
+							+ int32_t(responsesXY1[0]) + int32_t(responsesXY1[1]) + int32_t(responsesXY1[2])
+							+ int32_t(responsesXY2[0]) + int32_t(responsesXY2[1]) + int32_t(responsesXY2[2]);
 
-	const int determinant = int((Ixx >> 3u) * (Iyy >> 3u)) - sqr((Ixy / 8));
-	const unsigned int sqrTrace = sqr((Ixx >> 3u) + (Iyy >> 3u));
+	const int32_t determinant = int32_t((Ixx / 8u) * (Iyy / 8u)) - int32_t(sqr((Ixy / 8)));
+	const uint32_t sqrTrace = sqr((Ixx + Iyy) / 8u);
 
-	ocean_assert(((long long)sqrTrace) * 3ll >= (long long)(NumericT<int>::minValue())
-				&& ((long long)sqrTrace) * 3ll <= (long long)(NumericT<int>::maxValue()));
+	ocean_assert(NumericT<int32_t>::isInsideValueRange(int64_t(sqrTrace) * 3ll));
 
-	return determinant - int((sqrTrace * 3u) >> 6u);
+	return determinant - int32_t((sqrTrace * 3u) / 64u);
 }
 
 constexpr int32_t HarrisCornerDetector::determineInternalThreshold(const unsigned int threshold)
@@ -553,18 +549,24 @@ inline T HarrisCornerDetector::determineThreshold(const T vote)
 	return T(result);
 }
 
-constexpr int HarrisCornerDetector::sqr(const int value)
+constexpr uint32_t HarrisCornerDetector::sqr(const int32_t value)
 {
+	ocean_assert(value >= -65535 && value <= 65535);
+
+	return uint32_t(value * value);
+}
+
+constexpr uint32_t HarrisCornerDetector::sqr(const uint32_t value)
+{
+	ocean_assert(value <= 65535u);
+
 	return value * value;
 }
 
-constexpr unsigned int HarrisCornerDetector::sqr(const unsigned int value)
+constexpr uint64_t HarrisCornerDetector::sqr(const int64_t value)
 {
-	return value * value;
-}
+	ocean_assert(value >= -4294967295ll && value <= 4294967295ll);
 
-constexpr long long HarrisCornerDetector::sqr(const long long value)
-{
 	return value * value;
 }
 

@@ -15,7 +15,7 @@ namespace CV
 namespace Detector
 {
 
-bool HarrisCornerDetector::PreciseCornerPosition::precisePosition(const unsigned int x, const unsigned int y, const int strength, Scalar& preciseX, Scalar& preciseY, int& preciseStrength)
+bool HarrisCornerDetector::PreciseCornerPosition::precisePosition(const unsigned int x, const unsigned int y, const int32_t strength, Scalar& preciseX, Scalar& preciseY, int32_t& preciseStrength)
 {
 	ocean_assert(frameData_ != nullptr);
 	ocean_assert(frameWidth_ >= 10u);
@@ -69,7 +69,7 @@ bool HarrisCornerDetector::PreciseCornerPosition::precisePosition(const unsigned
 	const unsigned int firstSobelResponseOffset = (x - 3u) - firstSobelResponseLeft8;
 	ocean_assert(firstSobelResponseOffset <= 5u);
 
-	int harrisVotes[3][4]; // we actually need 3x3 votes, +1 for NEON
+	int32_t harrisVotes[3][4]; // we actually need 3x3 votes, +1 for NEON
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
@@ -99,9 +99,9 @@ bool HarrisCornerDetector::PreciseCornerPosition::precisePosition(const unsigned
 			const int16_t* const topResponseYY = responsesYY + responseBufferStride * (nRow - 1u) + xS;
 			const int16_t* const topResponseXY = responsesXY + responseBufferStride * (nRow - 1u) + xS;
 
-			const int vote = harrisVote(topResponseXX + responseBufferStride * 0u, topResponseXX + responseBufferStride * 1u, topResponseXX + responseBufferStride * 2u,
-											topResponseYY + responseBufferStride * 0u, topResponseYY + responseBufferStride * 1u, topResponseYY + responseBufferStride * 2u,
-											topResponseXY + responseBufferStride * 0u, topResponseXY + responseBufferStride * 1u, topResponseXY + responseBufferStride * 2u);
+			const int32_t vote = harrisVote(topResponseXX + responseBufferStride * 0u, topResponseXX + responseBufferStride * 1u, topResponseXX + responseBufferStride * 2u,
+												topResponseYY + responseBufferStride * 0u, topResponseYY + responseBufferStride * 1u, topResponseYY + responseBufferStride * 2u,
+												topResponseXY + responseBufferStride * 0u, topResponseXY + responseBufferStride * 1u, topResponseXY + responseBufferStride * 2u);
 
 			ocean_assert(nRow - 1u < 3u);
 			ocean_assert(xS - firstSobelResponseOffset < 3u);
@@ -112,17 +112,17 @@ bool HarrisCornerDetector::PreciseCornerPosition::precisePosition(const unsigned
 
 #endif
 
-	const int& vote00 = harrisVotes[0][0];
-	const int& vote01 = harrisVotes[0][1];
-	const int& vote02 = harrisVotes[0][2];
+	const int32_t& vote00 = harrisVotes[0][0];
+	const int32_t& vote01 = harrisVotes[0][1];
+	const int32_t& vote02 = harrisVotes[0][2];
 
-	const int& vote10 = harrisVotes[1][0];
-	const int& vote11 = harrisVotes[1][1];
-	const int& vote12 = harrisVotes[1][2];
+	const int32_t& vote10 = harrisVotes[1][0];
+	const int32_t& vote11 = harrisVotes[1][1];
+	const int32_t& vote12 = harrisVotes[1][2];
 
-	const int& vote20 = harrisVotes[2][0];
-	const int& vote21 = harrisVotes[2][1];
-	const int& vote22 = harrisVotes[2][2];
+	const int32_t& vote20 = harrisVotes[2][0];
+	const int32_t& vote21 = harrisVotes[2][1];
+	const int32_t& vote22 = harrisVotes[2][2];
 
 	ocean_assert(vote11 == strength); // we have determine this vote already when determining the pixel-precise location of this corner
 
@@ -186,7 +186,7 @@ bool HarrisCornerDetector::detectCorners(const uint8_t* yFrame, const unsigned i
 
 	NonMaximumSuppressionVote nonMaximumSuppression(width, subFrameHeight, subFrameTop);
 
-	if (useWorker)
+	if (useWorker != nullptr)
 	{
 		useWorker->executeFunction(Worker::Function::createStatic(HarrisCornerDetector::detectCornerCandidatesSubset, yFrame, width, height, yFramePaddingElements, internalThreshold, &nonMaximumSuppression, subFrameLeft, subFrameWidth, 0u, 0u), subFrameTop, subFrameHeight, 8u, 9u, 10u);
 	}
@@ -204,23 +204,23 @@ bool HarrisCornerDetector::detectCorners(const uint8_t* yFrame, const unsigned i
 	{
 		PreciseCornerPosition precisePositionObject(yFrame, width, height, yFramePaddingElements);
 
-		const NonMaximumSuppressionVote::PositionCallback<Scalar, int> callbackFunction(NonMaximumSuppressionVote::PositionCallback<Scalar, int>::create(precisePositionObject, &PreciseCornerPosition::precisePosition));
-		const NonMaximumSuppressionVote::StrengthPositions<Scalar, int> strengthPositions(nonMaximumSuppression.suppressNonMaximum<Scalar, int>(subFrameLeft + 3u, subFrameWidth - 6u, subFrameTop + 3u, subFrameHeight - 6u, useWorker, &callbackFunction, false));
+		const NonMaximumSuppressionVote::PositionCallback<Scalar, int32_t> callbackFunction(NonMaximumSuppressionVote::PositionCallback<Scalar, int32_t>::create(precisePositionObject, &PreciseCornerPosition::precisePosition));
+		const NonMaximumSuppressionVote::StrengthPositions<Scalar, int32_t> strengthPositions(nonMaximumSuppression.suppressNonMaximum<Scalar, int32_t>(subFrameLeft + 3u, subFrameWidth - 6u, subFrameTop + 3u, subFrameHeight - 6u, useWorker, &callbackFunction, false));
 
 		corners.reserve(strengthPositions.size());
-		for (NonMaximumSuppressionVote::StrengthPositions<Scalar, int>::const_iterator i = strengthPositions.begin(); i != strengthPositions.end(); ++i)
+		for (NonMaximumSuppressionVote::StrengthPositions<Scalar, int32_t>::const_iterator i = strengthPositions.begin(); i != strengthPositions.end(); ++i)
 		{
-			corners.push_back(HarrisCorner(*i, distortionState, Scalar(i->strength())));
+			corners.emplace_back(*i, distortionState, Scalar(i->strength()));
 		}
 	}
 	else
 	{
-		const NonMaximumSuppressionVote::StrengthPositions<unsigned int, int> strengthPositions(nonMaximumSuppression.suppressNonMaximum<unsigned int, int>(subFrameLeft + 3u, subFrameWidth - 6u, subFrameTop + 3u, subFrameHeight - 6u, useWorker, nullptr, false));
+		const NonMaximumSuppressionVote::StrengthPositions<unsigned int, int32_t> strengthPositions(nonMaximumSuppression.suppressNonMaximum<unsigned int, int32_t>(subFrameLeft + 3u, subFrameWidth - 6u, subFrameTop + 3u, subFrameHeight - 6u, useWorker, nullptr, false));
 
 		corners.reserve(strengthPositions.size());
-		for (NonMaximumSuppressionVote::StrengthPositions<unsigned int, int>::const_iterator i = strengthPositions.begin(); i != strengthPositions.end(); ++i)
+		for (NonMaximumSuppressionVote::StrengthPositions<unsigned int, int32_t>::const_iterator i = strengthPositions.begin(); i != strengthPositions.end(); ++i)
 		{
-			corners.push_back(HarrisCorner(Vector2(Scalar(i->x()), Scalar(i->y())), distortionState, Scalar(i->strength())));
+			corners.emplace_back(Vector2(Scalar(i->x()), Scalar(i->y())), distortionState, Scalar(i->strength()));
 		}
 	}
 
@@ -264,7 +264,7 @@ void HarrisCornerDetector::harrisVotesFrameSobelResponse(const int8_t* sobelResp
 
 	if (setBorderPixels)
 	{
-		constexpr int neutralResponse = 0;
+		constexpr int32_t neutralResponse = 0;
 
 #ifdef OCEAN_DEBUG
 		Frame debugZeroFrame(FrameType(11u, 11u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
@@ -300,9 +300,9 @@ void HarrisCornerDetector::harrisVotesFrameSobelResponse(const int8_t* sobelResp
 	}
 }
 
-void HarrisCornerDetector::harrisVotes(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const PixelPosition* positions, const size_t numberPositions, int* votes, Worker* worker)
+void HarrisCornerDetector::harrisVotes(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const PixelPosition* positions, const size_t numberPositions, int32_t* votes, Worker* worker)
 {
-	ocean_assert(yFrame && positions && votes);
+	ocean_assert(yFrame != nullptr && positions != nullptr && votes != nullptr);
 
 	ocean_assert(width >= 10u && height >= 5u);
 	if (!yFrame || !votes || width < 10u || height < 5u)
@@ -329,13 +329,13 @@ void HarrisCornerDetector::harrisVotes(const uint8_t* yFrame, const unsigned int
 		}
 		else
 		{
-			votes[n] = NumericT<int>::minValue();
+			votes[n] = NumericT<int32_t>::minValue();
 			ocean_assert(votes[n] < 0);
 		}
 	}
 }
 
-void HarrisCornerDetector::harrisVotesByResponseSubset(const int8_t* response, const unsigned int width, const unsigned int height, const unsigned int responsePaddingElements, int* votes, const unsigned int votesPaddingElements, const unsigned int firstRow, const unsigned int numberRows)
+void HarrisCornerDetector::harrisVotesByResponseSubset(const int8_t* response, const unsigned int width, const unsigned int height, const unsigned int responsePaddingElements, int32_t* votes, const unsigned int votesPaddingElements, const unsigned int firstRow, const unsigned int numberRows)
 {
 	ocean_assert(response && votes);
 	ocean_assert(firstRow + numberRows <= height);
@@ -350,7 +350,7 @@ void HarrisCornerDetector::harrisVotesByResponseSubset(const int8_t* response, c
 	const int8_t* response1 = response0 + responseStrideElements;
 	const int8_t* response2 = response1 + responseStrideElements;
 
-	int* vote = votes + beginResponseRow * votesStrideElements + 2 - 1;
+	int32_t* vote = votes + beginResponseRow * votesStrideElements + 2 - 1;
 
 	const int8_t* const response0End = response + responseStrideElements * endResponseRow + 2u * 2u;
 
@@ -366,27 +366,25 @@ void HarrisCornerDetector::harrisVotesByResponseSubset(const int8_t* response, c
 			ocean_assert(response0 < response0End);
 			ocean_assert(response0 < response0EndRow);
 
-			const unsigned int Ixx = (unsigned int)(sqr(*(response0 - 2)) + sqr(*(response0 + 0)) + sqr(*(response0 + 2))
-														+ sqr(*(response1 - 2)) + sqr(*(response1 + 0)) + sqr(*(response1 + 2))
-														+ sqr(*(response2 - 2)) + sqr(*(response2 + 0)) + sqr(*(response2 + 2)));
+			const uint32_t Ixx = sqr(*(response0 - 2)) + sqr(*(response0 + 0)) + sqr(*(response0 + 2))
+									+ sqr(*(response1 - 2)) + sqr(*(response1 + 0)) + sqr(*(response1 + 2))
+									+ sqr(*(response2 - 2)) + sqr(*(response2 + 0)) + sqr(*(response2 + 2));
 
-			const unsigned int Iyy = (unsigned int)(sqr(*(response0 - 1)) + sqr(*(response0 + 1)) + sqr(*(response0 + 3))
-														+ sqr(*(response1 - 1)) + sqr(*(response1 + 1)) + sqr(*(response1 + 3))
-														+ sqr(*(response2 - 1)) + sqr(*(response2 + 1)) + sqr(*(response2 + 3)));
+			const uint32_t Iyy = sqr(*(response0 - 1)) + sqr(*(response0 + 1)) + sqr(*(response0 + 3))
+									+ sqr(*(response1 - 1)) + sqr(*(response1 + 1)) + sqr(*(response1 + 3))
+									+ sqr(*(response2 - 1)) + sqr(*(response2 + 1)) + sqr(*(response2 + 3));
 
-			const int Ixy = *(response0 - 2) * *(response0 - 1) + *(response0 + 0) * *(response0 + 1) + *(response0 + 2) * *(response0 + 3)
-								+ *(response1 - 2) * *(response1 - 1) + *(response1 + 0) * *(response1 + 1) + *(response1 + 2) * *(response1 + 3)
-								+ *(response2 - 2) * *(response2 - 1) + *(response2 + 0) * *(response2 + 1) + *(response2 + 2) * *(response2 + 3);
+			const int32_t Ixy = *(response0 - 2) * *(response0 - 1) + *(response0 + 0) * *(response0 + 1) + *(response0 + 2) * *(response0 + 3)
+									+ *(response1 - 2) * *(response1 - 1) + *(response1 + 0) * *(response1 + 1) + *(response1 + 2) * *(response1 + 3)
+									+ *(response2 - 2) * *(response2 - 1) + *(response2 + 0) * *(response2 + 1) + *(response2 + 2) * *(response2 + 3);
 
-			const int determinant = int((Ixx >> 3u) * (Iyy >> 3u)) - sqr(Ixy / 8);
-			const unsigned int sqrTrace = sqr((Ixx + Iyy) >> 3u);
+			const int32_t determinant = int32_t((Ixx / 8u) * (Iyy / 8u)) - int32_t(sqr(Ixy / 8));
+			const uint32_t sqrTrace = sqr((Ixx + Iyy) / 8u);
 
-			ocean_assert(((long long)sqrTrace) * 3ll >= (long long)NumericT<int>::minValue()
-				&& ((long long)sqrTrace) * 3ll <= (long long)NumericT<int>::maxValue());
+			ocean_assert(NumericT<int32_t>::isInsideValueRange(int64_t(sqrTrace) * 3ll));
+			ocean_assert(NumericT<int32_t>::isInsideValueRange(int64_t(determinant) - int64_t(sqrTrace) * 3ll / 64ll));
 
-			ocean_assert((long long)(determinant - int((sqrTrace * 3u) >> 6u)) == ((long long)Ixx >> 3ll) * ((long long)Iyy >> 3ll) - ((long long)Ixy / 8ll) * ((long long)Ixy / 8ll) - ((((long long)(Ixx + Iyy) >> 3ll) * ((long long)(Ixx + Iyy) >> 3ll) * 3ll) >> 6ll));
-
-			*++vote = determinant - int((sqrTrace * 3u) >> 6u);
+			*++vote = determinant - int32_t((sqrTrace * 3u) / 64u);
 
 			response0 += 2;
 			response1 += 2;
@@ -401,7 +399,7 @@ void HarrisCornerDetector::harrisVotesByResponseSubset(const int8_t* response, c
 	}
 }
 
-void HarrisCornerDetector::harrisVotesSubPixelSubset(const uint8_t* yFrame, const unsigned int width, const unsigned int yFramePaddingElements, const Vector2* positions, int* votes, const unsigned int firstPosition, const unsigned int numberPositions)
+void HarrisCornerDetector::harrisVotesSubPixelSubset(const uint8_t* yFrame, const unsigned int width, const unsigned int yFramePaddingElements, const Vector2* positions, int32_t* votes, const unsigned int firstPosition, const unsigned int numberPositions)
 {
 	ocean_assert(yFrame != nullptr && width >= 7u);
 	ocean_assert(positions && votes);
@@ -412,7 +410,7 @@ void HarrisCornerDetector::harrisVotesSubPixelSubset(const uint8_t* yFrame, cons
 	}
 }
 
-int HarrisCornerDetector::harrisVotePixel(const uint8_t* yFrame, const unsigned int width, const unsigned int positionX, const unsigned int positionY, const unsigned int yFramePaddingElements)
+int32_t HarrisCornerDetector::harrisVotePixel(const uint8_t* yFrame, const unsigned int width, const unsigned int positionX, const unsigned int positionY, const unsigned int yFramePaddingElements)
 {
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(width >= 10u);
@@ -424,49 +422,47 @@ int HarrisCornerDetector::harrisVotePixel(const uint8_t* yFrame, const unsigned 
 
 	yFrame += strideElements * (positionY - 1u) + positionX - 1u;
 
-	int IxxIyyIxy[3 * 3 * 3];
+	int32_t IxxIyyIxy[3 * 3 * 3];
 
 	for (unsigned int y = 0u; y < 3u; y++)
 	{
 		for (unsigned int x = 0u; x < 3u; x++)
 		{
-			int* const pointer = IxxIyyIxy + y * 9u + x * 3u;
+			int32_t* const pointer = IxxIyyIxy + y * 9u + x * 3u;
 			ocean_assert(pointer < IxxIyyIxy + 3 * 3 * 3);
 
-			CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit<int, 8>(yFrame + y * strideElements + x, width, pointer, yFramePaddingElements);
+			CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit<int32_t, 8>(yFrame + y * strideElements + x, width, pointer, yFramePaddingElements);
 		}
 	}
 
 	// select the third response triple in each 'row' (due to the application of already verified code)
-	const int* r0 = IxxIyyIxy + 0u * 9u + 6u;
-	const int* r1 = IxxIyyIxy + 1u * 9u + 6u;
-	const int* r2 = IxxIyyIxy + 2u * 9u + 6u;
+	const int32_t* r0 = IxxIyyIxy + 0u * 9u + 6u;
+	const int32_t* r1 = IxxIyyIxy + 1u * 9u + 6u;
+	const int32_t* r2 = IxxIyyIxy + 2u * 9u + 6u;
 
-	const unsigned int Ixx = (unsigned int)(*(r0 - 6) + *(r0 - 3) + *(r0 + 0)
-						+ *(r1 - 6) + *(r1 - 3) + *(r1 + 0)
-						+ *(r2 - 6) + *(r2 - 3) + *(r2 + 0));
+	const uint32_t Ixx = uint32_t(*(r0 - 6) + *(r0 - 3) + *(r0 + 0)
+							+ *(r1 - 6) + *(r1 - 3) + *(r1 + 0)
+							+ *(r2 - 6) + *(r2 - 3) + *(r2 + 0));
 
-	const unsigned int Iyy = (unsigned int)(*(r0 - 5) + *(r0 - 2) + *(r0 + 1)
-						+ *(r1 - 5) + *(r1 - 2) + *(r1 + 1)
-						+ *(r2 - 5) + *(r2 - 2) + *(r2 + 1));
+	const uint32_t Iyy = uint32_t(*(r0 - 5) + *(r0 - 2) + *(r0 + 1)
+							+ *(r1 - 5) + *(r1 - 2) + *(r1 + 1)
+							+ *(r2 - 5) + *(r2 - 2) + *(r2 + 1));
 
-	const int Ixy = *(r0 - 4) + *(r0 - 1) + *(r0 + 2)
-						+ *(r1 - 4) + *(r1 - 1) + *(r1 + 2)
-						+ *(r2 - 4) + *(r2 - 1) + *(r2 + 2);
+	const int32_t Ixy = *(r0 - 4) + *(r0 - 1) + *(r0 + 2)
+							+ *(r1 - 4) + *(r1 - 1) + *(r1 + 2)
+							+ *(r2 - 4) + *(r2 - 1) + *(r2 + 2);
 
-	const int determinant = int((Ixx >> 3u) * (Iyy >> 3u)) - sqr((Ixy / 8));
-	const unsigned int sqrTrace = sqr((Ixx + Iyy) >> 3u);
+	const int32_t determinant = int32_t((Ixx / 8u) * (Iyy / 8u)) - int32_t(sqr((Ixy / 8)));
+	const uint32_t sqrTrace = sqr((Ixx + Iyy) / 8u);
 
-	ocean_assert(((long long)sqrTrace) * 3ll >= (long long)NumericT<int>::minValue() && ((long long)sqrTrace) * 3ll <= (long long)NumericT<int>::maxValue());
+	ocean_assert(NumericT<int32_t>::isInsideValueRange(int64_t(sqrTrace) * 3ll));
+	ocean_assert(NumericT<int32_t>::isInsideValueRange(int64_t(determinant) - int64_t(sqrTrace) * 3ll));
+	ocean_assert(NumericT<int32_t>::isInsideValueRange(int64_t(determinant) - int64_t(sqrTrace) * 3ll / 64ll));
 
-	ocean_assert(((long long)determinant) - (long long)(sqrTrace * 3u) >= (long long)NumericT<int>::minValue() && ((long long)determinant) - (long long)(sqrTrace * 3u) <= (long long)NumericT<int>::maxValue());
-
-	ocean_assert((long long)(determinant - int((sqrTrace * 3u) >> 6u)) == ((long long)Ixx >> 3ll) * ((long long)Iyy >> 3ll) - ((long long)Ixy / 8ll) * ((long long)Ixy / 8ll) - ((((long long)(Ixx + Iyy) >> 3ll) * ((long long)(Ixx + Iyy) >> 3ll) * 3) >> 6ll));
-
-	return determinant - int((sqrTrace * 3u) >> 6u);
+	return determinant - int32_t((sqrTrace * 3u) / 64u);
 }
 
-int HarrisCornerDetector::harrisVoteSubPixel(const uint8_t* yFrame, const unsigned int width, const Scalar x, const Scalar y, const unsigned int yFramePaddingElements)
+int32_t HarrisCornerDetector::harrisVoteSubPixel(const uint8_t* yFrame, const unsigned int width, const Scalar x, const Scalar y, const unsigned int yFramePaddingElements)
 {
 	ocean_assert(yFrame != nullptr && width >= 7u);
 	ocean_assert(x >= Scalar(3) && y >= Scalar(3) && x < Scalar(width - 3u));
@@ -476,10 +472,10 @@ int HarrisCornerDetector::harrisVoteSubPixel(const uint8_t* yFrame, const unsign
 	const unsigned int left = (unsigned int)(x - Scalar(0.5));
 	const unsigned int top = (unsigned int)(y - Scalar(0.5));
 
-	const int harrisTopLeft = harrisVotePixel(yFrame, width, left, top, yFramePaddingElements);
-	const int harrisTopRight = harrisVotePixel(yFrame, width, left + 1u, top, yFramePaddingElements);
-	const int harrisBottomLeft = harrisVotePixel(yFrame, width, left, top + 1u, yFramePaddingElements);
-	const int harrisBottomRight = harrisVotePixel(yFrame, width, left + 1u, top + 1u, yFramePaddingElements);
+	const int32_t harrisTopLeft = harrisVotePixel(yFrame, width, left, top, yFramePaddingElements);
+	const int32_t harrisTopRight = harrisVotePixel(yFrame, width, left + 1u, top, yFramePaddingElements);
+	const int32_t harrisBottomLeft = harrisVotePixel(yFrame, width, left, top + 1u, yFramePaddingElements);
+	const int32_t harrisBottomRight = harrisVotePixel(yFrame, width, left + 1u, top + 1u, yFramePaddingElements);
 
 	const Scalar _tx = x - (Scalar(left) + Scalar(0.5));
 	ocean_assert(_tx >= 0 && _tx <= 1);
@@ -496,11 +492,11 @@ int HarrisCornerDetector::harrisVoteSubPixel(const uint8_t* yFrame, const unsign
 	return Numeric::round32(ty * harrisTop + _ty * harrisBottom);
 }
 
-std::vector<int> HarrisCornerDetector::harrisVotesSubPixel(const uint8_t* yFrame, const unsigned int width, const Vectors2& positions, const unsigned int yFramePaddingElements, Worker* worker)
+std::vector<int32_t> HarrisCornerDetector::harrisVotesSubPixel(const uint8_t* yFrame, const unsigned int width, const Vectors2& positions, const unsigned int yFramePaddingElements, Worker* worker)
 {
 	ocean_assert(yFrame != nullptr && width >= 7u);
 
-	std::vector<int> results(positions.size());
+	std::vector<int32_t> results(positions.size());
 
 	if (worker)
 	{
@@ -514,7 +510,7 @@ std::vector<int> HarrisCornerDetector::harrisVotesSubPixel(const uint8_t* yFrame
 	return results;
 }
 
-void HarrisCornerDetector::detectCornerCandidatesSubset(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const int internalThreshold, NonMaximumSuppressionVote* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows)
+void HarrisCornerDetector::detectCornerCandidatesSubset(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const int32_t internalThreshold, NonMaximumSuppressionVote* nonMaximumSuppression, const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows)
 {
 	ocean_assert(yFrame != nullptr && nonMaximumSuppression != nullptr);
 	ocean_assert_and_suppress_unused(width >= 10u && height >= 7u, height);
@@ -535,7 +531,7 @@ void HarrisCornerDetector::detectCornerCandidatesSubset(const uint8_t* yFrame, c
 	int16_t* response1 = response0 + (numberColumns - 2u) * 3u;
 	int16_t* response2 = response1 + (numberColumns - 2u) * 3u;
 
-	const unsigned int beginHarrisRow = (unsigned int)max(int(nonMaximumSuppression->yOffset()), int(firstRow) - 2) + 2u;
+	const unsigned int beginHarrisRow = (unsigned int)(max(int(nonMaximumSuppression->yOffset()), int(firstRow) - 2)) + 2u;
 	const unsigned int endHarrisRow = min(firstRow + numberRows + 2u, nonMaximumSuppression->height() + nonMaximumSuppression->yOffset()) - 2u;
 
 	ocean_assert(beginHarrisRow < endHarrisRow);
@@ -560,7 +556,7 @@ void HarrisCornerDetector::detectCornerCandidatesSubset(const uint8_t* yFrame, c
 	unsigned int y = beginHarrisRow;
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
-	int votesNEON[4];
+	int32_t votesNEON[4];
 #endif
 
 	yFrameRow = yFrame + (beginHarrisRow + 1u) * frameStrideElements + firstColumn;
@@ -622,7 +618,7 @@ void HarrisCornerDetector::detectCornerCandidatesSubset(const uint8_t* yFrame, c
 
 		for (unsigned int x = 0u; x < filterCore; ++x)
 		{
-			const int vote = harrisVote(response0 + responseCore * 0u + x, response1 + responseCore * 0u + x, response2 + responseCore * 0u + x,
+			const int32_t vote = harrisVote(response0 + responseCore * 0u + x, response1 + responseCore * 0u + x, response2 + responseCore * 0u + x,
 										response0 + responseCore * 1u + x, response1 + responseCore * 1u + x, response2 + responseCore * 1u + x,
 										response0 + responseCore * 2u + x, response1 + responseCore * 2u + x, response2 + responseCore * 2u + x);
 
@@ -641,7 +637,7 @@ void HarrisCornerDetector::detectCornerCandidatesSubset(const uint8_t* yFrame, c
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
-void HarrisCornerDetector::determine4VotesNEON(const int32x4_t& Ixx_s_32x4, const int32x4_t& Iyy_s_32x4, const int32x4_t& Ixy_s_32x4, int* votes)
+void HarrisCornerDetector::determine4VotesNEON(const int32x4_t& Ixx_s_32x4, const int32x4_t& Iyy_s_32x4, const int32x4_t& Ixy_s_32x4, int32_t* votes)
 {
 	ocean_assert(votes != nullptr);
 
