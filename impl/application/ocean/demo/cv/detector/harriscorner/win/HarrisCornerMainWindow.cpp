@@ -118,20 +118,20 @@ void HarrisCornerMainWindow::onKeyDown(const int key)
 
 void HarrisCornerMainWindow::onMouseUp(const MouseButton /*button*/, const int x, const int y)
 {
-	if (harrisSubFrameSelectionIndex_ == 0)
+	if (harrisSubFrameSelectionIndex_ == 0u)
 	{
 		harrisSubFrameLeft_ = x;
 		harrisSubFrameTop_ = y;
 	}
-	else if (harrisSubFrameSelectionIndex_ == 1)
+	else if (harrisSubFrameSelectionIndex_ == 1u)
 	{
 		harrisSubFrameRight_ = x;
 		harrisSubFrameBottom_ = y;
 	}
 
-	if (++harrisSubFrameSelectionIndex_ >= 3)
+	if (++harrisSubFrameSelectionIndex_ >= 3u)
 	{
-		harrisSubFrameSelectionIndex_ = 0;
+		harrisSubFrameSelectionIndex_ = 0u;
 	}
 }
 
@@ -157,7 +157,7 @@ void HarrisCornerMainWindow::onFrame(const Frame& frame)
 	HighPerformanceTimer timer;
 	CV::Detector::HarrisCorners corners;
 
-	if (harrisSubFrameSelectionIndex_ == 2)
+	if (harrisSubFrameSelectionIndex_ == 2u)
 	{
 		const unsigned int left = min(harrisSubFrameLeft_, harrisSubFrameRight_);
 		const unsigned int top = min(harrisSubFrameTop_, harrisSubFrameBottom_);
@@ -179,15 +179,25 @@ void HarrisCornerMainWindow::onFrame(const Frame& frame)
 #ifdef OCEAN_DEBUG
 	if (!harrisExactPosition_)
 	{
-		for (unsigned int n = 0; n < corners.size(); ++n)
+		for (size_t n = 0; n < corners.size(); ++n)
 		{
 			const Vector2& observation = corners[n].observation();
 
-			const unsigned int response = CV::Detector::HarrisCornerDetector::harrisVotePixel(yFrame.constdata<uint8_t>(), yFrame.width(), Numeric::round32(observation.x()), Numeric::round32(observation.y()), yFrame.paddingElements());
-			ocean_assert(response == corners[n].strength());
+			const int32_t x = Numeric::round32(observation.x());
+			const int32_t y = Numeric::round32(observation.y());
+
+			ocean_assert(x >= 0 && x < int32_t(yFrame.width()) && y >= 0 && y < int32_t(yFrame.height()));
+
+			const int32_t response = CV::Detector::HarrisCornerDetector::harrisVotePixel(yFrame.constdata<uint8_t>(), yFrame.width(), (unsigned int)(x), (unsigned int)(y), yFrame.paddingElements());
+			ocean_assert(Scalar(response) == corners[n].strength());
 		}
 	}
 #endif // OCEAN_DEBUG
+
+	if (harrisSubFrameSelectionIndex_ == 2u)
+	{
+		CV::Canvas::box<1u>(topLeft, Box2(Scalar(harrisSubFrameLeft_), Scalar(harrisSubFrameTop_), Scalar(harrisSubFrameRight_), Scalar(harrisSubFrameBottom_)), CV::Canvas::green(topLeft.pixelFormat()));
+	}
 
 	paintCorners(corners, topLeft, &worker_);
 
