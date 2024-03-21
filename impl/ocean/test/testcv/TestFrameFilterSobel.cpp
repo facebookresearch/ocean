@@ -866,29 +866,95 @@ bool TestFrameFilterSobel::testFilterPixelCoreHorizontalVertical3Squared1Channel
 			const unsigned int x = RandomI::random(randomGenerator, 1u, width - 2u);
 			const unsigned int y = RandomI::random(randomGenerator, 1u, height - 2u);
 
-			std::vector<int32_t> responses(4);
-			const int32_t responseBack = int32_t(RandomI::random32(randomGenerator));
-
-			responses.back() = responseBack;
-
-			CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit(yFrame.constpixel<uint8_t>(x, y), yFrame.width(), responses.data(), yFrame.paddingElements());
-
-			if (responses.back() != responseBack)
+			for (const int32_t normalization : {1, 4, 8})
 			{
-				ocean_assert(false && "Invalid padding memory!");
-				return false;
-			}
+				for (const bool rounded : {false, true})
+				{
+					std::vector<int32_t> responses(4);
+					const int32_t responseBack = int32_t(RandomI::random32(randomGenerator));
 
-			const int32_t Ix = filterResponse<0u>(yFrame, x, y, 0u) / 8;
-			const int32_t Iy = filterResponse<90u>(yFrame, x, y, 0u) / 8;
+					responses.back() = responseBack;
 
-			const int32_t Ixx = Ix * Ix;
-			const int32_t Iyy = Iy * Iy;
-			const int32_t Ixy = Ix * Iy;
+					switch (normalization)
+					{
+						case 1u:
+						{
+							if (rounded)
+							{
+								CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit<int32_t, 1, true>(yFrame.constpixel<uint8_t>(x, y), yFrame.width(), responses.data(), yFrame.paddingElements());
+							}
+							else
+							{
+								CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit<int32_t, 1, false>(yFrame.constpixel<uint8_t>(x, y), yFrame.width(), responses.data(), yFrame.paddingElements());
+							}
+							break;
+						}
 
-			if (responses[0] != Ixx || responses[1] != Iyy || responses[2] != Ixy)
-			{
-				allSucceeded = false;
+						case 4u:
+						{
+							if (rounded)
+							{
+								CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit<int32_t, 4, true>(yFrame.constpixel<uint8_t>(x, y), yFrame.width(), responses.data(), yFrame.paddingElements());
+							}
+							else
+							{
+								CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit<int32_t, 4, false>(yFrame.constpixel<uint8_t>(x, y), yFrame.width(), responses.data(), yFrame.paddingElements());
+							}
+							break;
+						}
+
+						case 8u:
+						{
+							if (rounded)
+							{
+								CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit<int32_t, 8, true>(yFrame.constpixel<uint8_t>(x, y), yFrame.width(), responses.data(), yFrame.paddingElements());
+							}
+							else
+							{
+								CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit<int32_t, 8, false>(yFrame.constpixel<uint8_t>(x, y), yFrame.width(), responses.data(), yFrame.paddingElements());
+							}
+							break;
+						}
+
+						default:
+							ocean_assert(false && "This should never happen!");
+							allSucceeded = false;
+							break;
+					}
+
+					if (responses.back() != responseBack)
+					{
+						ocean_assert(false && "Invalid padding memory!");
+						return false;
+					}
+
+					ocean_assert(normalization > 0);
+					int32_t Ix = filterResponse<0u>(yFrame, x, y, 0u);
+					int32_t Iy = filterResponse<90u>(yFrame, x, y, 0u);
+
+					if (rounded)
+					{
+						const int32_t absIx = (std::abs(Ix) + normalization / 2) / normalization;
+						const int32_t absIy = (std::abs(Iy) + normalization / 2) / normalization;
+
+						Ix = NumericT<int32_t>::copySign(absIx, Ix);
+						Iy = NumericT<int32_t>::copySign(absIy, Iy);
+					}
+					else
+					{
+						Ix /= normalization;
+						Iy /= normalization;
+					}
+
+					const int32_t Ixx = Ix * Ix;
+					const int32_t Iyy = Iy * Iy;
+					const int32_t Ixy = Ix * Iy;
+
+					if (responses[0] != Ixx || responses[1] != Iyy || responses[2] != Ixy)
+					{
+						allSucceeded = false;
+					}
+				}
 			}
 		}
 	}

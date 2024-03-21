@@ -263,15 +263,15 @@ void FrameFilterSobel::filterHorizontalVertical3Squared1Channel8BitRow(const uin
 
 #else
 
-	int responses_XX_YY_XY[3];
+	int16_t responses_XX_YY_XY[3];
 
 	for (unsigned int x = 0u; x < elements; ++x)
 	{
-		filterPixelCoreHorizontalVertical3Squared1Channel8Bit(++row, width, responses_XX_YY_XY, paddingElements);
+		filterPixelCoreHorizontalVertical3Squared1Channel8Bit<int16_t, 8>(++row, width, responses_XX_YY_XY, paddingElements);
 
-		*responsesXX++ = int16_t(responses_XX_YY_XY[0]);
-		*responsesYY++ = int16_t(responses_XX_YY_XY[1]);
-		*responsesXY++ = int16_t(responses_XX_YY_XY[2]);
+		*responsesXX++ = responses_XX_YY_XY[0];
+		*responsesYY++ = responses_XX_YY_XY[1];
+		*responsesXY++ = responses_XX_YY_XY[2];
 	}
 
 #endif // OCEAN_HARDWARE_NEON_VERSION >= 10

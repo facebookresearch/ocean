@@ -433,7 +433,7 @@ int HarrisCornerDetector::harrisVotePixel(const uint8_t* yFrame, const unsigned 
 			int* const pointer = IxxIyyIxy + y * 9u + x * 3u;
 			ocean_assert(pointer < IxxIyyIxy + 3 * 3 * 3);
 
-			CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit(yFrame + y * strideElements + x, width, pointer, yFramePaddingElements);
+			CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit<int, 8>(yFrame + y * strideElements + x, width, pointer, yFramePaddingElements);
 		}
 	}
 

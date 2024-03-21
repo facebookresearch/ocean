@@ -194,7 +194,7 @@ class OCEAN_CV_EXPORT FrameFilterSobel : public FrameFilter
 		 * @param width The width of the frame in pixel, with `tSourceChannels` channels, with range [3, infinity)
 		 * @param response The resulting pixel filter response, with `tSourceChannels * 2` channels, must be valid
 		 * @param sourcePaddingElements Optional padding at the end of each source row in elements, with range [0, infinity)
-		 * @tparam TTarget The data type of the response values, either `int8_t` or `int16_t`
+		 * @tparam TTarget The data type of the response values, either 'int8_t' or 'int16_t'
 		 * @tparam tChannels The number of frame channels, with range [1, infinity)
 		 */
 		template <typename TTarget, unsigned int tSourceChannels>
@@ -207,8 +207,12 @@ class OCEAN_CV_EXPORT FrameFilterSobel : public FrameFilter
 		 * @param width The width of the frame in pixel, with range [3, infinity)
 		 * @param responses The three resulting pixel filter responses, with order: Ixx, Iyy, Ixy, must be valid
 		 * @param paddingElements Optional padding at the end of each frame row in elements, with range [0, infinity)
+		 * @tparam TTarget The data type of the response values, either 'int8_t', 'int16_t', or 'int32_t'
+		 * @tparam tNormalizationDenominator The normalization factor for each individual directional response before they will be squared, either 1, 4, or 8
+		 * @tparam tRoundedNormalization True, to apply a rounded normalization; False, to apply a normalization without rounding (ignored for floating point values)
 		 */
-		static inline void filterPixelCoreHorizontalVertical3Squared1Channel8Bit(const uint8_t* source, const unsigned int width, int* responses, const unsigned int paddingElements);
+		template <typename TTarget, TTarget tNormalizationDenominator, bool tRoundedNormalization = false>
+		static inline void filterPixelCoreHorizontalVertical3Squared1Channel8Bit(const uint8_t* source, const unsigned int width, TTarget* responses, const unsigned int paddingElements);
 
 		/**
 		 * Determines the squared Sobel filter responses (three products) for a 1 channel 8 bit row based on a horizontal and on a vertical Sobel filter (Ix, Iy).
@@ -335,7 +339,6 @@ class OCEAN_CV_EXPORT FrameFilterSobel : public FrameFilter
 		static inline void filterHorizontalVertical1Channel8BitBlock14SSE(const uint8_t* source, const unsigned int strideElements, int8_t* response);
 
 #endif // OCEAN_HARDWARE_SSE_VERSION >= 41
-
 };
 
 template <typename TTarget, unsigned int tSourceChannels>
@@ -479,13 +482,13 @@ void FrameFilterSobel::filterHorizontalVerticalRow(const TSource* sourceRow, TTa
 		{
 			for (unsigned int n = 0u; n < tSourceChannels; ++n)
 			{
-				// | -1 0 1 |
-				// | -2 0 2 |
-				// | -1 0 1 |
+				// | -1  0  1 |
+				// | -2  0  2 | / 8
+				// | -1  0  1 |
 				*targetRow++ = TTarget((*(source0 + tSourceChannels * 2u) - *(source0) + (*(source1 + tSourceChannels * 2u) - *(source1)) * 2 + *(source2 + tSourceChannels * 2u) - *(source2)) / 8);
 
 				// | -1 -2 -1 |
-				// |  0  0  0 |
+				// |  0  0  0 | / 8
 				// |  1  2  1 |
 				*targetRow++ = TTarget((*(source2) + (*(source2 + tSourceChannels) - *(source0 + tSourceChannels)) * 2 + *(source2 + tSourceChannels * 2u) - *(source0) - *(source0 + tSourceChannels * 2u)) / 8);
 
@@ -500,9 +503,9 @@ void FrameFilterSobel::filterHorizontalVerticalRow(const TSource* sourceRow, TTa
 
 			for (unsigned int n = 0u; n < tSourceChannels; ++n)
 			{
-				// | -1 0 1 |
-				// | -2 0 2 |
-				// | -1 0 1 |
+				// | -1  0  1 |
+				// | -2  0  2 |
+				// | -1  0  1 |
 				*targetRow++ = TTarget(*(source0 + tSourceChannels * 2u) - *(source0) + (*(source1 + tSourceChannels * 2u) - *(source1)) * 2 + *(source2 + tSourceChannels * 2u) - *(source2));
 
 				// | -1 -2 -1 |
@@ -563,12 +566,12 @@ void FrameFilterSobel::filterDiagonalRow(const TSource* sourceRow, TTarget* targ
 			for (unsigned int n = 0u; n < tSourceChannels; ++n)
 			{
 				// | -2 -1  0 |
-				// | -1  0  1 |
+				// | -1  0  1 | / 8
 				// |  0  1  2 |
 				*targetRow++ = TTarget((*(source1 + tSourceChannels * 2u) + *(source2 + tSourceChannels) + (*(source2 + tSourceChannels * 2u) - *(source0)) * 2 - *(source0 + tSourceChannels) - *(source1)) / 8);
 
 				// | 0  -1  -2 |
-				// | 1   0  -1 |
+				// | 1   0  -1 | / 8
 				// | 2   1   0 |
 				*targetRow++ = TTarget((*(source1) + *(source2 + tSourceChannels) + (*(source2) - *(source0 + tSourceChannels * 2u)) * 2 - *(source0 + tSourceChannels) - *(source1 + tSourceChannels * 2u)) / 8);
 
@@ -646,22 +649,22 @@ void FrameFilterSobel::filterRow(const TSource* sourceRow, TTarget* targetRow, c
 			for (unsigned int n = 0u; n < tSourceChannels; ++n)
 			{
 				// | -1  0  1 |
-				// | -2  0  2 |
+				// | -2  0  2 | / 8
 				// | -1  0  1 |
 				*targetRow++ = TTarget((*(source0 + tSourceChannels * 2u) - *(source0) + (*(source1 + tSourceChannels * 2u) - *(source1)) * 2 + *(source2 + tSourceChannels * 2u) - *(source2)) / 8);
 
 				// | -1 -2 -1 |
-				// |  0  0  0 |
+				// |  0  0  0 | / 8
 				// |  1  2  1 |
 				*targetRow++ = TTarget((*(source2) + (*(source2 + tSourceChannels) - *(source0 + tSourceChannels)) * 2 + *(source2 + tSourceChannels * 2u) - *(source0) - *(source0 + tSourceChannels * 2u)) / 8);
 
 				// | -2 -1  0 |
-				// | -1  0  1 |
+				// | -1  0  1 | / 8
 				// |  0  1  2 |
 				*targetRow++ = TTarget((*(source1 + tSourceChannels * 2u) + *(source2 + tSourceChannels) + (*(source2 + tSourceChannels * 2u) - *(source0)) * 2 - *(source0 + tSourceChannels) - *(source1)) / 8);
 
 				// | 0  -1  -2 |
-				// | 1   0  -1 |
+				// | 1   0  -1 | / 8
 				// | 2   1   0 |
 				*targetRow++ = TTarget((*(source1) + *(source2 + tSourceChannels) + (*(source2) - *(source0 + tSourceChannels * 2u)) * 2 - *(source0 + tSourceChannels) - *(source1 + tSourceChannels * 2u)) / 8);
 
@@ -748,13 +751,13 @@ void FrameFilterSobel::filterHorizontalVerticalMaximumAbsoluteRow(const TSource*
 		{
 			for (unsigned int n = 0u; n < tSourceChannels; ++n)
 			{
-				// | -1 0 1 |
-				// | -2 0 2 |
-				// | -1 0 1 |
+				// | -1  0  1 |
+				// | -2  0  2 | / 4
+				// | -1  0  1 |
 				*targetRow++ = TTarget((max(abs(*(source0 + tSourceChannels * 2u) - *(source0) + (*(source1 + tSourceChannels * 2u) - *(source1)) * 2 + *(source2 + tSourceChannels * 2u) - *(source2)),
 
 				// | -1 -2 -1 |
-				// |  0  0  0 |
+				// |  0  0  0 | / 4
 				// |  1  2  1 |
 				abs(*(source2) + (*(source2 + tSourceChannels) - *(source0 + tSourceChannels)) * 2 + *(source2 + tSourceChannels * 2u) - *(source0) - *(source0 + tSourceChannels * 2u))) + 2u) / 4u);
 
@@ -769,10 +772,9 @@ void FrameFilterSobel::filterHorizontalVerticalMaximumAbsoluteRow(const TSource*
 
 			for (unsigned int n = 0u; n < tSourceChannels; ++n)
 			{
-				// 0 degree filter
-				// |  -3   0   3 |
-				// | -10   0  10 | * 1/32
-				// |  -3   0   3 |
+				// | -1  0  1 |
+				// | -2  0  2 |
+				// | -1  0  1 |
 				*targetRow++ = TTarget(max(abs(*(source0 + tSourceChannels * 2u) - *(source0) + (*(source1 + tSourceChannels * 2u) - *(source1)) * 2 + *(source2 + tSourceChannels * 2u) - *(source2)),
 
 				// | -1 -2 -1 |
@@ -832,18 +834,17 @@ inline void FrameFilterSobel::filterPixelCoreHorizontalVertical8BitPerChannel(co
 
 	const unsigned int sourceStrideElements = width * tSourceChannels + sourcePaddingElements;
 
-	if (std::is_same<TTarget, int8_t>::value)
+	if constexpr (std::is_same<TTarget, int8_t>::value)
 	{
 		for (unsigned int n = 0u; n < tSourceChannels; ++n)
 		{
-			// channel 0
-			// | -1 0 1 |
-			// | -2 0 2 |
-			// | -1 0 1 |
+			// | -1  0  1 |
+			// | -2  0  2 | / 8
+			// | -1  0  1 |
 			*response++ = TTarget((*(source - sourceStrideElements + tSourceChannels) - *(source - sourceStrideElements - tSourceChannels) + (*(source + tSourceChannels) - *(source - tSourceChannels)) * 2 + *(source + sourceStrideElements + tSourceChannels) - *(source + sourceStrideElements - tSourceChannels)) / 8);
 
 			// | -1 -2 -1 |
-			// |  0  0  0 |
+			// |  0  0  0 | / 8
 			// |  1  2  1 |
 			*response++ = TTarget((*(source + sourceStrideElements - tSourceChannels) + (*(source + sourceStrideElements) - *(source - sourceStrideElements)) * 2 + *(source + sourceStrideElements + tSourceChannels) - *(source - sourceStrideElements - tSourceChannels) - *(source - sourceStrideElements + tSourceChannels)) / 8);
 
@@ -856,10 +857,9 @@ inline void FrameFilterSobel::filterPixelCoreHorizontalVertical8BitPerChannel(co
 
 		for (unsigned int n = 0u; n < tSourceChannels; ++n)
 		{
-			// channel 0
-			// | -1 0 1 |
-			// | -2 0 2 |
-			// | -1 0 1 |
+			// | -1  0  1 |
+			// | -2  0  2 |
+			// | -1  0  1 |
 			*response++ = TTarget(*(source - sourceStrideElements + tSourceChannels) - *(source - sourceStrideElements - tSourceChannels) + (*(source + tSourceChannels) - *(source - tSourceChannels)) * 2 + *(source + sourceStrideElements + tSourceChannels) - *(source + sourceStrideElements - tSourceChannels));
 
 			// | -1 -2 -1 |
@@ -872,23 +872,27 @@ inline void FrameFilterSobel::filterPixelCoreHorizontalVertical8BitPerChannel(co
 	}
 }
 
-inline void FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit(const uint8_t* source, const unsigned int width, int* responses, const unsigned int paddingElements)
+template <typename TTarget, TTarget tNormalizationDenominator, bool tRoundedNormalization>
+inline void FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit(const uint8_t* source, const unsigned int width, TTarget* responses, const unsigned int paddingElements)
 {
+	static_assert(tNormalizationDenominator == 1 || tNormalizationDenominator == 4 || tNormalizationDenominator == 8, "Invalid normalization factor!");
+
 	ocean_assert(source != nullptr && responses != nullptr);
 	ocean_assert(width >= 3u);
 
+
+
 	const unsigned int strideElements = width + paddingElements;
 
-	// channel 0
-	// | -1 0 1 |
-	// | -2 0 2 |
-	// | -1 0 1 |
-	const int horizontal = (*(source - strideElements + 1u) - *(source - strideElements - 1u) + (*(source + 1u) - *(source - 1u)) * 2 + *(source + strideElements + 1u) - *(source + strideElements - 1u)) / 8;
+	// | -1  0  1 |
+	// | -2  0  2 |
+	// | -1  0  1 |
+	const TTarget horizontal = TTarget(FrameFilter::normalizeValue<int32_t, tNormalizationDenominator, tRoundedNormalization>(*(source - strideElements + 1u) - *(source - strideElements - 1u) + (*(source + 1u) - *(source - 1u)) * 2 + *(source + strideElements + 1u) - *(source + strideElements - 1u)));
 
 	// | -1 -2 -1 |
 	// |  0  0  0 |
 	// |  1  2  1 |
-	const int vertical = (*(source + strideElements - 1u) + (*(source + strideElements) - *(source - strideElements)) * 2 + *(source + strideElements + 1u) - *(source - strideElements - 1u) - *(source - strideElements + 1u)) / 8;
+	const TTarget vertical = TTarget(FrameFilter::normalizeValue<int32_t, tNormalizationDenominator, tRoundedNormalization>(*(source + strideElements - 1u) + (*(source + strideElements) - *(source - strideElements)) * 2 + *(source + strideElements + 1u) - *(source - strideElements - 1u) - *(source - strideElements + 1u)));
 
 	*responses++ = horizontal * horizontal;
 	*responses++ = vertical * vertical;
