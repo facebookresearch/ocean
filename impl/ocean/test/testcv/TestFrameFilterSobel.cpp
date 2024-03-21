@@ -73,6 +73,12 @@ bool TestFrameFilterSobel::test(const unsigned int width, const unsigned int hei
 	allSucceeded = testComfort(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testFilterPixelCoreHorizontalVertical3Squared1Channel(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -149,7 +155,12 @@ TEST(TestFrameFilterSobel, HorizontalVerticalMaximumAbsolute8BitPerChannel_1920x
 TEST(TestFrameFilterSobel, Comfort)
 {
 	Worker worker;
-	EXPECT_TRUE((TestFrameFilterSobel::testComfort(GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE(TestFrameFilterSobel::testComfort(GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameFilterSobel, FilterPixelCoreHorizontalVertical3Squared1Channel)
+{
+	EXPECT_TRUE(TestFrameFilterSobel::testFilterPixelCoreHorizontalVertical3Squared1Channel(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -812,6 +823,70 @@ bool TestFrameFilterSobel::testComfort(const double testDuration, Worker& worker
 				}
 			}
 			else
+			{
+				allSucceeded = false;
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestFrameFilterSobel::testFilterPixelCoreHorizontalVertical3Squared1Channel(const double testDuration)
+{
+	Log::info() << "Testing pixel core filter function for three squared responses:";
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int width = RandomI::random(randomGenerator, 3u, 1000u);
+		const unsigned int height = RandomI::random(randomGenerator, 3u, 1000u);
+
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+
+		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 1u>(), pixelOrigin), false, &randomGenerator);
+
+		for (unsigned int n = 0u; n < 100u; ++n)
+		{
+			const unsigned int x = RandomI::random(randomGenerator, 1u, width - 2u);
+			const unsigned int y = RandomI::random(randomGenerator, 1u, height - 2u);
+
+			std::vector<int32_t> responses(4);
+			const int32_t responseBack = int32_t(RandomI::random32(randomGenerator));
+
+			responses.back() = responseBack;
+
+			CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit(yFrame.constpixel<uint8_t>(x, y), yFrame.width(), responses.data(), yFrame.paddingElements());
+
+			if (responses.back() != responseBack)
+			{
+				ocean_assert(false && "Invalid padding memory!");
+				return false;
+			}
+
+			const int32_t Ix = filterResponse<0u>(yFrame, x, y, 0u) / 8;
+			const int32_t Iy = filterResponse<90u>(yFrame, x, y, 0u) / 8;
+
+			const int32_t Ixx = Ix * Ix;
+			const int32_t Iyy = Iy * Iy;
+			const int32_t Ixy = Ix * Iy;
+
+			if (responses[0] != Ixx || responses[1] != Iyy || responses[2] != Ixy)
 			{
 				allSucceeded = false;
 			}

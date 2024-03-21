@@ -102,6 +102,13 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilterSobel
 		 */
 		static bool testComfort(const double testDuration, Worker& worker);
 
+		/**
+		 * Tests the pixel filter function determining the three squared Sobel filter responses.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testFilterPixelCoreHorizontalVertical3Squared1Channel(const double testDuration);
+
 	protected:
 
 		/**
@@ -218,6 +225,8 @@ int32_t TestFrameFilterSobel::filterResponse(const Frame& frame, const unsigned 
 					+ int32_t(frame.constpixel<uint8_t>(x - 1u, y)[channelIndex]) + int32_t(frame.constpixel<uint8_t>(x - 1u, y + 1u)[channelIndex]) * 2 + int32_t(frame.constpixel<uint8_t>(x, y + 1u)[channelIndex]);
 		}
 
+		default:
+			break;
 	}
 
 	ocean_assert(false && "This should never happen!");
