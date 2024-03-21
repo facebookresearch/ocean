@@ -139,7 +139,7 @@ class OCEAN_CV_EXPORT CVUtilities
 		 * Creates randomized data for a given frame.
 		 * Integer pixel formats as well as float pixel formats receive values between 0 and 255 for each pixel and channel.
 		 * @param legacyFrame Frame to fill with randomized data, may be invalid
-		 * @param randomGenerator Random generator object to be used
+		 * @param randomGenerator Optional explicit random generator to be used, nullptr to use any
 		 * @param limitedValueRange True, to use a value range of [0, 255] and [-128, 127] independently of the actual element data type; False, to use the full value range
 		 */
 		static void randomizeFrame(LegacyFrame& legacyFrame, RandomGenerator* randomGenerator = nullptr, const bool limitedValueRange = false);
@@ -149,7 +149,7 @@ class OCEAN_CV_EXPORT CVUtilities
 		 * Integer pixel formats as well as float pixel formats will receive values in the range [0, 255] or [-128, 127] for each pixel and channel if 'limitedValueRange == true'
 		 * @param frame The frame to fill with randomized data, may be invalid
 		 * @param skipPaddingArea True, to leave elements within the padding area untouched; False, to randomize the entire memory
-		 * @param randomGenerator Random generator object to be used
+		 * @param randomGenerator Optional explicit random generator to be used, nullptr to use any
 		 * @param limitedValueRange True, to use a value range of [0, 255] and [-128, 127] independently of the actual element data type; False, to use the full value range
 		 */
 		static void randomizeFrame(Frame& frame, const bool skipPaddingArea = true, RandomGenerator* randomGenerator = nullptr, const bool limitedValueRange = false);
@@ -161,7 +161,7 @@ class OCEAN_CV_EXPORT CVUtilities
 		 * @param minValue The minimal random value, with range (-infinity, maxValue]
 		 * @param maxValue The maximal random value, with range [minValue, infinity)
 		 * @param skipPaddingArea True, to leave elements within the padding area untouched; False, to randomize the entire memory
-		 * @param randomGenerator Random generator object to be used
+		 * @param randomGenerator Optional explicit random generator to be used, nullptr to use any
 		 * @tparam T The data type of each pixel element, e.g., 'unsigned char' or 'float'
 		 */
 		template <typename T>
@@ -173,7 +173,7 @@ class OCEAN_CV_EXPORT CVUtilities
 		 * Integer pixel formats as well as float pixel formats will receive values in the range [0, 255] or [-128, 127] for each pixel and channel if 'limitedValueRange == true'
 		 * @param frameType The frame type for which the randomized frame will be created, may be invalid
 		 * @param skipPaddingArea True, to leave elements within the padding area untouched; False, to randomize the entire memory
-		 * @param randomGenerator Random generator object to be used
+		 * @param randomGenerator Optional explicit random generator to be used, nullptr to use any
 		 * @param limitedValueRange True, to use a value range of [0, 255] and [-128, 127] independently of the actual element data type; False, to use the full value range
 		 * @return The randomized frame, invalid if frameType is invalid
 		 */

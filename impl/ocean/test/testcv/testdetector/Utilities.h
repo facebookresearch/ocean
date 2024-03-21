@@ -5,6 +5,8 @@
 
 #include "ocean/test/testcv/testdetector/TestCVDetector.h"
 
+#include "ocean/base/RandomGenerator.h"
+
 namespace Ocean
 {
 
@@ -30,9 +32,10 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT Utilities
 		 * @param width The width of the resulting frame in pixel, with range [1, infinity)
 		 * @param height The height of the resulting frame in pixel, with range [1, infinity)
 		 * @param featurePointPercentage The percentage of feature points to create, in relation to the image resolution, with range [0, 100]
+		 * @param randomGenerator Optional explicit random generator to be used, nullptr to use any
 		 * @return The resulting frame
 		 */
-		static Frame createRandomFrameWithFeatures(const unsigned int width, const unsigned int height, const unsigned int featurePointPercentage = 2u);
+		static Frame createRandomFrameWithFeatures(const unsigned int width, const unsigned int height, const unsigned int featurePointPercentage = 2u, RandomGenerator* randomGenerator = nullptr);
 };
 
 }

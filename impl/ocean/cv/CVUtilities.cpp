@@ -200,7 +200,14 @@ Frame CVUtilities::randomizedFrame(const FrameType& frameType, const bool skipPa
 	{
 		for (unsigned int n = 0u; n < frameType.numberPlanes(); ++n)
 		{
-			paddingElementsPerPlane.emplace_back(RandomI::random(localRandomGenerator, 1u, 100u) * RandomI::random(localRandomGenerator, 1u));
+			if (RandomI::random(localRandomGenerator, 1u) == 0u)
+			{
+				paddingElementsPerPlane.emplace_back(RandomI::random(localRandomGenerator, 1u, 100u));
+			}
+			else
+			{
+				paddingElementsPerPlane.emplace_back(0u);
+			}
 		}
 	}
 

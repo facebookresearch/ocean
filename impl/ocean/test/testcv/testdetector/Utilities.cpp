@@ -19,17 +19,14 @@ namespace TestCV
 namespace TestDetector
 {
 
-Frame Utilities::createRandomFrameWithFeatures(const unsigned int width, const unsigned int height, const unsigned int featurePointPercentage)
+Frame Utilities::createRandomFrameWithFeatures(const unsigned int width, const unsigned int height, const unsigned int featurePointPercentage, RandomGenerator* randomGenerator)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(featurePointPercentage <= 100u);
 
-	const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+	RandomGenerator localRandomGenerator(randomGenerator);
 
-	Frame yFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-
-	// we fill the frame with randomized data
-	CV::CVUtilities::randomizeFrame(yFrame, false);
+	Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &localRandomGenerator);
 
 	// we apply a strong blur filter
 	CV::FrameFilterGaussian::filter(yFrame, 11u);
@@ -38,10 +35,10 @@ Frame Utilities::createRandomFrameWithFeatures(const unsigned int width, const u
 
 	for (unsigned int n = 0u; n < featurePoints; ++n)
 	{
-		const unsigned int x = RandomI::random(0u, width - 1u);
-		const unsigned int y = RandomI::random(0u, height - 1u);
+		const unsigned int x = RandomI::random(localRandomGenerator, 0u, width - 1u);
+		const unsigned int y = RandomI::random(localRandomGenerator, 0u, height - 1u);
 
-		const uint8_t value = RandomI::random(1u) == 0u ? 0x00 : 0xFF;
+		const uint8_t value = RandomI::random(localRandomGenerator, 1u) == 0u ? 0x00 : 0xFF;
 
 		yFrame.pixel<uint8_t>(x, y)[0] = value;
 	}
