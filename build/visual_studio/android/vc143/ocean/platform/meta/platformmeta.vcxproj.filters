@@ -12,12 +12,15 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\meta\Meta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\meta\Login.h">
+    <ClInclude Include="..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\Login.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\Meta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\meta\Login.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\Login.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

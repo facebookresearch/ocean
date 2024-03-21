@@ -71,11 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\meta\Login.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\Login.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\Meta.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\meta\Meta.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\meta\Login.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\Login.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
