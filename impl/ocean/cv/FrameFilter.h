@@ -40,6 +40,40 @@ class OCEAN_CV_EXPORT FrameFilter
 		template <typename T, typename TMagnitude>
 		static void magnitude(const T* frame, TMagnitude* magnitude, const unsigned int channels, const unsigned int width, const unsigned int height, const unsigned int framePaddingElements, const unsigned int magnitudePaddingElements, Worker* worker = nullptr);
 
+		/**
+		 * Normalizes a given value with a template-based normalization factor.
+		 * This function will create a wrong rounded normalization result for extremely large 32bit and 64bit integers if the value is within tNormalizationDenominator/2 to the value range.<br>
+		 * Thus, for integers and if 'tRoundedNormalization == true', the value range for valid rounded normalization results is:
+		 * <pre>
+		 *  int32_t: [-2147483648 + tNormalizationDenominator/2, 2147483647 - tNormalizationDenominator/2]
+		 * uint32_t: [0, 4294967295 - tNormalizationDenominator/2]
+
+		 *  int64_t: [-9223372036854775808 + tNormalizationDenominator/2, 9223372036854775807 - tNormalizationDenominator/2]
+		 * uint64_t: [0, 18446744073709551615 - tNormalizationDenominator/2]
+		 * </pre>
+		 * @value The value to be normalized
+		 * @return The normalized value 'value / tNormalization'
+		 * @tparam T The data type of the value to normalize, either an integer value or a floating point value
+		 * @tparam tNormalizationDenominator The normalization factor to be applied, with range [1, infinity)
+		 * @tparam tRoundedNormalization True, to apply a rounded normalization; False, to apply a normalization without rounding (ignored for floating point values)
+		 * @see normalizeValueSlow().
+		 */
+		template <typename T, T tNormalizationDenominator, bool tRoundedNormalization>
+		static inline T normalizeValue(const T& value);
+
+		/**
+		 * Normalizes a given value with a template-based normalization factor.
+		 * This function does not provide wrong normalization results for extremely large 32bit and 64bit integers if 'tRoundedNormalization == true', but is also slower.
+		 * @value The value to be normalized
+		 * @return The normalized value 'value / tNormalization'
+		 * @tparam T The data type of the value to normalize, either an integer value or a floating point value
+		 * @tparam tNormalizationDenominator The normalization factor to be applied, with range [1, infinity)
+		 * @tparam tRoundedNormalization True, to apply a rounded normalization; False, to apply a normalization without rounding (ignored for floating point values)
+		 * @see normalizeValue().
+		 */
+		template <typename T, T tNormalizationDenominator, bool tRoundedNormalization>
+		static inline T normalizeValueSlow(const T& value);
+
 	protected:
 
 		/**
@@ -92,6 +126,120 @@ void FrameFilter::magnitude(const T* frame, TMagnitude* magnitude, const unsigne
 	else
 	{
 		magnitudeSubset<T, TMagnitude>(frame, magnitude, channels, width, height, framePaddingElements, magnitudePaddingElements, 0u, height);
+	}
+}
+
+template <typename T, T tNormalizationDenominator, bool tRoundedNormalization>
+inline T FrameFilter::normalizeValue(const T& value)
+{
+	static_assert(tNormalizationDenominator > T(0), "Invalid normalization!");
+
+	if constexpr (tNormalizationDenominator == T(1))
+	{
+		return value;
+	}
+
+	if constexpr (std::is_floating_point<T>::value)
+	{
+		return value / tNormalizationDenominator;
+	}
+	else
+	{
+		constexpr T tNormalizationDenominator_2 = tNormalizationDenominator / T(2);
+
+#ifdef OCEAN_DEBUG
+		ocean_assert((std::is_integral<T>::value));
+
+		if constexpr (tRoundedNormalization)
+		{
+			if constexpr (std::is_same<T, int32_t>::value)
+			{
+				ocean_assert(value >= NumericT<int32_t>::minValue() + tNormalizationDenominator_2);
+				ocean_assert(value <= NumericT<int32_t>::maxValue() - tNormalizationDenominator_2);
+			}
+
+			if constexpr (std::is_same<T, uint32_t>::value)
+			{
+				ocean_assert(value <= NumericT<uint32_t>::maxValue() - tNormalizationDenominator_2);
+			}
+
+			if constexpr (std::is_same<T, int64_t>::value)
+			{
+				ocean_assert(value >= NumericT<int64_t>::minValue() + tNormalizationDenominator_2);
+				ocean_assert(value <= NumericT<int64_t>::maxValue() - tNormalizationDenominator_2);
+			}
+
+			if constexpr (std::is_same<T, uint64_t>::value)
+			{
+				ocean_assert(value <= NumericT<uint64_t>::maxValue() - tNormalizationDenominator_2);
+			}
+		}
+#endif // OCEAN_DEBUG
+
+		if constexpr (tRoundedNormalization && std::is_signed<T>::value)
+		{
+			if (value >= T(0))
+			{
+				return (value + tNormalizationDenominator_2) / tNormalizationDenominator;
+			}
+			else
+			{
+				return (value - tNormalizationDenominator_2) / tNormalizationDenominator;
+			}
+		}
+		else
+		{
+			if constexpr (tRoundedNormalization)
+			{
+				return (value + tNormalizationDenominator_2) / tNormalizationDenominator;
+			}
+			else
+			{
+				return value / tNormalizationDenominator;
+			}
+		}
+	}
+}
+
+template <typename T, T tNormalizationDenominator, bool tRoundedNormalization>
+inline T FrameFilter::normalizeValueSlow(const T& value)
+{
+	if constexpr (std::is_integral<T>::value && tNormalizationDenominator != T(1) && tRoundedNormalization && sizeof(T) >= 4)
+	{
+		constexpr T tNormalizationDenominator_2 = (tNormalizationDenominator + 1) / T(2);
+
+		if constexpr (std::is_signed<T>::value)
+		{
+			if (value < T(0))
+			{
+				const T remainder = value % tNormalizationDenominator;
+
+				if (remainder <= -tNormalizationDenominator_2)
+				{
+					return value / tNormalizationDenominator - T(1);
+				}
+				else
+				{
+					return value / tNormalizationDenominator;
+				}
+			}
+
+		}
+
+		const T remainder = value % tNormalizationDenominator;
+
+		if (remainder >= tNormalizationDenominator_2)
+		{
+			return value / tNormalizationDenominator + T(1);
+		}
+		else
+		{
+			return value / tNormalizationDenominator;
+		}
+	}
+	else
+	{
+		return normalizeValue<T, tNormalizationDenominator, tRoundedNormalization>(value);
 	}
 }
 

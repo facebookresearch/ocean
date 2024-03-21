@@ -42,6 +42,23 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilter
 		static bool testMagnitude(const double testDuration, Worker& worker);
 
 		/**
+		 * Tests the normalize value function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testNormalizeValue(const double testDuration);
+
+		/**
+		 * Tests the normalize value function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param randomGenerator The random generator to be used
+		 * @return True, if succeeded
+		 * @tparam T The data type to be used
+		 */
+		template <typename T>
+		static bool testNormalizeValue(const double testDuration);
+
+		/**
 		 * Returns whether all border pixels of an image are set to zero.
 		 * @param frame The frame to test, must be valid
 		 * @return True, if so
@@ -80,6 +97,51 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilter
 		 */
 		template <typename T>
 		static bool isBorderZero(const Frame& frame);
+
+		/**
+		 * Verifies the value normalization.
+		 * @param value The value to be normalized
+		 * @tparam T The data type to be used
+		 * @tparam tNormalizationDenominator The normalization factor, with range [1, infinity)
+		 */
+		template <typename T, T tNormalizationDenominator>
+		static bool verifyValueNormalization(const T& value);
+
+		/**
+		 * Verifies the value normalization for floats.
+		 * @param value The value to be normalized
+		 * @tparam T The data type to be used
+		 * @tparam tNormalizationDenominator The normalization factor, with range [1, infinity)
+		 */
+		template <typename T, T tNormalizationDenominator>
+		static bool verifyValueNormalizationFloat(const T& value);
+
+		/**
+		 * Verifies the value normalization for integers.
+		 * @param value The value to be normalized
+		 * @tparam T The data type to be used
+		 * @tparam tNormalizationDenominator The normalization factor, with range [1, infinity)
+		 */
+		template <typename T, T tNormalizationDenominator>
+		static bool verifyValueNormalizationInteger(const T& value);
+
+		/**
+		 * Verifies the rounded value normalization for integers.
+		 * @param value The value to be normalized
+		 * @tparam T The data type to be used
+		 * @tparam tNormalizationDenominator The normalization factor, with range [1, infinity)
+		 */
+		template <typename T, T tNormalizationDenominator>
+		static bool verifyValueNormalizationIntegerRounded(const T& value);
+
+		/**
+		 * Verifies the not-rounded value normalization for integers.
+		 * @param value The value to be normalized
+		 * @tparam T The data type to be used
+		 * @tparam tNormalizationDenominator The normalization factor, with range [1, infinity)
+		 */
+		template <typename T, T tNormalizationDenominator>
+		static bool verifyValueNormalizationIntegerNotRounded(const T& value);
 };
 
 }
