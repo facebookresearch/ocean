@@ -89,13 +89,21 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestHarrisDetector
 		static bool testCheckerboardDetection(const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the Harris response.
+		 * Tests the Harris response for a single pixel.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		static bool testHarrisVotePixel(const double testDuration, Worker& worker);
+
+		/**
+		 * Tests the Harris response for an entire frame.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object
 		 * @param yFrameTest Optional explicit frame to be used for testing, otherwise a random image will be used
 		 * @return True, if succeeded
 		 */
-		static bool testHarrisVote(const double testDuration, Worker& worker, const Frame& yFrameTest = Frame());
+		static bool testHarrisVoteFrame(const double testDuration, Worker& worker, const Frame& yFrameTest = Frame());
 
 	private:
 

@@ -259,7 +259,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		/**
 		 * Calculates one Harris Corner vote for one specific pixel for a 3x3 region from a buffer storing interleaved squared sobel responses (Ixx, Iyy, Ixy).
 		 * @param squaredSobelResponses 3x32 bit sobel filter responses (32 bit for the squared horizontal response, 32 bit for the square vertical response and 32 bit for the product of horizontal and vertical response) to be used for Harris application pointing to the pixel of interest
-		 * @param width The width of the given response frame in pixel, with range [5, infinity)
+		 * @param width The width of the given response frame in pixel, with range [3, infinity)
 		 * @param squaredSobelResponsesPaddingElements The number of padding elements at the end of each response row, in elements, with range [0, infinity)
 		 * @return Resulting Harris vote
 		 */
@@ -459,7 +459,7 @@ inline int HarrisCornerDetector::harrisVotePixel(const int8_t* sobelResponse, co
 inline int HarrisCornerDetector::harrisVotePixel(const int* squaredSobelResponses, const unsigned int width, const unsigned int squaredSobelResponsesPaddingElements)
 {
 	ocean_assert(squaredSobelResponses);
-	ocean_assert(width >= 5u);
+	ocean_assert(width >= 3u);
 
 	const unsigned int squaredSobelResponsesStrideElements = width * 3u + squaredSobelResponsesPaddingElements;
 

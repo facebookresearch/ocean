@@ -6,9 +6,12 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
 
+#include "ocean/cv/FrameFilterSobel.h"
+
 #include "ocean/cv/detector/HarrisCornerDetector.h"
 
 #include <algorithm>
+#include <array>
 
 namespace Ocean
 {
@@ -76,7 +79,13 @@ bool TestHarrisDetector::test(const Frame& frame, const double testDuration, Wor
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testHarrisVote(testDuration, worker, yFrame) && allSucceeded;
+	allSucceeded = testHarrisVotePixel(testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testHarrisVoteFrame(testDuration, worker, yFrame) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -129,10 +138,16 @@ TEST(TestHarrisDetector, CheckerboardDetection)
 	EXPECT_TRUE(TestHarrisDetector::testCheckerboardDetection(GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestHarrisDetector, HarrisVote)
+TEST(TestHarrisDetector, HarrisVotePixel)
 {
 	Worker worker;
-	EXPECT_TRUE(TestHarrisDetector::testHarrisVote(GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestHarrisDetector::testHarrisVotePixel(GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestHarrisDetector, HarrisVoteFrame)
+{
+	Worker worker;
+	EXPECT_TRUE(TestHarrisDetector::testHarrisVoteFrame(GTEST_TEST_DURATION, worker));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -700,11 +715,108 @@ bool TestHarrisDetector::testCheckerboardDetection(const double testDuration, Wo
 	return allSucceeded;
 }
 
-bool TestHarrisDetector::testHarrisVote(const double testDuration, Worker& worker, const Frame& yFrameTest)
+bool TestHarrisDetector::testHarrisVotePixel(const double testDuration, Worker& worker)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Harris vote test:";
+	Log::info() << "Harris vote pixel test:";
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int width = RandomI::random(randomGenerator, 7u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 7u, 1080u);
+
+		Frame yFrame = Utilities::createRandomFrameWithFeatures(width, height, 2u, &randomGenerator);
+		ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
+
+		Frame sobelResponses = CV::CVUtilities::randomizedFrame(FrameType(yFrame, FrameType::genericPixelFormat<int8_t, 2u>()), false, &randomGenerator);
+
+		const Frame copySobelResponses(sobelResponses, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+		CV::FrameFilterSobel::filterHorizontalVertical8BitPerChannel<int8_t, 1u>(yFrame.constdata<uint8_t>(), sobelResponses.data<int8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), sobelResponses.paddingElements(), &worker);
+
+		Frame squaredSobelResponse = CV::CVUtilities::randomizedFrame(FrameType(3u, 3u, FrameType::genericPixelFormat<int32_t, 3u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+
+		const Frame copySquaredSobelResponse(squaredSobelResponse, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+		for (unsigned int y = 2u; y < yFrame.height() - 2u; ++y)
+		{
+			for (unsigned int x = 2u; x < yFrame.width() - 2u; ++x)
+			{
+				// we determine the squared sobel responses for a 3x3 neighborhood
+
+				for (unsigned int yy = 0u; yy < 3u; ++yy)
+				{
+					for (unsigned int xx = 0u; xx < 3u; ++xx)
+					{
+						const unsigned int frameX = x + xx - 1u;
+						const unsigned int frameY = y + yy - 1u;
+
+						CV::FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8Bit<int32_t, 8, false>(yFrame.constpixel<uint8_t>(frameX, frameY), yFrame.width(), squaredSobelResponse.pixel<int32_t>(xx, yy), yFrame.paddingElements());
+					}
+				}
+
+				std::array<int32_t, 3> pixelVotes;
+
+				// sobel responses
+				pixelVotes[0] = CV::Detector::HarrisCornerDetector::harrisVotePixel(sobelResponses.constpixel<int8_t>(x, y), sobelResponses.width(), sobelResponses.paddingElements());
+
+				// squared sobel responses
+				pixelVotes[1] = CV::Detector::HarrisCornerDetector::harrisVotePixel(squaredSobelResponse.constpixel<int32_t>(1u, 1u), squaredSobelResponse.width(), squaredSobelResponse.paddingElements());
+
+				// y-frame
+				pixelVotes[2] = CV::Detector::HarrisCornerDetector::harrisVotePixel(yFrame.constdata<uint8_t>(), yFrame.width(), x, y, yFrame.paddingElements());
+
+				const int32_t testVote = harrisVote3x3<false>(yFrame, x, y);
+				const int32_t testVoteRounded = harrisVote3x3<true>(yFrame, x, y);
+
+				for (size_t n = 0; n < pixelVotes.size(); ++n)
+				{
+					if (pixelVotes[n] != testVote && pixelVotes[n] != testVoteRounded)
+					{
+						allSucceeded = false;
+					}
+				}
+			}
+		}
+
+		if (!CV::CVUtilities::isPaddingMemoryIdentical(sobelResponses, copySobelResponses))
+		{
+			ocean_assert(false && "Invalid padding memory!");
+			return false;
+		}
+
+		if (!CV::CVUtilities::isPaddingMemoryIdentical(squaredSobelResponse, copySquaredSobelResponse))
+		{
+			ocean_assert(false && "Invalid padding memory!");
+			return false;
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Response validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Response validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestHarrisDetector::testHarrisVoteFrame(const double testDuration, Worker& worker, const Frame& yFrameTest)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Harris vote frame test:";
 
 	bool allSucceeded = true;
 
@@ -761,12 +873,19 @@ bool TestHarrisDetector::testHarrisVote(const double testDuration, Worker& worke
 				{
 					for (unsigned int x = 2u; x < yFrame.width() - 2u; ++x)
 					{
-						const int32_t v0 = votesFrame.constpixel<int32_t>(x, y)[0];
+						const int32_t vote = votesFrame.constpixel<int32_t>(x, y)[0];
 
-						const int32_t v1 = harrisVote3x3<false>(yFrame, x, y);
-						const int32_t v1Rounded = harrisVote3x3<true>(yFrame, x, y);
+						const int32_t testVote = harrisVote3x3<false>(yFrame, x, y);
+						const int32_t testVoteRounded = harrisVote3x3<true>(yFrame, x, y);
 
-						if (v0 != v1 && v0 != v1Rounded)
+						if (vote != testVote && vote != testVoteRounded)
+						{
+							allSucceeded = false;
+						}
+
+						const int32_t pixelVote = CV::Detector::HarrisCornerDetector::harrisVotePixel(yFrame.constdata<uint8_t>(), yFrame.width(), x, y, yFrame.paddingElements());
+
+						if (pixelVote != vote)
 						{
 							allSucceeded = false;
 						}

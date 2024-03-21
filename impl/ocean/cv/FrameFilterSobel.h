@@ -880,8 +880,6 @@ inline void FrameFilterSobel::filterPixelCoreHorizontalVertical3Squared1Channel8
 	ocean_assert(source != nullptr && responses != nullptr);
 	ocean_assert(width >= 3u);
 
-
-
 	const unsigned int strideElements = width + paddingElements;
 
 	// | -1  0  1 |
