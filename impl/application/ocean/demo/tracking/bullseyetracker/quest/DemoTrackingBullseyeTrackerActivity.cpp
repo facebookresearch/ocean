@@ -10,7 +10,8 @@ using namespace Ocean;
 /**
  * The application's main entry point of native activity of the demo application.
  *
- * The demo application shows how to use the 3D detector for QR codes from the CV::Detector::QRCodes library.
+ * The demo application shows how to use detector for Facebook's Messenger code from the CV::Detector library
+ * to track 3D position of "bullseye" fiducial markers on the code.
  *
  * @param androidApp The android app structure
  */
