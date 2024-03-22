@@ -89,7 +89,7 @@ bool TestLineDetectorHough::testAccumulatorJoin(const unsigned int width, const 
 
 	Log::info() << "Accumulator join function:";
 
-	const unsigned int diagonalHalf = (unsigned int)(Numeric::sqrt(Scalar(width * width + height * height))) / 2;
+	const unsigned int diagonalHalf = (unsigned int)(Numeric::sqrt(Scalar(width * width + height * height))) / 2u;
 
 	bool allSucceeded = true;
 
@@ -142,35 +142,37 @@ bool TestLineDetectorHough::testLineDetectorRandomFrame(const double testDuratio
 
 	bool allSucceeded = true;
 
+	const FrameType::PixelFormats pixelFormats = {FrameType::FORMAT_Y8, FrameType::FORMAT_RGB24};
+
+	RandomGenerator randomGenerator;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(50u, 1000u);
-		const unsigned int height = RandomI::random(50u, 1000u);
-		const FrameType::PixelFormat pixelFormat = RandomI::random(1u) == 0u ? FrameType::FORMAT_Y8 : FrameType::FORMAT_RGB24;
+		const unsigned int width = RandomI::random(randomGenerator, 50u, 1000u);
+		const unsigned int height = RandomI::random(randomGenerator, 50u, 1000u);
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
 
-		Frame frame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-		CV::CVUtilities::randomizeFrame(frame, false);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 		const CV::Detector::LineDetectorHough::FilterType filterType = RandomI::random(1u) == 0u ? CV::Detector::LineDetectorHough::FT_SOBEL : CV::Detector::LineDetectorHough::FT_SCHARR;
 		CV::Detector::LineDetectorHough::FilterResponse filterResponse = CV::Detector::LineDetectorHough::FR_INVALID;
 
-		switch (RandomI::random(2u))
+		switch (RandomI::random(1u))
 		{
 			case 0u:
 				filterResponse = CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL;
 				break;
 
 			case 1u:
-				filterResponse = CV::Detector::LineDetectorHough::FR_DIAGONAL;
-				break;
-
-			case 2u:
 				filterResponse = CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL_DIAGONAL;
 				break;
+
+			/*case 2u: // activate, once fully supported in the entire pipeline
+				filterResponse = CV::Detector::LineDetectorHough::FR_DIAGONAL;
+				break;*/
 
 			default:
 				ocean_assert(false && "Invalid value!");
@@ -180,11 +182,11 @@ bool TestLineDetectorHough::testLineDetectorRandomFrame(const double testDuratio
 		CV::Detector::LineDetectorHough::InfiniteLines infiniteLines;
 		FiniteLines2 optionalFiniteLines;
 
-		FiniteLines2* finiteLines = RandomI::random(1u) == 0u ? &optionalFiniteLines : nullptr;
+		FiniteLines2* finiteLines = RandomI::random(randomGenerator, 1u) == 0u ? &optionalFiniteLines : nullptr;
 
-		const bool optimizeLines = RandomI::random(1u) == 0u;
+		const bool optimizeLines = RandomI::random(randomGenerator, 1u) == 0u;
 
-		Worker* useWorker = RandomI::random(1u) == 0u ? &worker : nullptr;
+		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
 
 		if (!CV::Detector::LineDetectorHough::detectLines(frame, filterType, filterResponse, infiniteLines, finiteLines, optimizeLines, 100u, 16u, 2u, true, useWorker))
 		{
@@ -212,27 +214,28 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 
 	Log::info() << "Detector test on artificial frame:";
 
-	HighPerformanceStatistic performance0, performance1;
+	HighPerformanceStatistic performance0;
+	HighPerformanceStatistic performance1;
 
-	const uint8_t dark = 0x40u;
+	RandomGenerator randomGenerator;
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	constexpr uint8_t dark = 0x40u;
+
+	uint64_t iterations = 0ull;
+	uint64_t succeeded = 0ull;
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame frame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 		frame.setValue(0xFF);
 
-		const unsigned int horizontalTop = RandomI::random(6u, width - 7u);
-		const unsigned int horizontalBottom = RandomI::random(6u, width - 7u);
+		const unsigned int horizontalTop = RandomI::random(randomGenerator, 6u, width - 7u);
+		const unsigned int horizontalBottom = RandomI::random(randomGenerator, 6u, width - 7u);
 
-		const unsigned int verticalLeft = RandomI::random(6u, height - 7u);
-		const unsigned int verticalRight = RandomI::random(6u, height - 7u);
+		const unsigned int verticalLeft = RandomI::random(randomGenerator, 6u, height - 7u);
+		const unsigned int verticalRight = RandomI::random(randomGenerator, 6u, height - 7u);
 
 		// create two 11 pixel thick lines
 		for (int n = -5; n <= 5; ++n)
@@ -253,18 +256,16 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 		CV::Detector::LineDetectorHough::InfiniteLines infiniteLines0, infiniteLines1;
 
 		performance0.start();
-
-		const bool result0 = CV::Detector::LineDetectorHough::detectLines(frame, CV::Detector::LineDetectorHough::FT_SOBEL, CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL, infiniteLines0, nullptr, true, 80u, 8u, 5u, true, &worker, 360u, (unsigned int)(-1), false, Scalar(10), Numeric::deg2rad(5));
-		ocean_assert_and_suppress_unused(result0, result0);
-
+			const bool result0 = CV::Detector::LineDetectorHough::detectLines(frame, CV::Detector::LineDetectorHough::FT_SOBEL, CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL, infiniteLines0, nullptr, true, 80u, 8u, 5u, true, &worker, 360u, (unsigned int)(-1), false, Scalar(10), Numeric::deg2rad(5));
 		performance0.stop();
 
+		ocean_assert_and_suppress_unused(result0, result0);
+
 		performance1.start();
-
-		const bool result1 = CV::Detector::LineDetectorHough::detectLinesWithAdaptiveThreshold(frame, CV::Detector::LineDetectorHough::FT_SOBEL, CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL, infiniteLines1, nullptr, true, Scalar(10), 61u, 8u, 5u, true, &worker, 360u, (unsigned int)(-1), false, Scalar(10), Numeric::deg2rad(5));
-		ocean_assert_and_suppress_unused(result1, result1);
-
+			const bool result1 = CV::Detector::LineDetectorHough::detectLinesWithAdaptiveThreshold(frame, CV::Detector::LineDetectorHough::FT_SOBEL, CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL, infiniteLines1, nullptr, true, Scalar(10), 61u, 8u, 5u, true, &worker, 360u, (unsigned int)(-1), false, Scalar(10), Numeric::deg2rad(5));
 		performance1.stop();
+
+		ocean_assert_and_suppress_unused(result1, result1);
 
 		std::sort(infiniteLines0.rbegin(), infiniteLines0.rend());
 		std::sort(infiniteLines1.rbegin(), infiniteLines1.rend());
