@@ -51,7 +51,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\tracking\stereomatcher\StereoMatcherMain.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\tracking\stereomatcher\StereoMatcherMain.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E28F43D6-49E4-4364-A5B6-9D9D18CC8CED}</ProjectGuid>
