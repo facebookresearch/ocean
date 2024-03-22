@@ -23,28 +23,49 @@ class StaticVector : public StaticBuffer<T, tCapacity>
 		/**
 		 * Creates a new vector object.
 		 */
-		inline StaticVector();
+		StaticVector() = default;
 
 		/**
 		 * Creates a new vector object.
-		 * @param value Value that will be set as first element
+		 * @param value The value that will be set as first element
 		 */
-		inline explicit StaticVector(const T& value);
+		explicit inline StaticVector(const T& value);
 
 		/**
 		 * Creates a new vector object.
-		 * @param number Number of elements to be created
-		 * @param value Value that will be created in the first 'number' elements of this vector
+		 * @param value The value that will be set as first element
+		 */
+		explicit inline StaticVector(T&& value);
+
+		/**
+		 * Creates a new vector object.
+		 * @param number The number of elements to be created
+		 * @param value The value that will be created in the first 'number' elements of this vector
 		 */
 		inline StaticVector(const size_t number, const T& value);
 
 		/**
 		 * Creates a new vector object.
-		 * This constructor converts a stl vector object to a static vector object.<br>
-		 * Only the first tCapacity elements of the given vector are copied.<br>
-		 * @param values Values that will be used as first elements
+		 * @param values The values to be copied into this vector object, can be nullptr if 'size == 0'
+		 * @param size The number of values to copy, with range [0, tCapacity]
 		 */
-		inline explicit StaticVector(const std::vector<T>& values);
+		inline StaticVector(const T* values, const size_t size);
+
+		/**
+		 * Creates a new vector object.
+		 * This constructor converts a stl vector object to a static vector object.<br>
+		 * Only the first tCapacity elements of the given vector are copied.
+		 * @param values The values that will be used as first elements
+		 */
+		explicit inline StaticVector(const std::vector<T>& values);
+
+		/**
+		 * Creates a new vector object.
+		 * This constructor converts a stl vector object to a static vector object.<br>
+		 * Only the first tCapacity elements of the given vector are copied.
+		 * @param values The values that will be used as first elements
+		 */
+		explicit inline StaticVector(std::vector<T>&& values);
 
 		/**
 		 * Returns the size of this vector.
@@ -61,18 +82,34 @@ class StaticVector : public StaticBuffer<T, tCapacity>
 		/**
 		 * Adds a new element to this vector.
 		 * Beware: No range check is applied.
-		 * @param value Value to be added
+		 * @param value The value to be added
 		 * @see securePushBack().
 		 */
 		inline void pushBack(const T& value);
 
 		/**
+		 * Adds a new element to this vector.
+		 * Beware: No range check is applied.
+		 * @param value The value to be added
+		 * @see securePushBack().
+		 */
+		inline void pushBack(T&& value);
+
+		/**
 		 * Adds a new element to this vector if this vector has free elements left, otherwise nothing happens
-		 * @param value Value to be added
+		 * @param value The value to be added
 		 * @return True, if succeeded
 		 * @see pushBack().
 		 */
 		inline bool securePushBack(const T& value);
+
+		/**
+		 * Adds a new element to this vector if this vector has free elements left, otherwise nothing happens
+		 * @param value The value to be added
+		 * @return True, if succeeded
+		 * @see pushBack().
+		 */
+		inline bool securePushBack(T&& value);
 
 		/**
 		 * Adds a new elements to this vector.
@@ -124,23 +161,23 @@ class StaticVector : public StaticBuffer<T, tCapacity>
 
 		/**
 		 * Erases one element of this vector.
-		 * @param index Index of the element that will be removed, with range [0, size())
+		 * @param index The index of the element that will be removed, with range [0, size())
 		 * @see unstableErase().
 		 */
 		inline void erase(const size_t index);
 
 		/**
-		 * Erases one element of this vector.
-		 * The free element is replace by the last element in the vector, thus the order of the elements inside this vector is lost.<br>
-		 * This erase function is faster than the standard erase function.<br>
-		 * @param index Index of the element that will be removed, with range [0, size())
+		 * Erases one element from this vector.
+		 * The free element is replace by the last element in the vector, thus the previous order of the elements inside this vector is lost.<br>
+		 * This erase function is faster than the standard erase function.
+		 * @param index The index of the element that will be removed, with range [0, size())
 		 * @see erase().
 		 */
 		inline void unstableErase(const size_t index);
 
 		/**
 		 * Resizes this vector.
-		 * @param size Size to be applied, with range [0, tCapacity]
+		 * @param size The size to be applied, with range [0, tCapacity]
 		 * @see weakResize().
 		 */
 		inline void resize(const size_t size);
@@ -148,7 +185,7 @@ class StaticVector : public StaticBuffer<T, tCapacity>
 		/**
 		 * Resizes this vector.
 		 * This function simply sets the element counter.<br>
-		 * @param size Size to be applied, with range [0, tCapacity]
+		 * @param size The size to be applied, with range [0, tCapacity]
 		 * @see resize().
 		 */
 		inline void weakResize(const size_t size);
@@ -198,7 +235,7 @@ class StaticVector : public StaticBuffer<T, tCapacity>
 		/**
 		 * Returns one element of this vector.
 		 * Beware: No range check is done.
-		 * @param index Index of the element that will be returned, with range [0, size())
+		 * @param index The index of the element that will be returned, with range [0, size())
 		 * @return Vector element
 		 */
 		inline const T& operator[](const size_t index) const;
@@ -206,21 +243,21 @@ class StaticVector : public StaticBuffer<T, tCapacity>
 		/**
 		 * Returns one element of this vector.
 		 * Beware: No range check is done.
-		 * @param index Index of the element that will be returned, with range [0, size())
+		 * @param index The index of the element that will be returned, with range [0, size())
 		 * @return Vector element
 		 */
 		inline T& operator[](const size_t index);
 
 		/**
 		 * Returns whether two vectors are identical.
-		 * @param second Second vector object
+		 * @param second The second vector object
 		 * @return True, if so
 		 */
 		inline bool operator==(const StaticVector<T, tCapacity>& second) const;
 
 		/**
 		 * Returns whether two vectors are not identical.
-		 * @param second Second vector object
+		 * @param second The second vector object
 		 * @return True, if so
 		 */
 		inline bool operator!=(const StaticVector<T, tCapacity>& second) const;
@@ -233,21 +270,22 @@ class StaticVector : public StaticBuffer<T, tCapacity>
 
 	protected:
 
-		/// Current number of stored elements.
-		size_t vectorSize;
+		/// The current number of stored elements, with range [0, tCapacity]
+		size_t size_ = 0;
 };
 
 template <typename T, size_t tCapacity>
-inline StaticVector<T, tCapacity>::StaticVector() :
-	vectorSize(0)
+inline StaticVector<T, tCapacity>::StaticVector(const T& value) :
+	StaticBuffer<T, tCapacity>(value),
+	size_(1)
 {
 	static_assert(tCapacity > 0, "Invalid vector capacity!");
 }
 
 template <typename T, size_t tCapacity>
-inline StaticVector<T, tCapacity>::StaticVector(const T& value) :
-	StaticBuffer<T, tCapacity>(value),
-	vectorSize(1)
+inline StaticVector<T, tCapacity>::StaticVector(T&& value) :
+	StaticBuffer<T, tCapacity>(std::move(value)),
+	size_(1)
 {
 	static_assert(tCapacity > 0, "Invalid vector capacity!");
 }
@@ -255,45 +293,95 @@ inline StaticVector<T, tCapacity>::StaticVector(const T& value) :
 template <typename T, size_t tCapacity>
 inline StaticVector<T, tCapacity>::StaticVector(const size_t number, const T& value) :
 	StaticBuffer<T, tCapacity>(number, value),
-	vectorSize(number)
+	size_(number)
 {
+	static_assert(tCapacity > 0, "Invalid vector capacity!");
+
 	ocean_assert(number <= tCapacity);
+}
+
+template <typename T, size_t tCapacity>
+inline StaticVector<T, tCapacity>::StaticVector(const T* values, const size_t size)
+{
+	static_assert(tCapacity > 0, "Invalid vector capacity!");
+
+	ocean_assert(size <= tCapacity);
+
+	for (size_t n = 0; n < std::min(size, tCapacity); ++n)
+	{
+		this->elements_[n] = values[n];
+	}
+
+	size_ = size;
 }
 
 template <typename T, size_t tCapacity>
 inline StaticVector<T, tCapacity>::StaticVector(const std::vector<T>& values) :
 	StaticBuffer<T, tCapacity>(values),
-	vectorSize(min(tCapacity, values.size()))
+	size_(min(tCapacity, values.size()))
 {
-	// nothing to do here
+	static_assert(tCapacity > 0, "Invalid vector capacity!");
+}
+
+template <typename T, size_t tCapacity>
+inline StaticVector<T, tCapacity>::StaticVector(std::vector<T>&& values) :
+	StaticBuffer<T, tCapacity>(std::move(values)),
+	size_(min(tCapacity, values.size()))
+{
+	static_assert(tCapacity > 0, "Invalid vector capacity!");
 }
 
 template <typename T, size_t tCapacity>
 inline size_t StaticVector<T, tCapacity>::size() const
 {
-	return vectorSize;
+	return size_;
 }
 
 template <typename T, size_t tCapacity>
 inline bool StaticVector<T, tCapacity>::occupied() const
 {
-	return vectorSize == tCapacity;
+	return size_ == tCapacity;
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::pushBack(const T& value)
 {
-	ocean_assert(vectorSize < tCapacity);
-	this->elements_[vectorSize++] = value;
+	ocean_assert(size_ < tCapacity);
+
+	this->elements_[size_++] = value;
+}
+
+template <typename T, size_t tCapacity>
+inline void StaticVector<T, tCapacity>::pushBack(T&& value)
+{
+	ocean_assert(size_ < tCapacity);
+
+	this->elements_[size_++] = std::move(value);
 }
 
 template <typename T, size_t tCapacity>
 inline bool StaticVector<T, tCapacity>::securePushBack(const T& value)
 {
-	if (vectorSize >= tCapacity)
+	if (size_ >= tCapacity)
+	{
 		return false;
+	}
 
-	this->elements_[vectorSize++] = value;
+	this->elements_[size_++] = value;
+
+	return true;
+}
+
+template <typename T, size_t tCapacity>
+inline bool StaticVector<T, tCapacity>::securePushBack(T&& value)
+{
+	if (size_ >= tCapacity)
+	{
+		return false;
+	}
+
+	this->elements_[size_++] = std::move(value);
+
 	return true;
 }
 
@@ -301,57 +389,68 @@ template <typename T, size_t tCapacity>
 template <size_t tCapacity2>
 inline void StaticVector<T, tCapacity>::pushBack(const StaticVector<T, tCapacity2>& value)
 {
-	size_t elements = min(value.size(), tCapacity - vectorSize);
+	size_t elements = min(value.size(), tCapacity - size_);
 
 	for (size_t n = 0; n < elements; ++n)
-		this->elements_[n + vectorSize] = value.elements_[n];
+	{
+		this->elements_[n + size_] = value.elements_[n];
+	}
 
-	vectorSize += elements;
+	size_ += elements;
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::pushBack(const std::vector<T>& value)
 {
-	size_t elements = min(value.size(), tCapacity - vectorSize);
+	size_t elements = min(value.size(), tCapacity - size_);
 
 	for (size_t n = 0; n < elements; ++n)
-		this->elements_[n + vectorSize] = value.elements_[n];
+	{
+		this->elements_[n + size_] = value.elements_[n];
+	}
 
-	vectorSize += elements;
+	size_ += elements;
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::popBack()
 {
-	ocean_assert(vectorSize > 0);
-	this->elements_[--vectorSize] = T();
+	ocean_assert(size_ > 0);
+
+	this->elements_[--size_] = T();
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::securePopBack()
 {
-	if (vectorSize > 0)
-		this->elements_[--vectorSize] = T();
+	if (size_ > 0)
+	{
+		this->elements_[--size_] = T();
+	}
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::weakPopBack()
 {
-	ocean_assert(vectorSize > 0);
-	--vectorSize;
+	ocean_assert(size_ > 0);
+
+	--size_;
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::secureWeakPopBack()
 {
-	if (vectorSize > 0)
-		vectorSize--;
+	if (size_ > 0)
+	{
+		--size_;
+	}
 }
 
 template <typename T, size_t tCapacity>
 inline const T& StaticVector<T, tCapacity>::front() const
 {
 	ocean_assert(!empty());
+
 	return this->elements_[0];
 }
 
@@ -359,6 +458,7 @@ template <typename T, size_t tCapacity>
 inline T& StaticVector<T, tCapacity>::front()
 {
 	ocean_assert(!empty());
+
 	return this->elements_[0];
 }
 
@@ -366,43 +466,50 @@ template <typename T, size_t tCapacity>
 inline const T& StaticVector<T, tCapacity>::back() const
 {
 	ocean_assert(!empty());
-	return this->elements_[vectorSize - 1];
+
+	return this->elements_[size_ - 1];
 }
 
 template <typename T, size_t tCapacity>
 inline T& StaticVector<T, tCapacity>::back()
 {
 	ocean_assert(!empty());
-	return this->elements_[vectorSize - 1];
+
+	return this->elements_[size_ - 1];
 }
 
 template <typename T, size_t tCapacity>
 inline bool StaticVector<T, tCapacity>::empty() const
 {
-	return vectorSize == 0;
+	return size_ == 0;
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::erase(const size_t index)
 {
-	ocean_assert(index < vectorSize);
-	for (size_t n = index; n + 1 < vectorSize; ++n)
-		this->elements_[n] = std::move(this->elements_[n + 1]);
+	ocean_assert(index < size_);
 
-	this->elements_[--vectorSize] = T();
+	for (size_t n = index + 1; n < size_; ++n)
+	{
+		this->elements_[n - 1] = std::move(this->elements_[n]);
+	}
+
+	this->elements_[--size_] = T();
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::unstableErase(const size_t index)
 {
-	ocean_assert(index < vectorSize);
+	ocean_assert(index < size_);
 
-	vectorSize--;
+	--size_;
 
-	if (index < vectorSize)
-		this->elements_[index] = this->elements_[vectorSize];
+	if (index < size_)
+	{
+		this->elements_[index] = std::move(this->elements_[size_]);
+	}
 
-	this->elements_[vectorSize] = T();
+	this->elements_[size_] = T();
 }
 
 template <typename T, size_t tCapacity>
@@ -410,57 +517,70 @@ inline void StaticVector<T, tCapacity>::resize(const size_t size)
 {
 	ocean_assert(size <= tCapacity);
 
-	for (size_t n = size; n < vectorSize; ++n)
+	for (size_t n = size; n < size_; ++n)
+	{
 		this->elements_[n] = T();
+	}
 
-	vectorSize = size;
+	size_ = size;
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::weakResize(const size_t size)
 {
 	ocean_assert(size <= tCapacity);
-	vectorSize = size;
+
+	size_ = size;
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::clear()
 {
-	for (size_t n = 0; n < vectorSize; ++n)
+	for (size_t n = 0; n < size_; ++n)
+	{
 		this->elements_[n] = T();
+	}
 
-	vectorSize = 0;
+	size_ = 0;
 }
 
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::weakClear()
 {
-	vectorSize = 0;
+	size_ = 0;
 }
 
 template <typename T, size_t tCapacity>
 inline const T& StaticVector<T, tCapacity>::operator[](const size_t index) const
 {
-	ocean_assert(index < vectorSize);
+	ocean_assert(index < size_);
+
 	return this->elements_[index];
 }
 
 template <typename T, size_t tCapacity>
 inline T& StaticVector<T, tCapacity>::operator[](const size_t index)
 {
-	ocean_assert(index < vectorSize);
+	ocean_assert(index < size_);
+
 	return this->elements_[index];
 }
 
 template <typename T, size_t tCapacity>
 inline bool StaticVector<T, tCapacity>::operator==(const StaticVector<T, tCapacity>& second) const
 {
-	if (vectorSize != second.vectorSize)
+	if (size_ != second.size_)
+	{
 		return false;
+	}
 
-	for (size_t n = 0; n < vectorSize; ++n)
+	for (size_t n = 0; n < size_; ++n)
+	{
 		if (this->elements_[n] != second.elements_[n])
+		{
 			return false;
+		}
+	}
 
 	return true;
 }
@@ -474,7 +594,7 @@ inline bool StaticVector<T, tCapacity>::operator!=(const StaticVector<T, tCapaci
 template <typename T, size_t tCapacity>
 inline StaticVector<T, tCapacity>::operator bool() const
 {
-	return vectorSize > 0;
+	return size_ > 0;
 }
 
 }

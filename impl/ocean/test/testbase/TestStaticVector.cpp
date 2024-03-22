@@ -357,8 +357,7 @@ bool TestStaticVector::testConstructor(RandomGenerator& randomGenerator)
 			}
 		}
 
-		// not yet supported
-		/*{
+		{
 			const StaticVector<T, tCapacity> staticVector(elementVector.data(), elementVector.size());
 
 			if (staticVector.capacity() != tCapacity)
@@ -378,7 +377,7 @@ bool TestStaticVector::testConstructor(RandomGenerator& randomGenerator)
 					return false;
 				}
 			}
-		}*/
+		}
 
 		{
 			const std::vector<T> copyElementVector(elementVector);
