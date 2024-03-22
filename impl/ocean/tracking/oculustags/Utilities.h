@@ -9,9 +9,8 @@
 #include "ocean/base/Frame.h"
 #include "ocean/base/Memory.h"
 
-#include "ocean/cv/FrameInterpolatorBilinear.h"
-
 #include "ocean/cv/advanced/AdvancedMotion.h"
+#include "ocean/cv/advanced/AdvancedFrameInterpolatorBilinear.h"
 
 #include "ocean/math/AnyCamera.h"
 #include "ocean/math/FiniteLine2.h"
@@ -495,9 +494,9 @@ bool Utilities::refineCorner(const Frame& yFrame, Vector2& corner, const uint32_
 	Vector2 sampleCenter = tUseKernel11 ? (refinedCorner - Vector2(1, 1)) : refinedCorner;
 
 	const Scalar leftBorder = Scalar(bufferSize / 2u);
-	const Scalar rightBorder = Scalar(yFrame.width() - bufferSize / 2u);
+	const Scalar rightBorder = Scalar(yFrame.width() - bufferSize / 2u - 1u);
 	const Scalar topBorder = Scalar(bufferSize / 2u);
-	const Scalar bottomBorder = Scalar(yFrame.height() - bufferSize / 2u);
+	const Scalar bottomBorder = Scalar(yFrame.height() - bufferSize / 2u - 1u);
 
 	if (refinedCorner.x() < leftBorder || refinedCorner.x() >= rightBorder || refinedCorner.y() < topBorder || refinedCorner.y() >= bottomBorder
 		|| sampleCenter.x() < leftBorder || sampleCenter.x() >= rightBorder || sampleCenter.y() < topBorder || sampleCenter.y() >= bottomBorder)
@@ -514,7 +513,13 @@ bool Utilities::refineCorner(const Frame& yFrame, Vector2& corner, const uint32_
 
 	do
 	{
-		CV::FrameInterpolatorBilinear::patchFrame8BitPerChannel<1u>(yFrame.constdata<uint8_t>(), buffer.data<uint8_t>(), yFrame.width(), yFrame.height(), sampleCenter.x(), sampleCenter.y(), bufferSize, bufferSize, yFrame.paddingElements(), /* buffer padding elements */ 0u);
+		ocean_assert(sampleCenter.x() >= Scalar(bufferSize / 2u));
+		ocean_assert(sampleCenter.y() >= Scalar(bufferSize / 2u));
+
+		ocean_assert(sampleCenter.x() < Scalar(yFrame.width() - bufferSize / 2u - 1u));
+		ocean_assert(sampleCenter.y() < Scalar(yFrame.height() - bufferSize / 2u - 1u));
+
+		CV::Advanced::AdvancedFrameInterpolatorBilinear::interpolatePatch8BitPerChannel<1u, CV::PC_TOP_LEFT>(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.paddingElements(), buffer.data<uint8_t>(), sampleCenter, bufferSize, bufferSize);
 
 		Scalar a00 = 0;
 		Scalar a01 = 0;
