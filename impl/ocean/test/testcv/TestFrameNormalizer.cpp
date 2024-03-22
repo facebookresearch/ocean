@@ -36,6 +36,12 @@ bool TestFrameNormalizer::test(const double testDuration, Worker& worker)
 	allSucceeded = testNormalizeToFloat(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testValueRangeNormalizerToUint8(testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -586,6 +592,19 @@ TEST(TestFrameNormalizer, NormalizeToFloat_double_double_4u)
 	EXPECT_TRUE((TestFrameNormalizer::testNormalizeToFloat<double, double, 4u>(GTEST_TEST_DURATION, worker)));
 }
 
+
+TEST(TestFrameNormalizer, testValueRangeNormalizerToUint8_float)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameNormalizer::testValueRangeNormalizerToUint8<float>(GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameNormalizer, testValueRangeNormalizerToUint8_double)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameNormalizer::testValueRangeNormalizerToUint8<double>(GTEST_TEST_DURATION, worker));
+}
+
 #endif // OCEAN_USE_GTEST
 
 bool TestFrameNormalizer::testNormalizerToUint8(const double testDuration, Worker& worker)
@@ -916,6 +935,7 @@ bool TestFrameNormalizer::testNormalizeToFloat(const double testDuration, Worker
 	allSucceeded = testNormalizeToFloat<double, double, 3u>(testDuration, worker) && allSucceeded;
 	Log::info() << " ";
 	allSucceeded = testNormalizeToFloat<double, double, 4u>(testDuration, worker) && allSucceeded;
+
 	return allSucceeded;
 }
 
@@ -990,6 +1010,186 @@ bool TestFrameNormalizer::testNormalizeToFloat(const double testDuration, Worker
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Max. absolute error: " << String::toAString(maxAbsoluteError, 5u);
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestFrameNormalizer::testValueRangeNormalizerToUint8(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing value range normalize to float:";
+	Log::info() << " ";
+
+	bool allSucceeded = true;
+
+	allSucceeded = testValueRangeNormalizerToUint8<float>(testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testValueRangeNormalizerToUint8<double>(testDuration, worker) && allSucceeded;
+
+	return allSucceeded;
+}
+
+template <typename TFloat>
+bool TestFrameNormalizer::testValueRangeNormalizerToUint8(const double testDuration, Worker& worker)
+{
+	static_assert(std::is_floating_point<TFloat>::value, "Invalid source type!");
+
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "... for " << TypeNamer::name<TFloat>() << ":";
+
+	constexpr unsigned int width = 1000u;
+	constexpr unsigned int height = 1000u;
+
+	constexpr unsigned int pixels = width * height;
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<TFloat, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+
+		const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+		TFloat minValue = TFloat(RandomD::scalar(randomGenerator, -1.0e5, 1.0e5));
+		TFloat maxValue = TFloat(RandomD::scalar(randomGenerator, -1.0e5, 1.0e5));
+
+		if (minValue > maxValue)
+		{
+			std::swap(minValue, maxValue);
+		}
+
+		ocean_assert(minValue <= maxValue);
+
+		maxValue = std::max(minValue + TFloat(5000), maxValue);
+
+		const TFloat valueRange = maxValue - minValue;
+		ocean_assert(valueRange >= TFloat(255));
+
+		const TFloat testMaxValue = minValue + valueRange;
+		TFloat floatPrecisionMaxValue = NumericT<TFloat>::abs(testMaxValue - maxValue); // due to floating point precision, we may get a precision gap
+
+		floatPrecisionMaxValue = std::max(floatPrecisionMaxValue, valueRange * TFloat(0.0001));
+
+		unsigned int index = 0u;
+
+		for (unsigned int y = 0u; y < height; ++y)
+		{
+			TFloat* const row = frame.row<TFloat>(y);
+
+			for (unsigned int x = 0u; x < width; ++x)
+			{
+				// index == 0: minValue
+				// index == pixels - 1: maxValue
+
+				TFloat value = minValue + TFloat(index) * valueRange / TFloat(pixels - 1u);
+
+				ocean_assert(index != 0u || value == minValue);
+				ocean_assert(index != pixels - 1u || NumericT<TFloat>::isEqual(value, maxValue, floatPrecisionMaxValue * TFloat(2)));
+
+				ocean_assert(value >= minValue && value <= maxValue + floatPrecisionMaxValue);
+
+				if (index == pixels - 1u)
+				{
+					value = maxValue;
+				}
+
+				if (index >= pixels * 99u / 100u) // % in the last 1% we may see too large values
+				{
+					value = std::min(value, maxValue);
+				}
+
+				ocean_assert(value >= minValue && value <= maxValue);
+
+				row[x] = value;
+
+				++index;
+			}
+		}
+
+		Frame normalized = CV::CVUtilities::randomizedFrame(FrameType(frame, FrameType::genericPixelFormat<uint8_t, 1u>()), false, &randomGenerator);
+
+		const Frame copyNormalized(normalized, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+		CV::FrameNormalizer::normalize1ChannelToUint8<TFloat>(frame.constdata<TFloat>(), normalized.data<uint8_t>(), frame.width(), frame.height(), frame.paddingElements(), normalized.paddingElements(), useWorker);
+
+		if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
+		{
+			ocean_assert(false && "Invalid padding memory!");
+			return false;
+		}
+
+		if (!CV::CVUtilities::isPaddingMemoryIdentical(normalized, copyNormalized))
+		{
+			ocean_assert(false && "Invalid padding memory!");
+			return false;
+		}
+
+		// let's create a histogram to ensure that each bin is equally filled
+
+		Indices32 histogram(256, 0u);
+
+		int previousValue = -1;
+
+		for (unsigned int y = 0u; y < height; ++y)
+		{
+			const uint8_t* const row = normalized.constrow<uint8_t>(y);
+
+			for (unsigned int x = 0u; x < width; ++x)
+			{
+				const uint8_t value = row[x];
+
+				if (int(value) < previousValue) // each value must be equal or larger than the previous value
+				{
+					allSucceeded = false;
+				}
+
+				++histogram[value];
+
+				previousValue = int(value);
+			}
+		}
+
+		constexpr TFloat perfectBinSize = TFloat(pixels) / TFloat(256);
+
+		TFloat maxError = TFloat(0);
+
+		for (const Index32& bin : histogram)
+		{
+			const TFloat error = NumericT<TFloat>::abs(TFloat(bin) - perfectBinSize);
+
+			if (error > maxError)
+			{
+				maxError = error;
+			}
+		}
+
+		const double percent = double(maxError) / double(perfectBinSize);
+
+		if (percent >= 0.005) // 0.5%
+		{
+			allSucceeded = false;
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
 	{

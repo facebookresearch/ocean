@@ -72,6 +72,24 @@ class OCEAN_TEST_CV_EXPORT TestFrameNormalizer
 		template <typename TSource, typename TTarget, unsigned int tChannels>
 		static bool testNormalizeToFloat(const double testDuration, Worker& worker);
 
+		/**
+		 * Test the value range of the float normalizer.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool testValueRangeNormalizerToUint8(const double testDuration, Worker& worker);
+
+		/**
+		 * Test the value range of the float normalizer.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object to distribute the computation
+		 * @return True, if succeeded
+		 * @tparam TFloat The float data type of the source frame, either 'float' or 'double'
+		 */
+		template <typename TFloat>
+		static bool testValueRangeNormalizerToUint8(const double testDuration, Worker& worker);
+
 	protected:
 
 		/**
