@@ -1,12 +1,11 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-#ifndef META_OCEAN_TEST_TESTBASE_TEST_STATIC_BUFFER_H
-#define META_OCEAN_TEST_TESTBASE_TEST_STATIC_BUFFER_H
+#ifndef META_OCEAN_TEST_TESTBASE_TEST_STATIC_VECTOR_H
+#define META_OCEAN_TEST_TESTBASE_TEST_STATIC_VECTOR_H
 
 #include "ocean/test/testbase/TestBase.h"
 
 #include "ocean/base/RandomGenerator.h"
-#include "ocean/base/RandomI.h"
 
 namespace Ocean
 {
@@ -18,13 +17,11 @@ namespace TestBase
 {
 
 /**
- * This class implements tests for StaticBuffer.
+ * This class implements tests for StaticVector.
  * @ingroup testbase
  */
-class OCEAN_TEST_BASE_EXPORT TestStaticBuffer
+class OCEAN_TEST_BASE_EXPORT TestStaticVector
 {
-	friend class TestStaticVector;
-
 	public:
 
 		/**
@@ -36,27 +33,38 @@ class OCEAN_TEST_BASE_EXPORT TestStaticBuffer
 
 		/**
 		 * Tests the constructor functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testConstructor();
+		static bool testConstructor(const double testDuration);
 
 		/**
 		 * Tests the access functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testAccess();
+		static bool testAccess(const double testDuration);
 
 		/**
 		 * Tests the clear function.
+		 v
 		 * @return True, if succeeded
 		 */
-		static bool testClear();
+		static bool testClear(const double testDuration);
+
+		/**
+		 * Tests the resize functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testResize(const double testDuration);
 
 		/**
 		 * Tests the comparison functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testComparison();
+		static bool testComparison(const double testDuration);
 
 	protected:
 
@@ -72,12 +80,13 @@ class OCEAN_TEST_BASE_EXPORT TestStaticBuffer
 
 		/**
 		 * Tests the access functions.
+		 * @param randomGenerator The random generator to be used
 		 * @return True, if succeeded
 		 * @tparam T The data type of the buffer
 		 * @tparam tCapacity The capacity of the buffer, with range [1, infinity)
 		 */
 		template <typename T, size_t tCapacity>
-		static bool testAccess();
+		static bool testAccess(RandomGenerator& randomGenerator);
 
 		/**
 		 * Tests the clear function.
@@ -90,6 +99,16 @@ class OCEAN_TEST_BASE_EXPORT TestStaticBuffer
 		static bool testClear(RandomGenerator& randomGenerator);
 
 		/**
+		 * Tests the resize functions.
+		 * @param randomGenerator The random generator to be used
+		 * @return True, if succeeded
+		 * @tparam T The data type of the buffer
+		 * @tparam tCapacity The capacity of the buffer, with range [1, infinity)
+		 */
+		template <typename T, size_t tCapacity>
+		static bool testResize(RandomGenerator& randomGenerator);
+
+		/**
 		 * Tests the comparison functions.
 		 * @param randomGenerator The random generator to be used
 		 * @return True, if succeeded
@@ -98,61 +117,12 @@ class OCEAN_TEST_BASE_EXPORT TestStaticBuffer
 		 */
 		template <typename T, size_t tCapacity>
 		static bool testComparison(RandomGenerator& randomGenerator);
-
-		/**
-		 * Returns a random value.
-		 * @param randomGenerator The random generator to be used
-		 * @return The random value
-		 * @tparam T The data type of the value
-		 */
-		template <typename T>
-		static inline T randomValue(RandomGenerator& randomGenerator);
 };
 
-template <>
-inline int32_t TestStaticBuffer::randomValue(RandomGenerator& randomGenerator)
-{
-	while (true)
-	{
-		const int32_t value = RandomI::random(randomGenerator, -1000, 1000);
-
-		if (value != 0)
-		{
-			return value;
-		}
-	}
-}
-
-template <>
-inline uint8_t TestStaticBuffer::randomValue(RandomGenerator& randomGenerator)
-{
-	return uint8_t(RandomI::random(randomGenerator, 1u, 255u));
-}
-
-template <>
-inline float TestStaticBuffer::randomValue(RandomGenerator& randomGenerator)
-{
-	while (true)
-	{
-		const float value = float(RandomI::random(randomGenerator, -1000, 1000));
-
-		if (value != 0.0f)
-		{
-			return value;
-		}
-	}
-}
-
-template <>
-inline std::string TestStaticBuffer::randomValue(RandomGenerator& randomGenerator)
-{
-	return String::toAString(RandomI::random(randomGenerator, 1000u));
 }
 
 }
 
 }
 
-}
-
-#endif // META_OCEAN_TEST_TESTBASE_TEST_STATIC_BUFFER_H
+#endif // META_OCEAN_TEST_TESTBASE_TEST_STATIC_VECTOR_H

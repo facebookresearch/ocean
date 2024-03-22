@@ -3,7 +3,6 @@
 #include "ocean/test/testbase/TestStaticBuffer.h"
 
 #include "ocean/base/Frame.h"
-#include "ocean/base/RandomI.h"
 #include "ocean/base/StaticBuffer.h"
 #include "ocean/base/String.h"
 
@@ -233,19 +232,24 @@ bool TestStaticBuffer::testConstructor(RandomGenerator& randomGenerator)
 	static_assert(tCapacity >= 1, "Invalid capacity");
 
 	{
-		std::vector<T> elementsVector(tCapacity);
+		std::vector<T> elementVector(tCapacity);
 
 		for (size_t n = 0; n < tCapacity; ++n)
 		{
-			elementsVector[n] = randomValue<T>(randomGenerator);
+			elementVector[n] = randomValue<T>(randomGenerator);
 		}
 
 		{
-			const StaticBuffer<T, tCapacity> buffer0(elementsVector);
+			const StaticBuffer<T, tCapacity> buffer(elementVector);
+
+			if (buffer.capacity() != tCapacity)
+			{
+				return false;
+			}
 
 			for (size_t n = 0; n < tCapacity; ++n)
 			{
-				if (buffer0[n] != elementsVector[n])
+				if (buffer[n] != elementVector[n])
 				{
 					return false;
 				}
@@ -253,11 +257,16 @@ bool TestStaticBuffer::testConstructor(RandomGenerator& randomGenerator)
 		}
 
 		{
-			const StaticBuffer<T, tCapacity> buffer1(elementsVector.data());
+			const StaticBuffer<T, tCapacity> buffer(elementVector.data());
+
+			if (buffer.capacity() != tCapacity)
+			{
+				return false;
+			}
 
 			for (size_t n = 0; n < tCapacity; ++n)
 			{
-				if (buffer1[n] != elementsVector[n])
+				if (buffer[n] != elementVector[n])
 				{
 					return false;
 				}
@@ -269,9 +278,14 @@ bool TestStaticBuffer::testConstructor(RandomGenerator& randomGenerator)
 		const T value = randomValue<T>(randomGenerator);
 
 		{
-			const StaticBuffer<T, tCapacity> buffer2(value);
+			const StaticBuffer<T, tCapacity> buffer(value);
 
-			if (buffer2[0] != value)
+			if (buffer.capacity() != tCapacity)
+			{
+				return false;
+			}
+
+			if (buffer[0] != value)
 			{
 				return false;
 			}
@@ -280,11 +294,16 @@ bool TestStaticBuffer::testConstructor(RandomGenerator& randomGenerator)
 		{
 			const size_t number = size_t(RandomI::random(randomGenerator, (unsigned int)(tCapacity - 1)));
 
-			const StaticBuffer<T, tCapacity> buffer3(number, value);
+			const StaticBuffer<T, tCapacity> buffer(number, value);
+
+			if (buffer.capacity() != tCapacity)
+			{
+				return false;
+			}
 
 			for (size_t n = 0; n < number; ++n)
 			{
-				if (buffer3[n] != value)
+				if (buffer[n] != value)
 				{
 					return false;
 				}
@@ -301,6 +320,11 @@ bool TestStaticBuffer::testAccess()
 	static_assert(tCapacity >= 1, "Invalid capacity");
 
 	StaticBuffer<T, tCapacity> buffer;
+
+	if (buffer.capacity() != tCapacity)
+	{
+		return false;
+	}
 
 	T* data = buffer.data();
 
@@ -391,7 +415,7 @@ bool TestStaticBuffer::testComparison(RandomGenerator& randomGenerator)
 
 	StaticBuffer<T, tCapacity> buffer4 = buffer;
 
-	size_t index = size_t(RandomI::random(randomGenerator, (unsigned int)(tCapacity -1)));
+	size_t index = size_t(RandomI::random(randomGenerator, (unsigned int)(tCapacity - 1)));
 
 	const T value = buffer[index];
 
@@ -412,46 +436,6 @@ bool TestStaticBuffer::testComparison(RandomGenerator& randomGenerator)
 	}
 
 	return true;
-}
-
-template <>
-int32_t TestStaticBuffer::randomValue(RandomGenerator& randomGenerator)
-{
-	while (true)
-	{
-		const int32_t value = RandomI::random(randomGenerator, -1000, 1000);
-
-		if (value != 0)
-		{
-			return value;
-		}
-	}
-}
-
-template <>
-uint8_t TestStaticBuffer::randomValue(RandomGenerator& randomGenerator)
-{
-	return uint8_t(RandomI::random(randomGenerator, 1u, 255u));
-}
-
-template <>
-float TestStaticBuffer::randomValue(RandomGenerator& randomGenerator)
-{
-	while (true)
-	{
-		const float value = float(RandomI::random(randomGenerator, -1000, 1000));
-
-		if (value != 0.0f)
-		{
-			return value;
-		}
-	}
-}
-
-template <>
-std::string TestStaticBuffer::randomValue(RandomGenerator& randomGenerator)
-{
-	return String::toAString(RandomI::random(randomGenerator, 1000u));
 }
 
 }
