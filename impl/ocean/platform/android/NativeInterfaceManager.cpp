@@ -7,7 +7,14 @@
 	#include <unistd.h>
 #endif
 
-jint JNI_OnLoad(JavaVM* vm, void* reserved)
+/**
+ * The VM calls JNI_OnLoad when the native library is loaded.
+ * @param vm Virtual machine object
+ * @param reserved Reserved parameter
+ * @return JNI version
+ * @ingroup platformandroid
+ */
+JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
 {
 	Ocean::Log::info() << "JNI_OnLoad invoked.";
 	Ocean::Platform::Android::NativeInterfaceManager::get().setVirtualMachine(vm);
@@ -24,9 +31,7 @@ namespace Platform
 namespace Android
 {
 
-NativeInterfaceManager::NativeInterfaceManager() :
-	virtualMachine_(nullptr),
-	currentActivity_(nullptr)
+NativeInterfaceManager::NativeInterfaceManager()
 {
 	// nothing to do here
 }

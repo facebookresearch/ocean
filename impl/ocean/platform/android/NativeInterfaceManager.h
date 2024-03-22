@@ -8,17 +8,6 @@
 #include "ocean/base/Lock.h"
 #include "ocean/base/Singleton.h"
 
-#include <map>
-
-/**
- * The VM calls JNI_OnLoad when the native library is loaded.
- * @param vm Virtual machine object
- * @param reserved Reserved parameter
- * @return JNI version
- * @ingroup platformandroid
- */
-jint JNI_OnLoad(JavaVM* vm, void* reserved);
-
 namespace Ocean
 {
 
@@ -41,7 +30,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT NativeInterfaceManager : public Singleton<Na
 		/**
 		 * Definition of a map mapping thread ids to Java native interface environments.
 		 */
-		typedef std::map<pid_t, JNIEnv*> ThreadEnvironmentMap;
+		using ThreadEnvironmentMap = std::unordered_map<pid_t, JNIEnv*>;
 
 	public:
 
@@ -96,10 +85,10 @@ class OCEAN_PLATFORM_ANDROID_EXPORT NativeInterfaceManager : public Singleton<Na
 		Lock lock_;
 
 		/// JNI virtual machine object.
-		JavaVM* virtualMachine_;
+		JavaVM* virtualMachine_ = nullptr;
 
 		/// The JNI object of the current activity with global reference, nullptr if not set.
-		jobject currentActivity_;
+		jobject currentActivity_ = nullptr;
 
 		/// Map holding Java native environments individually for each thread.
 		ThreadEnvironmentMap threadEnvironmentMap_;
