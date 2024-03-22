@@ -6,40 +6,22 @@
 namespace Ocean
 {
 
-WorkerPool::WorkerPool() :
-	poolCapacity(2u)
-{
-	// nothing to do here
-}
-
 WorkerPool::~WorkerPool()
 {
-	const ScopedLock scopedLock(poolLock);
+	const ScopedLock scopedLock(lock_);
 
-	for (size_t n = 0; n < poolFreeWorkers.size(); ++n)
-	{
-		ocean_assert(poolFreeWorkers[n] != NULL);
-		delete poolFreeWorkers[n];
-	}
-
-	ocean_assert(poolUsedWorkers.empty());
-	for (size_t n = 0; n < poolUsedWorkers.size(); ++n)
-	{
-		ocean_assert(poolUsedWorkers[n] != NULL);
-		delete poolUsedWorkers[n];
-	}
-
-	poolFreeWorkers.clear();
-	poolUsedWorkers.clear();
+	freeWorkers_.clear();
+	usedWorkers_.clear();
 }
 
-bool WorkerPool::setCapacity(const unsigned int workers)
+bool WorkerPool::setCapacity(const size_t workers)
 {
-	const ScopedLock scopedLock(poolLock);
+	const ScopedLock scopedLock(lock_);
 
-	if (workers >= poolCapacity)
+	if (workers >= capacity_)
 	{
-		poolCapacity = workers;
+		capacity_ = workers;
+
 		return true;
 	}
 
@@ -53,58 +35,62 @@ WorkerPool::ScopedWorker WorkerPool::scopedWorker()
 
 Worker* WorkerPool::lock()
 {
-	const ScopedLock scopedLock(poolLock);
+	const ScopedLock scopedLock(lock_);
 
-	if (poolFreeWorkers.empty() && poolUsedWorkers.empty())
+	if (freeWorkers_.empty() && usedWorkers_.empty())
 	{
 		const unsigned int cores = Processor::get().cores();
 
 		if (cores == 1u)
-			return NULL;
+		{
+			return nullptr;
+		}
 	}
 
 	// try to find an unused worker
-	if (!poolFreeWorkers.empty())
+	if (!freeWorkers_.empty())
 	{
-		Worker* worker = poolFreeWorkers.back();
-		poolFreeWorkers.popBack();
+		UniqueWorker worker = std::move(freeWorkers_.back());
+		freeWorkers_.popBack();
 
-		ocean_assert(poolUsedWorkers.size() < poolUsedWorkers.capacity());
-		poolUsedWorkers.pushBack(worker);
+		ocean_assert(usedWorkers_.size() < usedWorkers_.capacity());
+		usedWorkers_.pushBack(std::move(worker));
 
-		return worker;
+		return usedWorkers_.back().get();
 	}
 
 	// if all workers are in use, but there is still capacity for a new worker
-	if (poolFreeWorkers.size() + poolUsedWorkers.size() < poolCapacity)
+	if (freeWorkers_.size() + usedWorkers_.size() < capacity_)
 	{
-		Worker* worker = new Worker();
+		UniqueWorker worker = std::make_unique<Worker>();
 
-		ocean_assert(poolUsedWorkers.size() < poolUsedWorkers.capacity());
-		poolUsedWorkers.pushBack(worker);
+		ocean_assert(usedWorkers_.size() < usedWorkers_.capacity());
+		usedWorkers_.pushBack(std::move(worker));
 
-		ocean_assert(poolFreeWorkers.empty());
+		ocean_assert(freeWorkers_.empty());
 
-		return worker;
+		return usedWorkers_.back().get();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void WorkerPool::unlock(Worker* worker)
 {
-	if (worker)
+	if (worker != nullptr)
 	{
-		const ScopedLock scopedLock(poolLock);
+		const ScopedLock scopedLock(lock_);
 
-		for (size_t n = 0; n < min(size_t(20), poolUsedWorkers.size()); ++n)
+		for (size_t n = 0; n < min(usedWorkers_.size(), size_t(20)); ++n)
 		{
-			if (poolUsedWorkers[n] == worker)
+			if (usedWorkers_[n].get() == worker)
 			{
-				poolUsedWorkers.unstableErase(n);
+				UniqueWorker usedWorker = std::move(usedWorkers_[n]);
+				usedWorkers_[n] = std::move(usedWorkers_.back());
+				usedWorkers_.popBack();
 
-				ocean_assert(poolFreeWorkers.size() < poolFreeWorkers.capacity());
-				poolFreeWorkers.pushBack(worker);
+				ocean_assert(freeWorkers_.size() < freeWorkers_.capacity());
+				freeWorkers_.pushBack(std::move(usedWorker));
 
 				return;
 			}

@@ -79,12 +79,19 @@ bool TestWorkerPool::testScopedWorker(const double testDuration)
 
 	Log::info() << "Test ScopedWorker acquiring:";
 
+	bool allSucceeded = true;
+
 	HighPerformanceStatistic performanceFirst, performanceSecond, performanceThird;
 	HighPerformanceStatistic performanceCreateDestroyFirst, performanceCreateDestroyTwo, performanceCreateDestroyThree;
 
-	const unsigned int constIterations = 10u;
+	constexpr unsigned int constIterations = 10u;
 
-	bool allSucceeded = true;
+	const size_t capacity = WorkerPool::get().capacity();
+
+	if (capacity != 2)
+	{
+		allSucceeded = false;
+	}
 
 	const Timestamp startTimestamp(true);
 
@@ -159,7 +166,12 @@ bool TestWorkerPool::testScopedWorker(const double testDuration)
 	Log::info() << "Performance acquire and surrender two objects: " << performanceCreateDestroyTwo.averageMseconds() * 1000.0 / double(constIterations) << "mys";
 	Log::info() << "Performance acquire and surrender three objects: " << performanceCreateDestroyThree.averageMseconds() * 1000.0 / double(constIterations) << "mys";
 
-	return allSucceeded || WorkerPool::get().capacity() != 2u;
+	if (WorkerPool::get().capacity() != 2)
+	{
+		allSucceeded = false;
+	}
+
+	return allSucceeded;
 }
 
 }

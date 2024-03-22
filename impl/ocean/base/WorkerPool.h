@@ -25,9 +25,14 @@ class OCEAN_BASE_EXPORT WorkerPool : public Singleton<WorkerPool>
 	private:
 
 		/**
+		 * Definition of a unique pointer holding a Worker object.
+		 */
+		using UniqueWorker = std::unique_ptr<Worker>;
+
+		/**
 		 * Definition of a static vector holding worker objects.
 		 */
-		typedef StaticVector<Worker*, 10> Workers;
+		using Workers = StaticVector<UniqueWorker, 10>;
 
 	public:
 
@@ -41,19 +46,19 @@ class OCEAN_BASE_EXPORT WorkerPool : public Singleton<WorkerPool>
 				/**
 				 * Creates an empty scoped worker object.
 				 */
-				inline ScopedWorker();
+				ScopedWorker() = default;
 
 				/**
 				 * Move constructor.
 				 * @param object The object to move
 				 */
-				inline ScopedWorker(ScopedWorker&& object);
+				inline ScopedWorker(ScopedWorker&& object) noexcept;
 
 				/**
 				 * Creates a new scoped worker object.
 				 * @param worker The worker object of this scoped object.
 				 */
-				inline explicit ScopedWorker(Worker* worker);
+				explicit inline ScopedWorker(Worker* worker) noexcept;
 
 				/**
 				 * Destructs a scoped worker object and unlocks the internal worker object automatically.
@@ -76,9 +81,10 @@ class OCEAN_BASE_EXPORT WorkerPool : public Singleton<WorkerPool>
 
 				/**
 				 * Move a scoped worker object.
-				 * @param object Object to move
+				 * @param object The object to move
+				 * @return Reference to this object
 				 */
-				inline ScopedWorker& operator=(ScopedWorker&& object);
+				inline ScopedWorker& operator=(ScopedWorker&& object) noexcept;
 
 				/**
 				 * Returns the internal worker object.
@@ -112,7 +118,7 @@ class OCEAN_BASE_EXPORT WorkerPool : public Singleton<WorkerPool>
 			private:
 
 				/// Internal worker object.
-				Worker* scopedWorker;
+				Worker* worker_ = nullptr;
 		};
 
 	public:
@@ -121,20 +127,20 @@ class OCEAN_BASE_EXPORT WorkerPool : public Singleton<WorkerPool>
 		 * Returns the maximal number of worker objects allowed inside this pool.
 		 * @return Maximal worker capacity, with range [1, 10], 2 by default
 		 */
-		inline unsigned int capacity();
+		inline size_t capacity();
 
 		/**
 		 * Returns the number of currently existing worker objects in this pool.
 		 * @return Worker count, with range [0, capacity()]
 		 */
-		inline unsigned int size();
+		inline size_t size();
 
 		/**
 		 * Defines the maximal number of worker objects existing concurrently.
 		 * @param workers Maximal number of worker objects to be allowed inside this pool, with range [capacity(), 10]
 		 * @return True, if succeeded
 		 */
-		bool setCapacity(const unsigned int workers);
+		bool setCapacity(const size_t workers);
 
 		/**
 		 * Returns a scoped object holding the real worker if available.
@@ -162,7 +168,7 @@ class OCEAN_BASE_EXPORT WorkerPool : public Singleton<WorkerPool>
 		/**
 		 * Creates a new worker pool and initializes the maximal worker capacity to 2.
 		 */
-		WorkerPool();
+		WorkerPool() = default;
 
 		/**
 		 * Destructs a worker pool.
@@ -187,32 +193,25 @@ class OCEAN_BASE_EXPORT WorkerPool : public Singleton<WorkerPool>
 	private:
 
 		/// Vector holding the currently not-used worker objects.
-		Workers poolFreeWorkers;
+		Workers freeWorkers_;
 
 		/// Vector holding the currently used worker objects.
-		Workers poolUsedWorkers;
+		Workers usedWorkers_;
 
 		/// Maximal pool capacity, with range [1, infinity)
-		unsigned int poolCapacity;
+		size_t capacity_ = 2;
 
 		/// Lock for the entire pool.
-		Lock poolLock;
+		Lock lock_;
 };
 
-WorkerPool::ScopedWorker::ScopedWorker() :
-	scopedWorker(NULL)
+inline WorkerPool::ScopedWorker::ScopedWorker(ScopedWorker&& object) noexcept
 {
-	// nothing to do here
+	*this = std::move(object);
 }
 
-inline WorkerPool::ScopedWorker::ScopedWorker(ScopedWorker&& object) :
-	scopedWorker(object.scopedWorker)
-{
-	object.scopedWorker = NULL;
-}
-
-inline WorkerPool::ScopedWorker::ScopedWorker(Worker* worker) :
-	scopedWorker(worker)
+inline WorkerPool::ScopedWorker::ScopedWorker(Worker* worker) noexcept :
+	worker_(worker)
 {
 	// nothing to do here
 }
@@ -224,26 +223,26 @@ inline WorkerPool::ScopedWorker::~ScopedWorker()
 
 inline Worker* WorkerPool::ScopedWorker::worker() const
 {
-	return scopedWorker;
+	return worker_;
 }
 
 inline void WorkerPool::ScopedWorker::release()
 {
-	if (scopedWorker)
+	if (worker_ != nullptr)
 	{
-		WorkerPool::get().unlock(scopedWorker);
-		scopedWorker = NULL;
+		WorkerPool::get().unlock(worker_);
+		worker_ = nullptr;
 	}
 }
 
-inline WorkerPool::ScopedWorker& WorkerPool::ScopedWorker::operator=(ScopedWorker&& object)
+inline WorkerPool::ScopedWorker& WorkerPool::ScopedWorker::operator=(ScopedWorker&& object) noexcept
 {
 	if (this != &object)
 	{
 		release();
 
-		scopedWorker = object.scopedWorker;
-		object.scopedWorker = NULL;
+		worker_ = object.worker_;
+		object.worker_ = nullptr;
 	}
 
 	return *this;
@@ -251,24 +250,26 @@ inline WorkerPool::ScopedWorker& WorkerPool::ScopedWorker::operator=(ScopedWorke
 
 inline Worker* WorkerPool::ScopedWorker::operator()() const
 {
-	return scopedWorker;
+	return worker_;
 }
 
 inline WorkerPool::ScopedWorker::operator bool() const
 {
-	return scopedWorker != NULL;
+	return worker_ != nullptr;
 }
 
-inline unsigned int WorkerPool::capacity()
+inline size_t WorkerPool::capacity()
 {
-	const ScopedLock scopedLock(poolLock);
-	return poolCapacity;
+	const ScopedLock scopedLock(lock_);
+
+	return capacity_;
 }
 
-inline unsigned int WorkerPool::size()
+inline size_t WorkerPool::size()
 {
-	const ScopedLock scopedLock(poolLock);
-	return (unsigned int)(poolUsedWorkers.size() + poolFreeWorkers.size());
+	const ScopedLock scopedLock(lock_);
+
+	return usedWorkers_.size() + freeWorkers_.size();
 }
 
 inline WorkerPool::ScopedWorker WorkerPool::conditionalScopedWorker(const bool condition)
