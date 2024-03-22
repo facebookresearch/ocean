@@ -62,7 +62,9 @@ bool TestPatternTracker::testPowerConsumption()
 	if (!Platform::Linux::Utilities::checkSecurityEnhancedLinuxStateIsPermissive())
 	{
 		Log::info() << "The enhanced linux state is not permissive, can be changed with 'setenforce 0'";
-		return false;
+		Log::info() << "Thus, skipping the test and rating it as succeeded.";
+
+		return true;
 	}
 
 	bool allSucceeded = true;
@@ -215,7 +217,7 @@ bool TestPatternTracker::testPowerConsumption()
 
 			double idleAveragePower = 0.0;
 			double idleStandardDeviation = -1.0;
-			size_t idleNumberMeasurements;
+			size_t idleNumberMeasurements = 0;
 			double idleMedian = 0.0;
 
 			if (idlePowerMonitor.averagePower(idleAveragePower, &idleStandardDeviation, &idleNumberMeasurements) && idlePowerMonitor.medianPower(idleMedian))
@@ -260,12 +262,12 @@ bool TestPatternTracker::testPowerConsumption()
 
 	return allSucceeded;
 
-#else //OCEAN_PLATFORM_BUILD_ANDROID
+#else // OCEAN_PLATFORM_BUILD_ANDROID
 
 	Log::info() << "Skipping test as it is only supported on Android platforms";
 	return true;
 
-#endif //OCEAN_PLATFORM_BUILD_ANDROID
+#endif // OCEAN_PLATFORM_BUILD_ANDROID
 
 }
 
