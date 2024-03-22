@@ -715,7 +715,16 @@ void FrameNormalizer::normalize1ChannelFloatToUint8Subset(const T* source, uint8
 	const unsigned int sourceStrideElements = width + sourcePaddingElements;
 	const unsigned int targetStrideElements = width + targetPaddingElements;
 
-	const TRange invRange = TRange(0xFF) / range;
+	/*
+	 * Value range mapping:
+	 *
+	 * [minValue,                                                         maxValue], maxValue = minValue + range
+	 * [   0   |   1   |   2   | ...                    ...   |   254   |   255   ]
+	 */
+
+	const TRange invRange = TRange(255.999) / range; // generously staying below 256 to avoid that we run out of the value range [0, 256) below
+
+	const TRange maxValueThreshold = TRange(minimalValue) + range + range * TRange(0.0001);
 
 	source += firstRow * sourceStrideElements;
 	target += firstRow * targetStrideElements;
@@ -737,11 +746,14 @@ void FrameNormalizer::normalize1ChannelFloatToUint8Subset(const T* source, uint8
 			}
 			else
 			{
-				ocean_assert(*source >= minimalValue && *source <= TRange(minimalValue) + TRange(range) + NumericT<TRange>::eps());
-				ocean_assert(TRange(*source - minimalValue) * invRange >= TRange(0));
-				ocean_assert(TRange(*source - minimalValue) * invRange < TRange(256));
+				ocean_assert_and_suppress_unused(*source >= minimalValue && *source <= maxValueThreshold, maxValueThreshold);
 
-				*target = uint8_t(TRange(*source - minimalValue) * invRange);
+				const TRange normalizedValue = TRange(*source - minimalValue) * invRange;
+
+				ocean_assert(normalizedValue >= TRange(0));
+				ocean_assert(normalizedValue < TRange(256));
+
+				*target = uint8_t(normalizedValue);
 			}
 
 			++target;
@@ -808,7 +820,7 @@ void FrameNormalizer::normalizeLogarithm1ChannelToUint8Subset(const T* source, u
 	const unsigned int targetStrideElements = width + targetPaddingElements;
 
 	const FloatType factor = FloatType(Numeric::pow(10, octaves) - 1) / FloatType(range);
-	const FloatType normalization = FloatType(255) / FloatType(octaves);
+	const FloatType normalization = FloatType(255.999) / FloatType(octaves); // generously staying below 256 to avoid that we run out of the value range [0, 256) below, see normalize1ChannelFloatToUint8Subset()
 
 	source += firstRow * sourceStrideElements;
 	target += firstRow * targetStrideElements;
