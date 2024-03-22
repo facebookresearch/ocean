@@ -285,16 +285,6 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorBilinear
 		static bool testResampleCameraImage(const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the bilinear patch creator with varying element types and number of channels
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param worker Optional worker object to distribute the CPU load
-		 * @return True, if succeeded
-		 * @tparam tChannels Number of channels to test, range: [1, infinity)
-		 */
-		template <unsigned int tChannels>
-		static bool testPatchFrame8BitPerChannel(const double testDuration, Worker& worker);
-
-		/**
 		 * Validates the bilinear frame resize function.
 		 * @param source The source frame that has been resized, must be valid
 		 * @param sourceWidth The width of the source frame in pixel, with range [1, infinity)

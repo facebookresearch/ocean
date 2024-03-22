@@ -740,26 +740,6 @@ class OCEAN_CV_EXPORT FrameInterpolatorBilinear
 		 */
 		static bool coversHomographyInputFrame(const unsigned int inputWidth, const unsigned int inputHeight, const unsigned int outputWidth, const unsigned int outputHeight, const SquareMatrix3& input_H_output, const int outputOriginX = 0, const int outputOriginY = 0);
 
-		/**
-		 * Copies a rectangular patch centered around a point from a source frame to a new target frame using bilinear interpolation
-		 * @note The patch must be fully inside the area of the source frame
-		 * @note Source and target are assumed to use the same frame origin (upper-left vs. lower-left)
-		 * @note Depending on origin used in the frames, the pixel origin is assumed to be in the top-left or bottom-left corner of each pixel
-		 * @param source Pointer to the data of the source frame, must be valid
-		 * @param target Pointer to the data of the target frame, must be valid
-		 * @param sourceWidth Width of the source frame in pixels, with range [targetWidth, infinity)
-		 * @param sourceHeight Height of the source frame in pixels, with range [targetWidth, infinity)
-		 * @param x Horizontal center position of the patch, with range [targetWidth/2, sourceWidth - targetWidth/2)
-		 * @param y Vertical center position of the patch, with range [targetHeight/2, sourceHeight - targetHeight/2)
-		 * @param targetWidth Width of the target frame, with range all odd values in range [1, sourceWidth]
-		 * @param targetHeight Height of the target frame, with range all odd values in range [1, sourceHeight]
-		 * @param sourcePaddingElements The number of padding elements at the end of each source frame, in elements, with range [0, infinity)
-		 * @param targetPaddingElements The number of padding elements at the end of each target frame, in elements, with range [0, infinity)
-		 * @tparam tChannels Number of data channels of the given source frame, with range [1, infinity)
-		 */
-		template <uint32_t tChannels>
-		static void patchFrame8BitPerChannel(const uint8_t* const source, uint8_t* const target, const uint32_t sourceWidth, const uint32_t sourceHeight, const Scalar x, const Scalar y, const uint32_t targetWidth, const uint32_t targetHeight, const uint32_t sourcePaddingElements, const uint32_t targetPaddingElements);
-
 	private:
 
 		/**
@@ -2237,88 +2217,6 @@ inline void FrameInterpolatorBilinear::interpolate1PixelFullAlphaBorder8BitPerCh
 		const uint8_t alphaBottomRight = (left + 1u < width && top + 1u < height) ? topLeft[bottomOffset + rightOffset + FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()] : FrameBlender::fullTransparent8Bit<tTransparentIs0xFF>();
 
 		result[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()] = (alphaTopLeft * tx_ty_ + alphaTopRight * txty_ + alphaBottomLeft * tx_ty + alphaBottomRight * txty + 8192u) >> 14u;
-	}
-}
-
-template <uint32_t tChannels>
-void FrameInterpolatorBilinear::patchFrame8BitPerChannel(const uint8_t* const source, uint8_t* const target, const uint32_t sourceWidth, const uint32_t sourceHeight, const Scalar x, const Scalar y, const uint32_t targetWidth, const uint32_t targetHeight, const uint32_t sourcePaddingElements, const uint32_t targetPaddingElements)
-{
-	ocean_assert(source != nullptr && target != nullptr);
-	ocean_assert(targetWidth != 0u && targetHeight != 0u && targetWidth <= sourceWidth && targetHeight <= sourceHeight);
-	ocean_assert(targetWidth % 2u == 1u && targetHeight % 2u == 1u);
-
-	// Location of the first sample point inside the most top-left pixel of the (target) window
-	// All sample points can be computed as (samplePointLeft + x, samplePointTop + y) with x = [0, 1, 2, ..., targetWidth) and y = [0, 1, 2, ..., targetHeight)
-	const Scalar samplePointLeft = x - Scalar(targetWidth / 2u);
-	const Scalar samplePointTop = y - Scalar(targetHeight / 2u);
-	ocean_assert(samplePointLeft >= 0 && samplePointLeft < Scalar(sourceWidth));
-	ocean_assert(samplePointTop >= 0 && samplePointTop < Scalar(sourceHeight));
-
-	// Integer position of the most top-left pixel of the window
-	const uint32_t windowLeftI = uint32_t(samplePointLeft);
-	const uint32_t windowTopI = uint32_t(samplePointTop);
-	ocean_assert(windowLeftI + targetWidth <= sourceWidth && windowTopI + targetHeight <= sourceHeight);
-
-	const Scalar tx = samplePointLeft - Scalar(windowLeftI);
-	ocean_assert(tx >= 0 && tx <= 1);
-	const uint32_t txi = uint32_t(tx * Scalar(128) + Scalar(0.5)); // Q32.7
-	const uint32_t txi_ = uint32_t(128) - txi; // Q32.7
-
-	const Scalar ty = samplePointTop - Scalar(windowTopI);
-	ocean_assert(ty >= 0 && ty <= 1);
-	const uint32_t tyi = uint32_t(ty * Scalar(128) + Scalar(0.5)); // Q32.7
-	const uint32_t tyi_ = uint32_t(128) - tyi; // Q32.7
-
-	const uint32_t txty = txi * tyi; // Q32.14
-	const uint32_t txty_ = txi * tyi_; // Q32.14
-	const uint32_t tx_ty = txi_ * tyi; // Q32.14
-	const uint32_t tx_ty_ = txi_ * tyi_; // Q32.14
-
-	const uint32_t sourceStrideElements = sourceWidth * tChannels + sourcePaddingElements;
-	const uint32_t targetStrideElements = targetWidth * tChannels + targetPaddingElements;
-
-	const uint8_t* const sourceEnd = source + (sourceHeight - 1u) * sourceStrideElements + tChannels * sourceWidth;
-	const uint8_t* const targetEnd = target + (targetHeight - 1u) * targetStrideElements + tChannels * targetWidth;
-
-	// TODO Add a NEON version for the loop below
-
-	for (uint32_t targetRowIndex = 0u; targetRowIndex < targetHeight; ++targetRowIndex)
-	{
-		const uint32_t sourceRowIndex = windowTopI + targetRowIndex;
-
-		const uint8_t* sourceRow = source + sourceRowIndex * sourceStrideElements + tChannels * windowLeftI;
-		uint8_t* targetRow = target + targetRowIndex * targetStrideElements;
-
-		ocean_assert_and_suppress_unused(sourceRow + tChannels * targetWidth <= sourceEnd, sourceEnd);
-		ocean_assert_and_suppress_unused(targetRow + tChannels * targetWidth <= targetEnd, targetEnd);
-
-		const uint8_t* const sourceRowEnd = sourceRow + tChannels * targetWidth;
-		const uint8_t* const targetRowEnd = targetRow + tChannels * targetWidth;
-
-		// In the last row, avoid leaving the image boundary by re-using (mirroring) the last row
-		const uint32_t bottomOffset = uint32_t(sourceRowIndex < sourceHeight - 1u) * sourceStrideElements; // <=> sourceRow < sourceHeight - 1u ? sourceStrideElements : 0u;
-		ocean_assert_and_suppress_unused(sourceRow + bottomOffset <= sourceEnd, sourceEnd);
-
-		for (uint32_t targetColumnIndex = 0u; targetColumnIndex < targetWidth; ++targetColumnIndex)
-		{
-			// In the last column, avoid leaving the image boundary by re-using (mirroring) the last column
-			const uint32_t rightOffset = uint32_t(windowLeftI + targetColumnIndex < sourceWidth - 1u) * tChannels; // <=> sourceColumn < sourceWidth - 1u ? tChannels : 0u;
-
-			ocean_assert_and_suppress_unused(sourceRow + rightOffset <= sourceRowEnd, sourceRowEnd);
-			ocean_assert_and_suppress_unused(sourceRow + rightOffset + bottomOffset <= sourceEnd, sourceEnd);
-			ocean_assert_and_suppress_unused(targetRow + tChannels <= targetRowEnd, targetRowEnd);
-
-			for (unsigned int channel = 0u; channel < tChannels; ++channel)
-			{
-				const uint32_t pixelValue = (sourceRow[channel] * tx_ty_ + sourceRow[rightOffset + channel] * txty_ + sourceRow[bottomOffset + channel] * tx_ty + sourceRow[bottomOffset + rightOffset + channel] * txty + 8192u) >> 14u; // Q32.0
-				ocean_assert(pixelValue <= NumericT<uint8_t>::maxValue());
-
-				targetRow[channel] = uint8_t(pixelValue);
-			}
-
-			sourceRow += tChannels;
-			targetRow += tChannels;
-		}
 	}
 }
 

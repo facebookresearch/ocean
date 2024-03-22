@@ -164,15 +164,6 @@ bool TestFrameInterpolatorBilinear::test(const unsigned int width, const unsigne
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testPatchFrame8BitPerChannel<1u>(testDuration, worker) && allSucceeded;
-	allSucceeded = testPatchFrame8BitPerChannel<2u>(testDuration, worker) && allSucceeded;
-	allSucceeded = testPatchFrame8BitPerChannel<3u>(testDuration, worker) && allSucceeded;
-	allSucceeded = testPatchFrame8BitPerChannel<4u>(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
 	allSucceeded = testResampleCameraImage(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
@@ -535,32 +526,8 @@ TEST(TestFrameInterpolatorBilinear, RotateFrame_1920x1080)
 }
 
 
-// Bilinear extraction of frame patches
 
-TEST(TestFrameInterpolatorBilinear, PatchFrameBilinear1Channel)
-{
-	Worker worker;
-	EXPECT_TRUE((TestFrameInterpolatorBilinear::testPatchFrame8BitPerChannel<1u>(GTEST_TEST_DURATION, worker)));
-}
-
-TEST(TestFrameInterpolatorBilinear, PatchFrameBilinear2Channels)
-{
-	Worker worker;
-	EXPECT_TRUE((TestFrameInterpolatorBilinear::testPatchFrame8BitPerChannel<2u>(GTEST_TEST_DURATION, worker)));
-}
-
-TEST(TestFrameInterpolatorBilinear, PatchFrameBilinear3Channels)
-{
-	Worker worker;
-	EXPECT_TRUE((TestFrameInterpolatorBilinear::testPatchFrame8BitPerChannel<3u>(GTEST_TEST_DURATION, worker)));
-}
-
-TEST(TestFrameInterpolatorBilinear, PatchFrameBilinear4Channels)
-{
-	Worker worker;
-	EXPECT_TRUE((TestFrameInterpolatorBilinear::testPatchFrame8BitPerChannel<4u>(GTEST_TEST_DURATION, worker)));
-}
-
+// Patch intensity
 
 TEST(TestFrameInterpolatorBilinear, PatchIntensitySum1Channel)
 {
@@ -2997,72 +2964,6 @@ bool TestFrameInterpolatorBilinear::testPatchIntensitySum1Channel(const unsigned
 		allSucceeded = testPatchIntensitySum1Channel(width, height, patchSize.first, patchSize.second, testDuration) && allSucceeded;
 		Log::info() << " ";
 	}
-
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
-}
-
-template <unsigned int tChannels>
-bool TestFrameInterpolatorBilinear::testPatchFrame8BitPerChannel(const double testDuration, Worker& worker)
-{
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "Test patchFrame8BitPerChannel(), channels: " << tChannels;
-
-	bool allSucceeded = true;
-
-	RandomGenerator randomGenerator;
-
-	const Timestamp startTimestamp(true);
-
-	do
-	{
-		const unsigned int frameWidth = RandomI::random(randomGenerator, 32u, 2048u);
-		const unsigned int frameHeight = RandomI::random(randomGenerator, 32u, 2048u);
-
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-		Frame frame(FrameType(frameWidth, frameHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-		CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
-		CV::FrameFilterGaussian::filter(frame, 3u, &worker);
-
-		const unsigned int patchWidth = 2u * RandomI::random(randomGenerator, 1u, 10u) + 1u;
-		const unsigned int patchHeight = 2u * RandomI::random(randomGenerator, 1u, 10u) + 1u;
-		ocean_assert(patchWidth % 2u == 1u && patchHeight % 2u == 1u);
-		ocean_assert(patchWidth <= frame.width() && patchHeight <= frame.height());
-
-		const unsigned int patchPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-		Frame patch(FrameType(frame, patchWidth, patchHeight), patchPaddingElements);
-		CV::CVUtilities::randomizeFrame(patch, false, &randomGenerator);
-
-		const Frame patchCopy(patch, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-		const Scalar x = Random::scalar(randomGenerator, Scalar(0.5) * Scalar(patchWidth), Scalar(frame.width()) - Scalar(0.5) * Scalar(patchWidth));
-		const Scalar y = Random::scalar(randomGenerator, Scalar(0.5) * Scalar(patchHeight), Scalar(frame.height()) - Scalar(0.5) * Scalar(patchHeight));
-
-		CV::FrameInterpolatorBilinear::patchFrame8BitPerChannel<tChannels>(frame.constdata<uint8_t>(), patch.data<uint8_t>(), frame.width(), frame.height(), x, y, patch.width(), patch.height(), frame.paddingElements(), patch.paddingElements());
-
-		if (CV::CVUtilities::isPaddingMemoryIdentical(patch, patchCopy) == false)
-		{
-			ocean_assert(false && "This should never happen");
-			return false;
-		}
-
-		if (!validatePatchFrame8BitPerChannel<tChannels>(frame.constdata<uint8_t>(), patch.constdata<uint8_t>(), frame.width(), frame.height(), x, y, patch.width(), patch.height(), frame.paddingElements(), patch.paddingElements()))
-		{
-			allSucceeded = false;
-		}
-	}
-	while (Timestamp(true) < startTimestamp + testDuration);
 
 	if (allSucceeded)
 	{
