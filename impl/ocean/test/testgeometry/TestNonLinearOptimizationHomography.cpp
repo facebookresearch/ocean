@@ -330,6 +330,8 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 			const Vector2 imagePointRight = pinholeCamera.projectToImage<true>(poseRight, objectPoints[n], pinholeCamera.hasDistortionParameters());
 			const Vector2 imagePointLeft = pinholeCamera.projectToImage<true>(poseLeft, objectPoints[n], pinholeCamera.hasDistortionParameters());
 
+			SquareMatrix2 invertedCovariance;
+
 			Vector2 imagePointNoise(0, 0);
 			if (standardDeviation > 0)
 			{
@@ -338,15 +340,19 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 				if (useCovariances)
 				{
 					const SquareMatrix2 covariance(Geometry::Utilities::covarianceMatrix(imagePointNoise, standardDeviation));
-					const SquareMatrix2 invertedCovariance(covariance.inverted());
 
-					invertedCovariance.copyElements(invertedCovariances[2 * n + 0u], false);
+					if (!covariance.invert(invertedCovariance))
+					{
+						invertedCovariance.toIdentity();
+					}
 				}
 			}
 			else if (useCovariances)
 			{
-				SquareMatrix2(true).copyElements(invertedCovariances[2 * n + 0u], false);
+				invertedCovariance.toIdentity();
 			}
+
+			invertedCovariance.copyElements(invertedCovariances[2u * n + 0u], false);
 
 			perfectImagePointsRight.push_back(imagePointRight);
 			pointsLeft.push_back(imagePointLeft);
@@ -528,6 +534,8 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 			const Vector2 imagePointLeft = Vector2(Random::scalar(0, Scalar(width)), Random::scalar(0, Scalar(height)));
 			const Vector2 imagePointRight = similarity * imagePointLeft;
 
+			SquareMatrix2 invertedCovariance;
+
 			Vector2 imagePointNoise(0, 0);
 			if (standardDeviation > 0)
 			{
@@ -536,15 +544,19 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 				if (useCovariances)
 				{
 					const SquareMatrix2 covariance(Geometry::Utilities::covarianceMatrix(imagePointNoise, standardDeviation));
-					const SquareMatrix2 invertedCovariance(covariance.inverted());
 
-					invertedCovariance.copyElements(invertedCovariances[2 * n + 0u], false);
+					if (!covariance.invert(invertedCovariance))
+					{
+						invertedCovariance.toIdentity();
+					}
 				}
 			}
 			else if (useCovariances)
 			{
-				SquareMatrix2(true).copyElements(invertedCovariances[2 * n + 0u], false);
+				invertedCovariance.toIdentity();
 			}
+
+			invertedCovariance.copyElements(invertedCovariances[2u * n + 0u], false);
 
 			perfectImagePointsRight.push_back(imagePointRight);
 			pointsLeft.push_back(imagePointLeft);
