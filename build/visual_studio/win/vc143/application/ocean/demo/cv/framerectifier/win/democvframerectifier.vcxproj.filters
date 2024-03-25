@@ -11,7 +11,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\framerectifier\FrameRectifierMain.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\demo\cv\framerectifier\FrameRectifierMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

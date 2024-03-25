@@ -51,7 +51,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\cv\framerectifier\FrameRectifierMain.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\demo\cv\framerectifier\FrameRectifierMain.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BF0D071C-42B9-4215-90B3-4FF9725C0413}</ProjectGuid>
