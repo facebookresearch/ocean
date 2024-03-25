@@ -21,18 +21,6 @@ namespace Test
 namespace TestGeometry
 {
 
-const Scalar TestNonLinearOptimizationHomography::noises[] =
-{
-	0,
-	1
-};
-
-const unsigned int TestNonLinearOptimizationHomography::outliers[] =
-{
-	0u,
-	10u
-};
-
 bool TestNonLinearOptimizationHomography::test(const double testDuration, Worker* /*worker*/)
 {
 	ocean_assert(testDuration > 0.0);
@@ -140,57 +128,47 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 
 	bool allSucceeded = true;
 
-	const unsigned int correspondenceNumbers[] = {4u, 20u, 50u, 100u, 1000u};
-
-	const unsigned int modelParameters[] = {8u, 9u};
-
-	for (unsigned int parameterIndex = 0u; parameterIndex < sizeof(modelParameters) / sizeof(modelParameters[0]); ++parameterIndex)
+	for (const unsigned int modelParameters : {8u, 9u})
 	{
-		for (unsigned int o = 0u; o < sizeof(outliers) / sizeof(outliers[0]); ++o)
+		for (const unsigned int outliersPercent : {0u, 10u})
 		{
-			if (o != 0u)
+			if (modelParameters != 8u)
 			{
 				Log::info() << " ";
 				Log::info() << " ";
 			}
 
-			const unsigned int outlier = outliers[o];
-
-			for (unsigned int n = 0u; n < sizeof(noises) / sizeof(noises[0]); ++n)
+			for (const Scalar noise : {Scalar(0), Scalar(1)})
 			{
-				if (n != 0u)
+				if (noise != Scalar(0))
 				{
 					Log::info() << " ";
 					Log::info() << " ";
 				}
 
-				const Scalar noise = noises[n];
-
-				Log::info() << "Samples with gaussian noise " << String::toAString(noise, 1u) << "px, " << outlier << "% outliers and " << modelParameters[parameterIndex] << " parameter for the model";
+				Log::info() << "Samples with Gaussian noise " << String::toAString(noise, 1u) << "px, " << outliersPercent << "% outliers and " << modelParameters << " parameter for the model";
 				Log::info() << " ";
 
-				for (unsigned int c = 0u; c < sizeof(correspondenceNumbers) / sizeof(correspondenceNumbers[0]); ++c)
+				for (const unsigned int numberCorrespondences : {4u, 20u, 50u, 100u, 1000u})
 				{
-					if (c != 0u)
+					if (numberCorrespondences != 4u)
 					{
 						Log::info() << " ";
 					}
 
-					const unsigned int correspondences = correspondenceNumbers[c];
+					Log::info() << "... with " << numberCorrespondences << " correspondences";
 
-					Log::info() << "... with " << correspondences << " correspondences";
-
-					for (unsigned int v = 0u; v < 2u; ++v)
+					for (const bool useCovariances : {false, true})
 					{
-						if (noise == 0u && v != 0u)
+						if (noise == Scalar(0) && useCovariances)
+						{
 							continue;
+						}
 
-						if (v != 0u)
+						if (useCovariances)
 						{
 							Log::info() << " ";
 						}
-
-						const bool useCovariances = v == 1u;
 
 						if (useCovariances)
 						{
@@ -205,7 +183,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 						{
 							Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType);
 
-							if (!testNonLinearOptimizationHomography(correspondences, modelParameters[parameterIndex], testDuration, estimatorType, noise, correspondences * outlier / 100u, useCovariances))
+							if (!testNonLinearOptimizationHomography(numberCorrespondences, modelParameters, testDuration, estimatorType, noise, numberCorrespondences * outliersPercent / 100u, useCovariances))
 							{
 								allSucceeded = false;
 							}
@@ -228,53 +206,45 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 
 	bool allSucceeded = true;
 
-	const unsigned int correspondenceNumbers[] = {4u, 20u, 50u, 100u, 1000u};
-
-	for (unsigned int o = 0u; o < sizeof(outliers) / sizeof(outliers[0]); ++o)
+	for (const unsigned int outliersPercent : {0u, 10u})
 	{
-		if (o != 0u)
+		if (outliersPercent != 0u)
 		{
 			Log::info() << " ";
 			Log::info() << " ";
 		}
 
-		const unsigned int outlier = outliers[o];
-
-		for (unsigned int n = 0u; n < sizeof(noises) / sizeof(noises[0]); ++n)
+		for (const Scalar noise : {Scalar(0), Scalar(1)})
 		{
-			if (n != 0u)
+			if (noise != Scalar(0))
 			{
 				Log::info() << " ";
 				Log::info() << " ";
 			}
 
-			const Scalar noise = noises[n];
-
-			Log::info() << "Samples with gaussian noise " << String::toAString(noise, 1u) << "px, " << outlier << "% outliers";
+			Log::info() << "Samples with Gaussian noise " << String::toAString(noise, 1u) << "px, " << outliersPercent << "% outliers";
 			Log::info() << " ";
 
-			for (unsigned int c = 0u; c < sizeof(correspondenceNumbers) / sizeof(correspondenceNumbers[0]); ++c)
+			for (const unsigned int numberCorrespondences : {4u, 20u, 50u, 100u, 1000u})
 			{
-				if (c != 0u)
+				if (numberCorrespondences != 4u)
 				{
 					Log::info() << " ";
 				}
 
-				const unsigned int correspondences = correspondenceNumbers[c];
+				Log::info() << "... with " << numberCorrespondences << " correspondences";
 
-				Log::info() << "... with " << correspondences << " correspondences";
-
-				for (unsigned int v = 0u; v < 2u; ++v)
+				for (const bool useCovariances : {false, true})
 				{
-					if (noise == 0u && v != 0u)
+					if (noise == Scalar(0) && useCovariances)
+					{
 						continue;
+					}
 
-					if (v != 0u)
+					if (useCovariances)
 					{
 						Log::info() << " ";
 					}
-
-					const bool useCovariances = v == 1u;
 
 					if (useCovariances)
 					{
@@ -289,7 +259,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 					{
 						Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType);
 
-						if (!testNonLinearOptimizationSimilarity(correspondences, testDuration, estimatorType, noise, correspondences * outlier / 100u, useCovariances))
+						if (!testNonLinearOptimizationSimilarity(numberCorrespondences, testDuration, estimatorType, noise, numberCorrespondences * outliersPercent / 100u, useCovariances))
 						{
 							allSucceeded = false;
 						}
@@ -308,8 +278,8 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 	ocean_assert(numberOutliers <= correspondences);
 	ocean_assert(modelParameter >= 8u && modelParameter <= 9u);
 
-	unsigned long long validIterations = 0ull;
-	unsigned long long iterations = 0ull;
+	uint64_t validIterations = 0ull;
+	uint64_t iterations = 0ull;
 
 	bool explicitError = false;
 
@@ -348,8 +318,9 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 		const HomogenousMatrix4 poseLeft(Utilities::viewPosition(pinholeCamera, objectPoints, viewdirectionLeft, true));
 		const HomogenousMatrix4 poseRight(Utilities::viewPosition(pinholeCamera, objectPoints, viewdirectionRight, true));
 
-		Geometry::ImagePoints pointsLeft, pointsRightNoised;
-		Geometry::ImagePoints perfectImagePointsRight;
+		Vectors2 pointsLeft;
+		Vectors2 pointsRightNoised;
+		Vectors2 perfectImagePointsRight;
 
 		Matrix invertedCovariances(correspondences * 2u, 2u);
 
@@ -379,7 +350,7 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationHomography(co
 
 			perfectImagePointsRight.push_back(imagePointRight);
 			pointsLeft.push_back(imagePointLeft);
-			pointsRightNoised.push_back(imagePointRight + imagePointNoise);
+			pointsRightNoised.emplace_back(imagePointRight + imagePointNoise);
 		}
 
 		const SquareMatrix3 homography(Geometry::Homography::normalizedHomography(Geometry::Homography::homographyMatrix(poseLeft, poseRight, pinholeCamera, pinholeCamera, plane)));
@@ -515,15 +486,15 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= correspondences);
 
-	unsigned long long validIterations = 0ull;
-	unsigned long long iterations = 0ull;
+	uint64_t validIterations = 0ull;
+	uint64_t iterations = 0ull;
 
 	bool explicitError = false;
 
 	HighPerformanceStatistic performance;
 
-	const unsigned int width = 1280u;
-	const unsigned int height = 720u;
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
 
 	RandomGenerator randomGenerator;
 
@@ -546,8 +517,9 @@ bool TestNonLinearOptimizationHomography::testNonLinearOptimizationSimilarity(co
 
 		const SquareMatrix3 similarity(Vector3(xAxis, 0), Vector3(yAxis, 0), Vector3(translation, 1));
 
-		Geometry::ImagePoints pointsLeft, pointsRightNoised;
-		Geometry::ImagePoints perfectImagePointsRight;
+		Vectors2 pointsLeft;
+		Vectors2 pointsRightNoised;
+		Vectors2 perfectImagePointsRight;
 
 		Matrix invertedCovariances(correspondences * 2u, 2u);
 
@@ -724,9 +696,9 @@ Scalar TestNonLinearOptimizationHomography::determineHomographyError(const Squar
 	ocean_assert(!homography.isSingular());
 	ocean_assert(pointsLeft.size() == pointsRight.size());
 
-	if (maximalSqrDistance)
+	if (maximalSqrDistance != nullptr)
 	{
-		*maximalSqrDistance = 0;
+		*maximalSqrDistance = Scalar(0);
 	}
 
 	if (pointsLeft.empty())
@@ -743,8 +715,10 @@ Scalar TestNonLinearOptimizationHomography::determineHomographyError(const Squar
 
 		averageSqrPixelErrorHomography += sqrDistance;
 
-		if (maximalSqrDistance && sqrDistance > *maximalSqrDistance)
+		if (maximalSqrDistance != nullptr && sqrDistance > *maximalSqrDistance)
+		{
 			*maximalSqrDistance = sqrDistance;
+		}
 	}
 
 	ocean_assert(!pointsLeft.empty());

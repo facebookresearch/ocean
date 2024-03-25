@@ -25,18 +25,6 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationHomography
 	public:
 
 		/**
-		 * Array with individual noise parameters.
-		 */
-		static const Scalar noises[];
-
-		/**
-		 * Array with individual outlier amounts.
-		 */
-		static const unsigned int outliers[];
-
-	public:
-
-		/**
 		 * Tests the non linear optimization function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker Optional worker object
