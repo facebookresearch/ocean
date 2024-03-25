@@ -211,6 +211,11 @@ class NonLinearOptimizationHomography::HomographyOptimizationProvider : public N
 		template <Estimator::EstimatorType tEstimator>
 		Scalar determineRobustError(Matrix& weightedErrorVector, Matrix& weightVector, const Matrix* invertedCovariances) const
 		{
+			if (!candidateHomographyMatrix_.isHomography())
+			{
+				return Numeric::maxValue();
+			}
+
 			// set the correct size of the resulting error vector
 			weightedErrorVector.resize(2 * correspondences_, 1u);
 
