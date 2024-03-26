@@ -242,8 +242,6 @@ MRPassthroughVisualizer& MRPassthroughVisualizer::operator=(MRPassthroughVisuali
 			destroyMrSession(mrSession_, mrPassthroughFeature_);
 		}
 
-		VRVisualizer::operator=(std::move(mrPassthroughVisualizer));
-
 		ovrMobile_ = mrPassthroughVisualizer.ovrMobile_;
 		mrPassthroughVisualizer.ovrMobile_ = nullptr;
 
@@ -261,6 +259,8 @@ MRPassthroughVisualizer& MRPassthroughVisualizer::operator=(MRPassthroughVisuali
 
 		passthroughStyles_ = std::move(mrPassthroughVisualizer.passthroughStyles_);
 		customShaders_ = std::move(mrPassthroughVisualizer.customShaders_);
+
+		VRVisualizer::operator=(std::move(mrPassthroughVisualizer));
 	}
 
 	return *this;

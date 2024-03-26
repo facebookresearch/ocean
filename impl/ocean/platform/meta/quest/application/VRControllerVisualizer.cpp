@@ -177,8 +177,6 @@ VRControllerVisualizer& VRControllerVisualizer::operator=(VRControllerVisualizer
 	{
 		release();
 
-		VRVisualizer::operator=(std::move(vrControllerVisualizer));
-
 		deviceType_ = vrControllerVisualizer.deviceType_;
 		vrControllerVisualizer.deviceType_ = Device::DT_UNKNOWN;
 
@@ -193,6 +191,8 @@ VRControllerVisualizer& VRControllerVisualizer::operator=(VRControllerVisualizer
 
 		controllerRayLength_ = Scalar(vrControllerVisualizer.controllerRayLength_);
 		vrControllerVisualizer.controllerRayLength_ = 0;
+
+		VRVisualizer::operator=(std::move(vrControllerVisualizer));
 	}
 
 	return *this;

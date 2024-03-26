@@ -397,8 +397,6 @@ inline VRHandVisualizer& VRHandVisualizer::operator=(VRHandVisualizer&& vrHandVi
 	{
 		release();
 
-		VRVisualizer::operator=(std::move(vrHandVisualizer));
-
 		renderMode_ = vrHandVisualizer.renderMode_;
 		vrHandVisualizer.renderMode_ = RM_DEFAULT;
 
@@ -427,6 +425,8 @@ inline VRHandVisualizer& VRHandVisualizer::operator=(VRHandVisualizer&& vrHandVi
 		vrHandVisualizer.isShown_ = true;
 
 		stateStack_ = std::move(vrHandVisualizer.stateStack_);
+
+		VRVisualizer::operator=(std::move(vrHandVisualizer));
 	}
 
 	return *this;

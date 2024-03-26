@@ -520,8 +520,6 @@ inline VRHandVisualizer& VRHandVisualizer::operator=(VRHandVisualizer&& vrHandVi
 {
 	if (this != &vrHandVisualizer)
 	{
-		VRVisualizer::operator=(std::move(vrHandVisualizer));
-
 		scene_ = std::move(vrHandVisualizer.scene_);
 
 		leftHandMesh_ = std::move(vrHandVisualizer.leftHandMesh_);
@@ -544,6 +542,8 @@ inline VRHandVisualizer& VRHandVisualizer::operator=(VRHandVisualizer&& vrHandVi
 
 		isShown_ = bool(vrHandVisualizer.isShown_);
 		vrHandVisualizer.isShown_ = true;
+
+		VRVisualizer::operator=(std::move(vrHandVisualizer));
 	}
 
 	return *this;
