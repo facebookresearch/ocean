@@ -587,15 +587,18 @@ bool TestHemiCube::validateLineFusion(const FiniteLine2& testLine, const FiniteL
 	{
 		for (unsigned int nInner = nOuter + 1u; nInner < projectedPoints.size(); ++nInner)
 		{
-			const FiniteLine2 currentLine(projectedPoints[nOuter], projectedPoints[nInner]);
-			ocean_assert(currentLine.isValid());
-
-			const Scalar currentLineLength = currentLine.length();
-
-			if (currentLineLength > longestLineLength)
+			if (projectedPoints[nOuter] != projectedPoints[nInner])
 			{
-				mergedLine = currentLine;
-				longestLineLength = currentLineLength;
+				const FiniteLine2 currentLine(projectedPoints[nOuter], projectedPoints[nInner]);
+				ocean_assert(currentLine.isValid());
+
+				const Scalar currentLineLength = currentLine.length();
+
+				if (currentLineLength > longestLineLength)
+				{
+					mergedLine = currentLine;
+					longestLineLength = currentLineLength;
+				}
 			}
 		}
 	}
