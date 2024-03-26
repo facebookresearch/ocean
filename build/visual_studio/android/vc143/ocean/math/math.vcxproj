@@ -125,7 +125,7 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\RGBAColor.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\Rotation.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\SampleMap.h" />
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\ScalarDerivation.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\ScalarAutomaticDifferentiation.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\SophusUtilities.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\SparseMatrix.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\Sphere3.h" />

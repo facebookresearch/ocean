@@ -188,9 +188,6 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\MathUtilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\ScalarDerivation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\HSVAColor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -222,6 +219,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\ScalarAutomaticDifferentiation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
