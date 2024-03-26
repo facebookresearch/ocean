@@ -329,9 +329,9 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		/**
 		 * Returns whether a polygon of given 2D points is convex.
 		 * A polygon consisting of 0 to 2 vertices is considered to be convex.
-		 * @param vertices The vertices of the polygon
+		 * @param vertices The vertices of the polygon, can be nullptr if size == 0
 		 * @param size Number of vertices in the polygon, range: [0, infinity)
-		 * @param strict If true, the polygon is tested for strict convexity (i.e. every internal angle is less than 180 degrees), otherwise internal angles be up 180 degrees, default: true
+		 * @param strict If true, the polygon is tested for strict convexity (i.e. every internal angle is less than 180 degrees), otherwise internal angles can be up equal to 180 degrees
 		 * @return True if the polygon is convex, otherwise false
 		 */
 		static bool isPolygonConvex(const Vector2* vertices, const size_t size, const bool strict = true);
@@ -371,21 +371,22 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		static inline Scalar computePolygonAreaSigned(const Vectors2& vertices);
 
 		/**
-		 * Test to determine if a point lies inside a convex polygon
+		 * Returns whether a given point lies inside a convex polygon.
 		 * For polygons consisting of less than 3 points, this function always returns false.
 		 * A point located on an edge of the polygon is considered as inside the polygon.
-		 * @param vertices The vertices of a convex polygon
+		 * @param vertices The vertices of a convex polygon, can be nullptr if size == 0
 		 * @param size The number of vertices in the polygon, range: [0, infinity)
-		 * @param point The point to be tested.
+		 * @param point The point to be tested
 		 * @return True, if the point is inside the polygon, otherwise false
 		 */
 		static bool isInsideConvexPolygon(const Vector2* vertices, size_t size, const Vector2& point);
 
 		/**
-		 * Test to determine if a point lies inside a convex polygon
-		 * If the point is on an edge of the polygon, that is considered as inside the polygon.
-		 * @param vertices The vertices of a convex polygon, size: [0, infinity)
-		 * @param point The point to be tested.
+		 * Returns whether a given point lies inside a convex polygon.
+		 * For polygons consisting of less than 3 points, this function always returns false.
+		 * A point located on an edge of the polygon is considered as inside the polygon.
+		 * @param vertices The vertices of a convex polygon, can be nullptr if size == 0
+		 * @param point The point to be tested
 		 * @return True, if the point is inside the polygon, otherwise false
 		 */
 		static inline bool isInsideConvexPolygon(const Vectors2& vertices, const Vector2& point);
@@ -557,7 +558,9 @@ inline ImagePoint Utilities::meanImagePoint(const TAccessor& imagePointAccessor)
 
 	ImagePoint meanPosition(0, 0);
 	for (size_t n = 0; n < imagePointAccessor.size(); ++n)
+	{
 		meanPosition += imagePointAccessor[n];
+	}
 
 	return meanPosition / Scalar(imagePointAccessor.size());
 }
@@ -569,7 +572,9 @@ inline ObjectPoint Utilities::meanObjectPoint(const TAccessor& objectPointAccess
 
 	ObjectPoint meanPosition(0, 0, 0);
 	for (size_t n = 0; n < objectPointAccessor.size(); ++n)
+	{
 		meanPosition += objectPointAccessor[n];
+	}
 
 	return meanPosition / Scalar(objectPointAccessor.size());
 }
@@ -580,7 +585,9 @@ inline ImagePoint Utilities::medianImagePoint(const TAccessor& imagePointAccesso
 	ocean_assert(!imagePointAccessor.isEmpty());
 
 	if (imagePointAccessor.size() == 1)
+	{
 		return imagePointAccessor[0];
+	}
 
 	Scalars xValues(imagePointAccessor.size());
 	Scalars yValues(imagePointAccessor.size());
@@ -605,7 +612,9 @@ inline ObjectPoint Utilities::medianObjectPoint(const TAccessor& objectPointAcce
 	ocean_assert(!objectPointAccessor.isEmpty());
 
 	if (objectPointAccessor.size() == 1)
+	{
 		return objectPointAccessor[0];
+	}
 
 	Scalars xValues(objectPointAccessor.size());
 	Scalars yValues(objectPointAccessor.size());
@@ -634,7 +643,9 @@ inline Scalar Utilities::medianDistance(const ImagePoint& imagePoint, const TAcc
 	sqrDistances.reserve(imagePointAccessor.size());
 
 	for (size_t n = 0; n < imagePointAccessor.size(); ++n)
+	{
 		sqrDistances.push_back(imagePoint.sqrDistance(imagePointAccessor[n]));
+	}
 
 	return Numeric::sqrt(Median::median(sqrDistances.data(), sqrDistances.size()));
 }
@@ -646,7 +657,9 @@ inline Scalar Utilities::medianDistance(const ObjectPoint& objectPoint, const TA
 	sqrDistances.reserve(objectPointAccessor.size());
 
 	for (size_t n = 0; n < objectPointAccessor.size(); ++n)
+	{
 		sqrDistances.push_back(objectPoint.sqrDistance(objectPointAccessor[n]));
+	}
 
 	return Numeric::sqrt(Median::median(sqrDistances.data(), sqrDistances.size()));
 }

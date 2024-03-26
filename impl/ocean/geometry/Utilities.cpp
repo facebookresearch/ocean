@@ -600,22 +600,36 @@ bool Utilities::isPolygonConvex(const Vector2* vertices, const size_t size, cons
 		return true;
 	}
 
-	ocean_assert(vertices);
+	ocean_assert(vertices != nullptr);
+
+	Vector2 previousVector = vertices[1] - vertices[0];
+	Vector2 nextVector = vertices[2] - vertices[1];
 
 	if (strict)
 	{
-		const Scalar firstCrossProduct = (vertices[1] - vertices[0]).cross(vertices[2] - vertices[1]);
+		const Scalar firstCrossProduct = previousVector.cross(nextVector);
+
+		if (Numeric::isEqualEps(firstCrossProduct))
+		{
+			// too close to 180 deg
+			return false;
+		}
+
 		for (size_t i = 1; i < size; ++i)
 		{
-			const size_t nextIndex = (i + 1) % size;
-			const Scalar secondCrossProduct = ((vertices[nextIndex] - vertices[i]).cross(vertices[(i + 2) % size] - vertices[nextIndex]));
+			previousVector = nextVector;
 
-			if (Numeric::abs(secondCrossProduct) < Numeric::weakEps())
+			nextVector = Vector2(vertices[(i + 2) % size] - vertices[(i + 1) % size]);
+
+			const Scalar nextCrossProduct = previousVector.cross(nextVector);
+
+			if (Numeric::isEqualEps(nextCrossProduct))
 			{
-				continue;
+				// too close to 180 deg
+				return false;
 			}
 
-			if (firstCrossProduct * secondCrossProduct < Numeric::eps())
+			if (Numeric::sign(firstCrossProduct) != Numeric::sign(nextCrossProduct))
 			{
 				return false;
 			}
@@ -623,22 +637,25 @@ bool Utilities::isPolygonConvex(const Vector2* vertices, const size_t size, cons
 	}
 	else
 	{
-		// In case the cross product of the first two segments of the polygon
-		// isn't conclusive, continue around the polygon. This can happen, if
-		// neighboring segments of a polygon are located on the same line, i.e.
-		// the internal angle between them is 180 degrees.
-		size_t index = 0;
-		Scalar firstCrossProduct = 0;
+		// In case the cross product of the first two segments of the polygon isn't conclusive, continue around the polygon.
+		// This can happen, if neighboring segments of a polygon are located on the same line, i.e. the internal angle between them is 180 degrees.
 
-		while (index < size && Numeric::abs(firstCrossProduct) < Numeric::weakEps())
+		Scalar firstCrossProduct = previousVector.cross(nextVector);
+
+		size_t index = 1;
+
+		while (Numeric::isEqualEps(firstCrossProduct) && index < size)
 		{
-			firstCrossProduct = (vertices[(index + 1) % size] - vertices[index]).cross(vertices[(index + 2) % size] - vertices[(index + 1) % size]);
-			index++;
+			previousVector = nextVector;
+
+			nextVector = Vector2(vertices[(index + 2) % size] - vertices[(index + 1) % size]);
+
+			firstCrossProduct = previousVector.cross(nextVector);
+
+			++index;
 		}
 
-		// If no cross-product with a value |v| > eps has been found, then this
-		// polygon is a straight line, which is a border case that will be
-		// ignored.
+		// If no cross-product with a value |v| > eps has been found, then this polygon is a straight line, which is a border case that will be ignored.
 		if (Numeric::isEqualEps(firstCrossProduct))
 		{
 			return false;
@@ -646,16 +663,19 @@ bool Utilities::isPolygonConvex(const Vector2* vertices, const size_t size, cons
 
 		for (size_t i = index; i < size; ++i)
 		{
-			const size_t nextIndex = (i + 1) % size;
-			const Scalar secondCrossProduct = ((vertices[nextIndex] - vertices[i]).cross(vertices[(i + 2) % size] - vertices[nextIndex]));
+			previousVector = nextVector;
 
-			// The current segment is a straight continuation of the previous segment (internal angle = 180 degrees)
-			if (Numeric::abs(secondCrossProduct) < Numeric::weakEps())
+			nextVector = Vector2(vertices[(i + 2) % size] - vertices[(i + 1) % size]);
+
+			const Scalar nextCrossProduct = previousVector.cross(nextVector);
+
+			if (Numeric::isEqualEps(nextCrossProduct))
 			{
-				continue;
+				// too close to 180 deg
+				return false;
 			}
 
-			if (firstCrossProduct * secondCrossProduct < Numeric::eps())
+			if (Numeric::sign(firstCrossProduct) != Numeric::sign(nextCrossProduct))
 			{
 				return false;
 			}
@@ -698,15 +718,15 @@ bool Utilities::isInsideConvexPolygon(const Vector2* vertices, size_t size, cons
 		return false;
 	}
 
-	ocean_assert(vertices);
+	ocean_assert(vertices != nullptr);
 	ocean_assert(isPolygonConvex(vertices, size, false));
 
-	// Check on which side the test point lies relative to the first edge of the
-	// polygon. If it lies on the line, it is considered as inside the polygon.
-	// Otherwise store the (sign of the) side that the test point is on. This
-	// sign must be identical for all edges of the convex polygon (or zero) if
-	// the point is inside the polygon.
+	// Check on which side the test point lies relative to the first edge of the polygon.
+	// If it lies on the line, it is considered as inside the polygon.
+	// Otherwise store the (sign of the) side that the test point is on.
+	// This sign must be identical for all edges of the convex polygon (or zero) if the point is inside the polygon.
 	const Scalar firstCrossProduct = (point - vertices[0]).cross(vertices[1] - vertices[0]);
+
 	if (Numeric::isWeakEqualEps(firstCrossProduct))
 	{
 		return true;
@@ -722,7 +742,7 @@ bool Utilities::isInsideConvexPolygon(const Vector2* vertices, size_t size, cons
 			return true;
 		}
 
-		if (firstCrossProduct * currentCrossProduct < Numeric::eps())
+		if (Numeric::sign(firstCrossProduct) != Numeric::sign(currentCrossProduct))
 		{
 			return false;
 		}
