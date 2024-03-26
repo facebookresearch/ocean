@@ -304,8 +304,8 @@ bool TestUtilities::testIsInsideConvexPolygon(const double testDuration)
 
 	Log::info() << "isInsideConvexPolygon test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Scalar range = std::is_same<Scalar, float>::value ? Scalar(100) : Scalar(1000);
 
@@ -316,6 +316,7 @@ bool TestUtilities::testIsInsideConvexPolygon(const double testDuration)
 		bool localSuccess = true;
 
 		const size_t polygonSize = size_t(RandomI::random(3u, 100u));
+
 		const Scalar radius = Random::scalar(Scalar(0.1), range);
 		const Vector2 center = Random::vector2(-range, range);
 
@@ -323,28 +324,34 @@ bool TestUtilities::testIsInsideConvexPolygon(const double testDuration)
 		circularPolygon.reserve(polygonSize);
 
 		ocean_assert(polygonSize > 0);
-		const Scalar angularStep = Numeric::pi2() / static_cast<Scalar>(polygonSize);
 		const Scalar additionalRandomRotation = Random::scalar(-Numeric::pi(), Numeric::pi());
-		Scalar currentAngle = 0;
+
+		const Scalar directionSign = Random::sign(); // allowing to make a cw circle or a ccw circle
 
 		for (size_t i = 0; i < polygonSize; ++i)
 		{
-			circularPolygon.emplace_back(center.x() + radius * Numeric::cos(additionalRandomRotation + currentAngle), center.y() + radius * Numeric::sin(additionalRandomRotation + currentAngle));
-			currentAngle += angularStep;
+			const Scalar angle = Numeric::pi2() * Scalar(i) / Scalar(polygonSize);
+			const Scalar adjustedAngle = (additionalRandomRotation + angle) * directionSign;
+
+			circularPolygon.emplace_back(center + Vector2(Numeric::cos(adjustedAngle), Numeric::sin(adjustedAngle)) * radius);
 		}
 
-		ocean_assert(Geometry::Utilities::isPolygonConvex(circularPolygon.data(), circularPolygon.size()));
+		const bool strict = RandomI::random(1u) == 0u;
 
-		// Because this is a discretized circle, selecting a point inside the
-		// continuous circle defined by the radius may be outside the polygon.
-		// To avoid that case, determine the radius of the circle that is fully
-		// enclosed by the polygon. This radius is the distance from the center
-		// to the mid point of any edge.
+		if (!Geometry::Utilities::isPolygonConvex(circularPolygon.data(), circularPolygon.size(), strict))
+		{
+			ocean_assert(false && "This should never happen!");
+
+			localSuccess = false;
+		}
+
+		// Because this is a discretized circle, selecting a point inside the continuous circle defined by the radius may be outside the polygon.
+		// To avoid that case, determine the radius of the circle that is fully enclosed by the polygon. This radius is the distance from the center to the mid point of any edge.
 		const Vector2 midPoint = (circularPolygon[0] + circularPolygon[1]) * Scalar(0.5);
 		const Scalar innerRadius = (midPoint - center).length();
 		ocean_assert(innerRadius <= radius);
 
-		const Vector2 pointInside = center + (Random::vector2() * innerRadius);
+		const Vector2 pointInside = center + Random::vector2() * innerRadius;
 		const Vector2 pointOutside = center + Vector2(Random::scalar(Scalar(1.01), range) * radius, Random::scalar(Scalar(1.01), range) * radius);
 		const Vector2 pointOnEdge = circularPolygon[0] + ((circularPolygon[1] - circularPolygon[0]) * Scalar(0.5));
 		ocean_assert(Line2(circularPolygon[0], (circularPolygon[1] - circularPolygon[0]).normalized()).isOnLine(pointOnEdge));
@@ -402,8 +409,8 @@ bool TestUtilities::testRandomCameraPosePinhole(const double testDuration)
 
 	Log::info() << "Random camera pose for pinhole camera test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -459,8 +466,8 @@ bool TestUtilities::testRandomCameraPoseFisheye(const double testDuration)
 
 	Log::info() << "Random camera pose for fisheye camera test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
