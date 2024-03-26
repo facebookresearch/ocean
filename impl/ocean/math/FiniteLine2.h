@@ -87,7 +87,7 @@ class FiniteLineT2
 		/**
 		 * Creates a finite line with default parameters.
 		 */
-		FiniteLineT2();
+		FiniteLineT2() = default;
 
 		/**
 		 * Creates a finite line defined by two end points of the line.
@@ -178,7 +178,7 @@ class FiniteLineT2
 		 * It's on the line the cross product is zero and in the right half-plane it is negative.
 		 * @note Keep in mind that if the point is not in the left half-plane, it doesn't necessarily mean that it's in the right half-plane because it could just as well be located on the line.
 		 * @sa direction()
-		 * @param point Point to check
+		 * @param point The point to check
 		 * @return True, if the point is in the left half-plane
 		 */
 		inline bool isLeftOfLine(const VectorT2<T>& point) const;
@@ -186,15 +186,15 @@ class FiniteLineT2
 		/**
 		 * Returns the distance between the line and a given point.
 		 * This function needs a unit vector as direction!
-		 * @param point Point to return the distance for
+		 * @param point The point to return the distance for
 		 * @return Distance between point and line
 		 */
 		inline T distance(const VectorT2<T>& point) const;
 
 		/**
 		 * Returns the square distance between the line and a given point.
-		 * @param point Point to return the distance for
-		 * @return Square distance between point and line
+		 * @param point The point to return the distance for
+		 * @return The resulting square distance between point and line, with range [0, infinity)
 		 */
 		inline T sqrDistance(const VectorT2<T>& point) const;
 
@@ -223,7 +223,7 @@ class FiniteLineT2
 		/**
 		 * Returns the unique intersection point of two finite lines.
 		 * Two aligned lines do not have one common intersection point, so that the function will return 'false' in such a case.
-		 * @param second Second line for intersection calculation
+		 * @param second The second line for intersection calculation
 		 * @param point Resulting intersection point
 		 * @return True, if both lines have a common intersection point
 		 * @see intersects().
@@ -231,9 +231,9 @@ class FiniteLineT2
 		inline bool intersection(const FiniteLineT2<T>& second, VectorT2<T>& point) const;
 
 		/**
-		 * Returns the unique intersection point of this fininte line with an infinite line.
+		 * Returns the unique intersection point of this finite line with an infinite line.
 		 * Two aligned lines do not have one common intersection point, so that the function will return 'false' in such a case.
-		 * @param second Second line for intersection calculation
+		 * @param second The second line for intersection calculation
 		 * @param point Resulting intersection point
 		 * @return True, if both lines have a common intersection point
 		 * @see intersects().
@@ -250,7 +250,7 @@ class FiniteLineT2
 
 		/**
 		 * Returns whether two finite lies have an intersection.
-		 * @param second Second line to check
+		 * @param second The second line to check
 		 * @return True, if both lines intersect
 		 * @see intersection().
 		 */
@@ -281,7 +281,7 @@ class FiniteLineT2
 		/**
 		 * Returns whether two lines are equal up to a specified epsilon.
 		 * Two lines are equal if both lines have the same end points (while the order of the points is not important).
-		 * @param line The second line to be used for comparision, must be valid
+		 * @param line The second line to be used for comparison, must be valid
 		 * @param epsilon The maximal distance between two equal end points, with range [0, infinity)
 		 * @return True, if so
 		 */
@@ -289,8 +289,8 @@ class FiniteLineT2
 
 		/**
 		 * Returns whether two line are identical up to a small epsilon.
-		 * Two finite lines are identical if both lines have the same endpoint (independent of the order of the end points).<br>
-		 * @param right Right line
+		 * Two finite lines are identical if both lines have the same endpoint (independent of the order of the end points).
+		 * @param right The right line
 		 * @return True, if so
 		 * @see isEqual().
 		 */
@@ -298,7 +298,7 @@ class FiniteLineT2
 
 		/**
 		 * Returns whether two line are identical up to a small epsilon.
-		 * @param right Right line
+		 * @param right The right line
 		 * @return True, if so
 		 */
 		inline bool operator!=(const FiniteLineT2<T>& right) const;
@@ -312,29 +312,20 @@ class FiniteLineT2
 	protected:
 
 		/// First end point of the line.
-		VectorT2<T> linePoint0;
+		VectorT2<T> point0_ = VectorT2<T>(T(0), T(0));
 
 		/// Second end point of the line.
-		VectorT2<T> linePoint1;
+		VectorT2<T> point1_ = VectorT2<T>(T(0), T(0));
 
 		/// Direction of the line with unit length, if the object holds valid parameters.
-		VectorT2<T> lineDirection;
+		VectorT2<T> direction_ = VectorT2<T>(T(0), T(0));
 };
 
 template <typename T>
-FiniteLineT2<T>::FiniteLineT2() :
-	linePoint0(T(0), T(0)),
-	linePoint1(T(0), T(0)),
-	lineDirection(T(0), T(0))
-{
-	// nothing to do here
-}
-
-template <typename T>
 FiniteLineT2<T>::FiniteLineT2(const VectorT2<T>& point0, const VectorT2<T>& point1) :
-	linePoint0(point0),
-	linePoint1(point1),
-	lineDirection((point1 - point0).normalizedOrZero())
+	point0_(point0),
+	point1_(point1),
+	direction_((point1 - point0).normalizedOrZero())
 {
 	// nothing to do here
 }
@@ -343,21 +334,21 @@ template <typename T>
 template <typename U>
 inline FiniteLineT2<T>::FiniteLineT2(const FiniteLineT2<U>& line)
 {
-	linePoint0 = VectorT2<T>(line.point0());
-	linePoint1 = VectorT2<T>(line.point1());
-	lineDirection = VectorT2<T>(line.direction());
+	point0_ = VectorT2<T>(line.point0());
+	point1_ = VectorT2<T>(line.point1());
+	direction_ = VectorT2<T>(line.direction());
 }
 
 template <typename T>
 inline const VectorT2<T>& FiniteLineT2<T>::point0() const
 {
-	return linePoint0;
+	return point0_;
 }
 
 template <typename T>
 inline const VectorT2<T>& FiniteLineT2<T>::point1() const
 {
-	return linePoint1;
+	return point1_;
 }
 
 template <typename T>
@@ -367,46 +358,46 @@ inline const VectorT2<T>& FiniteLineT2<T>::point(const unsigned int index) const
 
 	if (index == 0u)
 	{
-		return linePoint0;
+		return point0_;
 	}
 	else
 	{
-		return linePoint1;
+		return point1_;
 	}
 }
 
 template <typename T>
 inline VectorT2<T> FiniteLineT2<T>::midpoint() const
 {
-  return (linePoint0 + linePoint1) * T(0.5);
+  return (point0_ + point1_) * T(0.5);
 }
 
 template <typename T>
 inline const VectorT2<T>& FiniteLineT2<T>::direction() const
 {
-	return lineDirection;
+	return direction_;
 }
 
 template <typename T>
 inline const VectorT2<T> FiniteLineT2<T>::normal() const
 {
 	ocean_assert(isValid());
-	const VectorT2<T> result = -lineDirection.perpendicular();
+	const VectorT2<T> result = -direction_.perpendicular();
 	ocean_assert(Ocean::NumericT<T>::isEqual(result.length(), T(1)));
-	ocean_assert(result.cross(lineDirection) > 0);
+	ocean_assert(result.cross(direction_) > 0);
 	return result;
 }
 
 template <typename T>
 inline T FiniteLineT2<T>::sqrLength() const
 {
-	return (linePoint1 - linePoint0).sqr();
+	return (point1_ - point0_).sqr();
 }
 
 template <typename T>
 inline T FiniteLineT2<T>::length() const
 {
-	return (linePoint1 - linePoint0).length();
+	return (point1_ - point0_).length();
 }
 
 template <typename T>
@@ -430,7 +421,7 @@ inline bool FiniteLineT2<T>::isLeftOfLine(const VectorT2<T>& point) const
 {
 	ocean_assert(isValid());
 
-	return LineT2<T>(linePoint0, lineDirection).isLeftOfLine(point);
+	return LineT2<T>(point0_, direction_).isLeftOfLine(point);
 }
 
 template <typename T>
@@ -454,25 +445,25 @@ VectorT2<T> FiniteLineT2<T>::nearestPoint(const VectorT2<T>& point) const
 {
 	ocean_assert(isValid());
 
-	const VectorT2<T> lineOffset(linePoint1 - linePoint0);
-	const VectorT2<T> pointOffset(point - linePoint0);
+	const VectorT2<T> lineOffset(point1_ - point0_);
+	const VectorT2<T> pointOffset(point - point0_);
 
 	const T dotProduct = lineOffset * pointOffset;
 
 	// the projected point does not lie on the finite line (before the first end point)
 	if (dotProduct <= 0)
 	{
-		return linePoint0;
+		return point0_;
 	}
 
 	// the projected point does not lie on the finite line (behind the second end point)
 	if (dotProduct >= lineOffset.sqr())
 	{
-		return linePoint1;
+		return point1_;
 	}
 
 	// the projected point lies on the finite line
-	return linePoint0 + lineDirection * (pointOffset * lineDirection);
+	return point0_ + direction_ * (pointOffset * direction_);
 }
 
 template <typename T>
@@ -480,8 +471,8 @@ VectorT2<T> FiniteLineT2<T>::nearestPointOnInfiniteLine(const VectorT2<T>& point
 {
 	ocean_assert(isValid());
 
-	const VectorT2<T> lineOffset(linePoint1 - linePoint0);
-	const VectorT2<T> pointOffset(point - linePoint0);
+	const VectorT2<T> lineOffset(point1_ - point0_);
+	const VectorT2<T> pointOffset(point - point0_);
 
 	const T dotProduct = lineOffset * pointOffset;
 
@@ -493,7 +484,7 @@ VectorT2<T> FiniteLineT2<T>::nearestPointOnInfiniteLine(const VectorT2<T>& point
 		{
 			// we have a negative distance
 
-			*outOfBoundaryDistance = std::min(pointOffset * lineDirection, T(0));
+			*outOfBoundaryDistance = std::min(pointOffset * direction_, T(0));
 			ocean_assert(*outOfBoundaryDistance <= T(0));
 		}
 	}
@@ -505,7 +496,7 @@ VectorT2<T> FiniteLineT2<T>::nearestPointOnInfiniteLine(const VectorT2<T>& point
 		{
 			// we have a positive distance
 
-			*outOfBoundaryDistance = std::max(T(0), pointOffset * lineDirection - length());
+			*outOfBoundaryDistance = std::max(T(0), pointOffset * direction_ - length());
 			ocean_assert(*outOfBoundaryDistance >= T(0));
 		}
 	}
@@ -519,7 +510,7 @@ VectorT2<T> FiniteLineT2<T>::nearestPointOnInfiniteLine(const VectorT2<T>& point
 		}
 	}
 
-	const T length = pointOffset * lineDirection;
+	const T length = pointOffset * direction_;
 
 	if (finiteLineLocation)
 	{
@@ -530,14 +521,14 @@ VectorT2<T> FiniteLineT2<T>::nearestPointOnInfiniteLine(const VectorT2<T>& point
 	}
 
 	// the projected point lies on the finite line
-	return linePoint0 + lineDirection * length;
+	return point0_ + direction_ * length;
 }
 
 template <typename T>
 inline bool FiniteLineT2<T>::intersection(const FiniteLineT2<T>& second, VectorT2<T>& point) const
 {
 	ocean_assert(isValid() && second.isValid());
-	if (!LineT2<T>(linePoint0, lineDirection).intersection(LineT2<T>(second.linePoint0, second.lineDirection), point))
+	if (!LineT2<T>(point0_, direction_).intersection(LineT2<T>(second.point0_, second.direction_), point))
 	{
 		// we do not have an intersection on the infinite lines
 		return false;
@@ -545,8 +536,8 @@ inline bool FiniteLineT2<T>::intersection(const FiniteLineT2<T>& second, VectorT
 
 	// now we check whether the intersection points lies within the ranges [point0, point1]
 
-	const T lengthOnThisLine = lineDirection * (point - linePoint0);
-	const T lengthOnSecondLine = second.lineDirection * (point - second.linePoint0);
+	const T lengthOnThisLine = direction_ * (point - point0_);
+	const T lengthOnSecondLine = second.direction_ * (point - second.point0_);
 
 	if (lengthOnThisLine < T(0) || lengthOnSecondLine < T(0) || NumericT<T>::sqr(lengthOnThisLine) > sqrLength() || NumericT<T>::sqr(lengthOnSecondLine) > second.sqrLength())
 	{
@@ -560,7 +551,7 @@ template <typename T>
 inline bool FiniteLineT2<T>::intersection(const LineT2<T>& second, VectorT2<T>& point) const
 {
 	ocean_assert(isValid() && second.isValid());
-	if (!LineT2<T>(linePoint0, lineDirection).intersection(second, point))
+	if (!LineT2<T>(point0_, direction_).intersection(second, point))
 	{
 		// we do not have an intersection on the infinite lines
 		return false;
@@ -568,7 +559,7 @@ inline bool FiniteLineT2<T>::intersection(const LineT2<T>& second, VectorT2<T>& 
 
 	// now we check whether the intersection points lies within the ranges [point0, point1]
 
-	const T lengthOnThisLine = lineDirection * (point - linePoint0);
+	const T lengthOnThisLine = direction_ * (point - point0_);
 
 	if (lengthOnThisLine < T(0) || NumericT<T>::sqr(lengthOnThisLine) > sqrLength())
 	{
@@ -601,7 +592,7 @@ inline bool FiniteLineT2<T>::isParallel(const FiniteLineT2<T>& right) const
 {
 	ocean_assert(isValid() && right.isValid());
 
-	return lineDirection == right.lineDirection || lineDirection == -right.lineDirection;
+	return direction_ == right.direction_ || direction_ == -right.direction_;
 }
 
 template <typename T>
@@ -625,7 +616,7 @@ inline bool FiniteLineT2<T>::isCollinear(const FiniteLineT2<T>& right, const T& 
 template <typename T>
 inline bool FiniteLineT2<T>::isValid() const
 {
-	return !lineDirection.isNull();
+	return !direction_.isNull();
 }
 
 template <typename T>
@@ -635,15 +626,15 @@ inline bool FiniteLineT2<T>::isEqual(const FiniteLineT2<T>& line, const T& epsil
 
 	const T sqrDistance = NumericT<T>::sqr(epsilon);
 
-	return (linePoint0.sqrDistance(line.linePoint0) <= sqrDistance && linePoint1.sqrDistance(line.linePoint1) <= sqrDistance)
-				|| (linePoint0.sqrDistance(line.linePoint1) <= sqrDistance && linePoint1.sqrDistance(line.linePoint0) <= sqrDistance);
+	return (point0_.sqrDistance(line.point0_) <= sqrDistance && point1_.sqrDistance(line.point1_) <= sqrDistance)
+				|| (point0_.sqrDistance(line.point1_) <= sqrDistance && point1_.sqrDistance(line.point0_) <= sqrDistance);
 }
 
 template <typename T>
 bool FiniteLineT2<T>::operator==(const FiniteLineT2<T>& right) const
 {
-	return (linePoint0 == right.linePoint0 && linePoint1 == right.linePoint1)
-				|| (linePoint0 == right.linePoint1 && linePoint1 == right.linePoint0);
+	return (point0_ == right.point0_ && point1_ == right.point1_)
+				|| (point0_ == right.point1_ && point1_ == right.point0_);
 }
 
 template <typename T>
