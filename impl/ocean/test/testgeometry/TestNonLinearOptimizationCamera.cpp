@@ -26,18 +26,6 @@ namespace Test
 namespace TestGeometry
 {
 
-const Scalar TestNonLinearOptimizationCamera::noises[] =
-{
-	0,
-	1
-};
-
-const unsigned int TestNonLinearOptimizationCamera::outliers[] =
-{
-	0u,
-	10u
-};
-
 bool TestNonLinearOptimizationCamera::test(const double testDuration, Worker* /*worker*/)
 {
 	Log::info() << "---   Camera non linear optimization test:   ---";
@@ -76,47 +64,39 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCamera(const doub
 
 	bool result = true;
 
-	const unsigned int correspondenceNumbers[] = {50u, 500u, 5000u};
-
-	for (unsigned int o = 0u; o < sizeof(outliers) / sizeof(outliers[0]); ++o)
+	for (const unsigned int outliersPercent : {0u, 10u})
 	{
-		if (o != 0u)
+		if (outliersPercent != 0u)
 		{
 			Log::info() << " ";
 			Log::info() << " ";
 		}
 
-		const unsigned int outlier = outliers[o];
-
-		for (unsigned int n = 0u; n < sizeof(noises) / sizeof(noises[0]); ++n)
+		for (const Scalar noise : {Scalar(0), Scalar(1)})
 		{
-			if (n != 0u)
+			if (noise != Scalar(0))
 			{
 				Log::info() << " ";
 				Log::info() << " ";
 			}
 
-			const Scalar noise = noises[n];
-
-			Log::info() << "Samples with gaussian noise " << String::toAString(noise, 1u) << "px and " << outlier << "% outliers";
+			Log::info() << "Samples with Gaussian noise " << String::toAString(noise, 1u) << "px and " << outliersPercent << "% outliers";
 			Log::info() << " ";
 
-			for (unsigned int c = 0u; c < sizeof(correspondenceNumbers) / sizeof(correspondenceNumbers[0]); ++c)
+			for (const unsigned int numberCorrespondences : {50u, 500u, 5000u})
 			{
-				if (c != 0u)
+				if (numberCorrespondences != 50u)
 				{
 					Log::info() << " ";
 				}
 
-				const unsigned int correspondences = correspondenceNumbers[c];
-
-				Log::info() << "With " << correspondences << " correspondences";
+				Log::info() << "With " << numberCorrespondences << " correspondences";
 
 				for (Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
 				{
 					Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-					result = testNonLinearOptimizationCamera(correspondences, testDuration, estimatorType, noise, correspondences * outlier / 100u) && result;
+					result = testNonLinearOptimizationCamera(numberCorrespondences, testDuration, estimatorType, noise, numberCorrespondences * outliersPercent / 100u) && result;
 				}
 			}
 		}
@@ -134,38 +114,33 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCameraPoses(const
 
 	bool result = true;
 
-	const unsigned int numberObjectPoints[] = {50u, 200u};
-	const unsigned int poses = 10u;
+	constexpr unsigned int poses = 10u;
 
-	for (unsigned int n = 0u; n < sizeof(noises) / sizeof(noises[0]); ++n)
+	for (const Scalar noise : {Scalar(0), Scalar(1)})
 	{
-		if (n != 0u)
+		if (noise != Scalar(0))
 		{
 			Log::info() << " ";
 			Log::info() << " ";
 		}
 
-		const Scalar noise = noises[n];
-
-		Log::info() << "Samples with gaussian noise " << String::toAString(noise, 1u) << "px:";
+		Log::info() << "Samples with Gaussian noise " << String::toAString(noise, 1u) << "px:";
 		Log::info() << " ";
 
-		for (unsigned int c = 0u; c < sizeof(numberObjectPoints) / sizeof(numberObjectPoints[0]); ++c)
+		for (const unsigned int numberObjectPoints : {50u, 200u})
 		{
-			if (c != 0u)
+			if (numberObjectPoints != 50u)
 			{
 				Log::info() << " ";
 			}
 
-			const unsigned int objectPoints = numberObjectPoints[c];
-
-			Log::info() << "With " << poses << " poses and " << objectPoints << " object points";
+			Log::info() << "With " << poses << " poses and " << numberObjectPoints << " object points";
 
 			for (Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
 			{
 				Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-				result = testNonLinearOptimizationCameraPoses(poses, objectPoints, testDuration, estimatorType, noise) && result;
+				result = testNonLinearOptimizationCameraPoses(poses, numberObjectPoints, testDuration, estimatorType, noise) && result;
 			}
 		}
 	}
@@ -177,11 +152,11 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCamera(const unsi
 {
 	ocean_assert(correspondences >= 3u && testDuration > 0);
 
-	const unsigned int width = 640u;
-	const unsigned int height = 480u;
+	constexpr unsigned int width = 640u;
+	constexpr unsigned int height = 480u;
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t succeeded = 0ull;
 
 	HighPerformanceStatistic performance;
 
@@ -193,9 +168,10 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCamera(const unsi
 	Scalars medianPixelErrors;
 	Scalars medianOptimizedPixelErrors;
 
-	const unsigned int setSize = 50u;
+	constexpr unsigned int setSize = 50u;
 
 	const Timestamp startTimestamp(true);
+
 	do
 	{
 		const Scalar focalX = Random::scalar(500, 600);
@@ -209,11 +185,11 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCamera(const unsi
 
 		const PinholeCamera pinholeCamera(width, height, focalX, focalY, principalPointX, principalPointY, radialDistortionPair, tangentialDistortionPair);
 
-		const Geometry::ObjectPoints objectPoints(Utilities::objectPoints(objectPointBoundingBox, setSize));
+		const Vectors3 objectPoints(Utilities::objectPoints(objectPointBoundingBox, setSize));
 
-		Geometry::ImagePoints imagePoints;
-		Geometry::ImagePoints normalizedObjectPoints;
-		Geometry::ImagePoints perfectImagePoints;
+		Vectors2 imagePoints;
+		Vectors2 normalizedObjectPoints;
+		Vectors2 perfectImagePoints;
 
 		for (unsigned int i = 0u; i < max(1u, correspondences / setSize); ++i)
 		{
@@ -222,19 +198,22 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCamera(const unsi
 
 			const HomogenousMatrix4 extrinsic(Utilities::viewPosition(pinholeCamera, objectPoints, viewingDirection));
 
-			Geometry::ImagePoints localImagePoints(setSize);
+			Vectors2 localImagePoints(setSize);
 			pinholeCamera.projectToImage<true>(extrinsic, objectPoints.data(), objectPoints.size(), pinholeCamera.hasDistortionParameters(), localImagePoints.data());
 
 			perfectImagePoints.insert(perfectImagePoints.end(), localImagePoints.begin(), localImagePoints.end());
 
-			if (standardDeviation > 0)
+			if (standardDeviation > Scalar(0))
+			{
 				for (unsigned int n = 0; n < setSize; ++n)
 				{
 					const Vector2 noise(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation));
+
 					localImagePoints[n] += noise;
 				}
+			}
 
-			Geometry::ImagePoints localNormalizedObjectPoints(setSize);
+			Vectors2 localNormalizedObjectPoints(setSize);
 			PinholeCamera::objectPoints2normalizedImagePoints(extrinsic, objectPoints.data(), objectPoints.size(), localNormalizedObjectPoints.data());
 
 			imagePoints.insert(imagePoints.end(), localImagePoints.begin(), localImagePoints.end());
@@ -252,9 +231,9 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCamera(const unsi
 		PinholeCamera optimizedCamera;
 
 		performance.start();
-		const bool result = Geometry::NonLinearOptimizationCamera::optimizeCamera(initialCamera, ConstArrayAccessor<Vector2>(normalizedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints), PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS, optimizedCamera, 50u, estimatorType);
-		ocean_assert(result);
+			const bool result = Geometry::NonLinearOptimizationCamera::optimizeCamera(initialCamera, ConstArrayAccessor<Vector2>(normalizedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints), PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS, optimizedCamera, 50u, estimatorType);
 		performance.stop();
+		ocean_assert(result);
 
 		if (result)
 		{
@@ -309,8 +288,8 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCameraPoses(const
 
 	const Plane3 yPlane(Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-	unsigned long long succeeded = 0ull;
-	unsigned long long iterations = 0ull;
+	uint64_t succeeded = 0ull;
+	uint64_t iterations = 0ull;
 
 	Scalar averageInitialSqrError = 0;
 	Scalar averageOptimizedSqrError = 0;
@@ -324,8 +303,8 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCameraPoses(const
 
 	do
 	{
-		const unsigned int width = 640;
-		const unsigned int height = 480;
+		constexpr unsigned int width = 640;
+		constexpr unsigned int height = 480;
 
 		const Scalar Fx = Random::scalar(500, 600);
 		const Scalar Fy = Random::scalar(500, 600);
@@ -341,9 +320,10 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCameraPoses(const
 		const SquareMatrix3 intrinsic(Fx, 0, 0, 0, Fy, 0, mx, my, 1);
 		const PinholeCamera pinholeCamera(intrinsic, width, height, PinholeCamera::DistortionPair(k1, k2), PinholeCamera::DistortionPair(p1, p2));
 
-		const Geometry::ObjectPoints objectPoints(Utilities::objectPoints(Box3(Vector3(-1, -1, -1), Vector3(1, 1, 1)), correspondences));
+		const Vectors3 objectPoints(Utilities::objectPoints(Box3(Vector3(-1, -1, -1), Vector3(1, 1, 1)), correspondences));
 
-		Geometry::ImagePointGroups perfectImagePointGroups, imagePointGroups;
+		std::vector<Vectors2> perfectImagePointGroups;
+		std::vector<Vectors2> imagePointGroups;
 
 		HomogenousMatrices4 poses;
 		HomogenousMatrices4 inaccuratePoses;
@@ -353,15 +333,17 @@ bool TestNonLinearOptimizationCamera::testNonLinearOptimizationCameraPoses(const
 			const Vector3 viewingDirection(Random::vector3());
 			const HomogenousMatrix4 pose(Utilities::viewPosition(pinholeCamera, objectPoints, viewingDirection));
 
-			Geometry::ImagePoints imagePoints(objectPoints.size());
+			Vectors2 imagePoints(objectPoints.size());
 			pinholeCamera.projectToImage<true>(pose, objectPoints.data(), objectPoints.size(), true, imagePoints.data());
 
 			perfectImagePointGroups.push_back(imagePoints);
 
 			if (standardDeviation > 0)
 			{
-				for (Geometry::ImagePoints::iterator iP = imagePoints.begin(); iP != imagePoints.end(); ++iP)
-					*iP += Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation));
+				for (Vector2& imagePoint : imagePoints)
+				{
+					imagePoint += Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation));
+				}
 			}
 
 			imagePointGroups.push_back(imagePoints);

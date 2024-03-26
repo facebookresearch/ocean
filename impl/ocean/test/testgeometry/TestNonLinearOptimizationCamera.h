@@ -9,8 +9,6 @@
 
 #include "ocean/math/PinholeCamera.h"
 
-#include <set>
-
 namespace Ocean
 {
 
@@ -26,18 +24,6 @@ namespace TestGeometry
  */
 class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationCamera
 {
-	protected:
-
-		/**
-		 * Array with individual noise parameters.
-		 */
-		static const Scalar noises[];
-
-		/**
-		 * Array with individual outlier amounts.
-		 */
-		static const unsigned int outliers[];
-
 	public:
 
 		/**
