@@ -489,21 +489,35 @@ bool TestFrameInterpolator::resizePlane(const Frame& sourcePlane, Frame& targetP
 	{
 		const unsigned int layers = CV::FramePyramid::idealLayers(sourcePlane.width(), sourcePlane.height(), targetPlane.width() - 1u, targetPlane.height() - 1u);
 
-		const CV::FramePyramid framePyramid(sourcePlane, layers, nullptr, CV::FramePyramid::DM_FILTER_14641);
+		if (layers >= 2u)
+		{
+			const CV::FramePyramid framePyramid(sourcePlane, layers, nullptr, CV::FramePyramid::DM_FILTER_14641);
 
-		const Frame coarsestPyramidLayer(framePyramid.coarsestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			const Frame coarsestPyramidLayer(framePyramid.coarsestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
 
-		CV::FrameInterpolatorBilinear::resize<uint8_t, tPlaneChannels>(coarsestPyramidLayer.constdata<uint8_t>(), targetPlane.data<uint8_t>(), coarsestPyramidLayer.width(), coarsestPyramidLayer.height(), targetPlane.width(), targetPlane.height(), coarsestPyramidLayer.paddingElements(), targetPlane.paddingElements());
+			CV::FrameInterpolatorBilinear::resize<uint8_t, tPlaneChannels>(coarsestPyramidLayer.constdata<uint8_t>(), targetPlane.data<uint8_t>(), coarsestPyramidLayer.width(), coarsestPyramidLayer.height(), targetPlane.width(), targetPlane.height(), coarsestPyramidLayer.paddingElements(), targetPlane.paddingElements());
+		}
+		else
+		{
+			CV::FrameInterpolatorBilinear::resize<uint8_t, tPlaneChannels>(sourcePlane.constdata<uint8_t>(), targetPlane.data<uint8_t>(), sourcePlane.width(), sourcePlane.height(), targetPlane.width(), targetPlane.height(), sourcePlane.paddingElements(), targetPlane.paddingElements());
+		}
 	}
 	else if (resizeMethod == CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_11_BILINEAR)
 	{
 		const unsigned int layers = CV::FramePyramid::idealLayers(sourcePlane.width(), sourcePlane.height(), targetPlane.width() - 1u, targetPlane.height() - 1u);
 
-		const CV::FramePyramid framePyramid(sourcePlane, layers, nullptr, CV::FramePyramid::DM_FILTER_11);
+		if (layers >= 2u)
+		{
+			const CV::FramePyramid framePyramid(sourcePlane, layers, nullptr, CV::FramePyramid::DM_FILTER_11);
 
-		const Frame coarsestPyramidLayer(framePyramid.coarsestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			const Frame coarsestPyramidLayer(framePyramid.coarsestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
 
-		CV::FrameInterpolatorBilinear::resize<uint8_t, tPlaneChannels>(coarsestPyramidLayer.constdata<uint8_t>(), targetPlane.data<uint8_t>(), coarsestPyramidLayer.width(), coarsestPyramidLayer.height(), targetPlane.width(), targetPlane.height(), coarsestPyramidLayer.paddingElements(), targetPlane.paddingElements());
+			CV::FrameInterpolatorBilinear::resize<uint8_t, tPlaneChannels>(coarsestPyramidLayer.constdata<uint8_t>(), targetPlane.data<uint8_t>(), coarsestPyramidLayer.width(), coarsestPyramidLayer.height(), targetPlane.width(), targetPlane.height(), coarsestPyramidLayer.paddingElements(), targetPlane.paddingElements());
+		}
+		else
+		{
+			CV::FrameInterpolatorBilinear::resize<uint8_t, tPlaneChannels>(sourcePlane.constdata<uint8_t>(), targetPlane.data<uint8_t>(), sourcePlane.width(), sourcePlane.height(), targetPlane.width(), targetPlane.height(), sourcePlane.paddingElements(), targetPlane.paddingElements());
+		}
 	}
 	else
 	{
