@@ -289,7 +289,7 @@ class OCEAN_PLATFORM_META_AVATARS_EXPORT Manager : public Singleton<Manager>
 		/**
 		 * Updates the body tracking data of the local user.
 		 * This function should be called before update().
-		 * @param bodyTrackingData The body tracking daata of the local avatar, invalid if unknown
+		 * @param bodyTrackingData The body tracking data of the local avatar, invalid if unknown
 		 * @see update().
 		 */
 		void updateLocalBodyTrackingData(Input::SharedBodyTrackingData&& bodyTrackingData);
@@ -344,7 +344,7 @@ class OCEAN_PLATFORM_META_AVATARS_EXPORT Manager : public Singleton<Manager>
 		/**
 		 * Joins a zone to get access to all remote avatars in this zone via network.
 		 * @param zoneName The name of the zone to join, must be valid
-		 * @return The subscription object, the zone will be left when the object is dispoed
+		 * @return The subscription object, the zone will be left when the object is disposed
 		 */
 		[[nodiscard]] ZoneScopedSubscription joinZone(const std::string& zoneName);
 
@@ -381,7 +381,7 @@ class OCEAN_PLATFORM_META_AVATARS_EXPORT Manager : public Singleton<Manager>
 		HomogenousMatrix4 world_T_head(const uint64_t userId) const;
 
 		/**
-		 * Releases the manager and all avatar resoruces.
+		 * Releases the manager and all avatar resources.
 		 */
 		void release();
 
@@ -533,7 +533,7 @@ class OCEAN_PLATFORM_META_AVATARS_EXPORT Manager : public Singleton<Manager>
 		/// The map mapping user ids (of remote users) to their corresponding body tracking data objects.
 		RemoteBodyTrackingMap remoteBodyTrackingMap_;
 
-		/// A resusable memory buffer.
+		/// A reusable memory buffer.
 		std::vector<uint8_t> reusableNetworkBuffer_;
 
 		/// The map mapping zone names to zone objects.

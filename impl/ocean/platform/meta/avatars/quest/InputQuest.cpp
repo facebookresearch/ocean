@@ -84,7 +84,7 @@ ovrAvatar2InputTrackingState InputQuest::inputTrackingState(ovrMobile* ovr, cons
 
 				if (controllerTranslation.sqrDistance(headsetTranslation) > Numeric::sqr(Scalar(0.7)))
 				{
-					// HACK: temporary workaround until the underyling Avatars system comes with a better handling in case controllers are too far away from the user
+					// HACK: temporary workaround until the underlying Avatars system comes with a better handling in case controllers are too far away from the user
 
 					controllerTranslation = headsetTranslation + (controllerTranslation - headsetTranslation).normalized() * Scalar(0.7);
 				}

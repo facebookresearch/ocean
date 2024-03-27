@@ -147,7 +147,7 @@ Avatar::Avatar(const UserType userType, const uint64_t userId, const bool isLoca
 				}
 			}
 
-			// we create a custom lip sync context (it's a proxy context for local avatars) to support loca and remote avatars
+			// we create a custom lip sync context (it's a proxy context for local avatars) to support local and remote avatars
 
 			ovrAvatar2LipSyncContext customLipSyncContext;
 			customLipSyncContext.context = this;
@@ -443,7 +443,7 @@ void Avatar::release()
 		{
 			if (ovrAvatar2LipSync_DestroyProvider(localLipSyncProvider_) != ovrAvatar2Result_Success)
 			{
-				Log::error() << "Failed to destory viseme context";
+				Log::error() << "Failed to destroy viseme context";
 			}
 
 			localLipSyncProvider_ = nullptr;
@@ -453,7 +453,7 @@ void Avatar::release()
 		{
 			if (ovrAvatar2Body_DestroyProvider(bodyTrackingProvider_) != ovrAvatar2Result_Success)
 			{
-				Log::error() << "Failed to destory tracking context";
+				Log::error() << "Failed to destroy tracking context";
 			}
 
 			bodyTrackingProvider_ = nullptr;
@@ -614,7 +614,7 @@ bool Avatar::onDetermineLipSyncState(ovrAvatar2LipSyncState* lipSyncState, void*
 
 	if (avatar->isLocal_)
 	{
-		// we are a local avatar, so we detemine the lip sync state via the real lip sync context
+		// we are a local avatar, so we determine the lip sync state via the real lip sync context
 
 		if (avatar->localLipSyncContext_.lipsyncCallback != nullptr && avatar->localLipSyncContext_.lipsyncCallback(lipSyncState, avatar->localLipSyncContext_.context))
 		{

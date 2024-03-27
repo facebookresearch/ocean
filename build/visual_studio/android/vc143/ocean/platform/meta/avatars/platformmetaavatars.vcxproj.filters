@@ -30,6 +30,9 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\quest\InputQuest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Avatar.cpp">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Shaders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\quest\InputQuest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

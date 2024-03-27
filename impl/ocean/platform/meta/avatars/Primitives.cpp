@@ -111,7 +111,7 @@ bool Primitives::loadPrimitives(const Rendering::EngineRef& engine, const ovrAva
 							break;
 
 						default:
-							Log::warning() << "Invalid texture texture type: " << int(materialTexture.type);
+							Log::warning() << "Invalid texture type: " << int(materialTexture.type);
 							break;
 					}
 
