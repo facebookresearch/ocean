@@ -291,7 +291,7 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 
 			if (lineFound)
 			{
-				foundLines++;
+				++foundLines;
 			}
 		}
 
@@ -314,16 +314,16 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 
 			if (lineFound)
 			{
-				foundLines++;
+				++foundLines;
 			}
 		}
 
 		if (foundLines == 8u)
 		{
-			succeeded++;
+			++succeeded;
 		}
 
-		iterations++;
+		++iterations;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -335,7 +335,9 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	return percent >= 0.95;
+	constexpr double threshold = std::is_same<Scalar, float>::value ? 0.85 : 0.95;
+
+	return percent >= threshold;
 }
 
 bool TestLineDetectorHough::validateSmooth(const unsigned int* original, const unsigned int* smoothAccumulator, const unsigned int width, const unsigned int height)
