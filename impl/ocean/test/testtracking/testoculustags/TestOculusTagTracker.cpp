@@ -93,14 +93,14 @@ bool TestOculusTagTracker::testStressTestNegative(const double testDuration, Wor
 		const unsigned int cameraIndexA = RandomI::random(randomGenerator, 1u);
 		const unsigned int cameraIndexB = RandomI::random(randomGenerator, 1u);
 
-		const FisheyeCamera fisheyeCameraA = Test::TestGeometry::Utilities::realisticFisheyeCamera(cameraIndexA);
-		const FisheyeCamera fisheyeCameraB = Test::TestGeometry::Utilities::realisticFisheyeCamera(cameraIndexB);
+		const SharedAnyCamera anyCameraA = Test::TestGeometry::Utilities::realisticAnyCamera(AnyCameraType::FISHEYE, cameraIndexA);
+		const SharedAnyCamera anyCameraB = Test::TestGeometry::Utilities::realisticAnyCamera(AnyCameraType::FISHEYE, cameraIndexB);
 
 		const unsigned int paddingElementsFrameA = RandomI::random(randomGenerator, 0u, 100u);
 		const unsigned int paddingElementsFrameB = RandomI::random(randomGenerator, 0u, 100u);
 
-		Frame yFrameA(FrameType(fisheyeCameraA.width(), fisheyeCameraA.height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElementsFrameA);
-		Frame yFrameB(FrameType(fisheyeCameraB.width(), fisheyeCameraB.height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElementsFrameB);
+		Frame yFrameA(FrameType(anyCameraA->width(), anyCameraA->height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElementsFrameA);
+		Frame yFrameB(FrameType(anyCameraB->width(), anyCameraB->height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElementsFrameB);
 
 		OculusTagTracker oculusTagTracker;
 
@@ -118,9 +118,8 @@ bool TestOculusTagTracker::testStressTestNegative(const double testDuration, Wor
 
 			OculusTags tags;
 			// TODO oculusTagTracker.trackStereo(...);
-			OCEAN_SUPPRESS_UNUSED_WARNING(world_T_device);
-			OCEAN_SUPPRESS_UNUSED_WARNING(device_T_cameraA);
-			OCEAN_SUPPRESS_UNUSED_WARNING(device_T_cameraB);
+
+			oculusTagTracker.trackTagsStereo(*anyCameraA, *anyCameraB, yFrameA, yFrameB, world_T_device, device_T_cameraA, device_T_cameraB, tags);
 
 			const OculusTagTracker::TrackedTagMap trackedTagMap = oculusTagTracker.trackedTagMap();
 
