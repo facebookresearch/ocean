@@ -71,22 +71,24 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Avatar.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Images.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Manager.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Primitives.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\quest\InputQuest.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Shaders.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Avatar.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Images.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Input.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Manager.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Primitives.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\quest\InputQuest.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Shaders.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Avatar.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Avatars.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Images.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Manager.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Primitives.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\quest\InputQuest.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Shaders.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Utilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Avatar.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Avatars.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Images.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Input.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Manager.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Primitives.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\quest\InputQuest.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Shaders.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Utilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

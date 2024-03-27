@@ -11,7 +11,7 @@
 #include "ocean/media/FrameMedium.h"
 
 #ifdef XR_PLAYGROUND_PLATFORM_BUILD_PHONE
-	#include "ocean/platform/meta/avatars/Manager.h"
+	#include "metaonly/ocean/platform/meta/avatars/Manager.h"
 #endif
 
 namespace Ocean

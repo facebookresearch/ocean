@@ -8,7 +8,7 @@
 
 #include "ocean/base/Singleton.h"
 
-#include "ocean/platform/meta/avatars/Manager.h"
+#include "metaonly/ocean/platform/meta/avatars/Manager.h"
 
 #include "ocean/platform/meta/quest/vrapi/HandPoses.h"
 

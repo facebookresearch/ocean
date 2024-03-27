@@ -19,7 +19,7 @@
 #include "ocean/rendering/Transform.h"
 
 #ifdef OCEAN_PLATFORM_BUILD_MOBILE
-	#include "ocean/platform/meta/avatars/Manager.h"
+	#include "metaonly/ocean/platform/meta/avatars/Manager.h"
 #endif
 
 #ifdef XR_PLAYGROUND_PLATFORM_BUILD_PHONE

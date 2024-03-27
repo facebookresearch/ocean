@@ -24,7 +24,7 @@
 #include "ocean/rendering/Utilities.h"
 
 #ifdef XR_PLAYGROUND_PLATFORM_BUILD_META_QUEST
-	#include "ocean/platform/meta/avatars/Manager.h"
+	#include "metaonly/ocean/platform/meta/avatars/Manager.h"
 
 	#include "ocean/platform/meta/quest/vrapi/HandPoses.h"
 #endif

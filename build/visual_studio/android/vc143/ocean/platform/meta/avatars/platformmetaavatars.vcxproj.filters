@@ -9,48 +9,54 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Avatars.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Avatar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Avatar.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Avatars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Manager.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Images.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Images.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Primitives.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Shaders.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Primitives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Utilities.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Shaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\quest\InputQuest.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\quest\InputQuest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Avatar.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Images.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Manager.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Images.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Primitives.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Primitives.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\Shaders.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Shaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\meta\avatars\quest\InputQuest.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\Avatar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\avatars\quest\InputQuest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

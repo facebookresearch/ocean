@@ -27,7 +27,7 @@
 #include "ocean/platform/android/Resource.h"
 #include "ocean/platform/android/Utilities.h"
 
-#include "ocean/platform/meta/avatars/quest/InputQuest.h"
+#include "metaonly/ocean/platform/meta/avatars/quest/InputQuest.h"
 
 #include "ocean/platform/meta/quest/vrapi/HeadsetPoses.h"
 

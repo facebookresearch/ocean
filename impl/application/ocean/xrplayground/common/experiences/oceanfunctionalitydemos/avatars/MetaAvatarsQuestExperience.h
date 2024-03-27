@@ -15,7 +15,7 @@
 	#include "ocean/platform/meta/quest/platformsdk/Multiplayer.h"
 	#include "ocean/platform/meta/quest/vrapi/application/VRTableMenu.h"
 
-	#include "ocean/platform/meta/avatars/Manager.h"
+	#include "metaonly/ocean/platform/meta/avatars/Manager.h"
 #endif
 
 namespace Ocean

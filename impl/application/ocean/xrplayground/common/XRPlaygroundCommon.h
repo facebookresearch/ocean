@@ -21,7 +21,7 @@
 #include "metaonly/ocean/platform/meta/Login.h"
 
 #ifdef OCEAN_PLATFORM_BUILD_MOBILE
-	#include "ocean/platform/meta/avatars/Manager.h"
+	#include "metaonly/ocean/platform/meta/avatars/Manager.h"
 #endif
 
 namespace Ocean

@@ -31,7 +31,7 @@
 #ifdef XR_PLAYGROUND_PLATFORM_BUILD_META_QUEST
 	#include "ocean/platform/meta/quest/vrapi/application/VRTableMenu.h"
 
-	#include "ocean/platform/meta/avatars/Manager.h"
+	#include "metaonly/ocean/platform/meta/avatars/Manager.h"
 
 	#include "ocean/platform/meta/quest/platformsdk/DistributedStates.h"
 	#include "ocean/platform/meta/quest/platformsdk/Network.h"
