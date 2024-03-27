@@ -22,18 +22,15 @@ bool TestFrameConverterY10_Packed::test(const unsigned int width, const unsigned
 	Log::info() << "---   Y10_PACKED converter test:   ---";
 	Log::info() << " ";
 
-	const auto flags = TestFrameConverter::conversionFlags();
-
 	bool allSucceeded = true;
 
 	{
 		Log::info() << "Testing Y10_PACKED to BGR24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY10_PackedToBGR24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY10_PackedToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -43,12 +40,11 @@ bool TestFrameConverterY10_Packed::test(const unsigned int width, const unsigned
 
 	{
 		Log::info() << "Testing Y10_PACKED to RGB24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY10_PackedToRGB24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY10_PackedToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -58,12 +54,11 @@ bool TestFrameConverterY10_Packed::test(const unsigned int width, const unsigned
 
 	{
 		Log::info() << "Testing linear Y10_PACKED to Y8 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY10_PackedToY8Linear(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY10_PackedToY8Linear(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -73,12 +68,11 @@ bool TestFrameConverterY10_Packed::test(const unsigned int width, const unsigned
 
 	{
 		Log::info() << "Testing Y10_PACKED to Y8 conversion with LUT gamma correction (x^" << String::toAString(TestFrameConverter::ValueProvider::get().gammaValue(), 1u) << ") with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY10_PackedToY8GammaLUT(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY10_PackedToY8GammaLUT(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -88,12 +82,11 @@ bool TestFrameConverterY10_Packed::test(const unsigned int width, const unsigned
 
 	{
 		Log::info() << "Testing Y10_PACKED to Y8 conversion with approximated gamma correction (x^" << String::toAString(TestFrameConverter::ValueProvider::get().gammaValue(), 1u) << ") with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY10_PackedToY8GammaApproximated(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY10_PackedToY8GammaApproximated(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -103,12 +96,11 @@ bool TestFrameConverterY10_Packed::test(const unsigned int width, const unsigned
 
 	{
 		Log::info() << "Testing Y10_PACKED to Y10 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY10_PackedToY10(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY10_PackedToY10(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 

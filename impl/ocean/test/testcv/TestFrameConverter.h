@@ -592,19 +592,6 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverter : protected CV::FrameConverter
 		static bool validateConversion(const Frame& sourceFrame, const Frame& targetFrame, const FunctionPixelValue functionSourcePixelValue, const FunctionPixelValue functionTargetPixelValue, const MatrixD& transformationMatrix, const CV::FrameConverter::ConversionFlag conversionFlag, double* averageAbsErrorToFloat, double* averageAbsErrorToInteger, double* maximalAbsErrorToFloat, unsigned int* maximalAbsErrorToInteger, const double minimalGroundTruthValue, const double maximalGroundTruthValue, const bool skipPlausibilityCheck = false);
 
 		/**
-		 * Returns a vector holding all possible conversion flags.
-		 * @return The vector with conversion flags, will be four.
-		 */
-		static std::vector<CV::FrameConverter::ConversionFlag> conversionFlags();
-
-		/**
-		 * Translates a given conversion flag to a string.
-		 * @param conversionFlag The conversion flag to be translated
-		 * @return The resulting string containing the flag
-		 */
-		static std::string translateConversionFlag(const CV::FrameConverter::ConversionFlag conversionFlag);
-
-		/**
 		 * Extracts one pixel from a generic frame (e.g,. with pixel format BGR24, RGB24, YUV24, ...).
 		 * @param frame The frame from which the pixel will be extracted, must be valid
 		 * @param x The horizontal pixel location within the frame, with range [0, frame.width() - 1]

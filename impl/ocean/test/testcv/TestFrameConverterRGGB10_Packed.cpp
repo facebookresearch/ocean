@@ -25,17 +25,15 @@ bool TestFrameConverterRGGB10_Packed::test(const unsigned int width, const unsig
 
 	RandomGenerator randomGenerator;
 
-	const std::vector<CV::FrameConverter::ConversionFlag> flags = TestFrameConverter::conversionFlags();
-
 	bool allSucceeded = true;
 
 	{
 		Log::info() << "Testing RGGB10_PACKED to BGR24 conversion with resolution " << width << "x" << height << ":";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGGB10_PackedToBGR24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			allSucceeded = testRGGB10_PackedToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -46,10 +44,10 @@ bool TestFrameConverterRGGB10_Packed::test(const unsigned int width, const unsig
 	{
 		Log::info() << "Testing RGGB10_PACKED to RGB24 conversion with resolution " << width << "x" << height << ":";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGGB10_PackedToRGB24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			allSucceeded = testRGGB10_PackedToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -60,10 +58,10 @@ bool TestFrameConverterRGGB10_Packed::test(const unsigned int width, const unsig
 	{
 		Log::info() << "Testing RGGB10_PACKED to RGB24 conversion with black-level subtraction, white balancing, and gamma encoding at resolution " << width << "x" << height << ":";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testConvertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT(randomGenerator, width, height, flags[n], testDuration, worker) && allSucceeded;
+			allSucceeded = testConvertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT(randomGenerator, width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 

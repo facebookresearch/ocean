@@ -190,6 +190,13 @@ class OCEAN_CV_EXPORT CVUtilities
 		static Frame randomizedBinaryMask(const unsigned int width, const unsigned int height, const uint8_t maskValue, const unsigned int paddingElements = 0u, RandomGenerator* randomGenerator = nullptr);
 
 		/**
+		 * Returns whether all border pixels of an image are set to zero.
+		 * @param frame The frame to test, must be valid
+		 * @return True, if so
+		 */
+		static bool isBorderZero(const Frame& frame);
+
+		/**
 		 * Deprecated.
 		 *
 		 * Returns the mirrored correction offset for a given index.
@@ -252,6 +259,15 @@ class OCEAN_CV_EXPORT CVUtilities
 		static Frame createCheckerboardImage(const unsigned int width, const unsigned int height, const unsigned int horizontalElements, const unsigned int verticalElements, const unsigned int paddingElements, const uint8_t bright = 0xFFu, const uint8_t dark = 0x00u);
 
 	protected:
+
+		/**
+		 * Returns whether all border pixels of an image are set to zero.
+		 * @param frame The frame to test, must be valid
+		 * @return True, if so
+		 * @tparam T The data type of the pixel elements
+		 */
+		template <typename T>
+		static bool isBorderZero(const Frame& frame);
 
 		/**
 		 * Randomizes a given memory block.

@@ -22,18 +22,15 @@ bool TestFrameConverterY8::test(const unsigned int width, const unsigned int hei
 	Log::info() << "---   Y8 converter test:   ---";
 	Log::info() << " ";
 
-	const auto flags = TestFrameConverter::conversionFlags();
-
 	bool allSucceeded = true;
 
 	{
 		Log::info() << "Testing Y8 to BGR24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY8ToBGR24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY8ToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -43,12 +40,11 @@ bool TestFrameConverterY8::test(const unsigned int width, const unsigned int hei
 
 	{
 		Log::info() << "Testing Y8 to RGB24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY8ToRGB24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY8ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -58,12 +54,11 @@ bool TestFrameConverterY8::test(const unsigned int width, const unsigned int hei
 
 	{
 		Log::info() << "Testing Y8 to RGBA32 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY8ToRGBA32(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY8ToRGBA32(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -73,12 +68,11 @@ bool TestFrameConverterY8::test(const unsigned int width, const unsigned int hei
 
 	{
 		Log::info() << "Testing Y8 to Y8 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY8ToY8(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY8ToY8(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -88,12 +82,11 @@ bool TestFrameConverterY8::test(const unsigned int width, const unsigned int hei
 
 	{
 		Log::info() << "Testing Y8 to Y8 conversion with LUT gamma correction (x^" << String::toAString(TestFrameConverter::ValueProvider::get().gammaValue(), 1u) << ") with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY8ToY8GammaLUT(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY8ToY8GammaLUT(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 

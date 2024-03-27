@@ -33,7 +33,7 @@ class OCEAN_CV_EXPORT FrameConverter
 		/**
 		 * Definition of individual conversion flags.
 		 */
-		enum ConversionFlag
+		enum ConversionFlag : uint32_t
 		{
 			/**
 			 * Normal conversion, neither flips nor mirrors the image.
@@ -79,6 +79,11 @@ class OCEAN_CV_EXPORT FrameConverter
 			 */
 			CONVERT_FLIPPED_AND_MIRRORED
 		};
+
+		/**
+		 * Definition of a vector holding conversion flags.
+		 */
+		using ConversionFlags = std::vector<ConversionFlag>;
 
 		/**
 		 * Definition of a boolean enum for copy preferences (to improve code readability).
@@ -1261,6 +1266,19 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * @see transformationMatrix_FullRangeYUV24_To_FullRangeBGR24_BT601().
 		 */
 		static MatrixD transformationMatrix_FullRangeYVU24_To_FullRangeBGR24_BT601();
+
+		/**
+		 * Returns a vector holding all possible conversion flags.
+		 * @return The vector with conversion flags, will be four.
+		 */
+		static const ConversionFlags& conversionFlags();
+
+		/**
+		 * Translates a given conversion flag to a string.
+		 * @param conversionFlag The conversion flag to be translated
+		 * @return The resulting string containing the flag
+		 */
+		static std::string translateConversionFlag(const ConversionFlag conversionFlag);
 
 	protected:
 

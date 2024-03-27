@@ -58,13 +58,6 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilter
 		template <typename T>
 		static bool testNormalizeValue(const double testDuration);
 
-		/**
-		 * Returns whether all border pixels of an image are set to zero.
-		 * @param frame The frame to test, must be valid
-		 * @return True, if so
-		 */
-		static bool isBorderZero(const Frame& frame);
-
 	protected:
 
 		/**
@@ -88,15 +81,6 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilter
 		 */
 		template <typename T, typename TMagnitude>
 		static bool testMagnitude(RandomGenerator& randomGenerator, Worker& worker);
-
-		/**
-		 * Returns whether all border pixels of an image are set to zero.
-		 * @param frame The frame to test, must be valid
-		 * @return True, if so
-		 * @tparam T The data type of the pixel elements
-		 */
-		template <typename T>
-		static bool isBorderZero(const Frame& frame);
 
 		/**
 		 * Verifies the value normalization.

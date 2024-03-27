@@ -851,7 +851,7 @@ bool TestFrameFilterScharr::validateHorizontalVerticalMaximumAbsoluteFilter8BitP
 		}
 	}
 
-	if (!TestFrameFilter::isBorderZero(response))
+	if (!CV::CVUtilities::isBorderZero(response))
 	{
 		return false;
 	}
@@ -907,7 +907,7 @@ bool TestFrameFilterScharr::validateMaximumAbsoluteFilter8BitPerChannel(const Fr
 		}
 	}
 
-	if (!TestFrameFilter::isBorderZero(response))
+	if (!CV::CVUtilities::isBorderZero(response))
 	{
 		return false;
 	}

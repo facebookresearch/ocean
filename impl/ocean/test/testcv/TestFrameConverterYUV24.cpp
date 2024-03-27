@@ -22,18 +22,15 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 	Log::info() << "---   YUV24 converter test:   ---";
 	Log::info() << " ";
 
-	const auto flags = TestFrameConverter::conversionFlags();
-
 	bool allSucceeded = true;
 
 	{
 		Log::info() << "Testing YUV24 to BGR24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYUV24ToBGR24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYUV24ToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -43,12 +40,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 
 	{
 		Log::info() << "Testing YUV24 to BGRA32 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYUV24ToBGRA32Precision6Bit(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYUV24ToBGRA32Precision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -58,12 +54,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 
 	{
 		Log::info() << "Testing YUV24 to RGB24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYUV24ToRGB24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYUV24ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -73,12 +68,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 
 	{
 		Log::info() << "Testing YUV24 to RGB24 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYUV24ToRGB24Precision6Bit(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYUV24ToRGB24Precision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -88,12 +82,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 
 	{
 		Log::info() << "Testing YUV24 to Y8 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYUV24ToY8(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYUV24ToY8(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -103,12 +96,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 
 	{
 		Log::info() << "Testing YUV24 to YUV24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYUV24ToYUV24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYUV24ToYUV24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -118,12 +110,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 
 	{
 		Log::info() << "Testing YUV24 to YVU24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYUV24ToYVU24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYUV24ToYVU24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -133,12 +124,11 @@ bool TestFrameConverterYUV24::test(const unsigned int width, const unsigned int 
 
 	{
 		Log::info() << "Testing YUV24 to Y_U_V12 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYUV24ToY_U_V12(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYUV24ToY_U_V12(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 

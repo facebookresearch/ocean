@@ -21,18 +21,17 @@ bool TestFrameConverterRGB565::test(const unsigned int width, const unsigned int
 	Log::info() << "---   RGB565 converter test:   ---";
 	Log::info() << " ";
 
-	const auto flags = TestFrameConverter::conversionFlags();
+	const auto flags = CV::FrameConverter::conversionFlags();
 
 	bool allSucceeded = true;
 
 	{
 		Log::info() << "Testing RGB565 to RGB24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testRGB565ToRGB24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testRGB565ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -42,12 +41,11 @@ bool TestFrameConverterRGB565::test(const unsigned int width, const unsigned int
 
 	{
 		Log::info() << "Testing RGB565 to Y8 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testRGB565ToY8(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testRGB565ToY8(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 

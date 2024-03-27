@@ -290,6 +290,51 @@ Frame CVUtilities::randomizedBinaryMask(const unsigned int width, const unsigned
 	return mask;
 }
 
+bool CVUtilities::isBorderZero(const Frame& frame)
+{
+	if (frame.isValid() && frame.numberPlanes() == 1u)
+	{
+		switch (frame.dataType())
+		{
+			case FrameType::DT_UNSIGNED_INTEGER_8:
+				return isBorderZero<uint8_t>(frame);
+
+			case FrameType::DT_SIGNED_INTEGER_8:
+				return isBorderZero<int8_t>(frame);
+
+			case FrameType::DT_UNSIGNED_INTEGER_16:
+				return isBorderZero<uint16_t>(frame);
+
+			case FrameType::DT_SIGNED_INTEGER_16:
+				return isBorderZero<int16_t>(frame);
+
+			case FrameType::DT_UNSIGNED_INTEGER_32:
+				return isBorderZero<uint32_t>(frame);
+
+			case FrameType::DT_SIGNED_INTEGER_32:
+				return isBorderZero<int32_t>(frame);
+
+			case FrameType::DT_UNSIGNED_INTEGER_64:
+				return isBorderZero<uint64_t>(frame);
+
+			case FrameType::DT_SIGNED_INTEGER_64:
+				return isBorderZero<int64_t>(frame);
+
+			case FrameType::DT_SIGNED_FLOAT_32:
+				return isBorderZero<float>(frame);
+
+			case FrameType::DT_SIGNED_FLOAT_64:
+				return isBorderZero<double>(frame);
+
+			default:
+				break;
+		}
+	}
+
+	ocean_assert(false && "Invalid frame type!");
+	return false;
+}
+
 bool CVUtilities::isPaddingMemoryIdentical(const Frame& frameA, const Frame& frameB)
 {
 	ocean_assert(frameA && frameB);
@@ -349,6 +394,49 @@ Frame CVUtilities::createCheckerboardImage(const unsigned int width, const unsig
 	}
 
 	return frame;
+}
+
+template <typename T>
+bool CVUtilities::isBorderZero(const Frame& frame)
+{
+	const unsigned int width_1 = frame.width() - 1u;
+	const unsigned int height_1 = frame.height() - 1u;
+
+	// upper and lower border
+	for (unsigned int x = 0u; x < frame.width(); ++x)
+	{
+		for (unsigned int n = 0u; n < frame.channels(); ++n)
+		{
+			if (frame.constpixel<T>(x, 0u)[n] != T(0))
+			{
+				return false;
+			}
+
+			if (frame.constpixel<T>(x, height_1)[n] != T(0))
+			{
+				return false;
+			}
+		}
+	}
+
+	// left and right border
+	for (unsigned int y = 0u; y < frame.height(); ++y)
+	{
+		for (unsigned int n = 0u; n < frame.channels(); ++n)
+		{
+			if (frame.constpixel<T>(0u, y)[n] != T(0))
+			{
+				return false;
+			}
+
+			if (frame.constpixel<T>(width_1, y)[n] != T(0))
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
 template <typename T>

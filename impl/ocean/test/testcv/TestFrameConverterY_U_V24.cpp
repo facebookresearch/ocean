@@ -21,18 +21,15 @@ bool TestFrameConverterY_U_V24::test(const unsigned int width, const unsigned in
 	Log::info() << "---   Y_U_V24 converter test:   ---";
 	Log::info() << " ";
 
-	const auto flags = TestFrameConverter::conversionFlags();
-
 	bool allSucceeded = true;
 
 	{
 		Log::info() << "Testing Y_U_V24 to YUV24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY_U_V24ToYUV24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY_U_V24ToYUV24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -41,13 +38,12 @@ bool TestFrameConverterY_U_V24::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing limted range Y_U_V24 to BGR24 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
+		Log::info() << "Testing limited range Y_U_V24 to BGR24 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY_U_V24LimitedRangeToBGR24FullRangePrecision6Bit(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY_U_V24LimitedRangeToBGR24FullRangePrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -56,13 +52,12 @@ bool TestFrameConverterY_U_V24::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing limted range Y_U_V24 to RGB24 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
+		Log::info() << "Testing limited range Y_U_V24 to RGB24 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY_U_V24LimitedRangeToRGB24FullRangePrecision6Bit(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY_U_V24LimitedRangeToRGB24FullRangePrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -71,13 +66,12 @@ bool TestFrameConverterY_U_V24::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing limted range Y_U_V24 to BGRA32 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
+		Log::info() << "Testing limited range Y_U_V24 to BGRA32 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY_U_V24LimitedRangeToBGRA32FullRangePrecision6Bit(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY_U_V24LimitedRangeToBGRA32FullRangePrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -86,13 +80,12 @@ bool TestFrameConverterY_U_V24::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing limted range Y_U_V24 to RGBA32 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
+		Log::info() << "Testing limited range Y_U_V24 to RGBA32 (with 6 bit precision) conversion with resolution " << width << "x" << height << ":";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY_U_V24LimitedRangeToRGBA32FullRangePrecision6Bit(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY_U_V24LimitedRangeToRGBA32FullRangePrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -102,12 +95,11 @@ bool TestFrameConverterY_U_V24::test(const unsigned int width, const unsigned in
 
 	{
 		Log::info() << "Testing full range Y_U_V24 to BGRA32 (with 6 bit precision) Android-specific conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testY_U_V24FullRangeToBGRA32FullRangeAndroidPrecision6Bit(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testY_U_V24FullRangeToBGRA32FullRangeAndroidPrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 

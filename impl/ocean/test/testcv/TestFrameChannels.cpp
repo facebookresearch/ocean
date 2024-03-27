@@ -1891,13 +1891,13 @@ bool TestFrameChannels::testAddFirstChannel(const unsigned int width, const unsi
 
 	const double testDuration_4 = testDuration * 0.25;
 
-	const auto conversionFlags = TestFrameConverter::conversionFlags();
+	const auto conversionFlags = CV::FrameConverter::conversionFlags();
 
 	bool allSucceeded = true;
 
 	for (const CV::FrameChannels::ConversionFlag& conversionFlag : conversionFlags)
 	{
-		Log::info() << "Testing " << tSourceChannels << " channels to " << tSourceChannels + 1u << " channels (" << TypeNamer::name<T>() << "), " << TestFrameConverter::translateConversionFlag(conversionFlag) << ":";
+		Log::info() << "Testing " << tSourceChannels << " channels to " << tSourceChannels + 1u << " channels (" << TypeNamer::name<T>() << "), " << CV::FrameConverter::translateConversionFlag(conversionFlag) << ":";
 
 		HighPerformanceStatistic performanceSinglecore;
 		HighPerformanceStatistic performanceMulticore;
@@ -1999,13 +1999,13 @@ bool TestFrameChannels::testAddFirstChannelValue(const unsigned int width, const
 
 	const double testDuration_4 = testDuration * 0.25;
 
-	const auto conversionFlags = TestFrameConverter::conversionFlags();
+	const auto conversionFlags = CV::FrameConverter::conversionFlags();
 
 	bool allSucceeded = true;
 
 	for (const CV::FrameChannels::ConversionFlag& conversionFlag : conversionFlags)
 	{
-		Log::info() << "Testing " << tSourceChannels << " channels to " << tSourceChannels + 1u << " channels (" << TypeNamer::name<T>() << "), " << TestFrameConverter::translateConversionFlag(conversionFlag) << ":";
+		Log::info() << "Testing " << tSourceChannels << " channels to " << tSourceChannels + 1u << " channels (" << TypeNamer::name<T>() << "), " << CV::FrameConverter::translateConversionFlag(conversionFlag) << ":";
 
 		HighPerformanceStatistic performanceSinglecore;
 		HighPerformanceStatistic performanceMulticore;
@@ -2107,13 +2107,11 @@ bool TestFrameChannels::testAddLastChannel(const unsigned int width, const unsig
 
 	const double testDuration_4 = testDuration * 0.25;
 
-	const auto conversionFlags = TestFrameConverter::conversionFlags();
-
 	bool allSucceeded = true;
 
-	for (const CV::FrameChannels::ConversionFlag& conversionFlag : conversionFlags)
+	for (const CV::FrameChannels::ConversionFlag& conversionFlag : CV::FrameConverter::conversionFlags())
 	{
-		Log::info() << "Testing " << tSourceChannels << " channels to " << tSourceChannels + 1u << " channels (" << TypeNamer::name<T>() << "), " << TestFrameConverter::translateConversionFlag(conversionFlag) << ":";
+		Log::info() << "Testing " << tSourceChannels << " channels to " << tSourceChannels + 1u << " channels (" << TypeNamer::name<T>() << "), " << CV::FrameConverter::translateConversionFlag(conversionFlag) << ":";
 
 		HighPerformanceStatistic performanceSinglecore;
 		HighPerformanceStatistic performanceMulticore;
@@ -2215,13 +2213,11 @@ bool TestFrameChannels::testAddLastChannelValue(const unsigned int width, const 
 
 	const double testDuration_4 = testDuration * 0.25;
 
-	const auto conversionFlags = TestFrameConverter::conversionFlags();
-
 	bool allSucceeded = true;
 
-	for (const CV::FrameChannels::ConversionFlag& conversionFlag : conversionFlags)
+	for (const CV::FrameChannels::ConversionFlag conversionFlag : CV::FrameConverter::conversionFlags())
 	{
-		Log::info() << "Testing " << tSourceChannels << " channels to " << tSourceChannels + 1u << " channels (" << TypeNamer::name<T>() << "), " << TestFrameConverter::translateConversionFlag(conversionFlag) << ":";
+		Log::info() << "Testing " << tSourceChannels << " channels to " << tSourceChannels + 1u << " channels (" << TypeNamer::name<T>() << "), " << CV::FrameConverter::translateConversionFlag(conversionFlag) << ":";
 
 		HighPerformanceStatistic performanceSinglecore;
 		HighPerformanceStatistic performanceMulticore;
@@ -2322,13 +2318,11 @@ bool TestFrameChannels::testRemoveFirstChannel(const unsigned int width, const u
 
 	const double testDuration_4 = testDuration * 0.25;
 
-	const auto conversionFlags = TestFrameConverter::conversionFlags();
-
 	bool allSucceeded = true;
 
-	for (const CV::FrameChannels::ConversionFlag& conversionFlag : conversionFlags)
+	for (const CV::FrameChannels::ConversionFlag conversionFlag : CV::FrameConverter::conversionFlags())
 	{
-		Log::info() << "Testing " << tSourceChannels << " channels to " << tSourceChannels - 1u << " channels (" << TypeNamer::name<T>() << "), " << TestFrameConverter::translateConversionFlag(conversionFlag) << ":";
+		Log::info() << "Testing " << tSourceChannels << " channels to " << tSourceChannels - 1u << " channels (" << TypeNamer::name<T>() << "), " << CV::FrameConverter::translateConversionFlag(conversionFlag) << ":";
 
 		HighPerformanceStatistic performanceSinglecore;
 		HighPerformanceStatistic performanceMulticore;
@@ -2429,13 +2423,11 @@ bool TestFrameChannels::testRemoveLastChannel(const unsigned int width, const un
 
 	const double testDuration_4 = testDuration * 0.25;
 
-	const auto conversionFlags = TestFrameConverter::conversionFlags();
-
 	bool allSucceeded = true;
 
-	for (const CV::FrameChannels::ConversionFlag& conversionFlag : conversionFlags)
+	for (const CV::FrameChannels::ConversionFlag conversionFlag : CV::FrameConverter::conversionFlags())
 	{
-		Log::info() << "Testing " << tSourceChannels << " channels to " << tSourceChannels - 1u << " channels (" << TypeNamer::name<T>() << "), " << TestFrameConverter::translateConversionFlag(conversionFlag) << ":";
+		Log::info() << "Testing " << tSourceChannels << " channels to " << tSourceChannels - 1u << " channels (" << TypeNamer::name<T>() << "), " << CV::FrameConverter::translateConversionFlag(conversionFlag) << ":";
 
 		HighPerformanceStatistic performanceSinglecore;
 		HighPerformanceStatistic performanceMulticore;
@@ -2762,12 +2754,12 @@ bool TestFrameChannels::testApplyAdvancedPixelModifier(const unsigned int width,
 
 	bool allSucceeded = true;
 
-	for (const CV::FrameConverter::ConversionFlag conversionFlag : TestFrameConverter::conversionFlags())
+	for (const CV::FrameConverter::ConversionFlag conversionFlag : CV::FrameConverter::conversionFlags())
 	{
-		const std::string conversionName = TestFrameConverter::translateConversionFlag(conversionFlag);
+		const std::string conversionName = CV::FrameConverter::translateConversionFlag(conversionFlag);
 
 		Log::info().newLine();
-		Log::info() << "Test for advanced pixel modifier with imgage of size " << width << "x" << height << ", " << TypeNamer::name<TElement>() << ", " << conversionName << ":";
+		Log::info() << "Test for advanced pixel modifier with image of size " << width << "x" << height << ", " << TypeNamer::name<TElement>() << ", " << conversionName << ":";
 
 		constexpr FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<TElement, tChannels>();
 
@@ -2850,7 +2842,7 @@ bool TestFrameChannels::testApplyBivariateOperator(const double testDuration, Wo
 {
 	ocean_assert(testDuration > 0.0);
 
-	const std::vector<CV::FrameConverter::ConversionFlag> conversionFlags = TestFrameConverter::conversionFlags();
+	const std::vector<CV::FrameConverter::ConversionFlag> conversionFlags = CV::FrameConverter::conversionFlags();
 
 	bool allSucceeded = true;
 
@@ -2862,7 +2854,7 @@ bool TestFrameChannels::testApplyBivariateOperator(const double testDuration, Wo
 	for (unsigned int n = 0u; n < 4u; ++n)
 	{
 		const CV::FrameConverter::ConversionFlag conversionFlag = conversionFlags[n];
-		const std::string conversionName = TestFrameConverter::translateConversionFlag(conversionFlag);
+		const std::string conversionName = CV::FrameConverter::translateConversionFlag(conversionFlag);
 
 		Log::info().newLine(n != 0u);
 		Log::info() << "Pixel-wise subtraction of two frames, " << performanceWidth << "x" << performanceHeight << ", " << TypeNamer::name<TPrecision>() << ", " << conversionName << ":";
@@ -3377,11 +3369,9 @@ bool TestFrameChannels::testTransformGeneric(const unsigned int width, const uns
 	Log::info() << "... testing " << width << "x" << height << " '" << TypeNamer::name<TElementType>() << "' image with " << tChannels << " channels:";
 	Log::info() << " ";
 
-	const std::vector<CV::FrameConverter::ConversionFlag> conversionFlags = TestFrameConverter::conversionFlags();
-
-	for (const CV::FrameConverter::ConversionFlag conversionFlag : conversionFlags)
+	for (const CV::FrameConverter::ConversionFlag conversionFlag : CV::FrameConverter::conversionFlags())
 	{
-		Log::info() << "... with " << TestFrameConverter::translateConversionFlag(conversionFlag) << " conversion:";
+		Log::info() << "... with " << CV::FrameConverter::translateConversionFlag(conversionFlag) << " conversion:";
 
 		HighPerformanceStatistic performanceMulticore;
 		HighPerformanceStatistic performanceSinglecore;
@@ -3539,9 +3529,9 @@ bool TestFrameChannels::testReverseChannelOrder(const unsigned int width, const 
 	Log::info() << "... testing " << width << "x" << height << " '" << TypeNamer::name<T>() << "' image with " << tChannels << " channels:";
 	Log::info() << " ";
 
-	for (const CV::FrameConverter::ConversionFlag conversionFlag : TestFrameConverter::conversionFlags())
+	for (const CV::FrameConverter::ConversionFlag conversionFlag : CV::FrameConverter::conversionFlags())
 	{
-		Log::info() << "... with " << TestFrameConverter::translateConversionFlag(conversionFlag) << " conversion:";
+		Log::info() << "... with " << CV::FrameConverter::translateConversionFlag(conversionFlag) << " conversion:";
 
 		HighPerformanceStatistic performanceMulticore;
 		HighPerformanceStatistic performanceSinglecore;

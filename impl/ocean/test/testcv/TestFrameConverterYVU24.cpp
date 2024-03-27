@@ -21,18 +21,15 @@ bool TestFrameConverterYVU24::test(const unsigned int width, const unsigned int 
 	Log::info() << "---   YVU24 converter test:   ---";
 	Log::info() << " ";
 
-	const auto flags = TestFrameConverter::conversionFlags();
-
 	bool allSucceeded = true;
 
 	{
 		Log::info() << "Testing YVU24 to BGR24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYVU24ToBGR24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYVU24ToBGR24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -42,12 +39,11 @@ bool TestFrameConverterYVU24::test(const unsigned int width, const unsigned int 
 
 	{
 		Log::info() << "Testing YVU24 to RGB24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYVU24ToRGB24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYVU24ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -57,12 +53,11 @@ bool TestFrameConverterYVU24::test(const unsigned int width, const unsigned int 
 
 	{
 		Log::info() << "Testing YVU24 to Y8 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYVU24ToY8(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYVU24ToY8(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -72,12 +67,11 @@ bool TestFrameConverterYVU24::test(const unsigned int width, const unsigned int 
 
 	{
 		Log::info() << "Testing YVU24 to YUV24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYVU24ToYUV24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYVU24ToYUV24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -87,12 +81,11 @@ bool TestFrameConverterYVU24::test(const unsigned int width, const unsigned int 
 
 	{
 		Log::info() << "Testing YVU24 to YVU24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYVU24ToYVU24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYVU24ToYVU24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -102,12 +95,11 @@ bool TestFrameConverterYVU24::test(const unsigned int width, const unsigned int 
 
 	{
 		Log::info() << "Testing YVU24 to Y_V_U12 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYVU24ToY_V_U12(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYVU24ToY_V_U12(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 

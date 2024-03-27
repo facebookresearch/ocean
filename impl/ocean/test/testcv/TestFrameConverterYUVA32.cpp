@@ -21,18 +21,15 @@ bool TestFrameConverterYUVA32::test(const unsigned int width, const unsigned int
 	Log::info() << "---   YUVA32 converter test:   ---";
 	Log::info() << " ";
 
-	const auto flags = TestFrameConverter::conversionFlags();
-
 	bool allSucceeded = true;
 
 	{
 		Log::info() << "Testing YUVA32 to Y8 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testYUVA32ToY8(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testYUVA32ToY8(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 

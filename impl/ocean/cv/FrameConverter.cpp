@@ -2569,6 +2569,43 @@ MatrixD FrameConverter::transformationMatrix_FullRangeYVU24_To_FullRangeBGR24_BT
 	return rgbToBgr * transformationMatrix_FullRangeYVU24_To_FullRangeRGB24_BT601();
 }
 
+const FrameConverter::ConversionFlags& FrameConverter::conversionFlags()
+{
+	static const ConversionFlags flags =
+	{
+		CV::FrameConverter::CONVERT_NORMAL,
+		CV::FrameConverter::CONVERT_FLIPPED,
+		CV::FrameConverter::CONVERT_MIRRORED,
+		CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED
+	};
+
+	return flags;
+}
+
+std::string FrameConverter::translateConversionFlag(const ConversionFlag conversionFlag)
+{
+	switch (conversionFlag)
+	{
+		case CV::FrameConverter::CONVERT_NORMAL:
+			return std::string("normal");
+
+		case CV::FrameConverter::CONVERT_FLIPPED:
+			return std::string("flipped");
+
+		case CV::FrameConverter::CONVERT_MIRRORED:
+			return std::string("mirrored");
+
+		case CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED:
+			return std::string("flipped and mirrored");
+
+		default:
+			break;
+	}
+
+	ocean_assert(false && "Invalid conversion flag!");
+	return std::string("INVALID");
+}
+
 void FrameConverter::convertGenericPixelFormatSubset(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const unsigned int sourceStrideBytes, const unsigned int targetStrideBytes, const ConversionFlag flag, const RowConversionFunction<uint8_t, uint8_t> rowConversionFunction, const RowReversePixelOrderInPlaceFunction<uint8_t> targetReversePixelOrderInPlaceFunction, const bool areContinuous, const void* options, const unsigned int firstRow, const unsigned int numberRows)
 {
 	ocean_assert(source != nullptr && target != nullptr);

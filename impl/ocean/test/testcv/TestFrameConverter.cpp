@@ -5837,41 +5837,6 @@ bool TestFrameConverter::testConversionMatrices(const double testDuration)
 	return allSucceeded;
 }
 
-std::vector<CV::FrameConverter::ConversionFlag> TestFrameConverter::conversionFlags()
-{
-	const std::vector<CV::FrameConverter::ConversionFlag> flags =
-	{
-		CV::FrameConverter::CONVERT_NORMAL,
-		CV::FrameConverter::CONVERT_FLIPPED,
-		CV::FrameConverter::CONVERT_MIRRORED,
-		CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED
-	};
-
-	return flags;
-}
-
-std::string TestFrameConverter::translateConversionFlag(const CV::FrameConverter::ConversionFlag conversionFlag)
-{
-	switch (conversionFlag)
-	{
-		case CV::FrameConverter::CONVERT_NORMAL:
-			return std::string("normal");
-
-		case CV::FrameConverter::CONVERT_FLIPPED:
-			return std::string("flipped");
-
-		case CV::FrameConverter::CONVERT_MIRRORED:
-			return std::string("mirrored");
-
-		case CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED:
-			return std::string("flipped and mirrored");
-
-		default:
-			ocean_assert(false && "Invalid conversion flag!");
-			return std::string("INVALID");
-	}
-}
-
 MatrixD TestFrameConverter::functionGenericPixel(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)
 {
 	ocean_assert(frame.isValid());

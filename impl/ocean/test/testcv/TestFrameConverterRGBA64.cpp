@@ -21,18 +21,15 @@ bool TestFrameConverterRGBA64::test(const unsigned int width, const unsigned int
 	Log::info() << "---   RGBA64 converter test:   ---";
 	Log::info() << " ";
 
-	const auto flags = TestFrameConverter::conversionFlags();
-
 	bool allSucceeded = true;
 
 	{
 		Log::info() << "Testing RGBA64 to RGB24 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testRGBA64ToRGB24(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testRGBA64ToRGB24(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -42,12 +39,11 @@ bool TestFrameConverterRGBA64::test(const unsigned int width, const unsigned int
 
 	{
 		Log::info() << "Testing RGBA64 to RGBA32 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testRGBA64ToRGBA32(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testRGBA64ToRGBA32(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -57,12 +53,11 @@ bool TestFrameConverterRGBA64::test(const unsigned int width, const unsigned int
 
 	{
 		Log::info() << "Testing RGBA64 to RGBA64 conversion with resolution " << width << "x" << height << ":";
-		Log::info() << " ";
 
-		for (size_t n = 0; n < flags.size(); ++n)
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
-			Log::info().newLine(n != 0);
-			allSucceeded = testRGBA64ToRGBA64(width, height, flags[n], testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+			allSucceeded = testRGBA64ToRGBA64(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
