@@ -166,7 +166,7 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		 * @param defaultFovX The default horizontal field of view the resulting camera profile will provide if no camera calibration exists for the specified device, with range (0, PI)
 		 * @return The camera profile for the given resolution
 		 */
-		PinholeCamera camera(const std::string& device, const unsigned int width, const unsigned int height, Quality* quality = NULL, const Scalar defaultFovX = Numeric::deg2rad(45)) const;
+		PinholeCamera camera(const std::string& device, const unsigned int width, const unsigned int height, Quality* quality = nullptr, const Scalar defaultFovX = Numeric::deg2rad(45)) const;
 
 		/**
 		 * Returns whether this manager holds a valid camera profile for a specified device.

@@ -48,7 +48,7 @@ struct quirc;
 /* Obtain the library version string. */
 const char *quirc_version(void);
 
-/* Construct a new QR-code recognizer. This function will return NULL
+/* Construct a new QR-code recognizer. This function will return nullptr
  * if sufficient memory could not be allocated.
  */
 struct quirc *quirc_new(void);

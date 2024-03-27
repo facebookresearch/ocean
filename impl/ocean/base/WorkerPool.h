@@ -178,7 +178,7 @@ class OCEAN_BASE_EXPORT WorkerPool : public Singleton<WorkerPool>
 		/**
 		 * Tries to lock a worker to be used for individual worker.
 		 * Beware: This worker object must be unlocked after usage.
-		 * @return Worker object if available, otherwise NULL
+		 * @return Worker object if available, otherwise nullptr
 		 * @see unlock().
 		 */
 		Worker* lock();

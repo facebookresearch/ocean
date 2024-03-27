@@ -389,7 +389,7 @@ void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::onFrameSet(OS
 		const OSSDK::Sensors::v3::ImageData& image = images.at(n);
 
 		// Pointer to the actual image data. The lifetime of this data does not extend beyond the callback return, i.e. the consumer is required to make a copy
-		// It is possible for @data to be NULL - this may happen when an incomplete frame group gets emitted by the lower layers.
+		// It is possible for @data to be nullptr - this may happen when an incomplete frame group gets emitted by the lower layers.
 		if (image.data == nullptr)
 		{
 			// we will handle the current set of frames

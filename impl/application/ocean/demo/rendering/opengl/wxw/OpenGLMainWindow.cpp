@@ -26,7 +26,7 @@ BEGIN_EVENT_TABLE(OpenGLMainWindow, wxFrame)
 END_EVENT_TABLE()
 
 OpenGLMainWindow::OpenGLMainWindow(const wxString& title, const wxPoint& pos, const wxSize& size) :
-	wxFrame(NULL, -1, title, pos, size),
+	wxFrame(nullptr, -1, title, pos, size),
 	windowContext_(nullptr)
 {
 	windowContext_ = new Platform::GL::WxWidgets::WindowContext(this, wxID_ANY, wxPoint(0, 0), size);
@@ -52,7 +52,7 @@ OpenGLMainWindow::OpenGLMainWindow(const wxString& title, const wxPoint& pos, co
 
 void OpenGLMainWindow::initalize()
 {
-	ocean_assert(windowContext_ != NULL);
+	ocean_assert(windowContext_ != nullptr);
 
 	windowContext_->createOpenGLContext(false, 4u);
 

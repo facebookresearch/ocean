@@ -192,7 +192,7 @@ void ContourFinderMainWindow::onFrame(const Frame& frame)
 
 		if (pixelPositions_.size() >= 3)
 		{
-			MoveToEx(contourWindow_.bitmap().dc(), int(pixelPositions_.back().x()), int(pixelPositions_.back().y()), NULL);
+			MoveToEx(contourWindow_.bitmap().dc(), int(pixelPositions_.back().x()), int(pixelPositions_.back().y()), nullptr);
 			for (CV::PixelPositions::const_iterator i = pixelPositions_.begin(); i != pixelPositions_.end(); ++i)
 			{
 				const int x = int(i->x());
@@ -289,7 +289,7 @@ void ContourFinderMainWindow::onFrame(const Frame& frame)
 	}
 	else if (gatherRoughContour_ && !pixelPositions_.empty())
 	{
-		MoveToEx(bitmap().dc(), int(pixelPositions_.back().x()), int(pixelPositions_.back().y()), NULL);
+		MoveToEx(bitmap().dc(), int(pixelPositions_.back().x()), int(pixelPositions_.back().y()), nullptr);
 
 		for (const CV::PixelPosition& pixelPosition : pixelPositions_)
 		{

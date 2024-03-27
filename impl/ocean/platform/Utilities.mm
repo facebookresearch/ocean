@@ -27,7 +27,7 @@ void Utilities::showMessageBoxApple(const std::string& title, const std::string&
 #if !defined(TARGET_OS_IPHONE) || TARGET_OS_IPHONE == 0
 
 	CFOptionFlags result;
-	CFUserNotificationDisplayAlert(0, kCFUserNotificationNoteAlertLevel, NULL, NULL, NULL, CFStringCreateWithCString(NULL, title.c_str(), kCFStringEncodingUTF8), CFStringCreateWithCString(NULL, message.c_str(), kCFStringEncodingUTF8), NULL, NULL, NULL, &result);
+	CFUserNotificationDisplayAlert(0, kCFUserNotificationNoteAlertLevel, nullptr, nullptr, nullptr, CFStringCreateWithCString(nullptr, title.c_str(), kCFStringEncodingUTF8), CFStringCreateWithCString(nullptr, message.c_str(), kCFStringEncodingUTF8), nullptr, nullptr, nullptr, &result);
 
 #else
 

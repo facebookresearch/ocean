@@ -150,7 +150,7 @@ void ImagePickerManager::disposeDelegate()
 
     UIImage* image = info[UIImagePickerControllerOriginalImage];
 
-    [picker dismissViewControllerAnimated:YES completion:NULL];
+    [picker dismissViewControllerAnimated:YES completion:nullptr];
 
 	onPickedCallback_((__bridge void*)image);
 

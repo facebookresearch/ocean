@@ -78,7 +78,7 @@ class OCEAN_SCENEDESCRIPTION_SDL_OBJ_EXPORT OBJScanner : public IO::Scanner
 		 * @param cancel Optional cancel state
 		 * @see Scanner::Scanner().
 		 */
-		explicit OBJScanner(const std::string& filename, float* progress = NULL, bool* cancel = NULL);
+		explicit OBJScanner(const std::string& filename, float* progress = nullptr, bool* cancel = nullptr);
 };
 
 }

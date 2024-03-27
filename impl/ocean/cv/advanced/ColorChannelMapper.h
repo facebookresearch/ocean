@@ -119,7 +119,7 @@ class ScaleOffsetMapping
 		 * @param offset Color offset
 		 * @param gamma Exponent for gamma correction, should be greater than zero
 		 */
-		ScaleOffsetMapping(const float* scale, const float* offset, const float* gamma = NULL);
+		ScaleOffsetMapping(const float* scale, const float* offset, const float* gamma = nullptr);
 
 		/**
 		 * Maps a color value for the specified intensity index

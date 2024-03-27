@@ -648,9 +648,9 @@ class SquareMatrixT3
 		/**
 		 * Multiplies several 2D vectors with a given 3x3 matrix.
 		 * Each 2D vector is interpreted as a 3D vector with third component equal to 1.<br>
-		 * The final result will be dehomogenizated to provide a 2D vector result.
+		 * The final result will be de-homogenized to provide a 2D vector result.
 		 * @param matrix The matrix to be used for multiplication
-		 * @param vectors The input vectors that will be multiplied, may be NULL if number is 0
+		 * @param vectors The input vectors that will be multiplied, may be nullptr if number is 0
 		 * @param results The resulting output (multiplied/transformed) vectors, with same number as the provided input vectors
 		 * @param number The number of provided vectors (input and output), with range [0, infinity)
 		 */
@@ -659,9 +659,9 @@ class SquareMatrixT3
 		/**
 		 * Multiplies several 3D vectors with a given 3x3 matrix.
 		 * @param matrix The matrix to be used for multiplication
-		 * @param vectors The input vectors that will be multiplied, may be NULL if number is 0
+		 * @param vectors The input vectors that will be multiplied, may be nullptr if number is 0
 		 * @param results The resulting output (multiplied/transformed) vectors, with same number as the provided input vectors
-		 * @param number The number of provided vectors (insput and output), with range [0, infinity)
+		 * @param number The number of provided vectors (input and output), with range [0, infinity)
 		 */
 		static void multiply(const SquareMatrixT3<T>& matrix, const VectorT3<T>* vectors, VectorT3<T>* results, const size_t number);
 

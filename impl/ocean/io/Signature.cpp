@@ -115,34 +115,34 @@ bool Signature::evaluateCodeSignature(const std::wstring& filePath, bool& truste
 
 	fileInfo.cbStruct = sizeof(WINTRUST_FILE_INFO);
 	fileInfo.pcwszFilePath = filePath.c_str();
-	fileInfo.hFile = NULL;
-	fileInfo.pgKnownSubject = NULL;
+	fileInfo.hFile = nullptr;
+	fileInfo.pgKnownSubject = nullptr;
 
 	WINTRUST_DATA winTrustData;
 	memset(&winTrustData, 0, sizeof(winTrustData));
 
 	winTrustData.cbStruct = sizeof(winTrustData);
-	winTrustData.pPolicyCallbackData = NULL;
-	winTrustData.pSIPClientData = NULL;
+	winTrustData.pPolicyCallbackData = nullptr;
+	winTrustData.pSIPClientData = nullptr;
 	winTrustData.dwUIChoice = WTD_UI_NONE;
 	winTrustData.fdwRevocationChecks = WTD_REVOKE_NONE;
 	winTrustData.dwUnionChoice = WTD_CHOICE_FILE;
 	winTrustData.dwStateAction = WTD_STATEACTION_VERIFY;
-	winTrustData.hWVTStateData = NULL;
-	winTrustData.pwszURLReference = NULL;
+	winTrustData.hWVTStateData = nullptr;
+	winTrustData.pwszURLReference = nullptr;
 	winTrustData.dwUIContext = 0u;
 	winTrustData.pFile = &fileInfo;
 
 	// Identifies the Microsoft Authenticode Policy Provider:
 	GUID policyGUID = WINTRUST_ACTION_GENERIC_VERIFY_V2;
 
-	const LONG status = WinVerifyTrust(NULL, &policyGUID, &winTrustData);
+	const LONG status = WinVerifyTrust(nullptr, &policyGUID, &winTrustData);
 
 	// Only files with explicitly trusted signatures are considered as trusted:
 	trustedCodeSignature = status == ERROR_SUCCESS;
 
 	winTrustData.dwStateAction = WTD_STATEACTION_CLOSE;
-	WinVerifyTrust(NULL, &policyGUID, &winTrustData);
+	WinVerifyTrust(nullptr, &policyGUID, &winTrustData);
 
 	if (trustedCodeSignature && subjectName && !determineSignatureSubjectName(filePath, *subjectName))
 		return false;
@@ -215,25 +215,31 @@ bool Signature::evaluateCodeSignature(const std::wstring& filePath, bool& truste
 	{
 		NSURL* url = [NSURL fileURLWithPath: StringApple::toNSString(filePath)];
 
-		SecStaticCodeRef staticCode = NULL;
-		if (SecStaticCodeCreateWithPath((__bridge CFURLRef)url, kSecCSDefaultFlags, &staticCode) != errSecSuccess)
+		SecStaticCodeRef staticCode = nullptr;
+		if (SecStaticCodeCreateWithPath((__bridge CFURLRef)(url), kSecCSDefaultFlags, &staticCode) != errSecSuccess)
+		{
 			return false;
+		}
 
-		OSStatus status = SecStaticCodeCheckValidity(staticCode, kSecCSBasicValidateOnly, NULL);
+		OSStatus status = SecStaticCodeCheckValidity(staticCode, kSecCSBasicValidateOnly, nullptr);
 		trustedCodeSignature = status == errSecSuccess;
 
 		if (trustedCodeSignature && subjectName)
 		{
-			CFDictionaryRef signingInformation = NULL;
+			CFDictionaryRef signingInformation = nullptr;
 
 			// this function must only be called if the SecStaticCodeCheckValidity() is succeeded
 			if (SecCodeCopySigningInformation(staticCode, kSecCSSigningInformation, &signingInformation) != errSecSuccess)
+			{
 				return false;
+			}
 
 			CFArrayRef certificates = (CFArrayRef)CFDictionaryGetValue(signingInformation, kSecCodeInfoCertificates);
 
 			if (CFArrayGetCount(certificates) == 0)
+			{
 				return false;
+			}
 
 			// the first certificate will contains the subject we are looking for
 			SecCertificateRef certificate = (SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0);
@@ -246,7 +252,9 @@ bool Signature::evaluateCodeSignature(const std::wstring& filePath, bool& truste
 			std::wstring::size_type pos = subjectName->find(L": ");
 
 			if (pos != std::wstring::npos)
+			{
 				*subjectName = subjectName->substr(pos + 2);
+			}
 		}
 
 		CFRelease(staticCode);
@@ -265,17 +273,19 @@ bool Signature::determineSignatureSubjectName(const std::wstring& filePath, std:
 {
 	bool success = false;
 
-	HCERTSTORE storeHandle = NULL;
-	HCRYPTMSG messageHandle = NULL;
+	HCERTSTORE storeHandle = nullptr;
+	HCRYPTMSG messageHandle = nullptr;
 
-	if (CryptQueryObject(CERT_QUERY_OBJECT_FILE, filePath.c_str(), CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED, CERT_QUERY_FORMAT_FLAG_BINARY, 0u, NULL, NULL, NULL, &storeHandle, &messageHandle, NULL) != TRUE)
+	if (CryptQueryObject(CERT_QUERY_OBJECT_FILE, filePath.c_str(), CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED, CERT_QUERY_FORMAT_FLAG_BINARY, 0u, nullptr, nullptr, nullptr, &storeHandle, &messageHandle, nullptr) != TRUE)
+	{
 		return false;
+	}
 
 	ocean_assert(storeHandle && messageHandle);
 
 	// Get signer information:
 	DWORD signerInfoSize = 0u;
-	if (CryptMsgGetParam(messageHandle, CMSG_SIGNER_INFO_PARAM, 0u, NULL, &signerInfoSize) == TRUE)
+	if (CryptMsgGetParam(messageHandle, CMSG_SIGNER_INFO_PARAM, 0u, nullptr, &signerInfoSize) == TRUE)
 	{
 		PCMSG_SIGNER_INFO signerInfo = PCMSG_SIGNER_INFO(LocalAlloc(LPTR, signerInfoSize));
 		ocean_assert(signerInfo);
@@ -287,18 +297,20 @@ bool Signature::determineSignatureSubjectName(const std::wstring& filePath, std:
 			certInfo.Issuer = signerInfo->Issuer;
 			certInfo.SerialNumber = signerInfo->SerialNumber;
 
-			const PCCERT_CONTEXT certificateContext = CertFindCertificateInStore(storeHandle, X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0u, CERT_FIND_SUBJECT_CERT, (PVOID)&certInfo, NULL);
+			const PCCERT_CONTEXT certificateContext = CertFindCertificateInStore(storeHandle, X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0u, CERT_FIND_SUBJECT_CERT, (PVOID)&certInfo, nullptr);
 			if (certificateContext)
 			{
 				// Get subject name:
-				const DWORD length = CertGetNameStringW(certificateContext, CERT_NAME_SIMPLE_DISPLAY_TYPE, 0u, NULL, NULL, 0u);
+				const DWORD length = CertGetNameStringW(certificateContext, CERT_NAME_SIMPLE_DISPLAY_TYPE, 0u, nullptr, nullptr, 0u);
 				if (length > 0u)
 				{
 					std::vector<std::wstring::value_type> nameBuffer(length);
-					success = CertGetNameStringW(certificateContext, CERT_NAME_SIMPLE_DISPLAY_TYPE, 0u, NULL, nameBuffer.data(), length) != 0u;
+					success = CertGetNameStringW(certificateContext, CERT_NAME_SIMPLE_DISPLAY_TYPE, 0u, nullptr, nameBuffer.data(), length) != 0u;
 
 					if (success)
+					{
 						subjectName = std::wstring(nameBuffer.begin(), nameBuffer.end() - 1u);
+					}
 				}
 
 				CertFreeCertificateContext(certificateContext);
@@ -308,11 +320,15 @@ bool Signature::determineSignatureSubjectName(const std::wstring& filePath, std:
 		LocalFree(signerInfo);
 	}
 
-	if (storeHandle != NULL)
+	if (storeHandle != nullptr)
+	{
 		CertCloseStore(storeHandle, 0);
+	}
 
-	if (messageHandle != NULL)
+	if (messageHandle != nullptr)
+	{
 		CryptMsgClose(messageHandle);
+	}
 
 	return success;
 }

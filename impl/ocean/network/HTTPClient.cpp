@@ -363,7 +363,7 @@ bool HTTPClient::httpGetRequest(const std::string& url, Buffer& data, const Port
 		}
 	}
 
-	return httpGetRequest(urlRedirection, data, port, timeout, false, NULL, replyCode);
+	return httpGetRequest(urlRedirection, data, port, timeout, false, nullptr, replyCode);
 }
 
 bool HTTPClient::sendRequest(const std::string& uri, const std::string& requestMethod)

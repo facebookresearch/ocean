@@ -356,7 +356,7 @@ bool VideoInpaintingMainWindow::definingContour()
 				HPEN pen = CreatePen(0, 5, 0xFF);
 				HPEN oldPen = (HPEN)SelectObject(bitmap().dc(), pen);
 
-				MoveToEx(bitmap().dc(), int(userDefinedRoughContour_.front().x()), int(userDefinedRoughContour_.front().y()), NULL);
+				MoveToEx(bitmap().dc(), int(userDefinedRoughContour_.front().x()), int(userDefinedRoughContour_.front().y()), nullptr);
 				for (size_t n = 1; n < userDefinedRoughContour_.size(); ++n)
 				{
 					const int x = int(userDefinedRoughContour_[n].x());
@@ -554,7 +554,7 @@ bool VideoInpaintingMainWindow::coreInpainting(const SquareMatrix3& currentHomog
 #ifdef USE_SYNTHESIS_CONSTRAINTS
 
 		CV::Detector::LineDetector::InfiniteLines infiniteLines;
-		CV::Detector::LineDetector::detectLines(applicationCurrentFrame, CV::Detector::LineDetector::FT_SOBEL, CV::Detector::LineDetector::FR_HORIZONTAL_VERTICAL, infiniteLines, NULL, true, 8, 61u, 2u, 5, true, &applicationWorker);
+		CV::Detector::LineDetector::detectLines(applicationCurrentFrame, CV::Detector::LineDetector::FT_SOBEL, CV::Detector::LineDetector::FR_HORIZONTAL_VERTICAL, infiniteLines, nullptr, true, 8, 61u, 2u, 5, true, &applicationWorker);
 
 		if (!infiniteLines.empty())
 		{

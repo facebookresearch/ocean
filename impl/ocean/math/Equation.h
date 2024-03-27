@@ -268,7 +268,7 @@ template <typename T>
 unsigned int EquationT<T>::solveQuartic(const T a, const T b, const T c, const T d, const T e, T* x)
 {
 	ocean_assert(NumericT<T>::isNotEqualEps(a));
-	ocean_assert(x != NULL);
+	ocean_assert(x != nullptr);
 
 	// ax^4 + bx^3 + cx^2 + dx + e = 0
 

@@ -39,7 +39,7 @@ double DateTime::timestamp()
 #else
 
 	timeval currentTime;
-	gettimeofday(&currentTime, NULL);
+	gettimeofday(&currentTime, nullptr);
 
 	return double(currentTime.tv_sec) + double(currentTime.tv_usec) * 0.000001;
 
@@ -66,7 +66,7 @@ long long DateTime::microseconds()
 #else
 
 	timeval currentTime;
-	gettimeofday(&currentTime, NULL);
+	gettimeofday(&currentTime, nullptr);
 
 	return (long long)(currentTime.tv_sec) * 1000000ll + (long long)(currentTime.tv_usec);
 
@@ -125,7 +125,7 @@ std::string DateTime::stringDate(const char delimiter)
 	time(&currentTime);
 
 	const tm* value = gmtime(&currentTime);
-	ocean_assert(value != NULL);
+	ocean_assert(value != nullptr);
 
 	const unsigned int year = 1900 + value->tm_year;
 	const unsigned int month = value->tm_mon + 1;
@@ -181,7 +181,7 @@ std::string DateTime::stringTime(const bool addMilliseconds, const char delimite
 
 #else
 
-	time_t t = time(NULL);
+	time_t t = time(nullptr);
 	const tm *timeStruct = gmtime(&t);
 	ocean_assert(timeStruct);
 
@@ -241,7 +241,7 @@ double DateTime::localTimestamp()
 #else
 
 	timeval utcTime;
-	gettimeofday(&utcTime, NULL);
+	gettimeofday(&utcTime, nullptr);
 
 	const time_t localSeconds = mktime(localtime((time_t*)&utcTime.tv_sec));
 
@@ -270,7 +270,7 @@ long long DateTime::localMicroseconds()
 #else
 
 	timeval utcTime;
-	gettimeofday(&utcTime, NULL);
+	gettimeofday(&utcTime, nullptr);
 
 	const time_t localSeconds = mktime(localtime((time_t*)&utcTime.tv_sec));
 
@@ -312,7 +312,7 @@ std::string DateTime::localStringDate(const char delimiter)
 	time(&currentTime);
 
 	const tm* value = localtime(&currentTime);
-	ocean_assert(value != NULL);
+	ocean_assert(value != nullptr);
 
 	const unsigned int year = 1900 + value->tm_year;
 	const unsigned int month = value->tm_mon + 1;
@@ -496,7 +496,7 @@ std::string DateTime::localStringTime(const bool addMilliseconds, const char del
 
 #else
 
-	time_t t = time(NULL);
+	time_t t = time(nullptr);
 	const tm *timeStruct = localtime(&t);
 	ocean_assert(timeStruct);
 

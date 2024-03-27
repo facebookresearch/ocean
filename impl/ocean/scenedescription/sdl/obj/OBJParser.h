@@ -43,14 +43,14 @@ class OCEAN_SCENEDESCRIPTION_SDL_OBJ_EXPORT OBJParser
 		 * @param filename Name of the file to parse
 		 * @param progress Optional progress state receiving the parser progress recurrently
 		 */
-		explicit OBJParser(const std::string& filename, float* progress = NULL);
+		explicit OBJParser(const std::string& filename, float* progress = nullptr);
 
 		/**
 		 * Parses the given file and returns a node reference to the entire scene.
 		 * @return Parsed scene
 		 * @param cancel Cancel state allows the cancelation of a load process while loading process hasn't finished, if the cancel state is used the load process stops if the value is set to True
 		 */
-		SDLSceneRef parse(bool* cancel = NULL);
+		SDLSceneRef parse(bool* cancel = nullptr);
 
 	protected:
 

@@ -187,7 +187,7 @@ bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Po
 		return false;
 	}
 
-	const HINTERNET request = WinHttpOpenRequest(connection, L"GET", String::toWString(uri).c_str(), NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
+	const HINTERNET request = WinHttpOpenRequest(connection, L"GET", String::toWString(uri).c_str(), nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
 
 	if (request == nullptr)
 	{
@@ -339,7 +339,7 @@ bool HTTPSClient::httpsPostRequest(const std::string& url, const uint8_t* reques
 		return false;
 	}
 
-	const HINTERNET request = WinHttpOpenRequest(connection, L"POST", String::toWString(uri).c_str(), NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
+	const HINTERNET request = WinHttpOpenRequest(connection, L"POST", String::toWString(uri).c_str(), nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
 
 	if (request == nullptr)
 	{

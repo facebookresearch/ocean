@@ -31,7 +31,7 @@ class OCEAN_IO_EXPORT Signature
 
 		/**
 		 * Determines the MD5 hash for a specified data buffer.
-		 * @param buffer The buffer for which the hash will be determined, may be NULL if bufferSize is 0
+		 * @param buffer The buffer for which the hash will be determined, may be nullptr if bufferSize is 0
 		 * @param bufferSize The size of the buffer in bytes, with range [0, infinity)
 		 * @param hash The resulting MD5 hash value for the given buffer
 		 */
@@ -39,7 +39,7 @@ class OCEAN_IO_EXPORT Signature
 
 		/**
 		 * Determines the SHA1 hash for a specified data buffer.
-		 * @param buffer The buffer for which the hash will be determined, may be NULL if bufferSize is 0
+		 * @param buffer The buffer for which the hash will be determined, may be nullptr if bufferSize is 0
 		 * @param bufferSize The size of the buffer in bytes, with range [0, infinity)
 		 * @param hash The resulting SHA1 hash value for the given buffer
 		 */
@@ -47,9 +47,9 @@ class OCEAN_IO_EXPORT Signature
 
 		/**
 		 * Determines the keyed hash message authentication code using SHA1 for a specified data buffer and secrete key.
-		 * @param buffer The buffer for which the hash will be determined, may be NULL if bufferSize is 0
+		 * @param buffer The buffer for which the hash will be determined, may be nullptr if bufferSize is 0
 		 * @param bufferSize The size of the buffer in bytes, with range [0, infinity)
-		 * @param key The key which will be used to determine the hash, may be NULL if keySize is 0
+		 * @param key The key which will be used to determine the hash, may be nullptr if keySize is 0
 		 * @param keySize The size of the key in bytes, with range [0, infinity)
 		 * @param hash The resulting SHA1 hash value for the given buffer
 		 */

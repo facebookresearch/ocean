@@ -298,7 +298,7 @@ bool TestNonLinearOptimizationPlane::testOptimizePlaneNoisy(const unsigned int n
 
 		Scalar finalError;
 		Plane3 optimizedPlane;
-		if (Geometry::RANSAC::plane(ConstArrayAccessor<Vector3>(planePoints), randomGenerator, optimizedPlane, 50u, Scalar(0.1), (unsigned int)planePoints.size() / 2u, type, &finalError, NULL))
+		if (Geometry::RANSAC::plane(ConstArrayAccessor<Vector3>(planePoints), randomGenerator, optimizedPlane, 50u, Scalar(0.1), (unsigned int)(planePoints.size()) / 2u, type, &finalError, nullptr))
 		{
 			performance.stop();
 

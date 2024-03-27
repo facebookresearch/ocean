@@ -138,7 +138,7 @@ void TriangulationMainWindow::onPaint()
 		const HPEN pen = CreatePen(0, 3, 0);
 		const HPEN old = HPEN(SelectObject(bitmap().dc(), pen));
 
-		MoveToEx(bitmap().dc(), int(pixelPositions_.back().x()), int(pixelPositions_.back().y()), NULL);
+		MoveToEx(bitmap().dc(), int(pixelPositions_.back().x()), int(pixelPositions_.back().y()), nullptr);
 		for (unsigned int n = 0; n < pixelPositions_.size(); ++n)
 		{
 			LineTo(bitmap().dc(), int(pixelPositions_[n].x()), int(pixelPositions_[n].y()));

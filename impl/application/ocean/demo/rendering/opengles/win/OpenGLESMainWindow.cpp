@@ -454,7 +454,7 @@ void OpenGLESMainWindow::createShaderProgram()
 	glesVertexShader_ = glCreateShader(GL_VERTEX_SHADER);
 	ocean_assert(glesVertexShader_ != 0 && GL_NO_ERROR == glGetError());
 
-	glShaderSource(glesVertexShader_, 1, &vertexShaderCode, NULL);
+	glShaderSource(glesVertexShader_, 1, &vertexShaderCode, nullptr);
 	ocean_assert(GL_NO_ERROR == glGetError());
 
 	glCompileShader(glesVertexShader_);
@@ -480,7 +480,7 @@ void OpenGLESMainWindow::createShaderProgram()
 	glesFragmentShader_ = glCreateShader(GL_FRAGMENT_SHADER);
 	ocean_assert(glesFragmentShader_ != 0 && GL_NO_ERROR == glGetError());
 
-	glShaderSource(glesFragmentShader_, 1, &fragmentShaderCode, NULL);
+	glShaderSource(glesFragmentShader_, 1, &fragmentShaderCode, nullptr);
 	ocean_assert(GL_NO_ERROR == glGetError());
 
 	glCompileShader(glesFragmentShader_);

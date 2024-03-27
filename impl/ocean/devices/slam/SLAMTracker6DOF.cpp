@@ -614,7 +614,7 @@ void SLAMTracker6DOF::extendTrackingDatabase(const PinholeCamera& pinholeCamera,
 				}
 
 				Vector3 objectPoint;
-				if (Geometry::RANSAC::objectPoint(pinholeCamera, ConstArrayAccessor<HomogenousMatrix4>(observationPoses), ConstArrayAccessor<Vector2>(observationImagePoints), localRandomGenerator, objectPoint, pinholeCamera.hasDistortionParameters(), 20u, Scalar(3 * 3), 5u, true, Geometry::Estimator::ET_SQUARE, NULL, &usedIndices) && usedIndices.size() == observationPoses.size())
+				if (Geometry::RANSAC::objectPoint(pinholeCamera, ConstArrayAccessor<HomogenousMatrix4>(observationPoses), ConstArrayAccessor<Vector2>(observationImagePoints), localRandomGenerator, objectPoint, pinholeCamera.hasDistortionParameters(), 20u, Scalar(3 * 3), 5u, true, Geometry::Estimator::ET_SQUARE, nullptr, &usedIndices) && usedIndices.size() == observationPoses.size())
 				{
 					// we have a new 3D object point
 

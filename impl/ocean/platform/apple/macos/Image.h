@@ -73,7 +73,7 @@ class Image
 
 		/**
 		 * Returns the wrapped NSImage object.
-		 * @return The NSImage object, NULL if no object is wrapped
+		 * @return The NSImage object, nullptr if no object is wrapped
 		 */
 		inline NSImage* nsImage();
 

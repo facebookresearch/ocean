@@ -30,14 +30,20 @@ const char* oceanBaseDateTimeString(const char* selection)
 {
 	ocean_assert(selection);
 
-	if (selection == NULL)
+	if (selection == nullptr)
+	{
 		return string2buffer("invalid selection");
+	}
 
 	if (std::string(selection) == std::string("date"))
+	{
 		return string2buffer(Build::buildDate(__DATE__));
+	}
 
 	if (std::string(selection) == std::string("time"))
+	{
 		return string2buffer(Build::buildTime(__TIME__));
+	}
 
 	return string2buffer("invalid seleciton");
 }

@@ -42,7 +42,7 @@ bool DynamicNode::addField(const std::string& name, const Field& field)
 
 bool DynamicNode::hasAnyField(const std::string& fieldName) const
 {
-	ocean_assert(specification_ != NULL);
+	ocean_assert(specification_ != nullptr);
 	return specification_->hasField(fieldName) || dynamicFieldIndices_.find(fieldName) != dynamicFieldIndices_.end();
 }
 
@@ -54,11 +54,17 @@ bool DynamicNode::hasDynamicField(const std::string& name) const
 const std::string& DynamicNode::dynamicFieldName(const unsigned int index) const
 {
 	if (index >= dynamicFields_.size())
+	{
 		throw OceanException("Invalid dynamic field index.");
+	}
 
 	for (DynamicFieldIndices::const_iterator i = dynamicFieldIndices_.begin(); i != dynamicFieldIndices_.end(); ++i)
+	{
 		if (i->second == index)
+		{
 			return i->first;
+		}
+	}
 
 	ocean_assert(false && "This should never happen.");
 	throw OceanException("This should never happen.");
@@ -66,20 +72,24 @@ const std::string& DynamicNode::dynamicFieldName(const unsigned int index) const
 
 const Field& DynamicNode::anyField(const std::string& fieldName) const
 {
-	ocean_assert(specification_ != NULL);
+	ocean_assert(specification_ != nullptr);
 
 	if (specification_->hasField(fieldName))
+	{
 		return Node::field(fieldName);
+	}
 
 	return dynamicField(fieldName);
 }
 
 Field& DynamicNode::anyField(const std::string& fieldName)
 {
-	ocean_assert(specification_ != NULL);
+	ocean_assert(specification_ != nullptr);
 
 	if (specification_->hasField(fieldName))
+	{
 		return Node::field(fieldName);
+	}
 
 	return dynamicField(fieldName);
 }

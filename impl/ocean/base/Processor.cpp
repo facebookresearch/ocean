@@ -68,7 +68,7 @@ std::string Processor::brand()
 		char buffer[1025] = {'\0'};
 		size_t bufferSize = 1024;
 
-		const int result = sysctlbyname("machdep.cpu.brand_string", buffer, &bufferSize, NULL, 0);
+		const int result = sysctlbyname("machdep.cpu.brand_string", buffer, &bufferSize, nullptr, 0);
 		ocean_assert(result == 0);
 
 		if (bufferSize >= 1024)
@@ -288,7 +288,7 @@ ProcessorInstructions Processor::realInstructions()
 		char buffer[maxBufferSize + 1] = {'\0'};
 		size_t bufferSize = maxBufferSize;
 
-		const int result = sysctlbyname("machdep.cpu.features", buffer, &bufferSize, NULL, 0);
+		const int result = sysctlbyname("machdep.cpu.features", buffer, &bufferSize, nullptr, 0);
 		ocean_assert_and_suppress_unused(result == 0, result);
 
 		if (bufferSize >= maxBufferSize)

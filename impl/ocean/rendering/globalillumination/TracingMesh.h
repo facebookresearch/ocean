@@ -41,7 +41,7 @@ class OCEAN_RENDERING_GI_EXPORT TracingMesh : public TracingObject
 
 				/**
 				 * Creates a new octree object by a set of given indices and an corresponding mesh object.
-				 * @param indices The indices of all vertices which will be coverted by the new octree object
+				 * @param indices The indices of all vertices which will be covert by the new octree object
 				 * @param mesh The mesh holding the entire mesh already
 				 */
 				Octree(const VertexIndices& indices, const TracingMesh& mesh);
@@ -55,23 +55,23 @@ class OCEAN_RENDERING_GI_EXPORT TracingMesh : public TracingObject
 				 * Determines the nearest intersection with between this tracing object and a given 3D ray.
 				 * @see TracingObject::findNearestIntersection().
 				 */
-				void findNearestIntersection(const Line3& ray, const HomogenousMatrix4& objectTransformation, const HomogenousMatrix4& invertedObjectTransformation, const TracingMesh& mesh, RayIntersection& intersection, const bool frontFace, const Scalar eps, const TracingObject* excludedObject = NULL) const;
+				void findNearestIntersection(const Line3& ray, const HomogenousMatrix4& objectTransformation, const HomogenousMatrix4& invertedObjectTransformation, const TracingMesh& mesh, RayIntersection& intersection, const bool frontFace, const Scalar eps, const TracingObject* excludedObject = nullptr) const;
 
 				/**
 				 * Determines whether this tracing object has an intersection with a provided 3D ray.
 				 * @see TracingObject::hasIntersection().
 				 */
-				bool hasIntersection(const Line3& ray, const HomogenousMatrix4& objectTransformation, const HomogenousMatrix4& invertedObjectTransformation, const TracingMesh& mesh, const Scalar maximalDistance = Numeric::maxValue(), const TracingObject* excludedObject = NULL) const;
+				bool hasIntersection(const Line3& ray, const HomogenousMatrix4& objectTransformation, const HomogenousMatrix4& invertedObjectTransformation, const TracingMesh& mesh, const Scalar maximalDistance = Numeric::maxValue(), const TracingObject* excludedObject = nullptr) const;
 
 			protected:
 
 				/// The bounding box of this octree object.
 				BoundingBox octreeBoundingBox;
 
-				/// This indices of all vertices which are coverted by this octree object.
+				/// This indices of all vertices which are covert by this octree object.
 				VertexIndices octreeIndices;
 
-				/// Up to eight octree children object, NULL if a child does not exist.
+				/// Up to eight octree children object, nullptr if a child does not exist.
 				Octree* octreeChildren[8];
 		};
 

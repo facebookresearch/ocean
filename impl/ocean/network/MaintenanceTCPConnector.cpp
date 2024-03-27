@@ -138,7 +138,7 @@ void MaintenanceTCPConnector::threadRun()
 
 void MaintenanceTCPConnector::onReceiveTCPData(const TCPServer::ConnectionId connectionId, const void* data, const size_t size)
 {
-	ocean_assert(data != NULL && size != 0);
+	ocean_assert(data != nullptr && size != 0);
 
 	Buffer receivedBuffer(size);
 	memcpy(receivedBuffer.data(), data, receivedBuffer.size());

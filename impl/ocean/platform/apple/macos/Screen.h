@@ -33,14 +33,14 @@ class Screen
 
 		/**
 		 * Returns the scaling factor transforming the number of (backing) pixels defined in the (virtual) display coordinate system to the number of pixels defined in the (native/physical) screen coordinate system for a specified screen.
-		 * @param screen The screen for which the scaling factor is determined, NULL to determine the scale factor of the default screen
+		 * @param screen The screen for which the scaling factor is determined, nullptr to determine the scale factor of the default screen
 		 * @return The resulting scale factor with range (0, infinity)
 		 */
 		static double scaleFactor(NSScreen* screen);
 
 		/**
 		 * Returns the scaling factor transforming the number of (backing) pixels defined in the (virtual) display coordinate system to the number of pixels defined in the native/physical screen coordinate system for a specified window.
-		 * @param window The window for which the scaling factor is determined, NULL to determine the scale factor of the default screen
+		 * @param window The window for which the scaling factor is determined, nullptr to determine the scale factor of the default screen
 		 * @return The resulting scale factor with range (0, infinity)
 		 */
 		static double scaleFactor(NSWindow* window);

@@ -373,7 +373,7 @@ Frame WICObject::loadFrameFromBitmapDecoder(IWICImagingFactory* imagingFactory, 
 
 	if (noError && frameCount >= 1u)
 	{
-		IWICBitmapFrameDecode* bitmapFrameDecode = NULL;
+		IWICBitmapFrameDecode* bitmapFrameDecode = nullptr;
 		if (noError && S_OK != bitmapDecoder->GetFrame(0u, &bitmapFrameDecode))
 		{
 			noError = false;

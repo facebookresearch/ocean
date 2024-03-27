@@ -19,9 +19,9 @@ AndroidGyroSensor3DOF::AndroidGyroSensor3DOF(const SensorType sensorType, const 
 	AndroidSensor(deviceNameAndroidGyroSensor3DOF(sensorType), deviceTypeAndroidGyroSensor3DOF(sensorType)),
 	GyroSensor3DOF(deviceNameAndroidGyroSensor3DOF(sensorType), sensorType)
 {
-	ocean_assert(sensor != NULL);
+	ocean_assert(sensor != nullptr);
 
-	ocean_assert(sensor_ == NULL);
+	ocean_assert(sensor_ == nullptr);
 	sensor_ = sensor;
 
 	ocean_assert(sensorManager_ != nullptr);

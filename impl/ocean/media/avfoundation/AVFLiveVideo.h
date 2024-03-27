@@ -156,7 +156,7 @@ class AVFLiveVideo :
 		 * @param height The height of the frame in pixel, with range (0, infinity)
 		 * @param presetWidth The width of the frame matching to the resulting preset, with range (0, infinity), 0 if no valid preset exists
 		 * @param presetHeight The height of the frame matching to the resulting preset, with range (0, infinity), 0 if no valid preset exists
-		 * @return The preset matching to the specified frame dimension, NULL if no exact preset exists
+		 * @return The preset matching to the specified frame dimension, nullptr if no exact preset exists
 		 */
 		static NSString* determineExactPreset(const unsigned int width, const unsigned int height, unsigned int& presetWidth, unsigned int& presetHeight);
 

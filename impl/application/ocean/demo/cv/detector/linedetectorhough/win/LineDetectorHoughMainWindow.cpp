@@ -169,7 +169,7 @@ void LineDetectorHoughMainWindow::onFrame(const Frame& frame)
 
 	const unsigned int adaptiveThresholdWindow = (mode_ & DM_ADAPTIVE_THRESHOLD) ? 51u : 0u;
 
-	FiniteLines2* optionalFiniteLines = (mode_ & DM_FINITE_LINES) ? &finiteLines : NULL;
+	FiniteLines2* optionalFiniteLines = (mode_ & DM_FINITE_LINES) ? &finiteLines : nullptr;
 
 	const bool optimizeLines = (mode_ & DM_OPTIMIZED_LINES) ? true : false;
 

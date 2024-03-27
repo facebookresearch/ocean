@@ -63,8 +63,10 @@ Engine* GIEngine::createEngine(const GraphicAPI graphicAPI)
 {
 	Engine* newEngine = new GIEngine(graphicAPI);
 
-	if (newEngine == NULL)
+	if (newEngine == nullptr)
+	{
 		throw OutOfMemoryException("Not enough memory to create a new engine.");
+	}
 
 	return newEngine;
 }
@@ -81,21 +83,25 @@ const std::string& GIEngine::engineName() const
 
 Framebuffer* GIEngine::internalCreateFramebuffer(const Framebuffer::FramebufferType type, const Framebuffer::FramebufferConfig& /* config */)
 {
-	GIFramebuffer* newFramebuffer = NULL;
+	GIFramebuffer* newFramebuffer = nullptr;
 
 	if (type == Framebuffer::FRAMEBUFFER_WINDOW)
 	{
 		newFramebuffer = new GIWindowFramebuffer(graphicAPI_);
 
-		if (newFramebuffer == NULL)
+		if (newFramebuffer == nullptr)
+		{
 			throw OutOfMemoryException("Not enough memory to create a new framebuffer.");
+		}
 	}
 	else if (type == Framebuffer::FRAMEBUFFER_BITMAP)
 	{
 		newFramebuffer = new GIBitmapFramebuffer(graphicAPI_);
 
-		if (newFramebuffer == NULL)
+		if (newFramebuffer == nullptr)
+		{
 			throw OutOfMemoryException("Not enough memory to create a new framebuffer.");
+		}
 	}
 
 	return newFramebuffer;

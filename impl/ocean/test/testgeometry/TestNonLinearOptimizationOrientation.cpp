@@ -174,7 +174,7 @@ bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigne
 		else
 		{
 			Indices32 usedIndices;
-			if (Geometry::RANSAC::orientation(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pinholeCamera.hasDistortionParameters(), startOrientation, 3u, 50u, Scalar(5 * 5), NULL, &usedIndices))
+			if (Geometry::RANSAC::orientation(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pinholeCamera.hasDistortionParameters(), startOrientation, 3u, 50u, Scalar(5 * 5), nullptr, &usedIndices))
 			{
 				SquareMatrix3 optimizedOrientation;
 				Scalar initialError, finalError;

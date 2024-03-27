@@ -86,7 +86,7 @@ bool PackagedConnectionlessServer::onScheduler()
 
 				if (receiveCallback_)
 				{
-					receiveCallback_(messageTriple.address(), messageTriple.port(), NULL, 0, messageTriple.messageId());
+					receiveCallback_(messageTriple.address(), messageTriple.port(), nullptr, 0, messageTriple.messageId());
 				}
 			}
 			else

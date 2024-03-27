@@ -2112,7 +2112,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 		performance.start();
 
 		NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(optimizedObjectPoints);
-		const bool result = Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndTwoPoses(pinholeCamera, faultyPose0, faultyPose1, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints0), ConstArrayAccessor<Vector2>(imagePoints1), pinholeCamera.hasDistortionParameters(), &optimizedPose0, &optimizedPose1, &optimizedObjectPointsAccessor, 50u, estimatorType, Scalar(0.001), Scalar(5), true, NULL, NULL, useCovariances ? &invertedCovariances0 : NULL, useCovariances ? &invertedCovariances1 : NULL);
+		const bool result = Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndTwoPoses(pinholeCamera, faultyPose0, faultyPose1, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints0), ConstArrayAccessor<Vector2>(imagePoints1), pinholeCamera.hasDistortionParameters(), &optimizedPose0, &optimizedPose1, &optimizedObjectPointsAccessor, 50u, estimatorType, Scalar(0.001), Scalar(5), true, nullptr, nullptr, useCovariances ? &invertedCovariances0 : nullptr, useCovariances ? &invertedCovariances1 : nullptr);
 		ocean_assert(result);
 
 		performance.stop();
@@ -3165,7 +3165,7 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 		{
 			Vector3 startObjectPoint;
 			Indices32 usedIndices;
-			if (Geometry::RANSAC::objectPoint(pinholeCamera, ConstArrayAccessor<SquareMatrix3>(orientations), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, startObjectPoint, Scalar(1), pinholeCamera.hasDistortionParameters(), 50u, Scalar(5 * 5), 3u, true, Geometry::Estimator::ET_INVALID, NULL, &usedIndices))
+			if (Geometry::RANSAC::objectPoint(pinholeCamera, ConstArrayAccessor<SquareMatrix3>(orientations), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, startObjectPoint, Scalar(1), pinholeCamera.hasDistortionParameters(), 50u, Scalar(5 * 5), 3u, true, Geometry::Estimator::ET_INVALID, nullptr, &usedIndices))
 			{
 				Vector3 optimizedObjectPoint;
 				Scalar initialError, finalError;

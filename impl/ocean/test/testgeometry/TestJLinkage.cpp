@@ -345,11 +345,11 @@ bool TestJLinkage::testFaultlessNoisedSingleHomography(const double testDuration
 
 				if constexpr (tLinkageType == LM_TLINKAGE)
 				{
-					Geometry::TLinkage::homographyMatrices(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), homographies, 8u, permutationLeftImagePoints, 20, NULL, true, &randomGenerator);
+					Geometry::TLinkage::homographyMatrices(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), homographies, 8u, permutationLeftImagePoints, 20, nullptr, true, &randomGenerator);
 				}
 				else
 				{
-					Geometry::JLinkage::homographyMatrices(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), width, height, homographies, 8u, permutationLeftImagePoints, 16, NULL, true, false, &randomGenerator);
+					Geometry::JLinkage::homographyMatrices(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), width, height, homographies, 8u, permutationLeftImagePoints, 16, nullptr, true, false, &randomGenerator);
 				}
 
 				performance.stop();
@@ -497,7 +497,7 @@ bool TestJLinkage::testFaultlessMultipleHomography(const double testDuration)
 				}
 				else
 				{
-					if (!Geometry::JLinkage::homographyMatrices(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), width, height, homographies, 8u, initialLeftImagePoints, Scalar(2), NULL, true, false))
+					if (!Geometry::JLinkage::homographyMatrices(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), width, height, homographies, 8u, initialLeftImagePoints, Scalar(2), nullptr, true, false))
 					{
 						localSucceeded = false;
 					}
@@ -663,7 +663,7 @@ bool TestJLinkage::testFaultlessLines(const double testDuration)
 				}
 				else
 				{
-					if (!Geometry::JLinkage::fitLines(imagePoints.data(), imagePoints.size(), size, size, lines, 2u, initialImagePoints, Scalar(0.01), NULL, false))
+					if (!Geometry::JLinkage::fitLines(imagePoints.data(), imagePoints.size(), size, size, lines, 2u, initialImagePoints, Scalar(0.01), nullptr, false))
 					{
 						localSucceeded = false;
 					}

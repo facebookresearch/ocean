@@ -34,8 +34,12 @@ const std::string& Node::NodeSpecification::fieldName(const unsigned int index) 
 	size_t n = 0;
 
 	for (FieldSpecificationMap::const_iterator i = fields_.begin(); i != fields_.end(); ++i, ++n)
+	{
 		if (n == index)
+		{
 			return i->first;
+		}
+	}
 
 	ocean_assert(false && "Invalid field index.");
 	throw OceanException("Invalid field index.");
@@ -45,7 +49,9 @@ Node::FieldAccessType Node::NodeSpecification::fieldAccessType(const std::string
 {
 	FieldSpecificationMap::const_iterator i = fields_.find(fieldName);
 	if (i == fields_.end())
+	{
 		throw OceanException("Invalid field name.");
+	}
 
 	return i->second.second;
 }
@@ -61,7 +67,7 @@ const Field& Node::NodeSpecification::field(const size_t objectAddress, const st
 
 	const size_t fieldAddress = objectAddress + i->second.first;
 	const Field* fieldPointer = reinterpret_cast<const Field*>(fieldAddress);
-	ocean_assert(fieldPointer != NULL);
+	ocean_assert(fieldPointer != nullptr);
 
 	return *fieldPointer;
 }
@@ -77,7 +83,7 @@ Field& Node::NodeSpecification::field(const size_t objectAddress, const std::str
 
 	const size_t fieldAddress = objectAddress + i->second.first;
 	Field* fieldPointer = reinterpret_cast<Field*>(fieldAddress);
-	ocean_assert(fieldPointer != NULL);
+	ocean_assert(fieldPointer != nullptr);
 
 	return *fieldPointer;
 }
@@ -85,7 +91,9 @@ Field& Node::NodeSpecification::field(const size_t objectAddress, const std::str
 void Node::NodeSpecification::registerField(const size_t objectAddress, const std::string& fieldName, const Field& field, const FieldAccessType accessType)
 {
 	if (fields_.find(fieldName) != fields_.end())
+	{
 		return;
+	}
 
 	ocean_assert((size_t)&field >= objectAddress);
 
@@ -95,7 +103,7 @@ void Node::NodeSpecification::registerField(const size_t objectAddress, const st
 
 Node::Node() :
 	nodeId_(invalidNodeId),
-	specification_(NULL)
+	specification_(nullptr)
 {
 	const ScopedLock scopedLock(nodeIdCounterLock());
 	nodeId_ = ++nodeIdCounter_;
@@ -108,7 +116,7 @@ Node::~Node()
 
 Node::FieldAccessType Node::fieldAccessType(const std::string& fieldName) const
 {
-	ocean_assert(specification_ != NULL);
+	ocean_assert(specification_ != nullptr);
 	return specification_->fieldAccessType(fieldName);
 }
 
@@ -119,13 +127,13 @@ void Node::setName(const std::string& name)
 
 bool Node::hasField(const std::string& fieldName) const
 {
-	ocean_assert(specification_ != NULL);
+	ocean_assert(specification_ != nullptr);
 	return specification_->hasField(fieldName);
 }
 
 bool Node::hasAnyField(const std::string& fieldName) const
 {
-	ocean_assert(specification_ != NULL);
+	ocean_assert(specification_ != nullptr);
 	return specification_->hasField(fieldName);
 }
 

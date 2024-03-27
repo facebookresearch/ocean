@@ -58,7 +58,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT XMLParser
 		 * @param progress Optional parser progress state recurrently receiving the parsing progress if defined
 		 * @param cancel Optional cancel state to stop the progress during process
 		 */
-		explicit XMLParser(const std::string& filename, float* progress = NULL, bool* cancel = NULL);
+		explicit XMLParser(const std::string& filename, float* progress = nullptr, bool* cancel = nullptr);
 
 		/**
 		 * Parses the given file and returns a node reference to the entire scene.

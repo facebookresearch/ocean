@@ -80,7 +80,7 @@ class OCEAN_IO_EXPORT InputBitstream
 		/**
 		 * Reads a defined memory block from the stream into a given buffer and moves the internal position inside the bitstream accordingly.
 		 * If the read process fails, the new position of the bitstream may be arbitrary.
-		 * @param data The buffer that will receive the memory block, ensure that this buffer is large enough, may be NULL if size is 0
+		 * @param data The buffer that will receive the memory block, ensure that this buffer is large enough, may be nullptr if size is 0
 		 * @param size The number of bytes that will be read into the memory block, with range [0, infinity)
 		 * @return True, if succeeded
 		 */
@@ -183,7 +183,7 @@ class OCEAN_IO_EXPORT OutputBitstream
 		/**
 		 * Writes a defined memory block from a given buffer into the stream and moves the internal position inside the bitstream accordingly.
 		 * If the write process fails, the new position of the bitstream may be arbitrary.
-		 * @param data The buffer that will be written, may be NULL if size is 0
+		 * @param data The buffer that will be written, may be nullptr if size is 0
 		 * @param size The number of bytes that will be written, with range [0, infinity
 		 * @return True, if succeeded
 		 */

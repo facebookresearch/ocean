@@ -77,7 +77,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestMultipleViewGeometry
 		 * @param objectPoints Optional resulting 3d object points
 		 * @return True, if succeeded
 		 */
-		static bool generatedImagePointGroups(const PinholeCamera& pinholeCamera, const size_t points, const unsigned int views, std::vector<Vectors2>& imagePointsPerPose, Scalar gaussSigma = Scalar(0), Vectors3* objectPoints = NULL);
+		static bool generatedImagePointGroups(const PinholeCamera& pinholeCamera, const size_t points, const unsigned int views, std::vector<Vectors2>& imagePointsPerPose, Scalar gaussSigma = Scalar(0), Vectors3* objectPoints = nullptr);
 
 		/**
 		 * Evaluates the (squared) re-projection error for given camera intrinsics and camera poses.<br>

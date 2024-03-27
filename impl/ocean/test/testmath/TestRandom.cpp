@@ -66,9 +66,9 @@ bool TestRandom::test(const double testDuration)
 
 	return allSucceeded;
 }
-	
+
 #ifdef OCEAN_USE_GTEST
-	
+
 TEST(TestRandom, StandardRandomSingleThreaded) {
 	EXPECT_TRUE(TestRandom::testStandardRandomSingleThreaded(GTEST_TEST_DURATION));
 }
@@ -108,7 +108,7 @@ TEST(TestRandom, StandardRandomEuler) {
 TEST(TestRandom, OceanRandomEuler) {
 	EXPECT_TRUE(TestRandom::testOceanRandomEuler(GTEST_TEST_DURATION));
 }
-	
+
 #endif // OCEAN_USE_GTEST
 
 bool TestRandom::testStandardRandomSingleThreaded(const double testDuration)
@@ -448,10 +448,12 @@ void TestRandom::calculateStandardRandomValues(int* values, const unsigned int f
 {
 	ocean_assert(values);
 
-	srand((unsigned int)(time(NULL)));
+	srand((unsigned int)(time(nullptr)));
 
 	for (unsigned int n = firstValue; n < firstValue + numberValues; ++n)
+	{
 		values[n] = rand();
+	}
 }
 
 void TestRandom::calculateOceanRandomValues(RandomGenerator* generator, int* values, const unsigned int firstValue, const unsigned int numberValues)
@@ -461,7 +463,9 @@ void TestRandom::calculateOceanRandomValues(RandomGenerator* generator, int* val
 	RandomGenerator localGenerator(*generator);
 
 	for (unsigned int n = firstValue; n < firstValue + numberValues; ++n)
+	{
 		values[n] = localGenerator.rand();
+	}
 }
 
 }

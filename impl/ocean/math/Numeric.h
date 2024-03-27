@@ -277,8 +277,8 @@ class NumericT
 
 		/**
 		 * Returns the dot product for two vectors.
-		 * @param vectorA The first vector, can be NULL if size is 0
-		 * @param vectorB The second vector, can be NULL if size is 0
+		 * @param vectorA The first vector, can be nullptr if size is 0
+		 * @param vectorB The second vector, can be nullptr if size is 0
 		 * @param size The size of both vector (the number of elements each vector holds), with range [0, infinity)
 		 * @return The resulting dot product
 		 */

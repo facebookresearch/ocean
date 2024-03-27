@@ -44,10 +44,10 @@ class System
 		 * @param minor Optional resulting minor version number
 		 * @return The Apple-platform version determined by major + minor / 100
 		 */
-		static double version(unsigned int* major = NULL, unsigned int* minor = NULL);
+		static double version(unsigned int* major = nullptr, unsigned int* minor = nullptr);
 
 		/**
-		 * Returns whether the current Apple-platform version is equal or largern than a specified (minimal required version number).
+		 * Returns whether the current Apple-platform version is equal or larger than a specified (minimal required version number).
 		 * @param minimalMajor The minimal major version number the current Apple-platform must have, with range [10, infinity)
 		 * @param minimalMinor THe minimal minor version number the current Apple-platform must have, with range [0, infinity)
 		 * @return True, if succeeded

@@ -63,7 +63,7 @@ void Maintenance::Connector::encodeData(const std::string& name, const unsigned 
 
 bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t encodedBufferSize, std::string& name, unsigned long long& id, std::string& tag, Buffer& buffer, Timestamp& timestamp)
 {
-	ocean_assert(encodedBuffer != NULL && encodedBufferSize != 0);
+	ocean_assert(encodedBuffer != nullptr && encodedBufferSize != 0);
 
 	// timestamp: 8 byte
 	// name: 8 byte + 1 byte * name.length()
@@ -138,7 +138,7 @@ bool Maintenance::send(const std::string& tag, const void* data, const size_t si
 
 	const ScopedLock scopedLock(maintenanceLock);
 
-	if (!maintenanceActive || data == NULL || size == 0)
+	if (!maintenanceActive || data == nullptr || size == 0)
 		return false;
 
 	Buffer buffer(size);

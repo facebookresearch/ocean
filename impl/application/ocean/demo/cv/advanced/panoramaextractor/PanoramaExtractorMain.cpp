@@ -157,8 +157,8 @@ bool extractImageToDirectory(const IO::File& panoramaFile, const FrameType::Pixe
  * @param camera A camera
  * @param orientation A orientation that is applied to the camera before drawing the outline of its frame
  * @param panoramaFrame The actual panorama that is used as a reference
- * @param imuOrientation If specified, will draw a thinner outline of the camera frame based on the generated IMU orientation, otherwise this parameter will be ignored
- * @param color Four color values (RGBA), will be randomly selected if it is NULL, range of color values: [0, 255]
+ * @param imuOrientation If specified, will draw a thinner outline of the camera frame based on the generated IMU orientation, nullptr to ignore this parameter
+ * @param color Four color values (RGBA), will be randomly selected if it is nullptr, range of color values: [0, 255]
  * @tparam lineWidth Width of the lines that are used to draw the outlines
  */
 template <unsigned int lineWidth = 7u>

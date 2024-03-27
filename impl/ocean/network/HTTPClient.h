@@ -290,7 +290,7 @@ class OCEAN_NETWORK_EXPORT HTTPClient
 		 * @param progressCallback Optional callback for receiving progress information
 		 * @return True, if succeeded;
 		 */
-		bool invokeGetRequest(const std::string& uri, Buffer& data, const double timeout = 5.0, std::string* urlRedirection = NULL, HTTPHeader::ReplyCode* replyCode = NULL, bool* abort = NULL, const ProgressCallback& progressCallback = ProgressCallback());
+		bool invokeGetRequest(const std::string& uri, Buffer& data, const double timeout = 5.0, std::string* urlRedirection = nullptr, HTTPHeader::ReplyCode* replyCode = nullptr, bool* abort = nullptr, const ProgressCallback& progressCallback = ProgressCallback());
 
 		/**
 		 * Helper function to executes an HTTP site/file request.
@@ -305,7 +305,7 @@ class OCEAN_NETWORK_EXPORT HTTPClient
 		 * @param progressCallback Optional callback for receiving progress information
 		 * @return True, if succeeded
 		 */
-		static bool httpGetRequest(const std::string& url, Buffer& data, const Port& port = Port(80, Port::TYPE_READABLE), const double timeout = 5.0, bool allowRedirect = true, std::string* redirectedURL = NULL, HTTPHeader::ReplyCode* replyCode = NULL, bool* abort = NULL, const ProgressCallback& progressCallback = ProgressCallback());
+		static bool httpGetRequest(const std::string& url, Buffer& data, const Port& port = Port(80, Port::TYPE_READABLE), const double timeout = 5.0, bool allowRedirect = true, std::string* redirectedURL = nullptr, HTTPHeader::ReplyCode* replyCode = nullptr, bool* abort = nullptr, const ProgressCallback& progressCallback = ProgressCallback());
 
 	protected:
 

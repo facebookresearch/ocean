@@ -136,7 +136,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameShrinker : protected CV::FrameShrinker
 		 * @param target The target frame holding the downsampled frame, must be valid
 		 * @param averageAbsError Optional resulting average absolute error between the converted result and the ground truth result, with range (-infinity, infinity)
 		 * @param maximalAbsError Optional resulting maximal absolute error between the converted result and the ground truth result, with range (-infinity, infinity)
-		 * @param groundTruth Optional resulting ground truth data, with buffer size (sourceWidth / 2) * (sourceHeight / 2) * channels, otherwise NULL
+		 * @param groundTruth Optional resulting ground truth data, with buffer size (sourceWidth / 2) * (sourceHeight / 2) * channels, otherwise nullptr
 		 * @param groundTruthPaddingElements Optional number of padding elements at the end of each ground truth row, in elements, with range [0, infinity)
 		 * @return True, if succeeded
 		 */
@@ -168,7 +168,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameShrinker : protected CV::FrameShrinker
 		 * @param targetPaddingElements Optional number of padding elements at the end of each target row, in elements, with range [0, infinity)
 		 * @param averageAbsError Optional resulting average absolute error between the converted result and the ground truth result, with range (-infinity, infinity)
 		 * @param maximalAbsError Optional resulting maximal absolute error between the converted result and the ground truth result, with range (-infinity, infinity)
-		 * @param groundTruth Optional resulting ground truth data, with buffer size (sourceWidth / 2) * (sourceHeight / 2) * channels, otherwise NULL
+		 * @param groundTruth Optional resulting ground truth data, with buffer size (sourceWidth / 2) * (sourceHeight / 2) * channels, otherwise nullptr
 		 * @param groundTruthPaddingElements Optional number of padding elements at the end of each ground truth row, in elements, with range [0, infinity)
 		 */
 		static void validateDownsamplingByTwo8Bit14641(const uint8_t* source, const uint8_t* target, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int targetWidth, const unsigned int targetHeight, const unsigned int channels, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, double* averageAbsError, double* maximalAbsError, uint8_t* groundTruth = nullptr, const unsigned int groundTruthPaddingElements = 0u);

@@ -455,7 +455,7 @@ void JSLibrary::functionLoad(const v8::FunctionCallbackInfo<v8::Value>& info)
 	ocean_assert(uniqueContextId.IsEmpty() == false && uniqueContextId->IsInt32());
 
 	JSContext* contextObject = JSContext::context((unsigned int)(uniqueContextId->Int32Value()));
-	ocean_assert(contextObject != NULL);
+	ocean_assert(contextObject != nullptr);
 
 	bool fileLoaded = false;
 	for (int n = 0; n < args.Length(); n++)

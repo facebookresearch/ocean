@@ -20,7 +20,7 @@ std::string System::environmentVariable(const std::string& variable, const bool 
 
 	const char* valuePointer = getenv(variable.c_str());
 
-	if (valuePointer == NULL)
+	if (valuePointer == nullptr)
 	{
 #ifdef __APPLE__
 		if (variable == "OCEAN_DEVELOPMENT_PATH")
@@ -29,7 +29,7 @@ std::string System::environmentVariable(const std::string& variable, const bool 
 
 			const char* homePointer = getenv("HOME");
 
-			if (homePointer == NULL)
+			if (homePointer == nullptr)
 			{
 				return std::string();
 			}

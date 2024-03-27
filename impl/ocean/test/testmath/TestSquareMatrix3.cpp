@@ -495,17 +495,25 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 		do
 		{
 			for (unsigned int n = 0u; n < 9u; ++n)
+			{
 				matrix[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			}
 
 			for (size_t n = 0; n < constNumber; ++n)
+			{
 				for (unsigned int i = 0u; i < 3u; ++i)
+				{
 					vectors[n][i] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+				}
+			}
 
 			{
 				const HighPerformanceStatistic::ScopedStatistic scopedPerformance(performanceStandard);
 
 				for (unsigned int n = 0u; n < constNumber; ++n)
+				{
 					results[n] = standardVectorMultiplication<T>(matrix, vectors[n]);
+				}
 			}
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
@@ -517,8 +525,8 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 	{
 		// now we test the default implementation of the framework using SIMD optimizations
 
-		unsigned long long iterations = 0ull;
-		unsigned long long validIterations = 0ull;
+		uint64_t iterations = 0ull;
+		uint64_t validIterations = 0ull;
 
 		HighPerformanceStatistic performance;
 		const Timestamp startTimestamp(true);
@@ -526,17 +534,25 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 		do
 		{
 			for (unsigned int n = 0u; n < 9u; ++n)
+			{
 				matrix[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			}
 
 			for (size_t n = 0; n < constNumber; ++n)
+			{
 				for (unsigned int i = 0u; i < 3u; ++i)
+				{
 					vectors[n][i] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+				}
+			}
 
 			{
 				const HighPerformanceStatistic::ScopedStatistic scopedPerformance(performance);
 
 				for (unsigned int n = 0u; n < constNumber; ++n)
+				{
 					results[n] = matrix * vectors[n];
+				}
 			}
 
 			for (unsigned int n = 0u; n < constNumber; ++n)
@@ -548,13 +564,17 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 					const T rowResult = matrix(i, 0) * vectors[n][0] +  matrix(i, 1) * vectors[n][1] +  matrix(i, 2) * vectors[n][2];
 
 					if (NumericT<T>::isNotEqual(results[n][i], rowResult, NumericT<T>::eps() * (std::is_same<T, double>::value ? T(10) : T(100))))
+					{
 						localSucceeded = false;
+					}
 				}
 
 				if (localSucceeded)
-					validIterations++;
+				{
+					++validIterations;
+				}
 
-				iterations++;
+				++iterations;
 			}
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
@@ -569,7 +589,7 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 	}
 
 	{
-		// now we test the utilitity function of the framework allowing to process an entire array
+		// now we test the utility function of the framework allowing to process an entire array
 
 		unsigned long long iterations = 0ull;
 		unsigned long long validIterations = 0ull;
@@ -580,14 +600,20 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 		do
 		{
 			for (unsigned int n = 0u; n < 9u; ++n)
+			{
 				matrix[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			}
 
 			for (size_t n = 0; n < constNumber; ++n)
+			{
 				for (unsigned int i = 0u; i < 3u; ++i)
+				{
 					vectors[n][i] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+				}
+			}
 
 			performanceShared.start();
-			MathUtilities::transform(matrix, vectors, results, NULL);
+				MathUtilities::transform(matrix, vectors, results, nullptr);
 			performanceShared.stop();
 
 			for (unsigned int n = 0u; n < constNumber; ++n)
@@ -599,13 +625,17 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 					const T rowResult = matrix(i, 0) * vectors[n][0] +  matrix(i, 1) * vectors[n][1] +  matrix(i, 2) * vectors[n][2];
 
 					if (NumericT<T>::isNotEqual(results[n][i], rowResult, NumericT<T>::eps() * (std::is_same<T, double>::value ? T(10) : T(100))))
+					{
 						localSucceeded = false;
+					}
 				}
 
 				if (localSucceeded)
-					validIterations++;
+				{
+					++validIterations;
+				}
 
-				iterations++;
+				++iterations;
 			}
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
@@ -621,10 +651,10 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 
 	if (worker)
 	{
-		// now we test the utilitity function of the framework allowing to process an entire array (this time with multi-core support)
+		// now we test the utility function of the framework allowing to process an entire array (this time with multi-core support)
 
-		unsigned long long iterations = 0ull;
-		unsigned long long validIterations = 0ull;
+		uint64_t iterations = 0ull;
+		uint64_t validIterations = 0ull;
 
 		HighPerformanceStatistic performanceShared;
 		const Timestamp startTimestamp(true);
@@ -632,14 +662,20 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 		do
 		{
 			for (unsigned int n = 0u; n < 9u; ++n)
+			{
 				matrix[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			}
 
 			for (size_t n = 0; n < constNumber; ++n)
+			{
 				for (unsigned int i = 0u; i < 3u; ++i)
+				{
 					vectors[n][i] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+				}
+			}
 
 			performanceShared.start();
-			MathUtilities::transform(matrix, vectors, results, &worker);
+				MathUtilities::transform(matrix, vectors, results, &worker);
 			performanceShared.stop();
 
 			for (unsigned int n = 0u; n < constNumber; ++n)
@@ -651,13 +687,17 @@ bool TestSquareMatrix3::testVectorMultiplication3(const double testDuration, Wor
 					const T rowResult = matrix(i, 0) * vectors[n][0] +  matrix(i, 1) * vectors[n][1] +  matrix(i, 2) * vectors[n][2];
 
 					if (NumericT<T>::isNotEqual(results[n][i], rowResult, NumericT<T>::eps() * (std::is_same<T, double>::value ? T(10) : T(100))))
+					{
 						localSucceeded = false;
+					}
 				}
 
 				if (localSucceeded)
-					validIterations++;
+				{
+					++validIterations;
+				}
 
-				iterations++;
+				++iterations;
 			}
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
@@ -680,8 +720,8 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 
 	Log::info() << "SquareMatrix3::invert() and SquareMatrix3::inverted() test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Scalar epsilon = Numeric::eps() * 100;
 	const SquareMatrix3 identity(true);
@@ -693,14 +733,18 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 		SquareMatrix3 matrix;
 
 		for (unsigned int n = 0u; n < matrix.elements(); ++n)
+		{
 			matrix[n] = Random::scalar(-1, 1);
+		}
 
 		// we create a singular value each second iteration
 		if (iterations % 2u == 0u)
 		{
 			Scalar factor = Random::scalar(-1, 1);
 			while (Numeric::isWeakEqualEps(factor))
+			{
 				factor = Random::scalar(-1, 1);
+			}
 
 			if (RandomI::random(1u) == 0u)
 			{
@@ -708,7 +752,9 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 				RandomI::random(2u, rowIndex0, rowIndex1);
 
 				for (unsigned int c = 0u; c < 3u; ++c)
+				{
 					matrix(rowIndex0, c) = matrix(rowIndex1, c) * factor;
+				}
 			}
 			else
 			{
@@ -716,7 +762,9 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 				RandomI::random(2u, columnIndex0, columnIndex1);
 
 				for (unsigned int r = 0u; r < 3u; ++r)
+				{
 					matrix(r, columnIndex0) = matrix(r, columnIndex1) * factor;
+				}
 			}
 		}
 
@@ -742,11 +790,15 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 
 		ocean_assert(matrixInverted0 == !matrixIsSingular);
 		if (matrixInverted0 == matrixIsSingular)
+		{
 			localSucceeded = false;
+		}
 
 		ocean_assert(matrixInverted0 == matrixInverted1 && matrixInverted0 == matrixInverted2 && matrixInverted1 == matrixInverted2);
 		if (matrixInverted0 != matrixInverted1 || matrixInverted0 != matrixInverted2 || matrixInverted1 != matrixInverted2)
+		{
 			localSucceeded = false;
+		}
 
 		if (matrixInverted0)
 		{
@@ -754,13 +806,19 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 			const SquareMatrix3 testMatrixB(invertedMatrix0 * matrix);
 
 			if (!testMatrixA.isEqual(testMatrixB, epsilon))
+			{
 				localSucceeded = false;
+			}
 
 			if (!testMatrixA.isEqual(identity, epsilon))
+			{
 				localSucceeded = false;
+			}
 
 			if (!testMatrixB.isEqual(identity, epsilon))
+			{
 				localSucceeded = false;
+			}
 		}
 
 		if (matrixInverted1)
@@ -769,13 +827,19 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 			const SquareMatrix3 testMatrixB(invertedMatrix1 * matrix);
 
 			if (!testMatrixA.isEqual(testMatrixB, epsilon))
+			{
 				localSucceeded = false;
+			}
 
 			if (!testMatrixA.isEqual(identity, epsilon))
+			{
 				localSucceeded = false;
+			}
 
 			if (!testMatrixB.isEqual(identity, epsilon))
+			{
 				localSucceeded = false;
+			}
 		}
 
 		if (matrixInverted2)
@@ -784,19 +848,27 @@ bool TestSquareMatrix3::testInvert(const double testDuration)
 			const SquareMatrix3 testMatrixB(invertedMatrix2 * matrix);
 
 			if (!testMatrixA.isEqual(testMatrixB, epsilon))
+			{
 				localSucceeded = false;
+			}
 
 			if (!testMatrixA.isEqual(identity, epsilon))
+			{
 				localSucceeded = false;
+			}
 
 			if (!testMatrixB.isEqual(identity, epsilon))
+			{
 				localSucceeded = false;
+			}
 		}
 
-		iterations++;
+		++iterations;
 
 		if (localSucceeded)
-			validIterations++;
+		{
+			++validIterations;
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 

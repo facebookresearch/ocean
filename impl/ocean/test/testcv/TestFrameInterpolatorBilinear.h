@@ -299,7 +299,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorBilinear
 		 * @param targetPaddingElements Optional padding at the end of each target row in elements, with range [0, infinity)
 		 * @param averageAbsErrorToInteger Optional resulting average absolute error between the converted result and the ground truth integer result (rounded result), with range [0, 256)
 		 * @param maximalAbsErrorToInteger Optional resulting maximal absolute error between the converted result and the ground truth integer result (rounded result), with range [0, 256)
-		 * @param groundTruth Optional resulting ground truth data (the resized image content determined with floating point accuracy), NULL otherwise
+		 * @param groundTruth Optional resulting ground truth data (the resized image content determined with floating point accuracy), nullptr otherwise
 		 */
 		static void validateScaleFrame(const unsigned char* source, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const unsigned char* target, const unsigned int targetWidth, const unsigned int targetHeight, const double xTargetToSource, const double yTargetToSource, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, double* averageAbsErrorToInteger, unsigned int* maximalAbsErrorToInteger, unsigned char* groundTruth = nullptr);
 
@@ -318,7 +318,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorBilinear
 		 * @param targetPaddingElements Optional padding at the end of each target row in elements, with range [0, infinity)
 		 * @param averageAbsError Optional resulting average absolute error between the converted result and the ground truth result, with range (-infinity, infinity)
 		 * @param maximalAbsError Optional resulting maximal absolute error between the converted result and the ground truth result, with range (-infinity, infinity)
-		 * @param groundTruth Optional resulting ground truth data (the resized image content determined with floating point accuracy), NULL otherwise
+		 * @param groundTruth Optional resulting ground truth data (the resized image content determined with floating point accuracy), nullptr otherwise
 		 * @tparam T The data type of each pixel channel, e.g., 'float', 'double', 'int', ...
 		 */
 		template <typename T>
@@ -482,7 +482,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorBilinear
 		 * @param targetPaddingElements Optional padding at the end of each target row in elements, with range [0, infinity)
 		 * @param averageAbsError Optional resulting average absolute error between the converted result and the ground truth result, with range (-infinity, infinity)
 		 * @param maximalAbsError Optional resulting maximal absolute error between the converted result and the ground truth result, with range (-infinity, infinity)
-		 * @param groundTruth Optional resulting ground truth data (the resized image content determined with floating point accuracy), NULL otherwise
+		 * @param groundTruth Optional resulting ground truth data (the resized image content determined with floating point accuracy), nullptr otherwise
 		 */
 		static void validateScaleFramePrecision7Bit(const uint8_t* source, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const uint8_t* target, const unsigned int targetWidth, const unsigned int targetHeight, const double xSource_s_xTarget, const double ySource_s_yTarget, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, double* averageAbsError, double* maximalAbsError, uint8_t* groundTruth = nullptr);
 };

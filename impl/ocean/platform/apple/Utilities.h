@@ -58,7 +58,7 @@ class Utilities
 		 * @endcode
 		 * @param frame The frame from which the CGImage object will be created
 		 * @param copyData True, to create an CGImage object owning the frame data; False, to create an CGImageo object using the frame data only
-		 * @return The resulting CGImage object, NULL if the conversion failed
+		 * @return The resulting CGImage object, nullptr if the conversion failed
 		 * @see asNSImageOrUIImage().
 		 */
 		static ScopedCGImageRef toCGImage(const Frame& frame, bool copyData = true);

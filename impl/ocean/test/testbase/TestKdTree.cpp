@@ -155,20 +155,26 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 		KdTree<T> kdTree(dimension);
 
 		performance.start();
-		kdTree.insert(pointers.data(), pointers.size());
+			kdTree.insert(pointers.data(), pointers.size());
 		performance.stop();
 
 		for (size_t i = 0; i < randomsSet.size(); ++i)
+		{
 			for (unsigned int n = 0u; n < dimension; ++n)
+			{
 				randomsSet[i][n] = RandomT<T>::scalar(randomGenerator, T(-1.0), T(1.0));
+			}
+		}
 
 		performanceNearestNeighbor.start();
 
 		for (size_t i = 0; i < randomsSet.size(); ++i)
 		{
 			T dummyDistance = -1; // necessary to ensure that the optimizer does not skip the code
-			if (kdTree.nearestNeighbor(randomsSet[i].data(), dummyDistance) == NULL)
+			if (kdTree.nearestNeighbor(randomsSet[i].data(), dummyDistance) == nullptr)
+			{
 				dummyValue += 0.01f;
+			}
 		}
 
 		performanceNearestNeighbor.stop();
@@ -185,7 +191,9 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 				T ssd = 0;
 
 				for (unsigned int d = 0u; d < dimension; ++d)
+				{
 					ssd += sqr(pointers[n][d] - randomsSet[i][d]);
+				}
 
 				if (ssd < ssdBest)
 				{
@@ -223,18 +231,26 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 			ocean_assert(nearest);
 
 			if (distance != 0)
+			{
 				allSucceeded = false;
+			}
 
 			for (unsigned int d = 0u; d < dimension; ++d)
+			{
 				if (nearest[d] != value[d])
+				{
 					allSucceeded = false;
+				}
+			}
 		}
 
 		// now we validate the nearest distance function for random values
 		for (unsigned int i = 0u; i < 1000u; ++i)
 		{
 			for (unsigned int d = 0u; d < dimension; ++d)
+			{
 				randoms[d] = RandomT<T>::scalar(randomGenerator, T(-1.0), T(1.0));
+			}
 
 			const T* value = randoms.data();
 
@@ -250,7 +266,9 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 				T ssd = 0;
 
 				for (unsigned int d = 0u; d < dimension; ++d)
+				{
 					ssd += sqr(pointers[n][d] - value[d]);
+				}
 
 				if (ssd < ssdBest)
 				{
@@ -262,10 +280,13 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 			if (ssdBest != distance)
 			{
 				if (std::fabs(ssdBest - distance) > 1e-12f)
+				{
 					allSucceeded = false;
+				}
 			}
 
 			for (unsigned int d = 0u; d < dimension; ++d)
+			{
 				if (nearest[d] != valueBest[d])
 				{
 					// there may be more than one nearest value (so we have to ensure that both distances are identical)
@@ -273,27 +294,38 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 					T ssdTest = 0;
 
 					for (unsigned int innerD = 0u; innerD < dimension; ++innerD)
+					{
 						ssdTest += sqr(nearest[innerD] - value[innerD]);
+					}
 
 					if (std::fabs(ssdTest - ssdBest) > 1e-12f)
+					{
 						allSucceeded = false;
+					}
 
 					break;
 				}
+			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (dummyValue >= 0.0)
+	{
 		Log::info() << "Create performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
+	}
 	else
+	{
 		Log::info() << "Create performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
+	}
 
 	Log::info() << "KD Nearest Neighbor performance: Best: " << performanceNearestNeighbor.bestMseconds() << "ms, worst: " << performanceNearestNeighbor.worstMseconds() << "ms, average: " << performanceNearestNeighbor.averageMseconds() << "ms";
 	Log::info() << "Brute Force performance: Best: " << ssdPerformanceNearestNeighbor.bestMseconds() << "ms, worst: " << ssdPerformanceNearestNeighbor.worstMseconds() << "ms, average: " << ssdPerformanceNearestNeighbor.averageMseconds() << "ms";
 
 	if (performanceNearestNeighbor.averageMseconds() > 0)
+	{
 		Log::info() << "KD boost factor: Average: " << String::toAString(ssdPerformanceNearestNeighbor.averageMseconds() / performanceNearestNeighbor.averageMseconds(), 2u) << "x";
+	}
 
 	return allSucceeded;
 }

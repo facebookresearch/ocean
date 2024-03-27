@@ -483,8 +483,8 @@ class SquareMatrixT4
 
 		/**
 		 * Multiplies several 4D vectors with a given matrix.
-		 * @param matrix The matrix to be used for multiplication, may be NULL if number is 0
-		 * @param vectors The input vectors that will be multiplied, may be NULL if number is 0
+		 * @param matrix The matrix to be used for multiplication, may be nullptr if number is 0
+		 * @param vectors The input vectors that will be multiplied, may be nullptr if number is 0
 		 * @param results The resulting output (multiplied/transformed) vectors, with same number as the provided input vectors
 		 * @param number The number of provided vectors (input and output), with range [0, infinity)
 		 */

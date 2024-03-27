@@ -27,20 +27,24 @@ void TracingObject::setAttributes(const AttributeSetRef& attributes)
 	ocean_assert(attributes_.isNull());
 	attributes_ = attributes;
 
-	material_ = NULL;
-	textures_ = NULL;
+	material_ = nullptr;
+	textures_ = nullptr;
 
 	if (attributes)
 	{
 		const MaterialRef materialRef(attributes->attribute(Object::TYPE_MATERIAL));
 
 		if (materialRef)
+		{
 			material_ = dynamic_cast<GIMaterial*>(&*materialRef);
+		}
 
 		const SmartObjectRef<GITextures> texturesRef(attributes->attribute(Object::TYPE_TEXTURES));
 
 		if (texturesRef)
+		{
 			textures_ = &*texturesRef;
+		}
 	}
 }
 

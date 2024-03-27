@@ -32,7 +32,7 @@ class OCEAN_MEDIA_WIC_EXPORT WICObject
 		 * @param pixelOrigin Optional resulting Ocean specific pixel origin of the given format
 		 * @return Ocean pixel format, FORMAT_UNDEFINED if no corresponding pixel format exists
 		 */
-		static FrameType::PixelFormat translatePixelFormat(const WICPixelFormatGUID& format, FrameType::PixelOrigin* pixelOrigin = NULL);
+		static FrameType::PixelFormat translatePixelFormat(const WICPixelFormatGUID& format, FrameType::PixelOrigin* pixelOrigin = nullptr);
 
 		/**
 		 * Determines the best matching Windows Imaging Component pixel format for a given Ocean pixel format.

@@ -293,7 +293,7 @@ float Process::averageProcessorLoad() const
 	const long long processorTime = (long long)(resourceUsage.ru_utime.tv_sec + resourceUsage.ru_stime.tv_sec) * 1000000ll + (long long)(resourceUsage.ru_utime.tv_usec + resourceUsage.ru_stime.tv_usec);
 
 	struct timeval currentSystemTime;
-	gettimeofday(&currentSystemTime, NULL);
+	gettimeofday(&currentSystemTime, nullptr);
 
 	const long long currentTime((long long)(currentSystemTime.tv_sec) * 1000000ll + (long long)currentSystemTime.tv_usec);
 	const long long processCreationTime = processStartTime();
@@ -370,7 +370,7 @@ double Process::entireProcessLiveTime()
 #else
 
 	struct timeval currentSystemTime;
-	const int result = gettimeofday(&currentSystemTime, NULL);
+	const int result = gettimeofday(&currentSystemTime, nullptr);
 	ocean_assert_and_suppress_unused(result == 0, result);
 
 	const long long currentTime((long long)(currentSystemTime.tv_sec) * 1000000ll + (long long)currentSystemTime.tv_usec);
@@ -406,7 +406,7 @@ long long Process::processStartTime()
 
 	int managementInformationBase[] = {CTL_KERN, KERN_PROC, KERN_PROC_PID, getpid()};
 
-	if (sysctl(managementInformationBase, 4u, &info, &size, NULL, 0) == -1)
+	if (sysctl(managementInformationBase, 4u, &info, &size, nullptr, 0) == -1)
 	{
 		return -1ll;
 	}

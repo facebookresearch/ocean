@@ -602,7 +602,7 @@ void StreamingClient::onChangedDataType(const std::string& value, const SessionI
 
 void StreamingClient::onTCPReceiveData(const void* data, const size_t size)
 {
-	ocean_assert(data != NULL && size != 0);
+	ocean_assert(data != nullptr && size != 0);
 
 	bool isResponse = false;
 	std::string message, value;

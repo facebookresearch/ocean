@@ -115,8 +115,10 @@ bool Directory::create() const
 
 #ifdef _WINDOWS
 
-	if (CreateDirectoryA(pathValue_.c_str(), NULL) == TRUE)
+	if (CreateDirectoryA(pathValue_.c_str(), nullptr) == TRUE)
+	{
 		return true;
+	}
 
 	const DWORD error = GetLastError();
 
@@ -135,7 +137,7 @@ bool Directory::create() const
 			return false;
 		}
 
-		return CreateDirectoryA(pathValue_.c_str(), NULL) == TRUE;
+		return CreateDirectoryA(pathValue_.c_str(), nullptr) == TRUE;
 	}
 
 #else
@@ -614,7 +616,7 @@ Directory Directory::createTemporaryDirectory()
 	char tmpl[] = "/var/tmp/XXXXXXXXXXXXXXXXXXXX";
 	char* path = mkdtemp(tmpl);
 
-	if (path == NULL)
+	if (path == nullptr)
 	{
 		Log::error() << "Failed to create the temporary directory: " << path;
 		return Directory();

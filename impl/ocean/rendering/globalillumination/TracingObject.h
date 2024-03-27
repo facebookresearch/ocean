@@ -91,7 +91,7 @@ class OCEAN_RENDERING_GI_EXPORT TracingObject
 		 * @param intersection The already known intersection of the viewing ray with this object
 		 * @param group All tracing objects of the entire scene
 		 * @param bounces The number of reflection bounces to be used, with range [0, infinity)
-		 * @param excludedObject An optional tracking object to be excluded during this iteration, NULL to use every tracing object
+		 * @param excludedObject An optional tracking object to be excluded during this iteration, nullptr to use every tracing object
 		 * @param lightingModes The light lightingModes which will be used for the lighting
 		 * @param color The resulting color/light for the defined viewing ray
 		 * @return True, if succeeded

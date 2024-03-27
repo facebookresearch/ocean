@@ -145,7 +145,7 @@ bool Lighting::dampedLight(const Vector3& viewPosition, const Vector3& viewObjec
 		{
 			// determine the color for the most nearest intersection
 			const TracingObject* tracingObject = intersection.tracingObject();
-			tracingObject->determineColor(viewPosition, reflectiveDirection, intersection, root, bounces - 1u, NULL, lightingModes, reflectiveColor);//, object);
+			tracingObject->determineColor(viewPosition, reflectiveDirection, intersection, root, bounces - 1u, nullptr, lightingModes, reflectiveColor);//, object);
 		}
 
 		color = color.damped(1.0f - material->reflectivityInline()).combined(reflectiveColor.damped(material->reflectivityInline()));
@@ -167,7 +167,7 @@ bool Lighting::dampedLight(const Vector3& viewPosition, const Vector3& viewObjec
 			{
 				// determine the color for the most nearest intersection
 				const TracingObject* tracingObject = intersection.tracingObject();
-				tracingObject->determineColor(viewPosition, viewObjectDirection, intersection, root, bounces - 1u, NULL, lightingModes, transparencyColor);//, object);
+				tracingObject->determineColor(viewPosition, viewObjectDirection, intersection, root, bounces - 1u, nullptr, lightingModes, transparencyColor);//, object);
 			}
 
 			color = color.damped(1.0f - material->transparencyInline()).combined(transparencyColor.damped(material->transparencyInline()));
@@ -192,7 +192,7 @@ bool Lighting::dampedLight(const Vector3& viewPosition, const Vector3& viewObjec
 			{
 				// determine the color for the most nearest intersection
 				const TracingObject* tracingObject = outerIntersection.tracingObject();
-				tracingObject->determineColor(viewPosition, outerRefractionDirection, outerIntersection, root, bounces - 1u, NULL, lightingModes, transparencyColor);//, object);
+				tracingObject->determineColor(viewPosition, outerRefractionDirection, outerIntersection, root, bounces - 1u, nullptr, lightingModes, transparencyColor);//, object);
 			}
 
 			color = color.damped(1.0f - material->transparencyInline()).combined(transparencyColor.damped(material->transparencyInline()));
@@ -245,7 +245,7 @@ RGBAColor Lighting::lightDampingFactors(const Vector3& lightPosition, const Vect
 		return dampingColor;
 	}
 
-	if ((lightingModes & (LM_SHADOWS_SUPERSAMPLE | LM_SHADOWS)) && root.hasIntersection(Line3(lightPosition, lightObjectDirection), lightObjectDistance - Numeric::weakEps(), NULL))
+	if ((lightingModes & (LM_SHADOWS_SUPERSAMPLE | LM_SHADOWS)) && root.hasIntersection(Line3(lightPosition, lightObjectDirection), lightObjectDistance - Numeric::weakEps(), nullptr))
 	{
 		return RGBAColor(0, 0, 0);
 	}

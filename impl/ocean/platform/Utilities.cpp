@@ -20,7 +20,7 @@ void Utilities::showMessageBox(const std::string& title, const std::string& mess
 {
 #if defined(_WINDOWS)
 
-	MessageBoxA(NULL, message.c_str(), title.c_str(), 0);
+	MessageBoxA(nullptr, message.c_str(), title.c_str(), 0);
 
 #elif defined(__APPLE__)
 

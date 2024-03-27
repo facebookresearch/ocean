@@ -141,7 +141,7 @@ inline RayIntersection::RayIntersection() :
 	intersectionNormal(0, 0, 0),
 	intersectionTextureCoordinate(0, 0),
 	intersectionDistance(Numeric::maxValue()),
-	intersectionTracingObject(NULL)
+	intersectionTracingObject(nullptr)
 {
 	// nothing to do here
 }

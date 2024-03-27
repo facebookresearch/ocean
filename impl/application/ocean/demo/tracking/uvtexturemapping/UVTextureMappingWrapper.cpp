@@ -644,7 +644,7 @@ bool UVTextureMappingWrapper::trackNewFrame(Frame& frame, double& time)
 
 		// the camera calibration manager will either provided the calibrated profile (if existing) or will provide a default profile
 
-		trackerCamera = IO::CameraCalibrationManager::get().camera(trackerFrameMedium->url(), liveFrame->width(), liveFrame->height(), NULL, Numeric::deg2rad(60));
+		trackerCamera = IO::CameraCalibrationManager::get().camera(trackerFrameMedium->url(), liveFrame->width(), liveFrame->height(), nullptr, Numeric::deg2rad(60));
 	}
 
 	ocean_assert(trackerCamera.isValid());

@@ -297,7 +297,7 @@ bool CameraCalibrationMainWindow::calibration()
 	PinholeCamera optimizedCamera;
 	Scalar finalError = Numeric::maxValue();
 
-	if (!Geometry::NonLinearOptimizationCamera::optimizeCameraPoses(calibrationCamera_, ConstArrayAccessor<HomogenousMatrix4>(optimizedPoses), ConstElementAccessor<Vectors3>(optimizedPoses.size(), calibrationPatternObjectPoints_), ConstArraySubsetAccessor<Vectors2, unsigned int>(calibrationPatternImagePointsGroups_, subsetIndices), optimizedCamera, NULL, 50u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, NULL, &finalError))
+	if (!Geometry::NonLinearOptimizationCamera::optimizeCameraPoses(calibrationCamera_, ConstArrayAccessor<HomogenousMatrix4>(optimizedPoses), ConstElementAccessor<Vectors3>(optimizedPoses.size(), calibrationPatternObjectPoints_), ConstArraySubsetAccessor<Vectors2, unsigned int>(calibrationPatternImagePointsGroups_, subsetIndices), optimizedCamera, nullptr, 50u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, nullptr, &finalError))
 	{
 		return false;
 	}

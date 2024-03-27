@@ -459,7 +459,7 @@ bool TestSquareMatrix4::testVectorMultiplication(const double testDuration, Work
 			}
 
 			performanceShared.start();
-			MathUtilities::transform(matrix, vectors, results, NULL);
+				MathUtilities::transform(matrix, vectors, results, nullptr);
 			performanceShared.stop();
 
 			for (unsigned int n = 0u; n < constNumber; ++n)

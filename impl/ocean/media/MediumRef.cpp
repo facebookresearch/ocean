@@ -15,7 +15,7 @@ MediumRefManager::~MediumRefManager()
 
 MediumRef MediumRefManager::registerMedium(Medium* medium)
 {
-	ocean_assert(medium != NULL);
+	ocean_assert(medium != nullptr);
 
 	const ScopedLock scopedLock(lock);
 
