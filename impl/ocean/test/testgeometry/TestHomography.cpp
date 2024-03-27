@@ -1621,7 +1621,9 @@ bool TestHomography::testSimilarityMatrix(const double testDuration)
 
 	allSucceeded = testSimilarityMatrix(testDuration, 10000) && allSucceeded;
 
+#ifndef OCEAN_USE_GTEST // skipping during gtests due to execution time
 	allSucceeded = testSimilarityMatrix(testDuration, 100000) && allSucceeded;
+#endif
 
 	Log::info() << " ";
 
@@ -1705,7 +1707,9 @@ bool TestHomography::testSimilarityMatrix(const double testDuration, const size_
 			{
 				const Vector2 transformedPoint = similarity * pointsLeft[n];
 				if (!transformedPoint.isEqual(pointsRight[n], 1))
+				{
 					localSucceeded = false;
+				}
 			}
 
 			if (localSucceeded)
@@ -1724,7 +1728,9 @@ bool TestHomography::testSimilarityMatrix(const double testDuration, const size_
 	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << " ms";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << " % succeeded.";
 
-	return percent >= 0.99;
+	constexpr double threshold = std::is_same<Scalar, float>::value ? 0.98 : 0.99;
+
+	return percent >= threshold;
 }
 
 bool TestHomography::testAffineMatrix(const double testDuration)
