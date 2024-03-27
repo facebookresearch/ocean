@@ -35,12 +35,12 @@ class KdTree
 				/**
 				 * Creates an empty node.
 				 */
-				inline Node();
+				Node() = default;
 
 				/**
 				 * Destructs a node.
 				 */
-				inline ~Node();
+				~Node() = default;
 
 				/**
 				 * Creates a new node with given value.
@@ -68,15 +68,15 @@ class KdTree
 
 				/**
 				 * Sets the left child of this node.
-				 * @param left Left child
+				 * @param left The left child
 				 */
-				inline void setLeft(Node* left);
+				inline void setLeft(std::unique_ptr<Node>&& left);
 
 				/**
 				 * Sets the right child of this node.
-				 * @param right Right child
+				 * @param right The right child
 				 */
-				inline void setRight(Node* right);
+				inline void setRight(std::unique_ptr<Node>&& right);
 
 				/**
 				 * Returns whether this node holds a valid value.
@@ -87,13 +87,13 @@ class KdTree
 			protected:
 
 				/// Node value.
-				const T* nodeValue;
+				const T* value_ = nullptr;
 
 				/// Left node.
-				Node* nodeLeft;
+				std::unique_ptr<Node> left_ = nullptr;
 
 				/// Right node.
-				Node* nodeRight;
+				std::unique_ptr<Node> right_ = nullptr;
 		};
 
 		/**
@@ -117,20 +117,20 @@ class KdTree
 		/**
 		 * Destructs a k-d tree.
 		 */
-		inline ~KdTree();
+		~KdTree() = default;
 
 		/**
 		 * Inserts a set of values to this empty tree.
 		 * Beware: Adding elements to an already existing tree with nodes is not supported.
-		 * @param values Values to be added
-		 * @param number Number of elements to be added, with range [0, infinity)
+		 * @param values The values to be added
+		 * @param number The number of elements to be added, with range [0, infinity)
 		 * @return True, if succeeded
 		 */
 		bool insert(const T** values, const size_t number);
 
 		/**
 		 * Applies a nearest neighbor search for a given value.
-		 * @param value Value to be searched
+		 * @param value The value to be searched
 		 * @param distance Resulting minimal distance
 		 * @return Resulting nearest neighbor
 		 */
@@ -139,8 +139,8 @@ class KdTree
 		/**
 		 * Applies a radius search for neighbors of a given value.
 		 * Beware: Function offers performance boost over brute force search only if radius is so small that relatively few values are returned.
-		 * @param value Value to be searched
-		 * @param radius Neighboorhood radius
+		 * @param value The value to be searched
+		 * @param radius The neighborhood radius, with range [0, infinity)
 		 * @param values Found values within radius distance from a given value
 		 * @param maxValues Limit number of returned values
 		 * @return Number of returned values
@@ -163,18 +163,18 @@ class KdTree
 
 		/**
 		 * Inserts a set of values to a given parent as left children.
-		 * @param parent Parent node
-		 * @param values Values to be added
-		 * @param number Number of elements to be added
+		 * @param parent The parent node
+		 * @param values The values to be added
+		 * @param number The number of elements to be added
 		 * @param depth Current depth of the new nodes
 		 */
 		void insertLeft(Node& parent, const T** values, const size_t number, const unsigned int depth);
 
 		/**
 		 * Inserts a set of values to a given parent as right children.
-		 * @param parent Parent node
-		 * @param values Values to be added
-		 * @param number Number of elements to be added
+		 * @param parent The parent node
+		 * @param values The values to be added
+		 * @param number The number of elements to be added
 		 * @param depth Current depth of the new nodes
 		 */
 		void insertRight(Node& parent, const T** values, const size_t number, const unsigned int depth);
@@ -182,7 +182,7 @@ class KdTree
 		/**
 		 * Applies a nearest neighbor search for a given node and value.
 		 * @param node Reference node
-		 * @param value Value to be searched
+		 * @param value The value to be searched
 		 * @param nearest Resulting nearest value
 		 * @param distance Resulting minimal distance
 		 * @param index The index of the dimension for the recent search, with range [0, dimension())
@@ -192,8 +192,8 @@ class KdTree
 		/**
 		 * Applies a radius search for neighbors of a given value.
 		 * @param node Reference node
-		 * @param value Value to be searched
-		 * @param radius Neighboorhood radius
+		 * @param value The value to be searched
+		 * @param radius The neighborhood radius, with range [0, infinity)
 		 * @param values Found values within radius distance from a given value
 		 * @param maxValues Limit number of returned values
 		 * @param index The index of the dimension for the recent search, with range [0, dimension())
@@ -203,8 +203,8 @@ class KdTree
 
 		/**
 		 * Returns the median for a given set of values.
-		 * @param values Values to return the median for
-		 * @param number Number of values
+		 * @param values The values to return the median for
+		 * @param number The number of values
 		 * @param index Dimension index
 		 * @return Resulting median
 		 */
@@ -212,8 +212,8 @@ class KdTree
 
 		/**
 		 * Distributes a given set of values into two subset according to the median.
-		 * @param values Values to distribute
-		 * @param number Number of values
+		 * @param values The values to distribute
+		 * @param number The number of values
 		 * @param index Dimension index to be used for distribution
 		 * @param medianValue Resulting median value
 		 * @param leftValues Resulting left values
@@ -223,8 +223,8 @@ class KdTree
 
 		/**
 		 * Determines the square distance between two values.
-		 * @param first First value
-		 * @param second Second valu
+		 * @param first The first value
+		 * @param second The second value
 		 * @return Square distance
 		 */
 		inline typename SquareValueTyper<T>::Type determineSquareDistance(const T* first, const T* second) const;
@@ -232,118 +232,100 @@ class KdTree
 	protected:
 
 		/// Root node of this tree.
-		Node* treeRoot;
+		std::unique_ptr<Node> root_;
 
 		/// Number of nodes.
-		size_t treeSize;
+		size_t size_ = 0;
 
 		/// Number of dimensions.
-		const unsigned int treeDimension;
+		const unsigned int dimension_ = 0u;
 };
 
 template <typename T>
-inline KdTree<T>::Node::Node() :
-	nodeValue(NULL),
-	nodeLeft(NULL),
-	nodeRight(NULL)
-{
-	// nothing to do here
-}
-
-template <typename T>
 inline KdTree<T>::Node::Node(const T* value) :
-	nodeValue(value),
-	nodeLeft(NULL),
-	nodeRight(NULL)
+	value_(value)
 {
 	// nothing to do here
-}
-
-template <typename T>
-inline KdTree<T>::Node::~Node()
-{
-	delete nodeLeft;
-	delete nodeRight;
 }
 
 template <typename T>
 inline typename KdTree<T>::Node* KdTree<T>::Node::left()
 {
-	return nodeLeft;
+	return left_.get();
 }
 
 template <typename T>
 inline typename KdTree<T>::Node* KdTree<T>::Node::right()
 {
-	return nodeRight;
+	return right_.get();
 }
 
 template <typename T>
 inline const T* KdTree<T>::Node::value()
 {
-	return nodeValue;
+	return value_;
 }
 
 template <typename T>
-inline void KdTree<T>::Node::setLeft(Node* left)
+inline void KdTree<T>::Node::setLeft(std::unique_ptr<Node>&& left)
 {
-	ocean_assert(!nodeLeft);
-	nodeLeft = left;
+	ocean_assert(!left_);
+	left_ = std::move(left);
 }
 
 template <typename T>
-inline void KdTree<T>::Node::setRight(Node* right)
+inline void KdTree<T>::Node::setRight(std::unique_ptr<Node>&& right)
 {
-	ocean_assert(!nodeRight);
-	nodeRight = right;
+	ocean_assert(!right_);
+	right_ = std::move(right);
 }
 
 template <typename T>
 inline KdTree<T>::Node::operator bool() const
 {
-	return nodeValue != NULL;
+	return value_ != nullptr;
 }
 
 template <typename T>
 inline KdTree<T>::KdTree(const unsigned int dimension) :
-	treeRoot(NULL),
-	treeSize(0),
-	treeDimension(dimension)
+	dimension_(dimension)
 {
 	ocean_assert(dimension >= 1u);
-}
-
-template <typename T>
-inline KdTree<T>::~KdTree()
-{
-	delete treeRoot;
 }
 
 template <typename T>
 bool KdTree<T>::insert(const T** values, const size_t number)
 {
 	if (number == 0)
+	{
 		return true;
+	}
 
-	if (treeRoot)
+	if (root_)
+	{
 		return false;
+	}
 
 	ocean_assert(values);
 
-	const T* median = NULL;
+	const T* median = nullptr;
 	Pointers left, right;
 
 	distribute(values, number, 0u, median, left, right);
 
-	treeRoot = new Node(median);
+	root_ = std::make_unique<Node>(median);
 
 	if (!left.empty())
-		insertLeft(*treeRoot, left.data(), left.size(), 1u);
+	{
+		insertLeft(*root_, left.data(), left.size(), 1u);
+	}
 
 	if (!right.empty())
-		insertRight(*treeRoot, right.data(), right.size(), 1u);
+	{
+		insertRight(*root_, right.data(), right.size(), 1u);
+	}
 
-	treeSize = number;
+	size_ = number;
 
 	return true;
 }
@@ -355,14 +337,14 @@ const T* KdTree<T>::nearestNeighbor(const T* value, typename SquareValueTyper<T>
 
 	distance = std::numeric_limits<T>::max();
 
-	if (!treeRoot)
+	if (!root_)
 	{
 		return nullptr;
 	}
 
 	const T* nearest = nullptr;
 
-	nearestNeighbor(*treeRoot, value, nearest, distance, 0u);
+	nearestNeighbor(*root_, value, nearest, distance, 0u);
 	return nearest;
 }
 
@@ -372,12 +354,12 @@ size_t KdTree<T>::radiusSearch(const T* value, const typename SquareValueTyper<T
 	ocean_assert(value);
 	ocean_assert(values);
 
-	if (!treeRoot || maxValues == 0)
+	if (!root_ || maxValues == 0)
 	{
 		return 0;
 	}
 
-	size_t found = radiusSearch(*treeRoot, value, radius, values, maxValues, 0u);
+	size_t found = radiusSearch(*root_, value, radius, values, maxValues, 0u);
 
 	ocean_assert(found <= maxValues);
 
@@ -387,13 +369,13 @@ size_t KdTree<T>::radiusSearch(const T* value, const typename SquareValueTyper<T
 template <typename T>
 inline unsigned int KdTree<T>::dimension() const
 {
-	return treeDimension;
+	return dimension_;
 }
 
 template <typename T>
 inline size_t KdTree<T>::size() const
 {
-	return treeSize;
+	return size_;
 }
 
 template <typename T>
@@ -404,25 +386,31 @@ void KdTree<T>::insertLeft(Node& parent, const T** values, const size_t number, 
 	ocean_assert(values && number > 0);
 
 	for (size_t n = 0; n < number; ++n)
-		ocean_assert(values[n][(depth - 1) % treeDimension] <= parent.value()[(depth - 1) % treeDimension]);
+	{
+		ocean_assert(values[n][(depth - 1) % dimension_] <= parent.value()[(depth - 1) % dimension_]);
+	}
 #endif
 
 	ocean_assert(!parent.left());
 
-	const unsigned int index = depth % treeDimension;
+	const unsigned int index = depth % dimension_;
 
-	const T* median = NULL;
+	const T* median = nullptr;
 	Pointers left, right;
 
 	distribute(values, number, index, median, left, right);
 
-	parent.setLeft(new Node(median));
+	parent.setLeft(std::make_unique<Node>(median));
 
 	if (!left.empty())
+	{
 		insertLeft(*parent.left(), left.data(), left.size(), depth + 1);
+	}
 
 	if (!right.empty())
+	{
 		insertRight(*parent.left(), right.data(), right.size(), depth + 1);
+	}
 }
 
 template <typename T>
@@ -433,32 +421,38 @@ void KdTree<T>::insertRight(Node& parent, const T** values, const size_t number,
 	ocean_assert(values && number > 0);
 
 	for (size_t n = 0; n < number; ++n)
-		ocean_assert(parent.value()[(depth - 1) % treeDimension] < values[n][(depth - 1) % treeDimension]);
+	{
+		ocean_assert(parent.value()[(depth - 1) % dimension_] < values[n][(depth - 1) % dimension_]);
+	}
 #endif
 
 	ocean_assert(!parent.right());
 
-	const unsigned int index = depth % treeDimension;
+	const unsigned int index = depth % dimension_;
 
-	const T* median = NULL;
+	const T* median = nullptr;
 	Pointers left, right;
 
 	distribute(values, number, index, median, left, right);
 
-	parent.setRight(new Node(median));
+	parent.setRight(std::make_unique<Node>(median));
 
 	if (!left.empty())
+	{
 		insertLeft(*parent.right(), left.data(), left.size(), depth + 1);
+	}
 
 	if (!right.empty())
+	{
 		insertRight(*parent.right(), right.data(), right.size(), depth + 1);
+	}
 }
 
 template <typename T>
 void KdTree<T>::nearestNeighbor(Node& node, const T* value, const T*& nearest, typename SquareValueTyper<T>::Type& distance, const unsigned int index) const
 {
 	ocean_assert(node && value);
-	ocean_assert(index < treeDimension);
+	ocean_assert(index < dimension_);
 
 	const typename SquareValueTyper<T>::Type localDistance = determineSquareDistance(value, node.value());
 	if (localDistance < distance)
@@ -467,28 +461,36 @@ void KdTree<T>::nearestNeighbor(Node& node, const T* value, const T*& nearest, t
 		nearest = node.value();
 	}
 
-	const unsigned int nextIndex = (index + 1u) % treeDimension;
+	const unsigned int nextIndex = (index + 1u) % dimension_;
 
 	// depth-first-search
 	if (value[index] <= node.value()[index])
 	{
 		if (node.left())
+		{
 			nearestNeighbor(*node.left(), value, nearest, distance, nextIndex);
+		}
 
 		// check the neighboring branch not covered by the depth-first-search
 		if (node.right() && sqr(value[index] - node.value()[index]) < distance)
+		{
 			nearestNeighbor(*node.right(), value, nearest, distance, nextIndex);
+		}
 	}
 	else
 	{
 		ocean_assert(value[index] > node.value()[index]);
 
 		if (node.right())
+		{
 			nearestNeighbor(*node.right(), value, nearest, distance, nextIndex);
+		}
 
 		// check the neighboring branch not covered by the depth-first-search
 		if (node.left() && sqr(value[index] - node.value()[index]) < distance)
+		{
 			nearestNeighbor(*node.left(), value, nearest, distance, nextIndex);
+		}
 	}
 }
 
@@ -496,10 +498,12 @@ template <typename T>
 size_t KdTree<T>::radiusSearch(Node& node, const T* value, const typename SquareValueTyper<T>::Type radius, const T** values, const size_t maxValues, const unsigned int index) const
 {
 	ocean_assert(node && value && values);
-	ocean_assert(index < treeDimension);
+	ocean_assert(index < dimension_);
 
 	if (maxValues == 0)
+	{
 		return 0;
+	}
 
 	T const ** current = values;
 	T const ** const end = values + maxValues;
@@ -508,11 +512,14 @@ size_t KdTree<T>::radiusSearch(Node& node, const T* value, const typename Square
 	if (localDistance <= radius)
 	{
 		*current++ = node.value();
+
 		if (current == end)
+		{
 			return maxValues;
+		}
 	}
 
-	const unsigned int nextIndex = (index + 1u) % treeDimension;
+	const unsigned int nextIndex = (index + 1u) % dimension_;
 
 	// depth-first-search
 	if (value[index] <= node.value()[index])
@@ -521,12 +528,16 @@ size_t KdTree<T>::radiusSearch(Node& node, const T* value, const typename Square
 		{
 			current += radiusSearch(*node.left(), value, radius, current, end - current, nextIndex);
 			if (current == end)
+			{
 				return maxValues;
+			}
 		}
 
 		// check the neighboring branch not covered by the depth-first-search
 		if (node.right() && sqr(value[index] - node.value()[index]) <= radius)
+		{
 			current += radiusSearch(*node.right(), value, radius, current, end - current, nextIndex);
+		}
 	}
 	else
 	{
@@ -536,12 +547,16 @@ size_t KdTree<T>::radiusSearch(Node& node, const T* value, const typename Square
 		{
 			current += radiusSearch(*node.right(), value, radius, current, end - current, nextIndex);
 			if (current == end)
+			{
 				return maxValues;
+			}
 		}
 
 		// check the neighboring branch not covered by the depth-first-search
 		if (node.left() && sqr(value[index] - node.value()[index]) <= radius)
+		{
 			current += radiusSearch(*node.left(), value, radius, current, end - current, nextIndex);
+		}
 	}
 
 	ocean_assert(current <= end);
@@ -556,7 +571,9 @@ T KdTree<T>::median(const T** values, const size_t number, const unsigned int in
 
 	Elements elements(number);
 	for (size_t n = 0; n < number; ++n)
+	{
 		elements[n] = values[n][index];
+	}
 
 	return Median::median<T>((T*)elements.data(), elements.size());
 }
@@ -578,9 +595,13 @@ void KdTree<T>::distribute(const T** values, const size_t number, const unsigned
 	for (size_t n = 0; n < number; ++n)
 	{
 		if (values[n][index] < middle || (values[n][index] == middle && medianFound))
+		{
 			leftValues.push_back(values[n]);
+		}
 		else if (middle < values[n][index])
+		{
 			rightValues.push_back(values[n]);
+		}
 		else
 		{
 			ocean_assert(values[n][index] == middle);
@@ -601,8 +622,10 @@ inline typename SquareValueTyper<T>::Type KdTree<T>::determineSquareDistance(con
 
 	typename SquareValueTyper<T>::Type ssd = 0;
 
-	for (size_t n = 0; n < treeDimension; ++n)
+	for (size_t n = 0; n < dimension_; ++n)
+	{
 		ssd += sqr(first[n] - second[n]);
+	}
 
 	return ssd;
 }
