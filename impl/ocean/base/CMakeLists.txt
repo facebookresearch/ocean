@@ -37,6 +37,9 @@ if (APPLE OR
     target_include_directories(${OCEAN_TARGET_NAME} PRIVATE "${OCEAN_IMPL_DIR}")
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
+    if (BUILD_SHARED_LIBS)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_BASE_EXPORT)
+    endif()
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
 
     # Dependencies

@@ -39,6 +39,13 @@ if (APPLE OR
             "${OCEAN_COMPILER_FLAGS}"
     )
 
+    if (BUILD_SHARED_LIBS)
+        target_compile_definitions(${OCEAN_TARGET_NAME}
+            PRIVATE
+                -DUSE_OCEAN_SYSTEM_EXPORT
+        )
+    endif()
+
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_base)
 

@@ -35,6 +35,13 @@ if (APPLE OR
             "${OCEAN_PREPROCESSOR_FLAGS}"
     )
 
+    if (BUILD_SHARED_LIBS)
+        target_compile_definitions(${OCEAN_TARGET_NAME}
+            PRIVATE
+                -DUSE_OCEAN_TEST_BASE_EXPORT
+        )
+    endif()
+
     if (NOT WIN32)
         target_compile_options(${OCEAN_TARGET_NAME}
             PUBLIC
