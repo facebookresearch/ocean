@@ -286,11 +286,16 @@ PlaneT3<T>::PlaneT3(const VectorT3<T>& point, const VectorT3<T>& normal) :
 }
 
 template <typename T>
-PlaneT3<T>::PlaneT3(const VectorT3<T>& point0, const VectorT3<T>& point1, const VectorT3<T>& point2) :
-	normal_((point1 - point0).cross(point2 - point0).normalizedOrZero()),
-	distance_(point0 * normal_)
+PlaneT3<T>::PlaneT3(const VectorT3<T>& point0, const VectorT3<T>& point1, const VectorT3<T>& point2)
 {
-	// nothing to do here
+	const VectorT3<T> direction10 = point1 - point0;
+	const VectorT3<T> direction20 = point2 - point0;
+
+	if (direction10 != direction20 && direction10 != -direction20) // due to floating point precision with ARM and 32bit, checking for different directions before determining the normal
+	{
+		normal_ = direction10.cross(direction20).normalizedOrZero();
+		distance_ = point0 * normal_;
+	}
 }
 
 template <typename T>
