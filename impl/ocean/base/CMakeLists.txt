@@ -54,6 +54,10 @@ if (APPLE OR
                 ${CMAKE_DL_LIBS}
                 Threads::Threads
         )
+    elseif(WIN32)
+        target_link_libraries(${OCEAN_TARGET_NAME}
+            version.lib
+        )
     endif()
 
     # Installation
