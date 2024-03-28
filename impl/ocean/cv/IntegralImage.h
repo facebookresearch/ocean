@@ -509,14 +509,14 @@ class OCEAN_CV_EXPORT IntegralImage
 		 * @param windowWidth The width of the window, in pixel, with range [1, originalImageWidth - windowLeft]
 		 * @param windowHeight The height of the window, in pixel, with range [1, originalImageHeight - windowTop]
 		 * @param mean Optional resulting mean value and (`tReturnMean = true`), nullptr otherwise (and `tReturnMean = false`)
-		 * @return The resulting sum of elements
+		 * @return The resulting variance, with range [0, infinity)
 		 * @tparam TIntegral The data type of the elements in the integral image
 		 * @tparam TIntegralSquared The data type of the elements in the integral squared image
 		 * @tparam TVariance The data type of the resulting variance (also used for intermediate calculations)
 		 * @tparam tReturnMean True, to return the mean value (`mean` must be defined); False, to skip calculating of mean (`mean` must be nullptr)
 		 */
 		template <typename TIntegral, typename TIntegralSquared, typename TVariance, bool tReturnMean = false>
-		static inline TVariance linedIntegralVariance(const TIntegral* linedIntegral, const TIntegralSquared* linedIntegralSquared, const unsigned int integralStrideElements,  const unsigned int integralStrideSquaredElements, const unsigned int windowLeft, const unsigned int windowTop, const unsigned int windowWidth, const unsigned int windowHeight, TVariance* mean = nullptr);
+		static inline TVariance linedIntegralVariance(const TIntegral* linedIntegral, const TIntegralSquared* linedIntegralSquared, const unsigned int integralStrideElements, const unsigned int integralStrideSquaredElements, const unsigned int windowLeft, const unsigned int windowTop, const unsigned int windowWidth, const unsigned int windowHeight, TVariance* mean = nullptr);
 
 		/**
 		 * Determines the variance of elements within two windows from two integral images.
@@ -558,14 +558,14 @@ class OCEAN_CV_EXPORT IntegralImage
 		 * @param windowBWidth The width of the second window, in pixel, with range [1, originalImageWidth - windowBLeft]
 		 * @param windowBHeight The height of the second window, in pixel, with range [1, originalImageHeight - windowBTop]
 		 * @param mean Optional resulting mean value and (`tReturnMean = true`), nullptr otherwise (and `tReturnMean = false`)
-		 * @return The resulting sum of elements
+		 * @return The resulting variance, with range [0, infinity)
 		 * @tparam TIntegral The data type of the elements in the integral image
 		 * @tparam TIntegralSquared The data type of the elements in the integral squared image
 		 * @tparam TVariance The data type of the resulting variance (also used for intermediate calculations)
 		 * @tparam tReturnMean True, to return the mean value (`mean` must be defined); False, to skip calculating of mean (`mean` must be nullptr)
 		 */
 		template <typename TIntegral, typename TIntegralSquared, typename TVariance, bool tReturnMean = false>
-		static inline TVariance linedIntegralVariance(const TIntegral* linedIntegral, const TIntegralSquared* linedIntegralSquared, const unsigned int integralStrideElements,  const unsigned int integralStrideSquaredElements, const unsigned int windowALeft, const unsigned int windowATop, const unsigned int windowAWidth, const unsigned int windowAHeight, const unsigned int windowBLeft, const unsigned int windowBTop, const unsigned int windowBWidth, const unsigned int windowBHeight, TVariance* mean = nullptr);
+		static inline TVariance linedIntegralVariance(const TIntegral* linedIntegral, const TIntegralSquared* linedIntegralSquared, const unsigned int integralStrideElements, const unsigned int integralStrideSquaredElements, const unsigned int windowALeft, const unsigned int windowATop, const unsigned int windowAWidth, const unsigned int windowAHeight, const unsigned int windowBLeft, const unsigned int windowBTop, const unsigned int windowBWidth, const unsigned int windowBHeight, TVariance* mean = nullptr);
 
 		/**
 		 * Determines the variance of elements within three windows from two integral images.
@@ -587,14 +587,14 @@ class OCEAN_CV_EXPORT IntegralImage
 		 * @param windowCWidth The width of the third window, in pixel, with range [1, originalImageWidth - windowCLeft]
 		 * @param windowCHeight The height of the third window, in pixel, with range [1, originalImageHeight - windowCTop]
 		 * @param mean Optional resulting mean value and (`tReturnMean = true`), nullptr otherwise (and `tReturnMean = false`)
-		 * @return The resulting sum of elements
+		 * @return The resulting variance, with range [0, infinity)
 		 * @tparam TIntegral The data type of the elements in the integral image
 		 * @tparam TIntegralSquared The data type of the elements in the integral squared image
 		 * @tparam TVariance The data type of the resulting variance (also used for intermediate calculations)
 		 * @tparam tReturnMean True, to return the mean value (`mean` must be defined); False, to skip calculating of mean (`mean` must be nullptr)
 		 */
 		template <typename TIntegral, typename TIntegralSquared, typename TVariance, bool tReturnMean = false>
-		static inline TVariance linedIntegralVariance(const TIntegral* linedIntegral, const TIntegralSquared* linedIntegralSquared, const unsigned int integralStrideElements,  const unsigned int integralStrideSquaredElements, const unsigned int windowALeft, const unsigned int windowATop, const unsigned int windowAWidth, const unsigned int windowAHeight, const unsigned int windowBLeft, const unsigned int windowBTop, const unsigned int windowBWidth, const unsigned int windowBHeight, const unsigned int windowCLeft, const unsigned int windowCTop, const unsigned int windowCWidth, const unsigned int windowCHeight, TVariance* mean = nullptr);
+		static inline TVariance linedIntegralVariance(const TIntegral* linedIntegral, const TIntegralSquared* linedIntegralSquared, const unsigned int integralStrideElements, const unsigned int integralStrideSquaredElements, const unsigned int windowALeft, const unsigned int windowATop, const unsigned int windowAWidth, const unsigned int windowAHeight, const unsigned int windowBLeft, const unsigned int windowBTop, const unsigned int windowBWidth, const unsigned int windowBHeight, const unsigned int windowCLeft, const unsigned int windowCTop, const unsigned int windowCWidth, const unsigned int windowCHeight, TVariance* mean = nullptr);
 
 	private:
 
@@ -1892,7 +1892,7 @@ inline TIntegral IntegralImage::linedIntegralSum(const TIntegral* const linedInt
 }
 
 template <typename TIntegral, typename TIntegralSquared, typename TVariance, bool tReturnMean>
-inline TVariance IntegralImage::linedIntegralVariance(const TIntegral* linedIntegral, const TIntegralSquared* linedIntegralSquared, const unsigned int integralStrideElements,  const unsigned int integralStrideSquaredElements, const unsigned int windowLeft, const unsigned int windowTop, const unsigned int windowWidth, const unsigned int windowHeight, TVariance* mean)
+inline TVariance IntegralImage::linedIntegralVariance(const TIntegral* linedIntegral, const TIntegralSquared* linedIntegralSquared, const unsigned int integralStrideElements, const unsigned int integralStrideSquaredElements, const unsigned int windowLeft, const unsigned int windowTop, const unsigned int windowWidth, const unsigned int windowHeight, TVariance* mean)
 {
 	static_assert(std::is_floating_point<TVariance>::value, "Invalid TVariance must be a floating point data type!");
 
@@ -1904,6 +1904,11 @@ inline TVariance IntegralImage::linedIntegralVariance(const TIntegral* linedInte
 
 	ocean_assert(windowWidth != 0u);
 	ocean_assert(windowHeight != 0u);
+
+	if (windowWidth == 1u && windowHeight == 1u)
+	{
+		return TVariance(0);
+	}
 
 	const TIntegral sum = linedIntegralSum<TIntegral>(linedIntegral, integralStrideElements, windowLeft, windowTop, windowWidth, windowHeight);
 	const TIntegralSquared squaredSum = linedIntegralSum<TIntegralSquared>(linedIntegralSquared, integralStrideSquaredElements, windowLeft, windowTop, windowWidth, windowHeight);
@@ -1920,7 +1925,9 @@ inline TVariance IntegralImage::linedIntegralVariance(const TIntegral* linedInte
 		ocean_assert(mean == nullptr);
 	}
 
-	return (TVariance(squaredSum) - TVariance(TIntegralSquared(sum) * TIntegralSquared(sum)) / size) / size;
+	const TVariance variance = (TVariance(squaredSum) - TVariance(TIntegralSquared(sum) * TIntegralSquared(sum)) / size) / size;
+
+	return std::max(TVariance(0), variance); // due to floating point precision, always ensure that the variance is non-negative
 }
 
 template <typename TIntegral, typename TIntegralSquared, typename TVariance, bool tReturnMean>
@@ -1962,7 +1969,9 @@ inline TVariance IntegralImage::linedIntegralVariance(const TIntegral* linedInte
 		ocean_assert(mean == nullptr);
 	}
 
-	return (squaredSum - TVariance(sum * sum) / size) / size;
+	const TVariance variance = (squaredSum - TVariance(sum * sum) / size) / size;
+
+	return std::max(TVariance(0), variance); // due to floating point precision, always ensure that the variance is non-negative
 }
 
 template <typename TIntegral, typename TIntegralSquared, typename TVariance, bool tReturnMean>
@@ -2010,7 +2019,9 @@ inline TVariance IntegralImage::linedIntegralVariance(const TIntegral* linedInte
 		ocean_assert(mean == nullptr);
 	}
 
-	return (squaredSum - TVariance(sum * sum) / size) / size;
+	const TVariance variance = (squaredSum - TVariance(sum * sum) / size) / size;
+
+	return std::max(TVariance(0), variance); // due to floating point precision, always ensure that the variance is non-negative
 }
 
 template <typename T, typename TSquared>
