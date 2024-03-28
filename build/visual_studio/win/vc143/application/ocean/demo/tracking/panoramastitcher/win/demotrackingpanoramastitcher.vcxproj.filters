@@ -11,7 +11,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\tracking\panoramastitcher\PanoramaStitcherMain.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\demo\tracking\panoramastitcher\PanoramaStitcherMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

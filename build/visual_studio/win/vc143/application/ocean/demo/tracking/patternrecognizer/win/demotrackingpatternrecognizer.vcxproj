@@ -51,10 +51,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\h\application\ocean\demo\tracking\patternrecognizer\PatternRecognizer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\demo\tracking\patternrecognizer\PatternRecognizer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\src\application\ocean\demo\tracking\patternrecognizer\PatternRecognizer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\demo\tracking\patternrecognizer\PatternRecognizer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9215C884-5C34-4F78-80E6-3138CA19298C}</ProjectGuid>
