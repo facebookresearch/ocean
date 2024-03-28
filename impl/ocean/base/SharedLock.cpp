@@ -9,61 +9,54 @@
 namespace Ocean
 {
 
-SharedLock::SharedLock() :
-	lockLocalCounter(0u),
-	lockHandle(NULL)
-{
-	// nothing do do here
-}
-
 SharedLock::SharedLock(const std::wstring& name) :
-	lockName(name),
-	lockLocalCounter(0u),
-	lockHandle(NULL)
+	name_(name)
 {
-	ocean_assert(!lockName.empty());
+	ocean_assert(!name_.empty());
 }
 
 SharedLock::~SharedLock()
 {
-	ocean_assert(lockHandle == NULL);
+	ocean_assert(handle_ == nullptr);
 
 #ifdef _WINDOWS
 
-	if (lockHandle)
-		ReleaseMutex(lockHandle);
+	if (handle_ != nullptr)
+	{
+		ReleaseMutex(handle_);
+	}
 
 #else
 
 	// nothing to release here
-	ocean_assert(lockLocalCounter == 0u);
+	ocean_assert(localCounter_ == 0u);
 
 #endif
 }
 
 void SharedLock::lock()
 {
-	const ScopedLock scopedLock(lockLocalLock);
+	const ScopedLock scopedLock(localLock_);
 
-	ocean_assert(!lockName.empty());
+	ocean_assert(!name_.empty());
 
-	if (lockLocalCounter == 0u && !lockName.empty())
+	if (localCounter_ == 0u && !name_.empty())
 	{
 
 #if defined(_WINDOWS)
 
-		ocean_assert(lockHandle == NULL);
+		ocean_assert(handle_ == nullptr);
 
 		// try to create the mutex until this process is the owner
 		while (true)
 		{
-			const HANDLE handle = CreateMutex(NULL, TRUE, lockName.c_str());
+			const HANDLE handle = CreateMutex(nullptr, TRUE, name_.c_str());
 
-			if (handle != NULL)
+			if (handle != nullptr)
 			{
 				if (GetLastError() != ERROR_ALREADY_EXISTS)
 				{
-					lockHandle = handle;
+					handle_ = handle;
 					break;
 				}
 
@@ -82,7 +75,7 @@ void SharedLock::lock()
 			return;
 		}
 
-		const int semaphoreId = int(size_t(lockHandle));
+		const int semaphoreId = int(size_t(handle_));
 
 		// finally we have to lock the semaphore
 		sembuf semaphoreLock = {0, -1, SEM_UNDO};
@@ -95,34 +88,34 @@ void SharedLock::lock()
 
 #endif
 
-		lockLocalCounter = 1u;
+		localCounter_ = 1u;
 	}
 	else
-		++lockLocalCounter;
+		++localCounter_;
 }
 
 bool SharedLock::tryLock()
 {
-	const ScopedLock scopedLock(lockLocalLock);
+	const ScopedLock scopedLock(localLock_);
 
-	ocean_assert(!lockName.empty());
+	ocean_assert(!name_.empty());
 
-	if (lockLocalCounter == 0u && !lockName.empty())
+	if (localCounter_ == 0u && !name_.empty())
 	{
 
 #if defined(_WINDOWS)
 
-		ocean_assert(lockHandle == NULL);
+		ocean_assert(handle_ == nullptr);
 
 		// try to create the mutex and check whether this process is the owner
-		const HANDLE handle = CreateMutex(NULL, TRUE, lockName.c_str());
+		const HANDLE handle = CreateMutex(nullptr, TRUE, name_.c_str());
 
-		if (handle != NULL)
+		if (handle != nullptr)
 		{
 			if (GetLastError() != ERROR_ALREADY_EXISTS)
 			{
-				lockHandle = handle;
-				lockLocalCounter = 1u;
+				handle_ = handle;
+				localCounter_ = 1u;
 
 				return true;
 			}
@@ -139,16 +132,18 @@ bool SharedLock::tryLock()
 			return false;
 		}
 
-		const int semaphoreId = int(size_t(lockHandle));
+		const int semaphoreId = int(size_t(handle_));
 
 		// finally we have to lock the semaphore
 		sembuf semaphoreLock = {0, -1, SEM_UNDO | IPC_NOWAIT};
 		const int result = semop(semaphoreId, &semaphoreLock, 1);
 
 		if (result != 0)
+		{
 			return false;
+		}
 
-		lockLocalCounter = 1u;
+		localCounter_ = 1u;
 		return true;
 
 #else
@@ -160,9 +155,9 @@ bool SharedLock::tryLock()
 	}
 	else
 	{
-		ocean_assert(lockHandle != NULL);
+		ocean_assert(handle_ != nullptr);
 
-		++lockLocalCounter;
+		++localCounter_;
 		return true;
 	}
 
@@ -171,23 +166,23 @@ bool SharedLock::tryLock()
 
 void SharedLock::unlock()
 {
-	const ScopedLock scopedLock(lockLocalLock);
+	const ScopedLock scopedLock(localLock_);
 
-	ocean_assert(!lockName.empty());
+	ocean_assert(!name_.empty());
 
-	ocean_assert(lockLocalCounter > 0u);
-	ocean_assert(lockHandle != NULL);
+	ocean_assert(localCounter_ > 0u);
+	ocean_assert(handle_ != nullptr);
 
-	if (lockLocalCounter == 1u)
+	if (localCounter_ == 1u)
 	{
 
 #if defined(_WINDOWS)
 
-		CloseHandle(lockHandle);
+		CloseHandle(handle_);
 
 #elif defined(__APPLE__) || (defined(__linux__) && !defined(_ANDROID))
 
-		const int semaphoreId = int(size_t(lockHandle));
+		const int semaphoreId = int(size_t(handle_));
 
 		// we have to unlock the semaphore
 		sembuf semaphoreUnlock = {0, 1, SEM_UNDO};
@@ -200,22 +195,26 @@ void SharedLock::unlock()
 
 #endif
 
-		lockHandle = NULL;
-		lockLocalCounter = 0u;
+		handle_ = nullptr;
+		localCounter_ = 0u;
 	}
 	else
-		--lockLocalCounter;
+	{
+		--localCounter_;
+	}
 }
 
 #if defined(__APPLE__) || (defined(__linux__) && !defined(_ANDROID))
 
 bool SharedLock::createSemaphore()
 {
-	if (lockHandle != NULL)
+	if (handle_ != nullptr)
+	{
 		return true;
+	}
 
 	// we create a (almost unique) hash value from the given name;
-	const key_t uniqueKey = key_t(std::hash<std::wstring>()(lockName));
+	const key_t uniqueKey = key_t(std::hash<std::wstring>()(name_));
 
 	// check whether the semaphore exists already
 	int semaphoreId = semget(uniqueKey, 0, IPC_PRIVATE);
@@ -226,7 +225,9 @@ bool SharedLock::createSemaphore()
 		semaphoreId = semget(uniqueKey, 0, IPC_PRIVATE);
 
 		if (semaphoreId != -1)
+		{
 			break;
+		}
 
 		// we create the semaphore on our own
 		semaphoreId = semget(uniqueKey, 1, IPC_CREAT | IPC_EXCL | 0666);
@@ -241,9 +242,9 @@ bool SharedLock::createSemaphore()
 		}
 	}
 
-	lockHandle = (void*)size_t(semaphoreId);
+	handle_ = (void*)size_t(semaphoreId);
 
-	return lockHandle != NULL;
+	return handle_ != nullptr;
 }
 
 #endif // defined(__APPLE__) || defined(__linux__)

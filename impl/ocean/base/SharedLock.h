@@ -21,7 +21,7 @@ class OCEAN_BASE_EXPORT SharedLock
 		/**
 		 * Creates an invalid shared lock object.
 		 */
-		SharedLock();
+		SharedLock() = default;
 
 		/**
 		 * Creates a new shared lock object by a system unique name of this lock.
@@ -102,16 +102,16 @@ class OCEAN_BASE_EXPORT SharedLock
 	private:
 
 		/// System wide unique name.
-		std::wstring lockName;
+		std::wstring name_;
 
 		/// Local lock object.
-		Lock lockLocalLock;
+		Lock localLock_;
 
 		/// Local lock counter.
-		unsigned int lockLocalCounter;
+		unsigned int localCounter_ = 0u;
 
 		/// Handle of the mutex.
-		void* lockHandle;
+		void* handle_ = nullptr;
 };
 
 /**
@@ -152,33 +152,33 @@ class OCEAN_BASE_EXPORT ScopedSharedLock
 	private:
 
 		/// Shared lock object to be used for locking.
-		SharedLock& scopedLock;
+		SharedLock& scopedLock_;
 };
 
 inline const std::wstring& SharedLock::name() const
 {
-	return lockName;
+	return name_;
 }
 
 inline bool SharedLock::isValid() const
 {
-	return !lockName.empty();
+	return !name_.empty();
 }
 
 inline SharedLock::operator bool() const
 {
-	return !lockName.empty();
+	return !name_.empty();
 }
 
 inline ScopedSharedLock::ScopedSharedLock(SharedLock& sharedLock) :
-	scopedLock(sharedLock)
+	scopedLock_(sharedLock)
 {
-	scopedLock.lock();
+	scopedLock_.lock();
 }
 
 inline ScopedSharedLock::~ScopedSharedLock()
 {
-	scopedLock.unlock();
+	scopedLock_.unlock();
 }
 
 }
