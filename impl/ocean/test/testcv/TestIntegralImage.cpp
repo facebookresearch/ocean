@@ -636,46 +636,40 @@ bool TestIntegralImage::testIntegralImage(const unsigned int width, const unsign
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
-	unsigned long long iteration = 0ull;
+	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const bool benchmark = iteration % 2ull == 0ull;
-
-		const unsigned int testWidth = benchmark ? width : RandomI::random(1u, width);
-		const unsigned int testHeight = benchmark ? height : RandomI::random(1u, height);
-
-		const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-		const unsigned int integralPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame integralFrame(FrameType(sourceFrame, integralPixelFormat), integralPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
-		CV::CVUtilities::randomizeFrame(integralFrame, false);
-
-		const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-		performance.startIf(benchmark);
-			CV::IntegralImage::createImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), integralFrame.paddingElements());
-		performance.stopIf(benchmark);
-
-		if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+		for (const bool benchmark : {true, false})
 		{
-			ocean_assert(false && "Invalid padding elements!");
-			allSucceeded = false;
-			break;
-		}
+			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
+			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 
-		if (!validateIntegralImage<T, TIntegral>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), sourceFrame.paddingElements(), integralFrame.paddingElements(), 20u))
-		{
-			allSucceeded = false;
-		}
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, integralPixelFormat), false, &randomGenerator);
 
-		iteration++;
+			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+			performance.startIf(benchmark);
+				CV::IntegralImage::createImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), integralFrame.paddingElements());
+			performance.stopIf(benchmark);
+
+			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+			{
+				ocean_assert(false && "Invalid padding elements!");
+				allSucceeded = false;
+				break;
+			}
+
+			if (!validateIntegralImage<T, TIntegral>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), sourceFrame.paddingElements(), integralFrame.paddingElements(), 20u))
+			{
+				allSucceeded = false;
+			}
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -744,12 +738,10 @@ bool TestIntegralImage::testLinedIntegralImageComfort(const double testDuration)
 		{
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1024u);
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
-			Frame frame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-			Frame integralFrame = CV::IntegralImage::Comfort::createLinedImage(frame);
+			const Frame integralFrame = CV::IntegralImage::Comfort::createLinedImage(frame);
 
 			if (integralFrame.isValid() && integralFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<uint32_t>(channels)))
 			{
@@ -770,12 +762,10 @@ bool TestIntegralImage::testLinedIntegralImageComfort(const double testDuration)
 		{
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1024u);
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
-			Frame frame(FrameType(width, height, FrameType::genericPixelFormat<int8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<int8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-			Frame integralFrame = CV::IntegralImage::Comfort::createLinedImage(frame);
+			const Frame integralFrame = CV::IntegralImage::Comfort::createLinedImage(frame);
 
 			if (integralFrame.isValid() && integralFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<int32_t>(channels)))
 			{
@@ -796,12 +786,10 @@ bool TestIntegralImage::testLinedIntegralImageComfort(const double testDuration)
 		{
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1024u);
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
-			Frame frame(FrameType(width, height, FrameType::genericPixelFormat<double>(channels), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<double>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-			Frame integralFrame = CV::IntegralImage::Comfort::createLinedImage(frame);
+			const Frame integralFrame = CV::IntegralImage::Comfort::createLinedImage(frame);
 
 			if (integralFrame.isValid() && integralFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<double>(channels)))
 			{
@@ -844,47 +832,41 @@ bool TestIntegralImage::testLinedIntegralImage(const unsigned int width, const u
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
-	unsigned long long iteration = 0ull;
+	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const bool benchmark = iteration % 2ull == 0ull;
-
-		const unsigned int testWidth = benchmark ? width : RandomI::random(1u, width);
-		const unsigned int testHeight = benchmark ? height : RandomI::random(1u, height);
-
-		const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-		const unsigned int integralPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame integralFrame(FrameType(testWidth + 1u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), integralPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
-		CV::CVUtilities::randomizeFrame(integralFrame, false);
-
-		const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-		performance.startIf(benchmark);
-			CV::IntegralImage::createLinedImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), sourcePaddingElements, integralPaddingElements);
-		performance.stopIf(benchmark);
-
-		if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+		for (const bool benchmark : {true, false})
 		{
-			ocean_assert(false && "Invalid padding elements!");
-			allSucceeded = false;
-			break;
-		}
+			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
+			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 
-		constexpr unsigned int border = 0u;
-		if (!validateBorderedIntegralImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralFrame.paddingElements()))
-		{
-			allSucceeded = false;
-		}
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + 1u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-		iteration++;
+			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+			performance.startIf(benchmark);
+				CV::IntegralImage::createLinedImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), integralFrame.paddingElements());
+			performance.stopIf(benchmark);
+
+			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+			{
+				ocean_assert(false && "Invalid padding elements!");
+				allSucceeded = false;
+				break;
+			}
+
+			constexpr unsigned int border = 0u;
+			if (!validateBorderedIntegralImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralFrame.paddingElements()))
+			{
+				allSucceeded = false;
+			}
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -946,47 +928,41 @@ bool TestIntegralImage::testLinedIntegralImageSquared(const unsigned int width, 
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
-	unsigned long long iteration = 0ull;
+	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const bool benchmark = iteration % 2ull == 0ull;
-
-		const unsigned int testWidth = benchmark ? width : RandomI::random(1u, width);
-		const unsigned int testHeight = benchmark ? height : RandomI::random(1u, height);
-
-		const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-		const unsigned int integralPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame integralFrame(FrameType(testWidth + 1u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), integralPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
-		CV::CVUtilities::randomizeFrame(integralFrame, false);
-
-		const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-		performance.startIf(benchmark);
-			CV::IntegralImage::createLinedImageSquared<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), sourcePaddingElements, integralPaddingElements);
-		performance.stopIf(benchmark);
-
-		if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+		for (const bool benchmark : {true, false})
 		{
-			ocean_assert(false && "Invalid padding elements!");
-			allSucceeded = false;
-			break;
-		}
+			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
+			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 
-		constexpr unsigned int border = 0u;
-		if (!validateBorderedIntegralImageSquared<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralFrame.paddingElements()))
-		{
-			allSucceeded = false;
-		}
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + 1u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-		iteration++;
+			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+			performance.startIf(benchmark);
+				CV::IntegralImage::createLinedImageSquared<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), integralFrame.paddingElements());
+			performance.stopIf(benchmark);
+
+			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+			{
+				ocean_assert(false && "Invalid padding elements!");
+				allSucceeded = false;
+				break;
+			}
+
+			constexpr unsigned int border = 0u;
+			if (!validateBorderedIntegralImageSquared<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralFrame.paddingElements()))
+			{
+				allSucceeded = false;
+			}
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -1061,47 +1037,41 @@ bool TestIntegralImage::testLinedIntegralImageAndSquaredJoined(const unsigned in
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegralAndSquared, tChannels>();
 
-	unsigned long long iteration = 0ull;
+	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const bool benchmark = iteration % 2ull == 0ull;
-
-		const unsigned int testWidth = benchmark ? width : RandomI::random(1u, width);
-		const unsigned int testHeight = benchmark ? height : RandomI::random(1u, height);
-
-		const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-		const unsigned int integralAndSquaredPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame integralAndSquaredFrame(FrameType((testWidth + 1u) * 2u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), integralAndSquaredPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
-		CV::CVUtilities::randomizeFrame(integralAndSquaredFrame, false);
-
-		const Frame copyIntegralAndSquaredFrame(integralAndSquaredFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-		performance.startIf(benchmark);
-			CV::IntegralImage::createLinedImageAndSquared<T, TIntegralAndSquared, tChannels>(sourceFrame.constdata<T>(), integralAndSquaredFrame.data<TIntegralAndSquared>(), sourceFrame.width(), sourceFrame.height(), sourcePaddingElements, integralAndSquaredPaddingElements);
-		performance.stopIf(benchmark);
-
-		if (!CV::CVUtilities::isPaddingMemoryIdentical(integralAndSquaredFrame, copyIntegralAndSquaredFrame))
+		for (const bool benchmark : {true, false})
 		{
-			ocean_assert(false && "Invalid padding elements!");
-			allSucceeded = false;
-			break;
-		}
+			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
+			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 
-		constexpr unsigned int border = 0u;
-		if (!validateBorderedIntegralImageAndSquaredJoined<T, TIntegralAndSquared, tChannels>(sourceFrame.constdata<T>(), integralAndSquaredFrame.constdata<TIntegralAndSquared>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralAndSquaredFrame.paddingElements()))
-		{
-			allSucceeded = false;
-		}
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame integralAndSquaredFrame = CV::CVUtilities::randomizedFrame(FrameType((testWidth + 1u) * 2u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-		iteration++;
+			const Frame copyIntegralAndSquaredFrame(integralAndSquaredFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+			performance.startIf(benchmark);
+				CV::IntegralImage::createLinedImageAndSquared<T, TIntegralAndSquared, tChannels>(sourceFrame.constdata<T>(), integralAndSquaredFrame.data<TIntegralAndSquared>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), integralAndSquaredFrame.paddingElements());
+			performance.stopIf(benchmark);
+
+			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralAndSquaredFrame, copyIntegralAndSquaredFrame))
+			{
+				ocean_assert(false && "Invalid padding elements!");
+				allSucceeded = false;
+				break;
+			}
+
+			constexpr unsigned int border = 0u;
+			if (!validateBorderedIntegralImageAndSquaredJoined<T, TIntegralAndSquared, tChannels>(sourceFrame.constdata<T>(), integralAndSquaredFrame.constdata<TIntegralAndSquared>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralAndSquaredFrame.paddingElements()))
+			{
+				allSucceeded = false;
+			}
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -1175,58 +1145,50 @@ bool TestIntegralImage::testLinedIntegralImageAndSquaredSeparate(const unsigned 
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 	const FrameType::PixelFormat integralSquaredPixelFormat = FrameType::genericPixelFormat<TIntegralSquared, tChannels>();
 
-	unsigned long long iteration = 0ull;
+	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const bool benchmark = iteration % 2ull == 0ull;
-
-		const unsigned int testWidth = benchmark ? width : RandomI::random(1u, width);
-		const unsigned int testHeight = benchmark ? height : RandomI::random(1u, height);
-
-		const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-		const unsigned int integralPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-		const unsigned int integralSquaredPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame integralFrame(FrameType(testWidth + 1u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), integralPaddingElements);
-		Frame integralSquaredFrame(FrameType(testWidth + 1u, testHeight + 1u, integralSquaredPixelFormat, FrameType::ORIGIN_UPPER_LEFT), integralSquaredPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
-		CV::CVUtilities::randomizeFrame(integralFrame, false);
-		CV::CVUtilities::randomizeFrame(integralSquaredFrame, false);
-
-		const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-		const Frame copyIntegralSquaredFrame(integralSquaredFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-		performance.startIf(benchmark);
-			CV::IntegralImage::createLinedImageAndSquared<T, TIntegral, TIntegralSquared, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), integralSquaredFrame.data<TIntegralSquared>(), sourceFrame.width(), sourceFrame.height(), sourcePaddingElements, integralPaddingElements, integralSquaredPaddingElements);
-		performance.stopIf(benchmark);
-
-		if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+		for (const bool benchmark : {true, false})
 		{
-			ocean_assert(false && "Invalid padding elements!");
-			allSucceeded = false;
-			break;
-		}
+			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
+			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 
-		if (!CV::CVUtilities::isPaddingMemoryIdentical(integralSquaredFrame, copyIntegralSquaredFrame))
-		{
-			ocean_assert(false && "Invalid padding elements!");
-			allSucceeded = false;
-			break;
-		}
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + 1u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame integralSquaredFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + 1u, testHeight + 1u, integralSquaredPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-		constexpr unsigned int border = 0u;
-		if (!validateBorderedIntegralImageAndSquaredSeparate<T, TIntegral, TIntegralSquared, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), integralSquaredFrame.constdata<TIntegralSquared>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralFrame.paddingElements(), integralSquaredFrame.paddingElements()))
-		{
-			allSucceeded = false;
-		}
+			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+			const Frame copyIntegralSquaredFrame(integralSquaredFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-		iteration++;
+			performance.startIf(benchmark);
+				CV::IntegralImage::createLinedImageAndSquared<T, TIntegral, TIntegralSquared, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), integralSquaredFrame.data<TIntegralSquared>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), integralFrame.paddingElements(), integralSquaredFrame.paddingElements());
+			performance.stopIf(benchmark);
+
+			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+			{
+				ocean_assert(false && "Invalid padding elements!");
+				allSucceeded = false;
+				break;
+			}
+
+			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralSquaredFrame, copyIntegralSquaredFrame))
+			{
+				ocean_assert(false && "Invalid padding elements!");
+				allSucceeded = false;
+				break;
+			}
+
+			constexpr unsigned int border = 0u;
+			if (!validateBorderedIntegralImageAndSquaredSeparate<T, TIntegral, TIntegralSquared, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), integralSquaredFrame.constdata<TIntegralSquared>(), sourceFrame.width(), sourceFrame.height(), border, sourceFrame.paddingElements(), integralFrame.paddingElements(), integralSquaredFrame.paddingElements()))
+			{
+				allSucceeded = false;
+			}
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -1295,14 +1257,12 @@ bool TestIntegralImage::testBorderedIntegralImageComfort(const double testDurati
 		{
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1024u);
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
-			Frame frame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 			const unsigned int border = RandomI::random(randomGenerator, 1u, 100u);
 
-			Frame integralFrame = CV::IntegralImage::Comfort::createBorderedImage(frame, border);
+			const Frame integralFrame = CV::IntegralImage::Comfort::createBorderedImage(frame, border);
 
 			if (integralFrame.isValid() && integralFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<uint32_t>(channels)))
 			{
@@ -1322,14 +1282,12 @@ bool TestIntegralImage::testBorderedIntegralImageComfort(const double testDurati
 		{
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1024u);
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
-			Frame frame(FrameType(width, height, FrameType::genericPixelFormat<int8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<int8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 			const unsigned int border = RandomI::random(randomGenerator, 1u, 100u);
 
-			Frame integralFrame = CV::IntegralImage::Comfort::createBorderedImage(frame, border);
+			const Frame integralFrame = CV::IntegralImage::Comfort::createBorderedImage(frame, border);
 
 			if (integralFrame.isValid() && integralFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<int32_t>(channels)))
 			{
@@ -1349,14 +1307,12 @@ bool TestIntegralImage::testBorderedIntegralImageComfort(const double testDurati
 		{
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1024u);
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
-			Frame frame(FrameType(width, height, FrameType::genericPixelFormat<double>(channels), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<double>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 			const unsigned int border = RandomI::random(randomGenerator, 1u, 100u);
 
-			Frame integralFrame = CV::IntegralImage::Comfort::createBorderedImage(frame, border);
+			const Frame integralFrame = CV::IntegralImage::Comfort::createBorderedImage(frame, border);
 
 			if (integralFrame.isValid() && integralFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<double>(channels)))
 			{
@@ -1398,47 +1354,41 @@ bool TestIntegralImage::testBorderedIntegralImage(const unsigned int width, cons
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
-	unsigned long long iteration = 0ull;
+	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const bool benchmark = iteration % 2ull == 0ull;
-
-		const unsigned int testWidth = benchmark ? width : RandomI::random(1u, width);
-		const unsigned int testHeight = benchmark ? height : RandomI::random(1u, height);
-		const unsigned int testBorder = benchmark ? 10u : RandomI::random(1u, 50u);
-
-		const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-		const unsigned int integralPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame integralFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), integralPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
-		CV::CVUtilities::randomizeFrame(integralFrame, false);
-
-		const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-		performance.startIf(benchmark);
-			CV::IntegralImage::createBorderedImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourcePaddingElements, integralPaddingElements);
-		performance.stopIf(benchmark);
-
-		if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+		for (const bool benchmark : {true, false})
 		{
-			ocean_assert(false && "Invalid padding elements!");
-			allSucceeded = false;
-			break;
-		}
+			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
+			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
+			const unsigned int testBorder = benchmark ? 10u : RandomI::random(randomGenerator, 1u, 50u);
 
-		if (!validateBorderedIntegralImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements()))
-		{
-			allSucceeded = false;
-		}
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-		iteration++;
+			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+			performance.startIf(benchmark);
+				CV::IntegralImage::createBorderedImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements());
+			performance.stopIf(benchmark);
+
+			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+			{
+				ocean_assert(false && "Invalid padding elements!");
+				allSucceeded = false;
+				break;
+			}
+
+			if (!validateBorderedIntegralImage<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements()))
+			{
+				allSucceeded = false;
+			}
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -1500,47 +1450,41 @@ bool TestIntegralImage::testBorderedIntegralImageSquared(const unsigned int widt
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
-	unsigned long long iteration = 0ull;
+	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const bool benchmark = iteration % 2ull == 0ull;
-
-		const unsigned int testWidth = benchmark ? width : RandomI::random(1u, width);
-		const unsigned int testHeight = benchmark ? height : RandomI::random(1u, height);
-		const unsigned int testBorder = benchmark ? 10u : RandomI::random(1u, 50u);
-
-		const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-		const unsigned int integralPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame integralFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), integralPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
-		CV::CVUtilities::randomizeFrame(integralFrame, false);
-
-		const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-		performance.startIf(benchmark);
-			CV::IntegralImage::createBorderedImageSquared<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourcePaddingElements, integralPaddingElements);
-		performance.stopIf(benchmark);
-
-		if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+		for (const bool benchmark : {true, false})
 		{
-			ocean_assert(false && "Invalid padding elements!");
-			allSucceeded = false;
-			break;
-		}
+			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
+			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
+			const unsigned int testBorder = benchmark ? 10u : RandomI::random(randomGenerator, 1u, 50u);
 
-		if (!validateBorderedIntegralImageSquared<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements()))
-		{
-			allSucceeded = false;
-		}
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-		iteration++;
+			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+			performance.startIf(benchmark);
+				CV::IntegralImage::createBorderedImageSquared<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements());
+			performance.stopIf(benchmark);
+
+			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+			{
+				ocean_assert(false && "Invalid padding elements!");
+				allSucceeded = false;
+				break;
+			}
+
+			if (!validateBorderedIntegralImageSquared<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements()))
+			{
+				allSucceeded = false;
+			}
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -1602,47 +1546,41 @@ bool TestIntegralImage::testBorderedIntegralImageMirror(const unsigned int width
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
-	unsigned long long iteration = 0ull;
+	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const bool benchmark = iteration % 2ull == 0ull;
-
-		const unsigned int testWidth = benchmark ? width : RandomI::random(1u, width);
-		const unsigned int testHeight = benchmark ? height : RandomI::random(1u, height);
-		const unsigned int testBorder = benchmark ? 10u : RandomI::random(1u, std::min(50u, std::min(testWidth, testHeight)));
-
-		const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-		const unsigned int integralPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame integralFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), integralPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
-		CV::CVUtilities::randomizeFrame(integralFrame, false);
-
-		const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-		performance.startIf(benchmark);
-			CV::IntegralImage::createBorderedImageMirror<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourcePaddingElements, integralPaddingElements);
-		performance.stopIf(benchmark);
-
-		if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+		for (const bool benchmark : {true, false})
 		{
-			ocean_assert(false && "Invalid padding elements!");
-			allSucceeded = false;
-			break;
-		}
+			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
+			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
+			const unsigned int testBorder = benchmark ? 10u : RandomI::random(randomGenerator, 1u, std::min(50u, std::min(testWidth, testHeight)));
 
-		if (!validateBorderedIntegralImageMirror<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements()))
-		{
-			allSucceeded = false;
-		}
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-		iteration++;
+			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+			performance.startIf(benchmark);
+				CV::IntegralImage::createBorderedImageMirror<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements());
+			performance.stopIf(benchmark);
+
+			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+			{
+				ocean_assert(false && "Invalid padding elements!");
+				allSucceeded = false;
+				break;
+			}
+
+			if (!validateBorderedIntegralImageMirror<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements()))
+			{
+				allSucceeded = false;
+			}
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -1704,47 +1642,41 @@ bool TestIntegralImage::testBorderedIntegralImageSquaredMirror(const unsigned in
 	const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<T, tChannels>();
 	const FrameType::PixelFormat integralPixelFormat = FrameType::genericPixelFormat<TIntegral, tChannels>();
 
-	unsigned long long iteration = 0ull;
+	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const bool benchmark = iteration % 2ull == 0ull;
-
-		const unsigned int testWidth = benchmark ? width : RandomI::random(1u, width);
-		const unsigned int testHeight = benchmark ? height : RandomI::random(1u, height);
-		const unsigned int testBorder = benchmark ? 10u : RandomI::random(1u, std::min(50u, std::min(testWidth, testHeight)));
-
-		const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-		const unsigned int integralPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame integralFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), integralPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
-		CV::CVUtilities::randomizeFrame(integralFrame, false);
-
-		const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-		performance.startIf(benchmark);
-			CV::IntegralImage::createBorderedImageSquaredMirror<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourcePaddingElements, integralPaddingElements);
-		performance.stopIf(benchmark);
-
-		if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+		for (const bool benchmark : {true, false})
 		{
-			ocean_assert(false && "Invalid padding elements!");
-			allSucceeded = false;
-			break;
-		}
+			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
+			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
+			const unsigned int testBorder = benchmark ? 10u : RandomI::random(randomGenerator, 1u, std::min(50u, std::min(testWidth, testHeight)));
 
-		if (!validateBorderedIntegralImageSquaredMirror<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements()))
-		{
-			allSucceeded = false;
-		}
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-		iteration++;
+			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+			performance.startIf(benchmark);
+				CV::IntegralImage::createBorderedImageSquaredMirror<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.data<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements());
+			performance.stopIf(benchmark);
+
+			if (!CV::CVUtilities::isPaddingMemoryIdentical(integralFrame, copyIntegralFrame))
+			{
+				ocean_assert(false && "Invalid padding elements!");
+				allSucceeded = false;
+				break;
+			}
+
+			if (!validateBorderedIntegralImageSquaredMirror<T, TIntegral, tChannels>(sourceFrame.constdata<T>(), integralFrame.constdata<TIntegral>(), sourceFrame.width(), sourceFrame.height(), testBorder, sourceFrame.paddingElements(), integralFrame.paddingElements()))
+			{
+				allSucceeded = false;
+			}
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -1807,24 +1739,13 @@ bool TestIntegralImage::testVarianceCalculation(const double testDuration)
 
 	const unsigned int frameWidth = RandomI::random(randomGenerator, 1u, 1920u);
 	const unsigned int frameHeight = RandomI::random(randomGenerator, 1u, 1080u);
-	const unsigned int framePaddingElements = Random::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
 
-	const unsigned int linedIntegralPaddingElements = Random::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
-	const unsigned int linedIntegralSquaredPaddingElements = Random::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
+	const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth, frameHeight, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+	Frame linedIntegralFrame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegral, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+	Frame linedIntegralSquaredFrame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegralSquared, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-	Frame frame(FrameType(frameWidth, frameHeight, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-	Frame linedIntegralFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegral, 1u>(), FrameType::ORIGIN_UPPER_LEFT), linedIntegralPaddingElements);
-	Frame linedIntegralSquaredFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegralSquared, 1u>(), FrameType::ORIGIN_UPPER_LEFT), linedIntegralSquaredPaddingElements);
-
-	CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
-	CV::CVUtilities::randomizeFrame(linedIntegralFrame, false, &randomGenerator);
-	CV::CVUtilities::randomizeFrame(linedIntegralSquaredFrame, false, &randomGenerator);
-
-	CV::IntegralImage::createLinedImage<T, TIntegral, 1u>(frame.constdata<T>(), linedIntegralFrame.data<TIntegral>(), frameWidth, frameHeight, framePaddingElements, linedIntegralPaddingElements);
-	CV::IntegralImage::createLinedImageSquared<T, TIntegralSquared, 1u>(frame.constdata<T>(), linedIntegralSquaredFrame.data<TIntegralSquared>(), frameWidth, frameHeight, framePaddingElements, linedIntegralSquaredPaddingElements);
-
-	const unsigned int linedIntegralStrideElements = frameWidth + 1u + linedIntegralPaddingElements;
-	const unsigned int linedIntegralSquaredStrideElements = frameWidth + 1u + linedIntegralSquaredPaddingElements;
+	CV::IntegralImage::createLinedImage<T, TIntegral, 1u>(frame.constdata<T>(), linedIntegralFrame.data<TIntegral>(), frameWidth, frameHeight, frame.paddingElements(), linedIntegralFrame.paddingElements());
+	CV::IntegralImage::createLinedImageSquared<T, TIntegralSquared, 1u>(frame.constdata<T>(), linedIntegralSquaredFrame.data<TIntegralSquared>(), frameWidth, frameHeight, frame.paddingElements(), linedIntegralSquaredFrame.paddingElements());
 
 	const Timestamp startTimestamp(true);
 
@@ -1835,7 +1756,7 @@ bool TestIntegralImage::testVarianceCalculation(const double testDuration)
 		const unsigned int windowWidth = RandomI::random(randomGenerator, 1u, frameWidth - windowLeft);
 		const unsigned int windowHeight = RandomI::random(randomGenerator, 1u, frameHeight - windowTop);
 
-		const TVariance variance = CV::IntegralImage::linedIntegralVariance<TIntegral, TIntegralSquared, TVariance>(linedIntegralFrame.constdata<TIntegral>(), linedIntegralSquaredFrame.constdata<TIntegralSquared>(), linedIntegralStrideElements, linedIntegralSquaredStrideElements, windowLeft, windowTop, windowWidth, windowHeight);
+		const TVariance variance = CV::IntegralImage::linedIntegralVariance<TIntegral, TIntegralSquared, TVariance>(linedIntegralFrame.constdata<TIntegral>(), linedIntegralSquaredFrame.constdata<TIntegralSquared>(), linedIntegralFrame.strideElements(), linedIntegralSquaredFrame.strideElements(), windowLeft, windowTop, windowWidth, windowHeight);
 
 		// determine mean value
 
@@ -1916,31 +1837,20 @@ bool TestIntegralImage::testVarianceCalculationTwoRegions(const double testDurat
 
 	Log::info() << "for data types " <<  TypeNamer::name<T>() << ", " << TypeNamer::name<TIntegral>() << ", " << TypeNamer::name<TIntegralSquared>() << ", " << TypeNamer::name<TVariance>() << ":";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t succeeded = 0ull;
 
 	RandomGenerator randomGenerator;
 
 	const unsigned int frameWidth = RandomI::random(randomGenerator, 1u, 1920u);
 	const unsigned int frameHeight = RandomI::random(randomGenerator, 1u, 1080u);
-	const unsigned int framePaddingElements = Random::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
 
-	const unsigned int linedIntegralPaddingElements = Random::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
-	const unsigned int linedIntegralSquaredPaddingElements = Random::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
+	const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth, frameHeight, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+	Frame linedIntegralFrame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegral, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+	Frame linedIntegralSquaredFrame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegralSquared, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-	Frame frame(FrameType(frameWidth, frameHeight, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-	Frame linedIntegralFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegral, 1u>(), FrameType::ORIGIN_UPPER_LEFT), linedIntegralPaddingElements);
-	Frame linedIntegralSquaredFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegralSquared, 1u>(), FrameType::ORIGIN_UPPER_LEFT), linedIntegralSquaredPaddingElements);
-
-	CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
-	CV::CVUtilities::randomizeFrame(linedIntegralFrame, false, &randomGenerator);
-	CV::CVUtilities::randomizeFrame(linedIntegralSquaredFrame, false, &randomGenerator);
-
-	CV::IntegralImage::createLinedImage<T, TIntegral, 1u>(frame.constdata<T>(), linedIntegralFrame.data<TIntegral>(), frameWidth, frameHeight, framePaddingElements, linedIntegralPaddingElements);
-	CV::IntegralImage::createLinedImageSquared<T, TIntegralSquared, 1u>(frame.constdata<T>(), linedIntegralSquaredFrame.data<TIntegralSquared>(), frameWidth, frameHeight, framePaddingElements, linedIntegralSquaredPaddingElements);
-
-	const unsigned int linedIntegralStrideElements = frameWidth + 1u + linedIntegralPaddingElements;
-	const unsigned int linedIntegralSquaredStrideElements = frameWidth + 1u + linedIntegralSquaredPaddingElements;
+	CV::IntegralImage::createLinedImage<T, TIntegral, 1u>(frame.constdata<T>(), linedIntegralFrame.data<TIntegral>(), frameWidth, frameHeight, frame.paddingElements(), linedIntegralFrame.paddingElements());
+	CV::IntegralImage::createLinedImageSquared<T, TIntegralSquared, 1u>(frame.constdata<T>(), linedIntegralSquaredFrame.data<TIntegralSquared>(), frameWidth, frameHeight, frame.paddingElements(), linedIntegralSquaredFrame.paddingElements());
 
 	const Timestamp startTimestamp(true);
 
@@ -1956,7 +1866,7 @@ bool TestIntegralImage::testVarianceCalculationTwoRegions(const double testDurat
 		const unsigned int windowBWidth = RandomI::random(randomGenerator, 1u, frameWidth - windowBLeft);
 		const unsigned int windowBHeight = RandomI::random(randomGenerator, 1u, frameHeight - windowBTop);
 
-		const TVariance variance = CV::IntegralImage::linedIntegralVariance<TIntegral, TIntegralSquared, TVariance>(linedIntegralFrame.constdata<TIntegral>(), linedIntegralSquaredFrame.constdata<TIntegralSquared>(), linedIntegralStrideElements, linedIntegralSquaredStrideElements, windowALeft, windowATop, windowAWidth, windowAHeight, windowBLeft, windowBTop, windowBWidth, windowBHeight);
+		const TVariance variance = CV::IntegralImage::linedIntegralVariance<TIntegral, TIntegralSquared, TVariance>(linedIntegralFrame.constdata<TIntegral>(), linedIntegralSquaredFrame.constdata<TIntegralSquared>(), linedIntegralFrame.strideElements(), linedIntegralSquaredFrame.strideElements(), windowALeft, windowATop, windowAWidth, windowAHeight, windowBLeft, windowBTop, windowBWidth, windowBHeight);
 
 		// determine mean value
 
