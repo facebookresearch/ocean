@@ -936,7 +936,7 @@ bool BoxT2<T>::box2integer(const int constraintLeft, const int constraintTop, co
 		return true;
 	}
 
-	if (left() > T(constraintRight) || top() > T(constraintBottom) || left() + width() < T(constraintLeft) || top() + height() < T(constraintTop))
+	if (left() > T(constraintRight) || top() > T(constraintBottom) || right() < T(constraintLeft) || bottom() < T(constraintTop))
 	{
 		return false;
 	}
@@ -944,8 +944,8 @@ bool BoxT2<T>::box2integer(const int constraintLeft, const int constraintTop, co
 	intersectionLeft = minmax(constraintLeft, int(NumericT<T>::floor(left())), constraintRight);
 	intersectionTop = minmax(constraintTop, int(NumericT<T>::floor(top())), constraintBottom);
 
-	const int subRegionRight = minmax(intersectionLeft, int(NumericT<T>::floor(left() + width())), constraintRight);
-	const int subRegionBottom = minmax(intersectionTop, int(NumericT<T>::floor(top() + height())), constraintBottom);
+	const int subRegionRight = minmax(intersectionLeft, int(NumericT<T>::floor(right())), constraintRight);
+	const int subRegionBottom = minmax(intersectionTop, int(NumericT<T>::floor(bottom())), constraintBottom);
 
 	ocean_assert(intersectionLeft <= subRegionRight);
 	ocean_assert(intersectionTop <= subRegionBottom);
@@ -979,15 +979,15 @@ bool BoxT2<T>::box2integer(const unsigned int maximalWidth, const unsigned int m
 		intersectionHeight = maximalHeight;
 	}
 
-	if (left() >= T(maximalWidth) || top() >= T(maximalHeight) || left() + width() < 0 || top() + height() < 0)
+	if (left() >= T(maximalWidth) || top() >= T(maximalHeight) || right() < 0 || bottom() < 0)
 	{
 		return false;
 	}
 
 	intersectionLeft = minmax(0, int(left()), int(maximalWidth - 1u));
 	intersectionTop = minmax(0, int(top()), int(maximalHeight - 1u));
-	const unsigned int intersectionRight = minmax(int(intersectionLeft), int(left() + width()), int(maximalWidth - 1u));
-	const unsigned int intersectionBottom = minmax(int(intersectionTop), int(top() + height()), int(maximalHeight - 1u));
+	const unsigned int intersectionRight = minmax(int(intersectionLeft), int(right()), int(maximalWidth - 1u));
+	const unsigned int intersectionBottom = minmax(int(intersectionTop), int(bottom()), int(maximalHeight - 1u));
 
 	intersectionWidth = intersectionRight - intersectionLeft + 1u;
 	intersectionHeight = intersectionBottom - intersectionTop + 1u;
