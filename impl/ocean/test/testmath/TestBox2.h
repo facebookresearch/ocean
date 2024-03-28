@@ -33,35 +33,45 @@ class OCEAN_TEST_MATH_EXPORT TestBox2
 		 * Tests the constructors.
 		 * @param testDuration Duration of each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testConsturctors(const double testDuration);
-	
+
 		/**
 		 * Tests the intersects function.
 		 * @param testDuration Duration of each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testIntersects(const double testDuration);
 
 		/**
 		 * Tests the unsigned box2integer function.
 		 * @param testDuration Duration of each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testUnsignedBox2integer(const double testDuration);
 
 		/**
 		 * Tests the signed box2integer function.
 		 * @param testDuration Duration of each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testSignedBox2integer(const double testDuration);
-	
+
 		/**
 		 * Tests the multiplication operators.
 		 * @param testDuration Duration of each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testMultiplicationOperators(const double testDuration);
 };
 
