@@ -148,10 +148,14 @@ TEST(TestSignal, SignalBasics)
 	EXPECT_TRUE(TestSignal::testSignalBasics());
 }
 
+#ifndef OCEAN_PLATFORM_BUILD_APPLE_IOS_SUMULATOR // iOS simulator does not allow for testing the precise signal performance
+
 TEST(TestSignal, SingleSignal)
 {
 	EXPECT_TRUE(TestSignal::testSingleSignal());
 }
+
+#endif // OCEAN_PLATFORM_BUILD_APPLE_IOS_SUMULATOR
 
 TEST(TestSignal, AsyncFunction)
 {
