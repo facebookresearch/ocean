@@ -89,33 +89,6 @@ class AdvancedZeroMeanSumSquareDifferencesBase
 		template <unsigned int tChannels>
 		static inline IndexPair32 determine8BitPerChannelPartialTemplate(const uint8_t* frame0, const uint8_t* frame1, const uint8_t* mask0, const uint8_t* mask1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, unsigned int sizeX, unsigned int sizeY, const int left0, const int top0, const int left1, const int top1);
 
-		/**
-		 * Determines the partial zero-mean ssd of two image patches between two frames while for each frame a binary mask specifies whether a pixel is valid or skipped.
-		 * Only pixels with two corresponding mask pixels in both frames are used for mean and ssd calculation.<br>
-		 * Further, the size of the image patch may be arbitrary (even or odd) and parts of the patch may lie outside the frames (as long as one pixel lies inside each frame).<br>
-		 * Beware: The patch coordinate is not determined by the center position but by the upper left position of the patch (as the patch may have even dimensions).<br>
-		 * @param frame0 The first frame for ssd determination
-		 * @param frame1 The second frame for ssd determination
-		 * @param mask0 The 8 bit binary mask corresponding to the first frame (with same dimension), pixels not equal to 0x00 are valid in frame0
-		 * @param mask1 The 8 bit binary mask corresponding to the second frame (with same dimension), pixels not equal to 0x00 are valid in frame1
-		 * @param width0 The width of the first frame in pixel, with range [1, infinity)
-		 * @param height0 The height of the first frame in pixel, with range [1, infinity)
-		 * @param width1 The width of the second frame in pixel, with range [1, infinity)
-		 * @param height1 The height of the second frame in pixel, with range [1, infinity)
-		 * @param sizeX The width of the patch in pixel, with range [1, infinity)
-		 * @param sizeY The height of the patch in pixel, with range [1, infinity)
-		 * @param left0 The left position of the patch in the first frame, with range [-sizeX + 1, width0)
-		 * @param top0 The top position of the patch in the first frame, with range[-sizeY + 1, height0)
-		 * @param left1 The left position of the patch in the second frame, with range [-sizeX + 1, width1)
-		 * @param top1 The top position of the patch in the second frame, with range [-sizeY + 1, height0),
-		 * @param pixels0 Resulting number of valid pixels in the first frame, 0u if now valid (corresponding) pixel in both frames exist
-		 * @param pixels1 Resulting number of valid pixels in the second which are !also! valid in the first frame
-		 * @return Resulting ssd
-		 * @tparam tChannels The number of data channels of the frames
-		 */
-		template <unsigned int tChannels>
-		static inline unsigned int determine8BitPerChannelPartialTemplate(const uint8_t* frame0, const uint8_t* frame1, const uint8_t* mask0, const uint8_t* mask1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, unsigned int sizeX, unsigned int sizeY, const int left0, const int top0, const int left1, const int top1, unsigned int& pixels0, unsigned int& pixels1);
-
 	protected:
 
 		/**
@@ -320,92 +293,6 @@ inline IndexPair32 AdvancedZeroMeanSumSquareDifferencesBase::determine8BitPerCha
 	}
 
 	return std::make_pair(ssd, pixels);
-}
-
-template <unsigned int tChannels>
-inline unsigned int AdvancedZeroMeanSumSquareDifferencesBase::determine8BitPerChannelPartialTemplate(const uint8_t* frame0, const uint8_t* frame1, const uint8_t* mask0, const uint8_t* mask1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, unsigned int sizeX, unsigned int sizeY, const int left0, const int top0, const int left1, const int top1, unsigned int& pixels0, unsigned int& pixels1)
-{
-	static_assert(tChannels != 0u, "Invalid number of frame channels!");
-
-	ocean_assert(frame0 && frame1);
-	ocean_assert(mask0 && mask1);
-
-	ocean_assert(sizeX >= 1u && sizeY >= 1u);
-	ocean_assert(width0 >= sizeX && width1 >= sizeX);
-	ocean_assert(height0 >= sizeY && height1 >= sizeY);
-
-	ocean_assert(left0 >= -int(sizeX) + 1 && left0 < int(width0));
-	ocean_assert(top0 >= -int(sizeY) + 1 && top0 < int(height0));
-	ocean_assert(left1 >= -int(sizeX) + 1 && left1 < int(width1));
-	ocean_assert(top1 >= -int(sizeY) + 1 && top1 < int(height1));
-
-	pixels0 = 0u;
-	pixels1 = 0u;
-
-	unsigned int means0[tChannels] = {0u};
-	unsigned int means1[tChannels] = {0u};
-
-	const unsigned int meanPixels = sum8BitPerChannelPartialTemplate<tChannels>(frame0, frame1, mask0, mask1, width0, height0, width1, height1, sizeX, sizeY, left0, top0, left1, top1, means0, means1);
-
-	if (meanPixels == 0u)
-		return 0u;
-
-	int means1_0[tChannels];
-
-	for (unsigned int n = 0u; n < tChannels; ++n)
-		means1_0[n] = int((means1[n] + (meanPixels / 2u)) / meanPixels) - int((means0[n] + (meanPixels / 2u)) / meanPixels);
-
-	unsigned int ssd = 0u;
-
-	frame0 += (top0 * int(width0) + left0) * int(tChannels);
-	frame1 += (top1 * int(width1) + left1) * int(tChannels);
-
-	mask0 += (top0 * int(width0) + left0);
-	mask1 += (top1 * int(width1) + left1);
-
-	const unsigned int offset0 = width0 - sizeX;
-	const unsigned int offset1 = width1 - sizeX;
-
-	int y1 = top1;
-	for (int y0 = top0; y0 < top0 + int(sizeY); ++y0)
-	{
-		int x1 = left1;
-		for (int x0 = left0; x0 < left0 + int(sizeX); ++x0)
-		{
-			if ((unsigned int)x0 < width0 && (unsigned int)y0 < height0 && *mask0)
-			{
-				pixels0++;
-
-				if ((unsigned int)x1 < width1 && (unsigned int)y1 < height1 && *mask1)
-				{
-					pixels1++;
-
-					for (unsigned int n = 0u; n < tChannels; ++n)
-						ssd += sqr(int(frame0[n]) - int(frame1[n]) + means1_0[n]);
-				}
-			}
-
-			frame0 += tChannels;
-			frame1 += tChannels;
-
-			mask0++;
-			mask1++;
-
-			x1++;
-		}
-
-		frame0 += offset0 * tChannels;
-		frame1 += offset1 * tChannels;
-
-		mask0 += offset0;
-		mask1 += offset1;
-
-		y1++;
-	}
-
-	ocean_assert(pixels0 >= pixels1);
-
-	return ssd;
 }
 
 template <unsigned int tChannels>
