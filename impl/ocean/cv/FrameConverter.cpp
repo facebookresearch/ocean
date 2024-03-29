@@ -704,6 +704,8 @@ bool FrameConverter::Comfort::convert(const LegacyFrame& source, const FrameType
 				default:
 					break;
 			}
+
+			break;
 		}
 
 		case FrameType::FORMAT_BGR565:
@@ -858,6 +860,8 @@ bool FrameConverter::Comfort::convert(const LegacyFrame& source, const FrameType
 				default:
 					break;
 			}
+
+			break;
 		}
 
 		case FrameType::FORMAT_RGB565:
