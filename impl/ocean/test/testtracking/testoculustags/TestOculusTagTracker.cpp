@@ -117,7 +117,6 @@ bool TestOculusTagTracker::testStressTestNegative(const double testDuration, Wor
 			const HomogenousMatrix4 device_T_cameraB = HomogenousMatrix4(Random::vector3(randomGenerator, Scalar(-0.05), Scalar(0.05)), Random::euler(randomGenerator, Numeric::deg2rad(0), Numeric::deg2rad(30)));
 
 			OculusTags tags;
-			// TODO oculusTagTracker.trackStereo(...);
 
 			oculusTagTracker.trackTagsStereo(*anyCameraA, *anyCameraB, yFrameA, yFrameB, world_T_device, device_T_cameraA, device_T_cameraB, tags);
 
