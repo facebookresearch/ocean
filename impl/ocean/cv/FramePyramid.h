@@ -457,10 +457,10 @@ class OCEAN_CV_EXPORT FramePyramid
 		/**
 		 * Returns the size factor of a specified layer in relation to the finest layer.
 		 * The finest (first) layer has factor 1, the second layer has factor 2, the third layer has factor 4, ...<br>
-		 * @param layer The layer to return the size factor for, with range [1, infinity)
-		 * @return Size factor
+		 * @param layer The layer to return the size factor for, with range [1, 31]
+		 * @return The resulting size factor, with range [1, infinity)
 		 */
-		static inline unsigned int sizeFactor(const unsigned int layer);
+		static constexpr unsigned int sizeFactor(const unsigned int layer);
 
 		/**
 		 * Determines the number of layers until an invalid frame size would be reached in the next layer.
@@ -803,7 +803,7 @@ inline FramePyramid FramePyramid::create8BitPerChannel(const uint8_t* frame, con
 	return newPyramid;
 }
 
-inline unsigned int FramePyramid::sizeFactor(const unsigned int layer)
+constexpr unsigned int FramePyramid::sizeFactor(const unsigned int layer)
 {
 	ocean_assert(layer < 32u);
 	return 1u << layer;
