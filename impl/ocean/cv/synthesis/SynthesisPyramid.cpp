@@ -78,7 +78,7 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 		{
 			constexpr unsigned int layerPaddingElements = 0u;
 
-			CV::FrameShrinker::downsampleByTwoBinary1Channel8Bit(synthesisFilterPyramid_[n].constdata<uint8_t>(), synthesisFilterPyramid_[n + 1u].data<uint8_t>(), synthesisFilterPyramid_[n].width(), synthesisFilterPyramid_[n].height(), layerPaddingElements, layerPaddingElements, 766u, worker);
+			CV::FrameShrinker::downsampleBinayMaskByTwo8BitPerChannel11(synthesisFilterPyramid_[n].constdata<uint8_t>(), synthesisFilterPyramid_[n + 1u].data<uint8_t>(), synthesisFilterPyramid_[n].width(), synthesisFilterPyramid_[n].height(), layerPaddingElements, layerPaddingElements, 766u, worker);
 		}
 
 		if (!hasMaskPixel)

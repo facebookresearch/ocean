@@ -495,16 +495,24 @@ void ContourFinder::similarityMaskPyramid8BitPerChannel(const Frame& frame, cons
 		// therefore, we create the next pyramid layer from the current frame, mask and contour by halving the sizes
 
 		Frame smallFrame;
-		FrameShrinker::downsampleByTwo11(frame, smallFrame, worker);
+		if (!FrameShrinker::downsampleByTwo11(frame, smallFrame, worker))
+		{
+			ocean_assert(false && "This should never happen!");
+			return;
+		}
 
 		Frame smallRoughMask;
-		FrameShrinker::downsampleByTwoBinary(roughMask, smallRoughMask, 766u, worker);
+		if (!FrameShrinker::downsampleBinayMaskByTwo11(roughMask, smallRoughMask, 766u, worker))
+		{
+			ocean_assert(false && "This should never happen!");
+			return;
+		}
 
 		PixelPositions smallRoughPositions;
 		smallRoughPositions.reserve(roughContour.size());
 		for (PixelPositions::const_iterator i = roughContour.pixels().begin(); i != roughContour.pixels().end(); ++i)
 		{
-			smallRoughPositions.push_back(i->half());
+			smallRoughPositions.emplace_back(i->half());
 		}
 
 		// now we ensure that the new (downsampled) contour is distinct again
@@ -533,10 +541,10 @@ void ContourFinder::similarityMaskPyramid8BitPerChannel(const Frame& frame, cons
 		{
 			const PixelPosition twice(i->twice());
 
-			nonUniquePixels.push_back(twice);
-			nonUniquePixels.push_back(twice.east());
-			nonUniquePixels.push_back(twice.south());
-			nonUniquePixels.push_back(twice.southEast());
+			nonUniquePixels.emplace_back(twice);
+			nonUniquePixels.emplace_back(twice.east());
+			nonUniquePixels.emplace_back(twice.south());
+			nonUniquePixels.emplace_back(twice.southEast());
 		}
 
 		// we up-sample the mask by a nearest pixel sampling

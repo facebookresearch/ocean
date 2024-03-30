@@ -61,15 +61,20 @@ class OCEAN_CV_EXPORT FrameShrinker
 		static bool downsampleByTwo11(const Frame& source, Frame& target, Worker* worker = nullptr);
 
 		/**
-		 * Reduces the resolution of a given binary frame with 8bit per pixel with values 0 and 255 by two, taking four pixel values into account.
+		 * Reduces the resolution of a given binary mask by two, taking 2x2 (= four) mask pixel values into account:
+		 * <pre>
+		 * | 1 1 |
+		 * | 1 1 | * 1/4
+		 * </pre>
+		 * If the given source image has an odd frame dimension the last pixel row or the last pixel column is filtered together with the two valid rows or columns respectively.<br>
 		 * If the type of the target frame does not match to the input frame the target frame (and image buffer) will be replaced by the correct one.
-		 * @param source The source frame to resize, must be valid
-		 * @param target The target frame receiving the down sampled frame data, can be invalid
-		 * @param threshold Minimal sum threshold of four pixels to result in a pixel with value 255
+		 * @param source The source mask to resize, must be valid
+		 * @param target The target mask receiving the down sampled frame data, can be invalid
+		 * @param threshold The threshold of the minimal sum of the four mask pixels values to result in a downsampled pixel with value 255, with range [0, 255 * 4]
 		 * @param worker Optional worker object to distribute the computational load to several CPU cores
 		 * @return True, if succeeded
 		 */
-		static bool downsampleByTwoBinary(const Frame& source, Frame& target, const unsigned int threshold = 766u, Worker* worker = nullptr);
+		static bool downsampleBinayMaskByTwo11(const Frame& source, Frame& target, const unsigned int threshold = 766u, Worker* worker = nullptr);
 
 		/**
 		 * Deprecated.
@@ -151,13 +156,13 @@ class OCEAN_CV_EXPORT FrameShrinker
 		static inline bool downsampleByTwo11(Frame& frame, Worker* worker = nullptr);
 
 		/**
-		 * Reduces the resolution of a given binary frame with 8bit per pixel with values 0 and 255 by two, taking four pixel values into account.
-		 * @param frame The frame to down sample, must be valid
-		 * @param threshold Minimal sum threshold of four pixels to result in a pixel with value 255
+		 * Reduces the resolution of a given binary mask by two, taking 2x2 (= four) mask pixel values into account.
+		 * @param mask The mask to down sample, must be valid
+		 * @param threshold The threshold of the minimal sum of the four mask pixels values to result in a downsampled pixel with value 255, with range [0, 255 * 4]
 		 * @param worker Optional worker object to distribute the computational load to several CPU cores
 		 * @return True, if succeeded
 		 */
-		static inline bool downsampleByTwoBinary(Frame& frame, const unsigned int threshold = 766u, Worker* worker = nullptr);
+		static inline bool downsampleBinayMaskByTwo11(Frame& mask, const unsigned int threshold = 766u, Worker* worker = nullptr);
 
 		/**
 		 * Deprecated.
@@ -258,7 +263,7 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @param threshold Minimal sum threshold of four pixels to result in a pixel with value 255
 		 * @param worker Optional worker object to distribute the computational load to several CPU cores
 		 */
-		static inline void downsampleByTwoBinary1Channel8Bit(const uint8_t* source, uint8_t* target, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const unsigned int threshold = 766u, Worker* worker = nullptr);
+		static inline void downsampleBinayMaskByTwo8BitPerChannel11(const uint8_t* source, uint8_t* target, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const unsigned int threshold = 766u, Worker* worker = nullptr);
 
 		/**
 		 * Reduces the resolution of a given frame by two, taking 5x5 (= 25) pixel values into account:<br>
@@ -340,11 +345,11 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @param sourceHeight Height of the source frame in pixel, with range [2, infinity)
 		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
 		 * @param targetPaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
-		 * @param threshold Minimal sum threshold of four pixels to result in a pixel with value 255
+		 * @param threshold The threshold of the minimal sum of the four mask pixels values to result in a downsampled pixel with value 255, with range [0, 255 * 4]
 		 * @param firstTargetRow The first target row to be handled, with range [0, sourceHeight / 2 - 1]
 		 * @param numberTargetRows The number of target rows to be handled, with range [1, sourceHeight / 2 - firstTargetRow]
 		 */
-		static void downsampleByTwoBinary1Channel8BitSubset(const uint8_t* source, uint8_t* target, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const unsigned int threshold, const unsigned int firstTargetRow, const unsigned int numberTargetRows);
+		static void downsampleBinayMaskByTwo8BitPerChannel11Subset(const uint8_t* source, uint8_t* target, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const unsigned int threshold, const unsigned int firstTargetRow, const unsigned int numberTargetRows);
 
 		/**
 		 * Determines the function to down sample a block of pixel elements by two with a 11 filter pattern.
@@ -508,15 +513,15 @@ inline bool FrameShrinker::downsampleByTwo11(Frame& frame, Worker* worker)
 	return true;
 }
 
-inline bool FrameShrinker::downsampleByTwoBinary(Frame& frame, const unsigned int threshold, Worker* worker)
+inline bool FrameShrinker::downsampleBinayMaskByTwo11(Frame& mask, const unsigned int threshold, Worker* worker)
 {
-	Frame tmpFrame;
-	if (!downsampleByTwoBinary(frame, tmpFrame, threshold, worker))
+	Frame tmpMask;
+	if (!downsampleBinayMaskByTwo11(mask, tmpMask, threshold, worker))
 	{
 		return false;
 	}
 
-	frame = std::move(tmpFrame);
+	mask = std::move(tmpMask);
 	return true;
 }
 
@@ -568,21 +573,22 @@ inline bool FrameShrinker::downsampleByTwo14641(LegacyFrame& frame, Worker* work
 	return true;
 }
 
-inline void FrameShrinker::downsampleByTwoBinary1Channel8Bit(const uint8_t* source, uint8_t* target, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const unsigned int threshold, Worker* worker)
+inline void FrameShrinker::downsampleBinayMaskByTwo8BitPerChannel11(const uint8_t* source, uint8_t* target, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const unsigned int threshold, Worker* worker)
 {
-	ocean_assert(source && target);
+	ocean_assert(source != nullptr && target != nullptr);
 	ocean_assert(sourceWidth >= 2u && sourceHeight >= 2u);
+	ocean_assert(threshold <= 255 * 4u);
 
 	const unsigned int targetHeight = sourceHeight / 2u;
 	ocean_assert(targetHeight > 0u);
 
 	if (worker)
 	{
-		worker->executeFunction(Worker::Function::createStatic(&downsampleByTwoBinary1Channel8BitSubset, source, target, sourceWidth, sourceHeight, sourcePaddingElements, targetPaddingElements, threshold, 0u, 0u), 0u, targetHeight, 7u, 8u, 20u);
+		worker->executeFunction(Worker::Function::createStatic(&downsampleBinayMaskByTwo8BitPerChannel11Subset, source, target, sourceWidth, sourceHeight, sourcePaddingElements, targetPaddingElements, threshold, 0u, 0u), 0u, targetHeight, 7u, 8u, 20u);
 	}
 	else
 	{
-		downsampleByTwoBinary1Channel8BitSubset(source, target, sourceWidth, sourceHeight, sourcePaddingElements, targetPaddingElements, threshold, 0u, targetHeight);
+		downsampleBinayMaskByTwo8BitPerChannel11Subset(source, target, sourceWidth, sourceHeight, sourcePaddingElements, targetPaddingElements, threshold, 0u, targetHeight);
 	}
 }
 

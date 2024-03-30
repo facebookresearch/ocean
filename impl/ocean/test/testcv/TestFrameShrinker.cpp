@@ -45,12 +45,12 @@ bool TestFrameShrinker::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testFrameDownsamplingByTwoBinary11(testDuration, worker) && allSucceeded;
+	allSucceeded = testDownsampleBinayMaskByTwo11(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testFrameDownsamplingByTwoBinary11ExtremeResolutions(worker) && allSucceeded;
+	allSucceeded = testDownsampleBinayMaskByTwo11ExtremeResolutions(worker) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -225,37 +225,37 @@ TEST(TestFrameShrinker, FrameDownsamplingByTwo8Bit11ExtremeResolutions)
 }
 
 
-// downsamplingByTwoBinary11
+// downsampleBinayMaskByTwo11
 
-TEST(TestFrameShrinker, FrameDownsamplingByTwoBinary8Bit11_640x480)
+TEST(TestFrameShrinker, DownsampleBinayMaskByTwo11_640x480)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameShrinker::testFrameDownsamplingByTwoBinary11(640u, 480u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameShrinker::testDownsampleBinayMaskByTwo11(640u, 480u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameShrinker, FrameDownsamplingByTwoBinary8Bit11_640x481)
+TEST(TestFrameShrinker, DownsampleBinayMaskByTwo11_640x481)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameShrinker::testFrameDownsamplingByTwoBinary11(640u, 481u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameShrinker::testDownsampleBinayMaskByTwo11(640u, 481u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameShrinker, FrameDownsamplingByTwoBinary8Bit11_641x480)
+TEST(TestFrameShrinker, DownsampleBinayMaskByTwo11_641x480)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameShrinker::testFrameDownsamplingByTwoBinary11(641u, 480u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameShrinker::testDownsampleBinayMaskByTwo11(641u, 480u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameShrinker, FrameDownsamplingByTwoBinary8Bit11_641x481)
+TEST(TestFrameShrinker, DownsampleBinayMaskByTwo11_641x481)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameShrinker::testFrameDownsamplingByTwoBinary11(641u, 481u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameShrinker::testDownsampleBinayMaskByTwo11(641u, 481u, GTEST_TEST_DURATION, worker));
 }
 
 
-TEST(TestFrameShrinker, FrameDownsamplingByTwoBinary8Bit11ExtremeResolutions)
+TEST(TestFrameShrinker, DownsampleBinayMaskByTwo11ExtremeResolutions)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameShrinker::testFrameDownsamplingByTwoBinary11ExtremeResolutions(worker));
+	EXPECT_TRUE(TestFrameShrinker::testDownsampleBinayMaskByTwo11ExtremeResolutions(worker));
 }
 
 
@@ -658,11 +658,11 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641ExtremeResolutions(Wo
 	return allSucceeded;
 }
 
-bool TestFrameShrinker::testFrameDownsamplingByTwoBinary11(const double testDuration, Worker& worker)
+bool TestFrameShrinker::testDownsampleBinayMaskByTwo11(const double testDuration, Worker& worker)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing binary downsampling (by two) with 11 filtering:";
+	Log::info() << "Testing downsampling binary mask (by two) with 11 filtering:";
 	Log::info() << " ";
 
 	bool allSucceeded = true;
@@ -682,7 +682,7 @@ bool TestFrameShrinker::testFrameDownsamplingByTwoBinary11(const double testDura
 		Log::info() << "Testing binary frame with size " << sourceWidth << "x" << sourceHeight << " -> " << targetWidth << "x" << targetHeight << ":";
 		Log::info() << " ";
 
-		allSucceeded = testFrameDownsamplingByTwoBinary11(sourceWidth, sourceHeight, testDuration, worker) && allSucceeded;
+		allSucceeded = testDownsampleBinayMaskByTwo11(sourceWidth, sourceHeight, testDuration, worker) && allSucceeded;
 
 		Log::info() << " ";
 	}
@@ -699,7 +699,7 @@ bool TestFrameShrinker::testFrameDownsamplingByTwoBinary11(const double testDura
 	return allSucceeded;
 }
 
-bool TestFrameShrinker::testFrameDownsamplingByTwoBinary11ExtremeResolutions(Worker& worker)
+bool TestFrameShrinker::testDownsampleBinayMaskByTwo11ExtremeResolutions(Worker& worker)
 {
 	Log::info() << "Testing binary downsampling (by two) with 11 filtering for extreme frame resolutions:";
 
@@ -709,14 +709,14 @@ bool TestFrameShrinker::testFrameDownsamplingByTwoBinary11ExtremeResolutions(Wor
 	{
 		for (unsigned int sourceHeight = 2u; sourceHeight < 64u; ++sourceHeight)
 		{
-			allSucceeded = testFrameDownsamplingByTwoBinary11(sourceWidth, sourceHeight, NumericD::eps(), worker) && allSucceeded;
+			allSucceeded = testDownsampleBinayMaskByTwo11(sourceWidth, sourceHeight, NumericD::eps(), worker) && allSucceeded;
 		}
 	}
 
 	const unsigned int sourceWidth = RandomI::random(2u, 1920u);
 	const unsigned int sourceHeight = RandomI::random(2u, 1080u);
 
-	allSucceeded = testFrameDownsamplingByTwoBinary11(sourceWidth, sourceHeight, NumericD::eps(), worker) && allSucceeded;
+	allSucceeded = testDownsampleBinayMaskByTwo11(sourceWidth, sourceHeight, NumericD::eps(), worker) && allSucceeded;
 
 	if (allSucceeded)
 	{
@@ -784,14 +784,8 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 
 					ocean_assert(layers >= 1u);
 
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-					constexpr unsigned int pyramidMemoryPaddingElements = 100u;
-
-					Frame frame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-					Frame pyramidMemory(FrameType(frame, pyramidPixels, 1u), pyramidMemoryPaddingElements);
-
-					CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
-					CV::CVUtilities::randomizeFrame(pyramidMemory, false, &randomGenerator);
+					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+					Frame pyramidMemory = CV::CVUtilities::randomizedFrame(FrameType(frame, pyramidPixels, 1u), false, &randomGenerator);
 
 					const Frame pyramidMemoryCopy(pyramidMemory, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -900,7 +894,8 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11(const unsigned int sour
 
 	double sumAverageError = 0.0;
 	double maximalError = 0u;
-	unsigned long long measurements = 0ull;
+
+	uint64_t measurements = 0ull;
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -913,19 +908,13 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11(const unsigned int sour
 
 		do
 		{
-			const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-			const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-			Frame sourceFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-			Frame targetFrame(FrameType(sourceFrame, targetWidth, targetHeight), targetPaddingElements);
-
-			CV::CVUtilities::randomizeFrame(sourceFrame, false);
-			CV::CVUtilities::randomizeFrame(targetFrame, false);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), false);
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), false);
 
 			const Frame targetFrameCopy(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 			performance.start();
-			CV::FrameShrinker::downsampleByTwo8BitPerChannel11(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceFrame.width(), sourceFrame.height(), channels, sourceFrame.paddingElements(), targetFrame.paddingElements(), useWorker);
+				CV::FrameShrinker::downsampleByTwo8BitPerChannel11(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceFrame.width(), sourceFrame.height(), channels, sourceFrame.paddingElements(), targetFrame.paddingElements(), useWorker);
 			performance.stop();
 
 			double averageAbsError = NumericD::maxValue();
@@ -977,7 +966,7 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11(const unsigned int sour
 	return allSucceeded;
 }
 
-bool TestFrameShrinker::testFrameDownsamplingByTwoBinary11(const unsigned int sourceWidth, const unsigned int sourceHeight, const double testDuration, Worker& worker)
+bool TestFrameShrinker::testDownsampleBinayMaskByTwo11(const unsigned int sourceWidth, const unsigned int sourceHeight, const double testDuration, Worker& worker)
 {
 	ocean_assert(sourceWidth >= 2u && sourceHeight >= 2u && testDuration > 0.0);
 
@@ -1004,24 +993,21 @@ bool TestFrameShrinker::testFrameDownsamplingByTwoBinary11(const unsigned int so
 
 		do
 		{
-			const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-			const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-			Frame sourceFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1>(), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-			Frame targetFrame(FrameType(sourceFrame, targetWidth, targetHeight), targetPaddingElements);
-
-			uint8_t* const data = sourceFrame.data<uint8_t>();
-			for (unsigned int n = 0u; n < sourceFrame.pixels(); ++n)
-			{
-				data[n] = uint8_t(255u * RandomI::random(randomGenerator, 1u));
-			}
-
-			CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
+			Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), false, &randomGenerator);
 
 			const Frame targetFrameCopy(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
+			for (unsigned int y = 0u; y < sourceFrame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < sourceFrame.width(); ++x)
+				{
+					sourceFrame.pixel<uint8_t>(x, y)[0] = uint8_t(255u * RandomI::random(randomGenerator, 1u));
+				}
+			}
+
 			performance.startIf(textOutput);
-			CV::FrameShrinker::downsampleByTwoBinary1Channel8Bit(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), targetFrame.paddingElements(), 766u, useWorker);
+				CV::FrameShrinker::downsampleBinayMaskByTwo8BitPerChannel11(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), targetFrame.paddingElements(), 766u, useWorker);
 			performance.stopIf(textOutput);
 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, targetFrameCopy))
@@ -1030,7 +1016,7 @@ bool TestFrameShrinker::testFrameDownsamplingByTwoBinary11(const unsigned int so
 				return false;
 			}
 
-			allSucceeded = validateDownsamplingByTwoBinary11(sourceFrame.constdata<uint8_t>(), targetFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), targetFrame.paddingElements(), 766u) && allSucceeded;
+			allSucceeded = validateDownsampleBinayMaskByTwo11(sourceFrame.constdata<uint8_t>(), targetFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.paddingElements(), targetFrame.paddingElements(), 766u) && allSucceeded;
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
 	}
@@ -1080,7 +1066,8 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641(const unsigned int s
 
 	double sumAverageError = 0.0;
 	double maximalError = 0u;
-	unsigned long long measurements = 0ull;
+
+	uint64_t measurements = 0ull;
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
@@ -1093,19 +1080,13 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641(const unsigned int s
 
 		do
 		{
-			const unsigned int sourcePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-			const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-			Frame sourceFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-			Frame targetFrame(FrameType(sourceFrame, targetWidth, targetHeight), targetPaddingElements);
-
-			CV::CVUtilities::randomizeFrame(sourceFrame, false);
-			CV::CVUtilities::randomizeFrame(targetFrame, false);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), false);
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), false);
 
 			const Frame targetFrameCopy(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 			performance.start();
-			CV::FrameShrinker::downsampleByTwo8BitPerChannel14641(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceFrame.width(), sourceFrame.height(), targetFrame.width(), targetFrame.height(), channels, sourceFrame.paddingElements(), targetFrame.paddingElements(), useWorker);
+				CV::FrameShrinker::downsampleByTwo8BitPerChannel14641(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceFrame.width(), sourceFrame.height(), targetFrame.width(), targetFrame.height(), channels, sourceFrame.paddingElements(), targetFrame.paddingElements(), useWorker);
 			performance.stop();
 
 			double averageAbsError = NumericD::maxValue();
@@ -1317,7 +1298,7 @@ bool TestFrameShrinker::validateDownsamplingByTwo8Bit11(const Frame& source, con
 	return true;
 }
 
-bool TestFrameShrinker::validateDownsamplingByTwoBinary11(const uint8_t* source, const uint8_t* target, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const unsigned int threshold)
+bool TestFrameShrinker::validateDownsampleBinayMaskByTwo11(const uint8_t* source, const uint8_t* target, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const unsigned int threshold)
 {
 	ocean_assert(source && target);
 	ocean_assert(sourceWidth >= 2u && sourceHeight >= 2u);
@@ -1464,7 +1445,8 @@ void TestFrameShrinker::validateDownsamplingByTwo8Bit14641(const uint8_t* source
 
 	double sumAbsError = 0.0;
 	double maxAbsError = 0.0;
-	unsigned long long measurements = 0ull;
+
+	uint64_t measurements = 0ull;
 
 	for (unsigned int yTarget = 0u; yTarget < targetHeight; ++yTarget)
 	{

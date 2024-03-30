@@ -77,17 +77,17 @@ class OCEAN_TEST_CV_EXPORT TestFrameShrinker : protected CV::FrameShrinker
 		 * @param worker The worker object to distribute the computational load
 		 * @return True, if succeeded
 		 */
-		static bool testFrameDownsamplingByTwoBinary11(const double testDuration, Worker& worker);
+		static bool testDownsampleBinayMaskByTwo11(const double testDuration, Worker& worker);
 
 		/**
 		 * Tests the binary frame downsampling using 11 filtering for extreme (small) frame resolutions.
 		 * @param worker The worker object to distribute the computational load
 		 * @return True, if succeeded
 		 */
-		static bool testFrameDownsamplingByTwoBinary11ExtremeResolutions(Worker& worker);
+		static bool testDownsampleBinayMaskByTwo11ExtremeResolutions(Worker& worker);
 
 		/**
-		 * Tests the 8 bit praymid downsampling using 11 filtering.
+		 * Tests the 8 bit pyramid downsampling using 11 filtering.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computational load
 		 * @return True, if succeeded
@@ -113,7 +113,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameShrinker : protected CV::FrameShrinker
 		 * @param worker The worker object to distribute the computational load
 		 * @return True, if succeeded
 		 */
-		static bool testFrameDownsamplingByTwoBinary11(const unsigned int sourceWidth, const unsigned int sourceHeight, const double testDuration, Worker& worker);
+		static bool testDownsampleBinayMaskByTwo11(const unsigned int sourceWidth, const unsigned int sourceHeight, const double testDuration, Worker& worker);
 
 		/**
 		 * Tests the 8 bit frame downsampling using 14641 filtering.
@@ -153,7 +153,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameShrinker : protected CV::FrameShrinker
 		 * @param threshold Minimal sum threshold of four pixels to result in a pixel with value 255, with range [1, 255 * 4]
 		 * @return True, if succeeded
 		 */
-		static bool validateDownsamplingByTwoBinary11(const uint8_t* source, const uint8_t* target, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const unsigned int threshold);
+		static bool validateDownsampleBinayMaskByTwo11(const uint8_t* source, const uint8_t* target, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const unsigned int threshold);
 
 		/**
 		 * Validates the downsampling of a frame using a 14641 filtering.
