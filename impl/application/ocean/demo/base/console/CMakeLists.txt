@@ -14,8 +14,6 @@ if (APPLE OR
 
     set(OCEAN_TARGET_NAME "application_ocean_demo_base_console")
 
-    project(${OCEAN_TARGET_NAME})
-
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES ${CMAKE_CURRENT_LIST_DIR}/*.h)
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")

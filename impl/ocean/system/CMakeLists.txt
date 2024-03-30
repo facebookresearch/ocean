@@ -2,11 +2,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR
-    ANDROID OR
-    IOS OR
-    LINUX OR
-    WIN32)
+if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
 
     if (APPLE)
         find_library(FOUNDATION_LIB Foundation)
@@ -17,12 +13,10 @@ if (APPLE OR
 
     set(OCEAN_TARGET_NAME "ocean_system")
 
-    project(${OCEAN_TARGET_NAME})
-
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES ${CMAKE_CURRENT_LIST_DIR}/*.h)
 
-    if (APPLE)
+    if (APPLE OR IOS)
         file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp" "${CMAKE_CURRENT_LIST_DIR}/*.mm")
     else()
         file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
@@ -33,11 +27,8 @@ if (APPLE OR
 
     target_include_directories(${OCEAN_TARGET_NAME} PRIVATE "${OCEAN_IMPL_DIR}")
 
-    target_compile_definitions(${OCEAN_TARGET_NAME}
-        PUBLIC
-            "${OCEAN_PREPROCESSOR_FLAGS}"
-            "${OCEAN_COMPILER_FLAGS}"
-    )
+    target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
+    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
 
     if (BUILD_SHARED_LIBS)
         target_compile_definitions(${OCEAN_TARGET_NAME}

@@ -2,11 +2,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR
-    ANDROID OR
-    IOS OR
-    LINUX OR
-    WIN32)
+if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
 
     if (APPLE)
         find_library(FOUNDATION_LIB Foundation)
@@ -16,6 +12,10 @@ if (APPLE OR
     elseif (LINUX)
         set(THREADS_PREFER_PTHREAD_FLAG ON)
         find_package(Threads REQUIRED)
+    endif()
+
+    if (ANDROID)
+        find_library(LOG_LIB log)
     endif()
 
     set(OCEAN_TARGET_NAME "ocean_base")
@@ -34,7 +34,7 @@ if (APPLE OR
     # Target definition
     add_library(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
 
-    target_include_directories(${OCEAN_TARGET_NAME} PRIVATE "${OCEAN_IMPL_DIR}")
+    target_include_directories(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_IMPL_DIR}")
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
     if (BUILD_SHARED_LIBS)
@@ -51,15 +51,21 @@ if (APPLE OR
                 ${FOUNDATION_LIB}
                 ${UIKIT_LIB}
         )
-    elseif(LINUX)
+    elseif (LINUX)
         target_link_libraries(${OCEAN_TARGET_NAME}
             PUBLIC
                 ${CMAKE_DL_LIBS}
                 Threads::Threads
         )
-    elseif(WIN32)
+    elseif (WIN32)
         target_link_libraries(${OCEAN_TARGET_NAME}
-            version.lib
+            PUBLIC
+                version.lib
+        )
+    elseif (ANDROID)
+        target_link_libraries(${OCEAN_TARGET_NAME}
+            PUBLIC
+                ${LOG_LIB}
         )
     endif()
 

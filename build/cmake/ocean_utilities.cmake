@@ -3,9 +3,10 @@
 # Translates the system names CMake uses to system names Ocean prefers
 #
 # The mapping is defined as follows (CMake -> Ocean):
+#   Android -> android
 #   Darwin -> macos
-#   Windows -> win
 #   Linux -> linux
+#   Windows -> win
 #
 # Parameters:
 #   system_name_string: The name of the system that will be translated as a string, must be defined
@@ -23,6 +24,8 @@ function(ocean_translate_system_name system_name_string translated_system_name_v
         set(${translated_system_name_variable} "win" PARENT_SCOPE)
     elseif (${system_name_string} STREQUAL "Linux")
         set(${translated_system_name_variable} "linux" PARENT_SCOPE)
+    elseif (${system_name_string} STREQUAL "Android")
+        set(${translated_system_name_variable} "android" PARENT_SCOPE)
     else()
         message(FATAL_ERROR "Unknown/unsupported system name: ${system_name_string}")
     endif()
