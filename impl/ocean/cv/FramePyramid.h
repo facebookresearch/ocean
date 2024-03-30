@@ -386,12 +386,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		inline bool isNull() const;
 
 		/**
-		 * Returns whether this pyramid holds at least one valid frame layer.
-		 * @return True, if so
-		 */
-		inline bool hasValidLayer() const;
-
-		/**
 		 * Assigns a frame pyramid to this one.
 		 * @param right The right pyramid to be assigned
 		 * @return Reference to this object
@@ -499,32 +493,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return Resulting layers so that the invalid frame size will not be reached
 		 */
 		static unsigned int idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidWidth, const unsigned int invalidHeight, const unsigned int layerFactor, const unsigned int maximalRadius = (unsigned int)(-1), const unsigned int coarsestLayerRadius = 2u);
-
-		/**
-		 * Downsampling function applying a 2x2 averaging filter (a filter with factors 11).
-		 * @param source The source frame to be down sampled, must be valid
-		 * @param target The target frame receiving the down sampled frame, must be valid
-		 * @param worker Optional worker object to distribute the computation
-		 */
-		inline static void downsamplingFunctionFilter11(const Frame& source, Frame& target, Worker* worker = nullptr);
-
-		/**
-		 * Downsampling function applying a 5x5 filter with factors 14641.
-		 * @param source The source frame to be down sampled, must be valid
-		 * @param target The target frame receiving the down sampled frame, must be valid
-		 * @param worker Optional worker object to distribute the computation
-		 */
-		inline static void downsamplingFunctionFilter14641(const LegacyFrame& source, LegacyFrame& target, Worker* worker = nullptr);
-
-		/**
-		 * Default function applied for 8 bit binary mask frame shrinking.
-		 * @param source The source mask to be shrunken
-		 * @param target The target mask receiving the shrunken frame
-		 * @param worker Optional worker object to distribute the computation
-		 * @tparam tThreshold Minimal sum threshold of four pixels to result in a pixel with value 255, 766 means that more than three pixels must have an average mask value of 255
-		 */
-		template <unsigned int tThreshold>
-		inline static void defaultBinaryMaskShrinkFunction(const LegacyFrame& source, LegacyFrame& target, Worker* worker = nullptr);
 
 	protected:
 
@@ -870,60 +838,9 @@ inline bool FramePyramid::isNull() const
 	return layers_.empty();
 }
 
-inline bool FramePyramid::hasValidLayer() const
-{
-	return numberValidLayers_ != 0u;
-}
-
 inline FramePyramid::operator bool() const
 {
 	return isValid();
-}
-
-inline void FramePyramid::downsamplingFunctionFilter11(const Frame& source, Frame& target, Worker* worker)
-{
-	ocean_assert(source && target);
-
-	ocean_assert(source.width() / 2u == target.width());
-	ocean_assert(source.height() / 2u == target.height());
-	ocean_assert(source.pixelFormat() == target.pixelFormat());
-	ocean_assert(source.pixelOrigin() == target.pixelOrigin());
-
-	if (source.hasAlphaChannel())
-	{
-		FrameShrinkerAlpha::Comfort::divideByTwo<false>(source, target, worker);
-	}
-	else
-	{
-		FrameShrinker::downsampleByTwo11(source, target, worker);
-	}
-}
-
-inline void FramePyramid::downsamplingFunctionFilter14641(const LegacyFrame& source, LegacyFrame& target, Worker* worker)
-{
-	ocean_assert(source && target);
-
-	ocean_assert(source.width() / 2u == target.width());
-	ocean_assert(source.height() / 2u == target.height());
-	ocean_assert(source.pixelFormat() == target.pixelFormat());
-	ocean_assert(source.pixelOrigin() == target.pixelOrigin());
-
-	FrameShrinker::downsampleByTwo14641(source, target, worker);
-}
-
-template <unsigned int tThreshold>
-inline void FramePyramid::defaultBinaryMaskShrinkFunction(const LegacyFrame& source, LegacyFrame& target, Worker* worker)
-{
-	ocean_assert(source && target);
-
-	ocean_assert(source.pixelFormat() == FrameType::FORMAT_Y8);
-
-	ocean_assert(source.width() / 2u == target.width());
-	ocean_assert(source.height() / 2u == target.height());
-	ocean_assert(source.pixelFormat() == target.pixelFormat());
-	ocean_assert(source.pixelOrigin() == target.pixelOrigin());
-
-	FrameShrinker::downsampleByTwoBinary(source, target, tThreshold, worker);
 }
 
 }
