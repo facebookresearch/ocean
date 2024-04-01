@@ -362,6 +362,12 @@ class OCEAN_CV_EXPORT FramePyramid
 		bool resize(const FrameType& frameType, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE);
 
 		/**
+		 * Reduces the number of pyramid layers.
+		 * @param layers The number of pyramid layers, with range [0, layers()]
+		 */
+		void reduceLayers(const size_t layers);
+
+		/**
 		 * Releases the internal frame layers.
 		 */
 		inline void clear();

@@ -413,6 +413,20 @@ bool FramePyramid::resize(const FrameType& frameType, const unsigned int layers)
 	return true;
 }
 
+void FramePyramid::reduceLayers(const size_t layers)
+{
+	ocean_assert(layers <= layers_.size());
+
+	if (layers == 0)
+	{
+		clear();
+	}
+	else if (layers < layers_.size())
+	{
+		layers_.resize(layers);
+	}
+}
+
 bool FramePyramid::isOwner(const unsigned int layerIndex) const
 {
 	if (layerIndex == (unsigned int)(-1))

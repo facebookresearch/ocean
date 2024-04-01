@@ -68,6 +68,12 @@ bool TestFramePyramid::test(const double testDuration, Worker& worker)
 	allSucceeded = testConstructFromPyramid(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testReduceLayers(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -188,7 +194,13 @@ TEST(TestFramePyramid, ConstructFromFrameMultiLayer_RandomResolution_AllLayers)
 	EXPECT_TRUE(TestFramePyramid::testConstructFromFrameMultiLayer(width, height, (unsigned int)(-1), GTEST_TEST_DURATION, worker));
 }
 
-#endif
+
+TEST(TestFramePyramid, ReduceLayers)
+{
+	EXPECT_TRUE(TestFramePyramid::testReduceLayers(GTEST_TEST_DURATION));
+}
+
+#endif // OCEAN_USE_GTEST
 
 bool TestFramePyramid::testIdealLayers(const double testDuration)
 {
@@ -1030,6 +1042,100 @@ bool TestFramePyramid::testConstructFromPyramid(const CV::FramePyramid& sourcePy
 	{
 		Log::info() << "Multicore Performance: Best: " << String::toAString(performanceMulticore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceMulticore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceMulticore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceMulticore.firstMseconds(), 2u) << "ms";
 		Log::info() << "Multicore boost: Best: " << String::toAString(NumericD::ratio(performanceSinglecore.best(), performanceMulticore.best()), 1u) << "x, worst: " << String::toAString(NumericD::ratio(performanceSinglecore.worst(), performanceMulticore.worst()), 1u) << "x, average: " << String::toAString(NumericD::ratio(performanceSinglecore.average(), performanceMulticore.average()), 1u) << "x, first: " << String::toAString(NumericD::ratio(performanceSinglecore.first(), performanceMulticore.first()), 1u);
+	}
+
+	return allSucceeded;
+}
+
+bool TestFramePyramid::testReduceLayers(const double testDuration)
+{
+	Log::info() << "Testing reduce layers:";
+
+	bool allSucceeded = true;
+
+	const FrameType::PixelFormats pixelFormats = {FrameType::FORMAT_Y8, FrameType::FORMAT_Y16, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32, FrameType::FORMAT_F32, FrameType::FORMAT_Y64, FrameType::FORMAT_RGBA64};
+
+	RandomGenerator randomGenerator;
+
+	{
+		CV::FramePyramid framePyramid;
+
+		framePyramid.reduceLayers(0);
+
+		if (framePyramid.layers() != 0 || framePyramid.isValid())
+		{
+			allSucceeded = false;
+		}
+	}
+
+	Timestamp startTimestamp(true);
+
+	do
+	{
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 2000u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 2000u);
+
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+		unsigned int layers = CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE;
+
+		if (RandomI::random(randomGenerator, 1u) == 0u)
+		{
+			layers = RandomI::random(1u, 10u);
+		}
+
+		CV::FramePyramid framePyramid(FrameType(width, height, pixelFormat, pixelOrigin), layers);
+
+		if (!framePyramid.isValid())
+		{
+			allSucceeded = false;
+		}
+
+		std::vector<const void*> layerPoints;
+
+		for (size_t layerIndex = 0; layerIndex < framePyramid.layers(); ++layerIndex)
+		{
+			layerPoints.emplace_back(framePyramid[(unsigned int)(layerIndex)].constdata<void>());
+		}
+
+		const size_t newLayers = size_t(RandomI::random(randomGenerator, 0u, framePyramid.layers()));
+
+		framePyramid.reduceLayers(newLayers);
+
+		if (framePyramid.layers() == newLayers)
+		{
+			for (size_t layerIndex = 0; layerIndex < framePyramid.layers(); ++layerIndex)
+			{
+				if (layerPoints[layerIndex] != framePyramid[(unsigned int)(layerIndex)].constdata<void>())
+				{
+					allSucceeded = false;
+				}
+			}
+		}
+		else
+		{
+			allSucceeded = false;
+		}
+
+		if (newLayers == 0)
+		{
+			if (framePyramid.isValid())
+			{
+				allSucceeded = false;
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
 	}
 
 	return allSucceeded;

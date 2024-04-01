@@ -51,6 +51,13 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid
 		static bool testIdealLayers(const double testDuration);
 
 		/**
+		 * Tests the isOwner() function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testIsOwner(const double testDuration);
+
+		/**
 		 * Tests the creation of a frame pyramid.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation
@@ -136,11 +143,11 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid
 		static bool testConstructFromPyramid(const CV::FramePyramid& sourcePyramid, const bool copyData, const unsigned int  layerIndex, const unsigned int layerCount, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the isOwner() function.
+		 * Tests the reduceLayers() function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testIsOwner(const double testDuration);
+		static bool testReduceLayers(const double testDuration);
 
 	protected:
 
