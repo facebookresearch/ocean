@@ -164,6 +164,11 @@ unsigned int RandomI::random(const unsigned int maxValue)
 	ocean_assert(ThreadDatabase::get().containsThread() && "This thread has not been initialized yet, simply call RandomI::initialize() for this thread (just once) e.g., during start of application!");
 #endif
 
+	if (maxValue == (unsigned int)(-1))
+	{
+		return random32();
+	}
+
 	if (maxValue > randMax())
 	{
 		return random32() % (maxValue + 1u);
@@ -185,6 +190,7 @@ int RandomI::random(const int lower, const int upper)
 #endif
 
 	ocean_assert(lower <= upper);
+	ocean_assert(int64_t(upper) - int64_t(lower) <= int64_t(std::numeric_limits<int>::max()));
 
 	const unsigned int range = upper - lower;
 
@@ -211,6 +217,14 @@ unsigned int RandomI::random(const unsigned int lower, const unsigned int upper)
 	ocean_assert(lower <= upper);
 
 	const unsigned int range = upper - lower;
+
+	if (range == (unsigned int)(-1))
+	{
+		ocean_assert(lower == 0u);
+		ocean_assert(upper == (unsigned int)(-1));
+
+		return random32();
+	}
 
 	if (range > randMax())
 	{

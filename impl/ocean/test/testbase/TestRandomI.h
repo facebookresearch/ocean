@@ -33,79 +33,87 @@ class OCEAN_TEST_BASE_EXPORT TestRandomI
 
 		/**
 		 * Tests the random distribution of 32 bit values.
-		 * @param generator Random generator object
+		 * @param randomGenerator Random randomGenerator object
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testDistribution32(RandomGenerator& generator, const double testDuration);
+		static bool testDistribution32(RandomGenerator& randomGenerator, const double testDuration);
 
 		/**
 		 * Tests the random distribution of 64 bit values.
-		 * @param generator Random generator object
+		 * @param randomGenerator Random randomGenerator object
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testDistribution64(RandomGenerator& generator, const double testDuration);
+		static bool testDistribution64(RandomGenerator& randomGenerator, const double testDuration);
 
 		/**
 		 * Tests the random distribution of values with small range.
-		 * @param generator Random generator object
+		 * @param randomGenerator Random randomGenerator object
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testDistributionSmallRange(RandomGenerator& generator, const double testDuration);
+		static bool testDistributionSmallRange(RandomGenerator& randomGenerator, const double testDuration);
 
 		/**
 		 * Tests the random distribution of values with large range.
-		 * @param generator Random generator object
+		 * @param randomGenerator Random randomGenerator object
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testDistributionLargeRange(RandomGenerator& generator, const double testDuration);
+		static bool testDistributionLargeRange(RandomGenerator& randomGenerator, const double testDuration);
 
 		/**
 		 * Random number generator test producing one unique value.
-		 * @param generator Random generator object
+		 * @param randomGenerator Random randomGenerator object
 		 * @return True, if succeeded
 		 */
-		static bool testOneParameter(RandomGenerator& generator);
+		static bool testOneParameter(RandomGenerator& randomGenerator);
 
 		/**
 		 * Random number generator test allowing to create two individual random numbers.
-		 * @param generator Random generator object
+		 * @param randomGenerator Random randomGenerator object
 		 * @return True, if succeeded
 		 */
-		static bool testTwoParameter(RandomGenerator& generator);
+		static bool testTwoParameter(RandomGenerator& randomGenerator);
 
 		/**
 		 * Random number generator test allowing to create three individual random numbers.
-		 * @param generator Random generator object
+		 * @param randomGenerator Random randomGenerator object
 		 * @return True, if succeeded
 		 */
-		static bool testThreeParameter(RandomGenerator& generator);
+		static bool testThreeParameter(RandomGenerator& randomGenerator);
 
 		/**
 		 * Random number generator test for several individual random numbers.
-		 * @param generator Random generator object
+		 * @param randomGenerator Random randomGenerator object
 		 * @return True, if succeeded
 		 */
-		static bool testSeveralParameter(RandomGenerator& generator);
+		static bool testSeveralParameter(RandomGenerator& randomGenerator);
 
 		/**
 		 * Random number generator test for pairs.
-		 * @param generator Random generator object
+		 * @param randomGenerator Random randomGenerator object
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testRandomPair(RandomGenerator& generator, const double testDuration);
+		static bool testRandomPair(RandomGenerator& randomGenerator, const double testDuration);
 
 		/**
 		 * Random number generator test for triples.
-		 * @param generator Random generator object
+		 * @param randomGenerator Random randomGenerator object
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testRandomTriple(RandomGenerator& generator, const double testDuration);
+		static bool testRandomTriple(RandomGenerator& randomGenerator, const double testDuration);
+
+		/**
+		 * Tests extreme value ranges.
+		 * @param randomGenerator Random randomGenerator object
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testExtremeValueRange(RandomGenerator& randomGenerator);
 };
 
 }

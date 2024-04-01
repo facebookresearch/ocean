@@ -6,6 +6,8 @@
 #include "ocean/base/Base.h"
 #include "ocean/base/RandomGenerator.h"
 
+#include <limits>
+
 namespace Ocean
 {
 
@@ -115,7 +117,7 @@ class OCEAN_BASE_EXPORT RandomI
 		 * Returns one random integer value within a specific range.
 		 * @param lower The lower border, with range (-infinity, infinity)
 		 * @param upper The upper border, with range [lower, infinity)
-		 * @return Random integer number, with range [lower, upper]
+		 * @return Random integer number, with range [lower, lower + 2147483647]
 		 */
 		static int random(const int lower, const int upper);
 
@@ -131,7 +133,7 @@ class OCEAN_BASE_EXPORT RandomI
 		 * Returns one random integer value within a specific range using an explicit random generator.
 		 * @param randomGenerator The random generator to be used
 		 * @param lower The lower border, with range (-infinity, infinity)
-		 * @param upper The upper border, with range [lower, infinity)
+		 * @param upper The upper border, with range [lower, lower + 2147483647]
 		 * @return Random integer number, with range [lower, upper]
 		 */
 		static inline int random(RandomGenerator& randomGenerator, const int lower, const int upper);
@@ -182,7 +184,7 @@ class OCEAN_BASE_EXPORT RandomI
 		static void random(RandomGenerator& randomGenerator, const unsigned int maxValue, unsigned int& first, unsigned int& second, unsigned int& third);
 
 		/**
-		 * Randomly returns one element of a given vector.
+		 * Randomly returns one element from a given vector.
 		 * @param elements The elements from which one elements will be chosen randomly, must contain at least one element
 		 * @return The randomly selected element
 		 * @tparam T The data type of the element
@@ -228,6 +230,11 @@ inline RandomI::Initializer::Initializer(const unsigned int value)
 
 inline unsigned int RandomI::random(RandomGenerator& randomGenerator, const unsigned int maxValue)
 {
+	if (maxValue == (unsigned int)(-1))
+	{
+		return random32(randomGenerator);
+	}
+
 	if (maxValue > randomGenerator.randMax())
 	{
 		return random32(randomGenerator) % (maxValue + 1u);
@@ -241,6 +248,7 @@ inline unsigned int RandomI::random(RandomGenerator& randomGenerator, const unsi
 inline int RandomI::random(RandomGenerator& randomGenerator, const int lower, const int upper)
 {
 	ocean_assert(lower <= upper);
+	ocean_assert(int64_t(upper) - int64_t(lower) <= int64_t(std::numeric_limits<int>::max()));
 
 	const unsigned int range = (unsigned int)(upper - lower);
 
@@ -259,6 +267,14 @@ inline unsigned int RandomI::random(RandomGenerator& randomGenerator, const unsi
 	ocean_assert(lower <= upper);
 
 	const unsigned int range = upper - lower;
+
+	if (range == (unsigned int)(-1))
+	{
+		ocean_assert(lower == 0u);
+		ocean_assert(upper == (unsigned int)(-1));
+
+		return random32(randomGenerator);
+	}
 
 	if (range > randomGenerator.randMax())
 	{

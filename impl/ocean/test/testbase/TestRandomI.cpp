@@ -87,6 +87,12 @@ bool TestRandomI::test(const double testDuration)
 	allSucceeded = testRandomTriple(randomGenerator, testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testExtremeValueRange(randomGenerator) && allSucceeded;
+
+	Log::info() << " ";
 
 	return allSucceeded;
 }
@@ -122,7 +128,7 @@ class TestRandomI : public ::testing::Test
 	protected:
 
 		/// The random randomGenerator object for all tests.
-		RandomGenerator randomGenerator;
+		RandomGenerator randomGenerator_;
 };
 
 TEST_F(TestRandomI, Initialize)
@@ -133,52 +139,57 @@ TEST_F(TestRandomI, Initialize)
 
 TEST_F(TestRandomI, Distribution32)
 {
-	EXPECT_TRUE(TestBase::TestRandomI::testDistribution32(randomGenerator, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestBase::TestRandomI::testDistribution32(randomGenerator_, GTEST_TEST_DURATION));
 }
 
 TEST_F(TestRandomI, Distribution64)
 {
-	EXPECT_TRUE(TestBase::TestRandomI::testDistribution64(randomGenerator, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestBase::TestRandomI::testDistribution64(randomGenerator_, GTEST_TEST_DURATION));
 }
 
 TEST_F(TestRandomI, DistributionSmallRange)
 {
-	EXPECT_TRUE(TestBase::TestRandomI::testDistributionSmallRange(randomGenerator, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestBase::TestRandomI::testDistributionSmallRange(randomGenerator_, GTEST_TEST_DURATION));
 }
 
 TEST_F(TestRandomI, DistributionLargeRange)
 {
-	EXPECT_TRUE(TestBase::TestRandomI::testDistributionLargeRange(randomGenerator, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestBase::TestRandomI::testDistributionLargeRange(randomGenerator_, GTEST_TEST_DURATION));
 }
 
 TEST_F(TestRandomI, OneParameter)
 {
-	EXPECT_TRUE(TestBase::TestRandomI::testOneParameter(randomGenerator));
+	EXPECT_TRUE(TestBase::TestRandomI::testOneParameter(randomGenerator_));
 }
 
 TEST_F(TestRandomI, TwoParameter)
 {
-	EXPECT_TRUE(TestBase::TestRandomI::testTwoParameter(randomGenerator));
+	EXPECT_TRUE(TestBase::TestRandomI::testTwoParameter(randomGenerator_));
 }
 
 TEST_F(TestRandomI, ThreeParameter)
 {
-	EXPECT_TRUE(TestBase::TestRandomI::testThreeParameter(randomGenerator));
+	EXPECT_TRUE(TestBase::TestRandomI::testThreeParameter(randomGenerator_));
 }
 
 TEST_F(TestRandomI, SeveralParameter)
 {
-	EXPECT_TRUE(TestBase::TestRandomI::testSeveralParameter(randomGenerator));
+	EXPECT_TRUE(TestBase::TestRandomI::testSeveralParameter(randomGenerator_));
 }
 
 TEST_F(TestRandomI, RandomPair)
 {
-	EXPECT_TRUE(TestBase::TestRandomI::testRandomPair(randomGenerator, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestBase::TestRandomI::testRandomPair(randomGenerator_, GTEST_TEST_DURATION));
 }
 
 TEST_F(TestRandomI, RandomTriple)
 {
-	EXPECT_TRUE(TestBase::TestRandomI::testRandomTriple(randomGenerator, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestBase::TestRandomI::testRandomTriple(randomGenerator_, GTEST_TEST_DURATION));
+}
+
+TEST_F(TestRandomI, ExtremeValueRange)
+{
+	EXPECT_TRUE(TestBase::TestRandomI::testExtremeValueRange(randomGenerator_));
 }
 
 namespace TestBase
@@ -2689,6 +2700,60 @@ bool TestRandomI::testRandomTriple(RandomGenerator& randomGenerator, const doubl
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestRandomI::testExtremeValueRange(RandomGenerator& randomGenerator)
+{
+	Log::info() << "Testing extreme value range";
+
+	bool allSucceeded = true;
+
+	// just testing whether something unexpected happens - e.g., an assert
+
+	const int offset = RandomI::random(randomGenerator, 1, 100000);
+
+	{
+		const unsigned int valueA = RandomI::random((unsigned int)(-1));
+		const unsigned int valueB = RandomI::random(0u, (unsigned int)(-1));
+		const int valueC = RandomI::random(0, 2147483647);
+		const int valueD = RandomI::random(0 - offset, 2147483647 - offset);
+
+		if (uint64_t(valueA) > uint64_t(uint32_t(-1)) // dummy test
+			|| uint64_t(valueB) > uint64_t(uint32_t(-1))
+			|| int64_t(valueC) > int64_t(uint32_t(-1))
+			|| int64_t(valueD) > int64_t(uint32_t(-1)))
+		{
+			ocean_assert(false && " This should never happen!");
+			allSucceeded = false;
+		}
+	}
+
+	{
+		const unsigned int valueA = RandomI::random(randomGenerator, (unsigned int)(-1));
+		const unsigned int valueB = RandomI::random(randomGenerator, 0u, (unsigned int)(-1));
+		const int valueC = RandomI::random(randomGenerator, 0, 2147483647);
+		const int valueD = RandomI::random(randomGenerator, 0 - offset, 2147483647 - offset);
+
+		if (uint64_t(valueA) > uint64_t(uint32_t(-1)) // dummy test
+			|| uint64_t(valueB) > uint64_t(uint32_t(-1))
+			|| int64_t(valueC) > int64_t(uint32_t(-1))
+			|| int64_t(valueD) > int64_t(uint32_t(-1)))
+		{
+			ocean_assert(false && " This should never happen!");
+			allSucceeded = false;
+		}
+	}
 
 	if (allSucceeded)
 	{
