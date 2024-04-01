@@ -19,6 +19,8 @@
 
 #include <vros/sys/sensors/FrameType.h>
 
+#include <algorithm>
+
 using namespace Ocean::Media;
 using namespace Ocean::Platform::Meta;
 using namespace Ocean::Platform::Meta::Quest;
@@ -149,6 +151,20 @@ void BullseyeTrackerApplication::onButtonPressed(const TrackedController::Button
 			Log::error() << "Failed to switch cameras";
 		}
 	}
+
+	if(buttons & TrackedController::BT_RIGHT_A)
+	{
+		if(lockedPosition_)
+		{
+			lockedPosition_ = false;
+			markerTransform_->setVisible(false);
+		} else {
+			if(markerTransform_->visible())
+			{
+				lockedPosition_ = true;
+			}
+		}
+	}
 }
 
 void BullseyeTrackerApplication::onFramebufferInitialized()
@@ -161,14 +177,8 @@ void BullseyeTrackerApplication::onFramebufferInitialized()
 	scene_ = engine_->factory().createScene();
 	framebuffer_->addScene(scene_);
 
-	markerTransform_ = Rendering::Utilities::createSphere(engine_, Scalar(0.025), RGBAColor(0.85f, 1.0f, 0.0f, 0.8f));
-	markerTransform_->setTransformation(HomogenousMatrix4(Vector3(Scalar(0), Scalar(0.35), Scalar(-0.8))));
-	markerTransform_->setVisible(false);
-
-	Rendering::TransformRef markerCenterTransform = Rendering::Utilities::createSphere(engine_, Scalar(0.003), RGBAColor(3.0f, 0.0f, 0.0f, 1.0f));
-	markerTransform_->addChild(markerCenterTransform);
-
-	scene_->addChild(markerTransform_);
+	markerSize_ = Scalar(0.025);
+	lockedPosition_ = false;
 
 	int manifestVersionCode = -1;
 	if (Platform::Android::Utilities::manifestVersionCode(androidApp_->activity->vm, androidApp_->activity->clazz, manifestVersionCode))
@@ -177,6 +187,20 @@ void BullseyeTrackerApplication::onFramebufferInitialized()
 		const std::string manifestVersionCodeString = "App version: " + (manifestVersionCode >= 0 ? String::toAString(manifestVersionCode) : "unknown");
 		vrTextVisualizer_.visualizeTextInWorld(TV_MANIFEST_VERSION_CODE, HomogenousMatrix4(Vector3(0, 0.4, -0.8)), manifestVersionCodeString, VRVisualizer::ObjectSize(0, 0.025));
 	}
+
+	AttributeSetRef attrSet;
+	markerTransform_ = Rendering::Utilities::createSphere(engine_, Scalar(1.0), NULL, &attrSet);
+	markerMaterial_ = engine_->factory().createMaterial();
+	attrSet->addAttribute(markerMaterial_);
+
+	markerTransform_->setTransformation(HomogenousMatrix4(Vector3(Scalar(0), Scalar(0.35), Scalar(-0.8)), Vector3(1,1,1) * markerSize_));
+	markerTransform_->setVisible(false);
+
+	markerColor_ = RGBAColor(1.0f, 0.0f, 0.0f, 1.0f);
+	markerMaterial_->setAmbientColor(markerColor_);
+	markerMaterial_->setDiffuseColor(markerColor_);
+	markerMaterial_->setTransparency(0.0f);
+	scene_->addChild(markerTransform_);
 }
 
 void BullseyeTrackerApplication::onFramebufferReleasing()
@@ -216,14 +240,10 @@ void BullseyeTrackerApplication::onPreRender(const XrTime& xrPredictedDisplayTim
 
 	const bool haveResults = haveResults_;
 	haveResults_ = false;
-
 	const Vector3 bullseyeCenter = std::move(bullseyeCenter_);
+	const Timestamp detectionTime = detectionTime_;
 
 	scopedResultLock.release();
-
-	// Display the name of the current camera
-	const std::string cameraNameString = "Camera: " + FrameProvider::translateCameraFrameType(cameraFrameType);
-	vrTextVisualizer_.visualizeTextInWorld(TV_CAMERA_NAME, HomogenousMatrix4(Vector3(Scalar(0), Scalar(0.25), Scalar(-0.8))), cameraNameString, VRVisualizer::ObjectSize(Scalar(0), Scalar(0.025)));
 
 	// Display pop-up messages
 	const std::vector<std::string> popupMessages = getPopupMessages();
@@ -243,11 +263,50 @@ void BullseyeTrackerApplication::onPreRender(const XrTime& xrPredictedDisplayTim
 
 	vrTextVisualizer_.visualizeTextInWorld(TV_TIMED_POPUP_MESSAGES, HomogenousMatrix4(Vector3(Scalar(0), Scalar(0.0), Scalar(-0.7))), popupMessageString, VRVisualizer::ObjectSize(Scalar(0), popupMessageHeight));
 
-	if (haveResults)
+	if(haveResults && !lockedPosition_)
 	{
-		markerTransform_->setTransformation(HomogenousMatrix4(bullseyeCenter));
+		displayDetectionTime_ = detectionTime;
+
+		markerTransform_->setTransformation(HomogenousMatrix4(bullseyeCenter, Vector3(1,1,1) * markerSize_));
 		markerTransform_->setVisible(true);
+
+		markerColor_ = RGBAColor(markerColor_.green(), markerColor_.blue(), markerColor_.red(), 1.0f);
+		markerMaterial_->setAmbientColor(markerColor_);
+		markerMaterial_->setDiffuseColor(markerColor_);
 	}
+
+	const Vector3 world_t_marker = markerTransform_->transformation().translation();
+
+	const Scalar sizeInc = trackedController().joystickTilt(TrackedController::CT_RIGHT).x();
+	if(Numeric::abs(sizeInc) > Scalar(0.01))
+	{
+		const Scalar newSize = markerSize_ * Scalar(1.0) + Scalar(0.01) * sizeInc;
+		markerSize_ = std::min(Scalar(0.1), std::max(Scalar(0.01), newSize));
+		markerTransform_->setTransformation(HomogenousMatrix4(world_t_marker, Vector3(1,1,1) * markerSize_));
+	}
+
+	const Scalar textWidth = markerTransform_->visible() ? Scalar(0.5) * markerSize_ : Scalar(0);
+
+	ocean_assert(predictedDisplayTime >= displayDetectionTime_);
+	const std::string ageText = String::toAString(double(predictedDisplayTime - displayDetectionTime_), 1u) + " s";
+
+	const Vector3 world_t_device = locateSpace(xrSpaceView_.object(), predictedDisplayTime).translation();
+	const Vector3 device_t_marker = world_t_device - markerTransform_->transformation().translation();
+
+	// A direct rotation from the +Z pole of the sphere to the location on the sphere closest to the viewer (e.g. using
+	// RotationT(const VectorT3<T>& reference, const VectorT3<T>& offset) ) will, in general, result in the text being
+	// rotated away from level. Rotating first around +X (along longitude) and then around +Y (latitude) guarantees that
+	// the viewer will see text whose X-axis is horizontal in the World coordinate system.
+	// This does suffer from gimbal lock if the viewer is looking straight down from the top of the sphere.
+	// An alternative (not subject to gimbal lock) would be to use the above reference->offset rotation and then undo the
+	// text rotation with another axis-angle step, but the math gets more complicated.
+	const HomogenousMatrix4 marker_r_billboardLong(Rotation(1,0,0, -asin(device_t_marker.y() / device_t_marker.length())));
+	const HomogenousMatrix4 marker_r_billboardLat(Rotation(0,1,0, atan2(device_t_marker.x(), device_t_marker.z())));
+	const HomogenousMatrix4 marker_r_billboard = marker_r_billboardLat * marker_r_billboardLong;
+
+	const HomogenousMatrix4 world_T_text = HomogenousMatrix4(world_t_marker) * marker_r_billboard * HomogenousMatrix4(Vector3(0,0,1.1) * markerSize_);
+
+	vrTextVisualizer_.visualizeTextInWorld(TV_DETECTION_AGE, world_T_text, std::string(ageText), VRVisualizer::ObjectSize(Scalar(0), textWidth));
 }
 
 void BullseyeTrackerApplication::threadRun()
@@ -331,7 +390,7 @@ void BullseyeTrackerApplication::threadRun()
 		const ScopedLock scopedLock(resultLock_);
 
 		bullseyeCenter_ = std::move(bullseyeCenter);
-
+		detectionTime_ = frameTimestamp;
 		haveResults_ = true;
 	}
 }

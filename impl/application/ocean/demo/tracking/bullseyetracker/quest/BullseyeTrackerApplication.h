@@ -14,10 +14,12 @@
 #include "ocean/platform/meta/quest/sensors/FrameProvider.h"
 
 #include "ocean/rendering/Sphere.h"
+#include "ocean/rendering/Utilities.h"
 
 using namespace Ocean;
 using namespace Ocean::CV::Detector;
 using namespace Ocean::Platform::Meta::Quest::OpenXR::Application;
+using namespace Ocean::Rendering;
 
 /**
  * Implements a specialization of the VRApplication.
@@ -47,6 +49,8 @@ class BullseyeTrackerApplication :
 			TV_CAMERA_NAME,
 			/// Popup messages that are shown to the user for a short time.
 			TV_TIMED_POPUP_MESSAGES,
+			/// time since last detection
+			TV_DETECTION_AGE,
 			/// Indicates the last pre-assigned ID; this element must be the last one in this list; dynamically created text visualizations should use indices starting with this value
 			TV_INDICES_END
 		};
@@ -191,14 +195,32 @@ class BullseyeTrackerApplication :
 		/// The marker transformation that will be used as an overlay for the bullseye displayed in Passthrough.
 		Rendering::TransformRef markerTransform_;
 
+		/// Current marker size
+		Scalar markerSize_;
+
+		/// for settting marker color during operation
+		MaterialRef markerMaterial_;
+
+		/// current marker color
+		RGBAColor markerColor_;
+
+		/// If true then stop detection and keep rendering marker at current World position
+		bool lockedPosition_;
+
+		/// timestamp of last detection
+		Timestamp displayDetectionTime_;
+
 		/// The lock for the detection results.
 		Lock resultLock_;
 
-		/// Indicates if new results are available for displaying.
+		/// Indicates if new results are available for displaying. Protected by resultLock_.
 		bool haveResults_ = false;
 
-		/// The world location of the bullseye detected by `MessengerCodeDetector`.
+		/// The world location of the bullseye detected by `MessengerCodeDetector`. Protected by resultLock_.
 		Vector3 bullseyeCenter_;
+
+		/// Time of bullseye detection. Protected by resultLock_.
+		Timestamp detectionTime_;
 
 		/// The 6DOF pose if the device origin in world coordinates
 		HomogenousMatrix4 world_T_device_;
