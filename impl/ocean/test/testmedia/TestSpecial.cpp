@@ -613,7 +613,7 @@ bool TestSpecial::testOcnImageEncodeDecode(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 3840u / widthMultiple) * widthMultiple;
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 3840u / heightMultiple) * heightMultiple;
 
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const FrameType frameType(width, height, pixelFormat, pixelOrigin);
 

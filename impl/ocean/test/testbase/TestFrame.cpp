@@ -635,7 +635,7 @@ bool TestFrame::testFrameSpecificationGenericPixelFormats(const double testDurat
 		const unsigned int channels = RandomI::random(1u, 5u);
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(dataType, channels);
 
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(0u, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const unsigned int framePaddingElements = RandomI::random(0u, 100u);
 
@@ -754,8 +754,8 @@ bool TestFrame::testFrameSpecificationNonGenericPixelFormats(const double testDu
 		const unsigned int width = RandomI::random(2u, 1920u) & 0xFFFFFFFEu; // multiple of two
 		const unsigned int height = RandomI::random(2u, 1080u) & 0xFFFFFFFEu;
 
-		const FrameType::PixelFormat pixelFormat = pixelFormats[RandomI::random(0u, (unsigned int)pixelFormats.size() - 1u)];
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(0u, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelFormat pixelFormat = RandomI::random(pixelFormats);
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const FrameType frameType(width, height, pixelFormat, pixelOrigin);
 
@@ -2365,7 +2365,7 @@ bool TestFrame::testPlaneInitializer(const double testDuration)
 			};
 
 			const FrameType::PixelFormat pixelFormat = pixelFormats[RandomI::random(randomGenerator, (unsigned int)(pixelFormats.size() - 1))];
-			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 1u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
 			const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
@@ -2790,7 +2790,7 @@ bool TestFrame::testSubFrame(const double testDuration)
 		const unsigned int width = RandomI::random(1u, 1920u) * widthMultiple;
 		const unsigned int height = RandomI::random(1u, 1080u) * heightMultiple;
 
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(0u, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const FrameType frameType(width, height, pixelFormat, pixelOrigin);
 
@@ -3104,7 +3104,7 @@ bool TestFrame::testAccessorsDataTypes(const double testDuration)
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(dataType, channels);
 		const unsigned int bytesPerElement = FrameType::bytesPerDataType(dataType);
 
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(0u, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const unsigned int framePaddingElements = RandomI::random(0u, 100u);
 
@@ -3361,7 +3361,7 @@ bool TestFrame::testAccessorsPixelFormats(const double testDuration)
 		const unsigned int width = RandomI::random(1u, 1920u / widthMultiple) * widthMultiple;
 		const unsigned int height = RandomI::random(1u, 1080u / heightMultiple) * heightMultiple;
 
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(0u, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const FrameType frameType(width, height, pixelFormat, pixelOrigin);
 		ocean_assert(frameType.isValid());
@@ -3656,7 +3656,7 @@ bool TestFrame::testSetFrameType(const double testDuration)
 		const FrameType::DataType sourceDataType = RandomI::random(randomGenerator, FrameType::definedDataTypes());
 		const unsigned int sourceChannels = RandomI::random(randomGenerator, 1u, 5u);
 		const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat(sourceDataType, sourceChannels);
-		const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, 0u, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const unsigned int sourceFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
@@ -3671,7 +3671,7 @@ bool TestFrame::testSetFrameType(const double testDuration)
 		const FrameType::DataType targetDataType = RandomI::random(randomGenerator, FrameType::definedDataTypes());
 		const unsigned int targetChannels = RandomI::random(randomGenerator, 1u, 5u);
 		const FrameType::PixelFormat targetPixelFormat = FrameType::genericPixelFormat(targetDataType, targetChannels);
-		const FrameType::PixelOrigin targetPixelOrigin = RandomI::random(randomGenerator, 0u, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin targetPixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});;
 
 		const FrameType targetFrameType(targetWidth, targetHeight, targetPixelFormat, targetPixelOrigin);
 
@@ -3914,7 +3914,7 @@ bool TestFrame::testLegacyCopy(const double testDuration)
 			const unsigned int previousTargetWidth = RandomI::random(1u, 1920u) * FrameType::widthMultiple(previousTargetPixelFormat);
 			const unsigned int previousTargetHeight = RandomI::random(1u, 1080u) * FrameType::heightMultiple(previousTargetPixelFormat);
 
-			const FrameType::PixelOrigin previousTargetPixelOrigin = RandomI::random(1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+			const FrameType::PixelOrigin previousTargetPixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			{
 				// testing to copy the source frame (which is owning the memory) to a valid target frame (with arbitrary frame type)
@@ -4071,7 +4071,7 @@ bool TestFrame::testCopy(const double testDuration)
 template <typename T>
 bool TestFrame::testCopy(const FrameType::PixelFormat pixelFormat, RandomGenerator& randomGenerator)
 {
-	const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 1u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+	const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 	const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
 	const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
@@ -4553,7 +4553,7 @@ bool TestFrame::testSetValue(const double testDuration)
 	do
 	{
 		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * FrameType::widthMultiple(pixelFormat);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u) * FrameType::heightMultiple(pixelFormat);
@@ -4721,8 +4721,9 @@ bool TestFrame::testContainsValue(const double testDuration)
 
 		{
 			// Y8
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-			Frame frame(FrameType(width, height, FrameType::FORMAT_Y8, RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT), paddingElements);
+			Frame frame(FrameType(width, height, FrameType::FORMAT_Y8, pixelOrigin), paddingElements);
 
 			const uint8_t backgroundColor = uint8_t(RandomI::random(randomGenerator, 255u));
 
@@ -4755,8 +4756,9 @@ bool TestFrame::testContainsValue(const double testDuration)
 
 		{
 			// RGB24
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-			Frame frame(FrameType(width, height, FrameType::FORMAT_RGB24, RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT), paddingElements);
+			Frame frame(FrameType(width, height, FrameType::FORMAT_RGB24, pixelOrigin), paddingElements);
 
 			const Frame::PixelType<uint8_t, 3u> backgroundColor =
 			{{
@@ -4796,8 +4798,9 @@ bool TestFrame::testContainsValue(const double testDuration)
 
 		{
 			// float, 2 channels
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-			Frame frame(FrameType(width, height, FrameType::genericPixelFormat<float, 2u>(), RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT), paddingElements);
+			Frame frame(FrameType(width, height, FrameType::genericPixelFormat<float, 2u>(), pixelOrigin), paddingElements);
 
 			const Frame::PixelType<float, 2u> backgroundColor =
 			{{
@@ -4869,7 +4872,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 
 	for (const FrameType::PixelFormat& pixelFormat : pixelFormats)
 	{
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * FrameType::widthMultiple(pixelFormat);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u) * FrameType::heightMultiple(pixelFormat);
@@ -4938,7 +4941,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 			const FrameType::PixelFormats subsetPixelFormats = {FrameType::FORMAT_RGBA32, FrameType::FORMAT_BGRA32, FrameType::FORMAT_YUVA32};
 
 			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, subsetPixelFormats);
-			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
@@ -4995,7 +4998,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 			const FrameType::PixelFormats subsetPixelFormats = {FrameType::FORMAT_ARGB32, FrameType::FORMAT_ABGR32};
 
 			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, subsetPixelFormats);
-			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
@@ -5052,7 +5055,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 			const FrameType::PixelFormats subsetPixelFormats = {FrameType::FORMAT_RGBA64};
 
 			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, subsetPixelFormats);
-			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
@@ -5109,7 +5112,7 @@ bool TestFrame::testHasTransparentPixel(const double testDuration)
 			const FrameType::PixelFormats subsetPixelFormats = {FrameType::FORMAT_YA16};
 
 			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, subsetPixelFormats);
-			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
@@ -5194,7 +5197,7 @@ bool TestFrame::testStrideBytes2paddingElements(const double testDuration)
 
 	for (const FrameType::PixelFormat& pixelFormat : pixelFormats)
 	{
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * FrameType::widthMultiple(pixelFormat);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u) * FrameType::heightMultiple(pixelFormat);
@@ -5267,8 +5270,8 @@ bool TestFrame::testHaveIntersectingMemory(const double testDuration)
 			const FrameType::PixelFormat pixelFormatA = FrameType::genericPixelFormat(dataTypeA, RandomI::random(randomGenerator, 1u, 5u));
 			const FrameType::PixelFormat pixelFormatB = FrameType::genericPixelFormat(dataTypeB, RandomI::random(randomGenerator, 1u, 5u));
 
-			const FrameType::PixelOrigin pixelOriginA = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
-			const FrameType::PixelOrigin pixelOriginB = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+			const FrameType::PixelOrigin pixelOriginA = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+			const FrameType::PixelOrigin pixelOriginB = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			const bool usePaddingA = RandomI::random(randomGenerator, 1u) < 1u;
 			const bool usePaddingB = RandomI::random(randomGenerator, 1u) < 1u;
@@ -5323,8 +5326,8 @@ bool TestFrame::testHaveIntersectingMemory(const double testDuration)
 			const FrameType::PixelFormat pixelFormatA = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, RandomI::random(randomGenerator, 1u, maximalChannels));
 			const FrameType::PixelFormat pixelFormatB = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, RandomI::random(randomGenerator, 1u, maximalChannels));
 
-			const FrameType::PixelOrigin pixelOriginA = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
-			const FrameType::PixelOrigin pixelOriginB = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+			const FrameType::PixelOrigin pixelOriginA = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+			const FrameType::PixelOrigin pixelOriginB = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			const FrameType frameTypeA(widthA, heightA, pixelFormatA, pixelOriginA);
 			const FrameType frameTypeB(widthB, heightB, pixelFormatB, pixelOriginB);
@@ -7414,7 +7417,7 @@ FrameType TestFrame::randomizedFrameType(const FrameType::PixelFormats& pixelFor
 	const unsigned int width = RandomI::random(localRandomGenerator, 1u, 1920u) * widthMultiple;
 	const unsigned int height = RandomI::random(localRandomGenerator, 1u, 1080u) * heightMultiple;
 
-	const FrameType::PixelOrigin pixelOrigin = RandomI::random(localRandomGenerator, 0u, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+	const FrameType::PixelOrigin pixelOrigin = RandomI::random(localRandomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 	return FrameType(width, height, pixelFormat, pixelOrigin);
 }

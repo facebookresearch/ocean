@@ -680,7 +680,7 @@ bool TestLegacyFrame::testSize(const double testDuration)
 		const unsigned int height = RandomI::random(1u, 1920u);
 		const unsigned int pixels = width * height;
 
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		{
 			// for pixel format Y8
@@ -977,7 +977,7 @@ bool TestLegacyFrame::testChannelNumber()
 		const unsigned int widthMultiples = FrameType::widthMultiple(pixelFormat);
 		const unsigned int heightMultiples = FrameType::heightMultiple(pixelFormat);
 
-		const FrameType frameType(RandomI::random(1u, 1920u) * widthMultiples, RandomI::random(1u, 1080u) * heightMultiples, pixelFormat, RandomI::random(1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT);
+		const FrameType frameType(RandomI::random(1u, 1920u) * widthMultiples, RandomI::random(1u, 1080u) * heightMultiples, pixelFormat, RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT}));
 
 		if (frameType.channels() != testPair.second)
 		{
@@ -1251,7 +1251,7 @@ bool TestLegacyFrame::testNumberPlanes()
 		const unsigned int width = RandomI::random(1u, 1920u) * FrameType::widthMultiple(testPair.first);
 		const unsigned int height = RandomI::random(1u, 1080u) * FrameType::heightMultiple(testPair.first);
 
-		const FrameType frameType(width, height, testPair.first, RandomI::random(1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT);
+		const FrameType frameType(width, height, testPair.first, RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT}));
 
 		if (frameType.numberPlanes() != testPair.second)
 		{
@@ -1300,8 +1300,8 @@ bool TestLegacyFrame::testHaveIntersectingMemory(const double testDuration)
 			const FrameType::PixelFormat pixelFormatA = FrameType::genericPixelFormat(dataTypeA, RandomI::random(randomGenerator, 1u, 5u));
 			const FrameType::PixelFormat pixelFormatB = FrameType::genericPixelFormat(dataTypeB, RandomI::random(randomGenerator, 1u, 5u));
 
-			const FrameType::PixelOrigin pixelOriginA = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
-			const FrameType::PixelOrigin pixelOriginB = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+			const FrameType::PixelOrigin pixelOriginA = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+			const FrameType::PixelOrigin pixelOriginB = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			const LegacyFrame frameA(FrameType(widthA, heightA, pixelFormatA, pixelOriginA));
 			const LegacyFrame frameB(FrameType(widthB, heightB, pixelFormatB, pixelOriginB));
@@ -1349,8 +1349,8 @@ bool TestLegacyFrame::testHaveIntersectingMemory(const double testDuration)
 			const FrameType::PixelFormat pixelFormatA = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, RandomI::random(randomGenerator, 1u, maximalChannels));
 			const FrameType::PixelFormat pixelFormatB = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, RandomI::random(randomGenerator, 1u, maximalChannels));
 
-			const FrameType::PixelOrigin pixelOriginA = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
-			const FrameType::PixelOrigin pixelOriginB = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+			const FrameType::PixelOrigin pixelOriginA = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+			const FrameType::PixelOrigin pixelOriginB = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			const FrameType frameTypeA(widthA, heightA, pixelFormatA, pixelOriginA);
 			const FrameType frameTypeB(widthB, heightB, pixelFormatB, pixelOriginB);
@@ -1682,7 +1682,7 @@ bool TestLegacyFrame::testMoveConstructorFrame(const double testDuration)
 	do
 	{
 		FrameType::PixelFormat pixelFormat = pixelFormats[RandomI::random(randomGenerator, (unsigned int)(pixelFormats.size() - 1))];
-		FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 1u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
 		const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
@@ -1924,7 +1924,7 @@ bool TestLegacyFrame::testCopyConstructorFrame(const double testDuration)
 	do
 	{
 		FrameType::PixelFormat pixelFormat = pixelFormats[RandomI::random(randomGenerator, (unsigned int)(pixelFormats.size() - 1))];
-		FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 1u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
 		const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);

@@ -235,7 +235,7 @@ bool TestAdvancedFrameChannels::testSeparateTo1Channel(const unsigned int width,
 			const unsigned int sourceChannels = channels;
 			constexpr unsigned int targetChannels = 1u;
 
-			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<TSource>(sourceChannels);
 			const FrameType::PixelFormat targetPixelFormat = FrameType::genericPixelFormat<TTarget>(targetChannels);
@@ -490,7 +490,7 @@ bool TestAdvancedFrameChannels::testZipChannels(const unsigned int width, const 
 			constexpr unsigned int sourceChannels = 1u;
 			const unsigned int targetChannels = channels;
 
-			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 			const FrameType::PixelFormat sourcePixelFormat = FrameType::genericPixelFormat<TSource>(sourceChannels);
 			const FrameType::PixelFormat targetPixelFormat = FrameType::genericPixelFormat<TTarget>(targetChannels);

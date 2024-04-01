@@ -362,7 +362,7 @@ bool TestFrameTransposer::testRotate90(const double testDuration, Worker& worker
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 400u) * widthMultiple;
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 400u) * heightMultiple;
 
-		const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const FrameType sourceFrameType(width, height, sourcePixelFormat, sourcePixelOrigin);
 
@@ -464,7 +464,7 @@ bool TestFrameTransposer::testRotate180(const double testDuration, Worker& worke
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 400u) * widthMultiple;
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 400u) * heightMultiple;
 
-		const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const FrameType sourceFrameType(width, height, sourcePixelFormat, sourcePixelOrigin);
 
@@ -577,7 +577,7 @@ bool TestFrameTransposer::testRotate(const double testDuration, Worker& worker)
 		{
 			if (useComfort)
 			{
-				const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+				const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 				const FrameType sourceFrameType(width, height, sourcePixelFormat, sourcePixelOrigin);
 				const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, false, &randomGenerator);

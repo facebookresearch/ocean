@@ -710,8 +710,8 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 400u) * widthMultiple;
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 400u) * heightMultiple;
 
-		const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
-		const FrameType::PixelOrigin targetPixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+		const FrameType::PixelOrigin targetPixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const FrameType sourceFrameType(width, height, sourcePixelFormat, sourcePixelOrigin);
 		const FrameType targetFrameType(width, height, targetPixelFormat, targetPixelOrigin);
@@ -862,8 +862,8 @@ bool TestFrameConverter::testComfortConvertAndCopy(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 400u) * widthMultiple;
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 400u) * heightMultiple;
 
-		const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
-		const FrameType::PixelOrigin targetPixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+		const FrameType::PixelOrigin targetPixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const FrameType sourceFrameType(width, height, sourcePixelFormat, sourcePixelOrigin);
 		const FrameType targetFrameType(width, height, targetPixelFormat, targetPixelOrigin);

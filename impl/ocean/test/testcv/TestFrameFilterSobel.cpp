@@ -776,7 +776,7 @@ bool TestFrameFilterSobel::testComfort(const double testDuration, Worker& worker
 		const unsigned int channels = RandomI::random(1u, 4u);
 
 		const FrameType::DataType responseDataType = RandomI::random(1u) == 0u ? FrameType::DT_SIGNED_INTEGER_8 : FrameType::DT_SIGNED_INTEGER_16;
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random({FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), pixelOrigin), false);
 
@@ -857,7 +857,7 @@ bool TestFrameFilterSobel::testFilterPixelCoreHorizontalVertical3Squared1Channel
 		const unsigned int width = RandomI::random(randomGenerator, 3u, 1000u);
 		const unsigned int height = RandomI::random(randomGenerator, 3u, 1000u);
 
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, 1u) == 0u ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 1u>(), pixelOrigin), false, &randomGenerator);
 
