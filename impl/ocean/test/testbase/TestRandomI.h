@@ -116,6 +116,14 @@ class OCEAN_TEST_BASE_EXPORT TestRandomI
 		static bool testRandomElementsVector(RandomGenerator& randomGenerator, const double testDuration);
 
 		/**
+		 * Random element test based on an initializer list.
+		 * @param randomGenerator Random randomGenerator object
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testRandomElementsInitializerList(RandomGenerator& randomGenerator, const double testDuration);
+
+		/**
 		 * Tests extreme value ranges.
 		 * @param randomGenerator Random randomGenerator object
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)

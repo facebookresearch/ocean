@@ -193,7 +193,16 @@ class OCEAN_BASE_EXPORT RandomI
 		static T random(const std::vector<T>& elements);
 
 		/**
-		 * Randomly returns one element of a given vector.
+		 * Randomly returns one element from a given initializer list.
+		 * @param elements The elements from which one elements will be chosen randomly, must contain at least one element
+		 * @return The randomly selected element
+		 * @tparam T The data type of the element
+		 */
+		template <typename T>
+		static T random(const std::initializer_list<T>& elements);
+
+		/**
+		 * Randomly returns one element from a given vector.
 		 * @param randomGenerator The random generator to be used
 		 * @param elements The elements from which one elements will be chosen randomly, must contain at least one element
 		 * @return The randomly selected element
@@ -201,6 +210,16 @@ class OCEAN_BASE_EXPORT RandomI
 		 */
 		template <typename T>
 		static T random(RandomGenerator& randomGenerator, const std::vector<T>& elements);
+
+		/**
+		 * Randomly returns one element from a given initializer list.
+		 * @param randomGenerator The random generator to be used
+		 * @param elements The elements from which one elements will be chosen randomly, must contain at least one element
+		 * @return The randomly selected element
+		 * @tparam T The data type of the element
+		 */
+		template <typename T>
+		static T random(RandomGenerator& randomGenerator, const std::initializer_list<T>& elements);
 
 		/**
 		 * Returns a seed value based on the current time.
@@ -291,7 +310,19 @@ T RandomI::random(const std::vector<T>& elements)
 {
 	ocean_assert(!elements.empty());
 
-	return elements[RandomI::random((unsigned int)(elements.size()) - 1u)];
+	const unsigned int index = RandomI::random((unsigned int)(elements.size()) - 1u);
+
+	return elements[index];
+}
+
+template <typename T>
+T RandomI::random(const std::initializer_list<T>& elements)
+{
+	ocean_assert(elements.size() != 0);
+
+	const unsigned int index = RandomI::random((unsigned int)(elements.size()) - 1u);
+
+	return elements.begin()[index];
 }
 
 template <typename T>
@@ -299,7 +330,19 @@ T RandomI::random(RandomGenerator& randomGenerator, const std::vector<T>& elemen
 {
 	ocean_assert(!elements.empty());
 
-	return elements[RandomI::random(randomGenerator, (unsigned int)(elements.size()) - 1u)];
+	const unsigned int index = RandomI::random(randomGenerator, (unsigned int)(elements.size()) - 1u);
+
+	return elements[index];
+}
+
+template <typename T>
+T RandomI::random(RandomGenerator& randomGenerator, const std::initializer_list<T>& elements)
+{
+	ocean_assert(elements.size() != 0);
+
+	const unsigned int index = RandomI::random(randomGenerator, (unsigned int)(elements.size()) - 1u);
+
+	return elements.begin()[index];
 }
 
 constexpr unsigned int RandomI::randMax()

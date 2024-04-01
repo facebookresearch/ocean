@@ -96,6 +96,12 @@ bool TestRandomI::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testRandomElementsInitializerList(randomGenerator, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testExtremeValueRange(randomGenerator) && allSucceeded;
 
 	Log::info() << " ";
@@ -196,6 +202,11 @@ TEST_F(TestRandomI, RandomTriple)
 TEST_F(TestRandomI, RandomElementsVector)
 {
 	EXPECT_TRUE(TestBase::TestRandomI::testRandomElementsVector(randomGenerator_, GTEST_TEST_DURATION));
+}
+
+TEST_F(TestRandomI, RandomElementsInitializerList)
+{
+	EXPECT_TRUE(TestBase::TestRandomI::testRandomElementsInitializerList(randomGenerator_, GTEST_TEST_DURATION));
 }
 
 TEST_F(TestRandomI, ExtremeValueRange)
@@ -2816,7 +2827,92 @@ bool TestRandomI::testRandomElementsVector(RandomGenerator& randomGenerator, con
 	}
 
 	return allSucceeded;
+}
 
+bool TestRandomI::testRandomElementsInitializerList(RandomGenerator& randomGenerator, const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Random elements per initializer-list test:";
+
+	bool allSucceeded = true;
+
+	constexpr unsigned int iterations = 100000u;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const std::initializer_list<int> initializerList = {0, 1, 2, 3, 4};
+
+		{
+			Indices32 histogram(initializerList.size(), 0u);
+
+			for (size_t n = 0; n < iterations; ++n)
+			{
+				const int element = RandomI::random(initializerList);
+
+				ocean_assert(element < int(histogram.size()));
+				if (element < int(histogram.size()))
+				{
+					histogram[element]++;
+				}
+				else
+				{
+					allSucceeded = false;
+				}
+			}
+
+			std::sort(histogram.begin(), histogram.end());
+
+			const unsigned int difference = (unsigned int)(std::abs(int(histogram.front()) - int(histogram.back())));
+
+			if (difference > iterations * 5u / 100u) // 5%
+			{
+				allSucceeded = false;
+			}
+		}
+
+		{
+			Indices32 histogram(initializerList.size(), 0u);
+
+			for (size_t n = 0; n < iterations; ++n)
+			{
+				const int element = RandomI::random(randomGenerator, initializerList);
+
+				ocean_assert(element < int(histogram.size()));
+				if (element < int(histogram.size()))
+				{
+					histogram[element]++;
+				}
+				else
+				{
+					allSucceeded = false;
+				}
+			}
+
+			std::sort(histogram.begin(), histogram.end());
+
+			const unsigned int difference = (unsigned int)(std::abs(int(histogram.front()) - int(histogram.back())));
+
+			if (difference > iterations * 5u / 100u) // 5%
+			{
+				allSucceeded = false;
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
 }
 
 bool TestRandomI::testExtremeValueRange(RandomGenerator& randomGenerator)
