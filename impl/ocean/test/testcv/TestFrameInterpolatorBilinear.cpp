@@ -2404,6 +2404,10 @@ bool TestFrameInterpolatorBilinear::testSpecialCasesResize400x400To256x256_8BitP
 		if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrameSpecial, copyTargetFrameSpecial))
 		{
 			ocean_assert(false && "Invalid padding memory!");
+
+#ifdef OCEAN_USE_GTEST // temporary workaround
+			EXPECT_TRUE(false);
+#endif
 			allSucceeded = false;
 			break;
 		}
@@ -2416,6 +2420,10 @@ bool TestFrameInterpolatorBilinear::testSpecialCasesResize400x400To256x256_8BitP
 		{
 			if (memcmp(targetFrameSpecial.constrow<void>(y), targetFrameGeneral.constrow<void>(y), targetFrameSpecial.planeWidthBytes(0u)) != 0)
 			{
+#ifdef OCEAN_USE_GTEST // temporary workaround
+			EXPECT_TRUE(false);
+#endif
+
 				allSucceeded = false;
 			}
 		}
@@ -2433,6 +2441,10 @@ bool TestFrameInterpolatorBilinear::testSpecialCasesResize400x400To256x256_8BitP
 
 		if (averageAbsError != 0.0 || maximalAbsError != 0.0)
 		{
+#ifdef OCEAN_USE_GTEST // temporary workaround
+			EXPECT_EQ(averageAbsError, 0.0);
+			EXPECT_EQ(maximalAbsError, 0.0);
+#endif
 			allSucceeded = false;
 		}
 
