@@ -58,6 +58,7 @@ endif()
 
 # Ocean libraries
 add_subdirectory(impl/ocean/base)
+add_subdirectory(impl/ocean/math)
 add_subdirectory(impl/ocean/system)
 
 # Demo applications (for desktop)
