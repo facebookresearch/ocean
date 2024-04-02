@@ -195,7 +195,7 @@ bool OculusTagTracker::trackTagsStereo(const AnyCamera& anyCameraA, const AnyCam
 		createFramePyramid(yFrames[1], numberFrameLayers_),
 	};
 
-	ocean_assert(framePyramids[0].validLayers() == numberFrameLayers_ && framePyramids[0].validLayers() == numberFrameLayers_);
+	ocean_assert(framePyramids[0].layers() == numberFrameLayers_ && framePyramids[0].layers() == numberFrameLayers_);
 
 	ocean_assert(frameCounter_ == 0u || (previousYFrames_[0].isValid() && previousYFrames_[1].isValid()));
 	ocean_assert(frameCounter_ == 0u || (previousFramePyramids_[0].isValid() && previousFramePyramids_[1].isValid()));

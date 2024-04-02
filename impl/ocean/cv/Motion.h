@@ -155,7 +155,7 @@ class Motion
 		 * If a point is near the frame border, a mirrored image patch is applied.<br>
 		 * @param previousPyramid Previous frame pyramid
 		 * @param currentPyramid Current frame pyramid, with same frame type as the previous frame
-		 * @param numberLayers The number of pyramid layers that will be used for tracking, with range [1, min(pyramids->validLayers(), coarsest layer that match with the patch size)]
+		 * @param numberLayers The number of pyramid layers that will be used for tracking, with range [1, min(pyramids->layers(), coarsest layer that match with the patch size)]
 		 * @param previousPoints A set of points that are located in the previous frame
 		 * @param roughPoints The rough points in the current frame (if known), otherwise the prevousPoints may be provided
 		 * @param currentPoints Resulting current points, that have been tracking between the two points
@@ -209,7 +209,7 @@ bool Motion<TMetric>::trackPointsInPyramidMirroredBorder(const FramePyramid& pre
 	ocean_assert(previousPyramid.frameType().pixelOrigin() == currentPyramid.frameType().pixelOrigin());
 
 	const unsigned int idealLayers = CV::FramePyramid::idealLayers(previousPyramid.finestWidth(), previousPyramid.finestHeight(), (tPatchSize / 2u) * 4u, (tPatchSize / 2u) * 4u, 2u);
-	const unsigned int numberLayers = min(min(previousPyramid.validLayers(), currentPyramid.validLayers()), idealLayers);
+	const unsigned int numberLayers = min(min(previousPyramid.layers(), currentPyramid.layers()), idealLayers);
 
 	if (numberLayers == 0u)
 	{
@@ -384,7 +384,7 @@ void Motion<TMetric>::trackPointsInPyramidMirroredBorderSubset(const FramePyrami
 	ocean_assert(previousPyramid->frameType().pixelFormat() == currentPyramid->frameType().pixelFormat());
 	ocean_assert(previousPyramid->frameType().pixelOrigin() == currentPyramid->frameType().pixelOrigin());
 
-	ocean_assert(previousPyramid->validLayers() >= 1u && currentPyramid->validLayers() >= 1u);
+	ocean_assert(previousPyramid->layers() >= 1u && currentPyramid->layers() >= 1u);
 
 	ocean_assert(previousPoints->size() == roughPoints->size());
 	ocean_assert(currentPoints->size() == previousPoints->size());
@@ -394,8 +394,8 @@ void Motion<TMetric>::trackPointsInPyramidMirroredBorderSubset(const FramePyrami
 	ocean_assert(firstPoint + numberPoints <= previousPoints->size());
 
 	ocean_assert(numberLayers >= 1u);
-	ocean_assert(numberLayers <= previousPyramid->validLayers());
-	ocean_assert(numberLayers <= currentPyramid->validLayers());
+	ocean_assert(numberLayers <= previousPyramid->layers());
+	ocean_assert(numberLayers <= currentPyramid->layers());
 
 	ocean_assert(previousPyramid->layer(numberLayers - 1u).width() >= tPatchSize / 2u);
 	ocean_assert(previousPyramid->layer(numberLayers - 1u).height() >= tPatchSize / 2u);

@@ -451,7 +451,7 @@ class AdvancedMotion
 		 * If a point is near the frame border, a mirrored image patch is applied.
 		 * @param previousPyramid The previous frame pyramid, must be valid
 		 * @param nextPyramid The next frame pyramid, with same pixel format and pixel orientation as the previous frame pyramid, must be valid
-		 * @param numberLayers The number of pyramid layers that will be used for tracking, with range [1, min(pyramids->validLayers(), 'coarsest layer that match with the patch size')]
+		 * @param numberLayers The number of pyramid layers that will be used for tracking, with range [1, min(pyramids->layers(), 'coarsest layer that match with the patch size')]
 		 * @param previousPoints A set of points that are located in the previous frame
 		 * @param roughNextPoints The rough points located in the finest pyramid layer of the next pyramid (if known), nullptr if unknown
 		 * @param nextPoints Resulting tracked points located in the finest layer of the next pyramid
@@ -473,7 +473,7 @@ class AdvancedMotion
 		 * This function has two template parameters: a) the number of frame channels and b) the patch size, both known at compile time.<br>
 		 * @param previousPyramid Previous frame pyramid, must be valid
 		 * @param currentPyramid Current frame pyramid, with same pixel format and pixel orientation as the previous frame pyramid, must be valid
-		 * @param numberLayers The number of pyramid layers that will be used for tracking, with range [1, min(pyramids->validLayers(), 'coarsest layer that match with the patch size')]
+		 * @param numberLayers The number of pyramid layers that will be used for tracking, with range [1, min(pyramids->layers(), 'coarsest layer that match with the patch size')]
 		 * @param previousPoints A set of points that are located in the previous frame
 		 * @param roughPoints The rough points in the current frame (if known), otherwise the prevousPoints may be provided
 		 * @param currentPoints Resulting current points, that have been tracking between the two points
@@ -536,7 +536,7 @@ inline bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMir
 	ocean_assert(subPixelIterations >= 1u);
 
 	const unsigned int idealLayers = CV::FramePyramid::idealLayers(previousPyramid.finestWidth(), previousPyramid.finestHeight(), (tSize / 2u) * 4u, (tSize / 2u) * 4u, 2u);
-	const unsigned int numberLayers = min(min(previousPyramid.validLayers(), currentPyramid.validLayers()), idealLayers);
+	const unsigned int numberLayers = min(min(previousPyramid.layers(), currentPyramid.layers()), idealLayers);
 
 	if (numberLayers == 0u)
 	{
@@ -585,7 +585,7 @@ inline bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMir
 	ocean_assert(subPixelIterations >= 1u);
 
 	const unsigned int idealLayers = CV::FramePyramid::idealLayers(previousPyramid.finestWidth(), previousPyramid.finestHeight(), (tSize / 2u) * 4u, (tSize / 2u) * 4u, 2u);
-	const unsigned int numberLayers = min(min(previousPyramid.validLayers(), currentPyramid.validLayers()), idealLayers);
+	const unsigned int numberLayers = min(min(previousPyramid.layers(), currentPyramid.layers()), idealLayers);
 
 	if (numberLayers == 0u)
 	{
@@ -629,7 +629,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackArbitraryPointsBidirecti
 		return false;
 	}
 
-	const unsigned int maximalTrackingLayers = min(trackingLayers, min(previousPyramid.validLayers(), nextPyramid.validLayers()));
+	const unsigned int maximalTrackingLayers = min(trackingLayers, min(previousPyramid.layers(), nextPyramid.layers()));
 
 	for (unsigned int n = 0u; n < maximalTrackingLayers; ++n)
 	{
@@ -742,8 +742,8 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackArbitraryPointsBidirecti
 		}
 
 		// Create sub pyramid using fast frame data referencing:
-		const FramePyramid previousSmall = FramePyramid(previousPyramid, false, n, previousPyramid.validLayers() - n);
-		const FramePyramid nextSmall = FramePyramid(nextPyramid, false, n, nextPyramid.validLayers() - n);
+		const FramePyramid previousSmall = FramePyramid(previousPyramid, false, n, previousPyramid.layers() - n);
+		const FramePyramid nextSmall = FramePyramid(nextPyramid, false, n, nextPyramid.layers() - n);
 
 		Vectors2 smallNextImagePoints;
 
@@ -1502,8 +1502,8 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 	ocean_assert(firstPoint + numberPoints <= previousPoints->size());
 
 	ocean_assert(numberLayers >= 1u);
-	ocean_assert(numberLayers <= previousPyramid->validLayers());
-	ocean_assert(numberLayers <= nextPyramid->validLayers());
+	ocean_assert(numberLayers <= previousPyramid->layers());
+	ocean_assert(numberLayers <= nextPyramid->layers());
 
 	ocean_assert(previousPyramid->layer(numberLayers - 1u).width() >= tSize / 2u);
 	ocean_assert(previousPyramid->layer(numberLayers - 1u).height() >= tSize / 2u);
@@ -1648,8 +1648,8 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 	ocean_assert(firstPoint + numberPoints <= previousPoints->size());
 
 	ocean_assert(numberLayers >= 1u);
-	ocean_assert(numberLayers <= previousPyramid->validLayers());
-	ocean_assert(numberLayers <= currentPyramid->validLayers());
+	ocean_assert(numberLayers <= previousPyramid->layers());
+	ocean_assert(numberLayers <= currentPyramid->layers());
 
 	ocean_assert(previousPyramid->layer(numberLayers - 1u).width() >= tSize / 2u);
 	ocean_assert(previousPyramid->layer(numberLayers - 1u).height() >= tSize / 2u);

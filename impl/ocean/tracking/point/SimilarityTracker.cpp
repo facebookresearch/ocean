@@ -73,7 +73,7 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 	const unsigned int maxSize = std::max(yFrame.width(), yFrame.height());
 
 	// we want to ensure that corresponding feature points can have an offset of 2.5% between to successive video frames
-	const unsigned int pyramidLayers = keyFramePyramid_ ? keyFramePyramid_.validLayers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 20u, 20u, 2u, maxSize * 25u / 1000u, coarsestLayerRadius);
+	const unsigned int pyramidLayers = keyFramePyramid_ ? keyFramePyramid_.layers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 20u, 20u, 2u, maxSize * 25u / 1000u, coarsestLayerRadius);
 
 	currentFramePyramid_.replace8BitPerChannel(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), worker);
 
@@ -83,7 +83,7 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 
 	if (keyFramePyramid_)
 	{
-		ocean_assert(keyFramePyramid_.validLayers() == currentFramePyramid_.validLayers());
+		ocean_assert(keyFramePyramid_.layers() == currentFramePyramid_.layers());
 
 		unsigned int firstPyramidLayerIndex = (unsigned int)(-1);
 
@@ -107,14 +107,14 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 		}
 		else
 		{
-			ocean_assert(keyFramePointsLayerIndex_ < keyFramePyramid_.validLayers());
+			ocean_assert(keyFramePointsLayerIndex_ < keyFramePyramid_.layers());
 			firstPyramidLayerIndex = keyFramePointsLayerIndex_;
 		}
 
 		ocean_assert(keyFramePoints_.size() <= maximalFeaturePoints);
 
-		unsigned int hierarchyLayers = keyFramePyramid_.validLayers() - firstPyramidLayerIndex;
-		ocean_assert(hierarchyLayers >= 1u && hierarchyLayers <= keyFramePyramid_.validLayers());
+		unsigned int hierarchyLayers = keyFramePyramid_.layers() - firstPyramidLayerIndex;
+		ocean_assert(hierarchyLayers >= 1u && hierarchyLayers <= keyFramePyramid_.layers());
 
 		Vectors2 roughCurrentPoints;
 
@@ -317,7 +317,7 @@ bool SimilarityTracker::determineFeaturePoints(const CV::FramePyramid& framePyra
 	}
 
 	// in any case, we cannot start with a layer we do not have
-	maximalFirstPyramidLayerIndex = std::min(maximalFirstPyramidLayerIndex, framePyramid.validLayers() - 1u);
+	maximalFirstPyramidLayerIndex = std::min(maximalFirstPyramidLayerIndex, framePyramid.layers() - 1u);
 
 	CV::Detector::HarrisCorners corners;
 
@@ -327,7 +327,7 @@ bool SimilarityTracker::determineFeaturePoints(const CV::FramePyramid& framePyra
 
 		usedLayerIndex = std::min(firstPyramidLayerIndices[nConfiguration], maximalFirstPyramidLayerIndex);
 
-		ocean_assert(usedLayerIndex < framePyramid.validLayers());
+		ocean_assert(usedLayerIndex < framePyramid.layers());
 
 		// we have a valid frame pyramid of a previous frame
 
@@ -410,7 +410,7 @@ bool SimilarityTracker::determineFeaturePoints(const CV::FramePyramid& framePyra
 		}
 	}
 
-	ocean_assert(usedLayerIndex < framePyramid.validLayers());
+	ocean_assert(usedLayerIndex < framePyramid.layers());
 	ocean_assert(featurePoints.size() >= minimalFeaturePoints);
 
 	return true;

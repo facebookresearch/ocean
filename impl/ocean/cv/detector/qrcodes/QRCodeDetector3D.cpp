@@ -294,8 +294,8 @@ bool QRCodeDetector3D::detectQRCodesWithPyramids(const SharedAnyCameras& sharedA
 		FramePyramid(firstLayers[1], numberLayers, worker, FramePyramid::DM_FILTER_14641)
 	};
 
-	ocean_assert(framePyramids[0].isValid() && framePyramids[0].validLayers() == numberLayers);
-	ocean_assert(framePyramids[1].isValid() && framePyramids[1].validLayers() == numberLayers);
+	ocean_assert(framePyramids[0].isValid() && framePyramids[0].layers() == numberLayers);
+	ocean_assert(framePyramids[1].isValid() && framePyramids[1].layers() == numberLayers);
 
 	QRCodes filteredCodes;
 	Scalars filteredCodeSizes;
@@ -303,9 +303,9 @@ bool QRCodeDetector3D::detectQRCodesWithPyramids(const SharedAnyCameras& sharedA
 
 	QRCodes filteredCodes2D;
 
-	for (unsigned int layerIndex = 0u; layerIndex < framePyramids[0].validLayers(); ++layerIndex)
+	for (unsigned int layerIndex = 0u; layerIndex < framePyramids[0].layers(); ++layerIndex)
 	{
-		ocean_assert(layerIndex < framePyramids[1].validLayers());
+		ocean_assert(layerIndex < framePyramids[1].layers());
 
 		const unsigned int layerWidth = framePyramids[0].layer(layerIndex).width();
 		const unsigned int layerHeight = framePyramids[0].layer(layerIndex).height();

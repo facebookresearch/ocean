@@ -128,7 +128,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * The number of 'valid' layers will be set to zero, so adjust this value once the image content of the layers have been defined.
 		 * @param frameType Type of the frame to create a frame pyramid for
 		 * @param layers Number of layers to be created, with range [1, infinity)
-		 * @see setValidLayers().
 		 */
 		explicit FramePyramid(const FrameType& frameType, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE);
 
@@ -208,7 +207,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * If no valid layer is stored in this pyramid, the finest layer is used instead.<br>
 		 * Beware: The frame will not be the owner of the frame data, if you need a copy of this frame enforce to copy the frame buffer!<br>
 		 * @return Finest pyramid layer frame
-		 * @see validLayers().
 		 */
 		inline const LegacyFrame& coarsestLayer() const;
 
@@ -217,7 +215,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * If no valid layer is stored in this pyramid, the finest layer is used instead.<br>
 		 * Beware: The frame will not be the owner of the frame data, if you need a copy of this frame enforce to copy the frame buffer!<br>
 		 * @return Finest pyramid layer frame
-		 * @see validLayers().
 		 */
 		inline LegacyFrame& coarsestLayer();
 
@@ -226,13 +223,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return Pyramid layers, with range [0, infinity)
 		 */
 		inline unsigned int layers() const;
-
-		/**
-		 * Returns the number of valid layers this pyramid holds.
-		 * @return Valid pyramid layers, with range [0, infinity)
-		 * @see setValidLayers().
-		 */
-		inline unsigned int validLayers() const;
 
 		/**
 		 * Returns the width of a given layer.
@@ -264,7 +254,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Returns the width of the coarsest (last) layer regarding to the number of valid layers.
 		 * If no valid layer is stored in this pyramid, the finest layer is used instead.
 		 * @return Width in pixel
-		 * @see validLayers().
 		 */
 		inline unsigned int coarsestWidth() const;
 
@@ -272,7 +261,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Returns the height of the coarsest (last) layer regarding to the number of valid layers.
 		 * If no valid layer is stored in this pyramid, the finest layer is used instead.
 		 * @return Height in pixel
-		 * @see validLayers().
 		 */
 		inline unsigned int coarsestHeight() const;
 
@@ -280,16 +268,8 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Returns the size factor for the coarsest layer in relation to the finest layer regarding to the number of valid layers.
 		 * If no valid layer is stored in this pyramid, the finest layer is used instead.
 		 * @return Coarsest layer size factor
-		 * @see validLayers().
 		 */
 		inline unsigned int coarsestSizeFactor() const;
-
-		/**
-		 * Sets the number of valid layers of this pyramid holds.
-		 * @param validLayers Number of valid layers, with range [0, layers())
-		 * @see validLayers().
-		 */
-		inline void setValidLayers(const unsigned int validLayers);
 
 		/**
 		 * Returns the frame type of the finest layer.
@@ -555,9 +535,6 @@ class OCEAN_CV_EXPORT FramePyramid
 
 	protected:
 
-		/// Number of valid layers, with range [0, layers()]
-		unsigned int numberValidLayers_ = 0u;
-
 		/// Layers of this pyramid.
 		LegacyFrames layers_;
 
@@ -608,34 +585,19 @@ inline const LegacyFrame& FramePyramid::coarsestLayer() const
 {
 	ocean_assert(isValid());
 
-	if (numberValidLayers_ == 0u)
-	{
-		return layers_.front();
-	}
-
-	return layers_[numberValidLayers_ - 1u];
+	return layers_.back();
 }
 
 inline LegacyFrame& FramePyramid::coarsestLayer()
 {
 	ocean_assert(isValid());
 
-	if (numberValidLayers_ == 0u)
-	{
-		return layers_.front();
-	}
-
-	return layers_[numberValidLayers_ - 1u];
+	return layers_.back();
 }
 
 inline unsigned int FramePyramid::layers() const
 {
 	return (unsigned int)layers_.size();
-}
-
-inline unsigned int FramePyramid::validLayers() const
-{
-	return numberValidLayers_;
 }
 
 inline unsigned int FramePyramid::width(const unsigned int layer) const
@@ -666,43 +628,21 @@ inline unsigned int FramePyramid::coarsestWidth() const
 {
 	ocean_assert(isValid());
 
-	if (numberValidLayers_ == 0u)
-	{
-		return layers_.front().width();
-	}
-
-	return layers_[numberValidLayers_ - 1u].width();
+	return layers_.back().width();
 }
 
 inline unsigned int FramePyramid::coarsestHeight() const
 {
 	ocean_assert(isValid());
 
-	if (numberValidLayers_ == 0u)
-	{
-		return layers_.front().height();
-	}
-
-	return layers_[numberValidLayers_ - 1u].height();
+	return layers_.back().height();
 }
 
 unsigned int FramePyramid::coarsestSizeFactor() const
 {
 	ocean_assert(isValid());
 
-	if (numberValidLayers_ == 0u)
-	{
-		return 1u;
-	}
-
-	return 1u << (numberValidLayers_ - 1u);
-}
-
-inline void FramePyramid::setValidLayers(const unsigned int validLayers)
-{
-	ocean_assert(validLayers <= layers());
-
-	numberValidLayers_ = min(validLayers, layers());
+	return 1u << (unsigned int)((layers_.size() - 1));
 }
 
 inline const FrameType& FramePyramid::frameType() const
@@ -714,12 +654,12 @@ inline const FrameType& FramePyramid::frameType() const
 template <bool tCopyData>
 FramePyramid FramePyramid::create8BitPerChannel(const FramePyramid& framePyramid, const unsigned int layerIndex, const unsigned int layerCount, Worker* worker)
 {
-	ocean_assert(framePyramid.numberValidLayers_ >= 0u);
-	ocean_assert(layerIndex < framePyramid.numberValidLayers_);
+	ocean_assert(framePyramid.layers() >= 0u);
+	ocean_assert(layerIndex < framePyramid.layers());
 	ocean_assert(layerCount >= 0u);
 
 	const LegacyFrame& firstLayer = framePyramid.layers_[layerIndex];
-	const unsigned int maxUsableSourceLayers = framePyramid.numberValidLayers_ - layerIndex;
+	const unsigned int maxUsableSourceLayers = framePyramid.layers() - layerIndex;
 
 	FramePyramid newPyramid;
 
@@ -751,20 +691,18 @@ FramePyramid FramePyramid::create8BitPerChannel(const FramePyramid& framePyramid
 			newPyramid.layers_.push_back(LegacyFrame(sourceLayer.frameType(), sourceLayer.timestamp(), previousLayer.data() + previousLayer.size(), false));
 		}
 
-		newPyramid.numberValidLayers_ = selectedSourceLayers;
-
 		// Create additional missing layers, if frame data is not a reference:
-		if (resultingLayers > newPyramid.numberValidLayers_)
+		if (resultingLayers > newPyramid.layers_.size())
 		{
 			// Pyramid frame needs to hold requested number of layers:
 			ocean_assert(newPyramid.memory_.size() >= size(newPyramid.finestWidth(), newPyramid.finestHeight(), newPyramid.finestLayer().pixelFormat(), resultingLayers));
 
-			for (unsigned int n = newPyramid.numberValidLayers_; n < resultingLayers && newPyramid.layers_[n - 1u].width() > 1u && newPyramid.layers_[n - 1u].height() > 1u; ++n)
+			for (unsigned int n = (unsigned int)(newPyramid.layers_.size()); n < resultingLayers && newPyramid.layers_[n - 1u].width() > 1u && newPyramid.layers_[n - 1u].height() > 1u; ++n)
 			{
 				ocean_assert(n == (unsigned int)newPyramid.layers_.size());
-				if (newPyramid.addLayer11(worker))
+				if (!newPyramid.addLayer11(worker))
 				{
-					newPyramid.numberValidLayers_++;
+					break;
 				}
 			}
 		}
@@ -791,8 +729,6 @@ FramePyramid FramePyramid::create8BitPerChannel(const FramePyramid& framePyramid
 
 			newPyramid.layers_.push_back(LegacyFrame(sourceLayer.frameType(), sourceLayer.timestamp(), previousLayer.constdata() + previousLayer.size(), false));
 		}
-
-		newPyramid.numberValidLayers_ = selectedSourceLayers;
 	}
 
 	return newPyramid;
@@ -817,7 +753,6 @@ constexpr unsigned int FramePyramid::sizeFactor(const unsigned int layer)
 
 inline void FramePyramid::clear()
 {
-	numberValidLayers_ = 0u;
 	layers_.clear();
 	memory_.free();
 }

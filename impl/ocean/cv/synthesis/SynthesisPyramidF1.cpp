@@ -33,12 +33,12 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 	ocean_assert(synthesisHasBeenArranged_);
 #endif
 
-	ocean_assert(synthesisFramePyramid_.validLayers() == synthesisMaskPyramid_.validLayers());
-	ocean_assert(synthesisFilterPyramid_.isNull() || synthesisFilterPyramid_.validLayers() == synthesisFramePyramid_.validLayers());
-	ocean_assert(synthesisBoundingBoxes_.size() >= synthesisFramePyramid_.validLayers());
+	ocean_assert(synthesisFramePyramid_.layers() == synthesisMaskPyramid_.layers());
+	ocean_assert(synthesisFilterPyramid_.isNull() || synthesisFilterPyramid_.layers() == synthesisFramePyramid_.layers());
+	ocean_assert(synthesisBoundingBoxes_.size() >= synthesisFramePyramid_.layers());
 
 	layersReversedOrder_.clear(); // **TODO** replace - not clear
-	layersReversedOrder_.reserve(synthesisFramePyramid_.validLayers());
+	layersReversedOrder_.reserve(synthesisFramePyramid_.layers());
 
 	ocean_assert(optimizationIterations >= 1u);
 
@@ -46,7 +46,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 	OCEAN_SUPPRESS_UNUSED_WARNING(weightFactor);
 	OCEAN_SUPPRESS_UNUSED_WARNING(borderFactor);
 
-	const unsigned int layers = (unsigned int)synthesisFramePyramid_.validLayers();
+	const unsigned int layers = (unsigned int)synthesisFramePyramid_.layers();
 	ocean_assert(layers >= 1u);
 
 	for (unsigned int layerIndex = layers - 1u; layerIndex != (unsigned int)(-1); --layerIndex)

@@ -263,10 +263,10 @@ bool TestFREAKDescriptorT<tSize>::testComputeDescriptors(const double testDurati
 		// TODO Add an offset to the principal point
 		const PinholeCamera pinholeCamera(yFrame.width(), yFrame.height(), Numeric::deg2rad(60));
 
-		typename FREAKDescriptorT<tSize>::PinholeCameraDerivativeFunctor cameraDerivativeFunctor(pinholeCamera, yFramePyramid.validLayers());
-		ocean_assert(cameraDerivativeFunctor.supportedPyramidLevels() == yFramePyramid.validLayers());
+		typename FREAKDescriptorT<tSize>::PinholeCameraDerivativeFunctor cameraDerivativeFunctor(pinholeCamera, yFramePyramid.layers());
+		ocean_assert(cameraDerivativeFunctor.supportedPyramidLevels() == yFramePyramid.layers());
 
-		for (unsigned int level = 0u; level < yFramePyramid.validLayers() - 1u; ++level)
+		for (unsigned int level = 0u; level < yFramePyramid.layers() - 1u; ++level)
 		{
 			const unsigned int width = yFramePyramid[level].width();
 			const unsigned int height = yFramePyramid[level].height();

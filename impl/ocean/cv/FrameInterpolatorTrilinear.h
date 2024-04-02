@@ -240,13 +240,13 @@ inline void FrameInterpolatorTrilinear::interpolate8BitPerChannel(const FramePyr
 	static_assert(tChannels != 0u, "Invalid channel number!");
 
 	ocean_assert(result != nullptr);
-	ocean_assert(framePyramid.validLayers() > 0u);
+	ocean_assert(framePyramid.layers() > 0u);
 
 	ocean_assert(position.z() >= 0);
-	ocean_assert(position.z() <= Scalar(framePyramid.validLayers() - 1));
+	ocean_assert(position.z() <= Scalar(framePyramid.layers() - 1u));
 
 	const unsigned int indexFine = (unsigned int)position.z();
-	const unsigned int indexCoarse = indexFine + (indexFine + 1u < framePyramid.validLayers() ? 1u : 0u);
+	const unsigned int indexCoarse = indexFine + (indexFine + 1u < framePyramid.layers() ? 1u : 0u);
 
 	const Frame frameFine(framePyramid.layer(indexFine), Frame::temporary_ACM_USE_KEEP_LAYOUT);
 	const unsigned int widthFine = frameFine.width();
@@ -348,7 +348,7 @@ void FrameInterpolatorTrilinear::resize8BitPerChannelSubset(const FramePyramid* 
 
 	ocean_assert(source != nullptr && target != nullptr);
 	ocean_assert(source->isValid());
-	ocean_assert(source->validLayers() != 0u);
+	ocean_assert(source->layers() != 0u);
 
 	ocean_assert(source->finestLayer().numberPlanes() == 1u);
 	ocean_assert(FrameType::formatIsGeneric(source->finestLayer().pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, tChannels));
@@ -365,8 +365,8 @@ void FrameInterpolatorTrilinear::resize8BitPerChannelSubset(const FramePyramid* 
 	const Scalar squareDiagonal = Numeric::sqr(targetToSourceX) + Numeric::sqr(targetToSourceY);
 	const Scalar recipprocalLog2 = Scalar(1) / (2 * Numeric::log(2));
 
-	const Scalar layer = minmax(Scalar(0), Numeric::log(squareDiagonal) * recipprocalLog2 - Scalar(0.5), Scalar(source->validLayers() - 1u)); // log_2(diagonal) - 0.5
-	ocean_assert(Numeric::ceil(layer) <= Scalar(source->validLayers()));
+	const Scalar layer = minmax(Scalar(0), Numeric::log(squareDiagonal) * recipprocalLog2 - Scalar(0.5), Scalar(source->layers() - 1u)); // log_2(diagonal) - 0.5
+	ocean_assert(Numeric::ceil(layer) <= Scalar(source->layers()));
 
 	const unsigned int targetStrideElements = targetWidth * tChannels + targetPaddingElements;
 
@@ -439,7 +439,7 @@ void FrameInterpolatorTrilinear::homography8BitPerChannelSubset(const FramePyram
 			const Vector2 cornerPosition3Homography(*homography * cornerPosition3);
 			const Vector2 cornerPosition4Homography(*homography * cornerPosition4);
 
-			const Vector3 pyramidPosition = interpolatePosition(sourcePyramid->validLayers(), centerPositionHomography, cornerPosition1Homography, cornerPosition2Homography, cornerPosition3Homography, cornerPosition4Homography);
+			const Vector3 pyramidPosition = interpolatePosition(sourcePyramid->layers(), centerPositionHomography, cornerPosition1Homography, cornerPosition2Homography, cornerPosition3Homography, cornerPosition4Homography);
 
 			if (centerPositionHomography.x() < Scalar(0) || centerPositionHomography.x() > scalarWidth_1 || centerPositionHomography.y() < Scalar(0) || centerPositionHomography.y() > scalarHeight_1)
 			{

@@ -28,7 +28,7 @@ void ORBFeatureDescriptor::detectReferenceFeaturesAndDetermineDescriptors(const 
 	// we acquire the integral image for the finest image resolution, and reuse it for lower image resolutions as well
 	Frame linedIntegralFrame(FrameType(framePyramid.finestWidth() + 1u, framePyramid.finestHeight() + 1u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT));
 
-	for (unsigned int i = 0u; i < framePyramid.validLayers(); ++i)
+	for (unsigned int i = 0u; i < framePyramid.layers(); ++i)
 	{
 		const Frame layer(framePyramid[i], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 		ocean_assert(FrameType::formatIsGeneric(layer.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));

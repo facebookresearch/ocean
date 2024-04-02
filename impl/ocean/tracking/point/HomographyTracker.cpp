@@ -168,7 +168,7 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 	const unsigned int maxSize = std::max(yFrame.width(), yFrame.height());
 
 	// we ensure that corresponding feature points can have an offset of 20.0% between to successive video frames (to get a pyramid with enough layers for any tracking situation)
-	const unsigned int pyramidLayers = previousFramePyramid_ ? previousFramePyramid_.validLayers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 20u, 20u, 2u, maxSize * 20u / 100u, 2u /* = smallest coarset layer radius*/);
+	const unsigned int pyramidLayers = previousFramePyramid_ ? previousFramePyramid_.layers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 20u, 20u, 2u, maxSize * 20u / 100u, 2u /* = smallest coarsest layer radius*/);
 
 	currentFramePyramid_.replace8BitPerChannel(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), worker);
 
@@ -176,7 +176,7 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 
 	if (previousFramePyramid_ && isRegionVisible(globalCameraOrientation_, cameraOrientation))
 	{
-		ocean_assert(previousFramePyramid_.validLayers() == currentFramePyramid_.validLayers());
+		ocean_assert(previousFramePyramid_.layers() == currentFramePyramid_.layers());
 
 		ocean_assert(!globalHomography_.isNull());
 

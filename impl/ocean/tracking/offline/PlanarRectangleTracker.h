@@ -300,7 +300,7 @@ inline PlanarRectangleTracker::PlaneTrackerComponent::~PlaneTrackerComponent()
 inline size_t PlanarRectangleTracker::PlaneTrackerComponent::frame2framePose(const CV::FramePyramid& previousFramePyramid, const CV::FramePyramid& currentFramePyramid, const CV::SubRegion& previousSubRegion, const HomogenousMatrix4& previousPose, HomogenousMatrix4& currentPose, const Scalar maximalSqrError, const unsigned int horizontalBins, const unsigned int verticalBins, const unsigned int strength, Worker* worker, const unsigned int trackingLayers, Vectors2* previousImagePoints, Vectors2* currentImagePoints)
 {
 	ocean_assert(previousFramePyramid && currentFramePyramid);
-	ocean_assert(previousFramePyramid.validLayers() == currentFramePyramid.validLayers());
+	ocean_assert(previousFramePyramid.layers() == currentFramePyramid.layers());
 
 	return Frame2FrameTracker::trackPlanarObject<15u>(camera_, previousFramePyramid, currentFramePyramid, 2u, previousPose, plane_, previousSubRegion, currentPose, maximalSqrError, horizontalBins, verticalBins, strength, worker, trackingLayers, previousImagePoints, currentImagePoints);
 }

@@ -60,7 +60,7 @@ class OCEAN_TRACKING_POINT_EXPORT SimilarityTracker
 		{
 			/// The textureness is unknown.
 			RT_UNKNOWN,
-			/// The textureness is low (an almost homogenous region).
+			/// The textureness is low (an almost homogeneous region).
 			RT_LOW,
 			/// The textureness is moderate.
 			RT_MODERATE,
@@ -127,7 +127,7 @@ class OCEAN_TRACKING_POINT_EXPORT SimilarityTracker
 		 * @param desiredFeaturePoints The desired number of feature points that should be detected in an ideal case, with range [minimalFeaturePoints, infinity)
 		 * @param maximalFeaturePoints The maximal number of feature points that will be detected, with range [desiredFeaturePoints, infinity)
 		 * @param featurePoints The resulting detected feature points, defined in the domain of the pyramid layer as returned by 'usedLayerIndex'
-		 * @param usedLayerIndex The pyramid layer in which the resulting feature points have been detected, with range [0, framePyramid.validLayers() - 1]
+		 * @param usedLayerIndex The pyramid layer in which the resulting feature points have been detected, with range [0, framePyramid.layers() - 1]
 		 * @param regionTextureness The resulting textureness of the sub-region (which is based on the numbers of found feature etc.)
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if at least 'minimalFeaturePoints' could be determined

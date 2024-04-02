@@ -223,7 +223,6 @@ bool FrameInterpolator::resize(const T* source, T* target, const unsigned int so
 
 				// we create a pyramid with one layer less than necessary - as we do not need to copy the actual image
 				CV::FramePyramid framePyramid(secondLayerType, layers - 1u);
-				framePyramid.setValidLayers(layers - 1u);
 
 				Frame secondLayer(framePyramid.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
 
@@ -288,7 +287,6 @@ bool FrameInterpolator::resize(const T* source, T* target, const unsigned int so
 
 				// we create a pyramid with one layer less than necessary - as we do not need to copy the actual image
 				CV::FramePyramid framePyramid(secondLayerType, layers - 1u);
-				framePyramid.setValidLayers(layers - 1u);
 
 				Frame secondLayer(framePyramid.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
 

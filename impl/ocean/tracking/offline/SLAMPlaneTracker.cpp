@@ -177,7 +177,7 @@ bool SLAMPlaneTracker::HomographyTrackerComponent::onStop(const unsigned int low
 	// **TODO** here or later?
 	if (componentResultingOptimizedCamera_ && !componentParent_.shouldThreadStop() && !optimizeCamera(*componentResultingOptimizedCamera_, 20u))
 	{
-		// the optimization of the camera profile failed, however, than we use the normale profile
+		// the optimization of the camera profile failed, however, than we use the normal profile
 		*componentResultingOptimizedCamera_ = componentCamera_;
 	}
 
@@ -187,7 +187,7 @@ bool SLAMPlaneTracker::HomographyTrackerComponent::onStop(const unsigned int low
 bool SLAMPlaneTracker::HomographyTrackerComponent::frame2frameHomography(const CV::FramePyramid& previousFramePyramid, const CV::FramePyramid& currentFramePyramid, const CV::SubRegion& previousSubRegion, SquareMatrix3& homography, Worker* worker)
 {
 	ocean_assert(previousFramePyramid && currentFramePyramid);
-	ocean_assert(previousFramePyramid.validLayers() == currentFramePyramid.validLayers());
+	ocean_assert(previousFramePyramid.layers() == currentFramePyramid.layers());
 
 	Vectors2 previousPoints, currentPoints;
 
@@ -225,8 +225,8 @@ bool SLAMPlaneTracker::HomographyTrackerComponent::optimizeHomography(const CV::
 	}
 
 	// create a frame pyramid of the transformed current frame
-	componentIntermediateFramePyramid_.replace(componentIntermediateHomographyFrame_, previousFramePyramid.validLayers(), worker);
-	ocean_assert(previousFramePyramid.validLayers() == componentIntermediateFramePyramid_.validLayers());
+	componentIntermediateFramePyramid_.replace(componentIntermediateHomographyFrame_, previousFramePyramid.layers(), worker);
+	ocean_assert(previousFramePyramid.layers() == componentIntermediateFramePyramid_.layers());
 
 	// track points from the previous frame to the (transformed) current frame, we should determine a tiny offset as the current frame matches almost with the previous frame
 	previousImagePoints.clear();

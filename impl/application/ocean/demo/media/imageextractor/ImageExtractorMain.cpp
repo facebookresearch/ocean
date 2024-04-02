@@ -92,7 +92,7 @@ class FrameHandler
 						{
 							const unsigned int level = startLevel_ + l;
 
-							if (level >= pyramid.validLayers())
+							if (level >= pyramid.layers())
 							{
 								break;
 							}

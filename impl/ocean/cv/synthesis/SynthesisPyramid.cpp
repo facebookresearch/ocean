@@ -90,22 +90,21 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 				return false;
 			}
 
-			synthesisFramePyramid_.setValidLayers(n - 1u);
-			synthesisMaskPyramid_.setValidLayers(n - 1u);
+			synthesisFramePyramid_.reduceLayers(n - 1u);
+			synthesisMaskPyramid_.reduceLayers(n - 1u);
 
 			if (filter)
 			{
-				synthesisFilterPyramid_.setValidLayers(n - 1u);
+				synthesisFilterPyramid_.reduceLayers(n - 1u);
 			}
 
 			break;
 		}
 	}
 
-	ocean_assert(synthesisFramePyramid_.validLayers() < synthesisFramePyramid_.layers());
-	ocean_assert(synthesisFramePyramid_.validLayers() >= 1u);
-	ocean_assert(synthesisFramePyramid_.validLayers() == synthesisMaskPyramid_.validLayers());
-	ocean_assert(filter.isNull() || synthesisFramePyramid_.validLayers() == synthesisFilterPyramid_.validLayers());
+	ocean_assert(synthesisFramePyramid_.layers() >= 1u);
+	ocean_assert(synthesisFramePyramid_.layers() == synthesisMaskPyramid_.layers());
+	ocean_assert(filter.isNull() || synthesisFramePyramid_.layers() == synthesisFilterPyramid_.layers());
 
 	// determine the mask bounding boxes in the individual layers
 	determineBoundingBoxes(worker);
@@ -113,7 +112,7 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 	// apply smoothing on layer 0 to n-2
 	if (binomialFilterOnFineLayers)
 	{
-		for (unsigned int n = 0u; n < synthesisFramePyramid_.validLayers() - 1u; ++n)
+		for (unsigned int n = 0u; n < synthesisFramePyramid_.layers() - 1u; ++n)
 		{
 			Frame frameLayer(synthesisFramePyramid_[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 			Frame maskLayer(synthesisMaskPyramid_[n], Frame::ACM_COPY_REMOVE_PADDING_LAYOUT); // we copy the mask layer, otherwise it would be changed during filtering
@@ -134,7 +133,7 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 	// now we prepare the masks of the individual pyramid layers for the next coming steps
 	// we need to know how far a pixel (inside the mask) is located from the border of the mask, we determine pixels with distances 0, 1, 2, 3, larger distances are not important as we currently use patch sizes with dimension 5x5
 
-	for (unsigned int n = 0u; n < synthesisFramePyramid_.validLayers(); ++n)
+	for (unsigned int n = 0u; n < synthesisFramePyramid_.layers(); ++n)
 	{
 		Frame layerMask(synthesisMaskPyramid_[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 		Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(layerMask.data<uint8_t>(), layerMask.width(), layerMask.height(), layerMask.paddingElements(), 3u, false, synthesisBoundingBoxes_[n], worker);
@@ -152,7 +151,7 @@ bool SynthesisPyramid::applyInpainting(const SynthesisQuality synthesisQuality, 
 	switch (synthesisQuality)
 	{
 		case SQ_LOW:
-			return applyInpainting(IT_RANDOM_EROSION, randomGenerator, weightFactor, borderFactor, maxSpatialCost, 1u, synthesisFramePyramid_.validLayers() - 2u, 0xFFFFFFFF, worker);
+			return applyInpainting(IT_RANDOM_EROSION, randomGenerator, weightFactor, borderFactor, maxSpatialCost, 1u, synthesisFramePyramid_.layers() - 2u, 0xFFFFFFFF, worker);
 
 		case SQ_MODERATE:
 			return applyInpainting(IT_PATCH_FULL_AREA_HEURISTIC_1, randomGenerator, weightFactor, borderFactor, maxSpatialCost, 1u, 2u, 1u, worker);
@@ -170,13 +169,13 @@ bool SynthesisPyramid::applyInpainting(const SynthesisQuality synthesisQuality, 
 void SynthesisPyramid::determineBoundingBoxes(Worker* worker)
 {
 	// determine the mask bounding box
-	synthesisBoundingBoxes_.resize(synthesisMaskPyramid_.validLayers());
+	synthesisBoundingBoxes_.resize(synthesisMaskPyramid_.layers());
 
-	for (unsigned int n = synthesisMaskPyramid_.validLayers() - 1u; n != (unsigned int)(-1); --n)
+	for (unsigned int n = synthesisMaskPyramid_.layers() - 1u; n != (unsigned int)(-1); --n)
 	{
 		const Frame mask(synthesisMaskPyramid_[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 
-		if (n == synthesisMaskPyramid_.validLayers() - 1u)
+		if (n == synthesisMaskPyramid_.layers() - 1u)
 		{
 			synthesisBoundingBoxes_[n] = MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 		}
@@ -196,9 +195,9 @@ void SynthesisPyramid::determineBoundingBoxes(Worker* worker)
 PixelBoundingBoxes SynthesisPyramid::slowDetermineBoundingBoxes(const FramePyramid& maskPyramid, Worker* /*worker*/)
 {
 	PixelBoundingBoxes result;
-	result.resize(maskPyramid.validLayers());
+	result.resize(maskPyramid.layers());
 
-	for (unsigned int n = maskPyramid.validLayers() - 1u; n != (unsigned int)(-1); --n)
+	for (unsigned int n = maskPyramid.layers() - 1u; n != (unsigned int)(-1); --n)
 	{
 		const Frame mask(maskPyramid[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 

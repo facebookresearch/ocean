@@ -9,8 +9,7 @@ namespace Ocean
 namespace CV
 {
 
-FramePyramid::FramePyramid(const FramePyramid& framePyramid) :
-	numberValidLayers_(framePyramid.numberValidLayers_)
+FramePyramid::FramePyramid(const FramePyramid& framePyramid)
 {
 	if (framePyramid.memory_.isOwner())
 	{
@@ -55,15 +54,15 @@ FramePyramid::FramePyramid(FramePyramid&& framePyramid) noexcept
 
 FramePyramid::FramePyramid(const FramePyramid& framePyramid, bool copyData,	const unsigned int layerIndex, const unsigned int layerCount, Worker* worker, const DownsamplingMode downsamplingMode, const CallbackDownsampling& customDownsamplingFunction)
 {
-	ocean_assert(framePyramid.numberValidLayers_ >= 0u);
-	ocean_assert(layerIndex < framePyramid.numberValidLayers_);
+	ocean_assert(framePyramid.layers() >= 0u);
+	ocean_assert(layerIndex < framePyramid.layers());
 	ocean_assert(layerCount >= 0u);
 
 	// we should either have a custom downsampling function of a non-custom downsampling mode
 	ocean_assert(customDownsamplingFunction.isNull() || downsamplingMode == DM_CUSTOM);
 
 	const LegacyFrame& firstLayer = framePyramid.layers_[layerIndex];
-	const unsigned int maxUsableSourceLayers = framePyramid.numberValidLayers_ - layerIndex;
+	const unsigned int maxUsableSourceLayers = framePyramid.layers() - layerIndex;
 
 	if (copyData)
 	{
@@ -93,20 +92,18 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid, bool copyData,	cons
 			layers_.push_back(LegacyFrame(sourceLayer.frameType(), sourceLayer.timestamp(), previousLayer.data() + previousLayer.size(), false));
 		}
 
-		numberValidLayers_ = selectedSourceLayers;
-
 		// Create additional missing layers, if frame data is not a reference:
-		if (resultingLayers > numberValidLayers_)
+		if (resultingLayers > layers_.size())
 		{
 			// Pyramid frame needs to hold requested number of layers:
 			ocean_assert(memory_.size() >= size(finestWidth(), finestHeight(), finestLayer().pixelFormat(), resultingLayers));
 
-			for (unsigned int n = numberValidLayers_; n < resultingLayers && layers_[n - 1u].width() > 1u && layers_[n - 1u].height() > 1u; ++n)
+			for (unsigned int n = (unsigned int)(layers_.size()); n < resultingLayers && layers_[n - 1u].width() > 1u && layers_[n - 1u].height() > 1u; ++n)
 			{
 				ocean_assert(n == (unsigned int)layers_.size());
-				if (addLayer(worker, downsamplingMode, customDownsamplingFunction))
+				if (!addLayer(worker, downsamplingMode, customDownsamplingFunction))
 				{
-					numberValidLayers_++;
+					break;
 				}
 			}
 		}
@@ -133,8 +130,6 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid, bool copyData,	cons
 
 			layers_.push_back(LegacyFrame(sourceLayer.frameType(), sourceLayer.timestamp(), previousLayer.constdata() + previousLayer.size(), false));
 		}
-
-		numberValidLayers_ = selectedSourceLayers;
 	}
 }
 
@@ -212,8 +207,6 @@ bool FramePyramid::replace(const LegacyFrame& frame, const unsigned int layers, 
 		return false;
 	}
 
-	numberValidLayers_ = 0u;
-
 	if (layers != 0u)
 	{
 		unsigned int expectedLayers = 0u;
@@ -240,8 +233,6 @@ bool FramePyramid::replace(const LegacyFrame& frame, const unsigned int layers, 
 				ocean_assert(layers_.size() == n + 1u);
 				ocean_assert(!layers_[n].isOwner());
 			}
-
-			numberValidLayers_ = (unsigned int)layers_.size();
 		}
 		else
 		{
@@ -249,14 +240,12 @@ bool FramePyramid::replace(const LegacyFrame& frame, const unsigned int layers, 
 			layers_.push_back(LegacyFrame(frame.frameType(), frame.timestamp(), memory_.data<uint8_t>(), false));
 			memcpy(layers_.front().data(), frame.constdata(), frame.size());
 
-			numberValidLayers_ = 1u;
-
 			for (unsigned int n = 1u; n < layers && layers_[n - 1u].width() > 1u && layers_[n - 1u].height() > 1u; ++n)
 			{
 				ocean_assert((unsigned int)layers_.size() == n);
-				if (addLayer(worker, downsamplingMode, customDownsamplingFunction))
+				if (!addLayer(worker, downsamplingMode, customDownsamplingFunction))
 				{
-					numberValidLayers_++;
+					break;
 				}
 			}
 		}
@@ -287,8 +276,6 @@ bool FramePyramid::replace8BitPerChannel(const uint8_t* frame, const unsigned in
 
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels);
 
-	numberValidLayers_ = 0u;
-
 	if (layers != 0u)
 	{
 		unsigned int expectedLayers = 0u;
@@ -315,8 +302,6 @@ bool FramePyramid::replace8BitPerChannel(const uint8_t* frame, const unsigned in
 				ocean_assert(layers_.size() == n + 1u);
 				ocean_assert(!layers_[n].isOwner());
 			}
-
-			numberValidLayers_ = (unsigned int)layers_.size();
 		}
 		else
 		{
@@ -383,7 +368,6 @@ bool FramePyramid::resize(const FrameType& frameType, const unsigned int layers)
 
 		memory_.free();
 		layers_.clear();
-		numberValidLayers_ = 0u;
 	}
 
 	ocean_assert(memory_.isNull() && layers_.empty());
@@ -552,8 +536,6 @@ FramePyramid& FramePyramid::operator=(const FramePyramid& right)
 
 			layers_.push_back(LegacyFrame(FrameType(layerWidth, layerHeight, frame.pixelFormat(), frame.pixelOrigin()), frame.timestamp(), layers_[n - 1u].data() + layers_[n - 1u].size(), false));
 		}
-
-		numberValidLayers_ = right.numberValidLayers_;
 	}
 
 	return *this;
@@ -565,11 +547,8 @@ FramePyramid& FramePyramid::operator=(FramePyramid&& right) noexcept
 	{
 		clear();
 
-		numberValidLayers_ = right.numberValidLayers_;
 		layers_ = std::move(right.layers_);
 		memory_ = std::move(right.memory_);
-
-		right.numberValidLayers_ = 0u;
 	}
 
 	return *this;

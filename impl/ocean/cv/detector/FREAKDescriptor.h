@@ -1198,8 +1198,6 @@ FramePyramid FREAKDescriptorT<tSize>::createFramePyramidWithBlur8BitsPerChannel(
 		return FramePyramid();
 	}
 
-	pyramid.setValidLayers(pyramid.layers());
-
 	if (pyramid.isValid() && pyramid.layers() != 0u)
 	{
 		ocean_assert(frame.width() == pyramid[0].width() && frame.height() == pyramid[0].height());
@@ -1261,7 +1259,7 @@ bool FREAKDescriptorT<tSize>::extractHarrisCornersAndComputeDescriptors(const Fr
 
 	const FramePyramid pyramid = FREAKDescriptorT<tSize>::createFramePyramidWithBlur8BitsPerChannel(yFrame, 5u, 5u, lastLayerIndex + 2u, worker);
 
-	if (pyramid.isValid() == false || pyramid.validLayers() <= lastLayerIndex || cameraDerivativeFunctor.supportedPyramidLevels() <= lastLayerIndex)
+	if (pyramid.isValid() == false || pyramid.layers() <= lastLayerIndex || cameraDerivativeFunctor.supportedPyramidLevels() <= lastLayerIndex)
 	{
 		return false;
 	}
@@ -1285,7 +1283,7 @@ bool FREAKDescriptorT<tSize>::extractHarrisCornersAndComputeDescriptors(const Fr
 
 	for (unsigned int layer = startLayerIndex; layer <= lastLayerIndex; ++layer)
 	{
-		ocean_assert(layer + 1u < pyramid.validLayers());
+		ocean_assert(layer + 1u < pyramid.layers());
 		ocean_assert(corners.size() == descriptors.size());
 		ocean_assert(corners.size() == cornerPyramidLevels.size());
 

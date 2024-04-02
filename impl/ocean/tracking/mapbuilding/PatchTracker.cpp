@@ -344,8 +344,8 @@ void PatchTracker::trackUnlocatedPoints(const Index32 frameIndex, const SharedFr
 		constexpr unsigned int patchTrackingRadius = 16u * (1u << (pyramidLayers - 1u));
 		OCEAN_SUPPRESS_UNUSED_WARNING(patchTrackingRadius);
 
-		ocean_assert(yPreviousFramePyramid->validLayers() >= pyramidLayers);
-		ocean_assert(yCurrentFramePyramid->validLayers() >= pyramidLayers);
+		ocean_assert(yPreviousFramePyramid->layers() >= pyramidLayers);
+		ocean_assert(yCurrentFramePyramid->layers() >= pyramidLayers);
 
 		const CV::FramePyramid yReducedPreviousFramePyramid(*yPreviousFramePyramid, false /*copy*/, 0u, pyramidLayers);
 		const CV::FramePyramid yReducedCurrentFramePyramid(*yCurrentFramePyramid, false /*copy*/, 0u, pyramidLayers);
@@ -421,8 +421,8 @@ void PatchTracker::trackLocatedPoints(const Index32 frameIndex, const AnyCamera&
 		constexpr unsigned int coarsestLayerRadius = 8u;
 		constexpr unsigned int subPixelIterations = 4u;
 
-		ocean_assert(yPreviousFramePyramid->validLayers() >= pyramidLayers);
-		ocean_assert(yCurrentFramePyramid->validLayers() >= pyramidLayers);
+		ocean_assert(yPreviousFramePyramid->layers() >= pyramidLayers);
+		ocean_assert(yCurrentFramePyramid->layers() >= pyramidLayers);
 
 		const CV::FramePyramid yReducedPreviousFramePyramid(*yPreviousFramePyramid, false /*copy*/, 0u, pyramidLayers);
 		const CV::FramePyramid yReducedCurrentFramePyramid(*yCurrentFramePyramid, false /*copy*/, 0u, pyramidLayers);

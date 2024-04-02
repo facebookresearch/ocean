@@ -394,7 +394,6 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 			// testing pyramid from pyramid and making a copy
 
 			CV::FramePyramid framePyramidSource(FrameType(width, height, pixelFormat, pixelOrigin));
-			framePyramidSource.setValidLayers(framePyramidSource.layers());
 
 			CV::FramePyramid framePyramid(framePyramidSource, true /*copyData*/);
 
@@ -420,7 +419,6 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 			// testing pyramid from pyramid and using the memory only
 
 			CV::FramePyramid framePyramidSource(FrameType(width, height, pixelFormat, pixelOrigin));
-			framePyramidSource.setValidLayers(framePyramidSource.layers());
 
 			CV::FramePyramid framePyramid(framePyramidSource, false /*copyData*/);
 
@@ -446,7 +444,6 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 			// testing pyramid from pyramid and making a copy
 
 			CV::FramePyramid framePyramidSource(FrameType(width, height, pixelFormat, pixelOrigin));
-			framePyramidSource.setValidLayers(framePyramidSource.layers());
 
 			CV::FramePyramid framePyramid = CV::FramePyramid::create8BitPerChannel<true /*tCopyData*/>(framePyramidSource);
 
@@ -472,7 +469,6 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 			// testing pyramid from pyramid and using the memory only
 
 			CV::FramePyramid framePyramidSource(FrameType(width, height, pixelFormat, pixelOrigin));
-			framePyramidSource.setValidLayers(framePyramidSource.layers());
 
 			CV::FramePyramid framePyramid = CV::FramePyramid::create8BitPerChannel<false /*tCopyData*/>(framePyramidSource);
 
@@ -1145,7 +1141,7 @@ bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FrameP
 {
 	ocean_assert(frame && framePyramid && layers >= 1u);
 
-	if (layers > framePyramid.validLayers())
+	if (layers > framePyramid.layers())
 	{
 		return false;
 	}
