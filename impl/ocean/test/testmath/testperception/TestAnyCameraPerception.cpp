@@ -74,7 +74,7 @@ bool TestAnyCameraPerception::testConstructor(const double testDuration)
 
 	const AnyCameraPerceptionD anyCameraPerception(std::move(cameraModelInterface));
 
-	if (!TestAnyCamera::verifyAnyCamera(anyCameraPerception, testDuration, &randomGenerator))
+	if (TestAnyCamera::verifyAnyCamera(anyCameraPerception, &randomGenerator) != VR_SUCCEEDED)
 	{
 		allSucceeded = false;
 	}

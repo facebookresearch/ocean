@@ -24,6 +24,21 @@ namespace TestMath
  */
 class OCEAN_TEST_MATH_EXPORT TestAnyCamera
 {
+	protected:
+
+		/**
+		 * Definition of individual verification results.
+		 */
+		enum VerificationResult : uint32_t
+		{
+			/// The verification failed.
+			VR_FAILED = 0u,
+			/// The verification did not meet precision constraints.
+			VR_LOW_PRECISION,
+			/// The verification succeeded.
+			VR_SUCCEEDED,
+		};
+
 	public:
 
 		/**
@@ -56,13 +71,12 @@ class OCEAN_TEST_MATH_EXPORT TestAnyCamera
 		/**
 		 * Verifies an AnyCamera object.
 		 * @param anyCamera The object to be verified, must be valid
-		 * @param testDuration Number of seconds for the verification, with range (0, infinity)
 		 * @param optionalRandomGenerator Optional explicit random generator object to be used, nullptr to use a default object
-		 * @return True, if succeeded
+		 * @return The verification result
 		 * @tparam T The scalar data type of the camera object
 		 */
 		template <typename T>
-		static bool verifyAnyCamera(const AnyCameraT<T>& anyCamera, const double testDuration, RandomGenerator* optionalRandomGenerator = nullptr);
+		static VerificationResult verifyAnyCamera(const AnyCameraT<T>& anyCamera, RandomGenerator* optionalRandomGenerator = nullptr);
 };
 
 }
