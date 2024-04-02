@@ -31,346 +31,244 @@ bool TestLinearAlgebra::test(const double testDuration)
 	Log::info() << "---   Linear Algebra Test:   ---";
 	Log::info() << " ";
 
-	allSucceeded = testEigenSystemSquareMatrix3(testDuration) && allSucceeded;
+	allSucceeded = testEigenSystemSquareMatrix3<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testEigenSystemSquareMatrix3<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testEigenSystemMatrix(testDuration) && allSucceeded;
+	allSucceeded = testEigenSystemMatrix<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testEigenSystemMatrix<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testSingularValueDecomposition(testDuration) && allSucceeded;
+	allSucceeded = testSingularValueDecomposition<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testSingularValueDecomposition<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testQrDecomposition(testDuration) && allSucceeded;
+	allSucceeded = testQrDecomposition<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testQrDecomposition<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testCholeskyDecomposition(testDuration) && allSucceeded;
+	allSucceeded = testCholeskyDecomposition<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testCholeskyDecomposition<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testSolve(testDuration) && allSucceeded;
+	allSucceeded = testSolve<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testSolve<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Linear Algebra Test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Linear Algebra Test FAILED!";
+	}
 
 	return allSucceeded;
 }
-	
+
 #ifdef OCEAN_USE_GTEST
-	
-TEST(TestLinearAlgebra, EigenSystemSquareMatrix3)
+
+TEST(TestLinearAlgebra, EigenSystemSquareMatrix3_float)
 {
-	EXPECT_TRUE(TestLinearAlgebra::testEigenSystemSquareMatrix3(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestLinearAlgebra::testEigenSystemSquareMatrix3<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestLinearAlgebra, EigenSystemMatrix)
+TEST(TestLinearAlgebra, EigenSystemSquareMatrix3_double)
 {
-	EXPECT_TRUE(TestLinearAlgebra::testEigenSystemMatrix(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestLinearAlgebra::testEigenSystemSquareMatrix3<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestLinearAlgebra, SingularValueDecomposition)
+
+TEST(TestLinearAlgebra, EigenSystemMatrix_float)
 {
-	EXPECT_TRUE(TestLinearAlgebra::testSingularValueDecomposition(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestLinearAlgebra::testEigenSystemMatrix<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestLinearAlgebra, QrDecomposition)
+TEST(TestLinearAlgebra, EigenSystemMatrix_double)
 {
-	EXPECT_TRUE(TestLinearAlgebra::testQrDecomposition(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestLinearAlgebra::testEigenSystemMatrix<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestLinearAlgebra, CholeskyDecomposition)
+
+TEST(TestLinearAlgebra, SingularValueDecomposition_float)
 {
-	EXPECT_TRUE(TestLinearAlgebra::testCholeskyDecomposition(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestLinearAlgebra::testSingularValueDecomposition<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestLinearAlgebra, Solve)
+TEST(TestLinearAlgebra, SingularValueDecomposition_double)
 {
-	EXPECT_TRUE(TestLinearAlgebra::testSolve(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestLinearAlgebra::testSingularValueDecomposition<double>(GTEST_TEST_DURATION));
 }
-	
+
+
+TEST(TestLinearAlgebra, QrDecomposition_float)
+{
+	EXPECT_TRUE(TestLinearAlgebra::testQrDecomposition<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestLinearAlgebra, QrDecomposition_double)
+{
+	EXPECT_TRUE(TestLinearAlgebra::testQrDecomposition<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestLinearAlgebra, CholeskyDecomposition_float)
+{
+	EXPECT_TRUE(TestLinearAlgebra::testCholeskyDecomposition<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestLinearAlgebra, CholeskyDecomposition_double)
+{
+	EXPECT_TRUE(TestLinearAlgebra::testCholeskyDecomposition<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestLinearAlgebra, Solve_float)
+{
+	EXPECT_TRUE(TestLinearAlgebra::testSolve<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestLinearAlgebra, Solve_double)
+{
+	EXPECT_TRUE(TestLinearAlgebra::testSolve<double>(GTEST_TEST_DURATION));
+}
+
 #endif // OCEAN_USE_GTEST
 
+template <typename T>
 bool TestLinearAlgebra::testEigenSystemSquareMatrix3(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Eigensystem of a SquareMatrix3 matrix:";
+	Log::info() << "Eigen system of a SquareMatrix3 matrix, with '" << TypeNamer::name<T>() << "':";
 
 	bool allSucceeded = true;
 
-	// Matrix:
-	// |  7   0  -3 |
-	// | -9  -2   3 |
-	// | 18   0  -8 |
-	// EigenValues: 1, -2, -2
-	// EigenVectors are: (1, -1, 2); (1, 0, 3) or (1, 1, 3)
-	allSucceeded = testEigenSystemSquareMatrix3Static(SquareMatrix3(7, -9, 18, 0, -2, 0, -3, 3, -8), Vector3(1, -2, -2)) && allSucceeded;
-
-	// Matrix:
-	// | -1 4 -4 |
-	// | -4 7 -4 |
-	// | -4 4 -1 |
-	// EigenValues: 3, 3, -1
-	// EigenVectors: (1 0 1); (1 0 1); (1, 1, 1)
-	allSucceeded = testEigenSystemSquareMatrix3Static(SquareMatrix3(-1, -4, -4, 4, 7, 4, -4, -4, -1), Vector3(3, 3, -1)) && allSucceeded;
-
-	// Matrix:
-	// | 0 1 0 |
-	// | 0 2 0 |
-	// | 0 0 3 |
-	// EigenValues: 3, 2, 0
-	// EigenVectors: (0, 0, 1); (1, 2, 0); (1, 0, 0)
-	allSucceeded = testEigenSystemSquareMatrix3Static(SquareMatrix3(0, 0, 0, 1, 2, 0, 0, 0, 3), Vector3(3, 2, 0)) && allSucceeded;
-
-	/// No we test several random matrices
-	allSucceeded = testEigenSystemSquareMatrix3Dynamic(testDuration) && allSucceeded;
-
-	return allSucceeded;
-}
-	
-bool TestLinearAlgebra::testEigenSystemMatrix(const double testDuration)
-{
-	ocean_assert(testDuration > 0.0);
-	
-	Log::info() << "Eigensystem of a 4x4 matrix:";
-	
-	bool allSucceeded = true;
-	
-	const static Scalar eigenMatrixValues[16] =
 	{
-		Scalar(0.4), -3, 6, Scalar(-3.5),
-		-3, 30, Scalar(-67.5), 42,
-		6, Scalar(-67.5), 162, -105,
-		Scalar(-3.5), 42, -105, 70
-	};
-	
-	const Matrix matrix(4, 4, eigenMatrixValues);
-	Matrix values, vectors;
-	
-	HighPerformanceStatistic performance;
-	const Timestamp startTimestamp(true);
-	
-	do
-	{
-		performance.start();
-		allSucceeded = matrix.eigenSystem(values, vectors) && allSucceeded;
-		performance.stop();
-		
-		const Matrix diagonal(4, 4, values);
-		const Matrix result = vectors * diagonal * vectors.transposed();
-		
-		allSucceeded = matrix.isEqual(result, Numeric::weakEps()) && allSucceeded;
-	}
-	while (startTimestamp + testDuration > Timestamp(true));
-	
-	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
-	
-	return allSucceeded;
-}
-	
-bool TestLinearAlgebra::testSingularValueDecomposition(const double testDuration)
-{
-	ocean_assert(testDuration > 0.0);
-	
-	Log::info() << "Singular value decomposition test:";
-	Log::info() <<  " ";
-	
-	bool allSucceeded = true;
-	
-	allSucceeded = testSingularValueDecompositionStatic(testDuration) && allSucceeded;
-	
-	allSucceeded = testSingularValueDecompositionDynamic(testDuration) && allSucceeded;
-	
-	return allSucceeded;
-}
-	
-bool TestLinearAlgebra::testQrDecomposition(const double testDuration)
-{
-	ocean_assert(testDuration > 0.0);
-	
-	Log::info() << "QR decomposition test:";
-	Log::info() << " ";
-	
-	bool allSucceeded = true;
-	
-	allSucceeded = testQrDecompositionStatic(testDuration) && allSucceeded;
-	
-	allSucceeded = testQrDecompositionDynamic(testDuration) && allSucceeded;
-	
-	return allSucceeded;
-}
-	
-bool TestLinearAlgebra::testCholeskyDecomposition(const double testDuration)
-{
-	ocean_assert(testDuration > 0.0);
-	
-	bool allSucceeded = true;
-	
-	Log::info() << "Cholesky decomposition of random matrices with different sizes:";
-	
-	const unsigned int dimensions[] = {5u, 10u, 20u, 50u, 100u};
-	
-	for (unsigned int d = 0u; d < sizeof(dimensions) / sizeof(dimensions[0]); ++d)
-	{
-		Log::info() << " ";
-		
-		unsigned long long iterations = 0ull;
-		unsigned long long validIterations = 0ull;
-		
-		const size_t dimension = dimensions[d];
-		
-		Log::info() << "... with dimension " << dimension << "x" << dimension << ":";
-		
-		HighPerformanceStatistic performance;
-		Timestamp startTimestamp(true);
-		
-		do
+		// |  7   0  -3 |
+		// | -9  -2   3 |
+		// | 18   0  -8 |
+
+		// EigenValues: 1, -2, -2
+		// EigenVectors are: (1, -1, 2); (1, 0, 3) or (1, 1, 3)
+
+		const SquareMatrixT3<T> matrix(7, -9, 18, 0, -2, 0, -3, 3, -8);
+		const VectorT3<T> expectedEigenValues(1, -2, -2);
+
+		if (!validateEigenSystem(matrix, expectedEigenValues))
 		{
-			Matrix matrix(dimension, dimension);
-			
-			for (size_t n = 0; n < matrix.elements(); ++n)
-				matrix(n) = Random::scalar(-1, 1);
-			
-			const Matrix squaredMatrix = matrix.transposedMultiply(matrix);
-			
-			Matrix matrixL;
-			
-			performance.start();
-			const bool result = squaredMatrix.choleskyDecomposition(matrixL);
-			performance.stop();
-			
-			const Matrix matrixValidate = matrixL * matrixL.transposed();
-			
-			if (result && squaredMatrix.isEqual(matrixValidate, Numeric::weakEps()))
-				validIterations++;
-			
-			iterations++;
-		}
-		while (startTimestamp + testDuration > Timestamp(true));
-		
-		ocean_assert(iterations != 0ull);
-		const double percent = double(validIterations) / double(iterations);
-		
-		Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
-		
-		if (percent < 0.95)
 			allSucceeded = false;
+		}
 	}
-	
-	Log::info() << " ";
-	
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
-	
-	return allSucceeded;
-}
 
-bool TestLinearAlgebra::testEigenSystemSquareMatrix3Static(const SquareMatrix3& matrix, const Vector3& eigenValues)
-{
-	Scalar values[3] = {Numeric::maxValue(), Numeric::maxValue(), Numeric::maxValue()};
+	{
+		// | -1 4 -4 |
+		// | -4 7 -4 |
+		// | -4 4 -1 |
 
-	if (!matrix.eigenValues(values))
-		return false;
+		// EigenValues: 3, 3, -1
+		// EigenVectors: (1 0 1); (1 0 1); (1, 1, 1)
 
-	if (values[0] < values[1] || values[1] < values[2])
-		return false;
+		const SquareMatrixT3<T> matrix(-1, -4, -4, 4, 7, 4, -4, -4, -1);
+		const VectorT3<T> expectedEigenValues(3, 3, -1);
 
-	if (Numeric::isNotEqual(values[0], eigenValues[0]) || Numeric::isNotEqual(values[1], eigenValues[1]) || Numeric::isNotEqual(values[2], eigenValues[2]))
-		return false;
+		if (!validateEigenSystem(matrix, expectedEigenValues))
+		{
+			allSucceeded = false;
+		}
+	}
 
-	Vector3 eigenVectors[3];
-	values[0] = Numeric::maxValue();
-	values[1] = Numeric::maxValue();
-	values[2] = Numeric::maxValue();
+	{
+		// | 0 1 0 |
+		// | 0 2 0 |
+		// | 0 0 3 |
 
-	if (!matrix.eigenSystem(values, eigenVectors))
-		return false;
+		// EigenValues: 3, 2, 0
+		// EigenVectors: (0, 0, 1); (1, 2, 0); (1, 0, 0)
 
-	if (values[0] < values[1] || values[1] < values[2])
-		return false;
+		const SquareMatrixT3<T> matrix(0, 0, 0, 1, 2, 0, 0, 0, 3);
+		const VectorT3<T> expectedEigenValues(3, 2, 0);
 
-	if (Numeric::isNotEqual(values[0], eigenValues[0]) || Numeric::isNotEqual(values[1], eigenValues[1]) || Numeric::isNotEqual(values[2], eigenValues[2]))
-		return false;
+		if (!validateEigenSystem(matrix, expectedEigenValues))
+		{
+			allSucceeded = false;
+		}
+	}
 
-	for (unsigned int n = 0u; n < 3u; ++n)
-		if (matrix * eigenVectors[n] != eigenVectors[n] * values[n])
-			return false;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
-	return true;
-}
-
-bool TestLinearAlgebra::testEigenSystemSquareMatrix3Dynamic(const double testDuration)
-{
-	ocean_assert(testDuration > 0.0);
-
-	Scalar values[3];
-	Vector3 vectors[3];
-
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		bool localSucceeded = true;
+		const VectorT3<T> xAxis(1, 0, 0);
+		const VectorT3<T> yAxis(0, 1, 0);
+		const VectorT3<T> zAxis(0, 0, 1);
 
-		const Vector3 xAxis(Vector3(1, 0, 0));
-		const Vector3 yAxis(Vector3(0, 1, 0));
-		const Vector3 zAxis(Vector3(0, 0, 1));
+		T xLength = RandomT<T>::scalar(randomGenerator, T(0.01), T(10));
+		T yLength = RandomT<T>::scalar(randomGenerator, T(0.01), T(10));
+		T zLength = RandomT<T>::scalar(randomGenerator, T(0.01), T(10));
 
-		Scalar xLength = Random::scalar(Scalar(0.01), 10);
-		Scalar yLength = Random::scalar(Scalar(0.01), 10);
-		Scalar zLength = Random::scalar(Scalar(0.01), 10);
+		const SquareMatrixT3<T> matrix(xAxis * xLength, yAxis * yLength, zAxis * zLength);
 
-		const SquareMatrix3 matrix(xAxis * xLength, yAxis * yLength, zAxis * zLength);
+		T values[3] = {RandomT<T>::scalar(-100, 100), RandomT<T>::scalar(-100, 100), RandomT<T>::scalar(-100, 100)};
+		VectorT3<T> vectors[3];
 
 		performance.start();
-
-		if (!matrix.eigenSystem(values, vectors))
-			localSucceeded = false;
-
+			bool localResult = matrix.eigenSystem(values, vectors);
 		performance.stop();
 
 		Utilities::sortHighestToFront3(xLength, yLength, zLength);
 
-		if (Numeric::isNotWeakEqual(xLength, values[0]))
-			localSucceeded = false;
-		if (Numeric::isNotWeakEqual(yLength, values[1]))
-			localSucceeded = false;
-		if (Numeric::isNotWeakEqual(zLength, values[2]))
-			localSucceeded = false;
+		if (NumericT<T>::isNotWeakEqual(xLength, values[0]))
+		{
+			localResult = false;
+		}
 
-		if (localSucceeded)
-			validIterations++;
+		if (NumericT<T>::isNotWeakEqual(yLength, values[1]))
+		{
+			localResult = false;
+		}
 
-		iterations++;
+		if (NumericT<T>::isNotWeakEqual(zLength, values[2]))
+		{
+			localResult = false;
+		}
+
+		if (localResult)
+		{
+			++validIterations;
+		}
+
+		++iterations;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -378,21 +276,295 @@ bool TestLinearAlgebra::testEigenSystemSquareMatrix3Dynamic(const double testDur
 	const double percent = double(validIterations) / double(iterations);
 
 	Log::info() << "Performance: " << performance.averageMseconds() * 1000.0 << "mys";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	if (std::is_same<Scalar, float>::value)
-		return percent >= 0.95;
+	constexpr double threshold = std::is_same<T, float>::value ? 0.95 : 0.99;
 
-	return percent >= 0.99;
+	if (percent < threshold)
+	{
+		allSucceeded = false;
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
 }
 
-bool TestLinearAlgebra::testSingularValueDecompositionStatic(const double testDuration)
+template <typename T>
+bool TestLinearAlgebra::testEigenSystemMatrix(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Eigen system of a 4x4 matrix, with '" << TypeNamer::name<T>() << "':";
+
+	bool allSucceeded = true;
+
+	constexpr T eigenMatrixValues[16] =
+	{
+		T(0.4), T(-3), T(6), T(-3.5),
+		T(-3), T(30), T(-67.5), T(42),
+		T(6), T(-67.5), T(162), T(-105),
+		T(-3.5), T(42), T(-105), T(70)
+	};
+
+	const MatrixT<T> matrix(4, 4, eigenMatrixValues);
+
+	MatrixT<T> values;
+	MatrixT<T> vectors;
+
+	HighPerformanceStatistic performance;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		performance.start();
+			const bool localResult = matrix.eigenSystem(values, vectors);
+		performance.stop();
+
+		if (!localResult)
+		{
+			allSucceeded = false;
+		}
+
+		const MatrixT<T> diagonal(4, 4, values);
+		const MatrixT<T> result = vectors * diagonal * vectors.transposed();
+
+		if (!matrix.isEqual(result, NumericT<T>::weakEps()))
+		{
+			allSucceeded = false;
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+template <typename T>
+bool TestLinearAlgebra::testSingularValueDecomposition(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Singular value decomposition test, with '" << TypeNamer::name<T>() << "':";
+	Log::info() <<  " ";
+
+	bool allSucceeded = true;
+
+	allSucceeded = testSingularValueDecompositionStatic<T>(testDuration) && allSucceeded;
+	Log::info() <<  " ";
+	allSucceeded = testSingularValueDecompositionDynamic<T>(testDuration) && allSucceeded;
+
+	return allSucceeded;
+}
+
+template <typename T>
+bool TestLinearAlgebra::testQrDecomposition(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "QR decomposition test, with '" << TypeNamer::name<T>() << "':";
+	Log::info() << " ";
+
+	bool allSucceeded = true;
+
+	allSucceeded = testQrDecompositionStatic<T>(testDuration) && allSucceeded;
+	Log::info() <<  " ";
+	allSucceeded = testQrDecompositionDynamic<T>(testDuration) && allSucceeded;
+
+	return allSucceeded;
+}
+
+template <typename T>
+bool TestLinearAlgebra::testCholeskyDecomposition(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
 	bool allSucceeded = true;
 
-	const static Scalar m[20] =
+	Log::info() << "Cholesky decomposition of random matrices with different sizes, with '" << TypeNamer::name<T>() << "':";
+
+	for (const size_t dimension : {5u, 10u, 20u, 50u, 100u})
+	{
+		Log::info() << " ";
+
+		uint64_t iterations = 0ull;
+		uint64_t validIterations = 0ull;
+
+		Log::info() << "... with dimension " << dimension << "x" << dimension << ":";
+
+		HighPerformanceStatistic performance;
+
+		Timestamp startTimestamp(true);
+
+		do
+		{
+			MatrixT<T> matrix(dimension, dimension);
+
+			for (size_t n = 0; n < matrix.elements(); ++n)
+			{
+				matrix(n) = RandomT<T>::scalar(-1, 1);
+			}
+
+			const MatrixT<T> squaredMatrix = matrix.transposedMultiply(matrix);
+
+			MatrixT<T> matrixL;
+
+			performance.start();
+				const bool result = squaredMatrix.choleskyDecomposition(matrixL);
+			performance.stop();
+
+			const MatrixT<T> matrixValidate = matrixL * matrixL.transposed();
+
+			if (result && squaredMatrix.isEqual(matrixValidate, NumericT<T>::weakEps()))
+			{
+				++validIterations;
+			}
+
+			++iterations;
+		}
+		while (startTimestamp + testDuration > Timestamp(true));
+
+		ocean_assert(iterations != 0ull);
+		const double percent = double(validIterations) / double(iterations);
+
+		Log::info() << "Performance: " << performance.averageMseconds() << "ms";
+		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
+
+		if (percent < 0.95)
+		{
+			allSucceeded = false;
+		}
+	}
+
+	Log::info() << " ";
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+template <typename T>
+bool TestLinearAlgebra::testSolve(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Solve test, with '" << TypeNamer::name<T>() << "':";
+
+	bool allSucceeded = true;
+
+	Indices32 dimensions = {5u, 10u, 20u};
+
+	if (std::is_same<T, double>::value)
+	{
+		dimensions.push_back(50u);
+		dimensions.push_back(100u);
+	}
+
+	for (const unsigned int dimension : dimensions)
+	{
+		Log::info() << " ";
+
+		uint64_t iterations = 0ull;
+		uint64_t validIterations = 0ull;
+
+		Log::info() << "... with dimension " << dimension << "x" << dimension << ":";
+
+		HighPerformanceStatistic performance;
+
+		Timestamp startTimestamp(true);
+
+		do
+		{
+			MatrixT<T> a0(dimension, dimension);
+			MatrixT<T> x0(dimension, 1);
+
+			for (unsigned int n = 0; n < a0.elements(); ++n)
+			{
+				a0(n) = RandomT<T>::scalar(0, 1);
+			}
+
+			for (unsigned int n = 0; n < x0.elements(); ++n)
+			{
+				x0(n) = RandomT<T>::scalar(0, 1);
+			}
+
+			const MatrixT<T> b0 = a0 * x0;
+
+			MatrixT<T> x1;
+
+			performance.start();
+				const bool result = a0.solve(b0, x1);
+			performance.stop();
+
+			if (result && x0.isEqual(x1, NumericT<T>::weakEps()) && b0.isEqual(a0 * x1, NumericT<T>::weakEps()))
+			{
+				++validIterations;
+			}
+
+			++iterations;
+		}
+		while (startTimestamp + testDuration > Timestamp(true));
+
+		ocean_assert(iterations != 0ull);
+		const double percent = double(validIterations) / double(iterations);
+
+		Log::info() << "Performance: " << performance.averageMseconds() << "ms";
+		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+
+		if (percent < 0.95)
+		{
+			allSucceeded = false;
+		}
+	}
+
+	Log::info() << " ";
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+template <typename T>
+bool TestLinearAlgebra::testSingularValueDecompositionStatic(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "... with static matrix:";
+
+	bool allSucceeded = true;
+
+	const static T m[20] =
 	{
 		1, 0, 0, 0, 2,
 		0, 0, 3, 0, 0,
@@ -400,7 +572,7 @@ bool TestLinearAlgebra::testSingularValueDecompositionStatic(const double testDu
 		0, 2, 0, 0, 0
 	};
 
-	const static Scalar u[16] =
+	const static T u[16] =
 	{
 		0, 1, 0, 0,
 		1, 0, 0, 0,
@@ -408,57 +580,93 @@ bool TestLinearAlgebra::testSingularValueDecompositionStatic(const double testDu
 		0, 0, 1, 0
 	};
 
-	const static Scalar w[5] =
+	const static T w[5] =
 	{
-		3, Numeric::sqrt(5), 2, 0, 0
+		3, NumericT<T>::sqrt(5), 2, 0, 0
 	};
 
-	const static Scalar v[25] =
+	const static T v[25] =
 	{
 		 0, 0, 1, 0, 0,
-		 Numeric::sqrt(Scalar(0.2)), 0, 0, 0, Numeric::sqrt(Scalar(0.8)),
+		 NumericT<T>::sqrt(T(0.2)), 0, 0, 0, NumericT<T>::sqrt(T(0.8)),
 		 0, 1, 0, 0, 0,
 		 0, 0, 0, 1, 0,
-		 -Numeric::sqrt(Scalar(0.8)), 0, 0, 0, Numeric::sqrt(Scalar(0.2))
+		 -NumericT<T>::sqrt(T(0.8)), 0, 0, 0, NumericT<T>::sqrt(T(0.2))
 	};
 
-	const Scalar epsilon = std::is_same<float, Scalar>::value ? Numeric::eps() * 10 : Numeric::eps();
+	const T epsilon = std::is_same<float, T>::value ? NumericT<T>::eps() * 10 : NumericT<T>::eps();
 
-	const Matrix matrix = Matrix(4, 5, m);
-	const Matrix matrixT(matrix.transposed());
+	const MatrixT<T> matrix(4, 5, m);
+	const MatrixT<T> matrixT(matrix.transposed());
 
-	const Matrix uMatrix = Matrix(4, 4, u);
-	const Matrix wVector = Matrix(5, 1, w);
-	const Matrix vMatrix = Matrix(5, 5, v);
+	const MatrixT<T> uMatrix(4, 4, u);
+	const MatrixT<T> wVector(5, 1, w);
+	const MatrixT<T> vMatrix(5, 5, v);
 
-	allSucceeded = validateSingularValueDecomposition(matrix, uMatrix, wVector, vMatrix.transposed()) && allSucceeded;
-
+	if (!validateSingularValueDecomposition(matrix, uMatrix, wVector, vMatrix.transposed()))
 	{
-		Matrix uLocal, wLocal, vLocal;
-		allSucceeded = matrix.singularValueDecomposition(uLocal, wLocal, vLocal) && allSucceeded;
-		allSucceeded = wLocal.isEqual(wVector, epsilon) && allSucceeded;
-		allSucceeded = validateSingularValueDecomposition(matrix, uLocal, wLocal, vLocal) && allSucceeded;
+		allSucceeded = false;
 	}
 
 	{
-		Matrix uLocal, wLocal, vLocal;
-		allSucceeded = matrixT.singularValueDecomposition(uLocal, wLocal, vLocal) && allSucceeded;
-		allSucceeded = wLocal.isEqual(wVector, epsilon) && allSucceeded;
-		allSucceeded = validateSingularValueDecomposition(matrixT, uLocal, wLocal, vLocal) && allSucceeded;
+		MatrixT<T> uLocal, wLocal, vLocal;
+
+		if (!matrix.singularValueDecomposition(uLocal, wLocal, vLocal))
+		{
+			allSucceeded = false;
+		}
+
+		if (!wLocal.isEqual(wVector, epsilon))
+		{
+			allSucceeded = false;
+		}
+
+		if (!validateSingularValueDecomposition(matrix, uLocal, wLocal, vLocal))
+		{
+			allSucceeded = false;
+		}
+	}
+
+	{
+		MatrixT<T> uLocal, wLocal, vLocal;
+
+		if (!matrixT.singularValueDecomposition(uLocal, wLocal, vLocal))
+		{
+			allSucceeded = false;
+		}
+
+		if (!wLocal.isEqual(wVector, epsilon))
+		{
+			allSucceeded = false;
+		}
+
+		if (!validateSingularValueDecomposition(matrixT, uLocal, wLocal, vLocal))
+		{
+			allSucceeded = false;
+		}
 	}
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		Matrix uLocal, wLocal, vLocal;
+		MatrixT<T> uLocal, wLocal, vLocal;
 
 		performance.start();
-		matrix.singularValueDecomposition(uLocal, wLocal, vLocal);
+			const bool result = matrix.singularValueDecomposition(uLocal, wLocal, vLocal);
 		performance.stop();
 
-		allSucceeded = validateSingularValueDecomposition(matrix, uLocal, wLocal, vLocal) && allSucceeded;
+		if (!result)
+		{
+			allSucceeded = false;
+		}
+
+		if (!validateSingularValueDecomposition(matrix, uLocal, wLocal, vLocal))
+		{
+			allSucceeded = false;
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -466,29 +674,32 @@ bool TestLinearAlgebra::testSingularValueDecompositionStatic(const double testDu
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
 
+template <typename T>
 bool TestLinearAlgebra::testSingularValueDecompositionDynamic(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
+	Log::info() << "... with random matrix:";
+
 	bool allSucceeded = true;
 
-	const size_t dimensions[] = {5u, 10u, 20u, 50u, 100u};
-
-	for (unsigned int d = 0u; d < sizeof(dimensions) / sizeof(dimensions[0]); ++d)
+	for (const size_t dimension : {5u, 10u, 20u, 50u, 100u})
 	{
 		Log::info() << " ";
 
-		unsigned long long iterations = 0ull;
-		unsigned long long validIterations = 0ull;
-
-		const size_t dimension = dimensions[d];
+		uint64_t iterations = 0ull;
+		uint64_t validIterations = 0ull;
 
 		const size_t rows = dimension;
 		const size_t colums = dimension - 1;
@@ -496,25 +707,30 @@ bool TestLinearAlgebra::testSingularValueDecompositionDynamic(const double testD
 		Log::info() << "... with dimension " << rows << "x" << colums << ":";
 
 		HighPerformanceStatistic performance;
+
 		Timestamp startTimestamp(true);
 
 		do
 		{
-			Matrix matrix(rows, colums);
+			MatrixT<T> matrix(rows, colums);
 
 			for (size_t n = 0; n < rows * colums; ++n)
-				matrix(n) = Random::scalar(-1, 1);
+			{
+				matrix(n) = RandomT<T>::scalar(-1, 1);
+			}
 
-			Matrix uMatrix, wVector, vMatrix;
+			MatrixT<T> uMatrix, wVector, vMatrix;
 
 			performance.start();
-			const bool result = matrix.singularValueDecomposition(uMatrix, wVector, vMatrix);
+				const bool result = matrix.singularValueDecomposition(uMatrix, wVector, vMatrix);
 			performance.stop();
 
 			if (result && validateSingularValueDecomposition(matrix, uMatrix, wVector, vMatrix))
-				validIterations++;
+			{
+				++validIterations;
+			}
 
-			iterations++;
+			++iterations;
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
 
@@ -525,20 +741,242 @@ bool TestLinearAlgebra::testSingularValueDecompositionDynamic(const double testD
 		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
 		if (percent < 0.99)
+		{
 			allSucceeded = false;
+		}
 	}
 
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
 
-bool TestLinearAlgebra::validateSingularValueDecomposition(const Matrix& matrix, const Matrix& uMatrix, const Matrix& wVector, const Matrix& vMatrix)
+template <typename T>
+bool TestLinearAlgebra::testQrDecompositionStatic(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	bool allSucceeded = true;
+
+	constexpr T m[9] =
+	{
+		0, 1, 1,
+		1, 1, 2,
+		0, 0, 3
+	};
+
+	constexpr T q[9] =
+	{
+		 0, -1, 0,
+		-1,  0, 0,
+		 0,  0, 1
+	};
+
+	constexpr T r[9] =
+	{
+		 -1, -1, -2,
+		  0, -1, -1,
+		  0,  0,  3
+	};
+
+	const MatrixT<T> matrix(3, 3, m);
+	const MatrixT<T> groundTruthMatrixQ(3, 3, q);
+	const MatrixT<T> groundTruthMatrixR(3, 3, r);
+
+	if (!matrix.isEqual(groundTruthMatrixQ * groundTruthMatrixR, NumericT<T>::weakEps()))
+	{
+		allSucceeded = false;
+	}
+
+	MatrixT<T> matrixQ, matrixR;
+
+	if (!matrix.qrDecomposition(matrixQ, &matrixR))
+	{
+		allSucceeded = false;
+	}
+
+	if (!matrixR.isEqual(groundTruthMatrixR))
+	{
+		allSucceeded = false;
+	}
+
+	if (!matrix.isEqual(matrixQ * matrixR, NumericT<T>::weakEps()))
+	{
+		allSucceeded = false;
+	}
+
+	HighPerformanceStatistic performance;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		MatrixT<T> matrixQLocal, matrixRLocal;
+
+		performance.start();
+			const bool result = matrix.qrDecomposition(matrixQLocal, &matrixRLocal);
+		performance.stop();
+
+		if (!result)
+		{
+			allSucceeded = false;
+		}
+
+		if (!matrix.isEqual(matrixQLocal * matrixRLocal, NumericT<T>::weakEps()))
+		{
+			allSucceeded = false;
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+template <typename T>
+bool TestLinearAlgebra::testQrDecompositionDynamic(const double testDuration)
+{
+	bool allSucceeded = true;
+
+	for (const size_t dimension : {5u, 10u, 20u, 50u, 100u})
+	{
+		Log::info() << " ";
+
+		uint64_t iterations = 0ull;
+		uint64_t validIterations = 0ull;
+
+		const size_t rows = dimension;
+		const size_t colums = dimension;
+
+		Log::info() << "... with dimension " << rows << "x" << colums << ":";
+
+		HighPerformanceStatistic performance;
+
+		Timestamp startTimestamp(true);
+
+		do
+		{
+			MatrixT<T> matrix(rows, colums);
+
+			for (size_t n = 0; n < rows * colums; ++n)
+			{
+				matrix(n) = RandomT<T>::scalar(-1, 1);
+			}
+
+			MatrixT<T> matrixQ, matrixR;
+
+			performance.start();
+				const bool result = matrix.qrDecomposition(matrixQ, &matrixR);
+			performance.stop();
+
+			if (result && matrix.isEqual(matrixQ * matrixR, NumericT<T>::weakEps()))
+			{
+				++validIterations;
+			}
+
+			++iterations;
+		}
+		while (startTimestamp + testDuration > Timestamp(true));
+
+		ocean_assert(iterations != 0ull);
+		const double percent = double(validIterations) / double(iterations);
+
+		Log::info() << "Performance: " << performance.averageMseconds() << "ms";
+		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+
+		if (percent < 0.99)
+		{
+			allSucceeded = false;
+		}
+	}
+
+	Log::info() << " ";
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+template <typename T>
+bool TestLinearAlgebra::validateEigenSystem(const SquareMatrixT3<T>& matrix, const VectorT3<T>& expectedEigenValues)
+{
+	T eigenValues[3] = {NumericT<T>::maxValue(), NumericT<T>::maxValue(), NumericT<T>::maxValue()};
+
+	if (!matrix.eigenValues(eigenValues))
+	{
+		return false;
+	}
+
+	if (eigenValues[0] < eigenValues[1] || eigenValues[1] < eigenValues[2])
+	{
+		return false;
+	}
+
+	if (NumericT<T>::isNotEqual(eigenValues[0], expectedEigenValues[0]) || NumericT<T>::isNotEqual(eigenValues[1], expectedEigenValues[1]) || NumericT<T>::isNotEqual(eigenValues[2], expectedEigenValues[2]))
+	{
+		return false;
+	}
+
+	eigenValues[0] = NumericT<T>::maxValue();
+	eigenValues[1] = NumericT<T>::maxValue();
+	eigenValues[2] = NumericT<T>::maxValue();
+
+	VectorT3<T> eigenVectors[3];
+
+	if (!matrix.eigenSystem(eigenValues, eigenVectors))
+	{
+		return false;
+	}
+
+	if (eigenValues[0] < eigenValues[1] || eigenValues[1] < eigenValues[2])
+	{
+		return false;
+	}
+
+	if (NumericT<T>::isNotEqual(eigenValues[0], expectedEigenValues[0]) || NumericT<T>::isNotEqual(eigenValues[1], expectedEigenValues[1]) || NumericT<T>::isNotEqual(eigenValues[2], expectedEigenValues[2]))
+	{
+		return false;
+	}
+
+	for (unsigned int n = 0u; n < 3u; ++n)
+	{
+		if (matrix * eigenVectors[n] != eigenVectors[n] * eigenValues[n])
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+template <typename T>
+bool TestLinearAlgebra::validateSingularValueDecomposition(const MatrixT<T>& matrix, const MatrixT<T>& uMatrix, const MatrixT<T>& wVector, const MatrixT<T>& vMatrix)
 {
 	ocean_assert(uMatrix.rows() == matrix.rows());
 	ocean_assert(wVector.columns() == 1);
@@ -547,228 +985,31 @@ bool TestLinearAlgebra::validateSingularValueDecomposition(const Matrix& matrix,
 	const size_t rows = matrix.rows();
 	const size_t columns = matrix.columns();
 
-	const Matrix diagonalMatrix = Matrix(rows, columns, wVector);
-	const Matrix testMatrix = uMatrix * diagonalMatrix * vMatrix.transposed();
+	const MatrixT<T> diagonalMatrix = MatrixT<T>(rows, columns, wVector);
+	const MatrixT<T> testMatrix = uMatrix * diagonalMatrix * vMatrix.transposed();
 
-	if (!matrix.isEqual(testMatrix, Numeric::weakEps()))
+	if (!matrix.isEqual(testMatrix, NumericT<T>::weakEps()))
+	{
 		return false;
+	}
 
-	const Matrix unitMatrixRows(rows, rows, true);
-	const Matrix testMatrixRows = uMatrix * uMatrix.transposed();
+	const MatrixT<T> unitMatrixRows(rows, rows, true);
+	const MatrixT<T> testMatrixRows = uMatrix * uMatrix.transposed();
 
-	if (!unitMatrixRows.isEqual(testMatrixRows, Numeric::weakEps()))
+	if (!unitMatrixRows.isEqual(testMatrixRows, NumericT<T>::weakEps()))
+	{
 		return false;
+	}
 
-	const Matrix unitMatrixColumns(columns, columns, true);
-	const Matrix testMatrixColumns = vMatrix * vMatrix.transposed();
+	const MatrixT<T> unitMatrixColumns(columns, columns, true);
+	const MatrixT<T> testMatrixColumns = vMatrix * vMatrix.transposed();
 
-	if (!unitMatrixColumns.isEqual(testMatrixColumns, Numeric::weakEps()))
+	if (!unitMatrixColumns.isEqual(testMatrixColumns, NumericT<T>::weakEps()))
+	{
 		return false;
+	}
 
 	return true;
-}
-
-bool TestLinearAlgebra::testQrDecompositionStatic(const double testDuration)
-{
-	ocean_assert(testDuration > 0.0);
-
-	bool allSucceeded = true;
-
-	const static Scalar m[9] =
-	{
-		0, 1, 1,
-		1, 1, 2,
-		0, 0, 3
-	};
-
-	const static Scalar q[9] =
-	{
-		 0, -1, 0,
-		-1,  0, 0,
-		 0,  0, 1
-	};
-
-	const static Scalar r[9] =
-	{
-		 -1, -1, -2,
-		  0, -1, -1,
-		  0,  0,  3
-	};
-
-	const Matrix matrix = Matrix(3, 3, m);
-	const Matrix groundTruthMatrixQ = Matrix(3, 3, q);
-	const Matrix groundTruthMatrixR = Matrix(3, 3, r);
-
-	allSucceeded = matrix.isEqual(groundTruthMatrixQ * groundTruthMatrixR, Numeric::weakEps()) && allSucceeded;
-
-	Matrix matrixQ, matrixR;
-	allSucceeded = matrix.qrDecomposition(matrixQ, &matrixR) && allSucceeded;
-	allSucceeded = matrixR.isEqual(groundTruthMatrixR) && allSucceeded;
-	allSucceeded = matrix.isEqual(matrixQ * matrixR, Numeric::weakEps()) && allSucceeded;
-
-	HighPerformanceStatistic performance;
-	const Timestamp startTimestamp(true);
-
-	do
-	{
-		Matrix matrixQLocal, matrixRLocal;
-
-		performance.start();
-		matrix.qrDecomposition(matrixQLocal, &matrixRLocal);
-		performance.stop();
-
-		allSucceeded = matrix.isEqual(matrixQLocal * matrixRLocal, Numeric::weakEps()) && allSucceeded;
-	}
-	while (startTimestamp + testDuration > Timestamp(true));
-
-	Log::info() << "... with dimension 3x3:";
-	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
-
-	return allSucceeded;
-}
-
-bool TestLinearAlgebra::testQrDecompositionDynamic(const double testDuration)
-{
-	bool allSucceeded = true;
-
-	const unsigned int dimensions[] = {5u, 10u, 20u, 50u, 100u};
-
-	for (unsigned int d = 0u; d < sizeof(dimensions) / sizeof(dimensions[0]); ++d)
-	{
-		Log::info() << " ";
-
-		unsigned long long iterations = 0ull;
-		unsigned long long validIterations = 0ull;
-
-		const size_t dimension = dimensions[d];
-
-		const size_t rows = dimension;
-		const size_t colums = dimension;
-
-		Log::info() << "... with dimension " << rows << "x" << colums << ":";
-
-		HighPerformanceStatistic performance;
-		Timestamp startTimestamp(true);
-
-		do
-		{
-			Matrix matrix(rows, colums);
-
-			for (size_t n = 0; n < rows * colums; ++n)
-				matrix(n) = Random::scalar(-1, 1);
-
-			Matrix matrixQ, matrixR;
-
-			performance.start();
-			const bool result = matrix.qrDecomposition(matrixQ, &matrixR);
-			performance.stop();
-
-			if (result && matrix.isEqual(matrixQ * matrixR, Numeric::weakEps()))
-				validIterations++;
-
-			iterations++;
-		}
-		while (startTimestamp + testDuration > Timestamp(true));
-
-		ocean_assert(iterations != 0ull);
-		const double percent = double(validIterations) / double(iterations);
-
-		Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-		if (percent < 0.99)
-			allSucceeded = false;
-	}
-
-	Log::info() << " ";
-
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
-
-	return allSucceeded;
-}
-
-bool TestLinearAlgebra::testSolve(const double testDuration)
-{
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "Solve test:";
-
-	bool allSucceeded = true;
-
-	std::vector<unsigned int> dimensions = {5u, 10u, 20u};
-
-	if (std::is_same<Scalar, double>::value)
-	{
-		dimensions.push_back(50u);
-		dimensions.push_back(100u);
-	}
-
-	for (unsigned int d = 0; d < dimensions.size(); ++d)
-	{
-		Log::info() << " ";
-
-		unsigned long long iterations = 0ull;
-		unsigned long long validIterations = 0ull;
-
-		const size_t dimension = dimensions[d];
-
-		Log::info() << "... with dimension " << dimension << "x" << dimension << ":";
-
-		HighPerformanceStatistic performance;
-		Timestamp startTimestamp(true);
-
-		do
-		{
-			Matrix a0(dimension, dimension);
-			Matrix x0(dimension, 1);
-
-			for (unsigned int n = 0; n < a0.elements(); ++n)
-				a0(n) = Random::scalar(0, 1);
-
-			for (unsigned int n = 0; n < x0.elements(); ++n)
-				x0(n) = Random::scalar(0, 1);
-
-			const Matrix b0 = a0 * x0;
-
-			Matrix x1;
-
-			performance.start();
-			const bool result = a0.solve(b0, x1);
-			performance.stop();
-
-			if (result && x0.isEqual(x1, Numeric::weakEps()) && b0.isEqual(a0 * x1, Numeric::weakEps()))
-				validIterations++;
-
-			iterations++;
-		}
-		while (startTimestamp + testDuration > Timestamp(true));
-
-		ocean_assert(iterations != 0ull);
-		const double percent = double(validIterations) / double(iterations);
-
-		Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-		if (percent < 0.95)
-			allSucceeded = false;
-	}
-
-	Log::info() << " ";
-
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
-
-	return allSucceeded;
 }
 
 }

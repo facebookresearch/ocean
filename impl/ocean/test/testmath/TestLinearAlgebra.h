@@ -33,101 +33,117 @@ class OCEAN_TEST_MATH_EXPORT TestLinearAlgebra
 		static bool test(const double testDuration);
 
 		/**
-		 * Tests the eigensystem of a 3x3 square matrix.
+		 * Tests the Eigen system of a 3x3 square matrix.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, ether 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testEigenSystemSquareMatrix3(const double testDuration);
-	
+
 		/**
-		 * Tests the eigensystem of the matrix.
+		 * Tests the Eigen system of the matrix.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, ether 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testEigenSystemMatrix(const double testDuration);
 
 		/**
 		 * Tests the singular value decomposition of a matrix.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, ether 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testSingularValueDecomposition(const double testDuration);
-	
+
 		/**
 		 * Tests the QR decomposition of a matrix.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, ether 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testQrDecomposition(const double testDuration);
-	
+
 		/**
 		 * Tests the Cholesky decomposition of a square matrix.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, ether 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testCholeskyDecomposition(const double testDuration);
-	
+
 		/**
 		 * Tests solving a system of linear equations.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, ether 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testSolve(const double testDuration);
-	
+
 	private:
-	
-		/**
-		 * Tests the eigensystem of a static and known 3x3 square matrix.
-		 * @param matrix Matrix that will be tested
-		 * @param eigenValues Already known eigen values that have to be found
-		 * @return True, if succeeded
-		 */
-		static bool testEigenSystemSquareMatrix3Static(const SquareMatrix3& matrix, const Vector3& eigenValues);
-	
-		/**
-		 * Tests the eigensystem of random 3x3 square matrices.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		static bool testEigenSystemSquareMatrix3Dynamic(const double testDuration);
-	
+
 		/**
 		 * Tests the singular value decomposition of static and known matrix.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, ether 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testSingularValueDecompositionStatic(const double testDuration);
 
 		/**
 		 * Tests the singular value decomposition of dynamic random matrices.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, ether 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testSingularValueDecompositionDynamic(const double testDuration);
-
-		/**
-		 * Validate singular value decomposition of a matrix M = U * diag(W) * V^T.
-		 * @param matrix Matrix M for which the singular value decomposition has been computed
-		 * @param uMatrix Matrix U obtained from the SVD
-		 * @param wVector Vector W obtained from the SVD holding the singular values of diagonal matrix D
-		 * @param vMatrix Matrix V obtained from the SVD
-		 * @return True, if succeeded
-		 */
-		static bool validateSingularValueDecomposition(const Matrix& matrix, const Matrix& uMatrix, const Matrix& wVector, const Matrix& vMatrix);
 
 		/**
 		 * Tests the QR decomposition of static and known matrix.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, ether 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testQrDecompositionStatic(const double testDuration);
 
 		/**
 		 * Tests the QR decomposition of dynamic random matrices.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, ether 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testQrDecompositionDynamic(const double testDuration);
+
+		/**
+		 * Validates the Eigen system of a static and known 3x3 square matrix.
+		 * @param matrix The matrix to test
+		 * @param expectedEigenValues The expected Eigen values
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar to use, ether 'float' or 'double'
+		 */
+		template <typename T>
+		static bool validateEigenSystem(const SquareMatrixT3<T>& matrix, const VectorT3<T>& expectedEigenValues);
+
+		/**
+		 * Validate singular value decomposition of a matrix M = U * diag(W) * V^T.
+		 * @param matrix The matrix M for which the singular value decomposition has been computed
+		 * @param uMatrix Matrix U obtained from the SVD
+		 * @param wVector Vector W obtained from the SVD holding the singular values of diagonal matrix D
+		 * @param vMatrix Matrix V obtained from the SVD
+		 * @return True, if succeeded
+		 */
+		template <typename T>
+		static bool validateSingularValueDecomposition(const MatrixT<T>& matrix, const  MatrixT<T>& uMatrix, const  MatrixT<T>& wVector, const  MatrixT<T>& vMatrix);
 };
 
 }

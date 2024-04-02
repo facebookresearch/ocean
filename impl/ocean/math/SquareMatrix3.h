@@ -1508,7 +1508,7 @@ bool SquareMatrixT3<T>::eigenValues(T* eigenValues) const
 template <typename T>
 bool SquareMatrixT3<T>::eigenSystem(T* eigenValues, VectorT3<T>* eigenVectors) const
 {
-	ocean_assert(eigenValues && eigenVectors);
+	ocean_assert(eigenValues != nullptr && eigenVectors != nullptr);
 
 	/**
 	 * Computation of the characteristic polynomial
@@ -1567,17 +1567,17 @@ bool SquareMatrixT3<T>::eigenSystem(T* eigenValues, VectorT3<T>* eigenVectors) c
 
 	for (unsigned int n = 0u; n < 3u; ++n)
 	{
-		const Vector3 row0(a - eigenValues[n], b, c);
-		const Vector3 row1(d, e - eigenValues[n], f);
-		const Vector3 row2(g, h, i - eigenValues[n]);
+		const VectorT3<T> row0(a - eigenValues[n], b, c);
+		const VectorT3<T> row1(d, e - eigenValues[n], f);
+		const VectorT3<T> row2(g, h, i - eigenValues[n]);
 
-		Vector3 candidate0(row0.cross(row1));
-		Vector3 candidate1(row0.cross(row2));
-		Vector3 candidate2(row1.cross(row2));
+		VectorT3<T> candidate0(row0.cross(row1));
+		VectorT3<T> candidate1(row0.cross(row2));
+		VectorT3<T> candidate2(row1.cross(row2));
 
-		Scalar sqrCandidate0(candidate0.sqr());
-		Scalar sqrCandidate1(candidate1.sqr());
-		Scalar sqrCandidate2(candidate2.sqr());
+		T sqrCandidate0(candidate0.sqr());
+		T sqrCandidate1(candidate1.sqr());
+		T sqrCandidate2(candidate2.sqr());
 
 		Utilities::sortHighestToFront3(sqrCandidate0, sqrCandidate1, sqrCandidate2, candidate0, candidate1, candidate2);
 
@@ -1605,20 +1605,6 @@ bool SquareMatrixT3<T>::eigenSystem(T* eigenValues, VectorT3<T>* eigenVectors) c
 		}
 
 		eigenVectors[n].normalize();
-
-#ifdef OCEAN_DEBUG
-		if (!std::is_same<T, float>::value)
-		{
-			// check that the eigenvectors do not have length zero
-			ocean_assert(NumericT<T>::isNotWeakEqualEps(eigenVectors[n].length()));
-
-			// check that the last row is also perpendicular to the individual eigen vectors
-			ocean_assert(NumericT<T>::isWeakEqualEps(eigenVectors[n] * Vector3(g, h, i - eigenValues[n])));
-
-			// check whether the eigen vectors and eigen values are correct
-			ocean_assert((*this * eigenVectors[n]).isEqual(eigenVectors[n] * eigenValues[n], NumericT<T>::weakEps()));
-		}
-#endif
 	}
 
 	return true;
