@@ -118,3 +118,22 @@ function(get_ocean_compiler_flags ocean_compiler_flags)
 
     set(${ocean_compiler_flags} ${local_compiler_flags} PARENT_SCOPE)
 endfunction()
+
+# Returns the name of the installation directory that should be used for libraries
+#
+# Output:
+#   ocean_library_installation_directory: The the name of the installation directory that should be used for libraries
+function(get_ocean_library_installation_directory ocean_library_installation_directory)
+    if (OCEAN_USE_LONG_CMAKE_INSTALL_LIBDIR)
+        if (BUILD_SHARED_LIBS)
+            set(OCEAN_LINKING_TYPE_STRING "shared")
+        else()
+            set(OCEAN_LINKING_TYPE_STRING "static")
+        endif()
+
+        string(TOLOWER "lib/${OCEAN_TARGET_SYSTEM_NAME}_${OCEAN_TARGET_PROCESSOR_TYPE}_${OCEAN_LINKING_TYPE_STRING}_${CMAKE_BUILD_TYPE}" installation_directory)
+        set(${ocean_library_installation_directory} "${installation_directory}" PARENT_SCOPE)
+    else()
+        set(${ocean_library_installation_directory} "lib" PARENT_SCOPE)
+    endif()
+endfunction()
