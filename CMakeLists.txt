@@ -69,7 +69,9 @@ endif()
 if (OCEAN_BUILD_TESTS)
     # Test libraries
     add_subdirectory(impl/ocean/test/testbase)
+    add_subdirectory(impl/ocean/test/testmath)
 
     # Test applications
     add_subdirectory(impl/application/ocean/test/base/testbase)
+    add_subdirectory(impl/application/ocean/test/math/testmath)
 endif()
