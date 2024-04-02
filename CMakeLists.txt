@@ -58,6 +58,7 @@ endif()
 
 # Ocean libraries
 add_subdirectory(impl/ocean/base)
+add_subdirectory(impl/ocean/cv)
 add_subdirectory(impl/ocean/geometry)
 add_subdirectory(impl/ocean/math)
 add_subdirectory(impl/ocean/system)
@@ -70,11 +71,13 @@ endif()
 if (OCEAN_BUILD_TESTS)
     # Test libraries
     add_subdirectory(impl/ocean/test/testbase)
+    add_subdirectory(impl/ocean/test/testcv)
     add_subdirectory(impl/ocean/test/testgeometry)
     add_subdirectory(impl/ocean/test/testmath)
 
     # Test applications
     add_subdirectory(impl/application/ocean/test/base/testbase)
+    add_subdirectory(impl/application/ocean/test/cv/testcv)
     add_subdirectory(impl/application/ocean/test/geometry/testgeometry)
     add_subdirectory(impl/application/ocean/test/math/testmath)
 endif()
