@@ -2,27 +2,12 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR
-    ANDROID OR
-    IOS OR
-    LINUX OR
-    WIN32)
-
-    if (APPLE)
-        find_library(COREGRAPHIS_LIB CoreGraphics)
-        find_library(FOUNDATION_LIB Foundation)
-        find_library(IMAGEIO_LIB ImageIO)
-    elseif (IOS)
-        find_library(FOUNDATION_LIB Foundation)
-        find_library(UIKIT_LIB UiKit)
-    endif()
+if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_test_testbase")
 
-    project(${OCEAN_TARGET_NAME})
-
     # Source files
-    file(GLOB OCEAN_TARGET_HEADER_FILES ${CMAKE_CURRENT_LIST_DIR}/*.h)
+    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
 
     # Target definition
@@ -59,16 +44,6 @@ if (APPLE OR
             ocean_system
     )
 
-    if (APPLE)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${FOUNDATION_LIB})
-    elseif(IOS)
-        target_link_libraries(${OCEAN_TARGET_NAME}
-            PUBLIC
-                ${FOUNDATION_LIB}
-                ${UIKIT_LIB}
-        )
-    endif()
-
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
             DESTINATION ${CMAKE_INSTALL_PREFIX}/${OCEAN_LIBRARY_INSTALL_DIR}
@@ -76,7 +51,7 @@ if (APPLE OR
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/base
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/test/testbase
             COMPONENT include
     )
 
