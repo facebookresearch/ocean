@@ -2174,8 +2174,9 @@ inline std::unique_ptr<AnyCameraT<U>> CameraWrapperBasePinholeT<T>::clone(const 
 		}
 
 		const unsigned int validWidth = (height * actualCamera_.width() + actualCamera_.height() / 2u) / actualCamera_.height();
+		const unsigned int validHeight = (width * actualCamera_.height() + actualCamera_.width() / 2u) / actualCamera_.width();
 
-		if (!NumericT<unsigned int>::isEqual(width, validWidth, 1u))
+		if (!NumericT<unsigned int>::isEqual(width, validWidth, 1u) && !NumericT<unsigned int>::isEqual(height, validHeight, 1u)) // either of the valid width/height needs to be close by 1 pixel
 		{
 			ocean_assert(false && "Wrong aspect ratio!");
 			return nullptr;
@@ -2193,8 +2194,9 @@ inline std::unique_ptr<AnyCameraT<U>> CameraWrapperBasePinholeT<T>::clone(const 
 		}
 
 		const unsigned int validWidth = (height * actualCamera_.width() + actualCamera_.height() / 2u) / actualCamera_.height();
+		const unsigned int validHeight = (width * actualCamera_.height() + actualCamera_.width() / 2u) / actualCamera_.width();
 
-		if (!NumericT<unsigned int>::isEqual(width, validWidth, 1u))
+		if (!NumericT<unsigned int>::isEqual(width, validWidth, 1u) && !NumericT<unsigned int>::isEqual(height, validHeight, 1u)) // either of the valid width/height needs to be close by 1 pixel
 		{
 			ocean_assert(false && "Wrong aspect ratio!");
 			return nullptr;
