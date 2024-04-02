@@ -2,6 +2,10 @@
 
 cmake_minimum_required(VERSION 3.26)
 
+# Make option() honor normal variables
+cmake_policy(SET CMP0077 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW) # For CMake subprojects
+
 project(ocean)
 
 include(${CMAKE_CURRENT_LIST_DIR}/build/cmake/ocean_utilities.cmake)
