@@ -246,7 +246,7 @@ bool FrameShrinker::pyramidByTwo8BitPerChannel11(const uint8_t* source, uint8_t*
 
 			ocean_assert(firstSubsetsSourceHeightNextLarger <= sourceHeight);
 
-			const unsigned int threadsNextLarger = (unsigned int)Numeric::ceil(float(sourceHeight) / float(firstSubsetsSourceHeightNextLarger));
+			const unsigned int threadsNextLarger = (unsigned int)(Numeric::ceil(float(sourceHeight) / float(firstSubsetsSourceHeightNextLarger)));
 			ocean_assert(threadsNextLarger <= availableThreads);
 
 			if (firstSubsetsSourceHeight * (availableThreads - 1u) < firstSubsetsSourceHeightNextLarger * (threadsNextLarger - 1u))
@@ -268,7 +268,9 @@ bool FrameShrinker::pyramidByTwo8BitPerChannel11(const uint8_t* source, uint8_t*
 
 		if (multiThreadLayers >= 1u)
 		{
-			if (!pyramidByTwo8BitPerChannel11Internal(source, pyramidTarget, sourceWidth, sourceHeight, channels, multiThreadLayers, true /*copyFirstLayer*/, sourcePaddingElements, worker, availableThreads))
+			ocean_assert(availableThreads >= 2u);
+
+			if (!pyramidByTwo8BitPerChannel11WithThreads(source, pyramidTarget, sourceWidth, sourceHeight, channels, multiThreadLayers, true /*copyFirstLayer*/, sourcePaddingElements, availableThreads, worker))
 			{
 				return false;
 			}
@@ -292,25 +294,26 @@ bool FrameShrinker::pyramidByTwo8BitPerChannel11(const uint8_t* source, uint8_t*
 		const unsigned int sourcePyramidLayerPaddingElements = multiThreadLayers == 0u ? sourcePaddingElements : 0u;
 
 		ocean_assert(layers > multiThreadLayers || multiThreadLayers == 0u);
-		return pyramidByTwo8BitPerChannel11Internal(pyramidTarget + layersOffset, pyramidTarget + layersOffset, layerWidth, layerHeight, channels, layers - multiThreadLayers + 1u, false /*copyFirstLayer*/, sourcePyramidLayerPaddingElements, nullptr /*worker*/, 0u /*thread*/);
+		return pyramidByTwo8BitPerChannel11WithThreads(pyramidTarget + layersOffset, pyramidTarget + layersOffset, layerWidth, layerHeight, channels, layers - multiThreadLayers + 1u, false /*copyFirstLayer*/, sourcePyramidLayerPaddingElements, 1u /*threads*/, nullptr /*worker*/);
 	}
 	else
 	{
-		return pyramidByTwo8BitPerChannel11Internal(source, pyramidTarget, sourceWidth, sourceHeight, channels, layers, true /*copyFirstLayer*/, sourcePaddingElements, nullptr /*worker*/, 0u /*thread*/);
+		return pyramidByTwo8BitPerChannel11WithThreads(source, pyramidTarget, sourceWidth, sourceHeight, channels, layers, true /*copyFirstLayer*/, sourcePaddingElements, 1u /*threads*/, nullptr /*worker*/);
 	}
 }
 
-bool FrameShrinker::pyramidByTwo8BitPerChannel11Internal(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const unsigned int layers, const bool copyFirstLayer, const unsigned int sourcePaddingElements, Worker* worker, const unsigned int threads)
+bool FrameShrinker::pyramidByTwo8BitPerChannel11WithThreads(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const unsigned int layers, const bool copyFirstLayer, const unsigned int sourcePaddingElements, const unsigned int threads, Worker* worker)
 {
 	ocean_assert(source != nullptr && pyramidTarget != nullptr );
 	ocean_assert(sourceWidth >= 2u && sourceHeight >= 2u && layers >= 1u);
 	ocean_assert(channels >= 1u);
+	ocean_assert(threads >= 1u);
 
 	// we have to ensure that each thread stays in it's sub-region
 
-	if (worker != nullptr)
+	if (worker != nullptr && threads >= 2u)
 	{
-		ocean_assert(threads >= 2u && threads <= worker->threads());
+		ocean_assert(threads <= worker->threads());
 		ocean_assert(layers == 0u || (threads * 2u << (layers - 2u) <= sourceHeight));
 
 		// now we determine the height of the first threads-1 subsets, the last subset will take the remaining image content
@@ -322,7 +325,7 @@ bool FrameShrinker::pyramidByTwo8BitPerChannel11Internal(const uint8_t* source, 
 			unsigned int debugFirstSubsetsSourceHeight = 1u;
 			while (debugFirstSubsetsSourceHeight * threads <= sourceHeight / 2u)
 			{
-				debugFirstSubsetsSourceHeight <<= 1u;
+				debugFirstSubsetsSourceHeight *= 2u;
 			}
 
 			ocean_assert(firstSubsetsSourceHeight == debugFirstSubsetsSourceHeight);
@@ -332,17 +335,17 @@ bool FrameShrinker::pyramidByTwo8BitPerChannel11Internal(const uint8_t* source, 
 		ocean_assert(Utilities::isPowerOfTwo(firstSubsetsSourceHeight));
 		ocean_assert(firstSubsetsSourceHeight * (threads - 1u) < sourceHeight);
 
-		worker->executeFunction(Worker::Function::createStatic(&pyramidByTwo8BitPerChannel11InternalSubset, source, pyramidTarget, sourceWidth, sourceHeight, channels, layers, copyFirstLayer, sourcePaddingElements, firstSubsetsSourceHeight, threads, 0u, 0u), 0u, threads);
+		worker->executeFunction(Worker::Function::createStatic(&pyramidByTwo8BitPerChannel11WithThreadsSubset, source, pyramidTarget, sourceWidth, sourceHeight, channels, layers, copyFirstLayer, sourcePaddingElements, firstSubsetsSourceHeight, threads, 0u, 0u), 0u, threads);
 	}
 	else
 	{
-		pyramidByTwo8BitPerChannel11InternalSubset(source, pyramidTarget, sourceWidth, sourceHeight, channels, layers, copyFirstLayer, sourcePaddingElements, sourceHeight, 1u, 0u, 1u);
+		pyramidByTwo8BitPerChannel11WithThreadsSubset(source, pyramidTarget, sourceWidth, sourceHeight, channels, layers, copyFirstLayer, sourcePaddingElements, sourceHeight, 1u, 0u, 1u);
 	}
 
 	return true;
 }
 
-void FrameShrinker::pyramidByTwo8BitPerChannel11InternalSubset(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const unsigned int layers, const bool copyFirstLayer, const unsigned int sourcePaddingElements, const unsigned int firstSubsetsSourceHeight, const unsigned int subsets, const unsigned int subsetIndex, const unsigned int valueOne)
+void FrameShrinker::pyramidByTwo8BitPerChannel11WithThreadsSubset(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const unsigned int layers, const bool copyFirstLayer, const unsigned int sourcePaddingElements, const unsigned int firstSubsetsSourceHeight, const unsigned int subsets, const unsigned int subsetIndex, const unsigned int valueOne)
 {
 	ocean_assert(source != nullptr && pyramidTarget != nullptr);
 	ocean_assert(sourceWidth >= 2u && sourceHeight >= 2u && layers >= 1u);
@@ -368,7 +371,7 @@ void FrameShrinker::pyramidByTwo8BitPerChannel11InternalSubset(const uint8_t* so
 	{
 		// for the first layer we simply copy the content
 
-		const unsigned int targetPaddingElements = 0u;
+		constexpr unsigned int targetPaddingElements = 0u;
 		CV::FrameConverter::subFrame<uint8_t>(source, pyramidTarget, sourceWidth, sourceHeight, sourceWidth, sourceHeight, channels, 0u, subsetSourceFirstRow, 0u, subsetSourceFirstRow, sourceWidth, subsetSourceRows, sourcePaddingElements, targetPaddingElements);
 	}
 
