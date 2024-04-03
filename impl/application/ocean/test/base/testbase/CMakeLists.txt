@@ -2,15 +2,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR
-    LINUX OR
-    WIN32)
-
-    if (APPLE)
-        find_library(COREGRAPHIS_LIB CoreGraphics)
-        find_library(FOUNDATION_LIB Foundation)
-        find_library(IMAGEIO_LIB ImageIO)
-    endif()
+if (APPLE OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_base_testbase")
 
@@ -41,15 +33,6 @@ if (APPLE OR
             ocean_system
             ocean_test_testbase
     )
-
-    if (APPLE)
-        target_link_libraries(${OCEAN_TARGET_NAME}
-            PUBLIC
-                ${COREGRAPHIS_LIB}
-                ${FOUNDATION_LIB}
-                ${IMAGEIO_LIB}
-        )
-    endif()
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME} DESTINATION bin)
