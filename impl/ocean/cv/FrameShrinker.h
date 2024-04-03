@@ -46,7 +46,8 @@ class OCEAN_CV_EXPORT FrameShrinker
 	public:
 
 		/**
-		 * Reduces the resolution of a given frame by two, taking 2x2 (= four) pixel values into account:
+		 * Reduces the resolution of a given frame by two, applying a 1-1 downsampling.
+		 * Each downsampled pixel is based on 2x2 (= four) corresponding pixels from the source image:
 		 * <pre>
 		 * | 1 1 |
 		 * | 1 1 | * 1/4
@@ -61,7 +62,8 @@ class OCEAN_CV_EXPORT FrameShrinker
 		static bool downsampleByTwo11(const Frame& source, Frame& target, Worker* worker = nullptr);
 
 		/**
-		 * Reduces the resolution of a given binary mask by two, taking 2x2 (= four) mask pixel values into account:
+		 * Reduces the resolution of a given binary mask by two, applying a 1-1 downsampling.
+		 * Each downsampled pixel is based on 2x2 (= four) corresponding pixels from the source image:
 		 * <pre>
 		 * | 1 1 |
 		 * | 1 1 | * 1/4
@@ -107,7 +109,8 @@ class OCEAN_CV_EXPORT FrameShrinker
 		static bool downsampleByTwoBinary(const LegacyFrame& source, LegacyFrame& target, const unsigned int threshold = 766u, Worker* worker = nullptr);
 
 		/**
-		 * Reduces the resolution of a given frame by two, taking 5x5 (= 25) pixel values into account:<br>
+		 * Reduces the resolution of a given frame by two, applying a 1-4-6-4-1 downsampling.
+		 * Each downsampled pixel is based on  5x5 (= 25) corresponding pixels from the source image:
 		 * <pre>
 		 * | 1  4  6  4 1 |
 		 * | 4 16 24 16 4 |
@@ -187,7 +190,15 @@ class OCEAN_CV_EXPORT FrameShrinker
 		static inline bool downsampleByTwoBinary(LegacyFrame& frame, const unsigned int threshold = 766u, Worker* worker = nullptr);
 
 		/**
-		 * Reduces the resolution of a given frame by two, taking 5x5 (= 25) pixel values into account.
+		 * Reduces the resolution of a given frame by two, applying a 1-4-6-4-1 downsampling.
+		 * Each downsampled pixel is based on  5x5 (= 25) corresponding pixels from the source image:
+		  * <pre>
+		 * | 1  4  6  4 1 |
+		 * | 4 16 24 16 4 |
+		 * | 6 24 36 24 6 | * 1/256
+		 * | 4 16 24 16 4 |
+		 * | 1  4  6  4 1 |
+		 * </pre>
 		 * The filter values are determined at even pixel coordinates (0, 2, 4, ...).<br>
 		 * The resulting frame will have the resolution (frame.width() / 2, frame.height() / 2).
 		 * @param frame The frame to down sample, must be valid
@@ -219,7 +230,8 @@ class OCEAN_CV_EXPORT FrameShrinker
 		static bool pyramidByTwo11(const Frame& source, uint8_t* const pyramidTarget, const unsigned int layers, Worker* worker = nullptr);
 
 		/**
-		 * Fills the buffer of a pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8.
+		 * Fills the buffer of a pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
+		 * Each pixel of a coarser pyramid level is based on 2x2 pixels from the corresponding finer pyramid level.
 		 * @param source The source frame buffer to be used, must be valid
 		 * @param pyramidTarget The frame buffer of the frame pyramid, large enough for the requested layers, must be valid
 		 * @param sourceWidth Width of the source frame in pixel, with range [2, infinity)
@@ -233,7 +245,8 @@ class OCEAN_CV_EXPORT FrameShrinker
 		static bool pyramidByTwo8BitPerChannel11(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const unsigned int layers, const unsigned int sourcePaddingElements, Worker* worker);
 
 		/**
-		 * Reduces the resolution of a given frame by two, taking 2x2 (= 4) pixel values into account:<br>
+		 * Reduces the resolution of a given frame by two, applying a 1-1 downsampling.
+		 * Each downsampled pixel is based on 2x2 (= four) corresponding pixels from the source image:
 		 * <pre>
 		 * | 1 1 |
 		 * | 1 1 | * 1/4
@@ -266,7 +279,8 @@ class OCEAN_CV_EXPORT FrameShrinker
 		static inline void downsampleBinayMaskByTwo8BitPerChannel11(const uint8_t* source, uint8_t* target, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const unsigned int threshold = 766u, Worker* worker = nullptr);
 
 		/**
-		 * Reduces the resolution of a given frame by two, taking 5x5 (= 25) pixel values into account:<br>
+		 * Reduces the resolution of a given frame by two, applying a 1-4-6-4-1 downsampling.
+		 * Each downsampled pixel is based on  5x5 (= 25) corresponding pixels from the source image:
 		 * <pre>
 		 * | 1  4  6  4 1 |
 		 * | 4 16 24 16 4 |
@@ -291,7 +305,7 @@ class OCEAN_CV_EXPORT FrameShrinker
 	protected:
 
 		/**
-		 * Fills the buffer of a pyramid frame for frames with zipped pixel format and with 8 bit per channel.
+		 * Fills the buffer of a pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8.
 		 * @param source The source frame buffer from which the pyramid will be created, must be valid
 		 * @param pyramidTarget The frame buffer of the frame pyramid, large enough for the requested layers, must be valid
 		 * @param sourceWidth Width of the source frame in pixel, with range [2, infinity)
@@ -307,7 +321,7 @@ class OCEAN_CV_EXPORT FrameShrinker
 		static bool pyramidByTwo8BitPerChannel11Internal(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const unsigned int layers, const bool copyFirstLayer, const unsigned int sourcePaddingElements, Worker* worker = nullptr, const unsigned int threads = 0u);
 
 		/**
-		 * Fills a subset of the buffer of a pyramid frame for a given frame with zipped pixel format and with 8 bit per channel.
+		 * Fills a subset of the buffer of a pyramid frame for a given frame with 1 plane and data type DT_UNSIGNED_INTEGER_8.
 		 * @param source The source frame buffer from which the pyramid will be created, must be valid
 		 * @param pyramidTarget The frame buffer of the frame pyramid, large enough for the requested layers, must be valid
 		 * @param sourceWidth Width of the source frame in pixel, with range [2, infinity)
@@ -483,7 +497,7 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @return Mirrored value
 		 * @ingroup base
 		 */
-		inline static unsigned int mirroredBorderLocationLeft(const int value);
+		static inline unsigned int mirroredBorderLocationLeft(const int value);
 
 		/**
 		 * Mirrors a given value at the right border if necessary.
@@ -498,7 +512,7 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @return Mirrored value
 		 * @ingroup base
 		 */
-		inline static unsigned int mirroredBorderLocationRight(const unsigned int value, const unsigned int size);
+		static inline unsigned int mirroredBorderLocationRight(const unsigned int value, const unsigned int size);
 };
 
 inline bool FrameShrinker::downsampleByTwo11(Frame& frame, Worker* worker)
