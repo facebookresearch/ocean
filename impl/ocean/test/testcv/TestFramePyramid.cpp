@@ -210,15 +210,48 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	const Timestamp startTimestampWorker(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(100u, 1920u);
-		const unsigned int height = RandomI::random(100u, 1080u);
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-		const unsigned int invalidWidth = RandomI::random(1u, width - 1u);
-		const unsigned int invalidHeight = RandomI::random(1u, height - 1u);
+		{
+			// testing maximal number of layers
+
+			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, 0u /*invalidWidthOrHeight*/);
+
+			unsigned int expectedLayers = 1u;
+			unsigned int layerWidth = width;
+			unsigned int layerHeight = height;
+
+			while (true)
+			{
+				ocean_assert(layerWidth >= 1u && layerHeight >= 1u);
+
+				if (layerWidth == 1u || layerHeight == 1u)
+				{
+					// we have reached the last layer
+					break;
+				}
+
+				layerWidth /= 2u;
+				layerHeight /= 2u;
+
+				++expectedLayers;
+			}
+
+			if (layers != expectedLayers)
+			{
+				allSucceeded = false;
+			}
+		}
+
+		const unsigned int invalidWidth = RandomI::random(randomGenerator, 0u, width - 1u);
+		const unsigned int invalidHeight = RandomI::random(randomGenerator, 0u, height - 1u);
 
 		{
 			// testing function defining invalid size
