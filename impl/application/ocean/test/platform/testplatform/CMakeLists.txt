@@ -3,6 +3,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 if (APPLE OR LINUX OR WIN32)
+
     set(OCEAN_TARGET_NAME "application_ocean_test_platform_testplatform")
 
     if (APPLE)

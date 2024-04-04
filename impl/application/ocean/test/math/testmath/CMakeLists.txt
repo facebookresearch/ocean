@@ -4,13 +4,11 @@ cmake_minimum_required(VERSION 3.26)
 
 if (APPLE OR LINUX OR WIN32)
 
+    set(OCEAN_TARGET_NAME "application_ocean_test_math_testmath")
+
     if (APPLE)
         find_library(FOUNDATION_LIB Foundation)
     endif()
-
-    set(OCEAN_TARGET_NAME "application_ocean_test_math_testmath")
-
-    project(${OCEAN_TARGET_NAME})
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")

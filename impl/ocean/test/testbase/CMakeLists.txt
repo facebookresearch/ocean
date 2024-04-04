@@ -21,10 +21,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME}
-            PRIVATE
-                -DUSE_OCEAN_TEST_BASE_EXPORT
-        )
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_TEST_BASE_EXPORT)
     endif()
 
     if (NOT WIN32)

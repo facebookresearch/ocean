@@ -3,6 +3,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
+
     set(OCEAN_TARGET_NAME "ocean_cv")
 
     # Source files
@@ -26,7 +27,8 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
-            ocean_math)
+            ocean_math
+    )
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}

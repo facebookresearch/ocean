@@ -4,16 +4,16 @@ cmake_minimum_required(VERSION 3.26)
 
 if (APPLE OR LINUX OR WIN32)
 
+    set(OCEAN_TARGET_NAME "application_ocean_demo_base_console")
+
     if (APPLE)
         find_library(COREGRAPHICS_LIB CoreGraphics)
         find_library(FOUNDATION_LIB Foundation)
         find_library(IMAGEIO_LIB ImageIO)
     endif()
 
-    set(OCEAN_TARGET_NAME "application_ocean_demo_base_console")
-
     # Source files
-    file(GLOB OCEAN_TARGET_HEADER_FILES ${CMAKE_CURRENT_LIST_DIR}/*.h)
+    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
 
     # Target definition
