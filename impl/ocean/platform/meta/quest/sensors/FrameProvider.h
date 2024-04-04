@@ -524,6 +524,30 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 		bool currentExposureSettings(const OSSDK::Sensors::v3::FrameType& cameraFrameType, double* minExposure, double* meanExposure, double* maxExposure, double* minGain, double* meanGain, double* maxGain) const;
 
 		/**
+		 * Returns the exposure settings range of an active frame camera type.
+		 * @param streamKey The key returned in preparePurposeStream().
+		 * @param minExposure The resulting minimal exposure durtation, in seconds, with range [0, infinity)
+		 * @param maxExposure The resulting maximal exposure durtation, in seconds, with range [minExposure, infinity)
+		 * @param minGain The resulting maximal exposure durtation, in seconds, with range [0, infinity)
+		 * @param maxGain The resulting maximal exposure durtation, in seconds, with range [minGain, infinity)
+		 * @return True, if succeeded; False, if the value range is unknown
+		 */
+		bool exposureSettingsRange(CameraStreamKey streamKey, double& minExposure, double& maxExposure, double& minGain, double& maxGain) const;
+
+		/**
+		 * Returns the current exposure of an active frame camera type.
+		 * @param streamKey The key returned in preparePurposeStream().
+		 * @param minExposure Optional resulting minimal exposure value of all cameras, in seconds, with range [0, infinity), nullptr if not of interest
+		 * @param meanExposure Optional resulting mean of all exposure values of all cameras, in seconds, with range [minExposure, maxExposure], nullptr if not of interest
+		 * @param maxExposure Optional resulting maximal exposure value of all cameras, in seconds, with range [minExposure, infinity), nullptr if not of interest
+		 * @param minGain Optional resulting minimal gain value of all cameras, with range [0, infinity), nullptr if not of interest
+		 * @param meanGain Optional resulting mean of all gain values of all cameras, in seconds, with range [minGain, maxGain], nullptr if not of interest
+		 * @param maxGain Optional resulting maximal gain value of all cameras, in seconds, with range [minGain, infinity), nullptr if not of interest
+		 * @return True, if succeeded; False, if the camera frame type is not active
+		 */
+		bool currentExposureSettings(CameraStreamKey streamKey, double* minExposure, double* meanExposure, double* maxExposure, double* minGain, double* meanGain, double* maxGain) const;
+
+		/**
 		 * Requests the latest frames of this provider when using frame types.
 		 * The provider's copy mode must be `FCM_MAKE_COPY`, otherwise this function will never return any frames.
 		 * After calling this function, the provider does not have any latest frames anymore until the next frames arrive internally.

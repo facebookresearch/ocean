@@ -1032,6 +1032,75 @@ bool FrameProviderT<tAllowInvalidCameras>::currentExposureSettings(const OSSDK::
 }
 
 template <bool tAllowInvalidCameras>
+bool FrameProviderT<tAllowInvalidCameras>::exposureSettingsRange(CameraStreamKey streamKey, double& minExposure, double& maxExposure, double& minGain, double& maxGain) const
+{
+	const ScopedLock scopedLock(lock_);
+
+	if (streamKey >= purposeCameraStreams_.size())
+	{
+		return false;
+	}
+
+	return purposeCameraStreams_[streamKey].consumer->exposureSettingsRange(minExposure, maxExposure, minGain, maxGain);
+}
+
+template <bool tAllowInvalidCameras>
+bool FrameProviderT<tAllowInvalidCameras>::currentExposureSettings(CameraStreamKey streamKey, double* minExposure, double* meanExposure, double* maxExposure, double* minGain, double* meanGain, double* maxGain) const
+{
+	const ScopedLock scopedLock(lock_);
+
+	if (streamKey >= purposeCameraStreams_.size())
+	{
+		return false;
+	}
+
+	double internalMinExposure;
+	double internalMeanExposure;
+	double internalMaxExposure;
+
+	double internalMinGain;
+	double internalMeanGain;
+	double internalMaxGain;
+
+	if (!purposeCameraStreams_[streamKey].consumer->currentExposureSettings(internalMinExposure, internalMeanExposure, internalMaxExposure, internalMinGain, internalMeanGain, internalMaxGain))
+	{
+		return false;
+	}
+
+	if (minExposure)
+	{
+		*minExposure = internalMinExposure;
+	}
+
+	if (meanExposure)
+	{
+		*meanExposure = internalMeanExposure;
+	}
+
+	if (maxExposure)
+	{
+		*maxExposure = internalMaxExposure;
+	}
+
+	if (minGain)
+	{
+		*minGain = internalMinGain;
+	}
+
+	if (meanGain)
+	{
+		*meanGain = internalMeanGain;
+	}
+
+	if (maxGain)
+	{
+		*maxGain = internalMaxGain;
+	}
+
+	return true;
+}
+
+template <bool tAllowInvalidCameras>
 bool FrameProviderT<tAllowInvalidCameras>::latestFrames(Frames& frames, SharedAnyCamerasD* cameras, HomogenousMatrixD4* world_T_device, HomogenousMatricesD4* device_T_cameras, OSSDK::Sensors::v3::FrameType* cameraFrameType, CameraType* cameraType, FrameMetadatas* frameMetadatas, const OSSDK::Sensors::v3::FrameType requestCameraFrameType)
 {
 	TemporaryScopedLock scopedLock(lock_);
