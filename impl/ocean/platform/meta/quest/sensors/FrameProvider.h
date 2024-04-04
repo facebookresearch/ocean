@@ -524,7 +524,7 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 		bool currentExposureSettings(const OSSDK::Sensors::v3::FrameType& cameraFrameType, double* minExposure, double* meanExposure, double* maxExposure, double* minGain, double* meanGain, double* maxGain) const;
 
 		/**
-		 * Requests the latest frames of this provider.
+		 * Requests the latest frames of this provider when using frame types.
 		 * The provider's copy mode must be `FCM_MAKE_COPY`, otherwise this function will never return any frames.
 		 * After calling this function, the provider does not have any latest frames anymore until the next frames arrive internally.
 		 * @param frames The resulting latest frames moved out of this provider, the frames will own the image content and the caller can keep/use the frames as long as necessary
@@ -538,6 +538,22 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 		 * @return True, if succeeded
 		 */
 		bool latestFrames(Frames& frames, SharedAnyCamerasD* cameras = nullptr, HomogenousMatrixD4* world_T_device = nullptr, HomogenousMatricesD4* device_T_cameras = nullptr, OSSDK::Sensors::v3::FrameType* cameraFrameType = nullptr, CameraType* cameraType = nullptr, FrameMetadatas* frameMetadatas = nullptr, const OSSDK::Sensors::v3::FrameType requestCameraFrameType = OSSDK::Sensors::v3::FrameType::Invalid);
+
+		/**
+		 * Requests the latest frames of this provider when using purposes.
+		 * The provider's copy mode must be `FCM_MAKE_COPY`, otherwise this function will never return any frames.
+		 * After calling this function, the provider does not have any latest frames anymore until the next frames arrive internally.
+		 * @param streamKey The key returned in preparePurposeStream().
+		 * @param frames The resulting latest frames moved out of this provider, the frames will own the image content and the caller can keep/use the frames as long as necessary
+		 * @param cameras Optional the resulting camera profiles of the frames, one for each frame, based on online calibration if available; otherwise factory calibration
+		 * @param world_T_device Optional the resulting transformation between device and world, may be invalid if head tracking is currently failing; nullptr if not of interest
+		 * @param device_T_cameras Optional the resulting transformations between cameras and device, one for each camera, based on online calibration if available; otherwise factory calibration
+		 * @param cameraType Optional resulting camera type of the resulting frames; nullptr if not of interest
+		 * @param frameMetadatas Optional the resulting frame metadata, one object associated with each resulting frame; nullptr if not of interest
+		 * @param requestCameraFrameType Optional explicit camera frame type to request frames of a specific camera frame type only; otherwise FrameType::Invalid to receive frames from the next available camera
+		 * @return True, if succeeded
+		 */
+		bool latestFrames(CameraStreamKey streamKey, Frames& frames, SharedAnyCamerasD* cameras = nullptr, HomogenousMatrixD4* world_T_device = nullptr, HomogenousMatricesD4* device_T_cameras = nullptr, CameraType* cameraType = nullptr, FrameMetadatas* frameMetadatas = nullptr);
 
 		/**
 		 * Returns all currently active camera frame types which has been selected for receiving frames.

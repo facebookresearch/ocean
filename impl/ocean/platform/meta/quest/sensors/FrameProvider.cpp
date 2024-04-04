@@ -1120,6 +1120,25 @@ bool FrameProviderT<tAllowInvalidCameras>::latestFrames(Frames& frames, SharedAn
 }
 
 template <bool tAllowInvalidCameras>
+bool FrameProviderT<tAllowInvalidCameras>::latestFrames(CameraStreamKey streamKey, Frames& frames, SharedAnyCamerasD* cameras, HomogenousMatrixD4* world_T_device, HomogenousMatricesD4* device_T_cameras, CameraType* cameraType, FrameMetadatas* frameMetadatas)
+{
+	TemporaryScopedLock scopedLock(lock_);
+
+	if (streamKey >= purposeCameraStreams_.size())
+	{
+		return false;
+	}
+
+	const CameraStreamStorageElement& storage = purposeCameraStreams_[streamKey];
+	const std::shared_ptr<CustomFrameSetConsumer> frameConsumer(storage.consumer);
+
+	scopedLock.release();
+
+	ocean_assert(frameConsumer);
+	return frameConsumer->latestFrames(frames, cameras, world_T_device, device_T_cameras, cameraType, frameMetadatas);
+}
+
+template <bool tAllowInvalidCameras>
 typename FrameProviderT<tAllowInvalidCameras>::CameraFrameTypes FrameProviderT<tAllowInvalidCameras>::activeCameraFrameTypes() const
 {
 	const ScopedLock scopedLock(lock_);
