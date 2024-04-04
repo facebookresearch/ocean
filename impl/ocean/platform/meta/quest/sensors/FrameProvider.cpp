@@ -395,12 +395,13 @@ void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::onFrameSet(OS
 
 		const OSSDK::Sensors::v4::ImageData& image = images.at(n);
 
-		// Pointer to the actual image data. The lifetime of this data does not extend beyond the callback return, i.e. the consumer is required to make a copy
-		// It is possible for @data to be nullptr - this may happen when an incomplete frame group gets emitted by the lower layers.
-		if (image.data == nullptr)
+		// Frame sets may be incomplete, i.e. not all images are valid. This can be due to
+	    // 1) glitches in the transmission from camera sensor to the driver
+		// 2) intentionally incomplete frame sets such as eye-only frame sets in the faceEye camera system.
+		// Such invalid frames have to be skipped when processing the frame sets.
+		if (!image.valid())
 		{
-			// we will handle the current set of frames
-			return;
+			continue;
 		}
 
 		const FrameType::PixelFormat pixelFormat = translateImageFormat(image.imageFormat);
