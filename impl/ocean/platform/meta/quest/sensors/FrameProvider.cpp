@@ -785,6 +785,82 @@ bool FrameProviderT<tAllowInvalidCameras>::stopReceivingCameraFrames(const OSSDK
 }
 
 template <bool tAllowInvalidCameras>
+CameraStreamKey FrameProviderT<tAllowInvalidCameras>::preparePurposeStream(const sensoraccess::CameraStreamPurpose& purpose)
+{
+	for (size_t n = 0; n < purposeCameraStreams_.size(); ++n)
+	{
+		if (purposeCameraStreams_[n].purpose == purpose)
+		{
+			return kInvalidCameraStreamKey;
+		}
+	}
+
+    std::shared_ptr<CustomFrameSetConsumer> customFrameSetConsumer = std::make_shared<CustomFrameSetConsumer>(*this, ossdkHeadTracker_, nullptr, OSSDK::Sensors::v3::FrameType::Invalid, frameCopyMode_,  CT_ALL_CAMERAS);
+
+	auto createStreamResult = ossdkCameraDataProvider_->createStream(purpose, *customFrameSetConsumer, *ossdkDispatchThreadHandle_, "ocean");
+	if (!createStreamResult.success())
+	{
+		Log::error() << "Failed to create stream for purpose " << purpose.cameraSystem.toStdString() << "/" << purpose.purpose.toStdString();
+		return kInvalidCameraStreamKey;
+	}
+
+	purposeCameraStreams_.emplace_back(purpose, std::move(customFrameSetConsumer), std::move(createStreamResult.returnValue));
+	return purposeCameraStreams_.size() - 1;
+}
+
+template <bool tAllowInvalidCameras>
+bool FrameProviderT<tAllowInvalidCameras>::startReceivingCameraFrames(CameraStreamKey streamKey, const CameraType cameraType)
+{
+	ocean_assert(cameraType < CT_END);
+
+	const ScopedLock scopedLock(lock_);
+
+	if (!isValid())
+	{
+		ocean_assert(false && "Invalid frame provider!");
+		return false;
+	}
+
+	if (streamKey >= purposeCameraStreams_.size())
+	{
+		ocean_assert(false && "Invalid stream key!");
+		return false;
+	}
+
+	CameraStreamStorageElement& storage = purposeCameraStreams_[streamKey];
+
+	storage.control->stop();
+	storage.consumer->setCameraType(cameraType);
+
+	auto startResult = storage.control->start();
+	if (!startResult.success())
+	{
+		const sensoraccess::CameraStreamPurpose& purpose = storage.purpose;
+		Log::error() << "Failed to start stream for purpose " << purpose.cameraSystem.toStdString() << "/" << purpose.purpose.toStdString();
+		return false;
+	}
+
+	return true;
+}
+
+template <bool tAllowInvalidCameras>
+bool FrameProviderT<tAllowInvalidCameras>::stopReceivingCameraFrames(CameraStreamKey streamKey)
+{
+	const ScopedLock scopedLock(lock_);
+
+	if (streamKey >= purposeCameraStreams_.size())
+	{
+		ocean_assert(false && "Invalid stream key!");
+		return false;
+	}
+
+	CameraStreamStorageElement& storage = purposeCameraStreams_[streamKey];
+	storage.control->stop();
+
+	return true;
+}
+
+template <bool tAllowInvalidCameras>
 bool FrameProviderT<tAllowInvalidCameras>::stopReceivingCameraFrames()
 {
 	const ScopedLock scopedLock(lock_);
@@ -800,6 +876,11 @@ bool FrameProviderT<tAllowInvalidCameras>::stopReceivingCameraFrames()
 	}
 
 	frameSetConsumerMap_.clear();
+
+	for (typename CameraStreamStorage::iterator i = purposeCameraStreams_.begin(); i != purposeCameraStreams_.end(); ++i)
+	{
+		i->control->stop();
+	}
 
 	return allSucceeded;
 }

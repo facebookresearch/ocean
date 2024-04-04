@@ -58,6 +58,12 @@ typedef FrameProviderT<false> FrameProvider;
 typedef FrameProviderT<true> FrameProviderWithInvalid;
 
 /**
+ * The key is used to identify purpose-based streams after their creation
+ */
+typedef std::size_t CameraStreamKey;
+constexpr static CameraStreamKey kInvalidCameraStreamKey = std::numeric_limits<CameraStreamKey>::max();
+
+/**
  * This class implements a provider for camera frames of Meta's Quest devices.
  * The provider supports two copy modes of the image content:<br>
  * - FCM_USE_IMMEDIATELY: The image content is not copied and the image data is handled in a derived class of this provider.
@@ -238,6 +244,12 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 				 */
 				inline size_t maximalFrames() const;
 
+				void setCameraType(CameraType cameraType)
+				{
+					cameraType_ = cameraType;
+					cameraIndexSetForCameraType_.clear();
+				}
+
 			protected:
 
 			    /**
@@ -345,14 +357,24 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 		};
 
 		/**
-		 * Definition of an unordered map mapping senor frame types to frame consumers.
+		 * Definition of an unordered map mapping sensor frame types to frame consumers.
 		 */
 		typedef std::unordered_map<OSSDK::Sensors::v3::FrameType, std::shared_ptr<CustomFrameSetConsumer>> FrameSetConsumerMap;
 
 		/**
-		 * Definition of an unordered map mapping senor frame types to frame consumers.
+		 * Definition of a vector providing storage for pupose-based stream controls.
 		 */
-		typedef std::vector<std::shared_ptr<CustomFrameSetConsumer>> FrameSetConsumers;
+		struct CameraStreamStorageElement {
+			sensoraccess::CameraStreamPurpose purpose;
+			std::shared_ptr<CustomFrameSetConsumer> consumer;
+			std::shared_ptr<sensoraccess::StreamControl> control;
+		};
+		typedef std::vector<CameraStreamStorageElement> CameraStreamStorage;
+
+		/**
+         * Definition of a vector providing storage for frame set consumers.
+         */
+        typedef std::vector<std::shared_ptr<CustomFrameSetConsumer>> FrameSetConsumers;
 
 	public:
 
@@ -392,6 +414,18 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 		bool isCameraFrameTypeAvailable(const OSSDK::Sensors::v3::FrameType& cameraFrameType);
 
 		/**
+		 * @return All available camera stream purposes.
+		 */
+		const CameraStreamPurposes& availableCameraStreamPurposes();
+
+        /**
+		 * Returns whether a specific purpose is available.
+		 * @param cameraSteramPurpose the camera stream purpose to check
+		 * @return True, if so
+		 */
+		bool isCameraStreamPurposeAvailable(const sensoraccess::CameraStreamPurpose& cameraStreamPurpose);
+
+		/**
 		 * Starts receiving camera frames of a specific camera frame type.
 		 * In case the provider is already receiving camera frames for the specified frame type, the provider will restart stream.<br>
 		 * The provider can access realtime camera calibration from the calibration manager if necessary.<br>
@@ -410,6 +444,34 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 		 * @see startReceivingCameraFrames().
 		 */
 		bool stopReceivingCameraFrames(const OSSDK::Sensors::v3::FrameType& cameraFrameType);
+
+		/**
+		 * Prepares the system to receive the given camera stream purpose. This function needs to be called for every potential stream
+		 * that is to be received *before* starting any streams.
+		 * @param purpose The purpose of the camera stream to be created.
+		 * @return The key to identify the prepared stream, or kInvalidKey upon error.
+		 */
+		CameraStreamKey preparePurposeStream(const sensoraccess::CameraStreamPurpose& purpose);
+
+		/**
+		 * Starts receiving camera frames of a specific camera purpose.
+		 * In case the provider is already receiving camera frames for the specified frame type<br>
+		 * The provider can access realtime camera calibration from the calibration manager if necessary.<br>
+		 * The app needs to be whitelisted in the OS (https://fburl.com/diffusion/9qllda94).
+		 * @param streamKey The key that was returned in preparePurposeStream().
+		 * @param cameraType The type of the cameras to be received
+		 * @param useRealtimeCalibration True, to extract real-time camera calibration, if available; False, to use the device's factory or online calibration
+		 * @return True, if succeeded
+		 * @see stopReceivingCameraFrames().
+		 */
+		bool startReceivingCameraFrames(CameraStreamKey streamKey, const CameraType cameraType = CT_ALL_CAMERAS);
+
+		/**
+		 * Stops receiving camera frames.
+		 * @return True, if succeeded
+		 * @see startReceivingCameraFrames().
+		 */
+		bool stopReceivingCameraFrames(CameraStreamKey streamKey);
 
 		/**
 		 * Stops reciving camera frames.
@@ -603,6 +665,9 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 		using FrameSetConsumerAdapter = visiontypes::FrameSetConsumerAdapter<OSSDK::Sensors::v4::FrameSetConsumer, OSSDK::Sensors::v3::FrameSetConsumer>;
 		std::vector<std::shared_ptr<FrameSetConsumerAdapter>> frameSetConsumerAdapterStorage_;
 
+		/// The list of purpose-based camera streams.
+		CameraStreamStorage purposeCameraStreams_;
+
 		/// The index of the next frame consumer which will be used to deliver the last frame.
 		size_t nextRoundRobinCameraFrameSetIndex_ = 0;
 
@@ -671,6 +736,22 @@ bool FrameProviderT<tAllowInvalidCameras>::isCameraFrameTypeAvailable(const OSSD
 	const ScopedLock scopedLock(lock_);
 
 	return ossdkAvailableCameraFrameTypes_.find(cameraFrameType) != ossdkAvailableCameraFrameTypes_.cend();
+}
+
+template <bool tAllowInvalidCameras>
+const typename FrameProviderT<tAllowInvalidCameras>::CameraStreamPurposes& FrameProviderT<tAllowInvalidCameras>::availableCameraStreamPurposes()
+{
+	const ScopedLock scopedLock(lock_);
+
+	return ossdkAvailableCameraStreamPurposes_;
+}
+
+template <bool tAllowInvalidCameras>
+bool FrameProviderT<tAllowInvalidCameras>::isCameraStreamPurposeAvailable(const sensoraccess::CameraStreamPurpose& cameraStreamPurpose)
+{
+	const ScopedLock scopedLock(lock_);
+
+	return std::find(ossdkAvailableCameraStreamPurposes_.cbegin(), ossdkAvailableCameraStreamPurposes_.cend(), cameraStreamPurpose) != ossdkAvailableCameraStreamPurposes_.cend();
 }
 
 template <bool tAllowInvalidCameras>
