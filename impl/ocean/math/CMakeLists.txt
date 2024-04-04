@@ -21,15 +21,14 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
         target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_MATH_EXPORT)
     endif()
 
-    target_compile_options(${OCEAN_TARGET_NAME}
-        PUBLIC
-            ${OCEAN_COMPILER_FLAGS}
-        PRIVATE
-            "/wd4661" # C4661: no suitable definition provided for explicit template instantiation request
-    )
+    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
 
     if (WIN32)
-        target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "/bigobj")
+        target_compile_options(${OCEAN_TARGET_NAME}
+            PRIVATE
+                "/wd4661" # C4661: no suitable definition provided for explicit template instantiation request
+                "/bigobj"
+        )
     endif()
 
     # Dependencies
