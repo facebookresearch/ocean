@@ -78,6 +78,7 @@ if (OCEAN_BUILD_TESTS)
     add_subdirectory(impl/ocean/test/testgeometry)
     add_subdirectory(impl/ocean/test/testio)
     add_subdirectory(impl/ocean/test/testmath)
+    add_subdirectory(impl/ocean/test/testplatform)
 
     # Test applications
     add_subdirectory(impl/application/ocean/test/base/testbase)
@@ -85,4 +86,5 @@ if (OCEAN_BUILD_TESTS)
     add_subdirectory(impl/application/ocean/test/geometry/testgeometry)
     add_subdirectory(impl/application/ocean/test/io/testio)
     add_subdirectory(impl/application/ocean/test/math/testmath)
+    add_subdirectory(impl/application/ocean/test/platform/testplatform)
 endif()
