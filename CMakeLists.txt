@@ -62,6 +62,7 @@ add_subdirectory(impl/ocean/cv)
 add_subdirectory(impl/ocean/geometry)
 add_subdirectory(impl/ocean/io)
 add_subdirectory(impl/ocean/math)
+add_subdirectory(impl/ocean/media)
 add_subdirectory(impl/ocean/system)
 
 # Demo applications (for desktop)
