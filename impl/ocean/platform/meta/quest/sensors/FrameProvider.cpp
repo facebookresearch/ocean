@@ -600,9 +600,15 @@ bool FrameProviderT<tAllowInvalidCameras>::initialize(const FrameCopyMode frameC
 		return false;
 	}
 
+	if (ossdkDispatchThreadHandle_ || ossdkCameraDataProvider_)
+	{
+		return false;
+	}
+
 	ocean_assert(!ossdkHeadTracker_ && !ossdkCalibrationManager_);
 
 	ossdkSensorDataProvider_ = OSSDK::Sensors::v3::createSensorDataProvider();
+	ossdkCameraDataProvider_ = sensoraccess::CameraDataProvider::create();
 	ossdkHeadTracker_ = OSSDK::Tracking::v8::createHeadTracker();
 
 	if (!ossdkHeadTracker_)
@@ -615,6 +621,56 @@ bool FrameProviderT<tAllowInvalidCameras>::initialize(const FrameCopyMode frameC
 	if (!ossdkCalibrationManager_)
 	{
 		Log::error() << "Failed to create calibration manager";
+	}
+
+	{
+		auto dispatchThreadFactory = sensoraccess::DispatchThreadFactory::create();
+		if (dispatchThreadFactory)
+		{
+			auto createResult = dispatchThreadFactory->createDispatchThread("dispatch_thread", "");
+			if (!createResult.success())
+			{
+				Log::error() << "Failed to create dispatch thread";
+			}
+			else
+			{
+				ossdkDispatchThreadHandle_ = std::move(createResult.returnValue);
+			}
+		}
+		else
+		{
+			ossdkCameraDataProvider_ = nullptr;
+		}
+	}
+
+	if (ossdkCameraDataProvider_ != nullptr)
+	{
+		ossdkAvailableCameraStreamPurposes_ = ossdkCameraDataProvider_->getAvailablePurposes();
+
+#ifdef OCEAN_DEBUG
+		Log::info() << "FrameProviderT has access to " << ossdkAvailableCameraStreamPurposes_.size() << " different camera streams:";
+		for (sensoraccess::CameraStreamPurpose purpose : ossdkAvailableCameraStreamPurposes_)
+		{
+			Log::info() << purpose.cameraSystem.toStdString() << "/" << purpose.purpose.toStdString();
+		}
+#endif
+
+		if (ossdkAvailableCameraStreamPurposes_.empty())
+		{
+			Log::error() << "Failed to initialize camera data provider";
+
+			std::string value;
+			if (Platform::Android::Utilities::systemPropertyValue("persist.ovr.enable.sensorproxy", value) && value == "true")
+			{
+				Log::error() << "The camera sensors need a userdev OS and the app must have granted permission for sensor data";
+			}
+			else
+			{
+				Log::error() << "Ensure that the OS is a userdebug build and that persist.ovr.enable.sensorproxy is set to 'true', see also https://fburl.com/access_cameras";
+			}
+		}
+
+		// Fall back to the legacy sensor data provider
 	}
 
 	if (ossdkSensorDataProvider_ != nullptr)

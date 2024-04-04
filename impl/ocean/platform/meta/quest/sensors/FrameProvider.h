@@ -19,6 +19,8 @@
 #include <vros/sys/sensors/FrameSetConsumer.h>
 #include <vros/sys/sensors/FrameType.h>
 #include <vros/sys/sensors/SensorDataProvider.h>
+#include <sensoraccess/CameraDataProvider.h>
+#include <sensoraccess/DispatchThreadFactory.h>
 
 #include <vros/sys/tracking/HeadTracker.h>
 
@@ -103,6 +105,7 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 		 * Definition of an unordered set holding types of camera frames.
 		 */
 		typedef std::unordered_set<OSSDK::Sensors::v3::FrameType> CameraFrameTypes;
+		typedef std::vector<sensoraccess::CameraStreamPurpose> CameraStreamPurposes;
 
 		/**
 		 * Definition of frame metadata.
@@ -575,8 +578,12 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 
 	protected:
 
-		/// The interanl sensor data provider which is actually delivering the camera frames.
+		/// The legacy sensor data provider which used for FrameType-based streaming
 		std::shared_ptr<OSSDK::Sensors::v3::ISensorDataProvider> ossdkSensorDataProvider_;
+
+		/// The purpose-based sensor data access.
+		std::shared_ptr<sensoraccess::DispatchThreadHandle> ossdkDispatchThreadHandle_;
+		std::unique_ptr<sensoraccess::CameraDataProvider> ossdkCameraDataProvider_;
 
 		/// The access to the head tracker.
 		std::shared_ptr<OSSDK::Tracking::v8::IHeadTracker> ossdkHeadTracker_;
@@ -598,6 +605,9 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 
 		/// The available types of camera frames e.g., `Headset`, `Controller`, `Hand`, etc.
 		CameraFrameTypes ossdkAvailableCameraFrameTypes_;
+
+		/// The available purposes, e.g. "worldTracking/iot", "color/passtrhough", etc.
+		CameraStreamPurposes ossdkAvailableCameraStreamPurposes_;
 
 		/// The provider's lock to make the public functions thread-safe.
 		mutable Lock lock_;
