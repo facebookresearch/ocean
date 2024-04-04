@@ -790,7 +790,7 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 					const Frame pyramidMemoryCopy(pyramidMemory, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					performance.startIf(performanceIteration);
-						CV::FrameShrinker::pyramidByTwo11(frame, pyramidMemory.data<uint8_t>(), (unsigned int)(-1), useWorker);
+						CV::FrameShrinker::pyramidByTwo11(frame, pyramidMemory.data<uint8_t>(), pyramidMemory.size(), (unsigned int)(-1), useWorker);
 					performance.stopIf(performanceIteration);
 
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(pyramidMemory, pyramidMemoryCopy))

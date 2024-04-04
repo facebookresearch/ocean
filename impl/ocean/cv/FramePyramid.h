@@ -335,7 +335,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Resizes this frame pyramid (for a specified frame type of the finest layer).
 		 * The frame pyramid needs to be the owner of its frame data or needs to be empty; otherwise, nothing is done and False is returned.
 		 * Beware: If the frame type of the existing pyramid is different from the provided frame type the frame type of this pyramid will be replaced, so that all previous information of the pyramid will be invalid and must not be used anymore!
-		 * @param frameType The type of the finest pyramid layer
+		 * @param frameType The type of the finest pyramid layer, must be valid
 		 * @param layers The number of layers to be created during the resizing, with range [1, infinity)
 		 * @return True, if succeeded
 		 */
@@ -524,14 +524,14 @@ class OCEAN_CV_EXPORT FramePyramid
 
 		/**
 		 * Returns the size of the entire pyramid in bytes covering all images in all pyramid layers.
-		 * @param width The width of the finest layer in pixel, with range [0, infinity)
-		 * @param height The height of the finest layer in pixel, with range [0, infinity)
+		 * @param width The width of the finest layer in pixel, with range [0, 65535]
+		 * @param height The height of the finest layer in pixel, with range [0, 65535]
 		 * @param pixelFormat Pixel format of each layer
 		 * @param layers Number of layers, with range [0, infinity)
 		 * @param totalLayers Optional resulting real number of layers, with range [0, infinity)
 		 * @return Resulting number of bytes, with range [0, infinity)
 		 */
-		static unsigned int size(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const unsigned int layers, unsigned int* totalLayers = nullptr);
+		static size_t size(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const unsigned int layers, unsigned int* totalLayers = nullptr);
 
 	protected:
 
@@ -666,7 +666,13 @@ FramePyramid FramePyramid::create8BitPerChannel(const FramePyramid& framePyramid
 	if constexpr (tCopyData)
 	{
 		unsigned int resultingLayers;
-		const unsigned int pyramidFrameSize = size(firstLayer.width(), firstLayer.height(), firstLayer.pixelFormat(), layerCount, &resultingLayers);
+		const size_t pyramidFrameSize = size(firstLayer.width(), firstLayer.height(), firstLayer.pixelFormat(), layerCount, &resultingLayers);
+
+		if (pyramidFrameSize == 0)
+		{
+			return FramePyramid();
+		}
+
 		unsigned int selectedSourceLayers = min(resultingLayers, maxUsableSourceLayers);
 
 		const LegacyFrame& lastLayer = framePyramid.layers_[layerIndex + selectedSourceLayers - 1u];

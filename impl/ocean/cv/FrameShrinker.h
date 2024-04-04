@@ -223,11 +223,12 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * Fills the buffer of a pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8.
 		 * @param source The source frame buffer to be used, must be valid
 		 * @param pyramidTarget The frame buffer of the frame pyramid, large enough for the requested layers, must be valid
+		 * @param pyramidTargetSize The size of the pyramid target memory, in bytes, with range [1, infinity)
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
 		 * @param worker Optional worker object to distribute the computational load
 		 * @return True, if succeeded
 		 */
-		static bool pyramidByTwo11(const Frame& source, uint8_t* const pyramidTarget, const unsigned int layers, Worker* worker = nullptr);
+		static bool pyramidByTwo11(const Frame& source, uint8_t* const pyramidTarget, const size_t pyramidTargetSize, const unsigned int layers, Worker* worker = nullptr);
 
 		/**
 		 * Fills the buffer of a pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
@@ -237,12 +238,13 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @param sourceWidth Width of the source frame in pixel, with range [2, infinity)
 		 * @param sourceHeight Height of the source frame in pixel, with range [2, infinity)
 		 * @param channels The number of data channel the frames have, with range  [1, infinity)
+		 * @param pyramidTargetSize The size of the pyramid target memory, in bytes, with range [1, infinity)
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
 		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
-		 * @param worker Optional worker object to distribute the computational load
+		 * @param worker Optional worker object to distribute the computational load, nullptr otherwise
 		 * @return True, if succeeded
 		 */
-		static bool pyramidByTwo8BitPerChannel11(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const unsigned int layers, const unsigned int sourcePaddingElements, Worker* worker);
+		static bool pyramidByTwo8BitPerChannel11(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const size_t pyramidTargetSize, const unsigned int layers, const unsigned int sourcePaddingElements, Worker* worker);
 
 		/**
 		 * Reduces the resolution of a given frame by two, applying a 1-1 downsampling.
@@ -311,6 +313,7 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @param sourceWidth Width of the source frame in pixel, with range [2, infinity)
 		 * @param sourceHeight Height of the source frame in pixel, with range [2, infinity)
 		 * @param channels The number of frame channels the source frame has, with range [1, infinity)
+		 * @param pyramidTargetSize The size of the pyramid target memory, in bytes, with range [1, infinity)
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
 		 * @param copyFirstLayer True, to copy the first layer before processing the next finer layers; False, to start directly with the next coarser layer
 		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
@@ -318,7 +321,7 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @param threads The number of threads to be used if a valid worker is defined, with range [1u, worker->threads()] and the following must hold: threads * 2^layers <= sourceHeight
 		 * @return True, if succeeded
 		 */
-		static bool pyramidByTwo8BitPerChannel11WithThreads(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const unsigned int layers, const bool copyFirstLayer, const unsigned int sourcePaddingElements, const unsigned int threads, Worker* worker);
+		static bool pyramidByTwo8BitPerChannel11WithThreads(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const size_t pyramidTargetSize, const unsigned int layers, const bool copyFirstLayer, const unsigned int sourcePaddingElements, const unsigned int threads, Worker* worker);
 
 		/**
 		 * Fills a subset of the buffer of a pyramid frame for a given frame with 1 plane and data type DT_UNSIGNED_INTEGER_8.
@@ -327,6 +330,7 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @param sourceWidth Width of the source frame in pixel, with range [2, infinity)
 		 * @param sourceHeight Height of the source frame in pixel, with range [2, infinity)
 		 * @param channels The number of frame channels the source image has, with range [1, infinity)
+		 * @param pyramidTargetSize The size of the pyramid target memory, in bytes, with range [1, infinity)
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
 		 * @param copyFirstLayer True, to copy the first layer before processing the next finer layers; False, to start directly with the next coarser layer
 		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
@@ -335,7 +339,7 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @param subsetIndex The index of the subset which is handled, with range [0, subsetIndex)
 		 * @param valueOne The parameter must be 1
 		 */
-		static void pyramidByTwo8BitPerChannel11WithThreadsSubset(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const unsigned int layers, const bool copyFirstLayer, const unsigned int sourcePaddingElements, const unsigned int firstSubsetsSourceHeight, const unsigned int subsets, const unsigned int subsetIndex, const unsigned int valueOne);
+		static void pyramidByTwo8BitPerChannel11WithThreadsSubset(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const size_t pyramidTargetSize, const unsigned int layers, const bool copyFirstLayer, const unsigned int sourcePaddingElements, const unsigned int firstSubsetsSourceHeight, const unsigned int subsets, const unsigned int subsetIndex, const unsigned int valueOne);
 
 		/**
 		 * Reduces the resolution of a given frame by two.

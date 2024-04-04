@@ -67,7 +67,13 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid, bool copyData,	cons
 	if (copyData)
 	{
 		unsigned int resultingLayers;
-		const unsigned int pyramidFrameSize = size(firstLayer.width(), firstLayer.height(), firstLayer.pixelFormat(), layerCount, &resultingLayers);
+		const size_t pyramidFrameSize = size(firstLayer.width(), firstLayer.height(), firstLayer.pixelFormat(), layerCount, &resultingLayers);
+
+		if (pyramidFrameSize == 0)
+		{
+			return;
+		}
+
 		unsigned int selectedSourceLayers = min(resultingLayers, maxUsableSourceLayers);
 
 		const LegacyFrame& lastLayer = framePyramid.layers_[layerIndex + selectedSourceLayers - 1u];
@@ -210,14 +216,19 @@ bool FramePyramid::replace(const LegacyFrame& frame, const unsigned int layers, 
 	if (layers != 0u)
 	{
 		unsigned int expectedLayers = 0u;
-		const unsigned int bytes = size(frame.width(), frame.height(), frame.pixelFormat(), layers, &expectedLayers);
+		const size_t bytes = size(frame.width(), frame.height(), frame.pixelFormat(), layers, &expectedLayers);
+
+		if (bytes == 0)
+		{
+			return false;
+		}
 
 		memory_ = Memory(bytes, memoryAlignmentBytes_);
 
 		layers_.clear();
 		layers_.reserve(expectedLayers);
 
-		if (downsamplingMode == DM_FILTER_11 && FrameShrinker::pyramidByTwo11(Frame(frame, Frame::temporary_ACM_USE_KEEP_LAYOUT), memory_.data<uint8_t>(), expectedLayers, worker))
+		if (downsamplingMode == DM_FILTER_11 && FrameShrinker::pyramidByTwo11(Frame(frame, Frame::temporary_ACM_USE_KEEP_LAYOUT), memory_.data<uint8_t>(), memory_.size(), expectedLayers, worker))
 		{
 			layers_.push_back(LegacyFrame(frame.frameType(), frame.timestamp(), memory_.data<uint8_t>(), false));
 
@@ -279,14 +290,19 @@ bool FramePyramid::replace8BitPerChannel(const uint8_t* frame, const unsigned in
 	if (layers != 0u)
 	{
 		unsigned int expectedLayers = 0u;
-		const unsigned int bytes = size(width, height, pixelFormat, layers, &expectedLayers);
+		const size_t bytes = size(width, height, pixelFormat, layers, &expectedLayers);
+
+		if (bytes == 0)
+		{
+			return false;
+		}
 
 		memory_ = Memory(bytes, memoryAlignmentBytes_);
 
 		layers_.clear();
 		layers_.reserve(expectedLayers);
 
-		if (FrameShrinker::pyramidByTwo8BitPerChannel11(frame, memory_.data<uint8_t>(), width, height, channels, expectedLayers, framePaddingElements, worker))
+		if (FrameShrinker::pyramidByTwo8BitPerChannel11(frame, memory_.data<uint8_t>(), width, height, channels, memory_.size(), expectedLayers, framePaddingElements, worker))
 		{
 			layers_.push_back(LegacyFrame(FrameType(width, height, pixelFormat, pixelOrigin), timestamp, memory_.data<uint8_t>(), false));
 
@@ -323,6 +339,9 @@ bool FramePyramid::replace8BitPerChannel(const uint8_t* frame, const unsigned in
 
 bool FramePyramid::resize(const FrameType& frameType, const unsigned int layers)
 {
+	ocean_assert(frameType.isValid());
+	ocean_assert(layers >= 1u);
+
 	if (!(layers_.empty() || isOwner()))
 	{
 		ocean_assert(false && "Only pyramids that are uninitialized or own their frame data may proceeded");
@@ -330,7 +349,12 @@ bool FramePyramid::resize(const FrameType& frameType, const unsigned int layers)
 	}
 
 	unsigned int resultingLayers = 0u;
-	const unsigned int bytes = size(frameType.width(), frameType.height(), frameType.pixelFormat(), layers, &resultingLayers);
+	const size_t bytes = size(frameType.width(), frameType.height(), frameType.pixelFormat(), layers, &resultingLayers);
+
+	if (bytes == 0)
+	{
+		return false;
+	}
 
 	if (!memory_.isNull())
 	{
@@ -578,22 +602,47 @@ bool FramePyramid::addLayer11(Worker* worker)
 	return true;
 }
 
-unsigned int FramePyramid::size(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const unsigned int layers, unsigned int* totalLayers)
+size_t FramePyramid::size(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const unsigned int layers, unsigned int* totalLayers)
 {
+	ocean_assert(width <= 65535u && height <= 65535u);
+
+	if (width == 0u || height == 0u || width > 65535u || height > 65535u)
+	{
+		return 0;
+	}
+
 	ocean_assert(FrameType::numberPlanes(pixelFormat) == 1u && FrameType::formatIsGeneric(pixelFormat));
 
 	const unsigned int bytesPerPixel = FrameType::channels(pixelFormat) * FrameType::bytesPerDataType(FrameType::dataType(pixelFormat));
+	ocean_assert(bytesPerPixel <= 256u);
+
+	if (bytesPerPixel > 256u)
+	{
+		return 0;
+	}
 
 	unsigned int layerWidth = width;
 	unsigned int layerHeight = height;
 
 	unsigned int iterations = 0u;
-	unsigned int bytes = 0u;
+	uint64_t bytes = 0u;
 
 	while (iterations < layers && layerWidth >= 1u && layerHeight >= 1u)
 	{
-		const unsigned int layerPixels = layerWidth * layerHeight;
-		const unsigned int layerBytes = layerPixels * bytesPerPixel;
+		const uint64_t layerPixels = uint64_t(layerWidth) * uint64_t(layerHeight);
+		const uint64_t layerBytes = layerPixels * uint64_t(bytesPerPixel);
+
+		if (!NumericT<size_t>::isInsideValueRange(layerBytes))
+		{
+			ocean_assert(false && "This should never happen!");
+			return 0;
+		}
+
+		if (!NumericT<size_t>::isInsideValueRange(bytes + layerBytes))
+		{
+			ocean_assert(false && "This should never happen!");
+			return 0;
+		}
 
 		bytes += layerBytes;
 		++iterations;
@@ -602,12 +651,14 @@ unsigned int FramePyramid::size(const unsigned int width, const unsigned int hei
 		layerHeight /= 2u;
 	}
 
-	if (totalLayers)
+	if (totalLayers != nullptr)
 	{
 		*totalLayers = iterations;
 	}
 
-	return bytes;
+	ocean_assert(NumericT<size_t>::isInsideValueRange(bytes));
+
+	return size_t(bytes);
 }
 
 }
