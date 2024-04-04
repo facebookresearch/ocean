@@ -753,7 +753,12 @@ inline FramePyramid FramePyramid::create8BitPerChannel(const uint8_t* frame, con
 
 constexpr unsigned int FramePyramid::sizeFactor(const unsigned int layer)
 {
-	ocean_assert(layer < 32u);
+	ocean_assert(layer <= 31u);
+	if (layer > 31u)
+	{
+		return 0u;
+	}
+
 	return 1u << layer;
 }
 
