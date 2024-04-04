@@ -42,6 +42,10 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_math
     )
 
+    if (ANDROID)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_android)
+    endif()
+
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
             DESTINATION ${CMAKE_INSTALL_PREFIX}/${OCEAN_LIBRARY_INSTALL_DIR}

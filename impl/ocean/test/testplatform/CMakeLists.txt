@@ -48,8 +48,15 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_base
             ocean_cv
             ocean_platform
-            ocean_platform_apple
     )
+
+    if (APPLE OR IOS)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_apple)
+    endif()
+
+    if (ANDROID)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_android)
+    endif()
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}

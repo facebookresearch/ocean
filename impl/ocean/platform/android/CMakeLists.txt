@@ -27,6 +27,7 @@ if (ANDROID)
             ocean_platform
             ocean_platform_linux
             -ljnigraphics
+            -landroid
     )
 
     # Installation
