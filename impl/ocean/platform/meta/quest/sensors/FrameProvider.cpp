@@ -188,7 +188,10 @@ bool FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::currentExposu
 }
 
 template <bool tAllowInvalidCameras>
-void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::setNumCameras(uint32_t numCameras) {}
+void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::setNumCameras(uint32_t numCameras) {
+	const ScopedLock scopedLock(ownedFramesLock_);
+	imageSensorConfigurations_.resize(numCameras);
+}
 
 template <bool tAllowInvalidCameras>
 void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::startConfigurationUpdate() {}
@@ -201,7 +204,11 @@ void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::setCameraConf
 {
 	const ScopedLock scopedLock(ownedFramesLock_);
 
-	imageSensorConfigurations_.emplace_back(configuration);
+	if (cameraIndex >= imageSensorConfigurations_.size())
+	{
+		return;
+	}
+	imageSensorConfigurations_[cameraIndex] = configuration;
 
 	typedef std::map<int, perception::sensor_calibration_io::CameraCalibration> CameraCalibrationMap;
 
