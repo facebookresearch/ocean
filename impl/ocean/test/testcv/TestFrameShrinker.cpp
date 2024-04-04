@@ -762,10 +762,10 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 
 			do
 			{
-				for (const bool performanceIteration : {true})
+				for (const bool performanceIteration : {true, false})
 				{
-					const unsigned int width = performanceIteration ? frameWidth : RandomI::random(randomGenerator, 1u, 1000u) * 2u;
-					const unsigned int height = performanceIteration ? frameHeight : RandomI::random(randomGenerator, 1u, 1000u) * 2u;
+					const unsigned int width = performanceIteration ? frameWidth : RandomI::random(randomGenerator, 1u, 2000u);
+					const unsigned int height = performanceIteration ? frameHeight : RandomI::random(randomGenerator, 1u, 2000u);
 
 					unsigned int pyramidPixels = 0u;
 

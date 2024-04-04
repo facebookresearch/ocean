@@ -235,8 +235,8 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * Each pixel of a coarser pyramid level is based on 2x2 pixels from the corresponding finer pyramid level.
 		 * @param source The source frame buffer to be used, must be valid
 		 * @param pyramidTarget The frame buffer of the frame pyramid, large enough for the requested layers, must be valid
-		 * @param sourceWidth Width of the source frame in pixel, with range [2, infinity)
-		 * @param sourceHeight Height of the source frame in pixel, with range [2, infinity)
+		 * @param sourceWidth Width of the source frame in pixel, with range [1, infinity)
+		 * @param sourceHeight Height of the source frame in pixel, with range [1, infinity)
 		 * @param channels The number of data channel the frames have, with range  [1, infinity)
 		 * @param pyramidTargetSize The size of the pyramid target memory, in bytes, with range [1, infinity)
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
@@ -310,8 +310,8 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * Fills the buffer of a pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8.
 		 * @param source The source frame buffer from which the pyramid will be created, must be valid
 		 * @param pyramidTarget The frame buffer of the frame pyramid, large enough for the requested layers, must be valid
-		 * @param sourceWidth Width of the source frame in pixel, with range [2, infinity)
-		 * @param sourceHeight Height of the source frame in pixel, with range [2, infinity)
+		 * @param sourceWidth Width of the source frame in pixel, with range [1, infinity)
+		 * @param sourceHeight Height of the source frame in pixel, with range [1, infinity)
 		 * @param channels The number of frame channels the source frame has, with range [1, infinity)
 		 * @param pyramidTargetSize The size of the pyramid target memory, in bytes, with range [1, infinity)
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
@@ -327,8 +327,8 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * Fills a subset of the buffer of a pyramid frame for a given frame with 1 plane and data type DT_UNSIGNED_INTEGER_8.
 		 * @param source The source frame buffer from which the pyramid will be created, must be valid
 		 * @param pyramidTarget The frame buffer of the frame pyramid, large enough for the requested layers, must be valid
-		 * @param sourceWidth Width of the source frame in pixel, with range [2, infinity)
-		 * @param sourceHeight Height of the source frame in pixel, with range [2, infinity)
+		 * @param sourceWidth Width of the source frame in pixel, with range [1, infinity)
+		 * @param sourceHeight Height of the source frame in pixel, with range [1, infinity)
 		 * @param channels The number of frame channels the source image has, with range [1, infinity)
 		 * @param pyramidTargetSize The size of the pyramid target memory, in bytes, with range [1, infinity)
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
