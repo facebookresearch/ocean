@@ -126,7 +126,7 @@ bool FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::exposureSetti
 	double minGainLocal = NumericD::minValue();
 	double maxGainLocal = NumericD::maxValue();
 
-	for (const OSSDK::Sensors::v3::ImageSensorConfiguration& imageSensorConfiguration : imageSensorConfigurations_)
+	for (const OSSDK::Sensors::v4::ImageSensorConfiguration& imageSensorConfiguration : imageSensorConfigurations_)
 	{
 		minExposureLocal = std::max(minExposureLocal, imageSensorConfiguration.exposureDurationMin);
 		maxExposureLocal = std::min(maxExposureLocal, imageSensorConfiguration.exposureDurationMax);
@@ -200,7 +200,7 @@ template <bool tAllowInvalidCameras>
 void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::finishConfigurationUpdate() {}
 
 template <bool tAllowInvalidCameras>
-void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::setCameraConfiguration(uint32_t cameraIndex, const OSSDK::Sensors::v3::ImageSensorConfiguration& configuration)
+void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::setCameraConfiguration(uint32_t cameraIndex, const OSSDK::Sensors::v4::ImageSensorConfiguration& configuration)
 {
 	const ScopedLock scopedLock(ownedFramesLock_);
 
@@ -288,7 +288,7 @@ template <bool tAllowInvalidCameras>
 void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::afterLastFrameSet() {}
 
 template <bool tAllowInvalidCameras>
-void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::onFrameSet(OSSDK::ArrayView<const OSSDK::Sensors::v3::ImageData> images)
+void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::onFrameSet(OSSDK::ArrayView<const OSSDK::Sensors::v4::ImageData> images)
 {
 	if (ossdkCalibrationConsumer_ != nullptr)
 	{
@@ -393,7 +393,7 @@ void FrameProviderT<tAllowInvalidCameras>::CustomFrameSetConsumer::onFrameSet(OS
 			continue;
 		}
 
-		const OSSDK::Sensors::v3::ImageData& image = images.at(n);
+		const OSSDK::Sensors::v4::ImageData& image = images.at(n);
 
 		// Pointer to the actual image data. The lifetime of this data does not extend beyond the callback return, i.e. the consumer is required to make a copy
 		// It is possible for @data to be nullptr - this may happen when an incomplete frame group gets emitted by the lower layers.
@@ -746,10 +746,12 @@ bool FrameProviderT<tAllowInvalidCameras>::startReceivingCameraFrames(const OSSD
 	ocean_assert(frameSetConsumerMap_.find(cameraFrameType) == frameSetConsumerMap_.cend());
 
 	std::shared_ptr<CustomFrameSetConsumer> customFrameSetConsumer = std::make_shared<CustomFrameSetConsumer>(*this, ossdkHeadTracker_, useRealtimeCalibration ? ossdkCalibrationManager_ : nullptr, cameraFrameType, frameCopyMode_, cameraType);
+	std::shared_ptr<FrameSetConsumerAdapter> frameSetConsumerAdapter = std::make_shared<FrameSetConsumerAdapter>(customFrameSetConsumer.get());
 
-	if (ossdkSensorDataProvider_->registerFrameSetConsumer(*customFrameSetConsumer.get(), cameraFrameType))
+	if (ossdkSensorDataProvider_->registerFrameSetConsumer(*frameSetConsumerAdapter.get()->get(), cameraFrameType))
 	{
 		frameSetConsumerMap_.insert(std::make_pair(cameraFrameType, std::move(customFrameSetConsumer)));
+		frameSetConsumerAdapterStorage_.push_back(std::move(frameSetConsumerAdapter));
 	}
 	else
 	{
@@ -1099,7 +1101,7 @@ void FrameProviderT<tAllowInvalidCameras>::onFrames(const OSSDK::Sensors::v3::Fr
 }
 
 template <bool tAllowInvalidCameras>
-FrameType::PixelFormat FrameProviderT<tAllowInvalidCameras>::translateImageFormat(const OSSDK::Sensors::v3::ImageFormat& ossdkImageFormat)
+FrameType::PixelFormat FrameProviderT<tAllowInvalidCameras>::translateImageFormat(const OSSDK::Sensors::v4::ImageFormat& ossdkImageFormat)
 {
 	switch (ossdkImageFormat.pixelFormat())
 	{

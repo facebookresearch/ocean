@@ -21,6 +21,7 @@
 #include <vros/sys/sensors/SensorDataProvider.h>
 #include <sensoraccess/CameraDataProvider.h>
 #include <sensoraccess/DispatchThreadFactory.h>
+#include <visiontypes/conversion/FrameSetConsumerAdapter.h>
 
 #include <vros/sys/tracking/HeadTracker.h>
 
@@ -162,14 +163,14 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 		/**
 		 * Implements a custom consumer for frame sets.
 		 */
-		class CustomFrameSetConsumer : public OSSDK::Sensors::v3::FrameSetConsumer
+		class CustomFrameSetConsumer : public OSSDK::Sensors::v4::FrameSetConsumer
 		{
 			protected:
 
 				/**
 				 * Definition of a vector holding ImageSensorConfiguration objects.
 				 */
-				typedef std::vector<OSSDK::Sensors::v3::ImageSensorConfiguration> ImageSensorConfigurations;
+				typedef std::vector<OSSDK::Sensors::v4::ImageSensorConfiguration> ImageSensorConfigurations;
 
 				/**
 				 * Definition of an unordered set holding indices of cameras from which images will be extracted.
@@ -260,7 +261,7 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 				 * @param cameraIndex The index of the camera
 				 * @param configuration The configuration of the new camera
 				 */
-				void setCameraConfiguration(uint32_t cameraIndex, const OSSDK::Sensors::v3::ImageSensorConfiguration& configuration) override;
+				void setCameraConfiguration(uint32_t cameraIndex, const OSSDK::Sensors::v4::ImageSensorConfiguration& configuration) override;
 
 			    /**
 				 * @see OSSDK::Sensors::v3::FrameSetConsumer documentation.
@@ -276,7 +277,7 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 				 * Event functions for new sets of frames.
 				 * @param images The new set of images
 				 */
-				void onFrameSet(OSSDK::ArrayView<const OSSDK::Sensors::v3::ImageData> images) override;
+				void onFrameSet(OSSDK::ArrayView<const OSSDK::Sensors::v4::ImageData> images) override;
 
 				/**
 				 * Returns the indices of all cameras from which images will be extracted.
@@ -558,7 +559,7 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 		 * @param ossdkImageFormat The OSSDK image format to be translated
 		 * @return The corresponding Ocean pixel format, FrameType::FORMAT_UNDEFINED if not supported
 		 */
-		static FrameType::PixelFormat translateImageFormat(const OSSDK::Sensors::v3::ImageFormat& ossdkImageFormat);
+		static FrameType::PixelFormat translateImageFormat(const OSSDK::Sensors::v4::ImageFormat& ossdkImageFormat);
 
 		/**
 		 * Reads the latest camera calibration from a calibration consumer.
@@ -599,6 +600,8 @@ class OCEAN_PLATFORM_META_QUEST_SENSORS_EXPORT FrameProviderT
 
 		/// The map of frame consumers.
 		FrameSetConsumerMap frameSetConsumerMap_;
+		using FrameSetConsumerAdapter = visiontypes::FrameSetConsumerAdapter<OSSDK::Sensors::v4::FrameSetConsumer, OSSDK::Sensors::v3::FrameSetConsumer>;
+		std::vector<std::shared_ptr<FrameSetConsumerAdapter>> frameSetConsumerAdapterStorage_;
 
 		/// The index of the next frame consumer which will be used to deliver the last frame.
 		size_t nextRoundRobinCameraFrameSetIndex_ = 0;
