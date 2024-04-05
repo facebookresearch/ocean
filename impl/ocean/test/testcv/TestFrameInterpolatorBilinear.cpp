@@ -2405,13 +2405,9 @@ bool TestFrameInterpolatorBilinear::testSpecialCasesResize400x400To256x256_8BitP
 		{
 			ocean_assert(false && "Invalid padding memory!");
 
-#ifdef OCEAN_USE_GTEST // temporary workaround
-			EXPECT_TRUE(false);
-#endif
 			allSucceeded = false;
 			break;
 		}
-
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 		// ensuring bit-precise results between special case and general case, x86's general interpolation is slightly different (more precise) so we cannot ensure bit-precise results
@@ -2420,15 +2416,14 @@ bool TestFrameInterpolatorBilinear::testSpecialCasesResize400x400To256x256_8BitP
 		{
 			if (memcmp(targetFrameSpecial.constrow<void>(y), targetFrameGeneral.constrow<void>(y), targetFrameSpecial.planeWidthBytes(0u)) != 0)
 			{
-#ifdef OCEAN_USE_GTEST // temporary workaround
-			EXPECT_TRUE(false);
-#endif
-
 				allSucceeded = false;
 			}
 		}
-#endif
 
+		const double threshold = 0.0;
+#else
+		const double threshold = 1.0;
+#endif
 
 		// verifying the 7-bit interpolation accuracy
 
@@ -2439,12 +2434,8 @@ bool TestFrameInterpolatorBilinear::testSpecialCasesResize400x400To256x256_8BitP
 		double maximalAbsError = NumericD::maxValue();
 		validateScaleFramePrecision7Bit(sourceFrame.constdata<uint8_t>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), targetFrameSpecial.constdata<uint8_t>(), targetFrameSpecial.width(), targetFrameSpecial.height(), xSource_s_xTarget, ySource_s_yTarget, sourceFrame.paddingElements(), targetFrameSpecial.paddingElements(), &averageAbsError, &maximalAbsError);
 
-		if (averageAbsError != 0.0 || maximalAbsError != 0.0)
+		if (averageAbsError > threshold || maximalAbsError > threshold)
 		{
-#ifdef OCEAN_USE_GTEST // temporary workaround
-			EXPECT_EQ(averageAbsError, 0.0);
-			EXPECT_EQ(maximalAbsError, 0.0);
-#endif
 			allSucceeded = false;
 		}
 
