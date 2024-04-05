@@ -225,6 +225,17 @@ Frame ImageTif::decodeImage(const void* buffer, const size_t size)
 
 	const uint8_t* byteBuffer = (const uint8_t*)(buffer);
 
+	if (size <= 4)
+	{
+		return Frame();
+	}
+
+	// checking magic number (little endian)
+	if (byteBuffer[0] != 0x49u || byteBuffer[1] != 0x49u || byteBuffer[2] != 0x2Au || byteBuffer[3] != 0x00u)
+	{
+		return Frame();
+	}
+
 	// first we need to ensure that we have a little endian system
 
 	InputDataTriple inputDataTriple(byteBuffer, size, 0);
