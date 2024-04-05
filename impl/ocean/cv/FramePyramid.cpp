@@ -337,6 +337,112 @@ bool FramePyramid::replace8BitPerChannel(const uint8_t* frame, const unsigned in
 	return true;
 }
 
+bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const Timestamp timestamp)
+{
+	ocean_assert(frame != nullptr && width >= 1u && height >= 1u && layers > 0u);
+	ocean_assert(channels >= 1u);
+	ocean_assert(layers >= 1u);
+
+	if (frame == nullptr || width == 0u || height == 0u || channels == 0u || layers == 0u)
+	{
+		clear();
+		return false;
+	}
+
+	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
+
+	unsigned int expectedLayers = 0u;
+	size_t bytes = calculateMemorySize(width, height, pixelFormat, layers, copyFirstLayer, &expectedLayers);
+
+	ocean_assert(expectedLayers <= layers);
+
+	if (expectedLayers == 0u)
+	{
+		ocean_assert(bytes == 0 && expectedLayers == 0u);
+		return false;
+	}
+
+	ocean_assert(bytes != 0 || (expectedLayers == 1u && !copyFirstLayer)); // in case we don't copy the first layer, but we also don't need more than one layer, we don't need any memory
+
+	if (bytes > memory_.size())
+	{
+		memory_ = Memory(bytes, memoryAlignmentBytes_);
+	}
+
+	if (bytes != 0 && !memory_)
+	{
+		// we seem to be out of memory
+		return false;
+	}
+
+	layers_.clear();
+	layers_.reserve(expectedLayers);
+
+	if (FrameShrinker::pyramidByTwo8BitPerChannel11(frame, memory_.data<uint8_t>(), width, height, channels, memory_.size(), expectedLayers, framePaddingElements, copyFirstLayer, worker))
+	{
+		if (copyFirstLayer)
+		{
+			// the pyramid memory contains the first layer (writable)
+
+			layers_.push_back(LegacyFrame(FrameType(width, height, pixelFormat, pixelOrigin), timestamp, memory_.data<uint8_t>(), false));
+		}
+		else
+		{
+			// the pyramid memory does not contain the first layer, so we use the provided frame (as read-only)
+
+			Frame tmpFrame(FrameType(width, height, pixelFormat, pixelOrigin), frame, Frame::CM_USE_KEEP_LAYOUT, framePaddingElements, timestamp);
+
+			layers_.push_back(LegacyFrame(tmpFrame, LegacyFrame::FCM_USE_IF_POSSIBLE)); // **TODO** temporary workaround until `layers_` does not use `LegacyFrame` anymore
+		}
+
+		uint8_t* pyramidLayerData = memory_.data<uint8_t>();
+
+		if (copyFirstLayer)
+		{
+			// the first layer is part of the pyramid's memory
+			pyramidLayerData += layers_.front().frameTypeSize();
+		}
+
+		for (unsigned int n = 1u; n < expectedLayers; ++n)
+		{
+			ocean_assert(layers_.size() == n);
+			ocean_assert(layers_.back());
+
+			const unsigned int layerWidth = layers_.back().width() / 2u;
+			const unsigned int layerHeight = layers_.back().height() / 2u;
+
+			const FrameType layerFrameType(layerWidth, layerHeight, pixelFormat, pixelOrigin);
+
+			layers_.push_back(LegacyFrame(layerFrameType, timestamp, pyramidLayerData, false));
+			ocean_assert(layers_.size() == n + 1u);
+			ocean_assert(!layers_.back().isOwner());
+
+			pyramidLayerData += layerFrameType.frameTypeSize();
+		}
+	}
+	else
+	{
+		ocean_assert(false && "This should never happen!");
+	}
+
+#ifdef OCEAN_DEBUG
+
+	for (size_t n = 0; n < layers_.size(); ++n)
+	{
+		if (n == 0 && !copyFirstLayer)
+		{
+			// skipping the very first layer
+			continue;
+		}
+
+		ocean_assert(memory_.isInside(layers_[n].constdata(), layers_[n].size()));
+	}
+
+#endif // OCEAN_DEBUG
+
+	return true;
+}
+
 bool FramePyramid::resize(const FrameType& frameType, const unsigned int layers)
 {
 	ocean_assert(frameType.isValid());

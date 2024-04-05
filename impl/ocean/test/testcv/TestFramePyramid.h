@@ -143,6 +143,14 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid
 		static bool testConstructFromPyramid(const CV::FramePyramid& sourcePyramid, const bool copyData, const unsigned int  layerIndex, const unsigned int layerCount, const double testDuration, Worker& worker);
 
 		/**
+		 * Tests the replacement of a frame pyramid using a 1-1 downsampling.
+		 * @param testDuration Requested duration of test loop in seconds
+		 * @param worker The worker object to distribute the computation
+		 * @return True, if the test succeeded; otherwise, false is returned.
+		 */
+		static bool testReplace11(const double testDuration, Worker& worker);
+
+		/**
 		 * Tests the reduceLayers() function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -155,10 +163,12 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid
 		 * Validates the visual content of a frame pyramid.
 		 * @param frame The frame from which the frame pyramid has been created, must be valid
 		 * @param framePyramid The frame pyramid to be validated, must be valid
+		 * @param downsamplingMode The downsampling mode that has been applied when creating the pyramid, either DM_FILTER_11 or DM_FILTER_14641
 		 * @param layers The explicit number of pyramid layers to be checked, with range [1, infinity)
+		 * @param allowCompatibleFrameType True, to allow a compatible frame type; False, to expect a perfectly matching frame type
 		 * @return True, if succeeded
 		 */
-		static bool validateFramePyramid(const Frame& frame, const CV::FramePyramid& framePyramid, const unsigned int layers);
+		static bool validateFramePyramid(const Frame& frame, const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingMode downsamplingMode, const unsigned int layers, const bool allowCompatibleFrameType = false);
 
 		/**
 		 * Validates if the frame pyramid was created correctly with the specified settings.
