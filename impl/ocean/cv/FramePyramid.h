@@ -450,20 +450,20 @@ class OCEAN_CV_EXPORT FramePyramid
 
 		/**
 		 * Determines the number of layers until an invalid frame size would be reached in the next layer.
-		 * @param width The width of the finest layer in pixel, with range [0, infinity)
-		 * @param height The height of the finest layer in pixel, with range [0, infinity)
-		 * @param invalidWidthOrHeight Width or the height of a coarse layer not valid any more, with range [0, std::min(width, height) - 1]
-		 * @return Resulting layers so that the invalid frame size will not be reached, with range [1, infinity)
+		 * @param width The width of the finest layer in pixel, with range [1, infinity)
+		 * @param height The height of the finest layer in pixel, with range [1, infinity)
+		 * @param invalidWidthOrHeight Width or the height of a coarse layer not valid any more, with range (0, infinity)
+		 * @return Resulting layers so that the invalid frame size will not be reached, with range [1, infinity), 0 if 'width' or 'height' are smaller or equal than 'invalidWidthOrHeight'
 		 */
 		static unsigned int idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidWidthOrHeight);
 
 		/**
 		 * Determines the number of layers until an invalid frame size would be reached in the next layer.
-		 * @param width The width of the finest layer in pixel, with range [0, infinity)
-		 * @param height The height of the finest layer in pixel, with range [0, infinity)
-		 * @param invalidWidth Width of a coarse layer not valid any more, with range [0, width - 1]
-		 * @param invalidHeight Height of a coarse layer not valid any more, with range [0, height -1]
-		 * @return Resulting layers so that the invalid frame size will not be reached, with range [1, infinity)
+		 * @param width The width of the finest layer in pixel, with range [1, infinity)
+		 * @param height The height of the finest layer in pixel, with range [1, infinity)
+		 * @param invalidWidth Width of a coarse layer not valid any more, with range (0, infinity)
+		 * @param invalidHeight Height of a coarse layer not valid any more, with range (0, infinity)
+		 * @return Resulting layers so that the invalid frame size will not be reached, with range [1, infinity), 0 if 'width/height' is smaller or equal than 'invalidWidth/invalidHeight'
 		 */
 		static unsigned int idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidWidth, const unsigned int invalidHeight);
 
@@ -471,12 +471,12 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Determines the number of layers until an invalid frame size would be reached in the next layer or an overall size radius is reached.
 		 * @param width The width of the finest layer in pixel
 		 * @param height The height of the finest layer in pixel
-		 * @param invalidWidth Width of a coarse layer not valid any more, with range [0, width)
-		 * @param invalidHeight Height of a coarse layer not valid any more, with range [0, height)
+		 * @param invalidWidth Width of a coarse layer not valid any more, with range (0, infinity)
+		 * @param invalidHeight Height of a coarse layer not valid any more, with range (0, infinity)
 		 * @param layerFactor Size factor on each layer (a factor of 2 means that the layer dimension is halved on each layer), with range [2, infinity)
 		 * @param maximalRadius Maximal radius that can be reached on the finest layer by starting with coarsestLayerRadius on the coarsest layer in pixel, with range [1, infinity)
 		 * @param coarsestLayerRadius The search radius on the coarsest layer, with range [2, infinity)
-		 * @return Resulting layers so that the invalid frame size will not be reached
+		 * @return Resulting layers so that the invalid frame size will not be reached, with range [1, infinity), 0 if 'width/height' is smaller or equal than 'invalidWidth/invalidHeight'
 		 */
 		static unsigned int idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidWidth, const unsigned int invalidHeight, const unsigned int layerFactor, const unsigned int maximalRadius = (unsigned int)(-1), const unsigned int coarsestLayerRadius = 2u);
 

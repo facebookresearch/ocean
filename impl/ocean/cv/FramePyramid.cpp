@@ -482,13 +482,31 @@ bool FramePyramid::isOwner(const unsigned int layerIndex) const
 
 unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidWidthOrHeight)
 {
-	unsigned int testSize = std::min(width, height);
+	ocean_assert(width >= 1u && height >= 1u);
+
+	unsigned int layerSize = std::min(width, height);
+
+	if (layerSize <= invalidWidthOrHeight)
+	{
+		// the resolution is already too small for one pyramid layer
+		return 0u;
+	}
+
+	ocean_assert(invalidWidthOrHeight < layerSize);
 
 	unsigned int layers = 1u;
 
-	while (testSize / 2u > invalidWidthOrHeight)
+	while (true)
 	{
-		testSize /= 2u;
+		const unsigned int nextLayerSize = layerSize / 2u;
+
+		if (nextLayerSize <= invalidWidthOrHeight)
+		{
+			break;
+		}
+
+		layerSize = nextLayerSize;
+
 		++layers;
 	}
 
@@ -497,15 +515,34 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 
 unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidWidth, const unsigned int invalidHeight)
 {
-	unsigned int testWidth = width;
-	unsigned int testHeight = height;
+	ocean_assert(width >= 1u && height >= 1u);
+
+	if (width <= invalidWidth || height <= invalidHeight)
+	{
+		// the resolution is already too small for one pyramid layer
+		return 0u;
+	}
+
+	unsigned int layerWidth = width;
+	unsigned int layerHeight = height;
+	ocean_assert(invalidWidth < layerWidth);
+	ocean_assert(invalidHeight < layerHeight);
 
 	unsigned int layers = 1u;
 
-	while (testWidth / 2u > invalidWidth && testHeight / 2u > invalidHeight)
+	while (true)
 	{
-		testWidth /= 2u;
-		testHeight /= 2u;
+		const unsigned int nextLayerWidth = layerWidth / 2u;
+		const unsigned int nextLayerHeight = layerHeight / 2u;
+
+		if (nextLayerWidth <= invalidWidth || nextLayerHeight <= invalidHeight)
+		{
+			break;
+		}
+
+		layerWidth = nextLayerWidth;
+		layerHeight = nextLayerHeight;
+
 		++layers;
 	}
 
@@ -515,6 +552,12 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidWidth, const unsigned int invalidHeight, const unsigned int layerFactor, const unsigned int maximalRadius, const unsigned int coarsestLayerRadius)
 {
 	ocean_assert(width != 0u && height != 0u && layerFactor >= 2u && coarsestLayerRadius >= 2u);
+
+	if (width <= invalidWidth || height <= invalidHeight)
+	{
+		// the resolution is already too small for one pyramid layer
+		return 0u;
+	}
 
 	unsigned int testWidth = width;
 	unsigned int testHeight = height;
