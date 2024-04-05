@@ -871,57 +871,59 @@ bool TestOpenImageLibraries::testAnyImageEncodeDecode(const double testDuration)
 			const std::string& encoderType = encoderTypes[n];
 
 			std::vector<uint8_t> buffer;
-			if (!Media::OpenImageLibraries::Image::encodeImage(sourceFrame, encoderType, buffer, true))
+			if (Media::OpenImageLibraries::Image::encodeImage(sourceFrame, encoderType, buffer, true))
 			{
-				allSucceeded = false;
-			}
+				std::string decoderTypeExplicit;
+				const Frame targetFrameExplicit = Media::OpenImageLibraries::Image::decodeImage(buffer.data(), buffer.size(), encoderType, &decoderTypeExplicit);
 
-			std::string decoderTypeExplicit;
-			const Frame targetFrameExplicit = Media::OpenImageLibraries::Image::decodeImage(buffer.data(), buffer.size(), encoderType, &decoderTypeExplicit);
-
-			if (targetFrameExplicit.isNull() || encoderType != decoderTypeExplicit)
-			{
-				allSucceeded = false;
-			}
-			else
-			{
-				Frame convertedFrame;
-				if (!CV::FrameConverter::Comfort::convert(targetFrameExplicit, sourceFrame.frameType(), convertedFrame, false))
+				if (targetFrameExplicit.isNull() || encoderType != decoderTypeExplicit)
 				{
 					allSucceeded = false;
 				}
 				else
 				{
-					double minDifference, aveDifference, maxDifference;
-					if (!determineSimilarity(sourceFrame, convertedFrame, minDifference, aveDifference, maxDifference) && aveDifference <= 10) // quite generous
+					Frame convertedFrame;
+					if (!CV::FrameConverter::Comfort::convert(targetFrameExplicit, sourceFrame.frameType(), convertedFrame, false))
 					{
 						allSucceeded = false;
 					}
+					else
+					{
+						double minDifference, aveDifference, maxDifference;
+						if (!determineSimilarity(sourceFrame, convertedFrame, minDifference, aveDifference, maxDifference) && aveDifference <= 10) // quite generous
+						{
+							allSucceeded = false;
+						}
+					}
 				}
-			}
 
-			std::string decoderTypeImplicit;
-			const Frame targetFrameImplicit = Media::OpenImageLibraries::Image::decodeImage(buffer.data(), buffer.size(), "", &decoderTypeImplicit);
+				std::string decoderTypeImplicit;
+				const Frame targetFrameImplicit = Media::OpenImageLibraries::Image::decodeImage(buffer.data(), buffer.size(), "", &decoderTypeImplicit);
 
-			if (targetFrameImplicit.isNull() || encoderType != decoderTypeImplicit)
-			{
-				allSucceeded = false;
-			}
-			else
-			{
-				Frame convertedFrame;
-				if (!CV::FrameConverter::Comfort::convert(targetFrameImplicit, sourceFrame.frameType(), convertedFrame, false))
+				if (targetFrameImplicit.isNull() || encoderType != decoderTypeImplicit)
 				{
 					allSucceeded = false;
 				}
 				else
 				{
-					double minDifference, aveDifference, maxDifference;
-					if (!determineSimilarity(sourceFrame, convertedFrame, minDifference, aveDifference, maxDifference) && aveDifference <= 10) // quite generous
+					Frame convertedFrame;
+					if (!CV::FrameConverter::Comfort::convert(targetFrameImplicit, sourceFrame.frameType(), convertedFrame, false))
 					{
 						allSucceeded = false;
 					}
+					else
+					{
+						double minDifference, aveDifference, maxDifference;
+						if (!determineSimilarity(sourceFrame, convertedFrame, minDifference, aveDifference, maxDifference) && aveDifference <= 10) // quite generous
+						{
+							allSucceeded = false;
+						}
+					}
 				}
+			}
+			else
+			{
+				allSucceeded = false;
 			}
 		}
 	}
