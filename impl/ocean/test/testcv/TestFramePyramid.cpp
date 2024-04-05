@@ -319,6 +319,59 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 				allSucceeded = false;
 			}
 		}
+
+		{
+			// testing function using factor and radius
+
+			const unsigned int layerFactor = RandomI::random(randomGenerator, 2u, 20u);
+
+			unsigned int maximalRadius = (unsigned int)(-1);
+
+			if (RandomI::random(randomGenerator, 1u) == 0u)
+			{
+				maximalRadius = RandomI::random(randomGenerator, 1u, std::max(width, height));
+			}
+
+			const unsigned int coarsestLayerRadius = RandomI::random(randomGenerator, 2u, 20u);
+
+			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, invalidWidth, invalidHeight, layerFactor, maximalRadius, coarsestLayerRadius);
+
+			unsigned int testWidth = width;
+			unsigned int testHeight = height;
+			unsigned int testRadius = coarsestLayerRadius;
+
+			for (unsigned int n = 1u; n < layers; ++n)
+			{
+				testWidth /= layerFactor;
+				testHeight /= layerFactor;
+				testRadius *= layerFactor;
+			}
+
+			if (testWidth <= invalidWidth || testHeight <= invalidHeight)
+			{
+				allSucceeded = false;
+			}
+
+			if (testRadius < maximalRadius)
+			{
+				// in case the resulting radius is not large enough, we must ensure that we could not have gone down another layer
+
+				const unsigned int nextTestWidth = testWidth / layerFactor;
+				const unsigned int nextTestHeight = testHeight / layerFactor;
+
+				if (nextTestWidth > invalidWidth && nextTestHeight > invalidHeight)
+				{
+					allSucceeded = false;
+				}
+			}
+
+			if (testRadius / layerFactor > maximalRadius && layers > 1u)
+			{
+				// we should not add more layers than necessary
+
+				allSucceeded = false;
+			}
+		}
 	}
 	while (startTimestampWorker + testDuration > Timestamp(true));
 
