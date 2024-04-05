@@ -230,8 +230,13 @@ Frame ImageTif::decodeImage(const void* buffer, const size_t size)
 		return Frame();
 	}
 
-	// checking magic number (little endian)
-	if (byteBuffer[0] != 0x49u || byteBuffer[1] != 0x49u || byteBuffer[2] != 0x2Au || byteBuffer[3] != 0x00u)
+	// Magic number little endian: 0x49 0x49 0x2a 0x00
+	// Magic number big endian:    0x4d 0x4d 0x00 0x2a (e.g., Mac encoding)
+
+	const bool hasMagicNumberLittleEndian = byteBuffer[0] == 0x49u && byteBuffer[1] == 0x49u && byteBuffer[2] == 0x2Au && byteBuffer[3] == 0x00u;
+	const bool hasMagicNumberBigEndian = byteBuffer[0] == 0x4Du && byteBuffer[1] == 0x4Du && byteBuffer[2] == 0x00u && byteBuffer[3] == 0x2Au;
+
+	if (!hasMagicNumberLittleEndian && !hasMagicNumberBigEndian)
 	{
 		return Frame();
 	}
