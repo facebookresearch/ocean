@@ -236,6 +236,11 @@ bool ImageQuality::multiScaleStructuralSimilarity8BitPerChannel(const uint8_t* c
 	const unsigned int layers = min(CV::FramePyramid::idealLayers(width, height, 10u, 10u), maximalLayers);
 	ocean_assert(layers >= 1u && layers <= maximalLayers);
 
+	if (layers == 0u)
+	{
+		return false;
+	}
+
 	CV::FramePyramid pyramidX;
 	CV::FramePyramid pyramidY;
 

@@ -66,6 +66,13 @@ bool ContourTracker::detectObject(const Frame& frame, const PixelContour& roughC
 
 	// we need a pyramid frame for the next iteration
 	const unsigned int pyramidLayers = FramePyramid::idealLayers(frame.width(), frame.height(), 15u, 15u, 2u, 80u); // **TODO** unique parameter (must be class properties)
+
+	ocean_assert(pyramidLayers >= 1u);
+	if (pyramidLayers == 0u)
+	{
+		return false;
+	}
+
 	previousFramePyramid_.replace(frame, pyramidLayers, worker, FramePyramid::DM_FILTER_14641);
 
 	return true;
@@ -84,6 +91,13 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 
 	// we need a pyramid frame for the next iteration
 	const unsigned int pyramidLayers = FramePyramid::idealLayers(frame.width(), frame.height(), 15u, 15u, 2u, 80u); // **TODO** unique parameter (must be class properties)
+
+	ocean_assert(pyramidLayers >= 1u);
+	if (pyramidLayers == 0u)
+	{
+		return false;
+	}
+
 	currentFramePyramid_.replace(frame, pyramidLayers, worker, FramePyramid::DM_FILTER_14641);
 
 	Frame meanFrame;

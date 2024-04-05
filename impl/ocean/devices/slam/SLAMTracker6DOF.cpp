@@ -161,6 +161,13 @@ void SLAMTracker6DOF::threadRun()
 			const unsigned int framePyramidLayers = previousFramePyramid_ ? previousFramePyramid_.layers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 50u, 50u, 2u, 128u, 2u);
 			const unsigned int binsSize = 50u;
 #endif
+
+			if (framePyramidLayers == 0u)
+			{
+				ocean_assert(false && "This should never happen!");
+				return;
+			}
+
 			currentFramePyramid_.replace(yFrame, framePyramidLayers, scopedWorker());
 
 			if (objectPoints_.empty())

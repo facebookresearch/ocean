@@ -32,6 +32,13 @@ bool HomographyTracker::trackPoints(const Frame& currentFrame, const Frame& yPre
 
 	// we need a pyramid frame for the next iteration
 	const unsigned int pyramidLayers = CV::FramePyramid::idealLayers(currentFrame.width(), currentFrame.height(), 15u, 15u, 2u, 80u); // **TODO** unique parameter (must be class properties)
+
+	ocean_assert(pyramidLayers >= 1u);
+	if (pyramidLayers == 0u)
+	{
+		return false;
+	}
+
 	currentFramePyramid_.replace(currentFrame, pyramidLayers, worker, CV::FramePyramid::DM_FILTER_14641);
 
 	if (!previousFramePyramid_)

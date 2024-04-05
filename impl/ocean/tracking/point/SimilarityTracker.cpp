@@ -75,6 +75,12 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 	// we want to ensure that corresponding feature points can have an offset of 2.5% between to successive video frames
 	const unsigned int pyramidLayers = keyFramePyramid_ ? keyFramePyramid_.layers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 20u, 20u, 2u, maxSize * 25u / 1000u, coarsestLayerRadius);
 
+	ocean_assert(pyramidLayers >= 1u);
+	if (pyramidLayers == 0u)
+	{
+		return false;
+	}
+
 	currentFramePyramid_.replace8BitPerChannel(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), worker);
 
 	constexpr size_t minimalFeaturePoints = 20;

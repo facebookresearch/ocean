@@ -224,6 +224,11 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 
 			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, 0u /*invalidWidthOrHeight*/);
 
+			if (layers == 0u)
+			{
+				allSucceeded = false;
+			}
+
 			unsigned int expectedLayers = 1u;
 			unsigned int layerWidth = width;
 			unsigned int layerHeight = height;
@@ -260,6 +265,11 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 
 			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, invalidSize);
 
+			if (layers == 0u)
+			{
+				allSucceeded = false;
+			}
+
 			unsigned int testWidth = width;
 			unsigned int testHeight = height;
 
@@ -284,6 +294,11 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 			// testing function defining invalid width and height
 
 			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, invalidWidth, invalidHeight);
+
+			if (layers == 0u)
+			{
+				allSucceeded = false;
+			}
 
 			unsigned int testWidth = width;
 			unsigned int testHeight = height;

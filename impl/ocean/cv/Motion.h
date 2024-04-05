@@ -209,7 +209,7 @@ bool Motion<TMetric>::trackPointsInPyramidMirroredBorder(const FramePyramid& pre
 	ocean_assert(previousPyramid.frameType().pixelOrigin() == currentPyramid.frameType().pixelOrigin());
 
 	const unsigned int idealLayers = CV::FramePyramid::idealLayers(previousPyramid.finestWidth(), previousPyramid.finestHeight(), (tPatchSize / 2u) * 4u, (tPatchSize / 2u) * 4u, 2u);
-	const unsigned int numberLayers = min(min(previousPyramid.layers(), currentPyramid.layers()), idealLayers);
+	const unsigned int numberLayers = std::min(std::min(previousPyramid.layers(), currentPyramid.layers()), idealLayers);
 
 	if (numberLayers == 0u)
 	{

@@ -146,6 +146,12 @@ inline bool ORBFeatureDescriptor::detectReferenceFeaturesAndDetermineDescriptors
 	}
 
 	const unsigned int maxLayerNumber = FramePyramid::idealLayers(frame.width(), frame.height(), 64u, 64u);
+
+	if (maxLayerNumber == 0u)
+	{
+		return false;
+	}
+
 	detectReferenceFeaturesAndDetermineDescriptors(FramePyramid(yFrame, std::min(pyramidLayers, maxLayerNumber), worker), featurePoints, useHarrisFeatures, featureThreshold, worker);
 
 	return true;

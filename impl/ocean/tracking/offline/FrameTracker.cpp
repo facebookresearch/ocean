@@ -214,6 +214,8 @@ bool FrameTracker::FramePyramidTrackerComponent::onStartIncreasing()
 	}
 
 	framePyramidLayers_ = CV::FramePyramid::idealLayers(parent_.camera_.width(), parent_.camera_.height(), 20u, 20u, 2u, parent_.camera_.width() / 10u);
+	ocean_assert(framePyramidLayers_ >= 1u);
+
 	return true;
 }
 

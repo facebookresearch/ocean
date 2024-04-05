@@ -1081,6 +1081,13 @@ bool PatternTrackerCore6DOF::determinePosesWithDownsampledResolution(const bool 
 	ocean_assert(yFrame.width() == pinholeCamera.width() && yFrame.height() == pinholeCamera.height());
 
 	const unsigned int pyramidLayers = trackerPreviousFramePyramid.isValid() ? trackerPreviousFramePyramid.layers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 15u, 15u);
+
+	ocean_assert(pyramidLayers >= 1u);
+	if (pyramidLayers == 0u)
+	{
+		return false;
+	}
+
 	trackerCurrentFramePyramid.replace8BitPerChannel(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers,  yFrame.paddingElements(), worker, yFrame.timestamp());
 
 	for (PatternMap::iterator i = trackerPatternMap.begin(); i != trackerPatternMap.end(); ++i)

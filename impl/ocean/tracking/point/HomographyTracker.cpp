@@ -170,6 +170,12 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 	// we ensure that corresponding feature points can have an offset of 20.0% between to successive video frames (to get a pyramid with enough layers for any tracking situation)
 	const unsigned int pyramidLayers = previousFramePyramid_ ? previousFramePyramid_.layers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 20u, 20u, 2u, maxSize * 20u / 100u, 2u /* = smallest coarsest layer radius*/);
 
+	ocean_assert(pyramidLayers >= 1u);
+	if (pyramidLayers == 0u)
+	{
+		return false;
+	}
+
 	currentFramePyramid_.replace8BitPerChannel(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), worker);
 
 	homography.toNull();
@@ -589,6 +595,12 @@ bool HomographyTracker::trackPoints(const CV::FramePyramid& yPreviousFramePyrami
 	const unsigned int maxLayerSize = std::max(startLayerType.width(), startLayerType.height());
 
 	const unsigned int layers = CV::FramePyramid::idealLayers(startLayerType.width(), startLayerType.height(), 20u, 20u, 2u, (unsigned int)(float(maxLayerSize) * maximalOffsetPercent + 0.5f), coarsestLayerRadius);
+
+	ocean_assert(layers >= 1u);
+	if (layers == 0u)
+	{
+		return false;
+	}
 
 	// let's create new frame pyramids, starting with level 'firstPyramidLayerIndex' - while we do not copy the data
 	const CV::FramePyramid hierarchyPreviousFramePyramid(CV::FramePyramid::create8BitPerChannel<false>(yPreviousFramePyramid, startLayer, layers));

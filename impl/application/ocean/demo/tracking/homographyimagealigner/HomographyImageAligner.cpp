@@ -447,6 +447,12 @@ bool HomographyImageAligner::alignNewFrame(Frame& frame, double& time, SquareMat
 	if (pyramidLayers == 0u)
 	{
 		pyramidLayers = CV::FramePyramid::idealLayers(trackingFrame.width(), trackingFrame.height(), trackingPatchSize_, trackingPatchSize_, 2u, trackingMaximalOffset_, trackingCoarsestLayerRadius_);
+
+		if (pyramidLayers == 0u)
+		{
+			ocean_assert(false && "Image too small!");
+			return false;
+		}
 	}
 
 	// in each iteration we do not create a new pyramid but we use the existing pyramid to increase performance

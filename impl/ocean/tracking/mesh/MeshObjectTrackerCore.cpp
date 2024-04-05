@@ -200,6 +200,13 @@ bool MeshObjectTrackerCore::determinePosesWithDownsampledResolution(bool allowRe
 
 	// TODO (jtprice): hardcoded values
 	const unsigned int pyramidLayers = previousFramePyramid_.isValid() ? previousFramePyramid_.layers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 15u, 15u);
+
+	ocean_assert(pyramidLayers >= 1u);
+	if (pyramidLayers == 0u)
+	{
+		return false;
+	}
+
 	currentFramePyramid_.replace8BitPerChannel(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), worker, yFrame.timestamp());
 
 	for (RegisteredObjectMap::iterator meshObjectIterator = registeredObjects_.begin(); meshObjectIterator != registeredObjects_.end(); ++meshObjectIterator)

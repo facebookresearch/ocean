@@ -796,7 +796,7 @@ bool SphericalEnvironment::determinePointCorrespondencesHomography(const Frame& 
 		const unsigned int pyramidLayersSource = CV::FramePyramid::idealLayers(sourceFrame.width(), sourceFrame.height(), minimalLayerDimension, minimalLayerDimension, 2u, maximalDistance, coarsestLayerRadius);
 		const unsigned int pyramidLayersTransformedTarget = CV::FramePyramid::idealLayers(transformedTarget.width(), transformedTarget.height(), minimalLayerDimension, minimalLayerDimension, 2u, maximalDistance, coarsestLayerRadius);
 
-		pyramidLayers = max(1u, min(pyramidLayersSource, pyramidLayersTransformedTarget));
+		pyramidLayers = std::max(1u, std::min(pyramidLayersSource, pyramidLayersTransformedTarget));
 
 		// we stop if we have the smallest patch size already
 		if (adjustedPatchSize <= 7u)
@@ -988,7 +988,7 @@ bool SphericalEnvironment::determinePointCorrespondencesHomography(const CV::Fra
 
 		const unsigned int pyramidLayersTransformedTarget = CV::FramePyramid::idealLayers(transformedTarget.width(), transformedTarget.height(), minimalLayerDimension, minimalLayerDimension, 2u, maximalDistance, coarsestLayerRadius);
 
-		pyramidLayers = max(1u, min(sourceFramePyramid.layers(), pyramidLayersTransformedTarget));
+		pyramidLayers = std::max(1u, std::min(sourceFramePyramid.layers(), pyramidLayersTransformedTarget));
 
 		// we stop if we have the smallest patch size already
 		if (adjustedPatchSize <= 7u)

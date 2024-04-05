@@ -135,6 +135,12 @@ void PointMotionMainWindow::onFrame(const Frame& frame)
 
 	const unsigned int maximalLayers = CV::FramePyramid::idealLayers(rgbFrame.width(), rgbFrame.height(), patchSize / 2u, patchSize / 2u, 2u, maximalOffset, coarsestLayerRadius);
 
+	if (maximalLayers == 0u)
+	{
+		ocean_assert(false && "Image too small!");
+		return;
+	}
+
 	currentFramePyramid_.replace(rgbFrame, maximalLayers, &worker_, CV::FramePyramid::DM_FILTER_14641);
 
 	if (!previousPositions_.empty())

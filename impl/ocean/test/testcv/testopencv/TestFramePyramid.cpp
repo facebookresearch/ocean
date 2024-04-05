@@ -253,6 +253,7 @@ void TestFramePyramid::testFramePyramid(const unsigned int width, const unsigned
 	unsigned int iteration = 0u;
 
 	const unsigned int layers = CV::FramePyramid::idealLayers(width, height, 1u, 1u);
+	ocean_assert(layers != 0u);
 
 	RandomGenerator randomGenerator;
 
