@@ -16,38 +16,38 @@ namespace Ocean
 enum ProcessorInstructions : uint32_t
 {
 	/// Unknown processor instruction set.
-	PI_NONE = 0,
+	PI_NONE = 0u,
 	/// SEE instructions.
-	PI_SSE = 1 << 0,
+	PI_SSE = 1u << 0u,
 	/// SEE2 instructions.
-	PI_SSE_2 = 1 << 1,
+	PI_SSE_2 = 1u << 1u,
 	/// SSE3 instructions.
-	PI_SSE_3 = 1 << 2,
+	PI_SSE_3 = 1u << 2u,
 	/// SSSE3 instructions.
-	PI_SSSE_3 = 1 << 3,
+	PI_SSSE_3 = 1u << 3u,
 	/// SSE_4.1 instructions.
-	PI_SSE_4_1 = 1 << 4,
+	PI_SSE_4_1 = 1u << 4u,
 	/// SSE 4.2 instructions.
-	PI_SSE_4_2 = 1 << 5,
+	PI_SSE_4_2 = 1u << 5u,
 	/// Any SSE instructions.
 	PI_SSE_ANY = PI_SSE | PI_SSE_2 | PI_SSE_3 | PI_SSSE_3 | PI_SSE_4_1 | PI_SSE_4_2,
 
 	/// AVX instructions.
-	PI_AVX = 1 << 6,
+	PI_AVX = 1u << 6u,
 	/// AVX2 instructions.
-	PI_AVX_2 = 1 << 7,
+	PI_AVX_2 = 1u << 7u,
 	/// AVX 512 instructions.
-	PI_AVX_512 = 1 << 8,
+	PI_AVX_512 = 1u << 8u,
 	/// Any AVX instructions.
 	PI_AVX_ANY = PI_AVX | PI_AVX_2 | PI_AVX_512,
 
 	/// NEON instructions.
-	PI_NEON = 1 << 9,
+	PI_NEON = 1 << 9u,
 	/// Any NEON instructions.
 	PI_NEON_ANY = PI_NEON,
 
 	/// AES instructions.
-	PI_AES = 1 << 10,
+	PI_AES = 1 << 10u,
 
 	/// All SSE instructions between (including) SSE and SSE4.1.
 	PI_GROUP_SSE_4_1 = PI_SSE | PI_SSE_2 | PI_SSE_3 | PI_SSSE_3 | PI_SSE_4_1,

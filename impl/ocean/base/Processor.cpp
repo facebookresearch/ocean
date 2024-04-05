@@ -275,7 +275,6 @@ ProcessorInstructions Processor::realInstructions()
 		}
 	}
 
-
 #elif defined(__APPLE__)
 
 	#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
