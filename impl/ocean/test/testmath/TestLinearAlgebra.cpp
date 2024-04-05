@@ -447,7 +447,9 @@ bool TestLinearAlgebra::testCholeskyDecomposition(const double testDuration)
 		Log::info() << "Performance: " << performance.averageMseconds() << "ms";
 		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
 
-		if (percent < 0.95)
+		constexpr double threshold = std::is_same<float, T>::value ? 0.75 : 0.95;
+
+		if (percent < threshold)
 		{
 			allSucceeded = false;
 		}

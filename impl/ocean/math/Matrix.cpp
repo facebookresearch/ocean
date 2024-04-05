@@ -972,7 +972,9 @@ bool MatrixT<T>::choleskyDecomposition(MatrixT<T>& lMatrix) const
 {
 	ocean_assert(rows() == columns());
 	if (rows() != columns())
+	{
 		return false;
+	}
 
 	const size_t size = rows();
 
@@ -983,10 +985,14 @@ bool MatrixT<T>::choleskyDecomposition(MatrixT<T>& lMatrix) const
 	lMatrix.resize(size, size);
 	Eigen::Map<EigenMatrix> eigenL(lMatrix.data(), size, size);
 
-	if (eigenMatrix.llt().info() != Eigen::Success)
-		return false;
+	const Eigen::LLT<EigenMatrix> eigenLLT = eigenMatrix.llt();
 
-	eigenL = eigenMatrix.llt().matrixL();
+	if (eigenLLT.info() != Eigen::Success)
+	{
+		return false;
+	}
+
+	eigenL = eigenLLT.matrixL();
 
 	return true;
 }
