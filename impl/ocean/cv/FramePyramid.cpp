@@ -228,7 +228,7 @@ bool FramePyramid::replace(const LegacyFrame& frame, const unsigned int layers, 
 		layers_.clear();
 		layers_.reserve(expectedLayers);
 
-		if (downsamplingMode == DM_FILTER_11 && FrameShrinker::pyramidByTwo11(Frame(frame, Frame::temporary_ACM_USE_KEEP_LAYOUT), memory_.data<uint8_t>(), memory_.size(), expectedLayers, worker))
+		if (downsamplingMode == DM_FILTER_11 && FrameShrinker::pyramidByTwo11(Frame(frame, Frame::temporary_ACM_USE_KEEP_LAYOUT), memory_.data<uint8_t>(), memory_.size(), expectedLayers, true /*copyFirstLayer*/, worker))
 		{
 			layers_.push_back(LegacyFrame(frame.frameType(), frame.timestamp(), memory_.data<uint8_t>(), false));
 
@@ -302,7 +302,7 @@ bool FramePyramid::replace8BitPerChannel(const uint8_t* frame, const unsigned in
 		layers_.clear();
 		layers_.reserve(expectedLayers);
 
-		if (FrameShrinker::pyramidByTwo8BitPerChannel11(frame, memory_.data<uint8_t>(), width, height, channels, memory_.size(), expectedLayers, framePaddingElements, worker))
+		if (FrameShrinker::pyramidByTwo8BitPerChannel11(frame, memory_.data<uint8_t>(), width, height, channels, memory_.size(), expectedLayers, framePaddingElements, true /*copyFirstLayer*/, worker))
 		{
 			layers_.push_back(LegacyFrame(FrameType(width, height, pixelFormat, pixelOrigin), timestamp, memory_.data<uint8_t>(), false));
 

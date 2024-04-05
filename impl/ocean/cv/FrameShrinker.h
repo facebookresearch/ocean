@@ -225,10 +225,11 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @param pyramidTarget The frame buffer of the frame pyramid, large enough for the requested layers, must be valid
 		 * @param pyramidTargetSize The size of the pyramid target memory, in bytes, with range [1, infinity)
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
-		 * @param worker Optional worker object to distribute the computational load
+		 * @param copyFirstLayer True, to copy the first layer before processing the next finer layers; False, to start directly with the next coarser layer (the memory for pyramidTarget can then be correspondingly smaller)
+		 * @param worker Optional worker object to distribute the computational load, nullptr otherwise
 		 * @return True, if succeeded
 		 */
-		static bool pyramidByTwo11(const Frame& source, uint8_t* const pyramidTarget, const size_t pyramidTargetSize, const unsigned int layers, Worker* worker = nullptr);
+		static bool pyramidByTwo11(const Frame& source, uint8_t* const pyramidTarget, const size_t pyramidTargetSize, const unsigned int layers, const bool copyFirstLayer, Worker* worker);
 
 		/**
 		 * Fills the buffer of a pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
@@ -241,10 +242,11 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @param pyramidTargetSize The size of the pyramid target memory, in bytes, with range [1, infinity)
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
 		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
+		 * @param copyFirstLayer True, to copy the first layer before processing the next finer layers; False, to start directly with the next coarser layer (the memory for pyramidTarget can then be correspondingly smaller)
 		 * @param worker Optional worker object to distribute the computational load, nullptr otherwise
 		 * @return True, if succeeded
 		 */
-		static bool pyramidByTwo8BitPerChannel11(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const size_t pyramidTargetSize, const unsigned int layers, const unsigned int sourcePaddingElements, Worker* worker);
+		static bool pyramidByTwo8BitPerChannel11(const uint8_t* source, uint8_t* pyramidTarget, const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int channels, const size_t pyramidTargetSize, const unsigned int layers, const unsigned int sourcePaddingElements, const bool copyFirstLayer, Worker* worker);
 
 		/**
 		 * Reduces the resolution of a given frame by two, applying a 1-1 downsampling.

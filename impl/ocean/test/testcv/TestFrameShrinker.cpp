@@ -774,6 +774,8 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 						maximalLayers = RandomI::random(randomGenerator, 1u, 10u);
 					}
 
+					const bool copyFirstLayer = performanceIteration || RandomI::random(randomGenerator, 1u) == 0u;
+
 					unsigned int pyramidPixels = 0u;
 
 					unsigned int layerWidth = width;
@@ -789,6 +791,14 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 						layerHeight /= 2u;
 					}
 
+					if (!copyFirstLayer)
+					{
+						// we need to remove the memory for the finest layer again
+
+						ocean_assert(layerWidth * layerHeight <= pyramidPixels);
+						pyramidPixels -= width * height;
+					}
+
 					ocean_assert(layers >= 1u);
 					ocean_assert(pyramidPixels <= width * height * 134u / 100u); // should not exceed 133%
 
@@ -797,61 +807,125 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 
 					const Frame pyramidMemoryCopy(pyramidMemory, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
+					ocean_assert(!performanceIteration || maximalLayers == (unsigned int)(-1));
+					ocean_assert(!performanceIteration || copyFirstLayer);
+
 					performance.startIf(performanceIteration);
-						CV::FrameShrinker::pyramidByTwo11(frame, pyramidMemory.data<uint8_t>(), pyramidMemory.size(), maximalLayers, useWorker);
+						const bool result = CV::FrameShrinker::pyramidByTwo11(frame, pyramidMemory.data<uint8_t>(), pyramidMemory.size(), maximalLayers, copyFirstLayer, useWorker);
 					performance.stopIf(performanceIteration);
 
-					if (!CV::CVUtilities::isPaddingMemoryIdentical(pyramidMemory, pyramidMemoryCopy))
+					if (layers != 1u || copyFirstLayer)
 					{
-						ocean_assert(false && "This must never happen!");
-						return false;
-					}
-
-					// verify first layer
-
-					for (unsigned int y = 0u; y < frame.height(); ++y)
-					{
-						if (memcmp(frame.constrow<uint8_t>(y), pyramidMemory.constdata<uint8_t>() + y * frame.planeWidthBytes(0u), frame.planeWidthBytes(0u)) != 0)
+						if (!CV::CVUtilities::isPaddingMemoryIdentical(pyramidMemory, pyramidMemoryCopy))
 						{
-							allSucceeded = false;
+							ocean_assert(false && "This must never happen!");
+							return false;
 						}
 					}
-
-					// verify the following layers
-
-					layerWidth = width;
-					layerHeight = height;
-
-					const uint8_t* finerLayer = pyramidMemory.constdata<uint8_t>();
-
-					for (unsigned int layerIndex = 1u; layerIndex < layers; ++layerIndex)
+					else
 					{
-						ocean_assert(layerWidth >= 2u || layerHeight >= 2u);
+						ocean_assert(pyramidMemory.isNull());
+					}
 
-						const uint8_t* const coarserLayer = finerLayer + layerWidth * layerHeight * channels;
+					if (!result)
+					{
+						allSucceeded = false;
+					}
 
-						constexpr unsigned int finerLayerPaddingElements = 0u;
-						constexpr unsigned int coarserLayerPaddingElements = 0u;
+					if (copyFirstLayer)
+					{
+						// verify first layer
 
-						const Frame sourceLayer(FrameType(frame, layerWidth, layerHeight), finerLayer, Frame::CM_USE_KEEP_LAYOUT, finerLayerPaddingElements);
-						const Frame targetLayer(FrameType(frame, layerWidth / 2u, layerHeight / 2u), coarserLayer, Frame::CM_USE_KEEP_LAYOUT, coarserLayerPaddingElements);
-
-						double averageAbsError = NumericD::maxValue();
-						double maximalAbsError = NumericD::maxValue();
-						if (!validateDownsamplingByTwo8Bit11(sourceLayer, targetLayer, &averageAbsError, &maximalAbsError))
+						for (unsigned int y = 0u; y < frame.height(); ++y)
 						{
-							allSucceeded = false;
+							if (memcmp(frame.constrow<uint8_t>(y), pyramidMemory.constdata<uint8_t>() + y * frame.planeWidthBytes(0u), frame.planeWidthBytes(0u)) != 0)
+							{
+								allSucceeded = false;
+							}
 						}
 
-						if (averageAbsError > 5.0 || maximalAbsError > 5.0)
+						// verify the following layers
+
+						layerWidth = width;
+						layerHeight = height;
+
+						const uint8_t* finerLayer = pyramidMemory.constdata<uint8_t>();
+
+						for (unsigned int layerIndex = 1u; layerIndex < layers; ++layerIndex)
 						{
-							allSucceeded = false;
+							ocean_assert(layerWidth >= 2u || layerHeight >= 2u);
+
+							const uint8_t* const coarserLayer = finerLayer + layerWidth * layerHeight * channels;
+
+							constexpr unsigned int finerLayerPaddingElements = 0u;
+							constexpr unsigned int coarserLayerPaddingElements = 0u;
+
+							const unsigned int coarserLayerWidth = layerWidth / 2u;
+							const unsigned int coarserLayerHeight = layerHeight / 2u;
+
+							const Frame sourceLayer(FrameType(frame, layerWidth, layerHeight), finerLayer, Frame::CM_USE_KEEP_LAYOUT, finerLayerPaddingElements);
+							const Frame targetLayer(FrameType(frame, coarserLayerWidth, coarserLayerHeight), coarserLayer, Frame::CM_USE_KEEP_LAYOUT, coarserLayerPaddingElements);
+
+							double averageAbsError = NumericD::maxValue();
+							double maximalAbsError = NumericD::maxValue();
+							if (!validateDownsamplingByTwo8Bit11(sourceLayer, targetLayer, &averageAbsError, &maximalAbsError))
+							{
+								allSucceeded = false;
+							}
+
+							if (averageAbsError > 5.0 || maximalAbsError > 5.0)
+							{
+								allSucceeded = false;
+							}
+
+							layerWidth = coarserLayerWidth;
+							layerHeight = coarserLayerHeight;
+
+							finerLayer = coarserLayer;
 						}
+					}
+					else
+					{
+						layerWidth = width;
+						layerHeight = height;
 
-						layerWidth /= 2u;
-						layerHeight /= 2u;
+						const uint8_t* finerLayer = frame.constdata<uint8_t>();
+						unsigned int finerLayerPaddingElements = frame.paddingElements();
 
-						finerLayer = coarserLayer;
+						const uint8_t* coarserLayer = pyramidMemory.constdata<uint8_t>();
+
+						for (unsigned int layerIndex = 1u; layerIndex < layers; ++layerIndex)
+						{
+							ocean_assert(layerWidth >= 2u || layerHeight >= 2u);
+
+							constexpr unsigned int coarserLayerPaddingElements = 0u;
+
+							const unsigned int coarserLayerWidth = layerWidth / 2u;
+							const unsigned int coarserLayerHeight = layerHeight / 2u;
+
+							const Frame sourceLayer(FrameType(frame, layerWidth, layerHeight), finerLayer, Frame::CM_USE_KEEP_LAYOUT, finerLayerPaddingElements);
+							const Frame targetLayer(FrameType(frame, coarserLayerWidth, coarserLayerHeight), coarserLayer, Frame::CM_USE_KEEP_LAYOUT, coarserLayerPaddingElements);
+
+							double averageAbsError = NumericD::maxValue();
+							double maximalAbsError = NumericD::maxValue();
+							if (!validateDownsamplingByTwo8Bit11(sourceLayer, targetLayer, &averageAbsError, &maximalAbsError))
+							{
+								allSucceeded = false;
+							}
+
+							if (averageAbsError > 5.0 || maximalAbsError > 5.0)
+							{
+								allSucceeded = false;
+							}
+
+							layerWidth = coarserLayerWidth;
+							layerHeight = coarserLayerHeight;
+
+							finerLayer = coarserLayer;
+							coarserLayer += layerWidth * layerHeight * channels;
+
+							finerLayerPaddingElements = 0u; // all remaining layers don't have padding elements
+						}
 					}
 				}
 			}
