@@ -81,7 +81,9 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 		return false;
 	}
 
-	currentFramePyramid_.replace8BitPerChannel(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), worker);
+	constexpr bool copyFirstLayer = true; // we need to make a copy of the first layer, as this pyramid will be used as 'previousPyramid' in the next call of determineSimilarity()
+
+	currentFramePyramid_.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), copyFirstLayer, worker);
 
 	constexpr size_t minimalFeaturePoints = 20;
 	constexpr size_t desiredFeaturePoints = 80;

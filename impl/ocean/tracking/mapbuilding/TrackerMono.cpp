@@ -80,7 +80,7 @@ bool TrackerMono::track(const AnyCamera& anyCamera, const Frame& yFrame, Homogen
 
 		const size_t minimalNumberCorrespondencesTracking = std::max(4u, minimalNumberCorrespondences / 2u);
 
-		yCurrentFramePyramid_.replace8BitPerChannel(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), worker);
+		yCurrentFramePyramid_.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), true /*copyfirstLayer*/, worker);
 
 		Vectors2 roughCurrentImagePoints;
 
@@ -174,7 +174,7 @@ bool TrackerMono::track(const AnyCamera& anyCamera, const Frame& yFrame, Homogen
 
 	previousImagePoints_ = std::move(usedImagePoints);
 
-	yPreviousFramePyramid_.replace8BitPerChannel(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), worker);
+	yPreviousFramePyramid_.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), true /*copyFirstLayer*/, worker);
 
 	if (RelocalizerDebugElements::get().isElementActive(RelocalizerDebugElements::EI_CAMERA_IMAGE_WITH_FEATURE_CORRESPONDENCES))
 	{

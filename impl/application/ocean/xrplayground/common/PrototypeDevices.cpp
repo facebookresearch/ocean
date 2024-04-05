@@ -472,7 +472,7 @@ void OfflineRelocalizationTracker6DOF::threadRun()
 
 			cameraToUse = currentCamera->clone(yFrameToUse.width(), yFrameToUse.height());
 
-			currentPyramid.replace8BitPerChannel(yFrameToUse.constdata<uint8_t>(), yFrameToUse.width(), yFrameToUse.height(), 1u, FrameType::ORIGIN_UPPER_LEFT, pyramidLayers, yFrameToUse.paddingElements(), nullptr);
+			currentPyramid.replace8BitPerChannel11(yFrameToUse.constdata<uint8_t>(), yFrameToUse.width(), yFrameToUse.height(), 1u, FrameType::ORIGIN_UPPER_LEFT, pyramidLayers, yFrameToUse.paddingElements(), true /*copyfirstLayer*/, nullptr);
 
 
 			HomogenousMatrix4 world_T_predictedCamera(false);

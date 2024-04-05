@@ -57,10 +57,10 @@ Index32 PointTracker::newFrame(const Frame& yFrame, Worker* worker)
 		return invalidFrameIndex;
 	}
 
-	constexpr unsigned int yFramePaddingElements = 0u;
+	constexpr bool copyFirstLayer = true; // we need to make a copy of the first layer, as this pyramid will be used as 'previousPyramid' in the next call of newFrame()
 
 	const unsigned int pyramidLayers = 6u; // **TODO**
-	currentFramePyramid_.replace8BitPerChannel(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFramePaddingElements, worker);
+	currentFramePyramid_.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), copyFirstLayer, worker);
 
 	ocean_assert(binSize_ != 0u);
 	const unsigned int horizontalBins = minmax(1u, (yFrame.width() + binSize_ / 2u) / binSize_, yFrame.width() / 4u);

@@ -176,7 +176,9 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 		return false;
 	}
 
-	currentFramePyramid_.replace8BitPerChannel(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), worker);
+	constexpr bool copyFirstLayer = true; // we need to make a copy of the first layer, as this pyramid will be used as 'previousPyramid' in the next call of resetRegion()
+
+	currentFramePyramid_.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), copyFirstLayer, worker);
 
 	homography.toNull();
 
@@ -367,7 +369,7 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 							Frame transformedKeyFrame(keyFrame.pyramid_[0].frameType());
 							CV::FrameInterpolatorBilinear::homography<uint8_t, 1u>(keyFrame.pyramid_[0].constdata<uint8_t>(), keyFrame.pyramid_[0].width(), keyFrame.pyramid_[0].height(), predictedKeyFrameHomography.inverted() /* kHc */, nullptr, transformedKeyFrame.data<uint8_t>(), CV::PixelPositionI(0, 0), transformedKeyFrame.width(), transformedKeyFrame.height(), keyFrame.pyramid_[0].paddingElements(), transformedKeyFrame.paddingElements(), worker);
 
-							transformedKeyFramePyramid.replace8BitPerChannel(transformedKeyFrame.constdata<uint8_t>(), transformedKeyFrame.width(), transformedKeyFrame.height(), 1u, transformedKeyFrame.pixelOrigin(), keyFrame.pyramid_.layers(), transformedKeyFrame.paddingElements(), worker);
+							transformedKeyFramePyramid.replace8BitPerChannel11(transformedKeyFrame.constdata<uint8_t>(), transformedKeyFrame.width(), transformedKeyFrame.height(), 1u, transformedKeyFrame.pixelOrigin(), keyFrame.pyramid_.layers(), transformedKeyFrame.paddingElements(), false /*copyFirstLayer*/, worker);
 
 							// now we have a transformed keyframe image so that the prediction is actually the identity
 							predictedKeyFrameHomography.toIdentity();

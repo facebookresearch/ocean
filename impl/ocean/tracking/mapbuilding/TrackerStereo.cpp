@@ -86,8 +86,8 @@ bool TrackerStereo::track(const AnyCamera& anyCameraA, const AnyCamera& anyCamer
 
 		const unsigned int minimalNumberCorrespondencesTracking = std::max(4u, minimalNumberCorrespondences / 2u);
 
-		yCurrentFramePyramidA_.replace8BitPerChannel(yFrameA.constdata<uint8_t>(), yFrameA.width(), yFrameA.height(), 1u, yFrameA.pixelOrigin(), pyramidLayers, yFrameA.paddingElements(), worker);
-		yCurrentFramePyramidB_.replace8BitPerChannel(yFrameB.constdata<uint8_t>(), yFrameB.width(), yFrameB.height(), 1u, yFrameB.pixelOrigin(), pyramidLayers, yFrameB.paddingElements(), worker);
+		yCurrentFramePyramidA_.replace8BitPerChannel11(yFrameA.constdata<uint8_t>(), yFrameA.width(), yFrameA.height(), 1u, yFrameA.pixelOrigin(), pyramidLayers, yFrameA.paddingElements(), true /*copyFirstLayer*/, worker);
+		yCurrentFramePyramidB_.replace8BitPerChannel11(yFrameB.constdata<uint8_t>(), yFrameB.width(), yFrameB.height(), 1u, yFrameB.pixelOrigin(), pyramidLayers, yFrameB.paddingElements(), true /*copyFirstLayer*/, worker);
 
 		Vectors2 roughCurrentImagePointsA;
 		Vectors2 roughCurrentImagePointsB;
@@ -240,8 +240,8 @@ bool TrackerStereo::track(const AnyCamera& anyCameraA, const AnyCamera& anyCamer
 	previousImagePointsA_ = std::move(usedImagePointsA);
 	previousImagePointsB_ = std::move(usedImagePointsB);
 
-	yPreviousFramePyramidA_.replace8BitPerChannel(yFrameA.constdata<uint8_t>(), yFrameA.width(), yFrameA.height(), 1u, yFrameA.pixelOrigin(), pyramidLayers, yFrameA.paddingElements(), worker);
-	yPreviousFramePyramidB_.replace8BitPerChannel(yFrameB.constdata<uint8_t>(), yFrameB.width(), yFrameB.height(), 1u, yFrameB.pixelOrigin(), pyramidLayers, yFrameB.paddingElements(), worker);
+	yPreviousFramePyramidA_.replace8BitPerChannel11(yFrameA.constdata<uint8_t>(), yFrameA.width(), yFrameA.height(), 1u, yFrameA.pixelOrigin(), pyramidLayers, yFrameA.paddingElements(), true /*copyFirstLayer*/, worker);
+	yPreviousFramePyramidB_.replace8BitPerChannel11(yFrameB.constdata<uint8_t>(), yFrameB.width(), yFrameB.height(), 1u, yFrameB.pixelOrigin(), pyramidLayers, yFrameB.paddingElements(), true /*copyFirstLayer*/, worker);
 
 	if (RelocalizerDebugElements::get().isElementActive(RelocalizerDebugElements::EI_CAMERA_IMAGES_WITH_FEATURE_CORRESPONDENCES))
 	{

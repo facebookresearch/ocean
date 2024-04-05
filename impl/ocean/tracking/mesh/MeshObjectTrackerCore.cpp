@@ -207,7 +207,7 @@ bool MeshObjectTrackerCore::determinePosesWithDownsampledResolution(bool allowRe
 		return false;
 	}
 
-	currentFramePyramid_.replace8BitPerChannel(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), worker, yFrame.timestamp());
+	currentFramePyramid_.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), true /*copyFirstLayer*/, worker, yFrame.timestamp());
 
 	for (RegisteredObjectMap::iterator meshObjectIterator = registeredObjects_.begin(); meshObjectIterator != registeredObjects_.end(); ++meshObjectIterator)
 	{
@@ -243,7 +243,9 @@ bool MeshObjectTrackerCore::determinePosesWithDownsampledResolution(bool allowRe
 bool MeshObjectTrackerCore::determinePosesForUntrackedObjects(const PinholeCamera& pinholeCamera, const Frame& yFrame, const CV::FramePyramid& currentFramePyramid, const Quaternion& /*quaternion_previousFrame_T_currentFrame*/, Worker* worker)
 {
 	if (numCurrentlyTrackedObjects() >= maxNumConcurrentlyTrackedObjects())
+	{
 		return true;
+	}
 
 	const Timestamp recognitionStartTimestamp(true);
 
@@ -267,7 +269,9 @@ bool MeshObjectTrackerCore::determinePosesForUntrackedObjects(const PinholeCamer
 	CV::Detector::Blob::BlobFeatureDetector::detectFeatures(integralImage, yFrame.width(), yFrame.height(), samplingDensity, 10, true, features, worker);
 
 	if (features.size() < 10u)
+	{
 		return false;
+	}
 
 	CV::Detector::Blob::BlobFeatures subsetFeatures;
 	Vectors2 strongHarrisCorners;
