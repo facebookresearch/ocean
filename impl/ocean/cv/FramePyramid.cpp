@@ -67,7 +67,7 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid, bool copyData,	cons
 	if (copyData)
 	{
 		unsigned int resultingLayers;
-		const size_t pyramidFrameSize = size(firstLayer.width(), firstLayer.height(), firstLayer.pixelFormat(), layerCount, &resultingLayers);
+		const size_t pyramidFrameSize = calculateMemorySize(firstLayer.width(), firstLayer.height(), firstLayer.pixelFormat(), layerCount, true /*includeFirstLayer*/, &resultingLayers);
 
 		if (pyramidFrameSize == 0)
 		{
@@ -102,7 +102,7 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid, bool copyData,	cons
 		if (resultingLayers > layers_.size())
 		{
 			// Pyramid frame needs to hold requested number of layers:
-			ocean_assert(memory_.size() >= size(finestWidth(), finestHeight(), finestLayer().pixelFormat(), resultingLayers));
+			ocean_assert(memory_.size() >= calculateMemorySize(finestWidth(), finestHeight(), finestLayer().pixelFormat(), resultingLayers, true /*includeFirstLayer*/, nullptr));
 
 			for (unsigned int n = (unsigned int)(layers_.size()); n < resultingLayers && layers_[n - 1u].width() > 1u && layers_[n - 1u].height() > 1u; ++n)
 			{
@@ -216,7 +216,7 @@ bool FramePyramid::replace(const LegacyFrame& frame, const unsigned int layers, 
 	if (layers != 0u)
 	{
 		unsigned int expectedLayers = 0u;
-		const size_t bytes = size(frame.width(), frame.height(), frame.pixelFormat(), layers, &expectedLayers);
+		const size_t bytes = calculateMemorySize(frame.width(), frame.height(), frame.pixelFormat(), layers, true /*includeFirstLayer*/, &expectedLayers);
 
 		if (bytes == 0)
 		{
@@ -290,7 +290,7 @@ bool FramePyramid::replace8BitPerChannel(const uint8_t* frame, const unsigned in
 	if (layers != 0u)
 	{
 		unsigned int expectedLayers = 0u;
-		const size_t bytes = size(width, height, pixelFormat, layers, &expectedLayers);
+		const size_t bytes = calculateMemorySize(width, height, pixelFormat, layers, true /*includeFirstLayer*/, &expectedLayers);
 
 		if (bytes == 0)
 		{
@@ -349,7 +349,7 @@ bool FramePyramid::resize(const FrameType& frameType, const unsigned int layers)
 	}
 
 	unsigned int resultingLayers = 0u;
-	const size_t bytes = size(frameType.width(), frameType.height(), frameType.pixelFormat(), layers, &resultingLayers);
+	const size_t bytes = calculateMemorySize(frameType.width(), frameType.height(), frameType.pixelFormat(), layers, true /*includeFirstLayer*/, &resultingLayers);
 
 	if (bytes == 0)
 	{
@@ -661,7 +661,7 @@ bool FramePyramid::addLayer11(Worker* worker)
 	return true;
 }
 
-size_t FramePyramid::size(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const unsigned int layers, unsigned int* totalLayers)
+size_t FramePyramid::calculateMemorySize(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const unsigned int layers, const bool includeFirstLayer, unsigned int* totalLayers)
 {
 	ocean_assert(width <= 65535u && height <= 65535u);
 
@@ -683,10 +683,10 @@ size_t FramePyramid::size(const unsigned int width, const unsigned int height, c
 	unsigned int layerWidth = width;
 	unsigned int layerHeight = height;
 
-	unsigned int iterations = 0u;
+	unsigned int layerIndex = 0u;
 	uint64_t bytes = 0u;
 
-	while (iterations < layers && layerWidth >= 1u && layerHeight >= 1u)
+	while (layerIndex < layers && layerWidth >= 1u && layerHeight >= 1u)
 	{
 		const uint64_t layerPixels = uint64_t(layerWidth) * uint64_t(layerHeight);
 		const uint64_t layerBytes = layerPixels * uint64_t(bytesPerPixel);
@@ -703,8 +703,12 @@ size_t FramePyramid::size(const unsigned int width, const unsigned int height, c
 			return 0;
 		}
 
-		bytes += layerBytes;
-		++iterations;
+		if (layerIndex != 0u || includeFirstLayer)
+		{
+			bytes += layerBytes;
+		}
+
+		++layerIndex;
 
 		layerWidth /= 2u;
 		layerHeight /= 2u;
@@ -712,7 +716,7 @@ size_t FramePyramid::size(const unsigned int width, const unsigned int height, c
 
 	if (totalLayers != nullptr)
 	{
-		*totalLayers = iterations;
+		*totalLayers = layerIndex;
 	}
 
 	ocean_assert(NumericT<size_t>::isInsideValueRange(bytes));

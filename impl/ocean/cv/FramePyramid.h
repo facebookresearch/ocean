@@ -523,15 +523,16 @@ class OCEAN_CV_EXPORT FramePyramid
 		bool addLayer11(Worker* worker = nullptr);
 
 		/**
-		 * Returns the size of the entire pyramid in bytes covering all images in all pyramid layers.
+		 * Calculates the size of the entire pyramid in bytes covering all images in all pyramid layers.
 		 * @param width The width of the finest layer in pixel, with range [0, 65535]
 		 * @param height The height of the finest layer in pixel, with range [0, 65535]
 		 * @param pixelFormat Pixel format of each layer
 		 * @param layers Number of layers, with range [0, infinity)
-		 * @param totalLayers Optional resulting real number of layers, with range [0, infinity)
+		 * @param includeFirstLayer True, to determine the memory for all layers; False, to skip the first layer and only determine the memory for all remaining (coarser) layers
+		 * @param totalLayers Optional resulting number of pyramid layers that will exist (always counts the very first layer independently of 'includeFirstLayer'), with range [0, layers]
 		 * @return Resulting number of bytes, with range [0, infinity)
 		 */
-		static size_t size(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const unsigned int layers, unsigned int* totalLayers = nullptr);
+		static size_t calculateMemorySize(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const unsigned int layers, const bool includeFirstLayer, unsigned int* totalLayers);
 
 	protected:
 
@@ -666,7 +667,7 @@ FramePyramid FramePyramid::create8BitPerChannel(const FramePyramid& framePyramid
 	if constexpr (tCopyData)
 	{
 		unsigned int resultingLayers;
-		const size_t pyramidFrameSize = size(firstLayer.width(), firstLayer.height(), firstLayer.pixelFormat(), layerCount, &resultingLayers);
+		const size_t pyramidFrameSize = calculateMemorySize(firstLayer.width(), firstLayer.height(), firstLayer.pixelFormat(), layerCount, true /*includeFirstLayer*/, &resultingLayers);
 
 		if (pyramidFrameSize == 0)
 		{
@@ -701,7 +702,7 @@ FramePyramid FramePyramid::create8BitPerChannel(const FramePyramid& framePyramid
 		if (resultingLayers > newPyramid.layers_.size())
 		{
 			// Pyramid frame needs to hold requested number of layers:
-			ocean_assert(newPyramid.memory_.size() >= size(newPyramid.finestWidth(), newPyramid.finestHeight(), newPyramid.finestLayer().pixelFormat(), resultingLayers));
+			ocean_assert(newPyramid.memory_.size() >= calculateMemorySize(newPyramid.finestWidth(), newPyramid.finestHeight(), newPyramid.finestLayer().pixelFormat(), resultingLayers, true /*includeFirstLayer*/, nullptr));
 
 			for (unsigned int n = (unsigned int)(newPyramid.layers_.size()); n < resultingLayers && newPyramid.layers_[n - 1u].width() > 1u && newPyramid.layers_[n - 1u].height() > 1u; ++n)
 			{
