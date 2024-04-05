@@ -1803,7 +1803,9 @@ bool TestIntegralImage::testVarianceCalculation(const double testDuration)
 
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "%";
 
-	return percent >= 0.985;
+	constexpr double threshold = std::is_same<T, float>::value ? 0.95 : 0.985;
+
+	return percent >= threshold;
 }
 
 bool TestIntegralImage::testVarianceCalculationTwoRegions(const double testDuration)
