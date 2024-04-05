@@ -767,13 +767,20 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 					const unsigned int width = performanceIteration ? frameWidth : RandomI::random(randomGenerator, 1u, 2000u);
 					const unsigned int height = performanceIteration ? frameHeight : RandomI::random(randomGenerator, 1u, 2000u);
 
+					unsigned int maximalLayers = (unsigned int)(-1);
+
+					if (!performanceIteration && RandomI::random(randomGenerator, 1u) == 0u)
+					{
+						maximalLayers = RandomI::random(randomGenerator, 1u, 10u);
+					}
+
 					unsigned int pyramidPixels = 0u;
 
 					unsigned int layerWidth = width;
 					unsigned int layerHeight = height;
 					unsigned int layers = 0u;
 
-					while (layerWidth != 0u && layerHeight != 0u)
+					while (layerWidth != 0u && layerHeight != 0u && layers < maximalLayers)
 					{
 						++layers;
 						pyramidPixels += layerWidth * layerHeight;
@@ -783,6 +790,7 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 					}
 
 					ocean_assert(layers >= 1u);
+					ocean_assert(pyramidPixels <= width * height * 134u / 100u); // should not exceed 133%
 
 					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 					Frame pyramidMemory = CV::CVUtilities::randomizedFrame(FrameType(frame, pyramidPixels, 1u), false, &randomGenerator);
@@ -790,7 +798,7 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 					const Frame pyramidMemoryCopy(pyramidMemory, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					performance.startIf(performanceIteration);
-						CV::FrameShrinker::pyramidByTwo11(frame, pyramidMemory.data<uint8_t>(), pyramidMemory.size(), (unsigned int)(-1), useWorker);
+						CV::FrameShrinker::pyramidByTwo11(frame, pyramidMemory.data<uint8_t>(), pyramidMemory.size(), maximalLayers, useWorker);
 					performance.stopIf(performanceIteration);
 
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(pyramidMemory, pyramidMemoryCopy))
