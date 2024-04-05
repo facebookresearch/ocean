@@ -108,7 +108,8 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 	// however, due to accuracy/initial model reasons we do not apply one bundle-adjustment for the entire set of correspondences but
 	// we apply a RANSAC based search for the best matching camera pose first using a small number of correspondences and check how many of the remaining correspondences are correct for the determined pose
 
-	const unsigned int subsetSize = std::min((unsigned int)(imagePoints0.size()), 5u);
+	ocean_assert(imagePoints0.size() >= 5);
+	const unsigned int subsetSize = std::max(5u, (unsigned int)(imagePoints0.size() * 10 / 100)); // 10% but at least 5
 
 	Scalar bestError = Numeric::maxValue();
 
