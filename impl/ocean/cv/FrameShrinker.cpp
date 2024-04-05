@@ -310,8 +310,16 @@ bool FrameShrinker::pyramidByTwo8BitPerChannel11(const uint8_t* source, uint8_t*
 
 			ocean_assert(layersOffset < pyramidTargetSize);
 
+			const uint64_t coarserLayerOffset = uint64_t(layersOffset) + uint64_t(layerHeight * layerWidth * channels);
+
+			if (!NumericT<size_t>::isInsideValueRange(coarserLayerOffset))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
+
 			ocean_assert(layers > multiThreadLayers || multiThreadLayers == 0u);
-			return pyramidByTwo8BitPerChannel11WithThreads(pyramidTarget + layersOffset, pyramidTarget + layersOffset, layerWidth, layerHeight, channels, pyramidTargetSize - layersOffset, layers - multiThreadLayers + 1u, false /*copyFirstLayer*/, sourcePyramidLayerPaddingElements, 1u /*threads*/, nullptr /*worker*/);
+			return pyramidByTwo8BitPerChannel11WithThreads(pyramidTarget + layersOffset, pyramidTarget + coarserLayerOffset, layerWidth, layerHeight, channels, pyramidTargetSize - layersOffset, layers - multiThreadLayers + 1u, false /*copyFirstLayer*/, sourcePyramidLayerPaddingElements, 1u /*threads*/, nullptr /*worker*/);
 		}
 	}
 
@@ -387,6 +395,9 @@ void FrameShrinker::pyramidByTwo8BitPerChannel11WithThreadsSubset(const uint8_t*
 
 	size_t remainingPyramidTargetSize = pyramidTargetSize;
 
+	const uint8_t* currentPyramidLayer = source;
+	uint8_t* nextPyramidLayer = pyramidTarget;
+
 	if (copyFirstLayer)
 	{
 		// for the first layer we simply copy the content
@@ -400,9 +411,12 @@ void FrameShrinker::pyramidByTwo8BitPerChannel11WithThreadsSubset(const uint8_t*
 		}
 
 		constexpr unsigned int targetPaddingElements = 0u;
-		CV::FrameConverter::subFrame<uint8_t>(source, pyramidTarget, sourceWidth, sourceHeight, sourceWidth, sourceHeight, channels, 0u, subsetSourceFirstRow, 0u, subsetSourceFirstRow, sourceWidth, subsetSourceRows, sourcePaddingElements, targetPaddingElements);
+		CV::FrameConverter::subFrame<uint8_t>(currentPyramidLayer, nextPyramidLayer, sourceWidth, sourceHeight, sourceWidth, sourceHeight, channels, 0u, subsetSourceFirstRow, 0u, subsetSourceFirstRow, sourceWidth, subsetSourceRows, sourcePaddingElements, targetPaddingElements);
 
 		remainingPyramidTargetSize -= sizeFirstLayer;
+
+		currentPyramidLayer = nextPyramidLayer;
+		nextPyramidLayer += sourceWidth * sourceHeight * channels;
 	}
 
 	// now we proceed the remaining layers, and stay in the same subset of the frame
@@ -424,8 +438,6 @@ void FrameShrinker::pyramidByTwo8BitPerChannel11WithThreadsSubset(const uint8_t*
 			break;
 		}
 
-		uint8_t* nextPyramidLayer = pyramidTarget + layerWidth * layerHeight * channels;
-
 		ocean_assert((subsetSourceFirstRow % 2u) == 0u);
 
 		// we need an even number of source rows unless we are the last subset
@@ -444,9 +456,11 @@ void FrameShrinker::pyramidByTwo8BitPerChannel11WithThreadsSubset(const uint8_t*
 			return;
 		}
 
-		downsampleByTwo8BitPerChannel11Subset(pyramidTarget, nextPyramidLayer, layerWidth, layerHeight, channels, 0u, 0u, subsetSourceFirstRow, subsetSourceRows);
+		downsampleByTwo8BitPerChannel11Subset(currentPyramidLayer, nextPyramidLayer, layerWidth, layerHeight, channels, 0u, 0u, subsetSourceFirstRow, subsetSourceRows);
 
-		pyramidTarget = nextPyramidLayer;
+		currentPyramidLayer = nextPyramidLayer;
+		nextPyramidLayer += targetLayerWidth * targetLayerHeight * channels;
+
 		layerWidth = targetLayerWidth;
 		layerHeight = targetLayerHeight;
 
