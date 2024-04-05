@@ -1912,11 +1912,11 @@ void LookupCorner2<T, TScalar>::bilinearValues(const size_t y, TTarget* values) 
 
 		if constexpr (std::is_same<TScalar, float>::value)
 		{
-			ocean_assert(xFactor >= -NumericT<TScalar>::weakEps() && xFactor <= TScalar(1.0) + NumericT<TScalar>::weakEps());
+			ocean_assert(NumericT<TScalar>::isInsideWeakRange(TScalar(0), xFactor, TScalar(1)));
 		}
 		else
 		{
-			ocean_assert(xFactor >= TScalar(0.0) && xFactor <= TScalar(1.0));
+			ocean_assert(NumericT<TScalar>::isInsideRange(TScalar(0), xFactor, TScalar(1)));
 		}
 
 		values[x] = TTarget(leftBinValue * (TScalar(1) - xFactor) + rightBinValue * xFactor);
