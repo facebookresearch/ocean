@@ -108,7 +108,7 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 	// however, due to accuracy/initial model reasons we do not apply one bundle-adjustment for the entire set of correspondences but
 	// we apply a RANSAC based search for the best matching camera pose first using a small number of correspondences and check how many of the remaining correspondences are correct for the determined pose
 
-	const unsigned int subsetSize = std::min((unsigned int)(imagePoints0.size()), 10u);
+	const unsigned int subsetSize = std::min((unsigned int)(imagePoints0.size()), 5u);
 
 	Scalar bestError = Numeric::maxValue();
 
