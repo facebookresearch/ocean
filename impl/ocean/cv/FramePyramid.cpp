@@ -551,7 +551,8 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 
 unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidWidth, const unsigned int invalidHeight, const unsigned int layerFactor, const unsigned int maximalRadius, const unsigned int coarsestLayerRadius)
 {
-	ocean_assert(width != 0u && height != 0u && layerFactor >= 2u && coarsestLayerRadius >= 2u);
+	ocean_assert(width >= 1u && height >= 1u);
+	ocean_assert(layerFactor >= 2u && coarsestLayerRadius >= 2u);
 
 	if (width <= invalidWidth || height <= invalidHeight)
 	{
@@ -559,17 +560,32 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 		return 0u;
 	}
 
-	unsigned int testWidth = width;
-	unsigned int testHeight = height;
-	unsigned int testFactor = coarsestLayerRadius;
+	unsigned int layerWidth = width;
+	unsigned int layerHeight = height;
+	unsigned int totalRadius = coarsestLayerRadius;
 
 	unsigned int layers = 1u;
 
-	while (testWidth / layerFactor > invalidWidth && testHeight / layerFactor > invalidHeight && testFactor < maximalRadius)
+	while (true)
 	{
-		testWidth /= layerFactor;
-		testHeight /= layerFactor;
-		testFactor *= layerFactor;
+		const unsigned int nextLayerWidth = layerWidth / layerFactor;
+		const unsigned int nextLayerHeight = layerHeight / layerFactor;
+
+		if (nextLayerWidth <= invalidWidth || nextLayerHeight <= invalidHeight)
+		{
+			break;
+		}
+
+		if (totalRadius >= maximalRadius)
+		{
+			break;
+		}
+
+		layerWidth = nextLayerWidth;
+		layerHeight = nextLayerHeight;
+
+		totalRadius *= layerFactor;
+
 		++layers;
 	}
 

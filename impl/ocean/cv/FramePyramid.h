@@ -474,7 +474,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param invalidWidth Width of a coarse layer not valid any more, with range (0, infinity)
 		 * @param invalidHeight Height of a coarse layer not valid any more, with range (0, infinity)
 		 * @param layerFactor Size factor on each layer (a factor of 2 means that the layer dimension is halved on each layer), with range [2, infinity)
-		 * @param maximalRadius Maximal radius that can be reached on the finest layer by starting with coarsestLayerRadius on the coarsest layer in pixel, with range [1, infinity)
+		 * @param maximalRadius Maximal radius that can be reached on the finest layer by starting with coarsestLayerRadius on the coarsest layer in pixel (the maximal expected baseline between two pixels in the finest pyramid layer), with range [1, infinity)
 		 * @param coarsestLayerRadius The search radius on the coarsest layer, with range [2, infinity)
 		 * @return Resulting layers so that the invalid frame size will not be reached, with range [1, infinity), 0 if 'width/height' is smaller or equal than 'invalidWidth/invalidHeight'
 		 */
