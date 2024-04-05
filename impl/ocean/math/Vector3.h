@@ -778,7 +778,7 @@ bool VectorT3<T>::isParallel(const VectorT3<T>& right) const
 		const bool debugResult = NumericT<T>::isEqual(dotProduct, 1) || NumericT<T>::isEqual(dotProduct, -1);
 		const VectorT3<T> crossVector = cross(right);
 
-		ocean_assert(debugResult == (!isNull() && !right.isNull() && crossVector.isNull()));
+		ocean_assert_accuracy(debugResult == (!isNull() && !right.isNull() && crossVector.isNull()));
 	}
 #endif
 
