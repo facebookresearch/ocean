@@ -184,6 +184,19 @@ class OCEAN_BASE_EXPORT RandomI
 		static void random(RandomGenerator& randomGenerator, const unsigned int maxValue, unsigned int& first, unsigned int& second, unsigned int& third);
 
 		/**
+		 * Returns a random bool value.
+		 * @return True or False
+		 */
+		static inline bool boolean();
+
+		/**
+		 * Returns a random bool value.
+		 * @param randomGenerator The random generator to be used
+		 * @return True or False
+		 */
+		static inline bool boolean(RandomGenerator& randomGenerator);
+
+		/**
 		 * Randomly returns one element from a given vector.
 		 * @param elements The elements from which one elements will be chosen randomly, must contain at least one element
 		 * @return The randomly selected element
@@ -303,6 +316,16 @@ inline unsigned int RandomI::random(RandomGenerator& randomGenerator, const unsi
 	{
 		return lower + randomGenerator.rand() % (range + 1u);
 	}
+}
+
+inline bool RandomI::boolean()
+{
+	return random(1u) == 0u;
+}
+
+inline bool RandomI::boolean(RandomGenerator& randomGenerator)
+{
+	return random(randomGenerator, 1u) == 0u;
 }
 
 template <typename T>

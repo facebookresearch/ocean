@@ -90,6 +90,12 @@ bool TestRandomI::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testRandomBoolean(randomGenerator, testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testRandomElementsVector(randomGenerator, testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -197,6 +203,11 @@ TEST_F(TestRandomI, RandomPair)
 TEST_F(TestRandomI, RandomTriple)
 {
 	EXPECT_TRUE(TestBase::TestRandomI::testRandomTriple(randomGenerator_, GTEST_TEST_DURATION));
+}
+
+TEST_F(TestRandomI, RandomBoolean)
+{
+	EXPECT_TRUE(TestBase::TestRandomI::testRandomBoolean(randomGenerator_, GTEST_TEST_DURATION));
 }
 
 TEST_F(TestRandomI, RandomElementsVector)
@@ -2735,6 +2746,85 @@ bool TestRandomI::testRandomTriple(RandomGenerator& randomGenerator, const doubl
 	}
 
 	return allSucceeded;
+}
+
+bool TestRandomI::testRandomBoolean(RandomGenerator& randomGenerator, const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Random boolean test:";
+
+	bool allSucceeded = true;
+
+	constexpr unsigned int iterations = 100000u;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			unsigned int histogram[2] = {0u, 0u};
+
+			for (unsigned int n = 0u; n < iterations; ++n)
+			{
+				const bool value = RandomI::boolean();
+
+				if (value == false)
+				{
+					histogram[0]++;
+				}
+				else
+				{
+					histogram[1]++;
+				}
+			}
+
+			const unsigned int difference = (unsigned int)(std::abs(int(histogram[0]) - int(histogram[1])));
+
+			if (difference > iterations * 5u / 100u) // 5%
+			{
+				allSucceeded = false;
+			}
+		}
+
+		{
+			unsigned int histogram[2] = {0u, 0u};
+
+			for (unsigned int n = 0u; n < iterations; ++n)
+			{
+				const bool value = RandomI::boolean(randomGenerator);
+
+				if (value == false)
+				{
+					histogram[0]++;
+				}
+				else
+				{
+					histogram[1]++;
+				}
+			}
+
+			const unsigned int difference = (unsigned int)(std::abs(int(histogram[0]) - int(histogram[1])));
+
+			if (difference > iterations * 5u / 100u) // 5%
+			{
+				allSucceeded = false;
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+
 }
 
 bool TestRandomI::testRandomElementsVector(RandomGenerator& randomGenerator, const double testDuration)

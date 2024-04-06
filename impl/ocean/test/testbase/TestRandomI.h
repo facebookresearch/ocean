@@ -108,6 +108,14 @@ class OCEAN_TEST_BASE_EXPORT TestRandomI
 		static bool testRandomTriple(RandomGenerator& randomGenerator, const double testDuration);
 
 		/**
+		 * Random number generator test for boolean.
+		 * @param randomGenerator Random randomGenerator object
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testRandomBoolean(RandomGenerator& randomGenerator, const double testDuration);
+
+		/**
 		 * Random element test based on a vector.
 		 * @param randomGenerator Random randomGenerator object
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
