@@ -631,17 +631,13 @@ SquareMatrixT2<T>::SquareMatrixT2(const T eigenValue0, const T eigenValue1, cons
 	ocean_assert(NumericT<T>::isEqual(eigenVector0.length(), T(1.0)));
 	ocean_assert(NumericT<T>::isEqual(eigenVector1.length(), T(1.0)));
 
-	ocean_assert(NumericT<T>::isNotEqualEps(eigenVector1.x() * eigenVector0.y() - eigenVector0.x() * eigenVector1.y()));
-	const T a = (eigenVector0.y() * eigenValue1 * eigenVector1.x() - eigenVector1.y() * eigenValue0 * eigenVector0.x()) / (eigenVector1.x() * eigenVector0.y() - eigenVector0.x() * eigenVector1.y());
-	const T c = (eigenValue1 * eigenVector1.x() - a * eigenVector1.x()) / eigenVector1.y();
+	const T det = eigenVector0.x() * eigenVector1.y() - eigenVector1.x() * eigenVector0.y();
+	ocean_assert(NumericT<T>::isNotEqualEps(det));
 
-	const T b = (eigenValue1 * eigenVector1.y() * eigenVector0.y() - eigenValue0 * eigenVector0.y() * eigenVector1.y()) / (eigenVector1.x() * eigenVector0.y() - eigenVector0.x() * eigenVector1.y());
-	const T d = (eigenValue1 * eigenVector1.y() - b * eigenVector1.x()) / eigenVector1.y();
-
-	values[0] = a;
-	values[1] = b;
-	values[2] = c;
-	values[3] = d;
+	values[0] = (eigenVector0.x() * eigenValue0 * eigenVector1.y() - eigenVector0.y() * eigenValue1 * eigenVector1.x()) / det;
+	values[1] = (eigenValue0 - eigenValue1) * eigenVector0.y() * eigenVector1.y() / det;
+	values[2] = (eigenValue1 - eigenValue0) * eigenVector0.x() * eigenVector1.x() / det;
+	values[3] = (eigenVector0.x() * eigenValue1 * eigenVector1.y() - eigenVector0.y() * eigenValue0 * eigenVector1.x()) / det;
 
 #ifdef OCEAN_DEBUG
 	if (!std::is_same<Scalar, float>::value)

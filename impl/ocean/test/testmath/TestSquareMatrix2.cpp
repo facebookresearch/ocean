@@ -49,6 +49,12 @@ bool TestSquareMatrix2::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testEigenConstructor(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testEigenSystem() && allSucceeded;
 
 	Log::info() << " ";
@@ -93,6 +99,11 @@ TEST(TestSquareMatrix2, Invert)
 TEST(TestSquareMatrix2, MatrixConversion)
 {
 	EXPECT_TRUE(TestSquareMatrix2::testMatrixConversion(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix2, EigenConstructor)
+{
+	EXPECT_TRUE(TestSquareMatrix2::testEigenConstructor(GTEST_TEST_DURATION));
 }
 
 TEST(TestSquareMatrix2, EigenSystem)
@@ -464,6 +475,92 @@ bool TestSquareMatrix2::testMatrixConversion(const double testDuration)
 				if (NumericF::isNotWeakEqual(matricesF[n][i], float(convertedF2D_1[n][i])))
 					allSucceeded = false;
 			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+		Log::info() << "Validation: succeeded.";
+	else
+		Log::info() << "Validation: FAILED!";
+
+	return allSucceeded;
+}
+
+bool TestSquareMatrix2::testEigenConstructor(double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "SquareMatrix2 constructor from Eigen system test:";
+
+	bool allSucceeded = true;
+
+	const Timestamp startTimestamp(true);
+	do
+	{
+		Vector2 randomVector = Vector2(Random::gaussianNoise(1), Random::gaussianNoise(1));
+
+		const Scalar vectorLength = randomVector.length();
+
+		if (Numeric::isEqualEps(vectorLength))
+		{
+			continue;
+		}
+
+		const Vector2 eigenVector0 = randomVector / vectorLength;
+		const Vector2 eigenVector1(eigenVector0.perpendicular());
+		const Scalar eigenValue0 = Numeric::sqr(vectorLength);
+		const Scalar eigenValue1 = Numeric::sqr(vectorLength * Random::scalar(0.0001, 0.9999));
+
+		SquareMatrix2 mat(eigenValue0, eigenValue1, eigenVector0, eigenVector1);
+
+		// Check that the matrix values are all valid
+		for (unsigned int i = 0u; i < 2u; ++i)
+		{
+			for (unsigned int j = 0u; j < 2u; ++j)
+			{
+				if (Numeric::isNan(mat(i,j)) || Numeric::isInf(mat(i,j)))
+				{
+					allSucceeded = false;
+				}
+			}
+		}
+
+		// Check that the matrix is symmetric
+		if (Numeric::isNotEqual(mat(0,1), mat(1,0)))
+		{
+			allSucceeded = false;
+			Log::error() << "mat(0,1): " << mat(0,1) << ", mat(1,0): " << mat(1,0);
+		}
+
+		// Ensure resulting matrix values match the results of the old algorithm except for cases where the old algorithm is known to have been numerically unstable
+		const Scalar a = (eigenVector0.y() * eigenValue1 * eigenVector1.x() - eigenVector1.y() * eigenValue0 * eigenVector0.x()) / (eigenVector1.x() * eigenVector0.y() - eigenVector0.x() * eigenVector1.y());
+		const Scalar c = (eigenValue1 * eigenVector1.x() - a * eigenVector1.x()) / eigenVector1.y();
+
+		const Scalar b = (eigenValue1 * eigenVector1.y() * eigenVector0.y() - eigenValue0 * eigenVector0.y() * eigenVector1.y()) / (eigenVector1.x() * eigenVector0.y() - eigenVector0.x() * eigenVector1.y());
+		const Scalar d = (eigenValue1 * eigenVector1.y() - b * eigenVector1.x()) / eigenVector1.y();
+
+		bool match00 = Numeric::isWeakEqual(a, mat(0, 0));
+		bool match01 = Numeric::isWeakEqual(b, mat(0, 1));
+		bool match10 = Numeric::isWeakEqual(c, mat(1, 0));
+		bool match11 = Numeric::isWeakEqual(d, mat(1, 1));
+
+		bool match;
+		if (Numeric::isWeakEqualEps(eigenVector1.y()))
+		{
+			// Dividing by zero or near-zero values is numerically unstable, so ignore those values
+			match = match00 && match01;
+		}
+		else
+		{
+			// Allow for one off-diagonal mismatch, since the old algorithm is not always symmetric
+			match = match00 && (match01 || match10) && match11;
+		}
+
+		if (!match)
+		{
+			allSucceeded = false;
+			Log::error() << "Mismatch between old and new algorithm. New: " << mat << ", Old: " << SquareMatrix2(a, b, c, d);
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));

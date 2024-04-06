@@ -57,6 +57,13 @@ class OCEAN_TEST_MATH_EXPORT TestSquareMatrix2
 		static bool testMatrixConversion(const double testDuration);
 
 		/**
+		 * Tests the eigen-system-based constructor.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testEigenConstructor(const double testDuration);
+
+		/**
 		 * Tests the eigen system determination function.
 		 * @return True, if succeeded
 		 */
