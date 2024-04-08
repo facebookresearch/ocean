@@ -274,69 +274,6 @@ bool FramePyramid::replace(const LegacyFrame& frame, const unsigned int layers, 
 	return true;
 }
 
-bool FramePyramid::replace8BitPerChannel(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, Worker* worker, const Timestamp timestamp)
-{
-	ocean_assert(frame && width >= 1u && height >= 1u && layers >= 0u);
-	ocean_assert(channels >= 1u);
-
-	if (!(layers_.empty() || isOwner()))
-	{
-		ocean_assert(false && "Only pyramids that are uninitialized or own their frame data may proceeded");
-		return false;
-	}
-
-	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels);
-
-	if (layers != 0u)
-	{
-		unsigned int expectedLayers = 0u;
-		const size_t bytes = calculateMemorySize(width, height, pixelFormat, layers, true /*includeFirstLayer*/, &expectedLayers);
-
-		if (bytes == 0)
-		{
-			return false;
-		}
-
-		memory_ = Memory(bytes, memoryAlignmentBytes_);
-
-		layers_.clear();
-		layers_.reserve(expectedLayers);
-
-		if (FrameShrinker::pyramidByTwo8BitPerChannel11(frame, memory_.data<uint8_t>(), width, height, channels, memory_.size(), expectedLayers, framePaddingElements, true /*copyFirstLayer*/, worker))
-		{
-			layers_.push_back(LegacyFrame(FrameType(width, height, pixelFormat, pixelOrigin), timestamp, memory_.data<uint8_t>(), false));
-
-			for (unsigned int n = 1u; n < expectedLayers; ++n)
-			{
-				ocean_assert(layers_.size() == n);
-				ocean_assert(layers_.back() && !layers_.back().isReadOnly());
-
-				const unsigned int layerWidth = layers_.back().width() / 2u;
-				const unsigned int layerHeight = layers_.back().height() / 2u;
-
-				layers_.push_back(LegacyFrame(FrameType(layerWidth, layerHeight, pixelFormat, pixelOrigin), timestamp, layers_.back().data() + layers_.back().size(), false));
-				ocean_assert(layers_.size() == n + 1u);
-				ocean_assert(!layers_[n].isOwner());
-			}
-		}
-		else
-		{
-			ocean_assert(false && "This should never happen!");
-		}
-	}
-
-#ifdef OCEAN_DEBUG
-
-	for (size_t n = 0; n < layers_.size(); ++n)
-	{
-		ocean_assert(memory_.isInside(layers_[n].constdata(), layers_[n].size()));
-	}
-
-#endif // OCEAN_DEBUG
-
-	return true;
-}
-
 bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const Timestamp timestamp)
 {
 	ocean_assert(frame != nullptr && width >= 1u && height >= 1u && layers > 0u);

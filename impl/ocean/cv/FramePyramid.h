@@ -313,29 +313,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		bool replace(const LegacyFrame& frame, const unsigned int layers, Worker* worker = nullptr, const DownsamplingMode downsamplingMode = DM_FILTER_11, const CallbackDownsampling& customDownsamplingFunction = CallbackDownsampling());
 
 		/**
-		 * Deprecated.
-		 *
-		 * Replaces this frame pyramid by a new frame.
-		 * The frame pyramid needs to be the owner of its frame data or needs to be empty; otherwise, nothing is done and False is returned.
-		 * Beware: Due to performance issues the new frame should have the same frame type as already defined in this pyramid.<br>
-		 * Further, the number of layers to be created should be the same as already defined.
-		 * Beware: This template-based function can be used instead of the corresponding non-template-based function if the size of the resulting binary matters.<br>
-		 * As this function is more restrictive (and does not allow to apply a blur filter) the resulting code is significantly smaller.
-		 * @param frame The frame for which the pyramid will be created, must be valid
-		 * @param width The width of the given frame in pixel, with range [2, infinity)
-		 * @param height The height of the given frame in pixel, with range [2, infinity)
-		 * @param channels The number of channels the given frame has, with range [1, infinity)
-		 * @param pixelOrigin The pixel origin of the given frame
-		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
-		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
-		 * @param worker Optional worker object to distribute the computation
-		 * @param timestamp Timestamp to be assigned to the frame pyramid (e.g., the timestamp of the frame used to created the timestamp)
-		 * @return True, if the frame pyramid was replaced
-		 * @see isOwner(), replace().
-		 */
-		bool replace8BitPerChannel(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, Worker* worker, const Timestamp timestamp = Timestamp(false));
-
-		/**
 		 * Replaces this frame pyramid by a new frame with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
 		 * This function is intentionally restrictive to reduce binary impact when used, use other function or the constructor in case more flexibility is needed an binary size does not matter.<br>
 		 * The function will re-used the existing pyramid's memory of possible.
