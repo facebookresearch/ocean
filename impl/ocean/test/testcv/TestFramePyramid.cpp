@@ -1197,7 +1197,9 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 
 			const Timestamp timestamp(Random::scalar(randomGenerator, -1000, 1000));
 
-			if (framePyramid.replace8BitPerChannel11(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), pixelOrigin, layers, frame.paddingElements(), copyFirstLayer, useWorker, timestamp))
+			const FrameType::PixelFormat usePixelFormat = RandomI::random(randomGenerator, {FrameType::FORMAT_UNDEFINED, pixelFormat});
+
+			if (framePyramid.replace8BitPerChannel11(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), pixelOrigin, layers, frame.paddingElements(), copyFirstLayer, useWorker, usePixelFormat, timestamp))
 			{
 				if (framePyramid.layers() != expectedLayers)
 				{
@@ -1219,7 +1221,9 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 					}
 				}
 
-				if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, expectedLayers, true /*allowCompatibleFrameType*/))
+				const bool allowCompatibleFrameType = usePixelFormat == FrameType::FORMAT_UNDEFINED ? true : false;
+
+				if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, expectedLayers, allowCompatibleFrameType))
 				{
 					return false;
 				}
@@ -1236,6 +1240,14 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 					if (initialPyramidMemory != framePyramid.memory_.constdata())
 					{
 						// the pyramid should not have allocated a new memory
+						allSucceeded = false;
+					}
+				}
+
+				for (unsigned int n = 0u; n < framePyramid.layers(); ++n)
+				{
+					if (framePyramid[n].timestamp() != timestamp)
+					{
 						allSucceeded = false;
 					}
 				}
@@ -1260,9 +1272,11 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 
 		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
 
+		const FrameType::PixelFormat usePixelFormat = RandomI::random(randomGenerator, {FrameType::FORMAT_UNDEFINED, pixelFormat});
+
 		const Timestamp timestamp(Random::scalar(randomGenerator, -1000, 1000));
 
-		if (framePyramid.replace8BitPerChannel11(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), pixelOrigin, layers, frame.paddingElements(), copyFirstLayer, useWorker, timestamp))
+		if (framePyramid.replace8BitPerChannel11(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), pixelOrigin, layers, frame.paddingElements(), copyFirstLayer, useWorker, usePixelFormat, timestamp))
 		{
 			if (framePyramid.layers() != newExpectedLayers)
 			{
@@ -1284,7 +1298,9 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 				}
 			}
 
-			if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, newExpectedLayers, true /*allowCompatibleFrameType*/))
+			const bool allowCompatibleFrameType = usePixelFormat == FrameType::FORMAT_UNDEFINED ? true : false;
+
+			if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, newExpectedLayers, allowCompatibleFrameType))
 			{
 				return false;
 			}
@@ -1296,6 +1312,14 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 				if (initialPyramidMemory == framePyramid.memory_.constdata())
 				{
 					// the pyramid should have allocated a new memory
+					allSucceeded = false;
+				}
+			}
+
+			for (unsigned int n = 0u; n < framePyramid.layers(); ++n)
+			{
+				if (framePyramid[n].timestamp() != timestamp)
+				{
 					allSucceeded = false;
 				}
 			}

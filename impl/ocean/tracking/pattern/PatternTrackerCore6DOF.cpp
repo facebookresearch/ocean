@@ -1088,7 +1088,7 @@ bool PatternTrackerCore6DOF::determinePosesWithDownsampledResolution(const bool 
 		return false;
 	}
 
-	trackerCurrentFramePyramid.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers,  yFrame.paddingElements(), true /*copyFirstLayer*/, worker, yFrame.timestamp());
+	trackerCurrentFramePyramid.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.channels(), yFrame.pixelOrigin(), pyramidLayers,  yFrame.paddingElements(), true /*copyFirstLayer*/, worker, yFrame.pixelFormat(), yFrame.timestamp());
 
 	for (PatternMap::iterator i = trackerPatternMap.begin(); i != trackerPatternMap.end(); ++i)
 	{

@@ -207,7 +207,7 @@ bool MeshObjectTrackerCore::determinePosesWithDownsampledResolution(bool allowRe
 		return false;
 	}
 
-	currentFramePyramid_.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), true /*copyFirstLayer*/, worker, yFrame.timestamp());
+	currentFramePyramid_.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.channels(), yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), true /*copyFirstLayer*/, worker, yFrame.pixelFormat(), yFrame.timestamp());
 
 	for (RegisteredObjectMap::iterator meshObjectIterator = registeredObjects_.begin(); meshObjectIterator != registeredObjects_.end(); ++meshObjectIterator)
 	{

@@ -325,11 +325,12 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exist)
 		 * @param worker Optional worker object to distribute the computation
+		 * @param pixelFormat The explicit pixel format which will be used for each pyramid layer, must be compatible with DT_UNSIGNED_INTEGER_8 and 'channels'; FORMAT_UNDEFINED to use a generic pixel format
 		 * @param timestamp Timestamp to be assigned to the frame pyramid (e.g., the timestamp of the frame used to created the timestamp)
 		 * @return True, if the frame pyramid was replaced
 		 * @see isOwner(), replace().
 		 */
-		bool replace8BitPerChannel11(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const Timestamp timestamp = Timestamp(false));
+		bool replace8BitPerChannel11(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const FrameType::PixelFormat pixelFormat = FrameType::FORMAT_UNDEFINED, const Timestamp timestamp = Timestamp(false));
 
 		/**
 		 * Resizes this frame pyramid (for a specified frame type of the finest layer).

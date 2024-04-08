@@ -274,7 +274,7 @@ bool FramePyramid::replace(const LegacyFrame& frame, const unsigned int layers, 
 	return true;
 }
 
-bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const Timestamp timestamp)
+bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const FrameType::PixelFormat pixelFormat, const Timestamp timestamp)
 {
 	ocean_assert(frame != nullptr && width >= 1u && height >= 1u && layers > 0u);
 	ocean_assert(channels >= 1u);
@@ -286,10 +286,14 @@ bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned 
 		return false;
 	}
 
-	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
+	const FrameType::PixelFormat genericPixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
+
+	ocean_assert(pixelFormat == FrameType::FORMAT_UNDEFINED || FrameType::arePixelFormatsCompatible(pixelFormat, genericPixelFormat));
+
+	const FrameType::PixelFormat usePixelFormat = pixelFormat != FrameType::FORMAT_UNDEFINED ? pixelFormat : genericPixelFormat;
 
 	unsigned int expectedLayers = 0u;
-	size_t bytes = calculateMemorySize(width, height, pixelFormat, layers, copyFirstLayer, &expectedLayers);
+	size_t bytes = calculateMemorySize(width, height, usePixelFormat, layers, copyFirstLayer, &expectedLayers);
 
 	ocean_assert(expectedLayers <= layers);
 
@@ -321,13 +325,13 @@ bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned 
 		{
 			// the pyramid memory contains the first layer (writable)
 
-			layers_.push_back(LegacyFrame(FrameType(width, height, pixelFormat, pixelOrigin), timestamp, memory_.data<uint8_t>(), false));
+			layers_.push_back(LegacyFrame(FrameType(width, height, usePixelFormat, pixelOrigin), timestamp, memory_.data<uint8_t>(), false));
 		}
 		else
 		{
 			// the pyramid memory does not contain the first layer, so we use the provided frame (as read-only)
 
-			Frame tmpFrame(FrameType(width, height, pixelFormat, pixelOrigin), frame, Frame::CM_USE_KEEP_LAYOUT, framePaddingElements, timestamp);
+			Frame tmpFrame(FrameType(width, height, usePixelFormat, pixelOrigin), frame, Frame::CM_USE_KEEP_LAYOUT, framePaddingElements, timestamp);
 
 			layers_.push_back(LegacyFrame(tmpFrame, LegacyFrame::FCM_USE_IF_POSSIBLE)); // **TODO** temporary workaround until `layers_` does not use `LegacyFrame` anymore
 		}
@@ -348,7 +352,7 @@ bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned 
 			const unsigned int layerWidth = layers_.back().width() / 2u;
 			const unsigned int layerHeight = layers_.back().height() / 2u;
 
-			const FrameType layerFrameType(layerWidth, layerHeight, pixelFormat, pixelOrigin);
+			const FrameType layerFrameType(layerWidth, layerHeight, usePixelFormat, pixelOrigin);
 
 			layers_.push_back(LegacyFrame(layerFrameType, timestamp, pyramidLayerData, false));
 			ocean_assert(layers_.size() == n + 1u);

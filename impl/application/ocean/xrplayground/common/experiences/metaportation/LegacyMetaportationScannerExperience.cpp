@@ -279,7 +279,7 @@ void LegacyMetaportationScannerExperience::MapCreatorWorker::threadRun()
 			yCurrentFramePyramid = std::make_shared<CV::FramePyramid>();
 		}
 
-		yCurrentFramePyramid->replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.channels(), yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), true /*copyfirstLayer*/, nullptr, yFrame.timestamp());
+		yCurrentFramePyramid->replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.channels(), yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), true /*copyfirstLayer*/, nullptr, yFrame.pixelFormat(), yFrame.timestamp());
 
 		TemporaryScopedLock scopedLock(lock_);
 			patchTracker_->trackFrame(frameIndex++, *anyCamera, world_T_camera, yCurrentFramePyramid, sample->timestamp());

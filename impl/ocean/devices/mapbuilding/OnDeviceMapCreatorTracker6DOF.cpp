@@ -346,7 +346,7 @@ void OnDeviceMapCreatorTracker6DOF::threadRun()
 				yCurrentFramePyramid = std::make_shared<CV::FramePyramid>();
 			}
 
-			yCurrentFramePyramid->replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.channels(), yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), true /*copyFirstLayer*/, WorkerPool::get().scopedWorker()(), yFrame.timestamp());
+			yCurrentFramePyramid->replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.channels(), yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), true /*copyFirstLayer*/, WorkerPool::get().scopedWorker()(), yFrame.pixelFormat(), yFrame.timestamp());
 
 			const HighPerformanceStatistic::ScopedStatistic scopedPerformance(performance);
 

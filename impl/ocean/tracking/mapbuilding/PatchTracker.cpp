@@ -260,7 +260,7 @@ bool PatchTracker::trackVRSFile(const std::string& vrsFile, Database& database, 
 			yCurrentFramePyramid = std::make_shared<CV::FramePyramid>();
 		}
 
-		yCurrentFramePyramid->replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.channels(), yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), true /*coypFirstLayer*/, WorkerPool::get().scopedWorker()(), yFrame.timestamp());
+		yCurrentFramePyramid->replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.channels(), yFrame.pixelOrigin(), pyramidLayers, yFrame.paddingElements(), true /*coypFirstLayer*/, WorkerPool::get().scopedWorker()(), yFrame.pixelFormat(), yFrame.timestamp());
 
 		for (unsigned int n = 0u; n < yCurrentFramePyramid->layers(); ++n) // **TODO**
 		{
