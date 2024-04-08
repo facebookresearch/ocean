@@ -77,6 +77,12 @@ bool TestFramePyramid::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testConstructor11(testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testReduceLayers(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -205,6 +211,13 @@ TEST(TestFramePyramid, Replace11)
 {
 	Worker worker;
 	EXPECT_TRUE(TestFramePyramid::testReplace11(GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFramePyramid, Constructor11)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFramePyramid::testConstructor11(GTEST_TEST_DURATION, worker));
 }
 
 
@@ -1225,7 +1238,7 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 
 				if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, expectedLayers, allowCompatibleFrameType))
 				{
-					return false;
+					allSucceeded = false;
 				}
 
 				if (nIteration == 0u)
@@ -1302,7 +1315,7 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 
 			if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, newExpectedLayers, allowCompatibleFrameType))
 			{
-				return false;
+				allSucceeded = false;
 			}
 
 			if (framePyramid.layers() != 1u || copyFirstLayer)
@@ -1322,6 +1335,177 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 				{
 					allSucceeded = false;
 				}
+			}
+		}
+		else
+		{
+			allSucceeded = false;
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestFramePyramid::testConstructor11(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing restrictive constructor applying 1-1 downsampling:";
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 2000u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 2000u);
+
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, {FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32});
+
+		const unsigned int layers = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int expectedLayers = std::min(layers, determineMaxLayerCount(width, height));
+
+		const bool copyFirstLayer = RandomI::random(randomGenerator, 1u) == 0u;
+
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
+		frame.makeContinuous(); // **TODO** temporary workaround until LegacyFrame is still used in FramePyramid
+
+		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+
+		Timestamp timestamp(Random::scalar(randomGenerator, -1000, 1000));
+
+		frame.setTimestamp(timestamp);
+
+		FrameType::PixelFormat usePixelFormat = RandomI::random(randomGenerator, {FrameType::FORMAT_UNDEFINED, pixelFormat});
+
+		const bool useFrameObjectConstructor = RandomI::random(randomGenerator, 1u) == 0u;
+
+		CV::FramePyramid framePyramid;
+
+		if (useFrameObjectConstructor)
+		{
+			framePyramid = CV::FramePyramid(frame, layers, copyFirstLayer, useWorker);
+		}
+		else
+		{
+			framePyramid = CV::FramePyramid(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), pixelOrigin, layers, frame.paddingElements(), copyFirstLayer, useWorker, usePixelFormat, timestamp);
+		}
+
+		if (framePyramid.isValid())
+		{
+			const void* initialPyramidMemory = framePyramid.memory_.constdata();
+
+			if (framePyramid.layers() != expectedLayers)
+			{
+				allSucceeded = false;
+			}
+
+			if (copyFirstLayer)
+			{
+				if (frame.constdata<void>() == framePyramid.finestLayer().constdata<void>())
+				{
+					allSucceeded = false;
+				}
+			}
+			else
+			{
+				if (frame.constdata<void>() != framePyramid.finestLayer().constdata<void>())
+				{
+					allSucceeded = false;
+				}
+			}
+
+			bool allowCompatibleFrameType = usePixelFormat == FrameType::FORMAT_UNDEFINED ? true : false;
+
+			if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, expectedLayers, allowCompatibleFrameType))
+			{
+				allSucceeded = false;
+			}
+
+			for (unsigned int n = 0u; n < framePyramid.layers(); ++n)
+			{
+				if (framePyramid[n].timestamp() != timestamp)
+				{
+					allSucceeded = false;
+				}
+			}
+
+
+			// now, re replace the pyramid
+
+			frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
+			frame.makeContinuous(); // **TODO** temporary workaround until LegacyFrame is still used in FramePyramid
+
+			useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
+
+			timestamp = Timestamp(Random::scalar(randomGenerator, -1000, 1000));
+
+			usePixelFormat = RandomI::random(randomGenerator, {FrameType::FORMAT_UNDEFINED, pixelFormat});
+
+			if (framePyramid.replace8BitPerChannel11(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), pixelOrigin, layers, frame.paddingElements(), copyFirstLayer, useWorker, usePixelFormat, timestamp))
+			{
+				if (framePyramid.layers() != expectedLayers)
+				{
+					allSucceeded = false;
+				}
+
+				if (copyFirstLayer)
+				{
+					if (frame.constdata<void>() == framePyramid.finestLayer().constdata<void>())
+					{
+						allSucceeded = false;
+					}
+				}
+				else
+				{
+					if (frame.constdata<void>() != framePyramid.finestLayer().constdata<void>())
+					{
+						allSucceeded = false;
+					}
+				}
+
+				allowCompatibleFrameType = usePixelFormat == FrameType::FORMAT_UNDEFINED ? true : false;
+
+				if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, expectedLayers, allowCompatibleFrameType))
+				{
+					allSucceeded = false;
+				}
+
+				ocean_assert(initialPyramidMemory != nullptr || (framePyramid.layers() == 1u && !copyFirstLayer));
+
+				if (initialPyramidMemory != framePyramid.memory_.constdata())
+				{
+					// the pyramid should not have allocated a new memory
+					allSucceeded = false;
+				}
+
+				for (unsigned int n = 0u; n < framePyramid.layers(); ++n)
+				{
+					if (framePyramid[n].timestamp() != timestamp)
+					{
+						allSucceeded = false;
+					}
+				}
+			}
+			else
+			{
+				allSucceeded = false;
 			}
 		}
 		else

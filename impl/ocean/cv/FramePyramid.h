@@ -132,6 +132,36 @@ class OCEAN_CV_EXPORT FramePyramid
 		explicit FramePyramid(const FrameType& frameType, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE);
 
 		/**
+		 * Creates a new pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
+		 * This constructor is intentionally restrictive to reduce binary impact when used, use other constructors or functions in case more flexibility is needed an binary size does not matter.<br>
+		 * @param frame The frame for which the pyramid will be created, must be valid
+		 * @param width The width of the given frame in pixel, with range [1, infinity)
+		 * @param height The height of the given frame in pixel, with range [1, infinity)
+		 * @param channels The number of channels the given frame has, with range [1, infinity)
+		 * @param pixelOrigin The pixel origin of the given frame
+		 * @param layers Number of pyramid layers to be created, with range [1, infinity)
+		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
+		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exist)
+		 * @param worker Optional worker object to distribute the computation
+		 * @param pixelFormat The explicit pixel format which will be used for each pyramid layer, must be compatible with DT_UNSIGNED_INTEGER_8 and 'channels'; FORMAT_UNDEFINED to use a generic pixel format
+		 * @param timestamp Timestamp to be assigned to the frame pyramid (e.g., the timestamp of the frame used to created the timestamp)
+		 * @see replace8BitPerChannel11().
+		 */
+		inline FramePyramid(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker = nullptr, const FrameType::PixelFormat pixelFormat = FrameType::FORMAT_UNDEFINED, const Timestamp timestamp = Timestamp(false));
+
+		/**
+		 * Creates a new pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
+		 * This constructor is intentionally restrictive to reduce binary impact when used, use other constructors or functions in case more flexibility is needed an binary size does not matter.<br>
+		 * In case the provided frame not a valid 1-plane DT_UNSIGNED_INTEGER_8 frame, the pyramid will be invalid.
+		 * @param frame The frame for which the pyramid will be created, with 1 plane and data type DT_UNSIGNED_INTEGER_8, must be valid
+		 * @param layers Number of pyramid layers to be created, with range [1, infinity)
+		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exist)
+		 * @param worker Optional worker object to distribute the computation
+		 * @see replace8BitPerChannel11().
+		 */
+		inline FramePyramid(const Frame& frame, const unsigned int layers, const bool copyFirstLayer, Worker* worker = nullptr);
+
+		/**
 		 * Creates a frame pyramid object for a given frame and layer number.
 		 * The given frame is copied and used as finest layer.
 		 * @param frame The frame to create the pyramid for, must be valid.
@@ -430,8 +460,8 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Beware: This function can be used instead of the corresponding constructor if the size of the resulting binary matters.<br>
 		 * As this function is more restrictive compared to the corresponding constructor (and does not allow to apply a blur filter) the resulting code is significantly smaller.
 		 * @param frame The frame for which the pyramid will be created, must be valid
-		 * @param width The width of the given frame in pixel, with range [2, infinity)
-		 * @param height The height of the given frame in pixel, with range [2, infinity)
+		 * @param width The width of the given frame in pixel, with range [1, infinity)
+		 * @param height The height of the given frame in pixel, with range [1, infinity)
 		 * @param channels The number of channels the given frame has, with range [1, infinity)
 		 * @param pixelOrigin The pixel origin of the given frame
 		 * @param layers Number of pyramid layers to be created, with range [1, infinity)
@@ -547,6 +577,24 @@ class OCEAN_CV_EXPORT FramePyramid
 inline FramePyramid::FramePyramid()
 {
 	// nothing to do here
+}
+
+inline FramePyramid::FramePyramid(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const FrameType::PixelFormat pixelFormat, const Timestamp timestamp)
+{
+	ocean_assert(frame != nullptr && width >= 1u && height >= 1u && layers >= 1u);
+	ocean_assert(channels >= 1u);
+
+	replace8BitPerChannel11(frame, width, height, channels, pixelOrigin, layers, framePaddingElements, copyFirstLayer, worker, pixelFormat, timestamp);
+}
+
+inline FramePyramid::FramePyramid(const Frame& frame, const unsigned int layers, const bool copyFirstLayer, Worker* worker)
+{
+	ocean_assert(frame.isValid() && frame.numberPlanes() == 1u && frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
+
+	if (frame.numberPlanes() == 1u && frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
+	{
+		replace8BitPerChannel11(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), frame.pixelOrigin(), layers, frame.paddingElements(), copyFirstLayer, worker, frame.pixelFormat(), frame.timestamp());
+	}
 }
 
 inline FramePyramid::FramePyramid(const Frame& frame, const unsigned int layers, Worker* worker, const DownsamplingMode downsamplingMode, const CallbackDownsampling& customDownsamplingFunction)
