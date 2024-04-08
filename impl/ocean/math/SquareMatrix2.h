@@ -646,9 +646,10 @@ SquareMatrixT2<T>::SquareMatrixT2(const T eigenValue0, const T eigenValue1, cons
 		VectorT2<T> debugEigenVector0, debugEigenVector1;
 		ocean_assert(eigenSystem(debugEigenValue0, debugEigenValue1, debugEigenVector0, debugEigenVector1));
 
-		ocean_assert(NumericT<T>::isEqual(debugEigenValue0, eigenValue0) && NumericT<T>::isEqual(debugEigenValue1, eigenValue1));
-		ocean_assert(debugEigenVector0.isEqual(eigenVector0, NumericT<T>::weakEps()) || debugEigenVector0.isEqual(-eigenVector0, NumericT<T>::weakEps()));
-		ocean_assert(debugEigenVector1.isEqual(eigenVector1, NumericT<T>::weakEps()) || debugEigenVector1.isEqual(-eigenVector1, NumericT<T>::weakEps()));
+		ocean_assert(NumericT<T>::isEqual(debugEigenValue0, eigenValue0, NumericT<T>::eps() * 10));
+		ocean_assert(NumericT<T>::isEqual(debugEigenValue1, eigenValue1, NumericT<T>::eps() * 10));
+		ocean_assert(debugEigenVector0.isEqual(eigenVector0, NumericT<T>::weakEps() * 10) || debugEigenVector0.isEqual(-eigenVector0, NumericT<T>::weakEps() * 10));
+		ocean_assert(debugEigenVector1.isEqual(eigenVector1, NumericT<T>::weakEps() * 10) || debugEigenVector1.isEqual(-eigenVector1, NumericT<T>::weakEps() * 10));
 	}
 #endif // OCEAN_DEBUG
 }

@@ -498,7 +498,7 @@ bool TestSquareMatrix2::testEigenConstructor(double testDuration)
 	const Timestamp startTimestamp(true);
 	do
 	{
-		Vector2 randomVector = Vector2(Random::gaussianNoise(1), Random::gaussianNoise(1));
+		const Vector2 randomVector = Vector2(Random::gaussianNoise(1), Random::gaussianNoise(1));
 
 		const Scalar vectorLength = randomVector.length();
 
@@ -512,7 +512,7 @@ bool TestSquareMatrix2::testEigenConstructor(double testDuration)
 		const Scalar eigenValue0 = Numeric::sqr(vectorLength);
 		const Scalar eigenValue1 = Numeric::sqr(vectorLength * Random::scalar(0.0001, 0.9999));
 
-		SquareMatrix2 mat(eigenValue0, eigenValue1, eigenVector0, eigenVector1);
+		const SquareMatrix2 mat(eigenValue0, eigenValue1, eigenVector0, eigenVector1);
 
 		// Check that the matrix values are all valid
 		for (unsigned int i = 0u; i < 2u; ++i)
@@ -540,10 +540,10 @@ bool TestSquareMatrix2::testEigenConstructor(double testDuration)
 		const Scalar b = (eigenValue1 * eigenVector1.y() * eigenVector0.y() - eigenValue0 * eigenVector0.y() * eigenVector1.y()) / (eigenVector1.x() * eigenVector0.y() - eigenVector0.x() * eigenVector1.y());
 		const Scalar d = (eigenValue1 * eigenVector1.y() - b * eigenVector1.x()) / eigenVector1.y();
 
-		bool match00 = Numeric::isWeakEqual(a, mat(0, 0));
-		bool match01 = Numeric::isWeakEqual(b, mat(0, 1));
-		bool match10 = Numeric::isWeakEqual(c, mat(1, 0));
-		bool match11 = Numeric::isWeakEqual(d, mat(1, 1));
+		const bool match00 = Numeric::isWeakEqual(a, mat(0, 0));
+		const bool match01 = Numeric::isWeakEqual(b, mat(0, 1));
+		const bool match10 = Numeric::isWeakEqual(c, mat(1, 0));
+		const bool match11 = Numeric::isWeakEqual(d, mat(1, 1));
 
 		bool match;
 		if (Numeric::isWeakEqualEps(eigenVector1.y()))
