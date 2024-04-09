@@ -7,6 +7,8 @@
 #include "ocean/base/Processor.h"
 #include "ocean/base/WorkerPool.h"
 
+#include "ocean/cv/FrameConverter.h"
+
 #include "ocean/media/FiniteMedium.h"
 #include "ocean/media/Manager.h"
 #include "ocean/media/Utilities.h"
