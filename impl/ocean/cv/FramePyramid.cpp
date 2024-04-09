@@ -143,6 +143,96 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid, bool copyData,	cons
 	}
 }
 
+bool FramePyramid::replace(const FrameType& frameType, const bool reserveFirstLayerMemory, const bool forceOwner, const unsigned int layers)
+{
+	ocean_assert(frameType.isValid());
+	ocean_assert(layers >= 1u);
+
+	if (!frameType.isValid() || layers == 0u)
+	{
+		return false;
+	}
+
+	unsigned int resultingLayers = 0u;
+	const size_t bytes = calculateMemorySize(frameType.width(), frameType.height(), frameType.pixelFormat(), layers, reserveFirstLayerMemory, &resultingLayers);
+
+	if (resultingLayers == 0u)
+	{
+		ocean_assert(false && "This should never happen!");
+		ocean_assert(bytes == 0);
+
+		return false;
+	}
+
+	if (bytes == 0 && reserveFirstLayerMemory)
+	{
+		ocean_assert(false && "This should never happen!");
+
+		return false;
+	}
+
+	if (resultingLayers <= layers_.size() && layers_.front().frameType() == frameType && resultingLayers <= (unsigned int)(layers_.size()))
+	{
+		// in the case the frame pyramid has the correct size and the correct frame type we may be done
+
+		if (!forceOwner || isOwner())
+		{
+			if (resultingLayers < layers_.size())
+			{
+				layers_.resize(resultingLayers);
+			}
+
+			return true;
+		}
+	}
+
+	if (bytes > memory_.size())
+	{
+		memory_ = Memory(bytes, memoryAlignmentBytes_);
+	}
+
+	if (bytes != 0 && !memory_)
+	{
+		// we seem to be out of memory
+		return false;
+	}
+
+	layers_.clear();
+	layers_.reserve(resultingLayers);
+
+	unsigned int layerWidth = frameType.width();
+	unsigned int layerHeight = frameType.height();
+
+	uint8_t* layerData = memory_.data<uint8_t>();
+
+	unsigned int firstLayerIndex = 0u;
+
+	if (!reserveFirstLayerMemory)
+	{
+		layers_.emplace_back(); // place holder frame, which needs to be initialized outside of this function
+
+		layerWidth /= 2u;
+		layerHeight /= 2u;
+
+		firstLayerIndex = 1u;
+	}
+
+	for (unsigned int n = firstLayerIndex; n < resultingLayers; ++n)
+	{
+		ocean_assert(layerWidth >= 1u && layerHeight >= 1u);
+
+		const FrameType layerFrameType(frameType, layerWidth, layerHeight);
+
+		layers_.push_back(LegacyFrame(layerFrameType, layerData, false));
+
+		layerWidth /= 2u;
+		layerHeight /= 2u;
+		layerData += layerFrameType.frameTypeSize();
+	}
+
+	return true;
+}
+
 bool FramePyramid::addLayer(Worker* worker, const DownsamplingMode downsamplingMode, const CallbackDownsampling& customDownsamplingFunction)
 {
 	ocean_assert(!layers_.empty());
@@ -384,77 +474,6 @@ bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned 
 	}
 
 #endif // OCEAN_DEBUG
-
-	return true;
-}
-
-bool FramePyramid::replace(const FrameType& frameType, const bool forceOwner, const unsigned int layers)
-{
-	ocean_assert(frameType.isValid());
-	ocean_assert(layers >= 1u);
-
-	if (!frameType.isValid() || layers == 0u)
-	{
-		return false;
-	}
-
-	unsigned int resultingLayers = 0u;
-	const size_t bytes = calculateMemorySize(frameType.width(), frameType.height(), frameType.pixelFormat(), layers, true /*includeFirstLayer*/, &resultingLayers);
-
-	if (bytes == 0 || resultingLayers == 0u)
-	{
-		ocean_assert(false && "This should never happen!");
-		ocean_assert(bytes == 0 && resultingLayers == 0u);
-
-		return false;
-	}
-
-	if (resultingLayers <= layers_.size() && layers_.front().frameType() == frameType && resultingLayers <= (unsigned int)(layers_.size()))
-	{
-		// in the case the frame pyramid has the correct size and the correct frame type we may be done
-
-		if (!forceOwner || isOwner())
-		{
-			if (resultingLayers < layers_.size())
-			{
-				layers_.resize(resultingLayers);
-			}
-
-			return true;
-		}
-	}
-
-	if (bytes > memory_.size())
-	{
-		memory_ = Memory(bytes, memoryAlignmentBytes_);
-	}
-
-	if (bytes != 0 && !memory_)
-	{
-		// we seem to be out of memory
-		return false;
-	}
-
-	layers_.clear();
-	layers_.reserve(resultingLayers);
-
-	unsigned int layerWidth = frameType.width();
-	unsigned int layerHeight = frameType.height();
-
-	uint8_t* layerData = memory_.data<uint8_t>();
-
-	for (unsigned int n = 0u; n < resultingLayers; ++n)
-	{
-		ocean_assert(layerWidth >= 1u && layerHeight >= 1u);
-
-		const FrameType layerFrameType(frameType, layerWidth, layerHeight);
-
-		layers_.push_back(LegacyFrame(layerFrameType, layerData, false));
-
-		layerWidth /= 2u;
-		layerHeight /= 2u;
-		layerData += layerFrameType.frameTypeSize();
-	}
 
 	return true;
 }

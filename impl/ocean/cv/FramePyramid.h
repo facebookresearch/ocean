@@ -367,7 +367,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param forceOwner True, to force the pyramid to be the owner of the memory afterwards; False, to allow that the pyramid is not owning the memory (because the memory is managed outside of this pyramid)
 		 * @return True, if succeeded
 		 */
-		bool replace(const FrameType& frameType, const bool forceOwner, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE);
+		inline bool replace(const FrameType& frameType, const bool forceOwner, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE);
 
 		/**
 		 * Reduces the number of pyramid layers.
@@ -517,6 +517,17 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Disabled constructor.
 		 */
 		FramePyramid(const LegacyFrame&, const bool) = delete;
+
+		/**
+		 * Replaces this frame pyramid with a new pyramid defined by the frame type of the finest layer.
+		 * The image content of the replaced frame pyramid will be uninitialized.
+		 * @param frameType The type of the finest pyramid layer, must be valid
+		 * @param reserveFirstLayerMemory True, to reserve memory for the first pyramid layer (and to initialize the first layer frame); False, to reserve memory for the remaining pyramid layers only (and to skip initializing the first layer frame)
+		 * @param layers The number of layers to be created during the resizing, the resulting layers will be as many as possible but not exceed this value, with range [1, infinity)
+		 * @param forceOwner True, to force the pyramid to be the owner of the memory afterwards; False, to allow that the pyramid is not owning the memory (because the memory is managed outside of this pyramid)
+		 * @return True, if succeeded
+		 */
+		bool replace(const FrameType& frameType, const bool reserveFirstLayerMemory, const bool forceOwner, const unsigned int layers);
 
 		/**
 		 * Adds a new layer to the end of the frame pyramid.
@@ -693,6 +704,11 @@ inline bool FramePyramid::replace8BitPerChannel11(const Frame& frame, const unsi
 	}
 
 	return false;
+}
+
+inline bool FramePyramid::replace(const FrameType& frameType, const bool forceOwner, const unsigned int layers)
+{
+	return replace(frameType, true /*reserveFirstLayerMemory*/, forceOwner, layers);
 }
 
 template <bool tCopyData>
