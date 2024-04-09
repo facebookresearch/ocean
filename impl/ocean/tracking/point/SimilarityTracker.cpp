@@ -21,32 +21,32 @@ namespace Point
 
 bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::PixelBoundingBox& previousSubRegion, SquareMatrix3* current_T_previous, Vector2* translation, Scalar* rotation, Scalar* scale, const Vector2& predictedTranslation, TrackerConfidence* trackerConfidence, RegionTextureness* regionTextureness, Worker* worker)
 {
-	if (current_T_previous)
+	if (current_T_previous != nullptr)
 	{
 		current_T_previous->toIdentity();
 	}
 
-	if (translation)
+	if (translation != nullptr)
 	{
 		*translation = Vector2(0, 0);
 	}
 
-	if (rotation)
+	if (rotation != nullptr)
 	{
 		*rotation = Scalar(0);
 	}
 
-	if (scale)
+	if (scale != nullptr)
 	{
 		*scale = Scalar(1);
 	}
 
-	if (trackerConfidence)
+	if (trackerConfidence != nullptr)
 	{
 		*trackerConfidence = TC_NONE;
 	}
 
-	if (regionTextureness)
+	if (regionTextureness != nullptr)
 	{
 		*regionTextureness = RT_UNKNOWN;
 	}
@@ -56,10 +56,10 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 	ocean_assert(previousSubRegion.isValid());
 	ocean_assert(previousSubRegion.right() < yFrame.width() && previousSubRegion.bottom() < yFrame.height());
 
-	ocean_assert(FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
-	ocean_assert(keyFramePyramid_.isNull() || keyFramePyramid_.frameType() == FrameType(yFrame, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>()));
+	ocean_assert(yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(keyFramePyramid_.isNull() || keyFramePyramid_.frameType().isFrameTypeCompatible(yFrame, false));
 
-	if (yFrame.isNull() || yFrame.width() < 40u || yFrame.height() < 40u || !FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u) || (keyFramePyramid_ && keyFramePyramid_.frameType() != FrameType(yFrame, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>())) || !previousSubRegion.isValid())
+	if (yFrame.isNull() || yFrame.width() < 40u || yFrame.height() < 40u || !yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8) || (keyFramePyramid_ && !keyFramePyramid_.frameType().isFrameTypeCompatible(yFrame, false)) || !previousSubRegion.isValid())
 	{
 		return false;
 	}
@@ -126,7 +126,7 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 
 		Vectors2 roughCurrentPoints;
 
-		if (predictedTranslation != Vector2(0, 0) || !previousTkey_.isIdentity())
+		if (predictedTranslation != Vector2(0, 0) || !previous_T_key_.isIdentity())
 		{
 			roughCurrentPoints.reserve(keyFramePoints_.size());
 
@@ -136,7 +136,7 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 
 			const SquareMatrix3 predicted_current_T_previous(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(predictedTranslation * invLayerSizeFactor, 1));
 
-			const SquareMatrix3 predicted_currentTkey(predicted_current_T_previous * previousTkey_);
+			const SquareMatrix3 predicted_currentTkey(predicted_current_T_previous * previous_T_key_);
 
 			const Scalar maximalWidth = Scalar(keyFramePyramid_.width(firstPyramidLayerIndex) - 1u);
 			const Scalar maximalHeight = Scalar(keyFramePyramid_.height(firstPyramidLayerIndex) - 1u);
@@ -166,13 +166,13 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 
 			if (determineSimilarityTransformation(hierarchyKey, hierarchyCurrent, keyFramePoints_, roughCurrentPoints, randomGenerator_, currentTkey, validCorrespondences, coarsestLayerRadius, subPixelIterations, worker) && validCorrespondences.size() >= minimalFeaturePoints)
 			{
-				ocean_assert(previousTkey_.isSimilarity() && currentTkey.isSimilarity());
-				const SquareMatrix3 layer_current_T_previous = currentTkey * previousTkey_.inverted();
+				ocean_assert(previous_T_key_.isSimilarity() && currentTkey.isSimilarity());
+				const SquareMatrix3 layer_current_T_previous = currentTkey * previous_T_key_.inverted();
 
 				// we need the similarity transformation in the coordinate system of the finest image resolutions
 				const SquareMatrix3 fine_current_T_previous = Geometry::Homography::toFinestHomography(layer_current_T_previous, firstPyramidLayerIndex);
 
-				if (current_T_previous)
+				if (current_T_previous != nullptr)
 				{
 					*current_T_previous = fine_current_T_previous;
 				}
@@ -184,21 +184,21 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 				// Rb   Ra  Ty
 				//  0    0   1
 
-				if (translation)
+				if (translation != nullptr)
 				{
 					const Vector2 layerTranslation(fine_current_T_previous.zAxis().xy());
 
 					*translation = layerTranslation;
 				}
 
-				if (rotation)
+				if (rotation != nullptr)
 				{
 					const Vector2 axis(fine_current_T_previous.xAxis().xy());
 
 					*rotation = Numeric::atan2(axis.y(), axis.x());
 				}
 
-				if (scale)
+				if (scale != nullptr)
 				{
 					const Vector2 axis(fine_current_T_previous.xAxis().xy());
 					const Scalar axisLength = axis.length();
@@ -267,7 +267,7 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 
 		if (!currentTkey.isNull())
 		{
-			previousTkey_ = currentTkey;
+			previous_T_key_ = currentTkey;
 		}
 	}
 
@@ -278,17 +278,17 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 
 		std::swap(keyFramePyramid_, currentFramePyramid_);
 
-		previousTkey_.toIdentity();
+		previous_T_key_.toIdentity();
 		keyFramePoints_.clear();
 		keyFramePointsLayerIndex_ = (unsigned int)(-1);
 	}
 
-	if (trackerConfidence)
+	if (trackerConfidence != nullptr)
 	{
 		*trackerConfidence = internalTrackerConfidence;
 	}
 
-	if (regionTextureness)
+	if (regionTextureness != nullptr)
 	{
 		*regionTextureness = internalRegionTextureness;
 	}

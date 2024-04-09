@@ -12,6 +12,9 @@
 #include "ocean/cv/FramePyramid.h"
 #include "ocean/cv/PixelBoundingBox.h"
 
+#include "ocean/math/SquareMatrix3.h"
+#include "ocean/math/Vector2.h"
+
 namespace Ocean
 {
 
@@ -73,7 +76,7 @@ class OCEAN_TRACKING_POINT_EXPORT SimilarityTracker
 		/**
 		 * Creates a new tracker object.
 		 */
-		inline SimilarityTracker();
+		SimilarityTracker() = default;
 
 		/**
 		 * Determines the similarity between two successive video frame within a specified sub-region.
@@ -162,21 +165,14 @@ class OCEAN_TRACKING_POINT_EXPORT SimilarityTracker
 		RandomGenerator randomGenerator_;
 
 		/// The similarity since 'previousFramePyramid_' have been updated the last time, defined in the resolution of the usage pyramid layer.
-		SquareMatrix3 previousTkey_;
+		SquareMatrix3 previous_T_key_ = SquareMatrix3(true);
 
 		/// The image points located in 'previousFramePyramid_', defined in the usage pyramid layer.
 		Vectors2 keyFramePoints_;
 
 		/// The frame pyramid layer index in which 'keyFramePoints_' have been determined, -1 if invalid.
-		unsigned int keyFramePointsLayerIndex_;
+		unsigned int keyFramePointsLayerIndex_ = (unsigned int)(-1);
 };
-
-inline SimilarityTracker::SimilarityTracker() :
-	previousTkey_(true),
-	keyFramePointsLayerIndex_((unsigned int)(-1))
-{
-	// nothing to do here
-}
 
 inline const CV::FramePyramid& SimilarityTracker::currentFramePyramid() const
 {
@@ -193,7 +189,7 @@ inline void SimilarityTracker::reset()
 	currentFramePyramid_.clear();
 	keyFramePyramid_.clear();
 
-	previousTkey_.toIdentity();
+	previous_T_key_.toIdentity();
 	keyFramePoints_.clear();
 	keyFramePointsLayerIndex_ = (unsigned int)(-1);
 }
@@ -205,8 +201,8 @@ inline float SimilarityTracker::combinedConfidence(const TrackerConfidence track
 		return 1.0f;
 	}
 
-	ocean_assert((unsigned int)trackerConfidence < 4u);
-	ocean_assert((unsigned int)regionTextureness < 4u);
+	ocean_assert((unsigned int)(trackerConfidence) < 4u);
+	ocean_assert((unsigned int)(regionTextureness) < 4u);
 
 	constexpr float confidenceValues[] =
 	{
@@ -216,7 +212,7 @@ inline float SimilarityTracker::combinedConfidence(const TrackerConfidence track
 		1.0f, // TC_GOOD,      RT_HIGH
 	};
 
-	return confidenceValues[(unsigned int)trackerConfidence] * confidenceValues[(unsigned int)regionTextureness];
+	return confidenceValues[(unsigned int)(trackerConfidence)] * confidenceValues[(unsigned int)(regionTextureness)];
 }
 
 }
