@@ -712,14 +712,20 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	const Indices32 threads = {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u, 12u, 32u, 33u, 48u, 64u};
 
 	const Indices32 widths =  {640u, 641u, 640u, 641u, 800u, 1280u, 1920u, 3840u, 3840u};
 	const Indices32 heights = {480u, 480u, 481u, 481u, 640u,  720u, 1080u, 2048u, 2160u};
 
-	const unsigned int previousProcessorCores = Processor::get().cores();
+	const FrameType::PixelFormats pixelFormats =
+	{
+		FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32,
+		FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::genericPixelFormat<uint8_t, 4u>()
+	};
 
-	ocean_assert(sizeof(widths) == sizeof(heights));
+	const unsigned int previousProcessorCores = Processor::get().cores();
 
 	for (const unsigned int thread : threads)
 	{
@@ -729,13 +735,16 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 
 		for (unsigned int n = 0u; n < widths.size(); ++n)
 		{
+			ocean_assert(widths.size() == heights.size());
+
 			const unsigned int width = widths[n];
 			const unsigned int height = heights[n];
 
-			for (unsigned int c = 1u; c <= 4u; ++c)
+			for (const FrameType::PixelFormat pixelFormat : pixelFormats)
 			{
-				LegacyFrame frame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, c), FrameType::ORIGIN_UPPER_LEFT));
-				CV::CVUtilities::randomizeFrame(frame);
+				const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
 
 				const unsigned int layers = CV::FramePyramid::idealLayers(width, height, 0u, 0u);
 
@@ -743,7 +752,7 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 				{
 					const CV::FramePyramid framePyramid(frame, layerIndex, &extremeWorker);
 
-					if (!validateFramePyramid(Frame(frame, Frame::temporary_ACM_USE_KEEP_LAYOUT), framePyramid, CV::FramePyramid::DM_FILTER_11, layerIndex))
+					if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, layerIndex))
 					{
 						allSucceeded = false;
 					}
