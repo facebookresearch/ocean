@@ -124,12 +124,12 @@ class OCEAN_CV_EXPORT FramePyramid
 
 		/**
 		 * Creates a frame pyramid object for a given frame type and layer number.
-		 * The given number of preferred layers may not be reached if the finest frame will have a dimension of zero.<br>
-		 * The number of 'valid' layers will be set to zero, so adjust this value once the image content of the layers have been defined.
-		 * @param frameType Type of the frame to create a frame pyramid for
-		 * @param layers Number of layers to be created, with range [1, infinity)
+		 * The resulting pyramid may have fewer layers than desired.<br>
+		 * The image content of the replaced frame pyramid will be uninitialized.
+		 * @param layers The preferred number of layers to be created, with range [1, infinity), AS_MANY_LAYERS_AS_POSSIBLE to create as may layers as possible
+		 * @param frameType Type of the frame to create a frame pyramid for, must be valid
 		 */
-		explicit FramePyramid(const FrameType& frameType, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE);
+		explicit FramePyramid(const unsigned int layers, const FrameType& frameType);
 
 		/**
 		 * Creates a new pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.

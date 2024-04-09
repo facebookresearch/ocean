@@ -1191,7 +1191,7 @@ FramePyramid FREAKDescriptorT<tSize>::createFramePyramidWithBlur8BitsPerChannel(
 	ocean_assert(kernelHeight != 0u && kernelHeight % 2u == 1u);
 	ocean_assert(layers >= 0u);
 
-	FramePyramid pyramid(frame.frameType(), layers);
+	FramePyramid pyramid(layers, frame.frameType());
 
 	if (pyramid.layers() < layers)
 	{

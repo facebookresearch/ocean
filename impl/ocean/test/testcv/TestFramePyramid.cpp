@@ -444,7 +444,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 		{
 			// testing pyramid from FrameType
 
-			CV::FramePyramid framePyramid(FrameType(width, height, pixelFormat, pixelOrigin));
+			CV::FramePyramid framePyramid(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, FrameType(width, height, pixelFormat, pixelOrigin));
 
 			if (!verifyPyramidOwnership(framePyramid, true /*isValid*/, true /*isOwner*/))
 			{
@@ -520,7 +520,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 		{
 			// testing pyramid from pyramid and making a copy
 
-			CV::FramePyramid framePyramidSource(FrameType(width, height, pixelFormat, pixelOrigin));
+			CV::FramePyramid framePyramidSource(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, FrameType(width, height, pixelFormat, pixelOrigin));
 
 			CV::FramePyramid framePyramid(framePyramidSource, true /*copyData*/);
 
@@ -545,7 +545,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 		{
 			// testing pyramid from pyramid and using the memory only
 
-			CV::FramePyramid framePyramidSource(FrameType(width, height, pixelFormat, pixelOrigin));
+			CV::FramePyramid framePyramidSource(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, FrameType(width, height, pixelFormat, pixelOrigin));
 
 			CV::FramePyramid framePyramid(framePyramidSource, false /*copyData*/);
 
@@ -570,7 +570,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 		{
 			// testing pyramid from pyramid and making a copy
 
-			CV::FramePyramid framePyramidSource(FrameType(width, height, pixelFormat, pixelOrigin));
+			CV::FramePyramid framePyramidSource(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, FrameType(width, height, pixelFormat, pixelOrigin));
 
 			CV::FramePyramid framePyramid = CV::FramePyramid::create8BitPerChannel<true /*tCopyData*/>(framePyramidSource);
 
@@ -595,7 +595,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 		{
 			// testing pyramid from pyramid and using the memory only
 
-			CV::FramePyramid framePyramidSource(FrameType(width, height, pixelFormat, pixelOrigin));
+			CV::FramePyramid framePyramidSource(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, FrameType(width, height, pixelFormat, pixelOrigin));
 
 			CV::FramePyramid framePyramid = CV::FramePyramid::create8BitPerChannel<false /*tCopyData*/>(framePyramidSource);
 
@@ -1614,7 +1614,7 @@ bool TestFramePyramid::testReduceLayers(const double testDuration)
 			layers = RandomI::random(1u, 10u);
 		}
 
-		CV::FramePyramid framePyramid(FrameType(width, height, pixelFormat, pixelOrigin), layers);
+		CV::FramePyramid framePyramid(layers, FrameType(width, height, pixelFormat, pixelOrigin));
 
 		if (!framePyramid.isValid())
 		{

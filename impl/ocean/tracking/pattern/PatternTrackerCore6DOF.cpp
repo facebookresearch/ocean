@@ -999,12 +999,12 @@ bool PatternTrackerCore6DOF::determinePoses(const bool allowRecognition, const F
 
 		if (pyramidLayers >= 2u)
 		{
-			// **TODO** use FrameInterpolator::resize() when supporting 11 downsampling
+			// **TODO** use FrameInterpolator::resize() when supporting 11 downsampling, once LegacyFrame has been replaced
 
 			const FrameType secondLayerType(yFrame, yFrame.width() / 2u, yFrame.height() / 2u);
 
 			// we create a pyramid with one layer less than necessary - as we do not need to copy the actual image
-			framePyramid = CV::FramePyramid(secondLayerType, pyramidLayers - 1u);
+			framePyramid = CV::FramePyramid(pyramidLayers - 1u, secondLayerType);
 
 			Frame secondLayer(framePyramid.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
 

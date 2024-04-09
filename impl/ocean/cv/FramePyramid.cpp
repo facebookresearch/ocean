@@ -42,7 +42,7 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid)
 	}
 }
 
-FramePyramid::FramePyramid(const FrameType& frameType, const unsigned int layers)
+FramePyramid::FramePyramid(const unsigned int layers, const FrameType& frameType)
 {
 	resize(frameType, layers);
 }

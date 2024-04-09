@@ -92,18 +92,14 @@ void TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 	do
 	{
-		const unsigned int framePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::findPixelFormat(channels * 8u), FrameType::ORIGIN_UPPER_LEFT), false);
 
-		Frame frame(FrameType(width, height, FrameType::findPixelFormat(channels * 8u), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-
-		CV::CVUtilities::randomizeFrame(frame, false);
-
-		CV::FramePyramid framePyramid(frame.frameType());
+		CV::FramePyramid framePyramid(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, frame.frameType());
 
 		if (iteration % 3u == 0u)
 		{
 			performanceOceanSingleCore.start();
-			framePyramid.replace(frame, framePyramid.layers());
+				framePyramid.replace(frame, framePyramid.layers());
 			performanceOceanSingleCore.stop();
 		}
 		else if (iteration % 3u == 1u)
@@ -111,7 +107,7 @@ void TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 			const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
 
 			performanceOceanMultiCore.start();
-			framePyramid.replace(frame, framePyramid.layers(), scopedWorker());
+				framePyramid.replace(frame, framePyramid.layers(), scopedWorker());
 			performanceOceanMultiCore.stop();
 		}
 		else if (channels == 4u) // libyuv does not provide a rescale function for Y frames, YA frames, or RGB frames
@@ -134,7 +130,7 @@ void TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 			performanceLibYUV.stop();
 		}
 
-		iteration++;
+		++iteration;
 	}
 	while (iteration < 3u || startTimestamp + testDuration > Timestamp(true));
 
