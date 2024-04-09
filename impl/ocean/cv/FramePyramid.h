@@ -11,7 +11,6 @@
 #include "ocean/base/Worker.h"
 
 #include "ocean/cv/FrameShrinker.h"
-#include "ocean/cv/FrameShrinkerAlpha.h"
 
 namespace Ocean
 {
@@ -587,7 +586,7 @@ inline FramePyramid::FramePyramid(const Frame& frame, const unsigned int layers,
 
 inline FramePyramid::FramePyramid(const Frame& frame, const unsigned int layers, Worker* worker, const DownsamplingMode downsamplingMode, const CallbackDownsampling& customDownsamplingFunction)
 {
-	replace(LegacyFrame(frame, LegacyFrame::FCM_USE_IF_POSSIBLE), layers, worker, downsamplingMode, customDownsamplingFunction);
+	replace(frame, layers, worker, downsamplingMode, customDownsamplingFunction);
 }
 
 inline const LegacyFrame& FramePyramid::layer(const unsigned int layer) const

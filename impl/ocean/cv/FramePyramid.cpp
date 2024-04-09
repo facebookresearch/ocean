@@ -2,6 +2,7 @@
 
 #include "ocean/cv/FramePyramid.h"
 #include "ocean/cv/FrameShrinker.h"
+#include "ocean/cv/FrameShrinkerAlpha.h"
 
 namespace Ocean
 {
