@@ -173,19 +173,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		explicit inline FramePyramid(const Frame& frame, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr, const DownsamplingMode downsamplingMode = DM_FILTER_11, const CallbackDownsampling& customDownsamplingFunction = CallbackDownsampling());
 
 		/**
-		 * Deprecated.
-		 *
-		 * Creates a frame pyramid object for a given frame and layer number.
-		 * The given frame is copied and used as finest layer.
-		 * @param frame The frame to create the pyramid for, must be valid.
-		 * @param layers Number of pyramid layers to be created, with range [1, infinity)
-		 * @param worker Optional worker object to distribute the computation
-		 * @param downsamplingMode The down sampling mode to be used to create lower image resolutions, 'DM_CUSTOM' in combination with a valid 'customDownsamplingFunction' to use a custom down sampling mode
-		 * @param customDownsamplingFunction Optional explicit custom callback of the down sampling function to be used, define an invalid callback object to use the default down sampling function determined by 'mode'
-		 */
-		explicit inline FramePyramid(const LegacyFrame& frame, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr, const DownsamplingMode downsamplingMode = DM_FILTER_11, const CallbackDownsampling& customDownsamplingFunction = CallbackDownsampling());
-
-		/**
 		 * Creates a new frame pyramid by using layers from an existing source frame pyramid.
 		 * The range of used layers can be specified by layerIndex and layerCount.<br>
 		 * If copyData is False, then only a reference is created to the given source frame data; the new frame pyramid will be a read-only pyramid.<br>
@@ -601,11 +588,6 @@ inline FramePyramid::FramePyramid(const Frame& frame, const unsigned int layers,
 inline FramePyramid::FramePyramid(const Frame& frame, const unsigned int layers, Worker* worker, const DownsamplingMode downsamplingMode, const CallbackDownsampling& customDownsamplingFunction)
 {
 	replace(LegacyFrame(frame, LegacyFrame::FCM_USE_IF_POSSIBLE), layers, worker, downsamplingMode, customDownsamplingFunction);
-}
-
-inline FramePyramid::FramePyramid(const LegacyFrame& frame, const unsigned int layers, Worker* worker, const DownsamplingMode downsamplingMode, const CallbackDownsampling& customDownsamplingFunction)
-{
-	replace(frame, layers, worker, downsamplingMode, customDownsamplingFunction);
 }
 
 inline const LegacyFrame& FramePyramid::layer(const unsigned int layer) const
