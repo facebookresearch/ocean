@@ -241,11 +241,8 @@ bool ImageQuality::multiScaleStructuralSimilarity8BitPerChannel(const uint8_t* c
 		return false;
 	}
 
-	CV::FramePyramid pyramidX; // **TODO** switch to constructor-based pyramid creation
-	CV::FramePyramid pyramidY;
-
-	pyramidX.replace8BitPerChannel11(imageX, width, height, channels, FrameType::ORIGIN_UPPER_LEFT, layers, imageXPaddingElements, false /*copyFirstLayer*/, worker);
-	pyramidY.replace8BitPerChannel11(imageY, width, height, channels, FrameType::ORIGIN_UPPER_LEFT, layers, imageYPaddingElements, false /*copyFirstLayer*/, worker);
+	const CV::FramePyramid pyramidX(imageX, width, height, channels, FrameType::ORIGIN_UPPER_LEFT, layers, imageXPaddingElements, false /*copyFirstLayer*/, worker);
+	const CV::FramePyramid pyramidY(imageY, width, height, channels, FrameType::ORIGIN_UPPER_LEFT, layers, imageYPaddingElements, false /*copyFirstLayer*/, worker);
 
 	// beware: the following calculation does not really match with the paper
 	// Multi-Scale Structural Similarity for Image Quality Assessment
