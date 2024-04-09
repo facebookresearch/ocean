@@ -8,6 +8,9 @@ project(ocean_third_party)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(CMAKE_POLICY_DEFAULT_CMP0074 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+
 if (NOT DEFINED OCEAN_USE_LONG_CMAKE_INSTALL_LIBDIR)
     option(OCEAN_USE_LONG_CMAKE_INSTALL_LIBDIR "When enabled, additional information like platform and processor names, build type, etc. is used for the installation path of libraries. Otherwise the CMake standard location is used" TRUE)
 endif()
@@ -18,6 +21,9 @@ ocean_translate_system_name(${CMAKE_SYSTEM_NAME} OCEAN_TARGET_SYSTEM_NAME)
 set(OCEAN_HOST_PROCESSOR_TYPE ${CMAKE_HOST_SYSTEM_PROCESSOR})
 set(OCEAN_TARGET_PROCESSOR_TYPE ${CMAKE_SYSTEM_PROCESSOR})
 
+get_ocean_library_installation_suffix(suffix)
+set(CMAKE_FIND_LIBRARY_CUSTOM_LIB_SUFFIX "${suffix}")
+
 get_ocean_library_installation_directory(OCEAN_LIBRARY_INSTALL_DIR)
 set(CMAKE_INSTALL_LIBDIR "${OCEAN_LIBRARY_INSTALL_DIR}")
 
@@ -25,9 +31,17 @@ message(CHECK_START "Third-party dependencies")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
 # Do not change the order of these.
-include(libjpeg.cmake)
-include(eigen.cmake)
-include(gl.cmake)
+if(BUILD_PASS_INDEX EQUAL 0)
+    include(libjpeg.cmake)
+    include(gl.cmake)
+    include(zlib.cmake)
+    include(eigen.cmake)
+    include(giflib.cmake)
+elseif(BUILD_PASS_INDEX EQUAL 1)
+    include(libpng.cmake)
+    include(assimp.cmake)
+    include(freetype.cmake)
+endif()
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(CHECK_PASS "completed")
