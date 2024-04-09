@@ -33,7 +33,7 @@ namespace Mesh
 // TODO (jtprice): fix or explain hardcoded values
 MeshObject::MeshObject(const Frame& yTextureFrame, const UVTextureMapping::MeshUVTextureMappingRef& meshUVTextureMappingRef, Worker* worker) :
 	featureMap_(yTextureFrame.constdata<uint8_t>(), yTextureFrame.width(), yTextureFrame.height(), yTextureFrame.paddingElements(), meshUVTextureMappingRef, Scalar(6.5), 0u, worker),
-	texturePyramid_(CV::FramePyramid::create8BitPerChannel(yTextureFrame.constdata<uint8_t>(), yTextureFrame.width(), yTextureFrame.height(), 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(yTextureFrame.width(), yTextureFrame.height(), 15u, 15u), yTextureFrame.paddingElements(), worker)),
+	texturePyramid_(yTextureFrame, CV::FramePyramid::idealLayers(yTextureFrame.width(), yTextureFrame.height(), 15u, 15u), true /*copyFirstLayer*/, worker),
 	totalNumberTrackedPoints_(0u),
 	pose_world_T_camera_(false),
 	poseGuess_world_T_camera_(false),

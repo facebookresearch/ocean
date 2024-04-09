@@ -1070,19 +1070,19 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 
 			Timestamp startTimestamp(true);
 
-			UnorderedIndexSet32 readOnlyLayers;
-			UnorderedIndexSet32 ownerLayers;
-			UnorderedIndexSet32 outsideMemoryBlockLayers;
-
-			const unsigned int expectedNumberLayers = std::min(determineMaxLayerCount(width, height), layerCount);
-
-			for (unsigned int layerIndex = 0u; layerIndex < expectedNumberLayers; ++layerIndex)
-			{
-				ownerLayers.emplace(layerIndex);
-			}
-
 			do
 			{
+				UnorderedIndexSet32 readOnlyLayers;
+				UnorderedIndexSet32 ownerLayers;
+				UnorderedIndexSet32 outsideMemoryBlockLayers;
+
+				const unsigned int expectedNumberLayers = std::min(determineMaxLayerCount(width, height), layerCount);
+
+				for (unsigned int layerIndex = 0u; layerIndex < expectedNumberLayers; ++layerIndex)
+				{
+					ownerLayers.emplace(layerIndex);
+				}
+
 				LegacyFrame frame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT));
 				CV::CVUtilities::randomizeFrame(frame);
 
@@ -1097,10 +1097,25 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 
 				const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
 				Frame paddingFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
+				paddingFrame.makeContinuous(); // **TODO** workaround until LegacyFrame is not used anymore
 
 				CV::CVUtilities::randomizeFrame(paddingFrame, false);
 
-				if (!validateConstructFromFrame(CV::FramePyramid::create8BitPerChannel(paddingFrame.constdata<uint8_t>(), paddingFrame.width(), paddingFrame.height(), paddingFrame.channels(), paddingFrame.pixelOrigin(), layerCount, paddingFrame.paddingElements(), useWorker), CV::FramePyramid::DM_FILTER_11, paddingFrame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+				const bool copyFirstLayer = RandomI::random(1u) == 0u;
+
+				if (!copyFirstLayer)
+				{
+					readOnlyLayers.emplace(0u);
+					ownerLayers.erase(0u);
+					outsideMemoryBlockLayers.emplace(0u);
+				}
+
+				if (!validateConstructFromFrame(CV::FramePyramid(paddingFrame.constdata<uint8_t>(), paddingFrame.width(), paddingFrame.height(), paddingFrame.channels(), paddingFrame.pixelOrigin(), layerCount, paddingFrame.paddingElements(), copyFirstLayer, useWorker), CV::FramePyramid::DM_FILTER_11, paddingFrame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+				{
+					allSucceeded = false;
+				}
+
+				if (!validateConstructFromFrame(CV::FramePyramid(paddingFrame, layerCount, copyFirstLayer, useWorker), CV::FramePyramid::DM_FILTER_11, paddingFrame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
 				{
 					allSucceeded = false;
 				}
@@ -1822,6 +1837,13 @@ bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& frameP
 			if (outsideMemoryBlockLayers.find(layerIndex) != outsideMemoryBlockLayers.cend())
 			{
 				if (isOwnedByMemoryBlock)
+				{
+					return false;
+				}
+			}
+			else
+			{
+				if (!isOwnedByMemoryBlock)
 				{
 					return false;
 				}

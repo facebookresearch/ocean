@@ -264,8 +264,7 @@ bool MeshTriangle::rectifyTriangleAndIdentifyReferenceCorrespondences(
 
 	// Run feature matching between the rectified image and the local crop of the UV texture.
 
-	const CV::FramePyramid rectifiedPyramid = CV::FramePyramid::create8BitPerChannel(
-		rectifiedFrame.constdata<uint8_t>(), rectifiedFrame.width(), rectifiedFrame.height(), kNumChannels, rectifiedFrame.pixelOrigin(), kNumPyramidLayersForTracking, rectifiedFrame.paddingElements(), worker);
+	const CV::FramePyramid rectifiedPyramid(rectifiedFrame, kNumPyramidLayersForTracking, false /*copyFirstLayer*/, worker);
 
 	// Choose only one reference point in each local region of the UV texture, after filtering
 	// points based on visibility.

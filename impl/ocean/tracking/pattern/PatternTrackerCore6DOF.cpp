@@ -69,7 +69,7 @@ const IO::Tag& PatternTrackerCore6DOF::trackerTagFeatureMap()
 
 PatternTrackerCore6DOF::Pattern::Pattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const Vector2& dimension, Worker* worker) :
 	patternFeatureMap(yFrame, width, height, yFramePaddingElements, Vector2(dimension.x(), dimension.y()), Scalar(6.5), true, 0u, worker),
-	patternPyramid(CV::FramePyramid::create8BitPerChannel(yFrame, width, height, 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(width, height, 15u, 15u), yFramePaddingElements, worker)),
+	patternPyramid(yFrame, width, height, 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(width, height, 15u, 15u), yFramePaddingElements, true /*copyFirstLayer*/, worker),
 	patternDimension(dimension),
 	patternPreviousPose(false),
 	patternPoseGuess(false)
@@ -82,7 +82,7 @@ PatternTrackerCore6DOF::Pattern::Pattern(const uint8_t* yFrame, const unsigned i
 PatternTrackerCore6DOF::Pattern::Pattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, CV::Detector::Blob::BlobFeatures&& representativeFeatures, const Vector2& dimension, Worker* worker) :
 	patternFeatureMap(Frame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, Frame::CM_USE_KEEP_LAYOUT, yFramePaddingElements), Vector2(dimension.x(), dimension.y()), Scalar(6.5), true, 0u, worker),
 	patternRepresentativeFeatures(std::move(representativeFeatures)),
-	patternPyramid(CV::FramePyramid::create8BitPerChannel(yFrame, width, height, 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(width, height, 15u, 15u), yFramePaddingElements, worker)),
+	patternPyramid(yFrame, width, height, 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(width, height, 15u, 15u), yFramePaddingElements, true /*copyFirstLayer*/, worker),
 	patternDimension(dimension),
 	patternPreviousPose(false),
 	patternPoseGuess(false)
@@ -95,7 +95,7 @@ PatternTrackerCore6DOF::Pattern::Pattern(const uint8_t* yFrame, const unsigned i
 
 PatternTrackerCore6DOF::Pattern::Pattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const UVTextureMapping::CylinderUVTextureMapping& cylinderUVTextureMapping, Worker* worker) :
 	patternFeatureMap(yFrame, width, height, yFramePaddingElements, cylinderUVTextureMapping, Scalar(6.5), 0u, worker),
-	patternPyramid(CV::FramePyramid::create8BitPerChannel(yFrame, width, height, 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(width, height, 15u, 15u), yFramePaddingElements, worker)),
+	patternPyramid(yFrame, width, height, 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(width, height, 15u, 15u), yFramePaddingElements, true /*copyFirstLayer*/, worker),
 	patternDimension(Vector2(0., 0.)),
 	patternPreviousPose(false),
 	patternPoseGuess(false)
@@ -105,7 +105,7 @@ PatternTrackerCore6DOF::Pattern::Pattern(const uint8_t* yFrame, const unsigned i
 
 PatternTrackerCore6DOF::Pattern::Pattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const UVTextureMapping::ConeUVTextureMapping& coneUVTextureMapping, Worker* worker) :
 	patternFeatureMap(yFrame, width, height, yFramePaddingElements, coneUVTextureMapping, Scalar(6.5), 0u, worker),
-	patternPyramid(CV::FramePyramid::create8BitPerChannel(yFrame, width, height, 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(width, height, 15u, 15u), yFramePaddingElements, worker)),
+	patternPyramid(yFrame, width, height, 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(width, height, 15u, 15u), yFramePaddingElements, true /*copyFirstLayer*/, worker),
 	patternDimension(Vector2(0., 0.)),
 	patternPreviousPose(false),
 	patternPoseGuess(false)
@@ -1813,7 +1813,7 @@ bool PatternTrackerCore6DOF::optimizePoseByRectification(const PinholeCamera& pi
 		downscaledConeUVTextureMapping.warpImageMaskIF8bitPerChannel<1u>(currentFramePyramid.finestLayer().constdata<uint8_t>(), currentFramePyramid.finestLayer().pixelOrigin(), pinholeCamera, roughPoseIF, pattern.featureMap().cone(), rectifiedFrame.data<uint8_t>(), rectifiedFrameMask.data<uint8_t>(), referenceWidth, referenceHeight, worker, 0xFF, kLookupTableBinSize);
 	}
 
-	const CV::FramePyramid rectifiedPyramid(CV::FramePyramid::create8BitPerChannel(rectifiedFrame.constdata<uint8_t>(), rectifiedFrame.width(), rectifiedFrame.height(), 1u, rectifiedFrame.pixelOrigin(), 3u, rectifiedFrame.paddingElements(), worker));
+	const CV::FramePyramid rectifiedPyramid(rectifiedFrame, 3u /*layers*/, false /*copyFirstLayer*/, worker);
 
 	// determine visible pattern feature points which should be also visible in the current rectified camera frame
 	const Vectors2& patternReferencePoints = pattern.referencePoints(patternPyramidLayer);

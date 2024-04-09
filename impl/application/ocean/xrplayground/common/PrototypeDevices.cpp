@@ -433,7 +433,7 @@ void OfflineRelocalizationTracker6DOF::threadRun()
 		constexpr unsigned int pyramidLayers = 5u;
 		constexpr unsigned int subPixelIterations = 2u;
 
-		CV::FramePyramid currentPyramid = CV::FramePyramid::create8BitPerChannel(yFrameToUse.constdata<uint8_t>(), yFrameToUse.width(), yFrameToUse.height(), 1u, FrameType::ORIGIN_UPPER_LEFT, pyramidLayers, yFrameToUse.paddingElements(), nullptr);
+		CV::FramePyramid currentPyramid(yFrameToUse, pyramidLayers, true /*copyFirstLayer*/, nullptr /*worker*/);
 
 		Timestamp lastFrameTimestamp(firstTimestamp);
 

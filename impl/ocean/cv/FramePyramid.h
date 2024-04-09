@@ -169,7 +169,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param worker Optional worker object to distribute the computation
 		 * @param downsamplingMode The down sampling mode to be used to create lower image resolutions, 'DM_CUSTOM' in combination with a valid 'customDownsamplingFunction' to use a custom down sampling mode
 		 * @param customDownsamplingFunction Optional explicit custom callback of the down sampling function to be used, define an invalid callback object to use the default down sampling function determined by 'mode'
-		 * @see create8BitPerChannel().
 		 */
 		explicit inline FramePyramid(const Frame& frame, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr, const DownsamplingMode downsamplingMode = DM_FILTER_11, const CallbackDownsampling& customDownsamplingFunction = CallbackDownsampling());
 
@@ -183,7 +182,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param worker Optional worker object to distribute the computation
 		 * @param downsamplingMode The down sampling mode to be used to create lower image resolutions, 'DM_CUSTOM' in combination with a valid 'customDownsamplingFunction' to use a custom down sampling mode
 		 * @param customDownsamplingFunction Optional explicit custom callback of the down sampling function to be used, define an invalid callback object to use the default down sampling function determined by 'mode'
-		 * @see create8BitPerChannel().
 		 */
 		explicit inline FramePyramid(const LegacyFrame& frame, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr, const DownsamplingMode downsamplingMode = DM_FILTER_11, const CallbackDownsampling& customDownsamplingFunction = CallbackDownsampling());
 
