@@ -86,7 +86,7 @@ class FrameHandler
 				{
 					if (numLevels_ > 0u)
 					{
-						CV::FramePyramid pyramid = CV::FramePyramid(frameRGB24, startLevel_ + numLevels_);
+						const CV::FramePyramid pyramid = CV::FramePyramid(frameRGB24, startLevel_ + numLevels_, false /*copyFirstLayer*/);
 
 						for (unsigned int l = 0u; l < numLevels_; ++l)
 						{

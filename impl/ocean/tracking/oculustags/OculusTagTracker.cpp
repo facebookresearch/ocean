@@ -1536,11 +1536,9 @@ bool OculusTagTracker::confirmDetectionInFrame(const AnyCamera& anyCamera, const
 
 CV::FramePyramid OculusTagTracker::createFramePyramid(const Frame& yFrame, const uint32_t layers)
 {
-	ocean_assert(yFrame.isValid() && FrameType::arePixelFormatsCompatible(yFrame.pixelFormat(), FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>()));
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
 
-	CV::FramePyramid framePyramid = CV::FramePyramid(yFrame, layers);
-
-	return framePyramid;
+	return CV::FramePyramid(yFrame, layers, true /*copyFirstLayer*/);
 }
 
 }  // namespace OculusTags
