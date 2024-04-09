@@ -560,6 +560,15 @@ class OCEAN_CV_EXPORT FramePyramid
 		 */
 		static size_t calculateMemorySize(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const unsigned int layers, const bool includeFirstLayer, unsigned int* totalLayers);
 
+		/**
+		 * Deleted function to prevent confusion between Frame and FrameType.
+		 * @param frame The potential frame to be used
+		 * @param layers The number of layers
+		 * @param forceOwner The ownership information
+		 * @return True, if succeeded
+		 */
+		bool replace(const Frame& frame, const bool forceOwner, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE) = delete;
+
 	protected:
 
 		/// Layers of this pyramid.
