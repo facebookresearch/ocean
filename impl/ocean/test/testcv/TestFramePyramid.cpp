@@ -742,24 +742,27 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 
 			for (const FrameType::PixelFormat pixelFormat : pixelFormats)
 			{
-				const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
-
-				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
-
-				const unsigned int layers = CV::FramePyramid::idealLayers(width, height, 0u, 0u);
-
-				for (unsigned int layerIndex = 1u; layerIndex <= layers; ++layerIndex)
+				for (const CV::FramePyramid::DownsamplingMode downsamplingMode : {CV::FramePyramid::DM_FILTER_11, CV::FramePyramid::DM_FILTER_14641})
 				{
-					const CV::FramePyramid framePyramid(frame, layerIndex, &extremeWorker);
+					const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-					if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, layerIndex))
-					{
-						allSucceeded = false;
-					}
+					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
 
-					if (framePyramid.coarsestLayer().width() >= 2u && framePyramid.coarsestLayer().height() >= 2u)
+					const unsigned int layers = CV::FramePyramid::idealLayers(width, height, 0u, 0u);
+
+					for (unsigned int layerIndex = 1u; layerIndex <= layers; ++layerIndex)
 					{
-						break;
+						const CV::FramePyramid framePyramid(frame, layerIndex, &extremeWorker, downsamplingMode);
+
+						if (!validateFramePyramid(frame, framePyramid, downsamplingMode, layerIndex))
+						{
+							allSucceeded = false;
+						}
+
+						if (framePyramid.coarsestLayer().width() >= 2u && framePyramid.coarsestLayer().height() >= 2u)
+						{
+							break;
+						}
 					}
 				}
 			}
