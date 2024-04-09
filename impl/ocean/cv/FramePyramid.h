@@ -454,22 +454,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		static FramePyramid create8BitPerChannel(const FramePyramid& framePyramid, const unsigned int firstLayerIndex = 0u, const unsigned int layerCount = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
 
 		/**
-		 * Creates a new pyramid frame for a specific pixel format (a specific number of channels).
-		 * Beware: This function can be used instead of the corresponding constructor if the size of the resulting binary matters.<br>
-		 * As this function is more restrictive compared to the corresponding constructor (and does not allow to apply a blur filter) the resulting code is significantly smaller.
-		 * @param frame The frame for which the pyramid will be created, must be valid
-		 * @param width The width of the given frame in pixel, with range [1, infinity)
-		 * @param height The height of the given frame in pixel, with range [1, infinity)
-		 * @param channels The number of channels the given frame has, with range [1, infinity)
-		 * @param pixelOrigin The pixel origin of the given frame
-		 * @param layers Number of pyramid layers to be created, with range [1, infinity)
-		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
-		 * @param worker Optional worker object to distribute the computation
-		 * @return The resulting frame pyramid
-		 */
-		static inline FramePyramid create8BitPerChannel(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, Worker* worker);
-
-		/**
 		 * Returns the size factor of a specified layer in relation to the finest layer.
 		 * The finest (first) layer has factor 1, the second layer has factor 2, the third layer has factor 4, ...<br>
 		 * @param layer The layer to return the size factor for, with range [1, 31]
@@ -784,17 +768,6 @@ FramePyramid FramePyramid::create8BitPerChannel(const FramePyramid& framePyramid
 			newPyramid.layers_.push_back(LegacyFrame(sourceLayer.frameType(), sourceLayer.timestamp(), previousLayer.constdata() + previousLayer.size(), false));
 		}
 	}
-
-	return newPyramid;
-}
-
-inline FramePyramid FramePyramid::create8BitPerChannel(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, Worker* worker)
-{
-	ocean_assert(frame && width >= 1u && height >= 1u && layers >= 0u);
-	ocean_assert(channels >= 1u);
-
-	FramePyramid newPyramid;
-	newPyramid.replace8BitPerChannel11(frame, width, height, channels, pixelOrigin, layers, framePaddingElements, true /*copyFirstLayer*/, worker);
 
 	return newPyramid;
 }
