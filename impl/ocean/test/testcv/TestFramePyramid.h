@@ -63,14 +63,6 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid
 		 * @param worker The worker object to distribute the computation
 		 * @return True, if succeeded
 		 */
-		static bool testCreationFramePyramidWithFrame(const double testDuration, Worker& worker);
-
-		/**
-		 * Tests the creation of a frame pyramid.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param worker The worker object to distribute the computation
-		 * @return True, if succeeded
-		 */
 		static bool testCreationFramePyramid(const double testDuration, Worker& worker);
 
 		/**
@@ -78,18 +70,6 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid
 		 * @return True, if the test succeeded; otherwise, false is returned.
 		 */
 		static bool testCreateFramePyramidExtreme();
-
-		/**
-		 * Tests the creation of a frame pyramid for a specific frame with specific number of resulting layers.
-		 * @param width The width of the test frame in pixel, width range [1, infinity)
-		 * @param height The width of the test frame in pixel, height range [1, infinity)
-		 * @param channels The width of the test frame in pixel, channels range [1, infinity)
-		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param worker The worker object to distribute the computation
-		 * @return True, if succeeded
-		 */
-		static bool testCreationFramePyramidWithFrame(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int layers, const double testDuration, Worker& worker);
 
 		/**
 		 * Tests the creation of a frame pyramid for a specific frame with specific number of resulting layers.
