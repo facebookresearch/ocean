@@ -71,6 +71,12 @@ bool TestFramePyramid::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testReplaceWithFrameType(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testReplace11(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
@@ -204,6 +210,13 @@ TEST(TestFramePyramid, ConstructFromFrameMultiLayer_RandomResolution_AllLayers)
 
 	Worker worker;
 	EXPECT_TRUE(TestFramePyramid::testConstructFromFrameMultiLayer(width, height, (unsigned int)(-1), GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFramePyramid, ReplaceWithFrameType)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFramePyramid::testReplaceWithFrameType(GTEST_TEST_DURATION));
 }
 
 
@@ -1202,6 +1215,173 @@ bool TestFramePyramid::testConstructFromPyramid(const CV::FramePyramid& sourcePy
 	{
 		Log::info() << "Multicore Performance: Best: " << String::toAString(performanceMulticore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceMulticore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceMulticore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceMulticore.firstMseconds(), 2u) << "ms";
 		Log::info() << "Multicore boost: Best: " << String::toAString(NumericD::ratio(performanceSinglecore.best(), performanceMulticore.best()), 1u) << "x, worst: " << String::toAString(NumericD::ratio(performanceSinglecore.worst(), performanceMulticore.worst()), 1u) << "x, average: " << String::toAString(NumericD::ratio(performanceSinglecore.average(), performanceMulticore.average()), 1u) << "x, first: " << String::toAString(NumericD::ratio(performanceSinglecore.first(), performanceMulticore.first()), 1u);
+	}
+
+	return allSucceeded;
+}
+
+bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing replace with frame type()";
+
+	bool allSucceeded = true;
+
+	const FrameType::PixelFormats pixelFormats =
+	{
+		FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32,
+		FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::genericPixelFormat<uint8_t, 4u>()
+	};
+
+	RandomGenerator randomGenerator;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		CV::FramePyramid framePyramid;
+
+		FrameType previousFrameType;
+
+		for (unsigned int nIteration = 0u; nIteration < 10u; ++nIteration)
+		{
+			const size_t previousPyramidMemorySize = framePyramid.memory_.size();
+			const void* previousPyramidMemory = framePyramid.memory_.constdata();
+
+			FrameType frameType = previousFrameType;
+
+			unsigned int layers = framePyramid.layers();
+
+			if (nIteration == 0u || RandomI::random(randomGenerator, 1u) == 0u)
+			{
+				const unsigned int width = RandomI::random(randomGenerator, 1u, 2000u);
+				const unsigned int height = RandomI::random(randomGenerator, 1u, 2000u);
+
+				const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+				const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+				frameType = FrameType(width, height, pixelFormat, pixelOrigin);
+
+				layers = RandomI::random(randomGenerator, 1u, 100u);
+			}
+			else
+			{
+				// request a similar pyramid as before
+
+				if (RandomI::random(randomGenerator, 1u == 0u))
+				{
+					const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(previousFrameType.channels());
+					const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+					frameType = FrameType(previousFrameType, pixelFormat, pixelOrigin);
+
+					layers = RandomI::random(randomGenerator, 1u, framePyramid.layers());
+				}
+			}
+
+			const unsigned int expectedLayers = std::min(layers, determineMaxLayerCount(frameType.width(), frameType.height()));
+
+			const bool forceOwner = RandomI::random(randomGenerator, 1u) == 0u;
+
+			if (framePyramid.replace(frameType, forceOwner, layers))
+			{
+				if (framePyramid.layers() != expectedLayers)
+				{
+					allSucceeded = false;
+				}
+
+				if (!framePyramid.isOwner())
+				{
+					allSucceeded = false;
+				}
+
+				if (framePyramid.finestLayer().frameType() != frameType)
+				{
+					allSucceeded = false;
+				}
+
+				unsigned int layerWidth = frameType.width();
+				unsigned int layerHeight = frameType.height();
+				size_t memoryOffset = 0;
+
+				for (unsigned int layerIndex = 0u; layerIndex < framePyramid.layers(); ++layerIndex)
+				{
+					if (layerWidth == 0u || layerHeight == 0u)
+					{
+						allSucceeded = false;
+					}
+
+					if (framePyramid[layerIndex].width() != layerWidth || framePyramid[layerIndex].height() != layerHeight)
+					{
+						allSucceeded = false;
+					}
+
+					if (framePyramid[layerIndex].pixelFormat() != frameType.pixelFormat() || framePyramid[layerIndex].pixelOrigin() != frameType.pixelOrigin())
+					{
+						allSucceeded = false;
+					}
+
+					if (framePyramid[layerIndex].constdata<void>() != framePyramid.memory_.constdata<uint8_t>() + memoryOffset)
+					{
+						allSucceeded = false;
+					}
+
+					const size_t layerSize = size_t(layerWidth * layerHeight * frameType.channels()) * sizeof(uint8_t);
+
+					layerWidth /= 2u;
+					layerHeight /= 2u;
+
+					memoryOffset += layerSize;
+				}
+
+				if (memoryOffset > framePyramid.memory_.size())
+				{
+					allSucceeded = false;
+				}
+
+				if (nIteration != 0u)
+				{
+					unsigned int testTotalLayers = 0u;
+					const size_t newMemorySize = CV::FramePyramid::calculateMemorySize(frameType.width(), frameType.height(), frameType.pixelFormat(), expectedLayers, true, &testTotalLayers);
+
+					ocean_assert(testTotalLayers == expectedLayers);
+
+					const bool expectUpdatedMemory = previousPyramidMemorySize < newMemorySize;
+
+					if (expectUpdatedMemory)
+					{
+						if (framePyramid.memory_.constdata() == previousPyramidMemory)
+						{
+							allSucceeded = false;
+						}
+					}
+					else
+					{
+						if (framePyramid.memory_.constdata() != previousPyramidMemory)
+						{
+							allSucceeded = false;
+						}
+					}
+				}
+			}
+			else
+			{
+				allSucceeded = false;
+			}
+
+			previousFrameType = frameType;
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
 	}
 
 	return allSucceeded;

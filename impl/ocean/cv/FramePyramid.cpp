@@ -44,7 +44,10 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid)
 
 FramePyramid::FramePyramid(const unsigned int layers, const FrameType& frameType)
 {
-	resize(frameType, layers);
+	ocean_assert(frameType.isValid() && layers >= 1u);
+
+	const bool result = replace(frameType, true /*forceOwner*/, layers);
+	ocean_assert_and_suppress_unused(result, result);
 }
 
 FramePyramid::FramePyramid(FramePyramid&& framePyramid) noexcept
@@ -384,85 +387,72 @@ bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned 
 	return true;
 }
 
-bool FramePyramid::resize(const FrameType& frameType, const unsigned int layers)
+bool FramePyramid::replace(const FrameType& frameType, const bool forceOwner, const unsigned int layers)
 {
 	ocean_assert(frameType.isValid());
 	ocean_assert(layers >= 1u);
 
-	if (!(layers_.empty() || isOwner()))
+	if (!frameType.isValid() || layers == 0u)
 	{
-		ocean_assert(false && "Only pyramids that are uninitialized or own their frame data may proceeded");
 		return false;
 	}
 
 	unsigned int resultingLayers = 0u;
 	const size_t bytes = calculateMemorySize(frameType.width(), frameType.height(), frameType.pixelFormat(), layers, true /*includeFirstLayer*/, &resultingLayers);
 
-	if (bytes == 0)
+	if (bytes == 0 || resultingLayers == 0u)
 	{
+		ocean_assert(false && "This should never happen!");
+		ocean_assert(bytes == 0 && resultingLayers == 0u);
+
 		return false;
 	}
 
-	if (!memory_.isNull())
+	if (resultingLayers <= layers_.size() && layers_.front().frameType() == frameType && resultingLayers <= (unsigned int)(layers_.size()))
 	{
-		ocean_assert(!layers_.empty());
+		// in the case the frame pyramid has the correct size and the correct frame type we may be done
 
-		// in the case the frame pyramid is the correct size and frame type we simply do nothing
-		if (layers_.front().frameType() == frameType && resultingLayers <= (unsigned int)layers_.size())
+		if (!forceOwner || isOwner())
 		{
-			return true;
-		}
-
-		// in the case the frame type is not identical (but we have enough memory already, we simply replace the individual layer frames)
-		if (bytes <= memory_.size() && !memory_.isReadOnly())
-		{
-			layers_.clear();
-			layers_.reserve(resultingLayers);
-
-			unsigned int width = frameType.width();
-			unsigned int height = frameType.height();
-			uint8_t* data = memory_.data<uint8_t>();
-
-			for (unsigned int n = 0u; n < resultingLayers; ++n)
+			if (resultingLayers < layers_.size())
 			{
-				layers_.push_back(LegacyFrame(FrameType(frameType, width, height), data, false));
-
-				width >>= 1u;
-				height >>= 1u;
-				data += layers_.back().size();
+				layers_.resize(resultingLayers);
 			}
 
 			return true;
 		}
-
-		// we cannot use anything so that we have to re-create a new pyramid
-
-		memory_.free();
-		layers_.clear();
 	}
 
-	ocean_assert(memory_.isNull() && layers_.empty());
-
-	// in the case this pyramid is empty, we simply reserve enough memory
-
-	if (layers != 0u)
+	if (bytes > memory_.size())
 	{
 		memory_ = Memory(bytes, memoryAlignmentBytes_);
+	}
 
-		layers_.reserve(resultingLayers);
+	if (bytes != 0 && !memory_)
+	{
+		// we seem to be out of memory
+		return false;
+	}
 
-		unsigned int width = frameType.width();
-		unsigned int height = frameType.height();
-		uint8_t* data = memory_.data<uint8_t>();
+	layers_.clear();
+	layers_.reserve(resultingLayers);
 
-		for (unsigned int n = 0u; n < resultingLayers; ++n)
-		{
-			layers_.push_back(LegacyFrame(FrameType(frameType, width, height), data, false));
+	unsigned int layerWidth = frameType.width();
+	unsigned int layerHeight = frameType.height();
 
-			width >>= 1u;
-			height >>= 1u;
-			data += layers_.back().size();
-		}
+	uint8_t* layerData = memory_.data<uint8_t>();
+
+	for (unsigned int n = 0u; n < resultingLayers; ++n)
+	{
+		ocean_assert(layerWidth >= 1u && layerHeight >= 1u);
+
+		const FrameType layerFrameType(frameType, layerWidth, layerHeight);
+
+		layers_.push_back(LegacyFrame(layerFrameType, layerData, false));
+
+		layerWidth /= 2u;
+		layerHeight /= 2u;
+		layerData += layerFrameType.frameTypeSize();
 	}
 
 	return true;

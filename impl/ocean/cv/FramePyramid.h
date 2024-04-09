@@ -374,14 +374,14 @@ class OCEAN_CV_EXPORT FramePyramid
 		inline bool replace8BitPerChannel11(const Frame& frame, const unsigned int layers, const bool copyFirstLayer, Worker* worker);
 
 		/**
-		 * Resizes this frame pyramid (for a specified frame type of the finest layer).
-		 * The frame pyramid needs to be the owner of its frame data or needs to be empty; otherwise, nothing is done and False is returned.
-		 * Beware: If the frame type of the existing pyramid is different from the provided frame type the frame type of this pyramid will be replaced, so that all previous information of the pyramid will be invalid and must not be used anymore!
+		 * Replaces this frame pyramid with a new pyramid defined by the frame type of the finest layer.
+		 * The image content of the replaced frame pyramid will be uninitialized.
 		 * @param frameType The type of the finest pyramid layer, must be valid
-		 * @param layers The number of layers to be created during the resizing, with range [1, infinity)
+		 * @param layers The number of layers to be created during the resizing, the resulting layers will be as many as possible but not exceed this value, with range [1, infinity)
+		 * @param forceOwner True, to force the pyramid to be the owner of the memory afterwards; False, to allow that the pyramid is not owning the memory (because the memory is managed outside of this pyramid)
 		 * @return True, if succeeded
 		 */
-		bool resize(const FrameType& frameType, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE);
+		bool replace(const FrameType& frameType, const bool forceOwner, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE);
 
 		/**
 		 * Reduces the number of pyramid layers.
