@@ -27,6 +27,7 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 # Do not change the order of these.
 include(libjpeg.cmake)
 include(eigen.cmake)
+include(gl.cmake)
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(CHECK_PASS "completed")
