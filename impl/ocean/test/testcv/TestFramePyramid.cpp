@@ -1054,14 +1054,14 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 
 	bool allSucceeded = true;
 
-	HighPerformanceStatistic performanceSinglecore;
-	HighPerformanceStatistic performanceMulticore;
-
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
 	for (unsigned int channels = 1u; channels <= 4; ++channels)
 	{
 		Log::info() << "... with " << channels << " channels:";
+
+		HighPerformanceStatistic performanceSinglecore;
+		HighPerformanceStatistic performanceMulticore;
 
 		for (unsigned int workerIteration = 0u; workerIteration < maxWorkerIterations; ++workerIteration)
 		{
@@ -1070,16 +1070,27 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 
 			Timestamp startTimestamp(true);
 
+			UnorderedIndexSet32 readOnlyLayers;
+			UnorderedIndexSet32 ownerLayers;
+			UnorderedIndexSet32 outsideMemoryBlockLayers;
+
+			const unsigned int expectedNumberLayers = std::min(determineMaxLayerCount(width, height), layerCount);
+
+			for (unsigned int layerIndex = 0u; layerIndex < expectedNumberLayers; ++layerIndex)
+			{
+				ownerLayers.emplace(layerIndex);
+			}
+
 			do
 			{
 				LegacyFrame frame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT));
 				CV::CVUtilities::randomizeFrame(frame);
 
 				performance.start();
-				const CV::FramePyramid framePyramid(frame, layerCount, useWorker);
+					const CV::FramePyramid framePyramid(frame, layerCount, useWorker);
 				performance.stop();
 
-				if (!validateConstructFromFrame(framePyramid, Frame(frame, Frame::temporary_ACM_USE_KEEP_LAYOUT), true, layerCount))
+				if (!validateConstructFromFrame(framePyramid, CV::FramePyramid::DM_FILTER_11, Frame(frame, Frame::temporary_ACM_USE_KEEP_LAYOUT), expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
 				{
 					allSucceeded = false;
 				}
@@ -1089,22 +1100,32 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 
 				CV::CVUtilities::randomizeFrame(paddingFrame, false);
 
-				if (!validateConstructFromFrame(CV::FramePyramid::create8BitPerChannel(paddingFrame.constdata<uint8_t>(), paddingFrame.width(), paddingFrame.height(), paddingFrame.channels(), paddingFrame.pixelOrigin(), layerCount, paddingFrame.paddingElements(), useWorker), paddingFrame, true, layerCount))
+				if (!validateConstructFromFrame(CV::FramePyramid::create8BitPerChannel(paddingFrame.constdata<uint8_t>(), paddingFrame.width(), paddingFrame.height(), paddingFrame.channels(), paddingFrame.pixelOrigin(), layerCount, paddingFrame.paddingElements(), useWorker), CV::FramePyramid::DM_FILTER_11, paddingFrame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
 				{
 					allSucceeded = false;
 				}
 			}
 			while (startTimestamp + testDuration > Timestamp(true));
 		}
+
+		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceSinglecore.firstMseconds(), 2u) << "ms";
+
+		if (performanceMulticore.measurements() != 0u)
+		{
+			Log::info() << "Multicore performance: Best: " << String::toAString(performanceMulticore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceMulticore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceMulticore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceMulticore.firstMseconds(), 2u) << "ms";
+			Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
+		}
 	}
 
-	Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceSinglecore.firstMseconds(), 2u) << "ms";
+	Log::info() << " ";
 
-	if (performanceMulticore.measurements() != 0u)
+	if (allSucceeded)
 	{
-		Log::info() << "Multicore performance: Best: " << String::toAString(performanceMulticore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceMulticore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceMulticore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceMulticore.firstMseconds(), 2u) << "ms";
-
-		Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
 	}
 
 	return allSucceeded;
@@ -1716,82 +1737,114 @@ bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FrameP
 	return true;
 }
 
-bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& framePyramid, const Frame& frame, const bool copyData, const unsigned int layerCount)
+bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingMode downsamplingMode, const Frame& frame, const unsigned int numberLayers, const UnorderedIndexSet32& readOnlyLayers, const UnorderedIndexSet32& ownerLayers, const UnorderedIndexSet32& outsideMemoryBlockLayers)
 {
-	if (!validateFramePyramid(frame, framePyramid, CV::FramePyramid::DM_FILTER_11, framePyramid.layers()))
+	ocean_assert(framePyramid.isValid());
+	ocean_assert(frame.isValid());
+	ocean_assert(numberLayers >= 1u);
+
+	if (!framePyramid.isValid() || !frame.isValid() || numberLayers == 0u)
 	{
 		return false;
 	}
 
-	unsigned int layerWidth = frame.width();
-	unsigned int layerHeight = frame.height();
-
-	// Evaluate layer count:
-	const unsigned int maxLayerCount = copyData ? determineMaxLayerCount(layerWidth, layerHeight) : 1u;
-	const unsigned int expectedLayerCount = min(layerCount, maxLayerCount);
-
-	if (expectedLayerCount != framePyramid.layers())
+	if (framePyramid.layers() != numberLayers)
 	{
 		return false;
 	}
 
-	bool allLayersAreOwners = copyData;
-
-	unsigned int totalSize = 0u;
-
-	for (unsigned int l = 0u; l < framePyramid.layers(); l++)
+	if (!validateFramePyramid(frame, framePyramid, downsamplingMode, numberLayers))
 	{
-		const LegacyFrame& layer = framePyramid.layer(l);
+		return false;
+	}
 
-		// If the layer should not exist the current layer is invalid
-		if (layerWidth == 0u || layerHeight == 0u || l >= layerCount)
+	for (unsigned int layerIndex = 0u; layerIndex < numberLayers; ++layerIndex)
+	{
+		const LegacyFrame& layer = framePyramid[layerIndex];
+
 		{
-			return false;
+			// testing read-only vs. writable
+
+			if (readOnlyLayers.find(layerIndex) == readOnlyLayers.cend())
+			{
+				// we expect a writable layer
+
+				if (layer.isReadOnly())
+				{
+					return false;
+				}
+			}
+			else
+			{
+				// the layer must not be writable
+
+				if (!layer.isReadOnly())
+				{
+					return false;
+				}
+			}
 		}
 
-		// ensure that the layer's frame type is correct (while we do not check the pixel format but the number of channels only - due to the template implementation)
-		if (layer.width() != layerWidth || layer.height() != layerHeight || FrameType::channels(layer.pixelFormat()) != FrameType::channels(frame.pixelFormat()) || layer.pixelOrigin() != frame.pixelOrigin())
-		{
-			return false;
-		}
+		const size_t layerSizeBytes = layer.size(); // **TODO** switch to Frame-based function once LegacyFrame is removed
+		const bool isOwnedByMemoryBlock = framePyramid.memory_.isInside(layer.constdata<void>(), (const uint8_t*)(layer.constdata<void>()) + layerSizeBytes);
 
-		const FrameType frameType(layerWidth, layerHeight, frame.pixelFormat(), frame.pixelOrigin());
-
-		if (!layer.isOwner() && copyData)
 		{
-			// check the memory layout
-			if (layer.constdata() != framePyramid.memory_.constdata<uint8_t>() + totalSize || frameType.frameTypeSize() != layer.size())
+			// testing is owned
+
+			const bool isOwned = framePyramid.isOwner(layerIndex);
+
+			const bool testIsOwned = layer.isOwner() || isOwnedByMemoryBlock;
+
+			if (isOwned != testIsOwned)
 			{
 				return false;
 			}
 
-			allLayersAreOwners = false;
+			if (ownerLayers.find(layerIndex) == ownerLayers.cend())
+			{
+				if (isOwned)
+				{
+					return false;
+				}
+			}
+			else
+			{
+				if (!isOwned)
+				{
+					return false;
+				}
+			}
 		}
 
-		// if a pyramid has been copied it must be writable
-		if (copyData && layer.isReadOnly())
 		{
-			return false;
+			// testing outside memory block situation
+
+			if (outsideMemoryBlockLayers.find(layerIndex) != outsideMemoryBlockLayers.cend())
+			{
+				if (isOwnedByMemoryBlock)
+				{
+					return false;
+				}
+			}
 		}
-
-		totalSize += layer.size();
-
-		layerWidth /= 2u;
-		layerHeight /= 2u;
 	}
 
-	if (allLayersAreOwners)
+	if (ownerLayers.size() == numberLayers)
 	{
-		if (!framePyramid.memory_.isNull())
+		if (!framePyramid.isOwner())
+		{
+			return false;
+		}
+	}
+	else
+	{
+		if (framePyramid.isOwner())
 		{
 			return false;
 		}
 	}
 
-	const bool validLayerCount = framePyramid.coarsestWidth() == 1u || framePyramid.coarsestHeight() == 1u || framePyramid.layers() == layerCount;
-	const bool validOwner = framePyramid.isOwner() == copyData;
-
-	return validLayerCount && validOwner;
+	return true;
 }
 
 bool TestFramePyramid::validateConstructFromPyramid(const CV::FramePyramid& framePyramid, const CV::FramePyramid& sourcePyramid, const bool copyData, const unsigned int  layerIndex, const unsigned int layerCount)

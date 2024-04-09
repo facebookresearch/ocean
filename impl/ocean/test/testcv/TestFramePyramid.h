@@ -180,13 +180,16 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid
 
 		/**
 		 * Validates if the frame pyramid was created correctly with the specified settings.
-		 * @param framePyramid Created frame pyramid
-		 * @param frame The frame that was used to generate the frame pyramid
-		 * @param copyData True, if frame data was copied; otherwise, a reference to the frame data was created
-		 * @param layerCount Number of layers that were to be created
-		 * @return True, if the generated frame pyramid is valid; otherwise, false is returned.
+		 * @param framePyramid The frame pyramid to validate, must be valid
+		 * @param downsamplingMode The downsampling mode that has been applied when creating the pyramid, either DM_FILTER_11 or DM_FILTER_14641
+		 * @param frame The frame that was used to create the frame pyramid, must be valid
+		 * @param numberLayers The number of layers the pyramid needs to have, with range [1, infinity)
+		 * @param readOnlyLayers The indices of all layers which are expected to be read-only, all other layers are expected to be writable
+		 * @param ownerLayers The indices of all layers which are expected to own the memory
+		 * @param outsideMemoryBlockLayers The indices of all layers which are expected to have their memory outside of the pyramid's memory block
+		 * @return True, if the pyramid is correct
 		 */
-		static bool validateConstructFromFrame(const CV::FramePyramid& framePyramid, const Frame& frame, const bool copyData, const unsigned int layerCount);
+		static bool validateConstructFromFrame(const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingMode downsamplingMode, const Frame& frame, const unsigned int numberLayers, const UnorderedIndexSet32& readOnlyLayers, const UnorderedIndexSet32& ownerLayers, const UnorderedIndexSet32& outsideMemoryBlockLayers);
 
 		/**
 		 * Validates if the frame pyramid was created correctly with the specified settings.
