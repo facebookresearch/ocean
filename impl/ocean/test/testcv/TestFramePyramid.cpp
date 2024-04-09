@@ -998,7 +998,7 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const double testDuratio
 
 bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worker& worker)
 {
-	Log::info() << "Testing construction from pyramid with 24 bit and 3 channels:";
+	Log::info() << "Testing construction from pyramid with pixel format RGB24:";
 	Log::info() << " ";
 
 	const IndexPairs32 sizes =
@@ -1007,6 +1007,8 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 		IndexPair32(1920u, 1080u),
 		IndexPair32(3840u, 2160u)
 	};
+
+	RandomGenerator randomGenerator;
 
 	bool allSucceeded = true;
 
@@ -1018,10 +1020,12 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 			Log::info().newLine();
 		}
 
-		LegacyFrame frame = LegacyFrame(FrameType(sizes[i].first, sizes[i].second, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT));
-		CV::CVUtilities::randomizeFrame(frame);
+		const unsigned int width = sizes[i].first;
+		const unsigned int height = sizes[i].second;
 
-		CV::FramePyramid framePyramid = CV::FramePyramid(frame, 2u);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+
+		CV::FramePyramid framePyramid = CV::FramePyramid(frame, 2u, nullptr);
 		allSucceeded = testConstructFromPyramid(framePyramid, true,  0u, ALL_LAYERS, testDuration, worker) && allSucceeded;
 		Log::info() << " ";
 		allSucceeded = testConstructFromPyramid(framePyramid, false, 0u, ALL_LAYERS, testDuration, worker) && allSucceeded;
@@ -1041,7 +1045,7 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 		Log::info() << " ";
 		Log::info() << " ";
 
-		framePyramid = CV::FramePyramid(frame, ALL_LAYERS);
+		framePyramid = CV::FramePyramid(frame, ALL_LAYERS, nullptr);
 		allSucceeded = testConstructFromPyramid(framePyramid, true,  0u, ALL_LAYERS, testDuration, worker) && allSucceeded;
 		Log::info() << " ";
 		allSucceeded = testConstructFromPyramid(framePyramid, false, 0u, ALL_LAYERS, testDuration, worker) && allSucceeded;
