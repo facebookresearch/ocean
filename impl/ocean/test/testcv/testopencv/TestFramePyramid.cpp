@@ -4,9 +4,11 @@
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomGenerator.h"
+#include "ocean/base/RandomI.h"
 #include "ocean/base/String.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FramePyramid.h"
 #include "ocean/cv/FrameShrinker.h"
 #include "ocean/cv/OpenCVUtilities.h"
@@ -134,14 +136,8 @@ void TestFramePyramid::testFrameDownsampling(const unsigned int width, const uns
 
 	do
 	{
-		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-		Frame sourceFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame targetFrame(FrameType(sourceFrame, width / 2u, height / 2u), targetPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
-		CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, width / 2u, height / 2u), false, &randomGenerator);
 
 		cv::Mat cvSourceFrame;
 		cv::Mat cvTargetFrame;
@@ -149,13 +145,13 @@ void TestFramePyramid::testFrameDownsampling(const unsigned int width, const uns
 		if (iteration % 4u == 0u)
 		{
 			performanceOcean11.start();
-			CV::FrameShrinker::downsampleByTwo11(sourceFrame, targetFrame);
+				CV::FrameShrinker::downsampleByTwo11(sourceFrame, targetFrame);
 			performanceOcean11.stop();
 		}
 		else if (iteration % 4u == 1u)
 		{
 			performanceOcean14641.start();
-			CV::FrameShrinker::downsampleByTwo14641(sourceFrame, targetFrame);
+				CV::FrameShrinker::downsampleByTwo14641(sourceFrame, targetFrame);
 			performanceOcean14641.stop();
 
 			double averageAbsError = NumericD::maxValue();
@@ -173,7 +169,7 @@ void TestFramePyramid::testFrameDownsampling(const unsigned int width, const uns
 				CV::OpenCVUtilities::toCvMat(targetFrame).copyTo(cvTargetFrame);
 
 				performanceAML14641.start();
-				pyrDown(cvSourceFrame, cvTargetFrame, 1u);
+					pyrDown(cvSourceFrame, cvTargetFrame, 1u);
 				performanceAML14641.stop();
 
 				sourceFrame = CV::OpenCVUtilities::toOceanFrame(cvSourceFrame);
@@ -193,7 +189,7 @@ void TestFramePyramid::testFrameDownsampling(const unsigned int width, const uns
 			CV::OpenCVUtilities::toCvMat(targetFrame).copyTo(cvTargetFrame);
 
 			performanceOpenCV14641.start();
-			cv::pyrDown(cvSourceFrame, cvTargetFrame, cv::Size(cvSourceFrame.cols / 2, cvSourceFrame.rows / 2));
+				cv::pyrDown(cvSourceFrame, cvTargetFrame, cv::Size(cvSourceFrame.cols / 2, cvSourceFrame.rows / 2));
 			performanceOpenCV14641.stop();
 
 			sourceFrame = CV::OpenCVUtilities::toOceanFrame(cvSourceFrame);
@@ -207,7 +203,7 @@ void TestFramePyramid::testFrameDownsampling(const unsigned int width, const uns
 			opencvMaximalAbsError14641 = std::max(opencvMaximalAbsError14641, maximalAbsError);
 		}
 
-		iteration++;
+		++iteration;
 	}
 	while (iteration < 4u || startTimestamp + testDuration > Timestamp(true));
 
@@ -265,17 +261,13 @@ void TestFramePyramid::testFramePyramid(const unsigned int width, const unsigned
 
 	do
 	{
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-		Frame frame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 		cv::Mat cvFrame;
-
-		CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
 
 		if (iteration % 3u == 0u)
 		{
 			performanceOcean11.start();
-			CV::FramePyramid framePyramid(frame, layers, nullptr, CV::FramePyramid::DM_FILTER_11);
+				CV::FramePyramid framePyramid(frame, layers, nullptr, CV::FramePyramid::DM_FILTER_11);
 			performanceOcean11.stop();
 
 			ocean_assert(framePyramid.layers() == layers);
@@ -283,7 +275,7 @@ void TestFramePyramid::testFramePyramid(const unsigned int width, const unsigned
 		else if (iteration % 3u == 1u)
 		{
 			performanceOcean14641.start();
-			CV::FramePyramid framePyramid(frame, layers, nullptr, CV::FramePyramid::DM_FILTER_14641);
+				CV::FramePyramid framePyramid(frame, layers, nullptr, CV::FramePyramid::DM_FILTER_14641);
 			performanceOcean14641.stop();
 
 			ocean_assert(framePyramid.layers() == layers);
@@ -293,8 +285,8 @@ void TestFramePyramid::testFramePyramid(const unsigned int width, const unsigned
 			CV::OpenCVUtilities::toCvMat(frame).copyTo(cvFrame);
 
 			performanceOpenCV14641.start();
-			std::vector<cv::Mat> cvframePyramidLayers;
-			cv::buildPyramid(cvFrame, cvframePyramidLayers, int(layers) - 1); // layers == 1: create the original frame + one additional pyramid layer
+				std::vector<cv::Mat> cvframePyramidLayers;
+				cv::buildPyramid(cvFrame, cvframePyramidLayers, int(layers) - 1); // layers == 1: create the original frame + one additional pyramid layer
 			performanceOpenCV14641.stop();
 
 			ocean_assert(cvframePyramidLayers.size() == size_t(layers));
