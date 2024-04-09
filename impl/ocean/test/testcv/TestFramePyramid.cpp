@@ -1239,16 +1239,28 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 		{
 			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
+			const Timestamp timestamp(Random::scalar(randomGenerator, -1000, 1000));
+
 			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
+			frame.setTimestamp(timestamp);
 			frame.makeContinuous(); // **TODO** temporary workaround until LegacyFrame is still used in FramePyramid
 
 			Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
 
-			const Timestamp timestamp(Random::scalar(randomGenerator, -1000, 1000));
-
 			const FrameType::PixelFormat usePixelFormat = RandomI::random(randomGenerator, {FrameType::FORMAT_UNDEFINED, pixelFormat});
 
-			if (framePyramid.replace8BitPerChannel11(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), pixelOrigin, layers, frame.paddingElements(), copyFirstLayer, useWorker, usePixelFormat, timestamp))
+			bool replaceResult = false;
+
+			if (RandomI::random(randomGenerator, 1u) == 0u)
+			{
+				replaceResult = framePyramid.replace8BitPerChannel11(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), pixelOrigin, layers, frame.paddingElements(), copyFirstLayer, useWorker, usePixelFormat, timestamp);
+			}
+			else
+			{
+				replaceResult = framePyramid.replace8BitPerChannel11(frame, layers, copyFirstLayer, useWorker);
+			}
+
+			if (replaceResult)
 			{
 				if (framePyramid.layers() != expectedLayers)
 				{
