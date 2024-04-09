@@ -170,7 +170,8 @@ class OCEAN_CV_EXPORT CVUtilities
 		/**
 		 * Returns a randomized frame for a given frame type.
 		 * The resulting frame may contain random padding elements.<br>
-		 * Integer pixel formats as well as float pixel formats will receive values in the range [0, 255] or [-128, 127] for each pixel and channel if 'limitedValueRange == true'
+		 * Integer pixel formats as well as float pixel formats will receive values in the range [0, 255] or [-128, 127] for each pixel and channel if 'limitedValueRange == true'<br>
+		 * The timestamp will be randomized as well.
 		 * @param frameType The frame type for which the randomized frame will be created, may be invalid
 		 * @param skipPaddingArea True, to leave elements within the padding area untouched; False, to randomize the entire memory
 		 * @param randomGenerator Optional explicit random generator to be used, nullptr to use any
@@ -181,6 +182,7 @@ class OCEAN_CV_EXPORT CVUtilities
 
 		/**
 		 * Creates an 8 bit frame with a random binary mask, the optional padding area will be filled with random (not binary) noise.
+		 * The timestamp will be randomized as well.
 		 * @param width The width of the resulting frame in pixel, with range [1, infinity)
 		 * @param height The height of the resulting frame in pixel, with range [1, infinity)
 		 * @param maskValue The value of mask pixels, 0xFF - maskValue will be the value of non-mask pixels, with range [0x00, 0xFF]

@@ -215,6 +215,9 @@ Frame CVUtilities::randomizedFrame(const FrameType& frameType, const bool skipPa
 
 	randomizeFrame(frame, skipPaddingArea, &localRandomGenerator, limitedValueRange);
 
+	frame.setTimestamp(Timestamp(RandomD::scalar(localRandomGenerator, -1000, 1000)));
+	frame.setRelativeTimestamp(Timestamp(RandomD::scalar(localRandomGenerator, -1000, 1000)));
+
 	return frame;
 }
 
@@ -286,6 +289,9 @@ Frame CVUtilities::randomizedBinaryMask(const unsigned int width, const unsigned
 			}
 		}
 	}
+
+	mask.setTimestamp(Timestamp(RandomD::scalar(localRandomGenerator, -1000, 1000)));
+	mask.setRelativeTimestamp(Timestamp(RandomD::scalar(localRandomGenerator, -1000, 1000)));
 
 	return mask;
 }
