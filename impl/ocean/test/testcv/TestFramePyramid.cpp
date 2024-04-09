@@ -956,6 +956,8 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
 	for (unsigned int channels = 1u; channels <= 4; ++channels)
@@ -985,23 +987,17 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 					ownerLayers.emplace(layerIndex);
 				}
 
-				LegacyFrame frame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT));
-				CV::CVUtilities::randomizeFrame(frame);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				frame.makeContinuous(); // **TODO** workaround until LegacyFrame is not used anymore
 
 				performance.start();
 					const CV::FramePyramid framePyramid(frame, layerCount, useWorker);
 				performance.stop();
 
-				if (!validateConstructFromFrame(framePyramid, CV::FramePyramid::DM_FILTER_11, Frame(frame, Frame::temporary_ACM_USE_KEEP_LAYOUT), expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+				if (!validateConstructFromFrame(framePyramid, CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
 				{
 					allSucceeded = false;
 				}
-
-				const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-				Frame paddingFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-				paddingFrame.makeContinuous(); // **TODO** workaround until LegacyFrame is not used anymore
-
-				CV::CVUtilities::randomizeFrame(paddingFrame, false);
 
 				const bool copyFirstLayer = RandomI::random(1u) == 0u;
 
@@ -1012,12 +1008,12 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 					outsideMemoryBlockLayers.emplace(0u);
 				}
 
-				if (!validateConstructFromFrame(CV::FramePyramid(paddingFrame.constdata<uint8_t>(), paddingFrame.width(), paddingFrame.height(), paddingFrame.channels(), paddingFrame.pixelOrigin(), layerCount, paddingFrame.paddingElements(), copyFirstLayer, useWorker), CV::FramePyramid::DM_FILTER_11, paddingFrame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+				if (!validateConstructFromFrame(CV::FramePyramid(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), frame.pixelOrigin(), layerCount, frame.paddingElements(), copyFirstLayer, useWorker), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
 				{
 					allSucceeded = false;
 				}
 
-				if (!validateConstructFromFrame(CV::FramePyramid(paddingFrame, layerCount, copyFirstLayer, useWorker), CV::FramePyramid::DM_FILTER_11, paddingFrame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+				if (!validateConstructFromFrame(CV::FramePyramid(frame, layerCount, copyFirstLayer, useWorker), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
 				{
 					allSucceeded = false;
 				}
