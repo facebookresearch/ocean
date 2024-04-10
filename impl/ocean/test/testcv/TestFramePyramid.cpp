@@ -948,27 +948,64 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 						bool localResult = false;
 
-						performance.start();
-
-							if (useConstructor)
-							{
+						if (useConstructor)
+						{
+							performance.start();
 								framePyramid = CV::FramePyramid(frame, testLayers, useWorker, downsamplingMode);
+							performance.stop();
 
-								localResult = framePyramid.isValid();
+							localResult = framePyramid.isValid();
+						}
+						else
+						{
+							if (RandomI::boolean(randomGenerator))
+							{
+								// use downsampling mode
+
+								performance.start();
+
+									if (copyFirstLayer)
+									{
+										localResult = framePyramid.replace(frame, downsamplingMode, testLayers, useWorker);
+									}
+									else
+									{
+										localResult = framePyramid.replace(std::move(frame), downsamplingMode, testLayers, useWorker);
+									}
+
+								performance.stop();
 							}
 							else
 							{
-								if (copyFirstLayer)
+								// use downsampling function
+
+								CV::FramePyramid::CallbackDownsampling downsamplingFunction;
+
+								if (downsamplingMode == CV::FramePyramid::DM_FILTER_11)
 								{
-									localResult = framePyramid.replace(frame, downsamplingMode, testLayers, useWorker);
+									downsamplingFunction = CV::FramePyramid::CallbackDownsampling::createStatic(CV::FrameShrinker::downsampleByTwo11);
 								}
 								else
 								{
-									localResult = framePyramid.replace(std::move(frame), downsamplingMode, testLayers, useWorker);
-								}
-							}
+									ocean_assert(downsamplingMode == CV::FramePyramid::DM_FILTER_14641);
 
-						performance.stop();
+									downsamplingFunction = CV::FramePyramid::CallbackDownsampling::createStatic(CV::FrameShrinker::downsampleByTwo14641);
+								}
+
+								performance.start();
+
+									if (copyFirstLayer)
+									{
+										localResult = framePyramid.replace(frame, downsamplingFunction, testLayers, useWorker);
+									}
+									else
+									{
+										localResult = framePyramid.replace(std::move(frame), downsamplingFunction, testLayers, useWorker);
+									}
+
+								performance.stop();
+							}
+						}
 
 						if (!localResult)
 						{
