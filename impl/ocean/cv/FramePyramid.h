@@ -293,6 +293,34 @@ class OCEAN_CV_EXPORT FramePyramid
 		inline const FrameType& frameType() const;
 
 		/**
+		 * Replaces this frame pyramid based on a new frame.
+		 * The function will re-used the existing pyramid's memory of possible.<br>
+		 * The resulting pyramid will contain a copy of the given frame (as finest pyramid layer).
+		 * @param frame The frame for which the pyramid will be created, must be valid
+		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
+		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
+		 * @param worker Optional worker object to distribute the computation
+		 * @return True, if the frame pyramid was replaced
+		 * @see replace8BitPerChannel11().
+		 */
+		bool replace(const Frame& frame, const DownsamplingMode downsamplingMode, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
+
+		/**
+		 * Replaces this frame pyramid based on a new frame.
+		 * The function will re-used the existing pyramid's memory of possible.<br>
+		 * The resulting pyramid will re-used the given frame (as finest pyramid layer); thus, ensure that the frame's memory is valid as long as this pyramid exists.
+		 * @param frame The frame for which the pyramid will be created, must be valid
+		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
+		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
+		 * @param worker Optional worker object to distribute the computation
+		 * @return True, if the frame pyramid was replaced
+		 * @see replace8BitPerChannel11().
+		 */
+		bool replace(Frame&& frame, const DownsamplingMode downsamplingMode, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
+
+		/**
+		 * Deprecated.
+		 *
 		 * Replaces this frame pyramid by a new frame.
 		 * The frame pyramid needs to be the owner of its frame data or needs to be empty; otherwise, nothing is done and False is returned.
 		 * Beware: Due to performance issues the new frame should have the same frame type as already defined in this pyramid.<br>
@@ -349,8 +377,9 @@ class OCEAN_CV_EXPORT FramePyramid
 		/**
 		 * Replaces this frame pyramid by a new frame with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
 		 * This function is intentionally restrictive to reduce binary impact when used, use other function or the constructor in case more flexibility is needed an binary size does not matter.<br>
-		 * The function will re-used the existing pyramid's memory of possible.
-		 * @param frame The frame for which the pyramid will be created, with 1 plane and data type DT_UNSIGNED_INTEGER_8, must be valid
+		 * The function will re-used the existing pyramid's memory of possible.<br>
+		 * This function does not provide the optimal image quality for images with alpha channel, use replace() instead.
+		 * @param frame The frame for which the pyramid will be created, with 1 plane and data type DT_UNSIGNED_INTEGER_8, should not contain an alpha channel, must be valid
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
 		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exist)
 		 * @param worker Optional worker object to distribute the computation

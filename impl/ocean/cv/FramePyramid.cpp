@@ -288,6 +288,149 @@ bool FramePyramid::addLayer(Worker* worker, const DownsamplingMode downsamplingM
 	return true;
 }
 
+bool FramePyramid::replace(const Frame& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, Worker* worker)
+{
+	ocean_assert(frame.isValid());
+	ocean_assert(layers >= 1u);
+
+	if (downsamplingMode == DM_FILTER_11 && !frame.hasAlphaChannel())
+	{
+		return replace8BitPerChannel11(frame, layers, true /*copyFirstLayer*/, worker);
+	}
+
+	if (!replace(frame.frameType(), true /*forceOwner*/, layers))
+	{
+		clear();
+
+		return false;
+	}
+
+	ocean_assert(!layers_.empty());
+	ocean_assert(memory_.size() >= frame.frameTypeSize());
+
+	constexpr unsigned int memoryPaddingElements = 0u;
+	Frame memoryFinestLayer(frame.frameType(), memory_.data(), Frame::CM_USE_KEEP_LAYOUT, memoryPaddingElements);
+
+	if (!memoryFinestLayer.copy(0, 0, frame))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
+
+	if (downsamplingMode == DM_FILTER_11)
+	{
+		ocean_assert(frame.hasAlphaChannel());
+
+		for (size_t layerIndex = 1; layerIndex < layers_.size(); ++layerIndex)
+		{
+			const Frame sourceLayer(layers_[layerIndex - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			Frame targetLayer(layers_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+
+			if (!FrameShrinkerAlpha::Comfort::divideByTwo<false>(sourceLayer, targetLayer, worker))
+			{
+				clear();
+
+				return false;
+			}
+		}
+	}
+	else
+	{
+		ocean_assert(downsamplingMode == DM_FILTER_14641);
+
+		for (size_t layerIndex = 1; layerIndex < layers_.size(); ++layerIndex)
+		{
+			const Frame sourceLayer(layers_[layerIndex - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			Frame targetLayer(layers_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+
+			if (!FrameShrinker::downsampleByTwo14641(sourceLayer, targetLayer, worker))
+			{
+				clear();
+
+				return false;
+			}
+		}
+	}
+
+	for (LegacyFrame& layer : layers_)
+	{
+		layer.setTimestamp(frame.timestamp());
+	}
+
+	return true;
+}
+
+bool FramePyramid::replace(Frame&& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, Worker* worker)
+{
+	ocean_assert(frame.isValid());
+	ocean_assert(layers >= 1u);
+
+	if (downsamplingMode == DM_FILTER_11 && !frame.hasAlphaChannel())
+	{
+		if (!replace8BitPerChannel11(frame, layers, false /*copyFirstLayer*/, worker))
+		{
+			return false;
+		}
+
+		layers_[0] = std::move(frame);
+
+		return true;
+	}
+
+	if (!replace(frame.frameType(), false /*forceOwner*/, layers))
+	{
+		clear();
+
+		return false;
+	}
+
+	ocean_assert(!layers_.empty());
+
+	layers_[0] = std::move(frame);
+
+	if (downsamplingMode == DM_FILTER_11)
+	{
+		ocean_assert(frame.hasAlphaChannel());
+
+		for (size_t layerIndex = 1u; layerIndex < layers_.size(); ++layerIndex)
+		{
+			const Frame sourceLayer(layers_[layerIndex - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			Frame targetLayer(layers_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+
+			if (!FrameShrinkerAlpha::Comfort::divideByTwo<false>(sourceLayer, targetLayer, worker))
+			{
+				clear();
+
+				return false;
+			}
+		}
+	}
+	else
+	{
+		ocean_assert(downsamplingMode == DM_FILTER_14641);
+
+		for (size_t layerIndex = 1u; layerIndex < layers_.size(); ++layerIndex)
+		{
+			const Frame sourceLayer(layers_[layerIndex - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			Frame targetLayer(layers_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+
+			if (!FrameShrinker::downsampleByTwo14641(sourceLayer, targetLayer, worker))
+			{
+				clear();
+
+				return false;
+			}
+		}
+	}
+
+	for (size_t layerIndex = 1; layerIndex < layers_.size(); ++layerIndex)
+	{
+		layers_[layerIndex].setTimestamp(layers_[0].timestamp());
+	}
+
+	return true;
+}
+
 bool FramePyramid::replace(const Frame& frame, const unsigned int layers, Worker* worker, const DownsamplingMode downsamplingMode, const CallbackDownsampling& customDownsamplingFunction)
 {
 	return replace(LegacyFrame(frame, LegacyFrame::FCM_USE_IF_POSSIBLE), layers, worker, downsamplingMode, customDownsamplingFunction);
