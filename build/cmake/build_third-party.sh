@@ -36,8 +36,8 @@ function run_build {
         exit 1
     fi
 
-    OCEAN_THIRD_PARTY_BUILD_DIRECTORY="${OCEAN_THIRD_PARTY_BUILD_ROOT_DIRECTORY}/ocean_third-party_build_${LIBRARY_TYPE}_${BUILD_TYPE}"
-    OCEAN_THIRD_PARTY_INSTALL_DIRECTORY="${OCEAN_THIRD_PARTY_INSTALL_ROOT_DIRECTORY}/ocean_third-party_install_${LIBRARY_TYPE}_${BUILD_TYPE}"
+    OCEAN_THIRD_PARTY_BUILD_DIRECTORY="${OCEAN_THIRD_PARTY_BUILD_ROOT_DIRECTORY}/ocean/build/third-party_${LIBRARY_TYPE}_${BUILD_TYPE}"
+    OCEAN_THIRD_PARTY_INSTALL_DIRECTORY="${OCEAN_THIRD_PARTY_INSTALL_ROOT_DIRECTORY}/ocean/install/${LIBRARY_TYPE}_${BUILD_TYPE}"
 
     echo " "
     echo "BUILD_TYPE: ${BUILD_TYPE}"
@@ -73,4 +73,3 @@ run_build Release static 1
 
 run_build Release shared 0
 run_build Release shared 1
-
