@@ -10,6 +10,8 @@
 
 #include "ocean/cv/FramePyramid.h"
 
+#include <functional>
+
 namespace Ocean
 {
 
@@ -32,6 +34,15 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid
 		 * Default value to create as many layers as possible.
 		 */
 		static constexpr unsigned int ALL_LAYERS = (unsigned int)(-1);
+
+		/**
+		 * Definition of a function allowing to downsample a frame.
+		 * @param sourceLayer The source layer to downsample
+		 * @param targetLayer The target layer reviving the downsampled image content
+		 * @param worker Optional worker to distribute the computation
+		 * @return True, if succeeded
+		 */
+		using DownsamplingFunction = std::function<bool(const Frame& sourceLayer, Frame& targetLayer, Worker* worker)>;
 
 	public:
 
@@ -186,6 +197,17 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid
 		static bool validateFramePyramid(const Frame& frame, const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingMode downsamplingMode, const unsigned int layers, const bool allowCompatibleFrameType = false);
 
 		/**
+		 * Validates the visual content of a frame pyramid.
+		 * @param frame The frame from which the frame pyramid has been created, must be valid
+		 * @param framePyramid The frame pyramid to be validated, must be valid
+		 * @param downsamplingFunction The function which has been used to downsample the pyramid layers, must be valid
+		 * @param layers The explicit number of pyramid layers to be checked, with range [1, infinity)
+		 * @param allowCompatibleFrameType True, to allow a compatible frame type; False, to expect a perfectly matching frame type
+		 * @return True, if succeeded
+		 */
+		static bool validateFramePyramid(const Frame& frame, const CV::FramePyramid& framePyramid, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool allowCompatibleFrameType = false);
+
+		/**
 		 * Validates if the frame pyramid was created correctly with the specified settings.
 		 * @param framePyramid The frame pyramid to validate, must be valid
 		 * @param downsamplingMode The downsampling mode that has been applied when creating the pyramid, either DM_FILTER_11 or DM_FILTER_14641
@@ -197,6 +219,19 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid
 		 * @return True, if the pyramid is correct
 		 */
 		static bool validateConstructFromFrame(const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingMode downsamplingMode, const Frame& frame, const unsigned int numberLayers, const UnorderedIndexSet32& readOnlyLayers, const UnorderedIndexSet32& ownerLayers, const UnorderedIndexSet32& outsideMemoryBlockLayers);
+
+		/**
+		 * Validates if the frame pyramid was created correctly with the specified settings.
+		 * @param framePyramid The frame pyramid to validate, must be valid
+		 * @param downsamplingFunction The function which has been used to downsample the pyramid layers, must be valid
+		 * @param frame The frame that was used to create the frame pyramid, must be valid
+		 * @param numberLayers The number of layers the pyramid needs to have, with range [1, infinity)
+		 * @param readOnlyLayers The indices of all layers which are expected to be read-only, all other layers are expected to be writable
+		 * @param ownerLayers The indices of all layers which are expected to own the memory
+		 * @param outsideMemoryBlockLayers The indices of all layers which are expected to have their memory outside of the pyramid's memory block
+		 * @return True, if the pyramid is correct
+		 */
+		static bool validateConstructFromFrame(const CV::FramePyramid& framePyramid, const DownsamplingFunction& downsamplingFunction, const Frame& frame, const unsigned int numberLayers, const UnorderedIndexSet32& readOnlyLayers, const UnorderedIndexSet32& ownerLayers, const UnorderedIndexSet32& outsideMemoryBlockLayers);
 
 		/**
 		 * Validates if the frame pyramid was created correctly with the specified settings.
@@ -226,6 +261,31 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid
 		 * @return True, if all properties match
 		 */
 		static bool verifyPyramidOwnership(const CV::FramePyramid& framePyramid, const bool isValid, const bool isOwner, const Indices32& layerIsOwner = Indices32());
+
+		/**
+		 * Downsamples a frame with 1-1 filter.
+		 * @param finerLayer The finer pyramid layer, must be valid
+		 * @param coarserLayer The coarser pyramid layer, must be valid
+		 * @param worker The optional worker to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool downsampleByTwo11(const Frame& finerLayer, Frame& coarserLayer, Worker* worker);
+
+		/**
+		 * Downsamples a frame with 1-4-6-4-1 filter.
+		 * @param finerLayer The finer pyramid layer, must be valid
+		 * @param coarserLayer The coarser pyramid layer, must be valid
+		 * @param worker The optional worker to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool downsampleByTwo14641(const Frame& finerLayer, Frame& coarserLayer, Worker* worker);
+
+		/**
+		 * Returns the downsampling function for a specified downsampling mode.
+		 * @param downsamplingMode The downsampling mode for which the function will be returned
+		 * @return The downsampling function, nullptr if unknown
+		 */
+		static DownsamplingFunction downsamplingFunction(const CV::FramePyramid::DownsamplingMode downsamplingMode);
 };
 
 }

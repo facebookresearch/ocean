@@ -1905,6 +1905,19 @@ bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FrameP
 {
 	ocean_assert(frame && framePyramid && layers >= 1u);
 
+	return validateFramePyramid(frame, framePyramid, downsamplingFunction(downsamplingMode), layers, allowCompatibleFrameType);
+}
+
+bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FramePyramid& framePyramid, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool allowCompatibleFrameType)
+{
+	ocean_assert(frame && framePyramid && layers >= 1u);
+	ocean_assert(downsamplingFunction);
+
+	if (!downsamplingFunction)
+	{
+		return false;
+	}
+
 	if (layers > framePyramid.layers())
 	{
 		return false;
@@ -1940,31 +1953,9 @@ bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FrameP
 	{
 		Frame coarserLayer;
 
-		switch (downsamplingMode)
+		if (!downsamplingFunction(finerLayer, coarserLayer, nullptr /*worker*/))
 		{
-			case CV::FramePyramid::DM_FILTER_11:
-			{
-				if (!CV::FrameShrinker::downsampleByTwo11(finerLayer, coarserLayer))
-				{
-					return false;
-				}
-
-				break;
-			}
-
-			case CV::FramePyramid::DM_FILTER_14641:
-			{
-				if (!CV::FrameShrinker::downsampleByTwo14641(finerLayer, coarserLayer))
-				{
-					return false;
-				}
-
-				break;
-			}
-
-			default:
-				ocean_assert(false && "This should never happen!");
-				return false;
+			return false;
 		}
 
 		if (allowCompatibleFrameType && !coarserLayer.isFrameTypeCompatible(framePyramid[n], false))
@@ -2015,6 +2006,15 @@ bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& frameP
 	ocean_assert(frame.isValid());
 	ocean_assert(numberLayers >= 1u);
 
+	return validateConstructFromFrame(framePyramid, downsamplingFunction(downsamplingMode), frame, numberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers);
+}
+
+bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& framePyramid, const DownsamplingFunction& downsamplingFunction, const Frame& frame, const unsigned int numberLayers, const UnorderedIndexSet32& readOnlyLayers, const UnorderedIndexSet32& ownerLayers, const UnorderedIndexSet32& outsideMemoryBlockLayers)
+{
+	ocean_assert(framePyramid.isValid());
+	ocean_assert(frame.isValid());
+	ocean_assert(numberLayers >= 1u);
+
 	if (!framePyramid.isValid() || !frame.isValid() || numberLayers == 0u)
 	{
 		return false;
@@ -2025,7 +2025,7 @@ bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& frameP
 		return false;
 	}
 
-	if (!validateFramePyramid(frame, framePyramid, downsamplingMode, numberLayers))
+	if (!validateFramePyramid(frame, framePyramid, downsamplingFunction, numberLayers))
 	{
 		return false;
 	}
@@ -2319,6 +2319,34 @@ bool TestFramePyramid::verifyPyramidOwnership(const CV::FramePyramid& framePyram
 	}
 
 	return true;
+}
+
+bool TestFramePyramid::downsampleByTwo11(const Frame& finerLayer, Frame& coarserLayer, Worker* worker)
+{
+	return CV::FrameShrinker::downsampleByTwo11(finerLayer, coarserLayer, worker);
+}
+
+bool TestFramePyramid::downsampleByTwo14641(const Frame& finerLayer, Frame& coarserLayer, Worker* worker)
+{
+	return CV::FrameShrinker::downsampleByTwo14641(finerLayer, coarserLayer, worker);
+}
+
+TestFramePyramid::DownsamplingFunction TestFramePyramid::downsamplingFunction(const CV::FramePyramid::DownsamplingMode downsamplingMode)
+{
+	switch (downsamplingMode)
+	{
+		case CV::FramePyramid::DM_FILTER_11:
+			return downsampleByTwo11;
+
+		case CV::FramePyramid::DM_FILTER_14641:
+			return downsampleByTwo14641;
+
+		case CV::FramePyramid::DM_CUSTOM:
+			break;
+	}
+
+	ocean_assert(false && "This should never happen!");
+	return nullptr;
 }
 
 }
