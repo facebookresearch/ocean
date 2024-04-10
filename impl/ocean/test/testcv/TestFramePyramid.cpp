@@ -942,58 +942,60 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 						const unsigned int testLayers = benchmarkIteration ? layers : RandomI::random(1u, 0xFFFFFFFFu);
 
-						const bool useConstructor = copyFirstLayer && RandomI::boolean(randomGenerator); // **TODO** remove workaround once corresponding constructor exists (due to LegacyFrame( is not used anymore)
-
-						CV::FramePyramid framePyramid;
+						const bool useConstructor = RandomI::boolean(randomGenerator);
 
 						bool localResult = false;
 
-						if (useConstructor)
-						{
-							performance.start();
-								framePyramid = CV::FramePyramid(frame, testLayers, useWorker, downsamplingMode);
-							performance.stop();
+						CV::FramePyramid::CallbackDownsampling downsamplingFunction; // **TODO** use TestFramePyramid::downsamplingFunction() once LegacyFrame is not used anymore
 
-							localResult = framePyramid.isValid();
+						if (downsamplingMode == CV::FramePyramid::DM_FILTER_11)
+						{
+							downsamplingFunction = CV::FramePyramid::CallbackDownsampling::createStatic(CV::FrameShrinker::downsampleByTwo11);
 						}
 						else
 						{
-							if (RandomI::boolean(randomGenerator))
+							ocean_assert(downsamplingMode == CV::FramePyramid::DM_FILTER_14641);
+
+							downsamplingFunction = CV::FramePyramid::CallbackDownsampling::createStatic(CV::FrameShrinker::downsampleByTwo14641);
+						}
+
+						const bool useDownsamplingFunction = RandomI::boolean(randomGenerator);
+
+						CV::FramePyramid framePyramid;
+
+						performance.start();
+
+							if (useConstructor)
 							{
-								// use downsampling mode
-
-								performance.start();
-
+								if (useDownsamplingFunction)
+								{
 									if (copyFirstLayer)
 									{
-										localResult = framePyramid.replace(frame, downsamplingMode, testLayers, useWorker);
+										framePyramid = CV::FramePyramid(frame, downsamplingFunction, testLayers, useWorker);
 									}
 									else
 									{
-										localResult = framePyramid.replace(std::move(frame), downsamplingMode, testLayers, useWorker);
+										framePyramid = CV::FramePyramid(std::move(frame), downsamplingFunction, testLayers, useWorker);
 									}
-
-								performance.stop();
-							}
-							else
-							{
-								// use downsampling function
-
-								CV::FramePyramid::CallbackDownsampling downsamplingFunction;
-
-								if (downsamplingMode == CV::FramePyramid::DM_FILTER_11)
-								{
-									downsamplingFunction = CV::FramePyramid::CallbackDownsampling::createStatic(CV::FrameShrinker::downsampleByTwo11);
 								}
 								else
 								{
-									ocean_assert(downsamplingMode == CV::FramePyramid::DM_FILTER_14641);
-
-									downsamplingFunction = CV::FramePyramid::CallbackDownsampling::createStatic(CV::FrameShrinker::downsampleByTwo14641);
+									if (copyFirstLayer)
+									{
+										framePyramid = CV::FramePyramid(frame, downsamplingMode, testLayers, useWorker);
+									}
+									else
+									{
+										framePyramid = CV::FramePyramid(std::move(frame), downsamplingMode, testLayers, useWorker);
+									}
 								}
 
-								performance.start();
-
+								localResult = framePyramid.isValid();
+							}
+							else
+							{
+								if (useDownsamplingFunction)
+								{
 									if (copyFirstLayer)
 									{
 										localResult = framePyramid.replace(frame, downsamplingFunction, testLayers, useWorker);
@@ -1002,10 +1004,21 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 									{
 										localResult = framePyramid.replace(std::move(frame), downsamplingFunction, testLayers, useWorker);
 									}
-
-								performance.stop();
+								}
+								else
+								{
+									if (copyFirstLayer)
+									{
+										localResult = framePyramid.replace(frame, downsamplingMode, testLayers, useWorker);
+									}
+									else
+									{
+										localResult = framePyramid.replace(std::move(frame), downsamplingMode, testLayers, useWorker);
+									}
+								}
 							}
-						}
+
+						performance.stop();
 
 						if (!localResult)
 						{
@@ -1025,7 +1038,7 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 							ownerLayers.emplace(layerIndex);
 						}
 
-						if (!copyFirstLayer && !useConstructor) // **TODO** remove workaround once corresponding constructor exists (due to LegacyFrame( is not used anymore)
+						if (!copyFirstLayer)
 						{
 							outsideMemoryBlockLayers.emplace(0u);
 						}
