@@ -4,6 +4,8 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
 include(FetchContent)
 
+set(FT_DISABLE_BZIP2 TRUE)
+
 FetchContent_Declare(
   freetype
   GIT_REPOSITORY https://github.com/freetype/freetype.git

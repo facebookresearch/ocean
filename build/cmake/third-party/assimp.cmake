@@ -4,12 +4,13 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
 include(FetchContent)
 
-#set(ZLIB_ROOT /c/tmp/ocean_third-party_install_release)
+set(ZLIB_ROOT ${CMAKE_INSTALL_PREFIX})
 
 FetchContent_Declare(
   assimp
   GIT_REPOSITORY https://github.com/assimp/assimp.git
   GIT_TAG        v5.3.1
+  PATCH_COMMAND  ${CMAKE_COMMAND} -E remove ./cmake-modules/FindZLIB.cmake
 )
 
 set(ASSIMP_BUILD_ZLIB OFF CACHE BOOL "")

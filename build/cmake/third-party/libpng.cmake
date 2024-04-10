@@ -4,6 +4,8 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
 include(FetchContent)
 
+set(ZLIB_ROOT ${CMAKE_INSTALL_PREFIX})
+
 FetchContent_Declare(
   libpng
   GIT_REPOSITORY https://github.com/pnggroup/libpng.git
