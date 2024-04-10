@@ -680,48 +680,64 @@ bool TestMemory::testAllocation(const double testDuration, Worker& worker)
 	return true;
 }
 
-bool TestMemory::testIsInside(const double /*testDuration*/)
+bool TestMemory::testIsInside(const double testDuration)
 {
 	Log::info() << "IsInside test:";
 	Log::info() << " ";
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	Timestamp startTimestamp (true);
 
 	do
 	{
-		const size_t memorySize = size_t(RandomI::random(1u, 1024u));
+		const size_t memorySize = size_t(RandomI::random(randomGenerator, 1u, 1024u));
 
 		const Memory memory(memorySize);
+
+		const size_t pointer = size_t(memory.constdata());
 
 		{
 			// a memory pointer partially outside of the memory (to the left)
 
-			const uint8_t* memoryOutside = memory.constdata<uint8_t>() - RandomI::random(1, 1024);
-			const size_t memoryOutsideSize = size_t(RandomI::random(1u, 1024u));
+			//               [       memory       ]
+			// [   memoryOutside   ]
 
-			if (memory.isInside(memoryOutside, memoryOutsideSize))
-			{
-				allSucceeded = false;
-			}
+			const size_t outsideOffset = size_t(RandomI::random(randomGenerator, 1, 1024));
 
-			if (memory.isInside(memoryOutside, memoryOutside + memoryOutsideSize))
+			ocean_assert_accuracy(pointer >= outsideOffset);
+			if (pointer >= outsideOffset)
 			{
-				allSucceeded = false;
-			}
+				const uint8_t* memoryOutside = memory.constdata<uint8_t>() - outsideOffset;
+				const size_t memoryOutsideSize = size_t(RandomI::random(randomGenerator, 1u, 1024u));
 
-			if (!memory.isInside(memoryOutside, size_t(0))) // an empty range is always inside the memory
-			{
-				allSucceeded = false;
+				if (memory.isInside(memoryOutside, memoryOutsideSize))
+				{
+					allSucceeded = false;
+				}
+
+				if (memory.isInside(memoryOutside, memoryOutside + memoryOutsideSize))
+				{
+					allSucceeded = false;
+				}
+
+				if (!memory.isInside(memoryOutside, size_t(0))) // an empty range is always inside the memory
+				{
+					allSucceeded = false;
+				}
 			}
 		}
+
 
 		{
 			// a memory pointer entirely outside of the memory (to the right)
 
+			// [       memory       ]    [   memoryOutside   ]
+
 			const uint8_t* memoryOutside = memory.constdata<uint8_t>() + memory.size();
-			const size_t memoryOutsideSize = size_t(RandomI::random(1u, 1024u));
+			const size_t memoryOutsideSize = size_t(RandomI::random(randomGenerator, 1u, 1024u));
 
 			if (memory.isInside(memoryOutside, memoryOutsideSize))
 			{
@@ -742,10 +758,13 @@ bool TestMemory::testIsInside(const double /*testDuration*/)
 		{
 			// a memory pointer partially outside of the memory (to the right)
 
-			const size_t offset = size_t(RandomI::random(0, 1024));
+			//  [       memory       ]
+			//                    [   memoryOutside   ]
+
+			const size_t offset = size_t(RandomI::random(randomGenerator, 1024u));
 
 			const uint8_t* memoryOutside = memory.constdata<uint8_t>() + offset;
-			const size_t memoryOutsideSize = size_t(RandomI::random(int(memory.size()) - int(offset), 2048));
+			const size_t memoryOutsideSize = size_t(RandomI::random(randomGenerator, std::max(1, int(memory.size()) - int(offset)) + 1, 2048));
 
 			if (memory.isInside(memoryOutside, memoryOutsideSize))
 			{
@@ -766,10 +785,13 @@ bool TestMemory::testIsInside(const double /*testDuration*/)
 		{
 			// a memory entirely inside
 
-			const size_t offset = size_t(RandomI::random(0, int(memory.size()) - 1));
+			// [       memory              ]
+			//     [   memoryOutside   ]
+
+			const size_t offset = size_t(RandomI::random(randomGenerator, 0, int(memory.size()) - 1));
 
 			const uint8_t* memoryInside = memory.constdata<uint8_t>() + offset;
-			const size_t memoryInsideSize = size_t(RandomI::random(1, int(memory.size()) - int(offset)));
+			const size_t memoryInsideSize = size_t(RandomI::random(randomGenerator, 1, int(memory.size()) - int(offset)));
 
 			if (!memory.isInside(memoryInside, memoryInsideSize))
 			{
@@ -787,7 +809,7 @@ bool TestMemory::testIsInside(const double /*testDuration*/)
 			}
 		}
 	}
-	while (startTimestamp > Timestamp(true));
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
 	{
