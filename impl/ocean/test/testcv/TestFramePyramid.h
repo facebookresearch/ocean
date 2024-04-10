@@ -143,6 +143,15 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid
 
 		/**
 		 * Tests the construction of a new frame pyramid from an existing source pyramid.
+		 * @param downsamplingMode The downsampling mode to use
+		 * @param testDuration Requested duration of test loop in seconds
+		 * @param worker The worker object to distribute the computation
+		 * @return True, if the test succeeded; otherwise, false is returned.
+		 */
+		static bool testConstructFromPyramid(const CV::FramePyramid::DownsamplingMode downsamplingMode, const double testDuration, Worker& worker);
+
+		/**
+		 * Tests the construction of a new frame pyramid from an existing source pyramid.
 		 * @param sourcePyramid Source frame pyramid that is used to generate the frame pyramid
 		 * @param copyData True, if frame data is copied; otherwise, a reference to the frame data is created
 		 * @param layerIndex Index of the first source pyramid layer that is used

@@ -290,8 +290,8 @@ bool QRCodeDetector3D::detectQRCodesWithPyramids(const SharedAnyCameras& sharedA
 	constexpr unsigned int numberLayers = 3u;
 	const FramePyramid framePyramids[2] =
 	{
-		FramePyramid(firstLayers[0], numberLayers, worker, FramePyramid::DM_FILTER_14641),
-		FramePyramid(firstLayers[1], numberLayers, worker, FramePyramid::DM_FILTER_14641)
+		FramePyramid(firstLayers[0], FramePyramid::DM_FILTER_14641, numberLayers, worker),
+		FramePyramid(firstLayers[1], FramePyramid::DM_FILTER_14641, numberLayers, worker)
 	};
 
 	ocean_assert(framePyramids[0].isValid() && framePyramids[0].layers() == numberLayers);

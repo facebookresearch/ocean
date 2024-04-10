@@ -755,7 +755,7 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 
 					for (unsigned int layerIndex = 1u; layerIndex <= layers; ++layerIndex)
 					{
-						const CV::FramePyramid framePyramid(frame, layerIndex, &extremeWorker, downsamplingMode);
+						const CV::FramePyramid framePyramid(frame, downsamplingMode, layerIndex, &extremeWorker);
 
 						if (!validateFramePyramid(frame, framePyramid, downsamplingMode, layerIndex))
 						{
@@ -838,7 +838,7 @@ bool TestFramePyramid::testCreationFramePyramidDeprecated(const unsigned int wid
 
 					if (RandomI::boolean(randomGenerator))
 					{
-						framePyramid = CV::FramePyramid(frame, layers, useWorker, downsamplingMode);
+						framePyramid = CV::FramePyramid(frame, downsamplingMode, layers, useWorker);
 					}
 					else
 					{
@@ -1135,6 +1135,47 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 	Log::info() << "Testing construction from pyramid with pixel format RGB24:";
 	Log::info() << " ";
 
+	bool allSucceeded = true;
+
+	allSucceeded = testConstructFromPyramid(CV::FramePyramid::DM_FILTER_11, testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
+	allSucceeded = testConstructFromPyramid(CV::FramePyramid::DM_FILTER_14641, testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestFramePyramid::testConstructFromPyramid(const CV::FramePyramid::DownsamplingMode downsamplingMode, const double testDuration, Worker& worker)
+{
+	if (downsamplingMode == CV::FramePyramid::DM_FILTER_11)
+	{
+		Log::info() << "... with 1-1 downsampling:";
+	}
+	else if (downsamplingMode == CV::FramePyramid::DM_FILTER_14641)
+	{
+		Log::info() << "... with 1-4-6-4-1 downsampling:";
+	}
+	else
+	{
+		ocean_assert(false && "Invalid downsampling mode!");
+		return false;
+	}
+
+	Log::info() << " ";
+
 	const IndexPairs32 sizes =
 	{
 		IndexPair32(640u, 480u),
@@ -1159,7 +1200,7 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 
 		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-		CV::FramePyramid framePyramid = CV::FramePyramid(frame, 2u, nullptr);
+		CV::FramePyramid framePyramid = CV::FramePyramid(frame, downsamplingMode, 2u, nullptr);
 		allSucceeded = testConstructFromPyramid(framePyramid, true,  0u, ALL_LAYERS, testDuration, worker) && allSucceeded;
 		Log::info() << " ";
 		allSucceeded = testConstructFromPyramid(framePyramid, false, 0u, ALL_LAYERS, testDuration, worker) && allSucceeded;
@@ -1179,7 +1220,7 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 		Log::info() << " ";
 		Log::info() << " ";
 
-		framePyramid = CV::FramePyramid(frame, ALL_LAYERS, nullptr);
+		framePyramid = CV::FramePyramid(frame, downsamplingMode, ALL_LAYERS, nullptr);
 		allSucceeded = testConstructFromPyramid(framePyramid, true,  0u, ALL_LAYERS, testDuration, worker) && allSucceeded;
 		Log::info() << " ";
 		allSucceeded = testConstructFromPyramid(framePyramid, false, 0u, ALL_LAYERS, testDuration, worker) && allSucceeded;

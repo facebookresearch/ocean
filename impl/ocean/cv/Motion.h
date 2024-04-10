@@ -192,8 +192,8 @@ bool Motion<TMetric>::trackPointsInPyramidMirroredBorder(const Frame& previousFr
 		return false;
 	}
 
-	const FramePyramid previousPyramid(previousFrame, idealLayers, worker, downsamplingMode);
-	const FramePyramid currentPyramid(currentFrame, idealLayers, worker, downsamplingMode);
+	const FramePyramid previousPyramid(previousFrame, downsamplingMode, idealLayers, worker);
+	const FramePyramid currentPyramid(currentFrame, downsamplingMode, idealLayers, worker);
 
 	return trackPointsInPyramidMirroredBorder<tPatchSize>(previousPyramid, currentPyramid, previousPoints, roughPoints, currentPoints, coarsestLayerRadiusX, coarsestLayerRadiusY, worker, metricResults, metricIdentityResults);
 }

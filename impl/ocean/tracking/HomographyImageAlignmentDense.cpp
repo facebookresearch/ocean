@@ -1458,8 +1458,8 @@ bool HomographyImageAlignmentDense::optimizeAlignmentMultiResolution(const Frame
 
 	ocean_assert(coarseIterations >= 1u && fineIterations >= 1u);
 
-	const CV::FramePyramid templateFramePyramid(templateFrame, numberPyramidLayers, WorkerPool::get().scopedWorker()(), downsamplingMode);
-	const CV::FramePyramid currentFramePyramid(currentFrame, numberPyramidLayers, WorkerPool::get().scopedWorker()(), downsamplingMode);
+	const CV::FramePyramid templateFramePyramid(templateFrame, downsamplingMode, numberPyramidLayers, WorkerPool::get().scopedWorker()());
+	const CV::FramePyramid currentFramePyramid(currentFrame, downsamplingMode, numberPyramidLayers, WorkerPool::get().scopedWorker()());
 
 	const unsigned int layers = min(templateFramePyramid.layers(), currentFramePyramid.layers());
 

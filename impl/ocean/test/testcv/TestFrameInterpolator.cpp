@@ -491,7 +491,7 @@ bool TestFrameInterpolator::resizePlane(const Frame& sourcePlane, Frame& targetP
 
 		if (layers >= 2u)
 		{
-			const CV::FramePyramid framePyramid(sourcePlane, layers, nullptr, CV::FramePyramid::DM_FILTER_14641);
+			const CV::FramePyramid framePyramid(sourcePlane, CV::FramePyramid::DM_FILTER_14641, layers, nullptr);
 
 			const Frame coarsestPyramidLayer(framePyramid.coarsestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
 
@@ -508,7 +508,7 @@ bool TestFrameInterpolator::resizePlane(const Frame& sourcePlane, Frame& targetP
 
 		if (layers >= 2u)
 		{
-			const CV::FramePyramid framePyramid(sourcePlane, layers, nullptr, CV::FramePyramid::DM_FILTER_11);
+			const CV::FramePyramid framePyramid(sourcePlane, CV::FramePyramid::DM_FILTER_11, layers, nullptr);
 
 			const Frame coarsestPyramidLayer(framePyramid.coarsestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
 
