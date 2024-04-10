@@ -117,14 +117,10 @@ bool TestFREAKDescriptorT<tSize>::testComputeDescriptor(const double testDuratio
 	{
 		// Generate a pyramid from a random image
 
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-		Frame yFrame(FrameType(imageWidth, imageHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-
-		CV::CVUtilities::randomizeFrame(yFrame, false, &randomGenerator);
+		Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(imageWidth, imageHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 		CV::FrameFilterGaussian::filter(yFrame, 5u, &worker);
 
-		const CV::FramePyramid yFramePyramid(yFrame, /* FRL default number of layers */ 6u, &worker);
+		const CV::FramePyramid yFramePyramid(yFrame, /* FRL default number of layers */ 6u, false /*copyFirstLayer*/, &worker);
 
 		// Compute descriptors for random points in all but the last pyramid layer
 
@@ -248,14 +244,11 @@ bool TestFREAKDescriptorT<tSize>::testComputeDescriptors(const double testDurati
 	{
 		// Generate a pyramid from a random image
 
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(imageWidth, imageHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-		Frame yFrame(FrameType(imageWidth, imageHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-
-		CV::CVUtilities::randomizeFrame(yFrame, false, &randomGenerator);
 		CV::FrameFilterGaussian::filter(yFrame, 5u, &worker);
 
-		const CV::FramePyramid yFramePyramid(yFrame, /* FRL default number of layers */ 6u, &worker);
+		const CV::FramePyramid yFramePyramid(yFrame, /* FRL default number of layers */ 6u, false /*copyFirstLayer*/, &worker);
 
 		// Compute descriptors for random points in all but the last pyramid layer
 
