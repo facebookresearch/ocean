@@ -12,7 +12,6 @@ OCEAN_THIRD_PARTY_INSTALL_ROOT_DIRECTORY="/tmp"
 #
 # BUILD_TYPE: The build type to be used, valid values: Debug, Release
 # LIBRARY_TYPE: The type of libraries to be built, valid values: static, shared
-# BUILD_PASS_INDEX: Which stage of targets to build, valid values: 0, 1
 function run_build {
     BUILD_TYPE=$1
     if [[ ${BUILD_TYPE} != "Debug" ]] && [[ ${BUILD_TYPE} != "Release" ]]; then
@@ -30,30 +29,36 @@ function run_build {
         exit 1
     fi
 
-    BUILD_PASS_INDEX=$3
-    if [[ ${BUILD_PASS_INDEX} != "0" ]] && [[ ${BUILD_PASS_INDEX} != "1" ]]; then
-        echo "ERROR: Invalid value: BUILD_PASS_INDEX=${BUILD_PASS_INDEX}"
-        exit 1
-    fi
-
     OCEAN_THIRD_PARTY_BUILD_DIRECTORY="${OCEAN_THIRD_PARTY_BUILD_ROOT_DIRECTORY}/ocean/build/third-party_${LIBRARY_TYPE}_${BUILD_TYPE}"
     OCEAN_THIRD_PARTY_INSTALL_DIRECTORY="${OCEAN_THIRD_PARTY_INSTALL_ROOT_DIRECTORY}/ocean/install/${LIBRARY_TYPE}_${BUILD_TYPE}"
 
     echo " "
     echo "BUILD_TYPE: ${BUILD_TYPE}"
     echo "LIBRARY_TYPE: ${LIBRARY_TYPE}"
-    echo "BUILD_PASS_INDEX: ${BUILD_PASS_INDEX}"
     echo " "
     echo "OCEAN_THIRD_PARTY_BUILD_DIRECTORY: ${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}"
     echo "OCEAN_THIRD_PARTY_INSTALL_DIRECTORY: ${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}"
     echo " "
 
+    echo " "
+    echo "PASS 0"
     cmake -S "${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" \
         -B "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" \
         -DCMAKE_INSTALL_PREFIX="${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
         -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
         -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
-        -DBUILD_PASS_INDEX="${BUILD_PASS_INDEX}"
+        -DBUILD_PASS_INDEX="0"
+
+    cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16
+
+    echo " "
+    echo "PASS 1"
+    cmake -S "${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" \
+        -B "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" \
+        -DCMAKE_INSTALL_PREFIX="${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
+        -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
+        -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
+        -DBUILD_PASS_INDEX="1"
 
     cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16
 
@@ -62,14 +67,8 @@ function run_build {
     echo " "
 }
 
-run_build Debug static 0
-run_build Debug static 1
+run_build Debug static
+run_build Debug shared
 
-run_build Debug shared 0
-run_build Debug shared 1
-
-run_build Release static 0
-run_build Release static 1
-
-run_build Release shared 0
-run_build Release shared 1
+run_build Release static
+run_build Release shared
