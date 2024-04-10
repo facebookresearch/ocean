@@ -118,37 +118,3 @@ function(get_ocean_compiler_flags ocean_compiler_flags)
 
     set(${ocean_compiler_flags} ${local_compiler_flags} PARENT_SCOPE)
 endfunction()
-
-# Returns the name of the subdirectory of lib where libraries will be installed
-#
-# Output:
-#   suffix_out: underscore-delimited triplet of platform_linkagemode_buildtype
-function(get_ocean_library_installation_suffix suffix_out)
-    if (OCEAN_USE_LONG_CMAKE_INSTALL_LIBDIR)
-        if (BUILD_SHARED_LIBS)
-            set(OCEAN_LINKING_TYPE_STRING "shared")
-        else()
-            set(OCEAN_LINKING_TYPE_STRING "static")
-        endif()
-
-        if (ANDROID)
-            set(PLATFORM_ABI ${ANDROID_ABI})
-        else()
-            set(PLATFORM_ABI ${OCEAN_TARGET_PROCESSOR_TYPE})
-        endif()
-
-        string(TOLOWER "/${OCEAN_TARGET_SYSTEM_NAME}_${PLATFORM_ABI}_${OCEAN_LINKING_TYPE_STRING}_${CMAKE_BUILD_TYPE}" suffix)
-        set(${suffix_out} "${suffix}" PARENT_SCOPE)
-    else()
-        set(${suffix_out} "" PARENT_SCOPE)
-    endif()
-endfunction()
-
-# Returns the name of the installation directory that should be used for libraries
-#
-# Output:
-#   ocean_library_installation_directory: The the name of the installation directory that should be used for libraries
-function(get_ocean_library_installation_directory ocean_library_installation_directory)
-    get_ocean_library_installation_suffix(library_installation_suffix)
-    set(${ocean_library_installation_directory} "lib${library_installation_suffix}" PARENT_SCOPE)
-endfunction()

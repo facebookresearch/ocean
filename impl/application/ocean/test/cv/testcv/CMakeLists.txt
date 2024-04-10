@@ -27,12 +27,6 @@ if (APPLE OR LINUX OR WIN32)
         target_compile_options(${OCEAN_TARGET_NAME} PRIVATE "-fexceptions")
     endif()
 
-    if (BUILD_SHARED_LIBS)
-        if (APPLE OR LINUX)
-            set_property(TARGET ${OCEAN_TARGET_NAME} APPEND PROPERTY INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${OCEAN_LIBRARY_INSTALL_DIR}")
-        endif()
-    endif()
-
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
