@@ -149,8 +149,8 @@ size_t Frame2FrameTracker::trackPlanarObject(const PinholeCamera& pinholeCamera,
 		return false;
 	}
 
-	const CV::FramePyramid previousPyramid(previousFrame, layers, worker, downsamplingMode);
-	const CV::FramePyramid nextPyramid(nextFrame, layers, worker, downsamplingMode);
+	const CV::FramePyramid previousPyramid(Frame(previousFrame, Frame::ACM_USE_KEEP_LAYOUT), downsamplingMode, layers, worker);
+	const CV::FramePyramid nextPyramid(Frame(nextFrame, Frame::ACM_USE_KEEP_LAYOUT), downsamplingMode, layers, worker);
 
 	return trackPlanarObject<tSize>(pinholeCamera, previousPyramid, nextPyramid, layerRadius, previousPose, previousPlane, previousSubRegion, nextPose, maximalSqrError, worker);
 }
