@@ -152,7 +152,9 @@ inline bool ORBFeatureDescriptor::detectReferenceFeaturesAndDetermineDescriptors
 		return false;
 	}
 
-	detectReferenceFeaturesAndDetermineDescriptors(FramePyramid(yFrame, std::min(pyramidLayers, maxLayerNumber), worker), featurePoints, useHarrisFeatures, featureThreshold, worker);
+	const FramePyramid framePyramid(yFrame, std::min(pyramidLayers, maxLayerNumber), false /*copyFirstLayer*/, worker);
+
+	detectReferenceFeaturesAndDetermineDescriptors(framePyramid, featurePoints, useHarrisFeatures, featureThreshold, worker);
 
 	return true;
 }

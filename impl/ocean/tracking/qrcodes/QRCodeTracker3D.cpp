@@ -265,7 +265,7 @@ const QRCodeTracker3D::TrackedQRCodesMap& QRCodeTracker3D::trackQRCodes(const Sh
 		for (const Frame& yFrame : yFrames)
 		{
 			ocean_assert(parameters_.trackingNumberFramePyramidLayers_ != 0u);
-			CV::FramePyramid framePyramid(yFrame, parameters_.trackingNumberFramePyramidLayers_, worker);
+			CV::FramePyramid framePyramid(yFrame, parameters_.trackingNumberFramePyramidLayers_, true /*copyFirstLayer*/, worker);
 			ocean_assert(framePyramid.isValid());
 
 			framePyramids.emplace_back(std::move(framePyramid));

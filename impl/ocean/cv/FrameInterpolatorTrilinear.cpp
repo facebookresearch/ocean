@@ -60,7 +60,7 @@ bool FrameInterpolatorTrilinear::resize(const Frame& source, Frame& target, Work
 {
 	ocean_assert(source.isValid());
 
-	const FramePyramid sourcePyramid(source, (unsigned int)(-1), worker);
+	const FramePyramid sourcePyramid(source, FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, false /*copyFirstLayer*/, worker);
 
 	return resize(sourcePyramid, target, worker);
 }

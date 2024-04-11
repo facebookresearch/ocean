@@ -1292,32 +1292,37 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 				frame.makeContinuous(); // **TODO** workaround until LegacyFrame is not used anymore
 
+				const CV::FramePyramid::DownsamplingMode dowsamplingMode = RandomI::random(randomGenerator, {CV::FramePyramid::DM_FILTER_11, CV::FramePyramid::DM_FILTER_14641});
+
 				performance.start();
-					const CV::FramePyramid framePyramid(frame, layerCount, useWorker);
+					const CV::FramePyramid framePyramid(frame, dowsamplingMode, layerCount, useWorker);
 				performance.stop();
 
-				if (!validateConstructFromFrame(framePyramid, CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+				if (!validateConstructFromFrame(framePyramid, dowsamplingMode, frame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
 				{
 					allSucceeded = false;
 				}
 
-				const bool copyFirstLayer = RandomI::random(1u) == 0u;
-
-				if (!copyFirstLayer)
+				if (dowsamplingMode == CV::FramePyramid::DM_FILTER_11)
 				{
-					readOnlyLayers.emplace(0u);
-					ownerLayers.erase(0u);
-					outsideMemoryBlockLayers.emplace(0u);
-				}
+					const bool copyFirstLayer = RandomI::boolean(randomGenerator);
 
-				if (!validateConstructFromFrame(CV::FramePyramid(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), frame.pixelOrigin(), layerCount, frame.paddingElements(), copyFirstLayer, useWorker, FrameType::FORMAT_UNDEFINED, frame.timestamp()), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
-				{
-					allSucceeded = false;
-				}
+					if (!copyFirstLayer)
+					{
+						readOnlyLayers.emplace(0u);
+						ownerLayers.erase(0u);
+						outsideMemoryBlockLayers.emplace(0u);
+					}
 
-				if (!validateConstructFromFrame(CV::FramePyramid(frame, layerCount, copyFirstLayer, useWorker), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
-				{
-					allSucceeded = false;
+					if (!validateConstructFromFrame(CV::FramePyramid(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), frame.pixelOrigin(), layerCount, frame.paddingElements(), copyFirstLayer, useWorker, FrameType::FORMAT_UNDEFINED, frame.timestamp()), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+					{
+						allSucceeded = false;
+					}
+
+					if (!validateConstructFromFrame(CV::FramePyramid(frame, layerCount, copyFirstLayer, useWorker), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+					{
+						allSucceeded = false;
+					}
 				}
 			}
 			while (startTimestamp + testDuration > Timestamp(true));

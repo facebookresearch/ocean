@@ -429,7 +429,7 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 		return false;
 	}
 
-	CV::FramePyramid currentFramePyramid(frame, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, worker);
+	CV::FramePyramid currentFramePyramid(frame, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, true /*copyFirstLayer*/, worker);
 
 	if (previousFramePyramid_.isNull())
 	{
@@ -501,7 +501,7 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 			return false;
 		}
 
-		CV::FramePyramid correspondingFramePyramid(correspondingPanoramaFrame, 5u, worker);
+		const CV::FramePyramid correspondingFramePyramid(correspondingPanoramaFrame, 5u, true /*copyFirstLayer*/, worker);
 
 		previousImagePoints.clear();
 		currentImagePoints.clear();
@@ -552,9 +552,6 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 			{
 				return false;
 			}
-
-			// we do not need more than 5 layers as we expect very tiny offsets
-			correspondingFramePyramid = CV::FramePyramid(correspondingPanoramaFrame, 5u, worker);
 
 			previousImagePoints.clear();
 			currentImagePoints.clear();
@@ -636,8 +633,8 @@ bool SphericalEnvironment::optimizeOrientation(const PinholeCamera& pinholeCamer
 		CV::Segmentation::MaskCreator::joinMasks(mask.constdata<uint8_t>(), referenceMask.data<uint8_t>(), referenceMask.width(), referenceMask.height(), mask.paddingElements(), referenceMask.paddingElements(), maskValue(), worker);
 	}
 
-	CV::FramePyramid framePyramid(frame, 6u, worker);
-	CV::FramePyramid referenceFramePyramid(referenceFrame, 6u, worker);
+	CV::FramePyramid framePyramid(frame, 6u, false /*copyFirstLayer*/, worker);
+	CV::FramePyramid referenceFramePyramid(referenceFrame, 6u, false /*copyFirstLayer*/, worker);
 
 	Vectors2 referenceImagePoints, frameImagePoints;
 	if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackArbitraryPointsBidirectionalSubPixelMirroredBorder<15u>(referenceFramePyramid, framePyramid, 2u, referenceImagePoints, frameImagePoints, Scalar(0.9 * 0.9), CV::SubRegion(std::move(referenceMask), CV::PixelBoundingBox(), maskValue()), 30u, 30u, 30u, worker) || referenceImagePoints.size() < 10)
@@ -1113,7 +1110,7 @@ bool SphericalEnvironment::nonHomographyMask(const CV::FramePyramid& previousFra
 		return false;
 	}
 
-	const CV::FramePyramid adjustedPreviousFramePyramid(adjustedPreviousFrame, currentFramePyramid.layers(), worker);
+	const CV::FramePyramid adjustedPreviousFramePyramid(adjustedPreviousFrame, currentFramePyramid.layers(), false /*copyFirstLayer*/, worker);
 
 	Vectors2 previousImagePoints, currentImagePoints;
 	if (!CV::Advanced::AdvancedMotionSSD::trackArbitraryPointsBidirectionalSubPixelMirroredBorder<5u>(adjustedPreviousFramePyramid, currentFramePyramid, 2u, previousImagePoints, currentImagePoints, Scalar(1), CV::SubRegion(adjustedPreviousMask, CV::PixelBoundingBox(), maskValue), 30u, 30u, 25u, worker))
