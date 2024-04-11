@@ -5,7 +5,12 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 include(FetchContent)
 
 cmake_policy(SET CMP0144 NEW)
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
+
+if(BUILD_SHARED_LIBS)
+  option(BUILD_SHARED_LIBS "" ON)
+else()
+  option(BUILD_SHARED_LIBS "" OFF)
+endif()
 
 set(ZLIB_ROOT /c/tmp/ocean_third-party_install_release)
 set(PNG_ROOT /c/tmp/ocean_third-party_install_release)

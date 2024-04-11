@@ -63,6 +63,17 @@ function run_build {
     cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16
 
     echo " "
+    echo "PASS 2"
+    cmake -S "${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" \
+        -B "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" \
+        -DCMAKE_INSTALL_PREFIX="${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
+        -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
+        -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
+        -DBUILD_PASS_INDEX="2"
+
+    cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16
+
+    echo " "
     echo " "
     echo " "
 }
@@ -72,3 +83,4 @@ run_build Debug shared
 
 run_build Release static
 run_build Release shared
+

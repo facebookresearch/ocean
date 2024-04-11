@@ -5,6 +5,8 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 include(FetchContent)
 
 set(FT_DISABLE_BZIP2 TRUE)
+set(ZLIB_ROOT ${CMAKE_INSTALL_PREFIX})
+set(PNG_ROOT ${CMAKE_INSTALL_PREFIX})
 
 FetchContent_Declare(
   freetype

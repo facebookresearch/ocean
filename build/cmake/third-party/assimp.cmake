@@ -6,6 +6,8 @@ include(FetchContent)
 
 set(ZLIB_ROOT ${CMAKE_INSTALL_PREFIX})
 
+option(BUILD_SHARED_LIBS "" BUILD_SHARED_LIBS)
+
 FetchContent_Declare(
   assimp
   GIT_REPOSITORY https://github.com/assimp/assimp.git

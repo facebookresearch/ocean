@@ -5,6 +5,9 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 include(FetchContent)
 
 set(tiff-install ON CACHE BOOL "")
+set(tiff-tools OFF CACHE BOOL "")
+set(tiff-tests OFF CACHE BOOL "")
+set(tiff-contrib OFF CACHE BOOL "")
 
 FetchContent_Declare(
   libtiff
