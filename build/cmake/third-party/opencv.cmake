@@ -12,13 +12,15 @@ else()
   option(BUILD_SHARED_LIBS "" OFF)
 endif()
 
-set(ZLIB_ROOT /c/tmp/ocean_third-party_install_release)
-set(PNG_ROOT /c/tmp/ocean_third-party_install_release)
-set(tiff_ROOT /c/tmp/ocean_third-party_install_release)
+set(ZLIB_ROOT ${CMAKE_INSTALL_PREFIX})
+set(PNG_ROOT  ${CMAKE_INSTALL_PREFIX})
+set(tiff_ROOT ${CMAKE_INSTALL_PREFIX})
+set(JPEG_ROOT ${CMAKE_INSTALL_PREFIX})
 
 set(BUILD_ZLIB OFF CACHE BOOL "")
-set(BUILD_PNG OFF CACHE BOOL "")
+set(BUILD_PNG  OFF CACHE BOOL "")
 set(BUILD_TIFF OFF CACHE BOOL "")
+set(BUILD_JPEG OFF CACHE BOOL "")
 
 FetchContent_Declare(
   opencv

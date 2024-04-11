@@ -5,17 +5,24 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 include(FetchContent)
 
 set(ZLIB_ROOT ${CMAKE_INSTALL_PREFIX})
+set(JPEG_ROOT ${CMAKE_INSTALL_PREFIX})
 
-option(BUILD_SHARED_LIBS "" BUILD_SHARED_LIBS)
+if(BUILD_SHARED_LIBS)
+  option(BUILD_SHARED_LIBS "" ON)
+else()
+  option(BUILD_SHARED_LIBS "" OFF)
+  # .pdb file is an output of the linker which doesn't run
+  option(ASSIMP_INSTALL_PDB "" OFF)
+endif()
+
+set(ASSIMP_BUILD_ZLIB OFF CACHE BOOL "")
 
 FetchContent_Declare(
   assimp
   GIT_REPOSITORY https://github.com/assimp/assimp.git
-  GIT_TAG        v5.3.1
+  GIT_TAG        v5.4.0
   PATCH_COMMAND  ${CMAKE_COMMAND} -E remove ./cmake-modules/FindZLIB.cmake
 )
-
-set(ASSIMP_BUILD_ZLIB OFF CACHE BOOL "")
 
 FetchContent_MakeAvailable(assimp)
 
