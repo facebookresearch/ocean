@@ -240,7 +240,10 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 			database.addPose<false>(poseId);
 		}
 
-		currentFramePyramid.replace(frame, trackingConfiguration.pyramidLayers(), worker, CV::FramePyramid::DM_FILTER_14641);
+		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker))
+		{
+			return false;
+		}
 		ocean_assert(previousFramePyramid.isValid());
 
 		// we detect strong feature points in the current frame
@@ -408,7 +411,10 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 			return false;
 		}
 
-		currentFramePyramid.replace(frame, trackingConfiguration.pyramidLayers(), worker, CV::FramePyramid::DM_FILTER_14641);
+		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker))
+		{
+			return false;
+		}
 		ocean_assert(previousFramePyramid);
 
 		Indices32 validTrackedIndices;
@@ -520,7 +526,10 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 			database.addPose<false>(poseId);
 		}
 
-		currentFramePyramid.replace(frame, trackingConfiguration.pyramidLayers(), worker, CV::FramePyramid::DM_FILTER_14641);
+		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker))
+		{
+			return false;
+		}
 		ocean_assert(previousFramePyramid.isValid());
 
 		// we detect strong feature points in the current frame
@@ -689,7 +698,10 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 			return false;
 		}
 
-		currentFramePyramid.replace(frame, trackingConfiguration.pyramidLayers(), worker, CV::FramePyramid::DM_FILTER_14641);
+		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker))
+		{
+			return false;
+		}
 		ocean_assert(previousFramePyramid);
 
 		Indices32 validTrackedIndices;
@@ -945,7 +957,10 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 			database.addPose<false>(poseId);
 		}
 
-		currentFramePyramid.replace(frame, trackingConfiguration.pyramidLayers(), worker, CV::FramePyramid::DM_FILTER_14641);
+		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker))
+		{
+			return false;
+		}
 		ocean_assert(previousFramePyramid.isValid());
 
 		Vectors2 currentFeaturePoints;
@@ -1047,7 +1062,10 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 			database.addPose<false>(poseId);
 		}
 
-		currentFramePyramid.replace(frame, trackingConfiguration.pyramidLayers(), worker, CV::FramePyramid::DM_FILTER_14641);
+		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker))
+		{
+			return false;
+		}
 		ocean_assert(previousFramePyramid);
 
 		Vectors2 currentFeaturePoints;

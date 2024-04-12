@@ -249,9 +249,7 @@ bool FrameTracker::FramePyramidTrackerComponent::onSetupIteration(const unsigned
 	}
 
 	// we create the frame pyramid without explicit Gaussian filtering
-	currentFramePyramid_.replace(currentFrame, framePyramidLayers_, WorkerPool::get().scopedWorker()());
-
-	return true;
+	return currentFramePyramid_.replace8BitPerChannel11(currentFrame, framePyramidLayers_, true /*copyFirstLayer*/, WorkerPool::get().scopedWorker()());
 }
 
 bool FrameTracker::succeeded() const

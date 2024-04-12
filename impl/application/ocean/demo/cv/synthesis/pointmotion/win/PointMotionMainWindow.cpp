@@ -141,7 +141,10 @@ void PointMotionMainWindow::onFrame(const Frame& frame)
 		return;
 	}
 
-	currentFramePyramid_.replace(rgbFrame, maximalLayers, &worker_, CV::FramePyramid::DM_FILTER_14641);
+	if (!currentFramePyramid_.replace(rgbFrame, CV::FramePyramid::DM_FILTER_14641, maximalLayers, &worker_))
+	{
+		return;
+	}
 
 	if (!previousPositions_.empty())
 	{

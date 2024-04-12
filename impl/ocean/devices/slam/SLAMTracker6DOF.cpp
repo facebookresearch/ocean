@@ -168,7 +168,11 @@ void SLAMTracker6DOF::threadRun()
 				return;
 			}
 
-			currentFramePyramid_.replace(yFrame, framePyramidLayers, scopedWorker());
+			if (!currentFramePyramid_.replace8BitPerChannel11(yFrame, framePyramidLayers, true /*coypFirstLayer*/, scopedWorker()))
+			{
+				ocean_assert(false && "This should never happen!");
+				return;
+			}
 
 			if (objectPoints_.empty())
 			{

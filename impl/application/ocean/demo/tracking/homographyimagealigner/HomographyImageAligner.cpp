@@ -432,7 +432,7 @@ bool HomographyImageAligner::alignNewFrame(Frame& frame, double& time, SquareMat
 	HighPerformanceStatistic::ScopedStatistic scopedPerformance(performance_);
 
 	Frame trackingFrame;
-	if (!CV::FrameConverter::Comfort::convert(*currentFrame, FrameType(*currentFrame, trackingPixelFormat_), trackingFrame, false, scopedWorker()))
+	if (!CV::FrameConverter::Comfort::convert(*currentFrame, FrameType(*currentFrame, trackingPixelFormat_), trackingFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
@@ -459,7 +459,10 @@ bool HomographyImageAligner::alignNewFrame(Frame& frame, double& time, SquareMat
 
 	// in each iteration we do not create a new pyramid but we use the existing pyramid to increase performance
 
-	currentFramePyramid_.replace(trackingFrame, pyramidLayers, scopedWorker());
+	if (!currentFramePyramid_.replace8BitPerChannel11(trackingFrame, pyramidLayers, true /*copyFirstLayer*/, scopedWorker()))
+	{
+		return false;
+	}
 
 	if (previousFramePyramid_)
 	{

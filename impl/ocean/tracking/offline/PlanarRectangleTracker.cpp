@@ -342,7 +342,7 @@ PlanarRectangleTracker::FramePyramidTrackerComponent::IterationResult PlanarRect
 		}
 
 		// create a frame pyramid of the tracking rectangle
-		if (!initialRectifiedFramePyramid_.replace(initialRectifiedFrame, 5u, scopedWorker()))
+		if (!initialRectifiedFramePyramid_.replace8BitPerChannel11(initialRectifiedFrame, 5u, true /*copyFirstLayer*/, scopedWorker()))
 		{
 			return IR_FAILED;
 		}
@@ -480,7 +480,10 @@ bool PlanarRectangleTracker::PlaneTrackerComponent::optimizePose(const Frame& cu
 	// the tracking sub-region
 	const CV::SubRegion subRegion(maskTrackingArea);
 
-	intermediateRectifiedFramePyramid_.replace(intermediateRectifiedFrame_, 5u, worker);
+	if (!intermediateRectifiedFramePyramid_.replace8BitPerChannel11(intermediateRectifiedFrame_, 5u, true /*copyFirstLayer*/, worker))
+	{
+		return false;
+	}
 
 	Vectors2 rectifiedInitialPoints, rectifiedCurrentPoints;
 	if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackArbitraryPointsBidirectionalSubPixelMirroredBorder<15u>(initialRectifiedFramePyramid_, intermediateRectifiedFramePyramid_, 2u, rectifiedInitialPoints, rectifiedCurrentPoints, Scalar(0.9 * 0.9), subRegion, 20u, 20u, 30u, worker, 3u) || rectifiedInitialPoints.size() <= 45)

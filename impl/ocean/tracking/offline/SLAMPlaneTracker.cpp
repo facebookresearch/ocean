@@ -225,7 +225,10 @@ bool SLAMPlaneTracker::HomographyTrackerComponent::optimizeHomography(const CV::
 	}
 
 	// create a frame pyramid of the transformed current frame
-	componentIntermediateFramePyramid_.replace(componentIntermediateHomographyFrame_, previousFramePyramid.layers(), worker);
+	if (!componentIntermediateFramePyramid_.replace8BitPerChannel11(componentIntermediateHomographyFrame_, previousFramePyramid.layers(), true /*copyFirstLayer*/, worker))
+	{
+		return false;
+	}
 	ocean_assert(previousFramePyramid.layers() == componentIntermediateFramePyramid_.layers());
 
 	// track points from the previous frame to the (transformed) current frame, we should determine a tiny offset as the current frame matches almost with the previous frame
@@ -830,7 +833,11 @@ bool SLAMPlaneTracker::PlaneTrackerComponent::optimizePose(const CV::FramePyrami
 	}
 
 	// create a frame pyramid of the transformed current frame
-	componentIntermediateFramePyramid_.replace(componentIntermediateHomographyFrame_, 2u, worker);
+	if (!componentIntermediateFramePyramid_.replace8BitPerChannel11(componentIntermediateHomographyFrame_, 2u, true /*copyFirstLayer*/, worker))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
 	previousImagePoints.clear();
 	currentImagePoints.clear();

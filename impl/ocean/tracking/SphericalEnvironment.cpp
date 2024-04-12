@@ -678,8 +678,8 @@ bool SphericalEnvironment::optimizeOrientation(const PinholeCamera& pinholeCamer
 			CV::Segmentation::MaskCreator::joinMasks(mask.constdata<uint8_t>(), referenceMask.data<uint8_t>(), referenceMask.width(), referenceMask.height(), mask.paddingElements(), referenceMask.paddingElements(), maskValue(), worker);
 		}
 
-		framePyramid.replace(frame, 4u, worker);
-		referenceFramePyramid.replace(referenceFrame, 4u, worker);
+		framePyramid.reduceLayers(4);
+		referenceFramePyramid.reduceLayers(4);
 
 		referenceImagePoints.clear();
 		frameImagePoints.clear();

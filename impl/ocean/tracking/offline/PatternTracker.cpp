@@ -211,7 +211,11 @@ FrameTracker::FrameTrackerComponent::IterationResult PatternTracker::FineTrackin
 		}
 
 		// we apply a simple Gaussian blur as we expect the pattern frame to have perfect edges which could be difficult for tracking
-		patternFramePyramid_.replace(targetFrame, (unsigned int)(-1), scopedWorker(), CV::FramePyramid::DM_FILTER_14641);
+		if (!patternFramePyramid_.replace(targetFrame, CV::FramePyramid::DM_FILTER_14641, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, scopedWorker()))
+		{
+			ocean_assert(false && "This should never happen!");
+			return IR_FAILED;
+		}
 	}
 
 	const OfflinePose& offlinePose = poses_[currentIndex];
@@ -891,7 +895,11 @@ bool PatternTracker::closeGaps(const unsigned int lowerFrameIndex, const unsigne
 					return false;
 				}
 
-				centerPyramid.replace(zippedFrame, pyramidLayers, scopedWorker(), CV::FramePyramid::DM_FILTER_14641);
+				if (!centerPyramid.replace(zippedFrame, CV::FramePyramid::DM_FILTER_14641, pyramidLayers, scopedWorker()))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
 
 				// create left frame pyramid (if needed)
 				if (validLeft)
@@ -909,7 +917,11 @@ bool PatternTracker::closeGaps(const unsigned int lowerFrameIndex, const unsigne
 						return false;
 					}
 
-					leftPyramid.replace(zippedFrame, pyramidLayers, scopedWorker(), CV::FramePyramid::DM_FILTER_14641);
+					if (!leftPyramid.replace(zippedFrame, CV::FramePyramid::DM_FILTER_14641, pyramidLayers, scopedWorker()))
+					{
+						ocean_assert(false && "This should never happen!");
+						return false;
+					}
 				}
 
 				// create right frame pyramid (if needed)
@@ -928,7 +940,11 @@ bool PatternTracker::closeGaps(const unsigned int lowerFrameIndex, const unsigne
 						return false;
 					}
 
-					rightPyramid.replace(zippedFrame, pyramidLayers, scopedWorker(), CV::FramePyramid::DM_FILTER_14641);
+					if (!rightPyramid.replace(zippedFrame, CV::FramePyramid::DM_FILTER_14641, pyramidLayers, scopedWorker()))
+					{
+						ocean_assert(false && "This should never happen!");
+						return false;
+					}
 				}
 
 				HomogenousMatrix4 improvedLeftPose, improvedRightPose;
