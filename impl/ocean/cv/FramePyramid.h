@@ -469,23 +469,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		explicit inline operator bool() const;
 
 		/**
-		 * Creates a new frame pyramid by using layers from an existing source frame pyramid.
-		 * The range of used layers can be specified by layerIndex and layerCount.<br>
-		 * If tCopyData is False, then only a reference is created to the given source frame data; the new frame pyramid will be a read-only pyramid.<br>
-		 * If tCopyData is True and the source pyramid has less layers then specified, the additional layers are generated; the resulting frame pyramid will be a writable pyramid.<br>
-		 * In any case, the source pyramid is not modified.<br>
-		 * Beware: This function can be used instead of the corresponding constructor if the size of the resulting binary matters.<br>
-		 * As this function is more restrictive compared to the corresponding constructor (and does not allow to apply a blur filter) the resulting code is significantly smaller.
-		 * @param framePyramid Source frame pyramid, This frame pyramid needs to have at least one valid layer
-		 * @param firstLayerIndex Index of first layer to use from the source pyramid. The index needs to be in the range [0; source layers], where source layers is the number of valid layers in the specified source pyramid
-		 * @param layerCount The number of layers to use from the source pyramid, with range [1, infinity)
-		 * @param worker Optional worker object to distribute the computation
-		 * @tparam tCopyData If true, then the used frame data of the source pyramid is copied. Otherwise, only a reference to the used frame data of the source pyramid is created
-		 */
-		template <bool tCopyData>
-		static FramePyramid create8BitPerChannel(const FramePyramid& framePyramid, const unsigned int firstLayerIndex = 0u, const unsigned int layerCount = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
-
-		/**
 		 * Returns the size factor of a specified layer in relation to the finest layer.
 		 * The finest (first) layer has factor 1, the second layer has factor 2, the third layer has factor 4, ...<br>
 		 * @param layer The layer to return the size factor for, with range [1, 31]
@@ -766,95 +749,6 @@ inline bool FramePyramid::replace8BitPerChannel11(const Frame& frame, const unsi
 inline bool FramePyramid::replace(const FrameType& frameType, const bool forceOwner, const unsigned int layers)
 {
 	return replace(frameType, true /*reserveFirstLayerMemory*/, forceOwner, layers);
-}
-
-template <bool tCopyData>
-FramePyramid FramePyramid::create8BitPerChannel(const FramePyramid& framePyramid, const unsigned int layerIndex, const unsigned int layerCount, Worker* worker)
-{
-	ocean_assert(framePyramid.layers() >= 0u);
-	ocean_assert(layerIndex < framePyramid.layers());
-	ocean_assert(layerCount >= 0u);
-
-	const LegacyFrame& firstLayer = framePyramid.layers_[layerIndex];
-	const unsigned int maxUsableSourceLayers = framePyramid.layers() - layerIndex;
-
-	FramePyramid newPyramid;
-
-	if constexpr (tCopyData)
-	{
-		unsigned int resultingLayers;
-		const size_t pyramidFrameSize = calculateMemorySize(firstLayer.width(), firstLayer.height(), firstLayer.pixelFormat(), layerCount, true /*includeFirstLayer*/, &resultingLayers);
-
-		if (pyramidFrameSize == 0)
-		{
-			return FramePyramid();
-		}
-
-		unsigned int selectedSourceLayers = min(resultingLayers, maxUsableSourceLayers);
-
-		const LegacyFrame& lastLayer = framePyramid.layers_[layerIndex + selectedSourceLayers - 1u];
-		const size_t sizeSelectedSourceLayers = size_t(lastLayer.constdata() - firstLayer.constdata()) + lastLayer.size();
-
-		ocean_assert(framePyramid.memory_.isInside(firstLayer.constdata(), firstLayer.size()));
-		ocean_assert(framePyramid.memory_.isInside(lastLayer.constdata(), lastLayer.size()));
-		ocean_assert((lastLayer.constdata() == firstLayer.constdata() && lastLayer.size() == firstLayer.size()) || lastLayer.constdata() >= firstLayer.constdata() + firstLayer.size());
-
-		newPyramid.memory_ = Memory(pyramidFrameSize, memoryAlignmentBytes_);
-		memcpy(newPyramid.memory_.data(), firstLayer.constdata(), sizeSelectedSourceLayers);
-
-		// Create layers from source:
-		newPyramid.layers_.reserve(resultingLayers);
-		newPyramid.layers_.push_back(LegacyFrame(firstLayer.frameType(), firstLayer.timestamp(), newPyramid.memory_.data<uint8_t>(), false));
-
-		for (unsigned int index = 1u; index < selectedSourceLayers; index++)
-		{
-			const LegacyFrame& sourceLayer = framePyramid.layers_[index + layerIndex];
-			LegacyFrame& previousLayer = newPyramid.layers_[index - 1u];
-
-			newPyramid.layers_.push_back(LegacyFrame(sourceLayer.frameType(), sourceLayer.timestamp(), previousLayer.data() + previousLayer.size(), false));
-		}
-
-		// Create additional missing layers, if frame data is not a reference:
-		if (resultingLayers > newPyramid.layers_.size())
-		{
-			// Pyramid frame needs to hold requested number of layers:
-			ocean_assert(newPyramid.memory_.size() >= calculateMemorySize(newPyramid.finestWidth(), newPyramid.finestHeight(), newPyramid.finestLayer().pixelFormat(), resultingLayers, true /*includeFirstLayer*/, nullptr));
-
-			for (unsigned int n = (unsigned int)(newPyramid.layers_.size()); n < resultingLayers && newPyramid.layers_[n - 1u].width() > 1u && newPyramid.layers_[n - 1u].height() > 1u; ++n)
-			{
-				ocean_assert(n == (unsigned int)newPyramid.layers_.size());
-				if (!newPyramid.addLayer11(worker))
-				{
-					break;
-				}
-			}
-		}
-	}
-	else
-	{
-		const unsigned int selectedSourceLayers = min(layerCount, maxUsableSourceLayers);
-		const LegacyFrame& lastLayer = framePyramid.layers_[layerIndex + selectedSourceLayers - 1u];
-
-		ocean_assert(framePyramid.memory_.isInside(firstLayer.constdata(), firstLayer.size()));
-		ocean_assert(framePyramid.memory_.isInside(lastLayer.constdata(), lastLayer.size()));
-		ocean_assert((lastLayer.constdata() == firstLayer.constdata() && lastLayer.size() == firstLayer.size()) || lastLayer.constdata() >= firstLayer.constdata() + firstLayer.size());
-
-		ocean_assert(lastLayer.constdata() - firstLayer.constdata() >= 0);
-		newPyramid.memory_ = Memory(firstLayer.constdata(), lastLayer.constdata() - firstLayer.constdata() + lastLayer.size());
-
-		newPyramid.layers_.reserve(selectedSourceLayers);
-		newPyramid.layers_.push_back(LegacyFrame(firstLayer.frameType(), firstLayer.timestamp(), firstLayer.constdata(), false));
-
-		for (unsigned int index = 1u; index < selectedSourceLayers; index++)
-		{
-			const LegacyFrame& sourceLayer = framePyramid.layers_[index + layerIndex];
-			const LegacyFrame& previousLayer = newPyramid.layers_[index - 1u];
-
-			newPyramid.layers_.push_back(LegacyFrame(sourceLayer.frameType(), sourceLayer.timestamp(), previousLayer.constdata() + previousLayer.size(), false));
-		}
-	}
-
-	return newPyramid;
 }
 
 constexpr unsigned int FramePyramid::sizeFactor(const unsigned int layer)
