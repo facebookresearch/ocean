@@ -25,5 +25,5 @@ data/*
 res/**/win/**/*.res
 
 # XCode temporary files
-Project Settings.plist
-Project Settings.plist.lock
+ProjectSettings.plist
+ProjectSettings.plist.lock
