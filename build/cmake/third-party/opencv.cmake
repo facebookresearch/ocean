@@ -22,6 +22,14 @@ set(BUILD_PNG  OFF CACHE BOOL "")
 set(BUILD_TIFF OFF CACHE BOOL "")
 set(BUILD_JPEG OFF CACHE BOOL "")
 
+set(BUILD_TESTS OFF CACHE BOOL "")
+set(BUILD_PERF_TESTS OFF CACHE BOOL "")
+set(BUILD_opencv_apps OFF CACHE BOOL "")
+
+set(OPENCV_BIN_INSTALL_PATH "bin" CACHE BOOL "")
+set(OPENCV_LIB_INSTALL_PATH "lib" CACHE BOOL "")
+set(OPENCV_LIB_ARCHIVE_INSTALL_PATH "lib" CACHE BOOL "")
+
 FetchContent_Declare(
   opencv
   GIT_REPOSITORY https://github.com/opencv/opencv.git
