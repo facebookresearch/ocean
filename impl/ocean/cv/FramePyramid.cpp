@@ -300,7 +300,7 @@ bool FramePyramid::replace(const Frame& frame, const DownsamplingMode downsampli
 		return replace8BitPerChannel11(frame, layers, true /*copyFirstLayer*/, worker);
 	}
 
-	if (!replace(frame.frameType(), true /*forceOwner*/, layers))
+	if (!replace(frame.frameType(), true /*reserveFirstLayerMemory*/, true /*forceOwner*/, layers))
 	{
 		clear();
 
@@ -381,7 +381,7 @@ bool FramePyramid::replace(Frame&& frame, const DownsamplingMode downsamplingMod
 		return true;
 	}
 
-	if (!replace(frame.frameType(), false /*forceOwner*/, layers))
+	if (!replace(frame.frameType(), false /*reserveFirstLayerMemory*/, true /*forceOwner*/, layers))
 	{
 		clear();
 
@@ -448,7 +448,7 @@ bool FramePyramid::replace(const Frame& frame, const CallbackDownsampling& downs
 		return false;
 	}
 
-	if (!replace(frame.frameType(), true /*forceOwner*/, layers))
+	if (!replace(frame.frameType(), true /*reserveFirstLayerMemory*/, true /*forceOwner*/, layers))
 	{
 		clear();
 
@@ -501,7 +501,7 @@ bool FramePyramid::replace(Frame&& frame, const CallbackDownsampling& downsampli
 		return false;
 	}
 
-	if (!replace(frame.frameType(), false /*forceOwner*/, layers))
+	if (!replace(frame.frameType(), false /*reserveFirstLayerMemory*/, true /*forceOwner*/, layers))
 	{
 		clear();
 
