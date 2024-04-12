@@ -69,6 +69,13 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		static bool testIsOwner(const double testDuration);
 
 		/**
+		 * Tests the calculateMemorySize() function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testCalculateMemorySize(const double testDuration);
+
+		/**
 		 * Tests the creation of a frame pyramid (the deprecated workflow).
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation

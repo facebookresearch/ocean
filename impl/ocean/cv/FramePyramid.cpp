@@ -973,6 +973,10 @@ size_t FramePyramid::calculateMemorySize(const unsigned int width, const unsigne
 	}
 
 	ocean_assert(FrameType::numberPlanes(pixelFormat) == 1u && FrameType::formatIsGeneric(pixelFormat));
+	if (FrameType::numberPlanes(pixelFormat) != 1u || !FrameType::formatIsGeneric(pixelFormat))
+	{
+		return 0;
+	}
 
 	const unsigned int bytesPerPixel = FrameType::channels(pixelFormat) * FrameType::bytesPerDataType(FrameType::dataType(pixelFormat));
 	ocean_assert(bytesPerPixel <= 256u);

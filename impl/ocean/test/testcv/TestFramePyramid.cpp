@@ -41,6 +41,12 @@ bool TestFramePyramid::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testCalculateMemorySize(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testCreationFramePyramidDeprecated(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
@@ -116,6 +122,12 @@ TEST(TestFramePyramid, IdealLayers)
 TEST(TestFramePyramid, IsOwner)
 {
 	EXPECT_TRUE(TestFramePyramid::testIsOwner(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestFramePyramid, CalculateMemorySize)
+{
+	EXPECT_TRUE(TestFramePyramid::testCalculateMemorySize(GTEST_TEST_DURATION));
 }
 
 
@@ -626,6 +638,155 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 			}
 
 			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/))
+			{
+				allSucceeded = false;
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestFramePyramid::testCalculateMemorySize(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing calculateMemorySize:";
+
+	FrameType::PixelFormats pixelFormats = FrameType::definedPixelFormats();
+
+	// we test all pixel formats with one plane, and without dimension restrictions
+
+	for (size_t n = 0; n < pixelFormats.size(); /*noop*/)
+	{
+		const FrameType::PixelFormat pixelFormat = pixelFormats[n];
+
+		if (FrameType::numberPlanes(pixelFormat) != 1u || !FrameType::formatIsGeneric(pixelFormat))
+		{
+			pixelFormats[n] = pixelFormats.back();
+			pixelFormats.pop_back();
+		}
+		else
+		{
+			++n;
+		}
+	}
+
+	for (unsigned int channels = 1u; channels <= 4u; ++channels)
+	{
+		pixelFormats.emplace_back(FrameType::genericPixelFormat<uint8_t>(channels));
+		pixelFormats.emplace_back(FrameType::genericPixelFormat<int16_t>(channels));
+		pixelFormats.emplace_back(FrameType::genericPixelFormat<uint32_t>(channels));
+		pixelFormats.emplace_back(FrameType::genericPixelFormat<int64_t>(channels));
+		pixelFormats.emplace_back(FrameType::genericPixelFormat<float>(channels));
+		pixelFormats.emplace_back(FrameType::genericPixelFormat<double>(channels));
+	}
+
+	RandomGenerator randomGenerator;
+
+	bool allSucceeded = true;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int width = RandomI::random(randomGenerator, 0u, 1920u); // 0 is a valid input
+		const unsigned int height = RandomI::random(randomGenerator, 0u, 1080u);
+
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+		unsigned int layers = CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE;
+
+		if (RandomI::boolean(randomGenerator))
+		{
+			layers = RandomI::random(randomGenerator, 0u, 20u); // 0 is a valid input
+		}
+
+		const bool includeFirstLayer = RandomI::boolean(randomGenerator);
+
+		unsigned int totalLayers = 0u;
+		unsigned int* useTotalLayers = RandomI::boolean(randomGenerator) ? &totalLayers : nullptr;
+
+		const size_t size = CV::FramePyramid::calculateMemorySize(width, height, pixelFormat, layers, includeFirstLayer, useTotalLayers);
+
+		unsigned int layerWidth = width;
+		unsigned int layerHeight = height;
+
+		size_t testSize = 0;
+		unsigned int testLayers = 0u;
+
+		for (unsigned int layerIndex = 0u; layerIndex < layers; ++layerIndex)
+		{
+			if (layerWidth == 0u || layerHeight == 0u)
+			{
+				break;
+			}
+
+			++testLayers;
+
+			const FrameType layerFrameType(layerWidth, layerHeight, pixelFormat, pixelOrigin);
+
+			if (!layerFrameType.isValid())
+			{
+				ocean_assert(false && "This should never happen!");
+				allSucceeded = false;
+			}
+
+			const unsigned int layerSize = layerFrameType.frameTypeSize();
+
+			if (layerSize == 0u)
+			{
+				ocean_assert(false && "This should never happen!");
+				allSucceeded = false;
+			}
+
+			if (size_t(layerSize) >= NumericT<size_t>::maxValue() / 2u)
+			{
+				ocean_assert(false && "This should never happen!");
+				allSucceeded = false;
+			}
+
+			if (layerIndex == 0u)
+			{
+				if (includeFirstLayer)
+				{
+					testSize += size_t(layerSize);
+				}
+			}
+			else
+			{
+				testSize += size_t(layerSize);
+			}
+
+			layerWidth /= 2u;
+			layerHeight /= 2u;
+
+			if (testSize >= NumericT<size_t>::maxValue() / 2)
+			{
+				ocean_assert(false && "This should never happen!");
+				allSucceeded = false;
+			}
+		}
+
+		if (testSize != size)
+		{
+			allSucceeded = false;
+		}
+
+		if (useTotalLayers != nullptr)
+		{
+			if (*useTotalLayers != testLayers)
 			{
 				allSucceeded = false;
 			}

@@ -631,13 +631,13 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Calculates the size of the entire pyramid in bytes covering all images in all pyramid layers.
 		 * @param width The width of the finest layer in pixel, with range [0, 65535]
 		 * @param height The height of the finest layer in pixel, with range [0, 65535]
-		 * @param pixelFormat Pixel format of each layer
+		 * @param pixelFormat The pixel format of each layer, must be a generic 1-plane pixel format, must be valid
 		 * @param layers Number of layers, with range [0, infinity)
 		 * @param includeFirstLayer True, to determine the memory for all layers; False, to skip the first layer and only determine the memory for all remaining (coarser) layers
 		 * @param totalLayers Optional resulting number of pyramid layers that will exist (always counts the very first layer independently of 'includeFirstLayer'), with range [0, layers]
 		 * @return Resulting number of bytes, with range [0, infinity)
 		 */
-		static size_t calculateMemorySize(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const unsigned int layers, const bool includeFirstLayer, unsigned int* totalLayers);
+		static size_t calculateMemorySize(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const unsigned int layers, const bool includeFirstLayer, unsigned int* totalLayers = nullptr);
 
 		/**
 		 * Deleted function to prevent confusion between Frame and FrameType.
