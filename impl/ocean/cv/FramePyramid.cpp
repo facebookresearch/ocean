@@ -533,11 +533,6 @@ bool FramePyramid::replace(Frame&& frame, const CallbackDownsampling& downsampli
 	return true;
 }
 
-bool FramePyramid::replace(const Frame& frame, const unsigned int layers, Worker* worker, const DownsamplingMode downsamplingMode, const CallbackDownsampling& customDownsamplingFunction)
-{
-	return replace(LegacyFrame(frame, LegacyFrame::FCM_USE_IF_POSSIBLE), layers, worker, downsamplingMode, customDownsamplingFunction);
-}
-
 bool FramePyramid::replace(const LegacyFrame& frame, const unsigned int layers, Worker* worker, const DownsamplingMode downsamplingMode, const CallbackDownsampling& customDownsamplingFunction)
 {
 	ocean_assert(frame);

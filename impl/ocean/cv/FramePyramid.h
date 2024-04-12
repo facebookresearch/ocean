@@ -375,24 +375,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return True, if the frame pyramid was replaced
 		 * @see isOwner(), replace8BitPerChannel().
 		 */
-		bool replace(const Frame& frame, const unsigned int layers, Worker* worker = nullptr, const DownsamplingMode downsamplingMode = DM_FILTER_11, const CallbackDownsampling& customDownsamplingFunction = CallbackDownsampling());
-
-		/**
-		 * Deprecated.
-		 *
-		 * Replaces this frame pyramid by a new frame.
-		 * The frame pyramid needs to be the owner of its frame data or needs to be empty; otherwise, nothing is done and False is returned.
-		 * Beware: Due to performance issues the new frame should have the same frame type as already defined in this pyramid.<br>
-		 * Further, the number of layers to be created should be the same as already defined
-		 * Beware: This non-template-based function will result in larger binary code, use the corresponding template-based function if the size of the resulting binary matters.
-		 * @param frame The frame to be used to update this pyramid
-		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
-		 * @param worker Optional worker object to distribute the computation
-		 * @param downsamplingMode The down sampling mode to be used to create lower image resolutions, 'DM_CUSTOM' in combination with a valid 'customDownsamplingFunction' to use a custom down sampling mode
-		 * @param customDownsamplingFunction Optional explicit custom callback of the down sampling function to be used, define an invalid callback object to use the default down sampling function determined by 'mode'
-		 * @return True, if the frame pyramid was replaced
-		 * @see isOwner(), replace8BitPerChannel().
-		 */
 		bool replace(const LegacyFrame& frame, const unsigned int layers, Worker* worker = nullptr, const DownsamplingMode downsamplingMode = DM_FILTER_11, const CallbackDownsampling& customDownsamplingFunction = CallbackDownsampling());
 
 		/**

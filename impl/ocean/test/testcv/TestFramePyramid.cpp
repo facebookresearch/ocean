@@ -1003,7 +1003,7 @@ bool TestFramePyramid::testCreationFramePyramidDeprecated(const unsigned int wid
 					}
 					else
 					{
-						framePyramid.replace(frame, layers, useWorker, downsamplingMode);
+						framePyramid.replace(frame, downsamplingMode, layers, useWorker);
 					}
 
 				performance.stop();
