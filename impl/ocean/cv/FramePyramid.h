@@ -551,22 +551,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		bool replace(const FrameType& frameType, const bool reserveFirstLayerMemory, const bool forceOwner, const unsigned int layers);
 
 		/**
-		 * Adds a new layer to the end of the frame pyramid.
-		 * The image content of the new layer is derived from the coarsest existing layer.
-		 * @param worker Optional worker object to distribute the computation
-		 * @param downsamplingMode The down sampling mode to be used to create lower image resolutions, 'DM_CUSTOM' in combination with a valid 'customDownsamplingFunction' to use a custom down sampling mode
-		 * @param customDownsamplingFunction Optional custom callback of the down sampling function to be used, if mode == DM_CUSTOM
-		 */
-		bool addLayer(Worker* worker = nullptr, const DownsamplingMode downsamplingMode = DM_FILTER_11, const CallbackDownsampling& customDownsamplingFunction = CallbackDownsampling());
-
-		/**
-		 * Adds a new layer to the end of the frame pyramid.
-		 * The image content of the new layer is derived from the coarsest existing layer.
-		 * @param worker Optional worker object to distribute the computation
-		 */
-		bool addLayer11(Worker* worker = nullptr);
-
-		/**
 		 * Calculates the size of the entire pyramid in bytes covering all images in all pyramid layers.
 		 * @param width The width of the finest layer in pixel, with range [0, 65535]
 		 * @param height The height of the finest layer in pixel, with range [0, 65535]

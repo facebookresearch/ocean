@@ -198,61 +198,6 @@ bool FramePyramid::replace(const FrameType& frameType, const bool reserveFirstLa
 	return true;
 }
 
-bool FramePyramid::addLayer(Worker* worker, const DownsamplingMode downsamplingMode, const CallbackDownsampling& customDownsamplingFunction)
-{
-	ocean_assert(!layers_.empty());
-
-	// we should either have a custom downsampling function of a non-custom downsampling mode
-	ocean_assert(customDownsamplingFunction.isNull() || downsamplingMode == DM_CUSTOM);
-
-	LegacyFrame& oldCoarsestLayer = layers_.back();
-	const unsigned int newLayerIndex = (unsigned int)layers_.size();
-
-	const unsigned int layerWidth = oldCoarsestLayer.width() / 2u;
-	const unsigned int layerHeight = oldCoarsestLayer.height() / 2u;
-
-	ocean_assert(oldCoarsestLayer && !oldCoarsestLayer.isReadOnly());
-
-	const FrameType layerFrameType(oldCoarsestLayer.frameType(), layerWidth, layerHeight);
-	layers_.push_back(LegacyFrame(layerFrameType, oldCoarsestLayer.timestamp(), oldCoarsestLayer.data() + oldCoarsestLayer.size(), false));
-
-	ocean_assert((unsigned int)layers_.size() == newLayerIndex + 1u);
-
-	if (customDownsamplingFunction)
-	{
-		customDownsamplingFunction(layers_[newLayerIndex - 1u], layers_[newLayerIndex], worker);
-	}
-	else
-	{
-		switch (downsamplingMode)
-		{
-			case DM_FILTER_14641:
-				FrameShrinker::downsampleByTwo14641(layers_[newLayerIndex - 1u], layers_[newLayerIndex], worker);
-				break;
-
-			default:
-				ocean_assert(downsamplingMode == DM_FILTER_11);
-
-				if (layers_[newLayerIndex - 1u].hasAlphaChannel())
-				{
-					Frame targetLayer(layers_[newLayerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-
-					FrameShrinkerAlpha::Comfort::divideByTwo<false>(Frame(layers_[newLayerIndex - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT), targetLayer, worker);
-				}
-				else
-				{
-					FrameShrinker::downsampleByTwo11(layers_[newLayerIndex - 1u], layers_[newLayerIndex], worker);
-				}
-
-				break;
-		}
-	}
-
-	ocean_assert(!layers_[newLayerIndex].isOwner());
-
-	return true;
-}
-
 bool FramePyramid::replace(const Frame& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, Worker* worker)
 {
 	ocean_assert(frame.isValid());
@@ -822,30 +767,6 @@ FramePyramid& FramePyramid::operator=(FramePyramid&& right) noexcept
 	}
 
 	return *this;
-}
-
-bool FramePyramid::addLayer11(Worker* worker)
-{
-	ocean_assert(!layers_.empty());
-
-	LegacyFrame& oldCoarsestLayer = layers_.back();
-	const unsigned int newLayerIndex = (unsigned int)layers_.size();
-
-	const unsigned int layerWidth = oldCoarsestLayer.width() / 2u;
-	const unsigned int layerHeight = oldCoarsestLayer.height() / 2u;
-
-	ocean_assert(oldCoarsestLayer && !oldCoarsestLayer.isReadOnly());
-
-	const FrameType layerFrameType(oldCoarsestLayer.frameType(), layerWidth, layerHeight);
-	layers_.push_back(LegacyFrame(layerFrameType, oldCoarsestLayer.timestamp(), oldCoarsestLayer.data() + oldCoarsestLayer.size(), false));
-
-	ocean_assert((unsigned int)layers_.size() == newLayerIndex + 1u);
-
-	FrameShrinker::downsampleByTwo8BitPerChannel11(layers_[newLayerIndex - 1u].constdata(), layers_[newLayerIndex].data(), layers_[newLayerIndex - 1u].width(), layers_[newLayerIndex - 1u].height(), layerFrameType.channels(), 0u, 0u, worker);
-
-	ocean_assert(!layers_[newLayerIndex].isOwner());
-
-	return true;
 }
 
 size_t FramePyramid::calculateMemorySize(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const unsigned int layers, const bool includeFirstLayer, unsigned int* totalLayers)
