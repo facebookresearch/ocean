@@ -196,25 +196,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		FramePyramid(const FramePyramid& framePyramid, const unsigned int firstLayerIndex, const unsigned int layers, bool copyData);
 
 		/**
-		 * Deprecated.
-		 *
-		 * Creates a new frame pyramid by using layers from an existing source frame pyramid.
-		 * The range of used layers can be specified by layerIndex and layerCount.<br>
-		 * If copyData is False, then only a reference is created to the given source frame data; the new frame pyramid will be a read-only pyramid.<br>
-		 * If copyData is True and the source pyramid has less layers then specified, the additional layers are generated; the resulting frame pyramid will be a writable pyramid.<br>
-		 * In any case, the source pyramid is not modified.
-		 * @param framePyramid Source frame pyramid, This frame pyramid needs to have at least one valid layer
-		 * @param copyData If true, then the used frame data of the source pyramid is copied. Otherwise, only a reference to the used frame data of the source pyramid is created
-		 * @param firstLayerIndex Index of first layer to use from the source pyramid. The index needs to be in the range [0; source layers], where source layers is the number of valid layers in the specified source pyramid
-		 * @param layerCount The number of layers to use from the source pyramid, with range [1, infinity)
-		 * @param worker Optional worker object to distribute the computation
-		 * @param downsamplingMode The down sampling mode to be used to create lower image resolutions, 'DM_CUSTOM' in combination with a valid 'customDownsamplingFunction' to use a custom down sampling mode
-		 * @param customDownsamplingFunction Optional explicit custom callback of the down sampling function to be used, define an invalid callback object to use the default down sampling function determined by 'mode'
-		 * @see create8BitPerChannel().
-		 */
-		FramePyramid(const FramePyramid& framePyramid, bool copyData, const unsigned int firstLayerIndex, const unsigned int layerCount, Worker* worker, const DownsamplingMode downsamplingMode = DM_FILTER_11, const CallbackDownsampling& customDownsamplingFunction = CallbackDownsampling());
-
-		/**
 		 * Returns the frame of a specified layer.
 		 * @param layer Index of the layer frame to be returned, with range [0, layers())
 		 * @return Pyramid layer frame
