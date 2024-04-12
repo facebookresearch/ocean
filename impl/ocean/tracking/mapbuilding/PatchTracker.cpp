@@ -347,8 +347,8 @@ void PatchTracker::trackUnlocatedPoints(const Index32 frameIndex, const SharedFr
 		ocean_assert(yPreviousFramePyramid->layers() >= pyramidLayers);
 		ocean_assert(yCurrentFramePyramid->layers() >= pyramidLayers);
 
-		const CV::FramePyramid yReducedPreviousFramePyramid(*yPreviousFramePyramid, false /*copy*/, 0u, pyramidLayers, nullptr);
-		const CV::FramePyramid yReducedCurrentFramePyramid(*yCurrentFramePyramid, false /*copy*/, 0u, pyramidLayers, nullptr);
+		const CV::FramePyramid yReducedPreviousFramePyramid(*yPreviousFramePyramid, 0u, pyramidLayers, false /*copy*/);
+		const CV::FramePyramid yReducedCurrentFramePyramid(*yCurrentFramePyramid, 0u, pyramidLayers, false /*copy*/);
 
 		reusableCurrentImagePoints_.clear();
 		reusableValidIndices_.clear();
@@ -424,8 +424,8 @@ void PatchTracker::trackLocatedPoints(const Index32 frameIndex, const AnyCamera&
 		ocean_assert(yPreviousFramePyramid->layers() >= pyramidLayers);
 		ocean_assert(yCurrentFramePyramid->layers() >= pyramidLayers);
 
-		const CV::FramePyramid yReducedPreviousFramePyramid(*yPreviousFramePyramid, false /*copy*/, 0u, pyramidLayers, nullptr);
-		const CV::FramePyramid yReducedCurrentFramePyramid(*yCurrentFramePyramid, false /*copy*/, 0u, pyramidLayers, nullptr);
+		const CV::FramePyramid yReducedPreviousFramePyramid(*yPreviousFramePyramid, 0u, pyramidLayers, false /*copy*/);
+		const CV::FramePyramid yReducedCurrentFramePyramid(*yCurrentFramePyramid, 0u, pyramidLayers, false /*copy*/);
 
 		reusablePredictedCurrentImagePoints.resize(objectPoints.size());
 

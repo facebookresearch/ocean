@@ -459,7 +459,7 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 
 		// track 2D points from (successive) frame to frame
 		Vectors2 previousImagePoints, currentImagePoints;
-		if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackArbitraryPointsBidirectionalSubPixelMirroredBorder<15u>(CV::FramePyramid(previousFramePyramid_, false, 0u, 6u, nullptr), CV::FramePyramid(currentFramePyramid, false, 0u, 6u, nullptr), 2u, previousImagePoints, currentImagePoints, Scalar(0.9 * 0.9), CV::SubRegion(), 20u, 20u, featureStengthThreshold, worker) || previousImagePoints.size() < 10)
+		if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackArbitraryPointsBidirectionalSubPixelMirroredBorder<15u>(CV::FramePyramid(previousFramePyramid_, 0u, 6u, false), CV::FramePyramid(currentFramePyramid, 0u, 6u, false), 2u, previousImagePoints, currentImagePoints, Scalar(0.9 * 0.9), CV::SubRegion(), 20u, 20u, featureStengthThreshold, worker) || previousImagePoints.size() < 10)
 		{
 			return false;
 		}

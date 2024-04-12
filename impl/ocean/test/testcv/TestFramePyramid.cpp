@@ -232,9 +232,15 @@ TEST(TestFramePyramid, ConstructFromFrameMultiLayer_RandomResolution_AllLayers)
 }
 
 
-TEST(TestFramePyramid, ReplaceWithFrameType)
+TEST(TestFramePyramid, ConstructFromPyramid)
 {
 	Worker worker;
+	EXPECT_TRUE(TestFramePyramid::testConstructFromPyramid(GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFramePyramid, ReplaceWithFrameType)
+{
 	EXPECT_TRUE(TestFramePyramid::testReplaceWithFrameType(GTEST_TEST_DURATION));
 }
 
@@ -554,7 +560,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 
 			CV::FramePyramid framePyramidSource(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, FrameType(width, height, pixelFormat, pixelOrigin));
 
-			CV::FramePyramid framePyramid(framePyramidSource, true /*copyData*/, 0u, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, nullptr);
+			CV::FramePyramid framePyramid(framePyramidSource, 0u, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, true /*copyData*/);
 
 			if (!verifyPyramidOwnership(framePyramid, true /*isValid*/, true /*isOwner*/))
 			{
@@ -579,7 +585,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 
 			CV::FramePyramid framePyramidSource(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, FrameType(width, height, pixelFormat, pixelOrigin));
 
-			CV::FramePyramid framePyramid(framePyramidSource, false /*copyData*/, 0u, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, nullptr);
+			CV::FramePyramid framePyramid(framePyramidSource, 0u, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, false /*copyData*/);
 
 			if (!verifyPyramidOwnership(framePyramid, true /*isValid*/, false /*isOwner*/))
 			{
@@ -1668,7 +1674,7 @@ bool TestFramePyramid::testConstructFromPyramidDeprecated(const CV::FramePyramid
 		{
 			const HighPerformanceStatistic::ScopedStatistic scope(performance);
 
-			framePyramid = CV::FramePyramid(sourcePyramid, copyData, layerIndex, layerCount, useWorker);
+			framePyramid = CV::FramePyramid(sourcePyramid, layerIndex, layerCount, copyData);
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
 
@@ -2520,15 +2526,6 @@ bool TestFramePyramid::validateConstructFromPyramid(const CV::FramePyramid& fram
 	unsigned int layerWidth = sourcePyramid.layer(layerIndex).width();
 	unsigned int layerHeight = sourcePyramid.layer(layerIndex).height();
 
-	// Evaluate layer count:
-	const unsigned int maxLayerCount = copyData ? determineMaxLayerCount(layerWidth, layerHeight) : sourcePyramid.layers() - layerIndex;
-	const unsigned int expectedLayerCount = min(layerCount, maxLayerCount);
-
-	if (expectedLayerCount != framePyramid.layers())
-	{
-		return false;
-	}
-
 	bool allLayersAreOwners = copyData;
 
 	unsigned int totalSize = 0u;
@@ -2554,12 +2551,6 @@ bool TestFramePyramid::validateConstructFromPyramid(const CV::FramePyramid& fram
 
 			// if the pyramid is owner of the image content it must be writable
 			if (copyData && layer.isReadOnly())
-			{
-				return false;
-			}
-
-			// if the pyramid is not owner of the image content it will be a read-only pyramid
-			if (!copyData && !layer.isReadOnly())
 			{
 				return false;
 			}

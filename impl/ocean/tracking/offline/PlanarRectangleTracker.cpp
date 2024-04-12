@@ -362,9 +362,9 @@ PlanarRectangleTracker::FramePyramidTrackerComponent::IterationResult PlanarRect
 
 		// determine the pose between the previous and the current frame
 		HomogenousMatrix4 currentPose;
-		if (frame2framePose(CV::FramePyramid(previousFramePyramid_, false, 0u, 4u, nullptr), CV::FramePyramid(currentFramePyramid_, false, 0u, 4u, nullptr), previousSubRegion, previousPose, currentPose, Scalar(0.9 * 0.9), 20u, 20u, 30u, scopedWorker(), 3u) < 25)
+		if (frame2framePose(CV::FramePyramid(previousFramePyramid_, 0u, 4u, false), CV::FramePyramid(currentFramePyramid_, 0u, 4u, false), previousSubRegion, previousPose, currentPose, Scalar(0.9 * 0.9), 20u, 20u, 30u, scopedWorker(), 3u) < 25)
 		{
-			if (frame2framePose(CV::FramePyramid(previousFramePyramid_, false, 0u, 4u, nullptr), CV::FramePyramid(currentFramePyramid_, false, 0u, 4u, nullptr), previousSubRegion, previousPose, currentPose, Scalar(1.1 * 1.1), 30u, 30u, 10u, scopedWorker(), 3u) < 20)
+			if (frame2framePose(CV::FramePyramid(previousFramePyramid_, 0u, 4u, false), CV::FramePyramid(currentFramePyramid_, 0u, 4u, false), previousSubRegion, previousPose, currentPose, Scalar(1.1 * 1.1), 30u, 30u, 10u, scopedWorker(), 3u) < 20)
 			{
 				if (frame2framePose(previousFramePyramid_, currentFramePyramid_, previousSubRegion, previousPose, currentPose, Scalar(1.9 * 1.9), 0u, 0u, 5u, scopedWorker(), 5u) < 25)
 				{
