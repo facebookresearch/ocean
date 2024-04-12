@@ -187,6 +187,15 @@ class OCEAN_CV_EXPORT FramePyramid
 		inline FramePyramid(Frame&& frame, const CallbackDownsampling& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
 
 		/**
+		 * Creates a new frame pyramid based on an existing frame pyramid.
+		 * @param framePyramid The existing frame pyramid from which the new pyramid will be created, must be valid
+		 * @param firstLayerIndex The index of the first layer to use from the source pyramid, with range [0, framePyramid.layers() - 1]
+		 * @param layers The number of layers to use from the source pyramid, with range [1, infinity), AS_MANY_LAYERS_AS_POSSIBLE to use as many layers as exist
+		 * @param copyData True, to make a copy of the image content of the existing pyramid; False, to only use the memory
+		 */
+		FramePyramid(const FramePyramid& framePyramid, const unsigned int firstLayerIndex, const unsigned int layers, bool copyData);
+
+		/**
 		 * Deprecated.
 		 *
 		 * Creates a new frame pyramid by using layers from an existing source frame pyramid.

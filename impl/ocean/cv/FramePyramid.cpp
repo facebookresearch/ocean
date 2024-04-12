@@ -56,6 +56,58 @@ FramePyramid::FramePyramid(FramePyramid&& framePyramid) noexcept
 	*this = std::move(framePyramid);
 }
 
+FramePyramid::FramePyramid(const FramePyramid& framePyramid, const unsigned int firstLayerIndex, const unsigned int layers, bool copyData)
+{
+	ocean_assert(framePyramid.isValid());
+	ocean_assert(firstLayerIndex < framePyramid.layers());
+
+	if (framePyramid.isValid() && firstLayerIndex < framePyramid.layers())
+	{
+		const unsigned int actualLayers = std::min(layers, framePyramid.layers() - firstLayerIndex);
+		ocean_assert(actualLayers >= 1u && firstLayerIndex + actualLayers <= framePyramid.layers());
+
+		layers_.reserve(actualLayers);
+
+		if (copyData)
+		{
+			if (replace(framePyramid.layers_[firstLayerIndex].frameType(), true /*forceOwner*/, actualLayers))
+			{
+				ocean_assert(actualLayers == layers_.size());
+				ocean_assert(memory_);
+
+				for (size_t targetLayerIndex = 0; targetLayerIndex < layers_.size(); ++targetLayerIndex)
+				{
+					const size_t sourceLayerIndex = targetLayerIndex + size_t(firstLayerIndex);
+
+					const LegacyFrame& sourceLayer = framePyramid.layers_[sourceLayerIndex];
+
+					LegacyFrame& layer = layers_[targetLayerIndex];
+					ocean_assert(!layer.isOwner());
+
+					memcpy(layer.data(), sourceLayer.constdata(), sourceLayer.frameTypeSize());
+
+					layer.setTimestamp(sourceLayer.timestamp());
+				}
+			}
+			else
+			{
+				ocean_assert(false && "This should never happen!");
+			}
+		}
+		else
+		{
+			for (unsigned int sourceLayerIndex = firstLayerIndex; sourceLayerIndex < firstLayerIndex + actualLayers; ++sourceLayerIndex)
+			{
+				layers_.emplace_back(LegacyFrame(framePyramid.layers_[sourceLayerIndex], false)); // **TODO** add non-const version once switched to Frame
+			}
+		}
+
+		ocean_assert(layers_.size() == actualLayers);
+
+		ocean_assert(isOwner() == copyData);
+	}
+}
+
 FramePyramid::FramePyramid(const FramePyramid& framePyramid, bool copyData,	const unsigned int layerIndex, const unsigned int layerCount, Worker* worker, const DownsamplingMode downsamplingMode, const CallbackDownsampling& customDownsamplingFunction)
 {
 	ocean_assert(framePyramid.layers() >= 0u);
