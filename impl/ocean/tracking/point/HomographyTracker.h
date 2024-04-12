@@ -325,7 +325,7 @@ inline HomographyTracker::KeyFrame::KeyFrame(const Timestamp& timestamp, const V
 	timestamp_(timestamp),
 	initialPointsPyramid_(initialPointsPyramid),
 	pointsPyramid_(pointsPyramid),
-	pyramid_(pyramid),
+	pyramid_(pyramid, true /*copyData*/),
 	globalHomography_(globalHomography),
 	cameraOrientation_(cameraOrientation)
 {

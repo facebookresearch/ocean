@@ -10,36 +10,11 @@ namespace Ocean
 namespace CV
 {
 
-FramePyramid::FramePyramid(const FramePyramid& framePyramid)
+FramePyramid::FramePyramid(const FramePyramid& framePyramid, const bool copyData)
 {
-	if (framePyramid.memory_.isOwner())
+	if (framePyramid.isValid())
 	{
-		memory_ = Memory(framePyramid.memory_.size(), memoryAlignmentBytes_);
-
-		ocean_assert(memory_.size() == framePyramid.memory_.size());
-		memcpy(memory_.data(), framePyramid.memory_.constdata(), memory_.size());
-
-		for (size_t n = 0; n < framePyramid.layers_.size(); ++n)
-		{
-			const FrameType& type = framePyramid.layers_[n].frameType();
-
-			ocean_assert(framePyramid.memory_.constdata());
-			ocean_assert(framePyramid.layers_[n].constdata());
-
-			ocean_assert(framePyramid.memory_.constdata() <= framePyramid.layers_[n].constdata());
-			const size_t offset = framePyramid.layers_[n].constdata<uint8_t>() - framePyramid.memory_.constdata<uint8_t>();
-
-			layers_.push_back(LegacyFrame(type, memory_.data<uint8_t>() + offset, false));
-		}
-	}
-	else
-	{
-		layers_ = framePyramid.layers_;
-	}
-
-	if (framePyramid.memory_)
-	{
-		memory_ = Memory(framePyramid.memory_.constdata(), framePyramid.memory_.size());
+		*this = FramePyramid(framePyramid, 0u, AS_MANY_LAYERS_AS_POSSIBLE, copyData);
 	}
 }
 

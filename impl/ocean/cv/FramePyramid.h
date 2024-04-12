@@ -98,8 +98,9 @@ class OCEAN_CV_EXPORT FramePyramid
 		/**
 		 * Copy constructor.
 		 * @param framePyramid Frame pyramid to be copied
+		 * @param copyData True, to copy the image content of the frame pyramid; False, to only reuse the image content of the frame pyramid
 		 */
-		FramePyramid(const FramePyramid& framePyramid);
+		FramePyramid(const FramePyramid& framePyramid, const bool copyData);
 
 		/**
 		 * Move constructor.

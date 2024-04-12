@@ -203,7 +203,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 	}
 
 	CV::FramePyramid currentFramePyramid;
-	CV::FramePyramid previousFramePyramid(startFramePyramid);
+	CV::FramePyramid previousFramePyramid(startFramePyramid, true /*copyData*/);
 	Vectors2 previousFeaturePoints(startFrameFeaturePoints);
 	Strengths previousFeatureStrengths(startFrameFeatureStrengths);
 	Indices32 previousObjectPointIds(startFrameObjectPointIds);
@@ -922,7 +922,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 	}
 
 	CV::FramePyramid currentFramePyramid;
-	CV::FramePyramid previousFramePyramid(subRegionFramePyramid);
+	CV::FramePyramid previousFramePyramid(subRegionFramePyramid, true /*copyData*/);
 	Vectors2 previousFeaturePoints(subRegionFeaturePoints);
 	Strengths previousFeatureStrengths(subRegionFeatureStrengths);
 	Indices32 previousObjectPointIds(subRegionFrameObjectPointIds);

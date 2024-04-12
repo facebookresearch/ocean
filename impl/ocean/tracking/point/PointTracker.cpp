@@ -27,8 +27,8 @@ PointTracker::PointTracker(PointTracker&& pointTracker) noexcept
 
 PointTracker::PointTracker(const PointTracker& pointTracker) :
 	database_(pointTracker.database_),
-	previousFramePyramid_(pointTracker.previousFramePyramid_),
-	currentFramePyramid_(pointTracker.currentFramePyramid_),
+	previousFramePyramid_(pointTracker.previousFramePyramid_, true /*copyData*/),
+	currentFramePyramid_(pointTracker.currentFramePyramid_, true /*copyData*/),
 	previousFrameIndex_(pointTracker.previousFrameIndex_),
 	featurePointStrengthThreshold_(pointTracker.featurePointStrengthThreshold_),
 	binSize_(pointTracker.binSize_)
