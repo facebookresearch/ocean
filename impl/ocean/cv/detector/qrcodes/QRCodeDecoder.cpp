@@ -16,6 +16,10 @@ namespace {
 	extern "C" {
 #endif
 
+// Quirc
+// Code: https://github.com/dlbeer/quirc
+// Commit: 542848dd6b9b0eaa9587bbf25b9bc67bd8a71fca
+
 // quirc.h ---------------------------------------------------------------------
 
 /* quirc -- QR-code recognition library
@@ -98,7 +102,9 @@ typedef enum {
 const char *quirc_strerror(quirc_decode_error_t err);
 
 /* Limits on the maximum size of QR-codes and their content. */
-#define QUIRC_MAX_BITMAP	3917
+#define QUIRC_MAX_VERSION	40
+#define QUIRC_MAX_GRID_SIZE	(QUIRC_MAX_VERSION * 4 + 17)
+#define QUIRC_MAX_BITMAP	(((QUIRC_MAX_GRID_SIZE * QUIRC_MAX_GRID_SIZE) + 7) / 8)
 #define QUIRC_MAX_PAYLOAD	8896
 
 /* QR-code ECC types. */
@@ -186,6 +192,9 @@ void quirc_extract(const struct quirc *q, int index,
 quirc_decode_error_t quirc_decode(const struct quirc_code *code,
 				  struct quirc_data *data);
 
+/* Flip a QR-code according to optional mirror feature of ISO 18004:2015 */
+void quirc_flip(struct quirc_code *code);
+
 //#ifdef __cplusplus
 //}
 //#endif
@@ -215,7 +224,12 @@ quirc_decode_error_t quirc_decode(const struct quirc_code *code,
 #ifndef QUIRC_INTERNAL_H_
 #define QUIRC_INTERNAL_H_
 
+//#include <assert.h>
+//#include <stdlib.h>
+
 //#include "quirc.h"
+
+#define QUIRC_ASSERT(a)	ocean_assert(a)
 
 #define QUIRC_PIXEL_WHITE	0
 #define QUIRC_PIXEL_BLACK	1
@@ -225,16 +239,32 @@ quirc_decode_error_t quirc_decode(const struct quirc_code *code,
 #define QUIRC_MAX_REGIONS	254
 #endif
 #define QUIRC_MAX_CAPSTONES	32
-#define QUIRC_MAX_GRIDS		8
+#define QUIRC_MAX_GRIDS		(QUIRC_MAX_CAPSTONES * 2)
 
 #define QUIRC_PERSPECTIVE_PARAMS	8
 
 #if QUIRC_MAX_REGIONS < UINT8_MAX
+#define QUIRC_PIXEL_ALIAS_IMAGE	1
 typedef uint8_t quirc_pixel_t;
 #elif QUIRC_MAX_REGIONS < UINT16_MAX
+#define QUIRC_PIXEL_ALIAS_IMAGE	0
 typedef uint16_t quirc_pixel_t;
 #else
 #error "QUIRC_MAX_REGIONS > 65534 is not supported"
+#endif
+
+#ifdef QUIRC_FLOAT_TYPE
+/* Quirc uses double precision floating point internally by default.
+ * On platforms with a single precision FPU but no double precision FPU,
+ * this can be changed to float by defining QUIRC_FLOAT_TYPE.
+ *
+ * When setting QUIRC_FLOAT_TYPE to 'float', consider also defining QUIRC_USE_TGMATH.
+ * This will use the type-generic math functions (tgmath.h, C99 or later) instead of the normal ones,
+ * which will allow the compiler to use the correct overloaded functions for the type.
+ */
+typedef QUIRC_FLOAT_TYPE quirc_float_t;
+#else
+typedef double quirc_float_t;
 #endif
 
 struct quirc_region {
@@ -249,7 +279,7 @@ struct quirc_capstone {
 
 	struct quirc_point	corners[4];
 	struct quirc_point	center;
-	double			c[QUIRC_PERSPECTIVE_PARAMS];
+	quirc_float_t		c[QUIRC_PERSPECTIVE_PARAMS];
 
 	int			qr_grid;
 };
@@ -264,18 +294,22 @@ struct quirc_grid {
 
 	/* Timing pattern endpoints */
 	struct quirc_point	tpep[3];
-	int			hscan;
-	int			vscan;
 
 	/* Grid size and perspective transform */
 	int			grid_size;
-	double			c[QUIRC_PERSPECTIVE_PARAMS];
+	quirc_float_t		c[QUIRC_PERSPECTIVE_PARAMS];
+};
+
+struct quirc_flood_fill_vars {
+	int y;
+	int right;
+	int left_up;
+	int left_down;
 };
 
 struct quirc {
 	uint8_t			*image;
 	quirc_pixel_t		*pixels;
-	int			*row_average; /* used by threshold() */
 	int			w;
 	int			h;
 
@@ -287,6 +321,9 @@ struct quirc {
 
 	int			num_grids;
 	struct quirc_grid	grids[QUIRC_MAX_GRIDS];
+
+	size_t      		num_flood_fill_vars;
+	struct quirc_flood_fill_vars *flood_fill_vars;
 };
 
 /************************************************************************
@@ -334,409 +371,408 @@ extern const struct quirc_version_info quirc_version_db[QUIRC_MAX_VERSION + 1];
 
 //#include "quirc_internal.h"
 
-
 const struct quirc_version_info quirc_version_db[QUIRC_MAX_VERSION + 1] = {
-	{ },
-	{ /* Version 1 */
-		26, // .data_bytes
-		{ 0 }, // .apat
-		{ // .ecc
-			{ 26, 16, 1 }, // {.bs, .dw, .ns}
-			{ 26, 19, 1 }, // {.bs, .dw, .ns}
-			{ 26, 9, 1 }, // {.bs, .dw, .ns}
-			{ 26, 13, 1 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 2 */
-		44, // .data_bytes
-		{ 6, 18, 0 }, // .apat
-		{ // .ecc
-			{ 44, 28, 1 }, // {.bs, .dw, .ns}
-			{ 44, 34, 1 }, // {.bs, .dw, .ns}
-			{ 44, 16, 1 }, // {.bs, .dw, .ns}
-			{ 44, 22, 1 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 3 */
-		70, // .data_bytes
-		{ 6, 22, 0 }, // .apat
-		{ // .ecc
-			{ 70, 44, 1 }, // {.bs, .dw, .ns}
-			{ 70, 55, 1 }, // {.bs, .dw, .ns}
-			{ 35, 13, 2 }, // {.bs, .dw, .ns}
-			{ 35, 17, 2 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 4 */
-		100, // .data_bytes
-		{ 6, 26, 0 }, // .apat
-		{ // .ecc
-			{ 50, 32, 2 }, // {.bs, .dw, .ns}
-			{ 100, 80, 1 }, // {.bs, .dw, .ns}
-			{ 25, 9, 4 }, // {.bs, .dw, .ns}
-			{ 50, 24, 2 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 5 */
-		134, // .data_bytes
-		{ 6, 30, 0 }, // .apat
-		{ // .ecc
-			{ 67, 43, 2 }, // {.bs, .dw, .ns}
-			{ 134, 108, 1 }, // {.bs, .dw, .ns}
-			{ 33, 11, 2 }, // {.bs, .dw, .ns}
-			{ 33, 15, 2 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 6 */
-		172, // .data_bytes
-		{ 6, 34, 0 }, // .apat
-		{ // .ecc
-			{ 43, 27, 4 }, // {.bs, .dw, .ns}
-			{ 86, 68, 2 }, // {.bs, .dw, .ns}
-			{ 43, 15, 4 }, // {.bs, .dw, .ns}
-			{ 43, 19, 4 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 7 */
-		196, // .data_bytes
-		{ 6, 22, 38, 0 }, // .apat
-		{ // .ecc
-			{ 49, 31, 4 }, // {.bs, .dw, .ns}
-			{ 98, 78, 2 }, // {.bs, .dw, .ns}
-			{ 39, 13, 4 }, // {.bs, .dw, .ns}
-			{ 32, 14, 2 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 8 */
-		242, // .data_bytes
-		{ 6, 24, 42, 0 }, // .apat
-		{ // .ecc
-			{ 60, 38, 2 }, // {.bs, .dw, .ns}
-			{ 121, 97, 2 }, // {.bs, .dw, .ns}
-			{ 40, 14, 4 }, // {.bs, .dw, .ns}
-			{ 40, 18, 4 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 9 */
-		292, // .data_bytes
-		{ 6, 26, 46, 0 }, // .apat
-		{ // .ecc
-			{ 58, 36, 3 }, // {.bs, .dw, .ns}
-			{ 146, 116, 2 }, // {.bs, .dw, .ns}
-			{ 36, 12, 4 }, // {.bs, .dw, .ns}
-			{ 36, 16, 4 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 10 */
-		346, // .data_bytes
-		{ 6, 28, 50, 0 }, // .apat
-		{ // .ecc
-			{ 69, 43, 4 }, // {.bs, .dw, .ns}
-			{ 86, 68, 2 }, // {.bs, .dw, .ns}
-			{ 43, 15, 6 }, // {.bs, .dw, .ns}
-			{ 43, 19, 6 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 11 */
-		404, // .data_bytes
-		{ 6, 30, 54, 0 }, // .apat
-		{ // .ecc
-			{ 80, 50, 1 }, // {.bs, .dw, .ns}
-			{ 101, 81, 4 }, // {.bs, .dw, .ns}
-			{ 36, 12, 3 }, // {.bs, .dw, .ns}
-			{ 50, 22, 4 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 12 */
-		466, // .data_bytes
-		{ 6, 32, 58, 0 }, // .apat
-		{ // .ecc
-			{ 58, 36, 6 }, // {.bs, .dw, .ns}
-			{ 116, 92, 2 }, // {.bs, .dw, .ns}
-			{ 42, 14, 7 }, // {.bs, .dw, .ns}
-			{ 46, 20, 4 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 13 */
-		532, // .data_bytes
-		{ 6, 34, 62, 0 }, // .apat
-		{ // .ecc
-			{ 59, 37, 8 }, // {.bs, .dw, .ns}
-			{ 133, 107, 4 }, // {.bs, .dw, .ns}
-			{ 33, 11, 12 }, // {.bs, .dw, .ns}
-			{ 44, 20, 8 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 14 */
-		581, // .data_bytes
-		{ 6, 26, 46, 66, 0 }, // .apat
-		{ // .ecc
-			{ 64, 40, 4 }, // {.bs, .dw, .ns}
-			{ 145, 115, 3 }, // {.bs, .dw, .ns}
-			{ 36, 12, 11 }, // {.bs, .dw, .ns}
-			{ 36, 16, 11 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 15 */
-		655, // .data_bytes
-		{ 6, 26, 48, 70, 0 }, // .apat
-		{ // .ecc
-			{ 65, 41, 5 }, // {.bs, .dw, .ns}
-			{ 109, 87, 5 }, // {.bs, .dw, .ns}
-			{ 36, 12, 11 }, // {.bs, .dw, .ns}
-			{ 54, 24, 5 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 16 */
-		733, // .data_bytes
-		{ 6, 26, 50, 74, 0 }, // .apat
-		{ // .ecc
-			{ 73, 45, 7 }, // {.bs, .dw, .ns}
-			{ 122, 98, 5 }, // {.bs, .dw, .ns}
-			{ 45, 15, 3 }, // {.bs, .dw, .ns}
-			{ 43, 19, 15 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 17 */
-		815, // .data_bytes
-		{ 6, 30, 54, 78, 0 }, // .apat
-		{ // .ecc
-			{ 74, 46, 10 }, // {.bs, .dw, .ns}
-			{ 135, 107, 1 }, // {.bs, .dw, .ns}
-			{ 42, 14, 2 }, // {.bs, .dw, .ns}
-			{ 50, 22, 1 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 18 */
-		901, // .data_bytes
-		{ 6, 30, 56, 82, 0 }, // .apat
-		{ // .ecc
-			{ 69, 43, 9 }, // {.bs, .dw, .ns}
-			{ 150, 120, 5 }, // {.bs, .dw, .ns}
-			{ 42, 14, 2 }, // {.bs, .dw, .ns}
-			{ 50, 22, 17 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 19 */
-		991, // .data_bytes
-		{ 6, 30, 58, 86, 0 }, // .apat
-		{ // .ecc
-			{ 70, 44, 3 }, // {.bs, .dw, .ns}
-			{ 141, 113, 3 }, // {.bs, .dw, .ns}
-			{ 39, 13, 9 }, // {.bs, .dw, .ns}
-			{ 47, 21, 17 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 20 */
-		1085, // .data_bytes
-		{ 6, 34, 62, 90, 0 }, // .apat
-		{ // .ecc
-			{ 67, 41, 3 }, // {.bs, .dw, .ns}
-			{ 135, 107, 3 }, // {.bs, .dw, .ns}
-			{ 43, 15, 15 }, // {.bs, .dw, .ns}
-			{ 54, 24, 15 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 21 */
-		1156, // .data_bytes
-		{ 6, 28, 50, 72, 92, 0 }, // .apat
-		{ // .ecc
-			{ 68, 42, 17 }, // {.bs, .dw, .ns}
-			{ 144, 116, 4 }, // {.bs, .dw, .ns}
-			{ 46, 16, 19 }, // {.bs, .dw, .ns}
-			{ 50, 22, 17 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 22 */
-		1258, // .data_bytes
-		{ 6, 26, 50, 74, 98, 0 }, // .apat
-		{ // .ecc
-			{ 74, 46, 17 }, // {.bs, .dw, .ns}
-			{ 139, 111, 2 }, // {.bs, .dw, .ns}
-			{ 37, 13, 34 }, // {.bs, .dw, .ns}
-			{ 54, 24, 7 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 23 */
-		1364, // .data_bytes
-		{ 6, 30, 54, 78, 102, 0 }, // .apat
-		{ // .ecc
-			{ 75, 47, 4 }, // {.bs, .dw, .ns}
-			{ 151, 121, 4 }, // {.bs, .dw, .ns}
-			{ 45, 15, 16 }, // {.bs, .dw, .ns}
-			{ 54, 24, 11 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 24 */
-		1474, // .data_bytes
-		{ 6, 28, 54, 80, 106, 0 }, // .apat
-		{ // .ecc
-			{ 73, 45, 6 }, // {.bs, .dw, .ns}
-			{ 147, 117, 6 }, // {.bs, .dw, .ns}
-			{ 46, 16, 30 }, // {.bs, .dw, .ns}
-			{ 54, 24, 11 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 25 */
-		1588, // .data_bytes
-		{ 6, 32, 58, 84, 110, 0 }, // .apat
-		{ // .ecc
-			{ 75, 47, 8 }, // {.bs, .dw, .ns}
-			{ 132, 106, 8 }, // {.bs, .dw, .ns}
-			{ 45, 15, 22 }, // {.bs, .dw, .ns}
-			{ 54, 24, 7 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 26 */
-		1706, // .data_bytes
-		{ 6, 30, 58, 86, 114, 0 }, // .apat
-		{ // .ecc
-			{ 74, 46, 19 }, // {.bs, .dw, .ns}
-			{ 142, 114, 10 }, // {.bs, .dw, .ns}
-			{ 46, 16, 33 }, // {.bs, .dw, .ns}
-			{ 50, 22, 28 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 27 */
-		1828, // .data_bytes
-		{ 6, 34, 62, 90, 118, 0 }, // .apat
-		{ // .ecc
-			{ 73, 45, 22 }, // {.bs, .dw, .ns}
-			{ 152, 122, 8 }, // {.bs, .dw, .ns}
-			{ 45, 15, 12 }, // {.bs, .dw, .ns}
-			{ 53, 23, 8 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 28 */
-		1921, // .data_bytes
-		{ 6, 26, 50, 74, 98, 122, 0 }, // .apat
-		{ // .ecc
-			{ 73, 45, 3 }, // {.bs, .dw, .ns}
-			{ 147, 117, 3 }, // {.bs, .dw, .ns}
-			{ 45, 15, 11 }, // {.bs, .dw, .ns}
-			{ 54, 24, 4 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 29 */
-		2051, // .data_bytes
-		{ 6, 30, 54, 78, 102, 126, 0 }, // .apat
-		{ // .ecc
-			{ 73, 45, 21 }, // {.bs, .dw, .ns}
-			{ 146, 116, 7 }, // {.bs, .dw, .ns}
-			{ 45, 15, 19 }, // {.bs, .dw, .ns}
-			{ 53, 23, 1 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 30 */
-		2185, // .data_bytes
-		{ 6, 26, 52, 78, 104, 130, 0 }, // .apat
-		{ // .ecc
-			{ 75, 47, 19 }, // {.bs, .dw, .ns}
-			{ 145, 115, 5 }, // {.bs, .dw, .ns}
-			{ 45, 15, 23 }, // {.bs, .dw, .ns}
-			{ 54, 24, 15 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 31 */
-		2323, // .data_bytes
-		{ 6, 30, 56, 82, 108, 134, 0 }, // .apat
-		{ // .ecc
-			{ 74, 46, 2 }, // {.bs, .dw, .ns}
-			{ 145, 115, 13 }, // {.bs, .dw, .ns}
-			{ 45, 15, 23 }, // {.bs, .dw, .ns}
-			{ 54, 24, 42 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 32 */
-		2465, // .data_bytes
-		{ 6, 34, 60, 86, 112, 138, 0 }, // .apat
-		{ // .ecc
-			{ 74, 46, 10 }, // {.bs, .dw, .ns}
-			{ 145, 115, 17 }, // {.bs, .dw, .ns}
-			{ 45, 15, 19 }, // {.bs, .dw, .ns}
-			{ 54, 24, 10 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 33 */
-		2611, // .data_bytes
-		{ 6, 30, 58, 86, 114, 142, 0 }, // .apat
-		{ // .ecc
-			{ 74, 46, 14 }, // {.bs, .dw, .ns}
-			{ 145, 115, 17 }, // {.bs, .dw, .ns}
-			{ 45, 15, 11 }, // {.bs, .dw, .ns}
-			{ 54, 24, 29 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 34 */
-		2761, // .data_bytes
-		{ 6, 34, 62, 90, 118, 146, 0 }, // .apat
-		{ // .ecc
-			{ 74, 46, 14 }, // {.bs, .dw, .ns}
-			{ 145, 115, 13 }, // {.bs, .dw, .ns}
-			{ 46, 16, 59 }, // {.bs, .dw, .ns}
-			{ 54, 24, 44 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 35 */
-		2876, // .data_bytes
-		{ 6, 30, 54, 78, 102, 126, 150 }, // .apat
-		{ // .ecc
-			{ 75, 47, 12 }, // {.bs, .dw, .ns}
-			{ 151, 121, 12 }, // {.bs, .dw, .ns}
-			{ 45, 15, 22 }, // {.bs, .dw, .ns}
-			{ 54, 24, 39 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 36 */
-		3034, // .data_bytes
-		{ 6, 24, 50, 76, 102, 128, 154 }, // .apat
-		{ // .ecc
-			{ 75, 47, 6 }, // {.bs, .dw, .ns}
-			{ 151, 121, 6 }, // {.bs, .dw, .ns}
-			{ 45, 15, 2 }, // {.bs, .dw, .ns}
-			{ 54, 24, 46 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 37 */
-		3196, // .data_bytes
-		{ 6, 28, 54, 80, 106, 132, 158 }, // .apat
-		{ // .ecc
-			{ 74, 46, 29 }, // {.bs, .dw, .ns}
-			{ 152, 122, 17 }, // {.bs, .dw, .ns}
-			{ 45, 15, 24 }, // {.bs, .dw, .ns}
-			{ 54, 24, 49 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 38 */
-		3362, // .data_bytes
-		{ 6, 32, 58, 84, 110, 136, 162 }, // .apat
-		{ // .ecc
-			{ 74, 46, 13 }, // {.bs, .dw, .ns}
-			{ 152, 122, 4 }, // {.bs, .dw, .ns}
-			{ 45, 15, 42 }, // {.bs, .dw, .ns}
-			{ 54, 24, 48 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 39 */
-		3532, // .data_bytes
-		{ 6, 26, 54, 82, 110, 138, 166 }, // .apat
-		{ // .ecc
-			{ 75, 47, 40 }, // {.bs, .dw, .ns}
-			{ 147, 117, 20 }, // {.bs, .dw, .ns}
-			{ 45, 15, 10 }, // {.bs, .dw, .ns}
-			{ 54, 24, 43 } // {.bs, .dw, .ns}
-		}
-	},
-	{ /* Version 40 */
-		3706, // .data_bytes
-		{ 6, 30, 58, 86, 114, 142, 170 }, // .apat
-		{ // .ecc
-			{ 75, 47, 18 }, // {.bs, .dw, .ns}
-			{ 148, 118, 19 }, // {.bs, .dw, .ns}
-			{ 45, 15, 20 }, // {.bs, .dw, .ns}
-			{ 54, 24, 34 } // {.bs, .dw, .ns}
-		}
-	}
+	    {0},
+	    { /* Version 1 */
+		    .data_bytes = 26,
+		    .apat = {0},
+		    .ecc = {
+			    {.bs = 26, .dw = 16, .ns = 1},
+			    {.bs = 26, .dw = 19, .ns = 1},
+			    {.bs = 26, .dw = 9, .ns = 1},
+			    {.bs = 26, .dw = 13, .ns = 1}
+		    }
+	    },
+	    { /* Version 2 */
+		    .data_bytes = 44,
+		    .apat = {6, 18, 0},
+		    .ecc = {
+			    {.bs = 44, .dw = 28, .ns = 1},
+			    {.bs = 44, .dw = 34, .ns = 1},
+			    {.bs = 44, .dw = 16, .ns = 1},
+			    {.bs = 44, .dw = 22, .ns = 1}
+		    }
+	    },
+	    { /* Version 3 */
+		    .data_bytes = 70,
+		    .apat = {6, 22, 0},
+		    .ecc = {
+			    {.bs = 70, .dw = 44, .ns = 1},
+			    {.bs = 70, .dw = 55, .ns = 1},
+			    {.bs = 35, .dw = 13, .ns = 2},
+			    {.bs = 35, .dw = 17, .ns = 2}
+		    }
+	    },
+	    { /* Version 4 */
+		    .data_bytes = 100,
+		    .apat = {6, 26, 0},
+		    .ecc = {
+			    {.bs = 50, .dw = 32, .ns = 2},
+			    {.bs = 100, .dw = 80, .ns = 1},
+			    {.bs = 25, .dw = 9, .ns = 4},
+			    {.bs = 50, .dw = 24, .ns = 2}
+		    }
+	    },
+	    { /* Version 5 */
+		    .data_bytes = 134,
+		    .apat = {6, 30, 0},
+		    .ecc = {
+			    {.bs = 67, .dw = 43, .ns = 2},
+			    {.bs = 134, .dw = 108, .ns = 1},
+			    {.bs = 33, .dw = 11, .ns = 2},
+			    {.bs = 33, .dw = 15, .ns = 2}
+		    }
+	    },
+	    { /* Version 6 */
+		    .data_bytes = 172,
+		    .apat = {6, 34, 0},
+		    .ecc = {
+			    {.bs = 43, .dw = 27, .ns = 4},
+			    {.bs = 86, .dw = 68, .ns = 2},
+			    {.bs = 43, .dw = 15, .ns = 4},
+			    {.bs = 43, .dw = 19, .ns = 4}
+		    }
+	    },
+	    { /* Version 7 */
+		    .data_bytes = 196,
+		    .apat = {6, 22, 38, 0},
+		    .ecc = {
+			    {.bs = 49, .dw = 31, .ns = 4},
+			    {.bs = 98, .dw = 78, .ns = 2},
+			    {.bs = 39, .dw = 13, .ns = 4},
+			    {.bs = 32, .dw = 14, .ns = 2}
+		    }
+	    },
+	    { /* Version 8 */
+		    .data_bytes = 242,
+		    .apat = {6, 24, 42, 0},
+		    .ecc = {
+			    {.bs = 60, .dw = 38, .ns = 2},
+			    {.bs = 121, .dw = 97, .ns = 2},
+			    {.bs = 40, .dw = 14, .ns = 4},
+			    {.bs = 40, .dw = 18, .ns = 4}
+		    }
+	    },
+	    { /* Version 9 */
+		    .data_bytes = 292,
+		    .apat = {6, 26, 46, 0},
+		    .ecc = {
+			    {.bs = 58, .dw = 36, .ns = 3},
+			    {.bs = 146, .dw = 116, .ns = 2},
+			    {.bs = 36, .dw = 12, .ns = 4},
+			    {.bs = 36, .dw = 16, .ns = 4}
+		    }
+	    },
+	    { /* Version 10 */
+		    .data_bytes = 346,
+		    .apat = {6, 28, 50, 0},
+		    .ecc = {
+			    {.bs = 69, .dw = 43, .ns = 4},
+			    {.bs = 86, .dw = 68, .ns = 2},
+			    {.bs = 43, .dw = 15, .ns = 6},
+			    {.bs = 43, .dw = 19, .ns = 6}
+		    }
+	    },
+	    { /* Version 11 */
+		    .data_bytes = 404,
+		    .apat = {6, 30, 54, 0},
+		    .ecc = {
+			    {.bs = 80, .dw = 50, .ns = 1},
+			    {.bs = 101, .dw = 81, .ns = 4},
+			    {.bs = 36, .dw = 12, .ns = 3},
+			    {.bs = 50, .dw = 22, .ns = 4}
+		    }
+	    },
+	    { /* Version 12 */
+		    .data_bytes = 466,
+		    .apat = {6, 32, 58, 0},
+		    .ecc = {
+			    {.bs = 58, .dw = 36, .ns = 6},
+			    {.bs = 116, .dw = 92, .ns = 2},
+			    {.bs = 42, .dw = 14, .ns = 7},
+			    {.bs = 46, .dw = 20, .ns = 4}
+		    }
+	    },
+	    { /* Version 13 */
+		    .data_bytes = 532,
+		    .apat = {6, 34, 62, 0},
+		    .ecc = {
+			    {.bs = 59, .dw = 37, .ns = 8},
+			    {.bs = 133, .dw = 107, .ns = 4},
+			    {.bs = 33, .dw = 11, .ns = 12},
+			    {.bs = 44, .dw = 20, .ns = 8}
+		    }
+	    },
+	    { /* Version 14 */
+		    .data_bytes = 581,
+		    .apat = {6, 26, 46, 66, 0},
+		    .ecc = {
+			    {.bs = 64, .dw = 40, .ns = 4},
+			    {.bs = 145, .dw = 115, .ns = 3},
+			    {.bs = 36, .dw = 12, .ns = 11},
+			    {.bs = 36, .dw = 16, .ns = 11}
+		    }
+	    },
+	    { /* Version 15 */
+		    .data_bytes = 655,
+		    .apat = {6, 26, 48, 70, 0},
+		    .ecc = {
+			    {.bs = 65, .dw = 41, .ns = 5},
+			    {.bs = 109, .dw = 87, .ns = 5},
+			    {.bs = 36, .dw = 12, .ns = 11},
+			    {.bs = 54, .dw = 24, .ns = 5}
+		    }
+	    },
+	    { /* Version 16 */
+		    .data_bytes = 733,
+		    .apat = {6, 26, 50, 74, 0},
+		    .ecc = {
+			    {.bs = 73, .dw = 45, .ns = 7},
+			    {.bs = 122, .dw = 98, .ns = 5},
+			    {.bs = 45, .dw = 15, .ns = 3},
+			    {.bs = 43, .dw = 19, .ns = 15}
+		    }
+	    },
+	    { /* Version 17 */
+		    .data_bytes = 815,
+		    .apat = {6, 30, 54, 78, 0},
+		    .ecc = {
+			    {.bs = 74, .dw = 46, .ns = 10},
+			    {.bs = 135, .dw = 107, .ns = 1},
+			    {.bs = 42, .dw = 14, .ns = 2},
+			    {.bs = 50, .dw = 22, .ns = 1}
+		    }
+	    },
+	    { /* Version 18 */
+		    .data_bytes = 901,
+		    .apat = {6, 30, 56, 82, 0},
+		    .ecc = {
+			    {.bs = 69, .dw = 43, .ns = 9},
+			    {.bs = 150, .dw = 120, .ns = 5},
+			    {.bs = 42, .dw = 14, .ns = 2},
+			    {.bs = 50, .dw = 22, .ns = 17}
+		    }
+	    },
+	    { /* Version 19 */
+		    .data_bytes = 991,
+		    .apat = {6, 30, 58, 86, 0},
+		    .ecc = {
+			    {.bs = 70, .dw = 44, .ns = 3},
+			    {.bs = 141, .dw = 113, .ns = 3},
+			    {.bs = 39, .dw = 13, .ns = 9},
+			    {.bs = 47, .dw = 21, .ns = 17}
+		    }
+	    },
+	    { /* Version 20 */
+		    .data_bytes = 1085,
+		    .apat = {6, 34, 62, 90, 0},
+		    .ecc = {
+			    {.bs = 67, .dw = 41, .ns = 3},
+			    {.bs = 135, .dw = 107, .ns = 3},
+			    {.bs = 43, .dw = 15, .ns = 15},
+			    {.bs = 54, .dw = 24, .ns = 15}
+		    }
+	    },
+	    { /* Version 21 */
+		    .data_bytes = 1156,
+		    .apat = {6, 28, 50, 72, 92, 0},
+		    .ecc = {
+			    {.bs = 68, .dw = 42, .ns = 17},
+			    {.bs = 144, .dw = 116, .ns = 4},
+			    {.bs = 46, .dw = 16, .ns = 19},
+			    {.bs = 50, .dw = 22, .ns = 17}
+		    }
+	    },
+	    { /* Version 22 */
+		    .data_bytes = 1258,
+		    .apat = {6, 26, 50, 74, 98, 0},
+		    .ecc = {
+			    {.bs = 74, .dw = 46, .ns = 17},
+			    {.bs = 139, .dw = 111, .ns = 2},
+			    {.bs = 37, .dw = 13, .ns = 34},
+			    {.bs = 54, .dw = 24, .ns = 7}
+		    }
+	    },
+	    { /* Version 23 */
+		    .data_bytes = 1364,
+		    .apat = {6, 30, 54, 78, 102, 0},
+		    .ecc = {
+			    {.bs = 75, .dw = 47, .ns = 4},
+			    {.bs = 151, .dw = 121, .ns = 4},
+			    {.bs = 45, .dw = 15, .ns = 16},
+			    {.bs = 54, .dw = 24, .ns = 11}
+		    }
+	    },
+	    { /* Version 24 */
+		    .data_bytes = 1474,
+		    .apat = {6, 28, 54, 80, 106, 0},
+		    .ecc = {
+			    {.bs = 73, .dw = 45, .ns = 6},
+			    {.bs = 147, .dw = 117, .ns = 6},
+			    {.bs = 46, .dw = 16, .ns = 30},
+			    {.bs = 54, .dw = 24, .ns = 11}
+		    }
+	    },
+	    { /* Version 25 */
+		    .data_bytes = 1588,
+		    .apat = {6, 32, 58, 84, 110, 0},
+		    .ecc = {
+			    {.bs = 75, .dw = 47, .ns = 8},
+			    {.bs = 132, .dw = 106, .ns = 8},
+			    {.bs = 45, .dw = 15, .ns = 22},
+			    {.bs = 54, .dw = 24, .ns = 7}
+		    }
+	    },
+	    { /* Version 26 */
+		    .data_bytes = 1706,
+		    .apat = {6, 30, 58, 86, 114, 0},
+		    .ecc = {
+			    {.bs = 74, .dw = 46, .ns = 19},
+			    {.bs = 142, .dw = 114, .ns = 10},
+			    {.bs = 46, .dw = 16, .ns = 33},
+			    {.bs = 50, .dw = 22, .ns = 28}
+		    }
+	    },
+	    { /* Version 27 */
+		    .data_bytes = 1828,
+		    .apat = {6, 34, 62, 90, 118, 0},
+		    .ecc = {
+			    {.bs = 73, .dw = 45, .ns = 22},
+			    {.bs = 152, .dw = 122, .ns = 8},
+			    {.bs = 45, .dw = 15, .ns = 12},
+			    {.bs = 53, .dw = 23, .ns = 8}
+		    }
+	    },
+	    { /* Version 28 */
+		    .data_bytes = 1921,
+		    .apat = {6, 26, 50, 74, 98, 122, 0},
+		    .ecc = {
+			    {.bs = 73, .dw = 45, .ns = 3},
+			    {.bs = 147, .dw = 117, .ns = 3},
+			    {.bs = 45, .dw = 15, .ns = 11},
+			    {.bs = 54, .dw = 24, .ns = 4}
+		    }
+	    },
+	    { /* Version 29 */
+		    .data_bytes = 2051,
+		    .apat = {6, 30, 54, 78, 102, 126, 0},
+		    .ecc = {
+			    {.bs = 73, .dw = 45, .ns = 21},
+			    {.bs = 146, .dw = 116, .ns = 7},
+			    {.bs = 45, .dw = 15, .ns = 19},
+			    {.bs = 53, .dw = 23, .ns = 1}
+		    }
+	    },
+	    { /* Version 30 */
+		    .data_bytes = 2185,
+		    .apat = {6, 26, 52, 78, 104, 130, 0},
+		    .ecc = {
+			    {.bs = 75, .dw = 47, .ns = 19},
+			    {.bs = 145, .dw = 115, .ns = 5},
+			    {.bs = 45, .dw = 15, .ns = 23},
+			    {.bs = 54, .dw = 24, .ns = 15}
+		    }
+	    },
+	    { /* Version 31 */
+		    .data_bytes = 2323,
+		    .apat = {6, 30, 56, 82, 108, 134, 0},
+		    .ecc = {
+			    {.bs = 74, .dw = 46, .ns = 2},
+			    {.bs = 145, .dw = 115, .ns = 13},
+			    {.bs = 45, .dw = 15, .ns = 23},
+			    {.bs = 54, .dw = 24, .ns = 42}
+		    }
+	    },
+	    { /* Version 32 */
+		    .data_bytes = 2465,
+		    .apat = {6, 34, 60, 86, 112, 138, 0},
+		    .ecc = {
+			    {.bs = 74, .dw = 46, .ns = 10},
+			    {.bs = 145, .dw = 115, .ns = 17},
+			    {.bs = 45, .dw = 15, .ns = 19},
+			    {.bs = 54, .dw = 24, .ns = 10}
+		    }
+	    },
+	    { /* Version 33 */
+		    .data_bytes = 2611,
+		    .apat = {6, 30, 58, 86, 114, 142, 0},
+		    .ecc = {
+			    {.bs = 74, .dw = 46, .ns = 14},
+			    {.bs = 145, .dw = 115, .ns = 17},
+			    {.bs = 45, .dw = 15, .ns = 11},
+			    {.bs = 54, .dw = 24, .ns = 29}
+		    }
+	    },
+	    { /* Version 34 */
+		    .data_bytes = 2761,
+		    .apat = {6, 34, 62, 90, 118, 146, 0},
+		    .ecc = {
+			    {.bs = 74, .dw = 46, .ns = 14},
+			    {.bs = 145, .dw = 115, .ns = 13},
+			    {.bs = 46, .dw = 16, .ns = 59},
+			    {.bs = 54, .dw = 24, .ns = 44}
+		    }
+	    },
+	    { /* Version 35 */
+		    .data_bytes = 2876,
+		    .apat = {6, 30, 54, 78, 102, 126, 150},
+		    .ecc = {
+			    {.bs = 75, .dw = 47, .ns = 12},
+			    {.bs = 151, .dw = 121, .ns = 12},
+			    {.bs = 45, .dw = 15, .ns = 22},
+			    {.bs = 54, .dw = 24, .ns = 39}
+		    }
+	    },
+	    { /* Version 36 */
+		    .data_bytes = 3034,
+		    .apat = {6, 24, 50, 76, 102, 128, 154},
+		    .ecc = {
+			    {.bs = 75, .dw = 47, .ns = 6},
+			    {.bs = 151, .dw = 121, .ns = 6},
+			    {.bs = 45, .dw = 15, .ns = 2},
+			    {.bs = 54, .dw = 24, .ns = 46}
+		    }
+	    },
+	    { /* Version 37 */
+		    .data_bytes = 3196,
+		    .apat = {6, 28, 54, 80, 106, 132, 158},
+		    .ecc = {
+			    {.bs = 74, .dw = 46, .ns = 29},
+			    {.bs = 152, .dw = 122, .ns = 17},
+			    {.bs = 45, .dw = 15, .ns = 24},
+			    {.bs = 54, .dw = 24, .ns = 49}
+		    }
+	    },
+	    { /* Version 38 */
+		    .data_bytes = 3362,
+		    .apat = {6, 32, 58, 84, 110, 136, 162},
+		    .ecc = {
+			    {.bs = 74, .dw = 46, .ns = 13},
+			    {.bs = 152, .dw = 122, .ns = 4},
+			    {.bs = 45, .dw = 15, .ns = 42},
+			    {.bs = 54, .dw = 24, .ns = 48}
+		    }
+	    },
+	    { /* Version 39 */
+		    .data_bytes = 3532,
+		    .apat = {6, 26, 54, 82, 110, 138, 166},
+		    .ecc = {
+			    {.bs = 75, .dw = 47, .ns = 40},
+			    {.bs = 147, .dw = 117, .ns = 20},
+			    {.bs = 45, .dw = 15, .ns = 10},
+			    {.bs = 54, .dw = 24, .ns = 43}
+		    }
+	    },
+	    { /* Version 40 */
+		    .data_bytes = 3706,
+		    .apat = {6, 30, 58, 86, 114, 142, 170},
+		    .ecc = {
+			    {.bs = 75, .dw = 47, .ns = 18},
+			    {.bs = 148, .dw = 118, .ns = 19},
+			    {.bs = 45, .dw = 15, .ns = 20},
+			    {.bs = 54, .dw = 24, .ns = 34}
+		    }
+	    }
 };
 
 // version_db.c - EOF ----------------------------------------------------------
@@ -787,9 +823,9 @@ static const uint8_t gf16_log[16] = {
 };
 
 static const struct galois_field gf16 = {
-	15, // .p
-	gf16_log, // .log
-	gf16_exp // .exp
+	.p = 15,
+	.log = gf16_log,
+	.exp = gf16_exp
 };
 
 static const uint8_t gf256_exp[256] = {
@@ -863,9 +899,9 @@ static const uint8_t gf256_log[256] = {
 };
 
 static const struct galois_field gf256 = {
-	255, // .p
-	gf256_log, // .log
-	gf256_exp // .exp
+	.p = 255,
+	.log = gf256_log,
+	.exp = gf256_exp
 };
 
 /************************************************************************
@@ -1144,7 +1180,7 @@ static quirc_decode_error_t correct_format(uint16_t *f_ret)
  */
 
 struct datastream {
-	uint8_t		raw[QUIRC_MAX_PAYLOAD];
+	uint8_t		*raw;
 	int		data_bits;
 	int		ptr;
 
@@ -1154,7 +1190,6 @@ struct datastream {
 static inline int grid_bit(const struct quirc_code *code, int x, int y)
 {
 	int p = y * code->size + x;
-
 	return (code->cell_bitmap[p >> 3] >> (p & 7)) & 1;
 }
 
@@ -1168,11 +1203,11 @@ static quirc_decode_error_t read_format(const struct quirc_code *code,
 
 	if (which) {
 		for (i = 0; i < 7; i++)
-			format = uint16_t((format << 1) |
-				grid_bit(code, 8, code->size - 1 - i));
+			format = (format << 1) |
+				grid_bit(code, 8, code->size - 1 - i);
 		for (i = 0; i < 8; i++)
-			format = uint16_t((format << 1) |
-				grid_bit(code, code->size - 8 + i, 8));
+			format = (format << 1) |
+				grid_bit(code, code->size - 8 + i, 8);
 	} else {
 		static const int xs[15] = {
 			8, 8, 8, 8, 8, 8, 8, 8, 7, 5, 4, 3, 2, 1, 0
@@ -1182,7 +1217,7 @@ static quirc_decode_error_t read_format(const struct quirc_code *code,
 		};
 
 		for (i = 14; i >= 0; i--)
-			format = uint16_t((format << 1) | grid_bit(code, xs[i], ys[i]));
+			format = (format << 1) | grid_bit(code, xs[i], ys[i]);
 	}
 
 	format ^= 0x5412;
@@ -1510,7 +1545,7 @@ static quirc_decode_error_t decode_byte(struct quirc_data *data,
 		return QUIRC_ERROR_DATA_UNDERFLOW;
 
 	for (i = 0; i < count; i++)
-		data->payload[data->payload_len++] = uint8_t(take_bits(ds, 8));
+		data->payload[data->payload_len++] = take_bits(ds, 8);
 
 	return QUIRC_SUCCESS;
 }
@@ -1542,10 +1577,10 @@ static quirc_decode_error_t decode_kanji(struct quirc_data *data,
 
 		if (intermediate + 0x8140 <= 0x9ffc) {
 			/* bytes are in the range 0x8140 to 0x9FFC */
-			sjw = uint16_t(intermediate + 0x8140);
+			sjw = intermediate + 0x8140;
 		} else {
 			/* bytes are in the range 0xE040 to 0xEBBF */
-			sjw = uint16_t(intermediate + 0xc140);
+			sjw = intermediate + 0xc140;
 		}
 
 		data->payload[data->payload_len++] = sjw >> 8;
@@ -1619,7 +1654,7 @@ static quirc_decode_error_t decode_payload(struct quirc_data *data,
 done:
 
 	/* Add nul terminator to all payloads */
-	if (data->payload_len >= int(sizeof(data->payload)))
+	if (data->payload_len >= (int) sizeof(data->payload))
 		data->payload_len--;
 	data->payload[data->payload_len] = 0;
 
@@ -1631,6 +1666,9 @@ quirc_decode_error_t quirc_decode(const struct quirc_code *code,
 {
 	quirc_decode_error_t err;
 	struct datastream ds;
+
+	if (code->size > QUIRC_MAX_GRID_SIZE)
+		return QUIRC_ERROR_INVALID_GRID_SIZE;
 
 	if ((code->size - 17) % 4)
 		return QUIRC_ERROR_INVALID_GRID_SIZE;
@@ -1651,16 +1689,46 @@ quirc_decode_error_t quirc_decode(const struct quirc_code *code,
 	if (err)
 		return err;
 
+	/*
+	 * Borrow data->payload to store the raw bits.
+	 * It's only used during read_data + coddestream_ecc below.
+	 *
+	 * This trick saves the size of struct datastream, which we allocate
+	 * on the stack.
+	 */
+
+	ds.raw = data->payload;
+
 	read_data(code, data, &ds);
 	err = codestream_ecc(data, &ds);
 	if (err)
 		return err;
+
+	ds.raw = nullptr; /* We've done with this buffer. */
 
 	err = decode_payload(data, &ds);
 	if (err)
 		return err;
 
 	return QUIRC_SUCCESS;
+}
+
+void quirc_flip(struct quirc_code *code)
+{
+	//struct quirc_code flipped{0}; // quirc
+    struct quirc_code flipped; // Ocean
+    memset(&flipped, 0, sizeof(flipped));
+
+	unsigned int offset = 0;
+	for (int y = 0; y < code->size; y++) {
+		for (int x = 0; x < code->size; x++) {
+			if (grid_bit(code, y, x)) {
+				flipped.cell_bitmap[offset >> 3u] |= (1u << (offset & 7u));
+			}
+			offset++;
+		}
+	}
+	memcpy(&code->cell_bitmap, &flipped.cell_bitmap, sizeof(flipped.cell_bitmap));
 }
 
 // decode.c - EOF --------------------------------------------------------------
