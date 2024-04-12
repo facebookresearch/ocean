@@ -571,29 +571,40 @@ bool XMLConfig::read()
 
 	if (xmlOpenResult != tinyxml2::XML_SUCCESS)
 	{
-		std::string errorStr0, errorStr1;
+		std::string errorName, errorStr;
 
+#if defined(TINYXML2_MAJOR_VERSION) && TINYXML2_MAJOR_VERSION >= 6
+		if (xmlDocument_->ErrorName())
+		{
+			errorName = std::string(xmlDocument_->ErrorName());
+		}
+		if (xmlDocument_->ErrorStr())
+		{
+			errorStr = std::string(xmlDocument_->ErrorStr());
+		}
+#else
 		if (xmlDocument_->GetErrorStr1())
 		{
-			errorStr0 = std::string(xmlDocument_->GetErrorStr1());
+			errorName = std::string(xmlDocument_->GetErrorStr1());
 		}
 		if (xmlDocument_->GetErrorStr2())
 		{
-			errorStr1 = std::string(xmlDocument_->GetErrorStr2());
+			errorStr = std::string(xmlDocument_->GetErrorStr2());
 		}
+#endif
 
-		if (!errorStr0.empty())
+		if (!errorName.empty())
 		{
-			Log::warning() << "Failed to read XML file \"" << filename_ << "\": " << errorStr0;
+			Log::warning() << "Failed to read XML file \"" << filename_ << "\": " << errorName;
 
-			if (!errorStr1.empty())
+			if (!errorStr.empty())
 			{
-				Log::warning() << "Detailed problem: " << errorStr1;
+				Log::warning() << "Detailed problem: " << errorStr;
 			}
 		}
 		else
 		{
-			ocean_assert(errorStr1.empty());
+			ocean_assert(errorStr.empty());
 		}
 
 		return false;
@@ -628,29 +639,40 @@ bool XMLConfig::write()
 
 	if (xmlOpenResult != tinyxml2::XML_SUCCESS)
 	{
-		std::string errorStr0, errorStr1;
+		std::string errorName, errorStr;
 
+#if defined(TINYXML2_MAJOR_VERSION) && TINYXML2_MAJOR_VERSION >= 6
+		if (xmlDocument_->ErrorName())
+		{
+			errorName = std::string(xmlDocument_->ErrorName());
+		}
+		if (xmlDocument_->ErrorStr())
+		{
+			errorStr = std::string(xmlDocument_->ErrorStr());
+		}
+#else
 		if (xmlDocument_->GetErrorStr1())
 		{
-			errorStr0 = std::string(xmlDocument_->GetErrorStr1());
+			errorName = std::string(xmlDocument_->GetErrorStr1());
 		}
 		if (xmlDocument_->GetErrorStr2())
 		{
-			errorStr1 = std::string(xmlDocument_->GetErrorStr2());
+			errorStr = std::string(xmlDocument_->GetErrorStr2());
 		}
+#endif
 
-		if (!errorStr0.empty())
+		if (!errorName.empty())
 		{
-			Log::warning() << "Failed to write XML file \"" << filename_ << "\": " << errorStr0;
+			Log::warning() << "Failed to write XML file \"" << filename_ << "\": " << errorName;
 
-			if (!errorStr1.empty())
+			if (!errorStr.empty())
 			{
-				Log::warning() << "Detailed problem: " << errorStr1;
+				Log::warning() << "Detailed problem: " << errorStr;
 			}
 		}
 		else
 		{
-			ocean_assert(errorStr1.empty());
+			ocean_assert(errorStr.empty());
 		}
 
 		return false;
