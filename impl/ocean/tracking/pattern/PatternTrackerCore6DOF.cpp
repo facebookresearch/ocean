@@ -1237,8 +1237,8 @@ bool PatternTrackerCore6DOF::determinePoseWithDriftErrors(const PinholeCamera& p
 
 	constexpr unsigned int trackingLayer = 1u;
 
-	const CV::FramePyramid hierarchyPrevious(CV::FramePyramid::create8BitPerChannel<false>(previousFramePyramid_, trackingLayer, 3u));
-	const CV::FramePyramid hierarchyCurrent(CV::FramePyramid::create8BitPerChannel<false>(currentFramePyramid_, trackingLayer, 3u));
+	const CV::FramePyramid hierarchyPrevious(previousFramePyramid_, trackingLayer, 3u, false /*copyData*/);
+	const CV::FramePyramid hierarchyCurrent(currentFramePyramid_, trackingLayer, 3u, false /*copyData*/);
 
 	const PinholeCamera hierarchyCamera(hierarchyPrevious.finestWidth(), hierarchyPrevious.finestHeight(), pinholeCamera);
 
@@ -1362,8 +1362,8 @@ bool PatternTrackerCore6DOF::determinePoseWithPreviousCorrespondences(const Pinh
 
 	if (currentRoughPose.isValid())
 	{
-		const CV::FramePyramid previous(CV::FramePyramid::create8BitPerChannel<false>(previousFramePyramid, 0u, 3u));
-		const CV::FramePyramid current(CV::FramePyramid::create8BitPerChannel<false>(currentFramePyramid, 0u, 3u));
+		const CV::FramePyramid previous(previousFramePyramid, 0u, 3u, false /*copyData*/);
+		const CV::FramePyramid current(currentFramePyramid, 0u, 3u, false /*copyData*/);
 
 		if (!trackFrame2Frame(pinholeCamera, previous, current, pattern.previousPose(), pattern.objectPoints(), pattern.imagePoints(), currentImagePoints, pose, currentRoughPose, worker))
 		{
@@ -1395,8 +1395,8 @@ bool PatternTrackerCore6DOF::trackFrame2FrameHierarchy(const PinholeCamera& pinh
 		return false;
 	}
 
-	const CV::FramePyramid hierarchyPrevious(CV::FramePyramid::create8BitPerChannel<false>(previousFramePyramid, trackingLayer, 3u));
-	const CV::FramePyramid hierarchyCurrent(CV::FramePyramid::create8BitPerChannel<false>(currentFramePyramid, trackingLayer, 3u));
+	const CV::FramePyramid hierarchyPrevious(previousFramePyramid, trackingLayer, 3u, false /*copyData*/);
+	const CV::FramePyramid hierarchyCurrent(currentFramePyramid, trackingLayer, 3u, false /*copyData*/);
 
 	const PinholeCamera hierarchyCamera(hierarchyPrevious.finestWidth(), hierarchyPrevious.finestHeight(), pinholeCamera);
 
@@ -1824,7 +1824,7 @@ bool PatternTrackerCore6DOF::optimizePoseByRectification(const PinholeCamera& pi
 
 	Vectors2 rectifiedPoints;
 	Indices32 validPointIndices;
-	if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations<1u, 7u>(CV::FramePyramid::create8BitPerChannel<false>(pattern.pyramid(), patternPyramidLayer, 3u), rectifiedPyramid, 2u, patternPoints, patternPointsCopy, rectifiedPoints, Scalar(0.9 * 0.9), worker, &validPointIndices, 2u))
+	if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations<1u, 7u>(CV::FramePyramid(pattern.pyramid(), patternPyramidLayer, 3u, false /*copyData*/), rectifiedPyramid, 2u, patternPoints, patternPointsCopy, rectifiedPoints, Scalar(0.9 * 0.9), worker, &validPointIndices, 2u))
 	{
 		return false;
 	}

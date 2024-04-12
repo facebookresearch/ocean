@@ -317,8 +317,8 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 
 				if (predictedKeyFrameHomography.isNull())
 				{
-					// we do not have a roughly predicted homography (e.g., from IMU data), so that we simply must hope that the keyframe is close to the current frame so that the sprase point tracking works
-					transformedKeyFramePyramid = CV::FramePyramid::create8BitPerChannel<false>(keyFrame.pyramid_);
+					// we do not have a roughly predicted homography (e.g., from IMU data), so that we simply must hope that the keyframe is close to the current frame so that the sparse point tracking works
+					transformedKeyFramePyramid = CV::FramePyramid(keyFrame.pyramid_, 0u, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, false /*copyData*/);
 
 					copyKeyFrameInitialPointsPyramid = keyFrame.initialPointsPyramid_;
 					copyKeyFramePointsPyramid = keyFrame.pointsPyramid_;
@@ -508,7 +508,7 @@ bool HomographyTracker::addNewFeaturePointsToPyramid(const CV::FramePyramid& yFr
 				}
 				else
 				{
-					// we need to remove the point from 'pointsPyramid[layer]', instead of applying earse() we overwrite the point with the last point (as the order is not important in this case)
+					// we need to remove the point from 'pointsPyramid[layer]', instead of applying erase() we overwrite the point with the last point (as the order is not important in this case)
 
 					pointsPyramid[layer][n] = pointsPyramid[layer].back();
 					pointsPyramid[layer].pop_back();
@@ -605,8 +605,8 @@ bool HomographyTracker::trackPoints(const CV::FramePyramid& yPreviousFramePyrami
 	}
 
 	// let's create new frame pyramids, starting with level 'firstPyramidLayerIndex' - while we do not copy the data
-	const CV::FramePyramid hierarchyPreviousFramePyramid(CV::FramePyramid::create8BitPerChannel<false>(yPreviousFramePyramid, startLayer, layers));
-	const CV::FramePyramid hierarchyCurrentFramePyramid(CV::FramePyramid::create8BitPerChannel<false>(yCurrentFramePyramid, startLayer, layers));
+	const CV::FramePyramid hierarchyPreviousFramePyramid(yPreviousFramePyramid, startLayer, layers, false /*copyData*/);
+	const CV::FramePyramid hierarchyCurrentFramePyramid(yCurrentFramePyramid, startLayer, layers, false /*copyData*/);
 
 	Vectors2& previousLayerPoints = previousPointsPyramid[startLayer];
 	Vectors2& currentLayerPoints = currentPointsPyramid[startLayer];
@@ -623,7 +623,7 @@ bool HomographyTracker::trackPoints(const CV::FramePyramid& yPreviousFramePyrami
 	}
 	else
 	{
-		// the rough homography is defined in the domain of the finest pyramid layer, we need to adjust it to match with the actualy tracking layer
+		// the rough homography is defined in the domain of the finest pyramid layer, we need to adjust it to match with the actual tracking layer
 
 		const SquareMatrix3 roughLayerHomography = Geometry::Homography::toCoarseHomography(roughHomography, startLayer);
 
@@ -747,7 +747,7 @@ HomographyTracker::HomographyQuality HomographyTracker::determineHomographyWithP
 								{
 									roughHomography = Geometry::Homography::toFinestHomography(layerHomography, layer);
 
-									// we have to shrink the set of intial image points so that it fits with the set of all tracked points
+									// we have to shrink the set of initial image points so that it fits with the set of all tracked points
 
 									Vectors2 validInitialPoints;
 									validInitialPoints.reserve(validPoseIndices.size());
@@ -785,7 +785,7 @@ HomographyTracker::HomographyQuality HomographyTracker::determineHomographyWithP
 								previousPointsPyramid[layer] = Subset::subset(trackedPreviousPoints, validHomographyIndices);
 								currentPointsPyramid[layer] = Subset::subset(trackedCurrentPoints, validHomographyIndices);
 
-								// we have to shrink the set of intial image points so that it fits with the set of all tracked points
+								// we have to shrink the set of initial image points so that it fits with the set of all tracked points
 
 								Vectors2 validInitialPoints;
 								validInitialPoints.reserve(validHomographyIndices.size());

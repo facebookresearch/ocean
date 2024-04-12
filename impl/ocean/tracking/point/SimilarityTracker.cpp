@@ -159,8 +159,8 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 			applyAnotherTrackingIteration = false;
 
 			// let's create new frame pyramids, starting with level 'firstPyramidLayerIndex' - while we do not copy the data
-			const CV::FramePyramid hierarchyKey(CV::FramePyramid::create8BitPerChannel<false>(keyFramePyramid_, firstPyramidLayerIndex, hierarchyLayers));
-			const CV::FramePyramid hierarchyCurrent(CV::FramePyramid::create8BitPerChannel<false>(currentFramePyramid_, firstPyramidLayerIndex, hierarchyLayers));
+			const CV::FramePyramid hierarchyKey(keyFramePyramid_, firstPyramidLayerIndex, hierarchyLayers, false /*copyData*/);
+			const CV::FramePyramid hierarchyCurrent(currentFramePyramid_, firstPyramidLayerIndex, hierarchyLayers, false /*copyData*/);
 
 			Indices32 validCorrespondences;
 

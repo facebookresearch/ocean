@@ -53,8 +53,8 @@ bool trackFrameToFrameAtLowerResolution(const PinholeCamera& pinholeCamera, cons
 	}
 
 	// It's fine if there are fewer than kMaxNumTrackingLayers left in the pyramid.
-	const CV::FramePyramid previousFrameSubPyramid(CV::FramePyramid::create8BitPerChannel</* copyData */ false>(previousFramePyramid, initialPyramidLayer, kMaxNumTrackingLayers));
-	const CV::FramePyramid currentFrameSubPyramid(CV::FramePyramid::create8BitPerChannel</* copyData */ false>(currentFramePyramid, initialPyramidLayer, kMaxNumTrackingLayers));
+	const CV::FramePyramid previousFrameSubPyramid(previousFramePyramid, initialPyramidLayer, kMaxNumTrackingLayers, false /*copyData*/);
+	const CV::FramePyramid currentFrameSubPyramid(currentFramePyramid, initialPyramidLayer, kMaxNumTrackingLayers, false /*copyData*/);
 
 	const PinholeCamera lowerResolutionCamera(previousFrameSubPyramid.finestWidth(), previousFrameSubPyramid.finestHeight(), pinholeCamera);
 
@@ -366,10 +366,8 @@ bool FrameToFrameTracker::track(const PinholeCamera& pinholeCamera, const CV::Fr
 	if (currentRoughPose_world_T_currentFrame.isValid())
 	{
 		// TODO (jtprice): hardcoded values
-		const CV::FramePyramid previousFramePyramidSlice = CV::FramePyramid::create8BitPerChannel</* copyData */ false>(
-			previousFramePyramid, 0u, 3u);
-		const CV::FramePyramid currentFramePyramidSlice = CV::FramePyramid::create8BitPerChannel</* copyData */ false>(
-			currentFramePyramid, 0u, 3u);
+		const CV::FramePyramid previousFramePyramidSlice(previousFramePyramid, 0u, 3u, false /*copyData*/);
+		const CV::FramePyramid currentFramePyramidSlice(currentFramePyramid, 0u, 3u, false /*copyData*/);
 
 		if (!trackFrameToFrame(
 				pinholeCamera,

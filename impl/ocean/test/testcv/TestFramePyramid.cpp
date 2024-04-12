@@ -604,56 +604,6 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 				allSucceeded = false;
 			}
 		}
-
-		{
-			// testing pyramid from pyramid and making a copy
-
-			CV::FramePyramid framePyramidSource(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, FrameType(width, height, pixelFormat, pixelOrigin));
-
-			CV::FramePyramid framePyramid = CV::FramePyramid::create8BitPerChannel<true /*tCopyData*/>(framePyramidSource);
-
-			if (!verifyPyramidOwnership(framePyramid, true /*isValid*/, true /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
-
-			CV::FramePyramid movedFramePyramid(std::move(framePyramid));
-
-			if (!verifyPyramidOwnership(movedFramePyramid, true /*isValid*/, true /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
-
-			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
-		}
-
-		{
-			// testing pyramid from pyramid and using the memory only
-
-			CV::FramePyramid framePyramidSource(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, FrameType(width, height, pixelFormat, pixelOrigin));
-
-			CV::FramePyramid framePyramid = CV::FramePyramid::create8BitPerChannel<false /*tCopyData*/>(framePyramidSource);
-
-			if (!verifyPyramidOwnership(framePyramid, true /*isValid*/, false /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
-
-			CV::FramePyramid movedFramePyramid(std::move(framePyramid));
-
-			if (!verifyPyramidOwnership(movedFramePyramid, true /*isValid*/, false /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
-
-			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
-		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -1677,22 +1627,6 @@ bool TestFramePyramid::testConstructFromPyramidDeprecated(const CV::FramePyramid
 			framePyramid = CV::FramePyramid(sourcePyramid, layerIndex, layerCount, copyData);
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
-
-		if (!validateConstructFromPyramid(framePyramid, sourcePyramid, copyData, layerIndex, layerCount))
-		{
-			allSucceeded = false;
-		}
-
-		framePyramid.clear();
-
-		if (copyData)
-		{
-			framePyramid = CV::FramePyramid::create8BitPerChannel<true>(sourcePyramid, layerIndex, layerCount, useWorker);
-		}
-		else
-		{
-			framePyramid = CV::FramePyramid::create8BitPerChannel<false>(sourcePyramid, layerIndex, layerCount, useWorker);
-		}
 
 		if (!validateConstructFromPyramid(framePyramid, sourcePyramid, copyData, layerIndex, layerCount))
 		{

@@ -305,7 +305,7 @@ bool MeshTriangle::rectifyTriangleAndIdentifyReferenceCorrespondences(
 	Vectors2 rectifiedPoints;
 	Indices32 validPointIndices;
 	const bool matchingResult = CV::Advanced::AdvancedMotionZeroMeanSSD::trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations<kNumChannels, kSSDWindowSize>(
-		CV::FramePyramid::create8BitPerChannel<false>(texturePyramid, texturePyramidLayer, rectifiedPyramid.layers()),
+		CV::FramePyramid(texturePyramid, texturePyramidLayer, rectifiedPyramid.layers(), false /*copyData*/),
 		rectifiedPyramid,
 		kCoarsestLayerSearchRadius,
 		texturePoints,
