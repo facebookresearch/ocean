@@ -99,7 +99,7 @@ void TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 		if (iteration % 3u == 0u)
 		{
 			performanceOceanSingleCore.start();
-				framePyramid.replace(frame, framePyramid.layers());
+				framePyramid.replace8BitPerChannel11(frame, framePyramid.layers(), true /*copyFirstLayer*/, nullptr);
 			performanceOceanSingleCore.stop();
 		}
 		else if (iteration % 3u == 1u)
@@ -107,7 +107,7 @@ void TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 			const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
 
 			performanceOceanMultiCore.start();
-				framePyramid.replace(frame, framePyramid.layers(), scopedWorker());
+				framePyramid.replace8BitPerChannel11(frame, framePyramid.layers(), true /*copyFirstLayer*/, scopedWorker());
 			performanceOceanMultiCore.stop();
 		}
 		else if (channels == 4u) // libyuv does not provide a rescale function for Y frames, YA frames, or RGB frames
