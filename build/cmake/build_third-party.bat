@@ -3,36 +3,58 @@
 @REM Determine the location of the source directory from the location of this script
 set OCEAN_THIRD_PARTY_SOURCE_DIR=%~dp0..\..\build\cmake\third-party
 
-@REM Static, debug + release
-cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B C:\tmp\ocean_third-party_build_static -DCMAKE_INSTALL_PREFIX=C:\tmp\ocean_third-party_install_static -DBUILD_PASS_INDEX=0
+@REM Static, debug
+set BUILD_TYPE=Debug
+set BUILD_DIRECTORY=C:\tmp\ocean\build\third-party\static_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\static_%BUILD_TYPE%
 
-cmake --build C:\tmp\ocean_third-party_build_static --config Release --target install -- /m:16
-cmake --build C:\tmp\ocean_third-party_build_static --config Debug --target install -- /m:16
+cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=OFF -DBUILD_PASS_INDEX=0
+cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
 
-cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B C:\tmp\ocean_third-party_build_static -DCMAKE_INSTALL_PREFIX=C:\tmp\ocean_third-party_install_static -DBUILD_PASS_INDEX=1
+cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=OFF -DBUILD_PASS_INDEX=1
+cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
 
-cmake --build C:\tmp\ocean_third-party_build_static --config Release --target install -- /m:16
-cmake --build C:\tmp\ocean_third-party_build_static --config Debug --target install -- /m:16
+cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=OFF -DBUILD_PASS_INDEX=2
+cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
 
-cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B C:\tmp\ocean_third-party_build_static -DCMAKE_INSTALL_PREFIX=C:\tmp\ocean_third-party_install_static -DBUILD_PASS_INDEX=2
+@REM Static, release
+set BUILD_TYPE=Release
+set BUILD_DIRECTORY=C:\tmp\ocean\build\third-party\static_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\static_%BUILD_TYPE%
 
-cmake --build C:\tmp\ocean_third-party_build_static --config Release --target install -- /m:16
-cmake --build C:\tmp\ocean_third-party_build_static --config Debug --target install -- /m:16
+cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=OFF -DBUILD_PASS_INDEX=0
+cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
 
+cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=OFF -DBUILD_PASS_INDEX=1
+cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
 
-@REM Shared, debug + release
-cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B C:\tmp\ocean_third-party_build_shared -DCMAKE_INSTALL_PREFIX=C:\tmp\ocean_third-party_install_shared -DBUILD_SHARED_LIBS=ON -DBUILD_PASS_INDEX=0
+cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=OFF -DBUILD_PASS_INDEX=2
+cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
 
-cmake --build C:\tmp\ocean_third-party_build_shared --config Release --target install -- /m:16
-cmake --build C:\tmp\ocean_third-party_build_shared --config Debug --target install -- /m:16
+@REM Shared, debug
+set BUILD_TYPE=Debug
+set BUILD_DIRECTORY=C:\tmp\ocean\build\third-party\shared_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\shared_%BUILD_TYPE%
 
-cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B C:\tmp\ocean_third-party_build_shared -DCMAKE_INSTALL_PREFIX=C:\tmp\ocean_third-party_install_shared -DBUILD_SHARED_LIBS=ON -DBUILD_PASS_INDEX=1
+cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=ON -DBUILD_PASS_INDEX=0
+cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
 
-cmake --build C:\tmp\ocean_third-party_build_shared --config Release --target install -- /m:16
-cmake --build C:\tmp\ocean_third-party_build_shared --config Debug --target install -- /m:16
+cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=ON -DBUILD_PASS_INDEX=1
+cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
 
-cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B C:\tmp\ocean_third-party_build_shared -DCMAKE_INSTALL_PREFIX=C:\tmp\ocean_third-party_install_shared -DBUILD_SHARED_LIBS=ON -DBUILD_PASS_INDEX=2
+cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=ON -DBUILD_PASS_INDEX=2
+cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
 
-cmake --build C:\tmp\ocean_third-party_build_shared --config Release --target install -- /m:16
-cmake --build C:\tmp\ocean_third-party_build_shared --config Debug --target install -- /m:16
+@REM Shared, release
+set BUILD_TYPE=Release
+set BUILD_DIRECTORY=C:\tmp\ocean\build\third-party\shared_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\shared_%BUILD_TYPE%
 
+cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=ON -DBUILD_PASS_INDEX=0
+cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
+
+cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=ON -DBUILD_PASS_INDEX=1
+cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
+
+cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=ON -DBUILD_PASS_INDEX=2
+cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
