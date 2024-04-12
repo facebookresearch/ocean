@@ -1438,8 +1438,8 @@ bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
 
 		for (unsigned int nIteration = 0u; nIteration < 10u; ++nIteration)
 		{
-			const size_t previousPyramidMemorySize = framePyramid.memory_.size();
-			const void* previousPyramidMemory = framePyramid.memory_.constdata();
+			const size_t previousPyramidMemorySize = framePyramid.memory().size();
+			const void* previousPyramidMemory = framePyramid.memory().constdata();
 
 			FrameType frameType = previousFrameType;
 
@@ -1514,7 +1514,7 @@ bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
 						allSucceeded = false;
 					}
 
-					if (framePyramid[layerIndex].constdata<void>() != framePyramid.memory_.constdata<uint8_t>() + memoryOffset)
+					if (framePyramid[layerIndex].constdata<void>() != framePyramid.memory().constdata<uint8_t>() + memoryOffset)
 					{
 						allSucceeded = false;
 					}
@@ -1527,7 +1527,7 @@ bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
 					memoryOffset += layerSize;
 				}
 
-				if (memoryOffset > framePyramid.memory_.size())
+				if (memoryOffset > framePyramid.memory().size())
 				{
 					allSucceeded = false;
 				}
@@ -1543,14 +1543,14 @@ bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
 
 					if (expectUpdatedMemory)
 					{
-						if (framePyramid.memory_.constdata() == previousPyramidMemory)
+						if (framePyramid.memory().constdata() == previousPyramidMemory)
 						{
 							allSucceeded = false;
 						}
 					}
 					else
 					{
-						if (framePyramid.memory_.constdata() != previousPyramidMemory)
+						if (framePyramid.memory().constdata() != previousPyramidMemory)
 						{
 							allSucceeded = false;
 						}
@@ -1661,13 +1661,13 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 				if (nIteration == 0u)
 				{
 					ocean_assert(initialPyramidMemory == nullptr);
-					initialPyramidMemory = framePyramid.memory_.constdata();
+					initialPyramidMemory = framePyramid.memory().constdata();
 				}
 				else
 				{
 					ocean_assert(initialPyramidMemory != nullptr || (framePyramid.layers() == 1u && !copyFirstLayer));
 
-					if (initialPyramidMemory != framePyramid.memory_.constdata())
+					if (initialPyramidMemory != framePyramid.memory().constdata())
 					{
 						// the pyramid should not have allocated a new memory
 						allSucceeded = false;
@@ -1729,7 +1729,7 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 			{
 				ocean_assert(initialPyramidMemory != nullptr);
 
-				if (initialPyramidMemory == framePyramid.memory_.constdata())
+				if (initialPyramidMemory == framePyramid.memory().constdata())
 				{
 					// the pyramid should have allocated a new memory
 					allSucceeded = false;
@@ -1803,7 +1803,7 @@ bool TestFramePyramid::testConstructor11(const double testDuration, Worker& work
 
 		if (framePyramid.isValid())
 		{
-			const void* initialPyramidMemory = framePyramid.memory_.constdata();
+			const void* initialPyramidMemory = framePyramid.memory().constdata();
 
 			if (framePyramid.layers() != expectedLayers)
 			{
@@ -1873,7 +1873,7 @@ bool TestFramePyramid::testConstructor11(const double testDuration, Worker& work
 
 				ocean_assert(initialPyramidMemory != nullptr || (framePyramid.layers() == 1u && !copyFirstLayer));
 
-				if (initialPyramidMemory != framePyramid.memory_.constdata())
+				if (initialPyramidMemory != framePyramid.memory().constdata())
 				{
 					// the pyramid should not have allocated a new memory
 					allSucceeded = false;
@@ -2154,7 +2154,7 @@ bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& frameP
 		}
 
 		const size_t layerSizeBytes = layer.size(); // **TODO** switch to Frame-based function once LegacyFrame is removed
-		const bool isOwnedByMemoryBlock = framePyramid.memory_.isInside(layer.constdata<void>(), (const uint8_t*)(layer.constdata<void>()) + layerSizeBytes);
+		const bool isOwnedByMemoryBlock = framePyramid.memory().isInside(layer.constdata<void>(), (const uint8_t*)(layer.constdata<void>()) + layerSizeBytes);
 
 		{
 			// testing is owned
@@ -2301,7 +2301,7 @@ bool TestFramePyramid::validateConstructFromPyramid(const CV::FramePyramid& fram
 
 		if (!layer.isOwner() && copyData)
 		{
-			if (layer.constdata() != framePyramid.memory_.constdata<uint8_t>() + totalSize || layer.size() != expectedFrameType.frameTypeSize())
+			if (layer.constdata() != framePyramid.memory().constdata<uint8_t>() + totalSize || layer.size() != expectedFrameType.frameTypeSize())
 			{
 				return false;
 			}
@@ -2323,13 +2323,13 @@ bool TestFramePyramid::validateConstructFromPyramid(const CV::FramePyramid& fram
 
 	if (allLayersAreOwners)
 	{
-		if (!framePyramid.memory_.isNull())
+		if (!framePyramid.memory().isNull())
 		{
 			return false;
 		}
 	}
 
-	const bool validSize = !allLayersAreOwners || size_t(totalSize) == size_t(framePyramid.memory_.size());
+	const bool validSize = !allLayersAreOwners || size_t(totalSize) == size_t(framePyramid.memory().size());
 	const bool validOwner = framePyramid.isOwner() == copyData;
 
 	return validSize && validOwner;

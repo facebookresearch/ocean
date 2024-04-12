@@ -26,7 +26,7 @@ namespace TestCV
  * @see Ocean::CV::FramePyramid
  * @ingroup testcv
  */
-class OCEAN_TEST_CV_EXPORT TestFramePyramid
+class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 {
 	protected:
 

@@ -15,19 +15,6 @@
 namespace Ocean
 {
 
-namespace Test
-{
-
-namespace TestCV
-{
-
-// Forward declaration.
-class TestFramePyramid;
-
-}
-
-}
-
 namespace CV
 {
 
@@ -40,8 +27,6 @@ namespace CV
  */
 class OCEAN_CV_EXPORT FramePyramid
 {
-	friend class Ocean::Test::TestCV::TestFramePyramid;
-
 	public:
 
 		/**
@@ -483,6 +468,13 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return True, if so
 		 */
 		inline bool isNull() const;
+
+		/**
+		 * Returns the pyramid's memory block.
+		 * This functions is intended for testing purposes only, don't use this function.
+		 * @return The pyramid's memory block, if any
+		 */
+		inline const Memory& memory() const;
 
 		/**
 		 * Assigns a frame pyramid to this one.
@@ -946,6 +938,11 @@ inline bool FramePyramid::isValid() const
 inline bool FramePyramid::isNull() const
 {
 	return layers_.empty();
+}
+
+inline const Memory& FramePyramid::memory() const
+{
+	return memory_;
 }
 
 inline FramePyramid::operator bool() const
