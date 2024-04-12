@@ -1804,11 +1804,22 @@ bool QRCodeDecoder::decodeQRCode(const std::vector<uint8_t>& modules, QRCode& co
 	}
 
 	struct quirc_data quircData;
-	const quirc_decode_error_t quircStatus = quirc_decode(&quircCode, &quircData);
+	quirc_decode_error_t quircStatus = quirc_decode(&quircCode, &quircData);
 
 	if (quircStatus != QUIRC_SUCCESS)
 	{
-		return false;
+		// The first decoding attempt has failed. According ISO 18004:2015 it
+		// is "possible to achieve a valid decode of a symbol in which the
+		// arrangement of the modules has been laterally transposed", i.e.
+		// mirror the modules around the vertical axes, and try to decode
+		// again.
+		quirc_flip(&quircCode);
+		quircStatus = quirc_decode(&quircCode, &quircData);
+
+		if (quircStatus != QUIRC_SUCCESS)
+		{
+			return false;
+		}
 	}
 
 	if (version != (unsigned int)quircData.version)
