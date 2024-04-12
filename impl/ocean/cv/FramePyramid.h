@@ -162,19 +162,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		inline FramePyramid(const Frame& frame, const unsigned int layers, const bool copyFirstLayer, Worker* worker = nullptr);
 
 		/**
-		 * Deprecated.
-		 *
-		 * Creates a frame pyramid object for a given frame and layer number.
-		 * The given frame is copied and used as finest layer.
-		 * @param frame The frame to create the pyramid for, must be valid.
-		 * @param layers Number of pyramid layers to be created, with range [1, infinity)
-		 * @param worker Optional worker object to distribute the computation
-		 * @param downsamplingMode The down sampling mode to be used to create lower image resolutions, 'DM_CUSTOM' in combination with a valid 'customDownsamplingFunction' to use a custom down sampling mode
-		 * @param customDownsamplingFunction Optional explicit custom callback of the down sampling function to be used, define an invalid callback object to use the default down sampling function determined by 'mode'
-		 */
-		explicit inline FramePyramid(const Frame& frame, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr, const DownsamplingMode downsamplingMode = DM_FILTER_11, const CallbackDownsampling& customDownsamplingFunction = CallbackDownsampling());
-
-		/**
 		 * Creates a frame pyramid based on a frame.
 		 * The resulting pyramid will contain a copy of the given frame (as finest pyramid layer).
 		 * @param frame The frame for which the pyramid will be created, must be valid
@@ -617,6 +604,11 @@ class OCEAN_CV_EXPORT FramePyramid
 		FramePyramid(const LegacyFrame&, const bool) = delete;
 
 		/**
+		 * Disabled constructor.
+		 */
+		FramePyramid(const Frame&, const unsigned int, Worker*) = delete;
+
+		/**
 		 * Replaces this frame pyramid with a new pyramid defined by the frame type of the finest layer.
 		 * The image content of the replaced frame pyramid will be uninitialized.
 		 * @param frameType The type of the finest pyramid layer, must be valid
@@ -691,11 +683,6 @@ inline FramePyramid::FramePyramid(const Frame& frame, const unsigned int layers,
 {
 	const bool result = replace8BitPerChannel11(frame, layers, copyFirstLayer, worker);
 	ocean_assert_and_suppress_unused(result, result);
-}
-
-inline FramePyramid::FramePyramid(const Frame& frame, const unsigned int layers, Worker* worker, const DownsamplingMode downsamplingMode, const CallbackDownsampling& customDownsamplingFunction)
-{
-	replace(frame, layers, worker, downsamplingMode, customDownsamplingFunction);
 }
 
 inline FramePyramid::FramePyramid(const Frame& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, Worker* worker)
