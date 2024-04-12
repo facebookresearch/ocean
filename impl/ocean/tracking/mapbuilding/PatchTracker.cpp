@@ -347,8 +347,8 @@ void PatchTracker::trackUnlocatedPoints(const Index32 frameIndex, const SharedFr
 		ocean_assert(yPreviousFramePyramid->layers() >= pyramidLayers);
 		ocean_assert(yCurrentFramePyramid->layers() >= pyramidLayers);
 
-		const CV::FramePyramid yReducedPreviousFramePyramid(*yPreviousFramePyramid, false /*copy*/, 0u, pyramidLayers);
-		const CV::FramePyramid yReducedCurrentFramePyramid(*yCurrentFramePyramid, false /*copy*/, 0u, pyramidLayers);
+		const CV::FramePyramid yReducedPreviousFramePyramid(*yPreviousFramePyramid, false /*copy*/, 0u, pyramidLayers, nullptr);
+		const CV::FramePyramid yReducedCurrentFramePyramid(*yCurrentFramePyramid, false /*copy*/, 0u, pyramidLayers, nullptr);
 
 		reusableCurrentImagePoints_.clear();
 		reusableValidIndices_.clear();
@@ -370,7 +370,7 @@ void PatchTracker::trackUnlocatedPoints(const Index32 frameIndex, const SharedFr
 
 		if (!options_.keepUnlocatedFeatures_)
 		{
-			// we need to remove all object points from the database which we lost in this tracking iterationdatabase
+			// we need to remove all object points from the database which we lost in this tracking iteration
 
 			const Indices32 invalidIndices = Subset::invertedIndices(reusableValidIndices_, objectPointIds.size());
 
@@ -424,8 +424,8 @@ void PatchTracker::trackLocatedPoints(const Index32 frameIndex, const AnyCamera&
 		ocean_assert(yPreviousFramePyramid->layers() >= pyramidLayers);
 		ocean_assert(yCurrentFramePyramid->layers() >= pyramidLayers);
 
-		const CV::FramePyramid yReducedPreviousFramePyramid(*yPreviousFramePyramid, false /*copy*/, 0u, pyramidLayers);
-		const CV::FramePyramid yReducedCurrentFramePyramid(*yCurrentFramePyramid, false /*copy*/, 0u, pyramidLayers);
+		const CV::FramePyramid yReducedPreviousFramePyramid(*yPreviousFramePyramid, false /*copy*/, 0u, pyramidLayers, nullptr);
+		const CV::FramePyramid yReducedCurrentFramePyramid(*yCurrentFramePyramid, false /*copy*/, 0u, pyramidLayers, nullptr);
 
 		reusablePredictedCurrentImagePoints.resize(objectPoints.size());
 

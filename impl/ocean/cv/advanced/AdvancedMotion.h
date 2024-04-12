@@ -742,8 +742,8 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackArbitraryPointsBidirecti
 		}
 
 		// Create sub pyramid using fast frame data referencing:
-		const FramePyramid previousSmall = FramePyramid(previousPyramid, false, n, previousPyramid.layers() - n);
-		const FramePyramid nextSmall = FramePyramid(nextPyramid, false, n, nextPyramid.layers() - n);
+		const FramePyramid previousSmall = FramePyramid(previousPyramid, false, n, previousPyramid.layers() - n, nullptr);
+		const FramePyramid nextSmall = FramePyramid(nextPyramid, false, n, nextPyramid.layers() - n, nullptr);
 
 		Vectors2 smallNextImagePoints;
 

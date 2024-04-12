@@ -357,14 +357,14 @@ PlanarRectangleTracker::FramePyramidTrackerComponent::IterationResult PlanarRect
 		ocean_assert(camera_.isValid());
 		const SquareMatrix3 previousHomography(Geometry::Homography::homographyMatrix(initialPose_, previousPose, camera_, camera_, plane_));
 
-		// adjust the sub-region from the initial frame so that it matches with the pevious frame
+		// adjust the sub-region from the initial frame so that it matches with the previous frame
 		const CV::SubRegion previousSubRegion(parent_.initialRectangleSubRegion_ * previousHomography);
 
 		// determine the pose between the previous and the current frame
 		HomogenousMatrix4 currentPose;
-		if (frame2framePose(CV::FramePyramid(previousFramePyramid_, false, 0u, 4u), CV::FramePyramid(currentFramePyramid_, false, 0u, 4u), previousSubRegion, previousPose, currentPose, Scalar(0.9 * 0.9), 20u, 20u, 30u, scopedWorker(), 3u) < 25)
+		if (frame2framePose(CV::FramePyramid(previousFramePyramid_, false, 0u, 4u, nullptr), CV::FramePyramid(currentFramePyramid_, false, 0u, 4u, nullptr), previousSubRegion, previousPose, currentPose, Scalar(0.9 * 0.9), 20u, 20u, 30u, scopedWorker(), 3u) < 25)
 		{
-			if (frame2framePose(CV::FramePyramid(previousFramePyramid_, false, 0u, 4u), CV::FramePyramid(currentFramePyramid_, false, 0u, 4u), previousSubRegion, previousPose, currentPose, Scalar(1.1 * 1.1), 30u, 30u, 10u, scopedWorker(), 3u) < 20)
+			if (frame2framePose(CV::FramePyramid(previousFramePyramid_, false, 0u, 4u, nullptr), CV::FramePyramid(currentFramePyramid_, false, 0u, 4u, nullptr), previousSubRegion, previousPose, currentPose, Scalar(1.1 * 1.1), 30u, 30u, 10u, scopedWorker(), 3u) < 20)
 			{
 				if (frame2framePose(previousFramePyramid_, currentFramePyramid_, previousSubRegion, previousPose, currentPose, Scalar(1.9 * 1.9), 0u, 0u, 5u, scopedWorker(), 5u) < 25)
 				{

@@ -187,6 +187,8 @@ class OCEAN_CV_EXPORT FramePyramid
 		inline FramePyramid(Frame&& frame, const CallbackDownsampling& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
 
 		/**
+		 * Deprecated.
+		 *
 		 * Creates a new frame pyramid by using layers from an existing source frame pyramid.
 		 * The range of used layers can be specified by layerIndex and layerCount.<br>
 		 * If copyData is False, then only a reference is created to the given source frame data; the new frame pyramid will be a read-only pyramid.<br>
@@ -201,7 +203,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param customDownsamplingFunction Optional explicit custom callback of the down sampling function to be used, define an invalid callback object to use the default down sampling function determined by 'mode'
 		 * @see create8BitPerChannel().
 		 */
-		FramePyramid(const FramePyramid& framePyramid, bool copyData, const unsigned int firstLayerIndex = 0u, const unsigned int layerCount = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr, const DownsamplingMode downsamplingMode = DM_FILTER_11, const CallbackDownsampling& customDownsamplingFunction = CallbackDownsampling());
+		FramePyramid(const FramePyramid& framePyramid, bool copyData, const unsigned int firstLayerIndex, const unsigned int layerCount, Worker* worker, const DownsamplingMode downsamplingMode = DM_FILTER_11, const CallbackDownsampling& customDownsamplingFunction = CallbackDownsampling());
 
 		/**
 		 * Returns the frame of a specified layer.

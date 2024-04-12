@@ -548,7 +548,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 
 			CV::FramePyramid framePyramidSource(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, FrameType(width, height, pixelFormat, pixelOrigin));
 
-			CV::FramePyramid framePyramid(framePyramidSource, true /*copyData*/);
+			CV::FramePyramid framePyramid(framePyramidSource, true /*copyData*/, 0u, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, nullptr);
 
 			if (!verifyPyramidOwnership(framePyramid, true /*isValid*/, true /*isOwner*/))
 			{
@@ -573,7 +573,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 
 			CV::FramePyramid framePyramidSource(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, FrameType(width, height, pixelFormat, pixelOrigin));
 
-			CV::FramePyramid framePyramid(framePyramidSource, false /*copyData*/);
+			CV::FramePyramid framePyramid(framePyramidSource, false /*copyData*/, 0u, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, nullptr);
 
 			if (!verifyPyramidOwnership(framePyramid, true /*isValid*/, false /*isOwner*/))
 			{
