@@ -1047,6 +1047,7 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "... for a " << width << "x" << height << " frame with " << channels << " channels:";
+	Log::info() << " ";
 
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
 
@@ -1187,6 +1188,13 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 						}
 
 						const unsigned int expectedLayers = std::min(testLayers, determineMaxLayerCount(testWidth, testHeight));
+
+						const size_t expectedMemorySize = CV::FramePyramid::calculateMemorySize(testWidth, testHeight, pixelFormat, expectedLayers, copyFirstLayer);
+
+						if (framePyramid.memory().size() != expectedMemorySize)
+						{
+							allSucceeded = false;
+						}
 
 						ocean_assert(framePyramid.layers() == expectedLayers);
 
