@@ -478,7 +478,7 @@ bool FrameFilterGaussian::filter(const T* source, T* target, const unsigned int 
 template <typename T, typename TFilter>
 inline bool FrameFilterGaussian::filter(T* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int framePaddingElements, const unsigned int horizontalFilterSize, const unsigned int verticalFilterSize, const float sigma, Worker* worker, ReusableMemory* reusableMemory, const ProcessorInstructions processorInstructions)
 {
-	return filter<T, TFilter>(frame, frame, width, height, channels, horizontalFilterSize, verticalFilterSize, sigma, framePaddingElements, framePaddingElements, worker, reusableMemory, processorInstructions);
+	return filter<T, TFilter>(frame, frame, width, height, channels, framePaddingElements, framePaddingElements, horizontalFilterSize, verticalFilterSize, sigma, worker, reusableMemory, processorInstructions);
 }
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
