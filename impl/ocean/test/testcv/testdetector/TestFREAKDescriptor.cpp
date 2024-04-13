@@ -65,18 +65,18 @@ bool TestFREAKDescriptorT<tSize>::test(const double testDuration, Worker& worker
 
 // 32-byte FREAK
 
-#define OCN_FREAK_MAX_HAMMING_DISTANCE 1u
+#define GTEST_FREAK_MAX_HAMMING_DISTANCE 1u
 
 TEST(TestFREAKDescriptor32, ComputeDescriptor_1920x1080)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFREAKDescriptor32::testComputeDescriptor(GTEST_TEST_DURATION, 1920u, 1080u, OCN_FREAK_MAX_HAMMING_DISTANCE, worker));
+	EXPECT_TRUE(TestFREAKDescriptor32::testComputeDescriptor(GTEST_TEST_DURATION, 1920u, 1080u, GTEST_FREAK_MAX_HAMMING_DISTANCE, worker));
 }
 
 TEST(TestFREAKDescriptor32, ComputeDescriptors_1920x1080)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFREAKDescriptor32::testComputeDescriptors(GTEST_TEST_DURATION, 1920u, 1080u, OCN_FREAK_MAX_HAMMING_DISTANCE, worker));
+	EXPECT_TRUE(TestFREAKDescriptor32::testComputeDescriptors(GTEST_TEST_DURATION, 1920u, 1080u, GTEST_FREAK_MAX_HAMMING_DISTANCE, worker));
 }
 
 // 64-byte FREAK
@@ -84,13 +84,13 @@ TEST(TestFREAKDescriptor32, ComputeDescriptors_1920x1080)
 TEST(TestFREAKDescriptor64, ComputeDescriptor_1920x1080)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFREAKDescriptor64::testComputeDescriptor(GTEST_TEST_DURATION, 1920u, 1080u, OCN_FREAK_MAX_HAMMING_DISTANCE, worker));
+	EXPECT_TRUE(TestFREAKDescriptor64::testComputeDescriptor(GTEST_TEST_DURATION, 1920u, 1080u, GTEST_FREAK_MAX_HAMMING_DISTANCE, worker));
 }
 
 TEST(TestFREAKDescriptor64, ComputeDescriptors_1920x1080)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFREAKDescriptor64::testComputeDescriptors(GTEST_TEST_DURATION, 1920u, 1080u, OCN_FREAK_MAX_HAMMING_DISTANCE, worker));
+	EXPECT_TRUE(TestFREAKDescriptor64::testComputeDescriptors(GTEST_TEST_DURATION, 1920u, 1080u, GTEST_FREAK_MAX_HAMMING_DISTANCE, worker));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -164,18 +164,18 @@ bool TestFREAKDescriptorT<tSize>::testComputeDescriptor(const double testDuratio
 					if (implementationIteration == oceanIteration)
 					{
 						oceanPerformance.start();
-						oceanComputationSuccessful = CV::Detector::FREAKDescriptorT<tSize>::computeDescriptor(yFramePyramid, point, level, oceanFreakDescriptor, cameraDerivativeData.unprojectRayIF, float(pinholeCamera.inverseFocalLengthX()), cameraDerivativeData.pointJacobianMatrixIF);
+							oceanComputationSuccessful = CV::Detector::FREAKDescriptorT<tSize>::computeDescriptor(yFramePyramid, point, level, oceanFreakDescriptor, cameraDerivativeData.unprojectRayIF, float(pinholeCamera.inverseFocalLengthX()), cameraDerivativeData.pointJacobianMatrixIF);
 						oceanPerformance.stop();
 					}
 					else
 					{
 						originalPerformance.start();
-						originalComputationSuccessful = TestFREAKDescriptorT<tSize>::computeOriginalDescriptor(yFramePyramid, point, level, originalFreakDescriptor, cameraDerivativeData.unprojectRayIF, float(pinholeCamera.inverseFocalLengthX()), cameraDerivativeData.pointJacobianMatrixIF);
+							originalComputationSuccessful = TestFREAKDescriptorT<tSize>::computeOriginalDescriptor(yFramePyramid, point, level, originalFreakDescriptor, cameraDerivativeData.unprojectRayIF, float(pinholeCamera.inverseFocalLengthX()), cameraDerivativeData.pointJacobianMatrixIF);
 						originalPerformance.stop();
 					}
 				}
 
-				unsigned int hammingDistances[3] = { 0u, 0u, 0u };
+				unsigned int hammingDistances[3] = {0u, 0u, 0u};
 				if (oceanComputationSuccessful != originalComputationSuccessful || TestFREAKDescriptorT<tSize>::validateFREAKDescriptor(oceanFreakDescriptor, originalFreakDescriptor, hammingDistanceThreshold, hammingDistances) == false)
 				{
 					Log::debug() << "Bad descriptor: level: " << level << ", i: " << i << ", point: " << point.x() << ", " << point.y() << ", hamming: " << hammingDistances[0] << ", " << hammingDistances[1] << ", " << hammingDistances[2];
@@ -295,19 +295,19 @@ bool TestFREAKDescriptorT<tSize>::testComputeDescriptors(const double testDurati
 				{
 					case 0u:
 						oceanPerformanceSinglecore.start();
-						FREAKDescriptorT<tSize>::computeDescriptors(yFramePyramid, points.data(), points.size(), level, oceanFreakDescriptorsSinglecore.data(), float(pinholeCamera.inverseFocalLengthX()), cameraDerivativeFunctor, nullptr);
+							FREAKDescriptorT<tSize>::computeDescriptors(yFramePyramid, points.data(), points.size(), level, oceanFreakDescriptorsSinglecore.data(), float(pinholeCamera.inverseFocalLengthX()), cameraDerivativeFunctor, nullptr);
 						oceanPerformanceSinglecore.stop();
 						break;
 
 					case 1u:
 						oceanPerformanceMulticore.start();
-						FREAKDescriptorT<tSize>::computeDescriptors(yFramePyramid, points.data(), points.size(), level, oceanFreakDescriptorsMulticore.data(), float(pinholeCamera.inverseFocalLengthX()), cameraDerivativeFunctor, &worker);
+							FREAKDescriptorT<tSize>::computeDescriptors(yFramePyramid, points.data(), points.size(), level, oceanFreakDescriptorsMulticore.data(), float(pinholeCamera.inverseFocalLengthX()), cameraDerivativeFunctor, &worker);
 						oceanPerformanceMulticore.stop();
 						break;
 
 					case 2u:
 						originalPerformance.start();
-						TestFREAKDescriptorT<tSize>::computeOriginalDescriptors(yFramePyramid, points, level, originalFreakDescriptors, float(pinholeCamera.inverseFocalLengthX()), cameraDerivativeFunctor);
+							TestFREAKDescriptorT<tSize>::computeOriginalDescriptors(yFramePyramid, points, level, originalFreakDescriptors, float(pinholeCamera.inverseFocalLengthX()), cameraDerivativeFunctor);
 						originalPerformance.stop();
 						break;
 				}
@@ -318,7 +318,7 @@ bool TestFREAKDescriptorT<tSize>::testComputeDescriptors(const double testDurati
 
 			for (unsigned int i = 0u; i < pointCount; ++i)
 			{
-				unsigned int hammingDistances[3] = { 0u, 0u, 0u };
+				unsigned int hammingDistances[3] = {0u, 0u, 0u};
 				if (originalFreakDescriptors[i].isValid() != oceanFreakDescriptorsSinglecore[i].isValid() || TestFREAKDescriptorT<tSize>::validateFREAKDescriptor(originalFreakDescriptors[i], oceanFreakDescriptorsSinglecore[i], maxAllowedHammingDistance, hammingDistances) == false)
 				{
 					Log::debug() << "Single-core, level: " << level << ", i: " << i << ", point: " << points[i].x() << ", " << points[i].y() << ", hamming: " << hammingDistances[0] << ", " << hammingDistances[1] << ", " << hammingDistances[2];
@@ -850,15 +850,16 @@ bool TestFREAKDescriptorT<tSize>::computeOriginalDescriptor(const CV::FramePyram
 	ocean_assert(pyramid.layers() >= 6u && "perception::FREAK is hardcoded to accept a pyramid of 6 levels");
 	ocean_assert(pointPyramidLevel < pyramid.layers());
 	ocean_assert(inverseFocalLengthX > 0.0f);
+	ocean_assert(pyramid.frameType().isPixelFormatCompatible(FrameType::FORMAT_Y8));
 
 	frl::ImagePyramidInfoAndPtr<std::uint8_t, /* levels */ 6> imagePyramidInfoAndPtr;
 	imagePyramidInfoAndPtr.maxValidLevel = int(pyramid.layers());
 	for (unsigned int i = 0u; i < pyramid.layers(); ++i)
 	{
-		imagePyramidInfoAndPtr.dataAtLvl[i] = pyramid.layer(i).constdata<std::uint8_t>();
-		imagePyramidInfoAndPtr.pitchAtLvl[i] = int(pyramid.layer(i).width());
-		imagePyramidInfoAndPtr.widthAtLvl[i] = int(pyramid.layer(i).width());
-		imagePyramidInfoAndPtr.heightAtLvl[i] = int(pyramid.layer(i).height());
+		imagePyramidInfoAndPtr.dataAtLvl[i] = pyramid[i].constdata<std::uint8_t>();
+		imagePyramidInfoAndPtr.pitchAtLvl[i] = int(pyramid[i].width() + pyramid[i].paddingElements()); // **TODO** switch to strideElements() once LegacyFrame is not used anymore
+		imagePyramidInfoAndPtr.widthAtLvl[i] = int(pyramid[i].width());
+		imagePyramidInfoAndPtr.heightAtLvl[i] = int(pyramid[i].height());
 	}
 
 	frl::MultiLevelBinaryDescriptor<tSize> descriptors;

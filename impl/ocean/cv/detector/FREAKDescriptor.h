@@ -1100,6 +1100,7 @@ bool FREAKDescriptorT<tSize>::computeLocalDeformationMatrixAndOrientation(const 
 {
 	ocean_assert(pyramid.isValid());
 	ocean_assert(pointPyramidLevel < pyramid.layers());
+	ocean_assert(pyramid.frameType().isPixelFormatCompatible(FrameType::FORMAT_Y8));
 	ocean_assert(NumericF::isEqualEps(unprojectRayIF.norm() - 1.0f));
 	ocean_assert(inverseFocalLengthX > 0);
 	ocean_assert(projectionJacobianMatrix.IsRowMajor == false);
@@ -1119,8 +1120,8 @@ bool FREAKDescriptorT<tSize>::computeLocalDeformationMatrixAndOrientation(const 
 
 	// Make sure that the orientation kernel (radius 7) fits inside the current pyramid layer
 
-	constexpr float cornerX[4] = { -7.0f, -7.0f, 7.0f, 7.0f };
-	constexpr float cornerY[4] = { -7.0f, 7.0f, -7.0f, 7.0f };
+	constexpr float cornerX[4] = {-7.0f, -7.0f, 7.0f, 7.0f};
+	constexpr float cornerY[4] = {-7.0f, 7.0f, -7.0f, 7.0f};
 	const Frame framePyramidLevel(pyramid.layer(pointPyramidLevel), Frame::temporary_ACM_USE_KEEP_LAYOUT);
 
 	for (size_t i = 0; i < 4; ++i)
@@ -1140,7 +1141,7 @@ bool FREAKDescriptorT<tSize>::computeLocalDeformationMatrixAndOrientation(const 
 
 	int magnitudeX = 0;
 	int magnitudeY = 0;
-	const unsigned int strideElements = framePyramidLevel.width();
+	const unsigned int strideElements = framePyramidLevel.width() + framePyramidLevel.paddingElements(); // **TODO** switch to strideElements() once LegacyFrame is not used anymore
 	const PixelType* data = framePyramidLevel.constdata<PixelType>();
 
 	for (size_t i = 0; i < FREAKDescriptorT<tSize>::kernelRadius7Elements; ++i)
@@ -1151,7 +1152,7 @@ bool FREAKDescriptorT<tSize>::computeLocalDeformationMatrixAndOrientation(const 
 		const int v = NumericF::round32(p[1]);
 
 		ocean_assert(((unsigned int)v * strideElements + (unsigned int)u) < (framePyramidLevel.height() * framePyramidLevel.width()));
-		const int intensity = int(data[(unsigned int)v * strideElements + (unsigned int)u]);
+		const int intensity = int(data[(unsigned int)(v) * strideElements + (unsigned int)(u)]);
 
 		// TODOX Is weighting with the relative x-/y-offsets of the kernel correct? Pixels on the border of kernel have much larger weight (up to +/-7) than ones closer to the kernel center (as low as 0 for the center)
 		magnitudeX += FREAKDescriptorT<tSize>::kernelRadius7X[i] * intensity;
