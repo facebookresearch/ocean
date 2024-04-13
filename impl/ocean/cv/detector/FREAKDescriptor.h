@@ -1222,12 +1222,19 @@ FramePyramid FREAKDescriptorT<tSize>::createFramePyramidWithBlur8BitsPerChannel(
 			const Frame previousLayer(pyramid[i - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
 			ocean_assert(previousLayer.width() <= intermediateMemory.width() && previousLayer.height() <= intermediateMemory.height() && FrameType::arePixelFormatsCompatible(previousLayer.pixelFormat(), intermediateMemory.pixelFormat()));
 
-			if (CV::FrameFilterGaussian::filter<uint8_t, uint32_t>(previousLayer.constdata<uint8_t>(), intermediateMemory.data<uint8_t>(), previousLayer.width(), previousLayer.height(), previousLayer.channels(), previousLayer.paddingElements(), intermediateMemory.paddingElements(), kernelWidth, kernelHeight, -1.0f, worker) == false)
+			if (kernelWidth <= previousLayer.width() && kernelHeight <= previousLayer.height())
 			{
-				return FramePyramid();
-			}
+				if (CV::FrameFilterGaussian::filter<uint8_t, uint32_t>(previousLayer.constdata<uint8_t>(), intermediateMemory.data<uint8_t>(), previousLayer.width(), previousLayer.height(), previousLayer.channels(), previousLayer.paddingElements(), intermediateMemory.paddingElements(), kernelWidth, kernelHeight, -1.0f, worker) == false)
+				{
+					return FramePyramid();
+				}
 
-			CV::FrameShrinker::downsampleByTwo8BitPerChannel11(intermediateMemory.constdata<uint8_t>(), pyramid[i].data<uint8_t>(), previousLayer.width(), previousLayer.height(), previousLayer.channels(), intermediateMemory.paddingElements(), /* pyramid[i].paddingElements() */ 0u, worker);
+				CV::FrameShrinker::downsampleByTwo8BitPerChannel11(intermediateMemory.constdata<uint8_t>(), pyramid[i].data<uint8_t>(), previousLayer.width(), previousLayer.height(), previousLayer.channels(), intermediateMemory.paddingElements(), /* pyramid[i].paddingElements() */ 0u, worker);
+			}
+			else
+			{
+				CV::FrameShrinker::downsampleByTwo8BitPerChannel11(previousLayer.constdata<uint8_t>(), pyramid[i].data<uint8_t>(), previousLayer.width(), previousLayer.height(), previousLayer.channels(), previousLayer.paddingElements(), /* pyramid[i].paddingElements() */ 0u, worker);
+			}
 		}
 	}
 
