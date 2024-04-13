@@ -55,7 +55,7 @@ class OCEAN_TEST_CV_EXPORT TestNEON
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if all result are valid
 		 */
-		static bool testAveragingElements2x2(const double testDuration);
+		static bool testAveragingPixels2x2(const double testDuration);
 
 		/**
 		 * Tests the NEON-based multiply functions.
@@ -82,13 +82,14 @@ class OCEAN_TEST_CV_EXPORT TestNEON
 
 		/*
 		 * Validates the NEON-based averaging of 2x2 pixel blocks.
-		 * @param channels The number of data channels, with range [1, infinity)
-		 * @param sourceElements The number of source elements to be averaged, with range [2, infinity), must be even
 		 * @param averagingFunction The actual averaging function to be tested, must be valid
 		 * @param randomGenerator The random generator object to be used
 		 * @return True, if succeeded
+		 * @tparam tChannels The number of channels to test, with range [1, infinity)
+		 * @tparam tSourcePixels The number of source pixels to test, with range [2, infinity), must be even
 		 */
-		static bool validateAveragingElements2x2(const unsigned int channels, const unsigned int sourceElements, const AveragingFunction averagingFunction, RandomGenerator& randomGenerator);
+		template <unsigned int tChannels, unsigned int tSourcePixels>
+		static bool validateAveragePixels2x2(const AveragingFunction averagingFunction, RandomGenerator& randomGenerator);
 };
 
 }

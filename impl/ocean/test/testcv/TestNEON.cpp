@@ -8,6 +8,8 @@
 
 #include "ocean/cv/NEON.h"
 
+#include <array>
+
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
 namespace Ocean
@@ -36,7 +38,7 @@ bool TestNEON::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testAveragingElements2x2(testDuration) && allSucceeded;
+	allSucceeded = testAveragingPixels2x2(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -77,9 +79,9 @@ TEST(TestNEON, Sum16Bit4Blocks3x3)
 	EXPECT_TRUE(TestNEON::testSum16Bit4Blocks3x3(GTEST_TEST_DURATION));
 }
 
-TEST(TestNEON, AveragingElements2x2)
+TEST(TestNEON, AveragingPixels2x2)
 {
-	EXPECT_TRUE(TestNEON::testAveragingElements2x2(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestNEON::testAveragingPixels2x2(GTEST_TEST_DURATION));
 }
 
 TEST(TestNEON, Multiply)
@@ -197,11 +199,11 @@ bool TestNEON::testSum16Bit4Blocks3x3(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestNEON::testAveragingElements2x2(const double testDuration)
+bool TestNEON::testAveragingPixels2x2(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Test 2x2 averaging of pixel elements:";
+	Log::info() << "Test 2x2 averaging of pixel blocks:";
 
 	RandomGenerator randomGenerator;
 
@@ -211,15 +213,15 @@ bool TestNEON::testAveragingElements2x2(const double testDuration)
 
 	do
 	{
-		allSucceeded = validateAveragingElements2x2(1u, 16u, CV::NEON::average16Elements1Channel8Bit2x2, randomGenerator) && allSucceeded;
-		allSucceeded = validateAveragingElements2x2(1u, 32u, CV::NEON::average32Elements1Channel8Bit2x2, randomGenerator) && allSucceeded;
+		allSucceeded = validateAveragePixels2x2<1u, 16u>(CV::NEON::average16Elements1Channel8Bit2x2, randomGenerator) && allSucceeded;
+		allSucceeded = validateAveragePixels2x2<1u, 32u>(CV::NEON::average32Elements1Channel8Bit2x2, randomGenerator) && allSucceeded;
 
-		allSucceeded = validateAveragingElements2x2(2u, 32u, CV::NEON::average32Elements2Channel16Bit2x2, randomGenerator) && allSucceeded;
-		allSucceeded = validateAveragingElements2x2(2u, 64u, CV::NEON::average64Elements2Channel16Bit2x2, randomGenerator) && allSucceeded;
+		allSucceeded = validateAveragePixels2x2<2u, 16u>(CV::NEON::average32Elements2Channel16Bit2x2, randomGenerator) && allSucceeded;
+		allSucceeded = validateAveragePixels2x2<2u, 32u>(CV::NEON::average64Elements2Channel16Bit2x2, randomGenerator) && allSucceeded;
 
-		allSucceeded = validateAveragingElements2x2(3u, 48u, CV::NEON::average48Elements3Channel24Bit2x2, randomGenerator) && allSucceeded;
+		allSucceeded = validateAveragePixels2x2<3u, 16u>(CV::NEON::average48Elements3Channel24Bit2x2, randomGenerator) && allSucceeded;
 
-		allSucceeded = validateAveragingElements2x2(4u, 64u, CV::NEON::average64Elements4Channel32Bit2x2, randomGenerator) && allSucceeded;
+		allSucceeded = validateAveragePixels2x2<4u, 16u>(CV::NEON::average64Elements4Channel32Bit2x2, randomGenerator) && allSucceeded;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -425,55 +427,138 @@ bool TestNEON::testCastElements(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestNEON::validateAveragingElements2x2(const unsigned int channels, const unsigned int sourceElements, const AveragingFunction averagingFunction, RandomGenerator& randomGenerator)
+template <unsigned int tChannels, unsigned int tSourcePixels>
+bool TestNEON::validateAveragePixels2x2(const AveragingFunction averagingFunction, RandomGenerator& randomGenerator)
 {
-	ocean_assert(channels >= 1u);
-	ocean_assert(sourceElements >= 2u && sourceElements % 2u == 0u);
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+	static_assert(tSourcePixels >= 2u && tSourcePixels % 2u == 0u, "Invalid channel number!");
+
 	ocean_assert(averagingFunction != nullptr);
 
-	const unsigned int targetElements = sourceElements / 2u;
+	constexpr unsigned int tTargetPixels = tSourcePixels / 2u;
 
-	std::vector<unsigned char> source0(sourceElements);
-	std::vector<unsigned char> source1(sourceElements);
-	std::vector<unsigned char> target(targetElements + 1u);
+	constexpr unsigned int tSourceElements = tSourcePixels * tChannels;
+	static_assert(tSourceElements % 2u == 0u);
 
-	for (size_t n = 0; n < source0.size(); ++n)
+	constexpr unsigned int tTargetElements = tSourceElements / 2u;
+
 	{
-		source0[n] = (unsigned char)RandomI::random(randomGenerator, 255u);
-		source1[n] = (unsigned char)RandomI::random(randomGenerator, 255u);
-	}
+		// testing with heap memory
 
-	for (size_t n = 0; n < target.size(); ++n)
-	{
-		target[n] = (unsigned char)RandomI::random(randomGenerator, 255u);
-	}
+		std::vector<uint8_t> source0(tSourceElements);
+		std::vector<uint8_t> source1(tSourceElements);
+		std::vector<uint8_t> target(tTargetElements + 1u);
 
-	const unsigned char targetEndElement = target.back();
-
-	averagingFunction(source0.data(), source1.data(), target.data());
-
-	ocean_assert(targetEndElement == target.back());
-	if (targetEndElement != target.back())
-	{
-		return false;
-	}
-
-	for (unsigned int n = 0u; n < targetElements; ++n)
-	{
-		const unsigned int pixel = n / channels;
-		const unsigned int channel = n % channels;
-
-		const unsigned char sourceTopLeft = source0[(pixel * 2u + 0u) * channels + channel];
-		const unsigned char sourceTopRight = source0[(pixel * 2u + 1u) * channels + channel];
-
-		const unsigned char sourceBottomLeft = source1[(pixel * 2u + 0u) * channels + channel];
-		const unsigned char sourceBottomRight = source1[(pixel * 2u + 1u) * channels + channel];
-
-		const unsigned int value = (sourceTopLeft + sourceTopRight + sourceBottomLeft + sourceBottomRight + 2u) / 4u;
-
-		if (abs(int(value) - int(target[n])) > 1)
+		for (size_t n = 0; n < source0.size(); ++n)
 		{
+			source0[n] = uint8_t(RandomI::random(randomGenerator, 255u));
+			source1[n] = uint8_t(RandomI::random(randomGenerator, 255u));
+		}
+
+		for (size_t n = 0; n < target.size(); ++n)
+		{
+			target[n] = uint8_t(RandomI::random(randomGenerator, 255u));
+		}
+
+		const uint8_t targetLastElement = target.back();
+
+		averagingFunction(source0.data(), source1.data(), target.data());
+
+		if (targetLastElement != target.back())
+		{
+			ocean_assert(false && "Invalid padding memory!");
 			return false;
+		}
+
+		for (unsigned int nTargetPixel = 0u; nTargetPixel < tTargetPixels; ++nTargetPixel)
+		{
+			const unsigned int nSourcePixel = nTargetPixel * 2u;
+
+			const uint8_t* leftSourcePixel0 = source0.data() + nSourcePixel * tChannels;
+			const uint8_t* leftSourcePixel1 = source1.data() + nSourcePixel * tChannels;
+
+			const uint8_t* targetPixel = target.data() + nTargetPixel * tChannels;
+
+			const uint8_t* rightSourcePixel0 = leftSourcePixel0 + tChannels;
+			const uint8_t* rightSourcePixel1 = leftSourcePixel1 + tChannels;
+
+			for (unsigned int n = 0u; n < tChannels; ++n)
+			{
+				const uint32_t value = uint32_t((leftSourcePixel0[n] + rightSourcePixel0[n] + leftSourcePixel1[n] + rightSourcePixel1[n] + 2u) / 4u);
+				ocean_assert(value <= 255u);
+
+				if (value > 255u)
+				{
+					return false;
+				}
+
+				const int32_t error = std::abs(int32_t(value) - int32_t(targetPixel[n]));
+
+				if (error > 1)
+				{
+					return false;
+				}
+			}
+		}
+	}
+
+	{
+		// testing with stack memory
+
+		std::array<uint8_t, tSourceElements> source0;
+		std::array<uint8_t, tSourceElements> source1;
+		std::array<uint8_t, tTargetElements + 1u> target;
+
+		for (size_t n = 0; n < source0.size(); ++n)
+		{
+			source0[n] = uint8_t(RandomI::random(randomGenerator, 255u));
+			source1[n] = uint8_t(RandomI::random(randomGenerator, 255u));
+		}
+
+		for (size_t n = 0; n < target.size(); ++n)
+		{
+			target[n] = uint8_t(RandomI::random(randomGenerator, 255u));
+		}
+
+		const uint8_t targetLastElement = target.back();
+
+		averagingFunction(source0.data(), source1.data(), target.data());
+
+		if (targetLastElement != target.back())
+		{
+			ocean_assert(false && "Invalid padding memory!");
+			return false;
+		}
+
+		for (unsigned int nTargetPixel = 0u; nTargetPixel < tTargetPixels; ++nTargetPixel)
+		{
+			const unsigned int nSourcePixel = nTargetPixel * 2u;
+
+			const uint8_t* leftSourcePixel0 = source0.data() + nSourcePixel * tChannels;
+			const uint8_t* leftSourcePixel1 = source1.data() + nSourcePixel * tChannels;
+
+			const uint8_t* targetPixel = target.data() + nTargetPixel * tChannels;
+
+			const uint8_t* rightSourcePixel0 = leftSourcePixel0 + tChannels;
+			const uint8_t* rightSourcePixel1 = leftSourcePixel1 + tChannels;
+
+			for (unsigned int n = 0u; n < tChannels; ++n)
+			{
+				const uint32_t value = uint32_t((leftSourcePixel0[n] + rightSourcePixel0[n] + leftSourcePixel1[n] + rightSourcePixel1[n] + 2u) / 4u);
+				ocean_assert(value <= 255u);
+
+				if (value > 255u)
+				{
+					return false;
+				}
+
+				const int32_t error = std::abs(int32_t(value) - int32_t(targetPixel[n]));
+
+				if (error > 1)
+				{
+					return false;
+				}
+			}
 		}
 	}
 
