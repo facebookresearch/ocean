@@ -496,7 +496,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 				allSucceeded = false;
 			}
 
-			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/))
+			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)) // NOLINT(bugprone-use-after-move)
 			{
 				allSucceeded = false;
 			}
@@ -523,7 +523,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 				allSucceeded = false;
 			}
 
-			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/))
+			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)) // NOLINT(bugprone-use-after-move)
 			{
 				allSucceeded = false;
 			}
@@ -548,7 +548,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 				allSucceeded = false;
 			}
 
-			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/))
+			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)) // NOLINT(bugprone-use-after-move)
 			{
 				allSucceeded = false;
 			}
@@ -574,7 +574,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 				allSucceeded = false;
 			}
 
-			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/))
+			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)) // NOLINT(bugprone-use-after-move)
 			{
 				allSucceeded = false;
 			}
@@ -599,7 +599,7 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 				allSucceeded = false;
 			}
 
-			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/))
+			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)) // NOLINT(bugprone-use-after-move)
 			{
 				allSucceeded = false;
 			}
