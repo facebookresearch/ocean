@@ -14,9 +14,6 @@
 namespace Ocean
 {
 
-/// Forward-declaration of the statistics class
-class HighPerformanceStatistic;
-
 namespace Test
 {
 
@@ -38,6 +35,7 @@ typedef TestFREAKDescriptorT<64> TestFREAKDescriptor64;
 
 /**
  * This class implements a test for the FREAK descriptor.
+ * @tparam tSize The size of the FREAK descriptor to test, in bytes, either 32 or 64
  * @ingroup testcvdetector
  */
 template <size_t tSize>
@@ -75,13 +73,21 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestFREAKDescriptorT : public CV::Detector::
 		 */
 		static bool testComputeDescriptors(const double testDuration, const unsigned int width, const unsigned int height, const unsigned int maxAllowedHammingDistance, Worker& worker);
 
+		/**
+		 * Test the function creating a blurred frame pyramid.
+		 * @param testDuration Number of seconds that this test will be run, range: (0, infinity)
+		 * @param worker The worker object
+		 * @return True if the test has passed, otherwise false
+		 */
+		static bool testCreateBlurredFramePyramid(const double testDuration, Worker& worker);
+
 	protected:
 
 		/**
 		 * Compute a FREAK descriptor for a single point
 		 * This is a wrapper for the original FRL-FREAK implementation
 		 * @param pyramid Frame pyramid in which the location `point` has been defined, must be valid
-		 * @param point Point defined at level `pointPyramidLevel` in `framePyramid` for which a descriptor will be computed, must be valid
+		 * @param point The point defined at level `pointPyramidLevel` in `framePyramid` for which a descriptor will be computed, must be valid
 		 * @param pointPyramidLevel Level of the frame pyramid at which the input point is located, range: [0, framePyramid.layers() - 1)
 		 * @param freakDescriptor The FREAK descriptor that will be computed for the input point, will be valid only if this function returns true
 		 * @param unprojectRay This is the 3D vector that connects the projection center of the camera with image point `point` in the image plane, must be valid
@@ -120,6 +126,6 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestFREAKDescriptorT : public CV::Detector::
 
 } // namespace Test
 
-} // namepace Ocean
+} // namespace Ocean
 
 #endif // META_OCEAN_TEST_TESTCV_TESTDETECTOR_TEST_FREAK_DESCRIPTOR_H
