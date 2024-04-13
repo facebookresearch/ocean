@@ -530,8 +530,8 @@ inline uint32x4_t NEON::sumSquareDifferences8BitBack9Elements(const uint8_t* con
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vcreate_u8(0xFF00000000000000ull), vdup_n_u8(0xFFu));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -541,8 +541,8 @@ inline uint32x4_t NEON::sumSquareDifferences8BitBack10Elements(const uint8_t* co
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vcreate_u8(0xFFFF000000000000ull), vdup_n_u8(0xFFu));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -552,8 +552,8 @@ inline uint32x4_t NEON::sumSquareDifferences8BitBack11Elements(const uint8_t* co
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vcreate_u8(0xFFFFFF0000000000ull), vdup_n_u8(0xFFu));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -563,8 +563,8 @@ inline uint32x4_t NEON::sumSquareDifferences8BitBack12Elements(const uint8_t* co
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vcreate_u8(0xFFFFFFFF00000000ull), vdup_n_u8(0xFFu));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -574,8 +574,8 @@ inline uint32x4_t NEON::sumSquareDifferences8BitBack13Elements(const uint8_t* co
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vcreate_u8(0xFFFFFFFFFF000000ull), vdup_n_u8(0xFFu));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -585,8 +585,8 @@ inline uint32x4_t NEON::sumSquareDifferences8BitBack14Elements(const uint8_t* co
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vcreate_u8(0xFFFFFFFFFFFF0000ull), vdup_n_u8(0xFFu));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -596,8 +596,8 @@ inline uint32x4_t NEON::sumSquareDifferences8BitBack15Elements(const uint8_t* co
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vcreate_u8(0xFFFFFFFFFFFFFF00ull), vdup_n_u8(0xFFu));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -607,8 +607,8 @@ inline uint32x4_t NEON::sumSquareDifference8BitFront9Elements(const uint8_t* con
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vdup_n_u8(0xFFu), vcreate_u8(0x00000000000000FFull));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -618,8 +618,8 @@ inline uint32x4_t NEON::sumSquareDifference8BitFront10Elements(const uint8_t* co
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vdup_n_u8(0xFFu), vcreate_u8(0x000000000000FFFFull));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -629,8 +629,8 @@ inline uint32x4_t NEON::sumSquareDifference8BitFront11Elements(const uint8_t* co
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vdup_n_u8(0xFFu), vcreate_u8(0x0000000000FFFFFFull));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -640,8 +640,8 @@ inline uint32x4_t NEON::sumSquareDifference8BitFront12Elements(const uint8_t* co
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vdup_n_u8(0xFFu), vcreate_u8(0x00000000FFFFFFFFull));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -651,8 +651,8 @@ inline uint32x4_t NEON::sumSquareDifference8BitFront13Elements(const uint8_t* co
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vdup_n_u8(0xFFu), vcreate_u8(0x000000FFFFFFFFFFull));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -662,8 +662,8 @@ inline uint32x4_t NEON::sumSquareDifference8BitFront14Elements(const uint8_t* co
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vdup_n_u8(0xFFu), vcreate_u8(0x0000FFFFFFFFFFFFull));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -673,8 +673,8 @@ inline uint32x4_t NEON::sumSquareDifference8BitFront15Elements(const uint8_t* co
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	const uint8x16_t mask = vcombine_u8(vdup_n_u8(0xFFu), vcreate_u8(0x00FFFFFFFFFFFFFFull));
 	return sumSquareDifference8Bit16Elements(vandq_u8(row0, mask), vandq_u8(row1, mask));
@@ -684,8 +684,8 @@ inline uint32x4_t NEON::sumSquareDifference8Bit16Elements(const uint8_t* const i
 {
 	ocean_assert(image0 && image1);
 
-	uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	uint8x16_t row0 = vld1q_u8(image0);
+	uint8x16_t row1 = vld1q_u8(image1);
 
 	return sumSquareDifference8Bit16Elements(row0, row1);
 }
@@ -708,8 +708,8 @@ inline uint32x4_t NEON::sumSquareDifference8Bit8Elements(const uint8_t* const im
 {
 	ocean_assert(image0 && image1);
 
-	const uint8x8_t row0 = vld1_u8((uint8_t*)image0);
-	const uint8x8_t row1 = vld1_u8((uint8_t*)image1);
+	const uint8x8_t row0 = vld1_u8(image0);
+	const uint8x8_t row1 = vld1_u8(image1);
 
 	return sumSquareDifference8Bit8Elements(row0, row1);
 }
@@ -736,8 +736,8 @@ inline uint32x4_t NEON::sumAbsoluteDifference8Bit16Elements(const uint8_t* const
 {
 	ocean_assert(image0 && image1);
 
-	uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	uint8x16_t row0 = vld1q_u8(image0);
+	uint8x16_t row1 = vld1q_u8(image1);
 
 	return sumAbsoluteDifference8Bit16Elements(row0, row1);
 }
@@ -758,8 +758,8 @@ OCEAN_FORCE_INLINE void NEON::average16Elements1Channel8Bit2x2(const uint8_t* co
 
 	// we load 16 successive pixels (= 1 * 16 = 16 values)
 
-	const uint8x16_t m128_row0 = vld1q_u8((uint8_t*)row0);
-	const uint8x16_t m128_row1 = vld1q_u8((uint8_t*)row1);
+	const uint8x16_t m128_row0 = vld1q_u8(row0);
+	const uint8x16_t m128_row1 = vld1q_u8(row1);
 
 	// now we simply average the corresponding values of two rows by using NEON's rounding halving add function:
 	// vrhaddq_u8: Vr[i] := (Va[i] + Vb[i] + 1) >> 1
@@ -783,11 +783,11 @@ OCEAN_FORCE_INLINE void NEON::average32Elements1Channel8Bit2x2(const uint8_t* co
 
 	ocean_assert(row0 != nullptr && row1 != nullptr && result != nullptr);
 
-	const uint8x16_t row0A_u_8x16 = vld1q_u8((const uint8_t*)row0 + 0);
-	const uint8x16_t row0B_u_8x16 = vld1q_u8((const uint8_t*)row0 + 16);
+	const uint8x16_t row0A_u_8x16 = vld1q_u8(row0 + 0);
+	const uint8x16_t row0B_u_8x16 = vld1q_u8(row0 + 16);
 
-	const uint8x16_t row1A_u_8x16 = vld1q_u8((const uint8_t*)row1 + 0);
-	const uint8x16_t row1B_u_8x16 = vld1q_u8((const uint8_t*)row1 + 16);
+	const uint8x16_t row1A_u_8x16 = vld1q_u8(row1 + 0);
+	const uint8x16_t row1B_u_8x16 = vld1q_u8(row1 + 16);
 
 	const uint8x8_t averageA_u_8x8 = vrshrn_n_u16(vpaddlq_u8(vrhaddq_u8(row0A_u_8x16, row1A_u_8x16)), 1);
 	const uint8x8_t averageB_u_8x8 = vrshrn_n_u16(vpaddlq_u8(vrhaddq_u8(row0B_u_8x16, row1B_u_8x16)), 1);
@@ -801,8 +801,8 @@ inline void NEON::average16ElementsBinary1Channel8Bit2x2(const uint8_t* const im
 {
 	ocean_assert(image0 && image1 && result);
 
-	const uint8x16_t row0 = vld1q_u8((uint8_t*)image0);
-	const uint8x16_t row1 = vld1q_u8((uint8_t*)image1);
+	const uint8x16_t row0 = vld1q_u8(image0);
+	const uint8x16_t row1 = vld1q_u8(image1);
 
 	// calculate normal average
 	const uint8x8_t average = vmovn_u16(vshrq_n_u16(vpaddlq_u8(vhaddq_u8(row0, row1)), 1));
@@ -822,8 +822,8 @@ OCEAN_FORCE_INLINE void NEON::average32Elements2Channel16Bit2x2(const uint8_t* c
 	// m2_128_row0.val[0]: Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y
 	// m2_128_row0.val[1]: A A A A A A A A A A A A A A A A
 
-	const uint8x16x2_t m2_128_row0 = vld2q_u8((uint8_t*)row0);
-	const uint8x16x2_t m2_128_row1 = vld2q_u8((uint8_t*)row1);
+	const uint8x16x2_t m2_128_row0 = vld2q_u8(row0);
+	const uint8x16x2_t m2_128_row1 = vld2q_u8(row1);
 
 	// now we simply average the corresponding values of two rows by using NEON's rounding halving add function:
 	// vrhaddq_u8: Vr[i] := (Va[i] + Vb[i] + 1) >> 1
@@ -850,11 +850,11 @@ OCEAN_FORCE_INLINE void NEON::average64Elements2Channel16Bit2x2(const uint8_t* c
 
 	ocean_assert(row0 != nullptr && row1 != nullptr && result != nullptr);
 
-	const uint8x16x2_t row0A_u_8x16x2 = vld2q_u8((const uint8_t*)row0 + 0);
-	const uint8x16x2_t row0B_u_8x16x2 = vld2q_u8((const uint8_t*)row0 + 32);
+	const uint8x16x2_t row0A_u_8x16x2 = vld2q_u8(row0 + 0);
+	const uint8x16x2_t row0B_u_8x16x2 = vld2q_u8(row0 + 32);
 
-	const uint8x16x2_t row1A_u_8x16x2 = vld2q_u8((const uint8_t*)row1 + 0);
-	const uint8x16x2_t row1B_u_8x16x2 = vld2q_u8((const uint8_t*)row1 + 32);
+	const uint8x16x2_t row1A_u_8x16x2 = vld2q_u8(row1 + 0);
+	const uint8x16x2_t row1B_u_8x16x2 = vld2q_u8(row1 + 32);
 
 	const uint8x8_t averageChannel0A_u_8x8 = vrshrn_n_u16(vpaddlq_u8(vrhaddq_u8(row0A_u_8x16x2.val[0], row1A_u_8x16x2.val[0])), 1);
 	const uint8x8_t averageChannel1A_u_8x8 = vrshrn_n_u16(vpaddlq_u8(vrhaddq_u8(row0A_u_8x16x2.val[1], row1A_u_8x16x2.val[1])), 1);
@@ -879,8 +879,8 @@ OCEAN_FORCE_INLINE void NEON::average48Elements3Channel24Bit2x2(const uint8_t* c
 	// m3_128_row0.val[1]: G G G G G G G G G G G G G G G G
 	// m3_128_row0.val[2]: B B B B B B B B B B B B B B B B
 
-	const uint8x16x3_t m3_128_row0 = vld3q_u8((uint8_t*)row0);
-	const uint8x16x3_t m3_128_row1 = vld3q_u8((uint8_t*)row1);
+	const uint8x16x3_t m3_128_row0 = vld3q_u8(row0);
+	const uint8x16x3_t m3_128_row1 = vld3q_u8(row1);
 
 	// now we simply average the corresponding values of two rows by using NEON's rounding halving add function:
 	// vrhaddq_u8: Vr[i] := (Va[i] + Vb[i] + 1) >> 1
@@ -925,8 +925,8 @@ OCEAN_FORCE_INLINE void NEON::average64Elements4Channel32Bit2x2(const uint8_t* c
 	// m4_128_row0.val[2]: B B B B B B B B B B B B B B B B
 	// m4_128_row0.val[3]: A A A A A A A A A A A A A A A A
 
-	const uint8x16x4_t m4_128_row0 = vld4q_u8((uint8_t*)row0);
-	const uint8x16x4_t m4_128_row1 = vld4q_u8((uint8_t*)row1);
+	const uint8x16x4_t m4_128_row0 = vld4q_u8(row0);
+	const uint8x16x4_t m4_128_row1 = vld4q_u8(row1);
 
 	// now we simply average the corresponding values of two rows by using NEON's rounding halving add function:
 	// vrhaddq_u8: Vr[i] := (Va[i] + Vb[i] + 1) >> 1
@@ -960,9 +960,9 @@ inline void NEON::average24Elements1Channel8Bit3x3(const uint8_t* const image0, 
 	 */
 
 	// load 3 * 8 uchars
-	uint8x8x3_t row0 = vld3_u8((uint8_t*)image0);
-	uint8x8x3_t row1 = vld3_u8((uint8_t*)image1);
-	uint8x8x3_t row2 = vld3_u8((uint8_t*)image2);
+	uint8x8x3_t row0 = vld3_u8(image0);
+	uint8x8x3_t row1 = vld3_u8(image1);
+	uint8x8x3_t row2 = vld3_u8(image2);
 
 	uint16x8x3_t sumPerRow;
 
@@ -996,9 +996,9 @@ inline void NEON::average48Elements1Channel8Bit3x3Approximation(const uint8_t* c
 	// row1: B0 B1 B2   B3 B4 B5   B6 B7 B8   B9 ... B44   B45 B46 B47
 	// row2: C0 C1 C2   C3 C4 C5   C6 C7 C8   C9 ... C44   C45 C46 C47
 
-	uint8x16x3_t row0 = vld3q_u8((uint8_t*)image0);
-	uint8x16x3_t row1 = vld3q_u8((uint8_t*)image1);
-	uint8x16x3_t row2 = vld3q_u8((uint8_t*)image2);
+	uint8x16x3_t row0 = vld3q_u8(image0);
+	uint8x16x3_t row1 = vld3q_u8(image1);
+	uint8x16x3_t row2 = vld3q_u8(image2);
 
 	// now de-interleaved:
 	//
