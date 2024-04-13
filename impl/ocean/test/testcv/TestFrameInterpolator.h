@@ -56,6 +56,14 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolator
 		template <unsigned int tChannels, CV::FrameInterpolator::ResizeMethod tResizeMethod>
 		static bool testResize(const unsigned int sourceWidth, const unsigned int sourceHeight, const unsigned int targetWidth, const unsigned int targetHeight, const double testDuration, Worker& worker);
 
+		/**
+		 * Tests the resize function with focus on production use case.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool testResizeUseCase(const double testDuration, Worker& worker);
+
 	protected:
 
 		/**

@@ -29,6 +29,12 @@ bool TestFrameInterpolator::test(const double testDuration, Worker& worker)
 	allSucceeded = testResize(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testResizeUseCase(testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -145,6 +151,13 @@ TEST(TestFrameInterpolator, ResizeUnsignedChar4Channel_1920x1080_400x235_Nearest
 {
 	Worker worker;
 	EXPECT_TRUE((TestFrameInterpolator::testResize<4u, CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR>(1920u, 1080u, 400u, 235u, GTEST_TEST_DURATION, worker)));
+}
+
+
+TEST(TestFrameInterpolator, ResizeUseCase)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameInterpolator::testResizeUseCase(GTEST_TEST_DURATION, worker));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -362,7 +375,151 @@ bool TestFrameInterpolator::testResize(const unsigned int sourceWidth, const uns
 	}
 
 	return allSucceeded;
+}
 
+bool TestFrameInterpolator::testResizeUseCase(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing resize() with focus on production use case:";
+
+	const std::vector<CV::FrameInterpolator::ResizeMethod> resizeMethods =
+	{
+		CV::FrameInterpolator::RM_NEAREST_PIXEL,
+		CV::FrameInterpolator::RM_BILINEAR,
+		CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_11_BILINEAR,
+		CV::FrameInterpolator::RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR,
+		CV::FrameInterpolator::RM_AUTOMATIC
+	};
+
+	const FrameType::PixelFormats pixelFormats =
+	{
+		FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32,
+		FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::genericPixelFormat<uint8_t, 4u>()
+	};
+
+	RandomGenerator randomGenerator;
+
+	bool allSucceeded = true;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (const int targetMaxDimension : {32, 64, 128, 384, 480, 512})
+		{
+			const unsigned int sourceWidth = RandomI::random(randomGenerator, 1u, 2000u);
+			const unsigned int sourceHeight = RandomI::random(randomGenerator, 1u, 2000u);
+
+			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, pixelFormat, pixelOrigin), false, &randomGenerator);
+
+			const int width = int(frame.width());
+			const int height = int(frame.height());
+
+			int targetWidth = width;
+			int targetHeight = height;
+
+			if (width > height)
+			{
+				targetWidth = targetMaxDimension;
+				targetHeight = int(1.0f * float(height) / float(width) * float(targetWidth));
+
+				targetHeight -= targetHeight % 32; // ensure targetHeight is a multiple of 32
+			}
+			else
+			{
+				targetHeight = targetMaxDimension;
+				targetWidth = 1.0f * float(width) / float(height) * float(targetHeight);
+
+				targetWidth -= targetWidth % 32; // ensure targetWidth is a multiple of 32
+			}
+
+#ifdef OCEAN_DEBUG
+
+			// adding several checks to prevent asserts in debug builds
+			// however, we skip this part in release builds
+
+			ocean_assert(targetWidth >= 0 && targetHeight >= 0);
+
+			if (targetWidth == 0 || targetHeight == 0)
+			{
+				Log::debug() << "Skipped resolution " << sourceWidth << "x" << sourceHeight << " for " << targetMaxDimension;
+				continue;
+			}
+
+			if (targetWidth < 1 || targetHeight < 1)
+			{
+				allSucceeded = false;
+				continue;
+			}
+
+			ocean_assert(targetWidth % 32 == 0 && targetHeight % 32 == 0);
+
+			if (targetWidth % 32 != 0 || targetHeight % 32 != 0)
+			{
+				allSucceeded = false;
+				continue;
+			}
+
+#else
+
+			// in release builds, we allow a targetWidth == 0 || targetHeight == 0 to ensure that the code does not crash
+
+#endif // OCEAN_DEBUG
+
+			const FrameType resizedFrameType(frame.frameType(), (unsigned int)(targetWidth), (unsigned int)(targetHeight));
+
+			Frame resizedFrame = CV::CVUtilities::randomizedFrame(resizedFrameType, false, &randomGenerator);
+
+			const Frame copyResizedFrame(resizedFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+			const CV::FrameInterpolator::ResizeMethod resizeMethod = RandomI::random(randomGenerator, resizeMethods);
+
+			Worker* useWorker = RandomI::boolean() ? &worker : nullptr;
+
+			if (!CV::FrameInterpolator::resize(frame, resizedFrame, resizeMethod, useWorker))
+			{
+#ifdef OCEAN_DEBUG
+				ocean_assert(false && "This should never happen!");
+				allSucceeded = false;
+#else
+				if (targetWidth != 0 && targetHeight != 0)
+				{
+					allSucceeded = false;
+				}
+#endif
+			}
+
+			if (targetWidth != 0 && targetHeight != 0)
+			{
+				if (!CV::CVUtilities::isPaddingMemoryIdentical(resizedFrame, copyResizedFrame))
+				{
+					ocean_assert(false && "Invalid padding memory!");
+					return false;
+				}
+
+				if (!validateResizedFrame(frame, resizedFrame, resizeMethod))
+				{
+					allSucceeded = false;
+				}
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
 }
 
 bool TestFrameInterpolator::validateResizedFrame(const Frame& source, const Frame& target, const CV::FrameInterpolator::ResizeMethod resizeMethod)
