@@ -317,8 +317,7 @@ PlanarRectangleTracker::FramePyramidTrackerComponent::IterationResult PlanarRect
 		ocean_assert(poses_.isValidIndex(currentIndex));
 		poses_[currentIndex] = OfflinePose(currentIndex, initialPose_);
 
-		// **TODO** ensure that a copy of the pyramid data is created
-		initialFramePyramid_ = currentFramePyramid_;
+		initialFramePyramid_ = CV::FramePyramid(currentFramePyramid_, true /*copyData*/);
 
 		ocean_assert(initialRectifiedFramePyramid_.isNull() && !initialRectifiedCamera_.isValid() && initialRectifiedPose_.isNull());
 

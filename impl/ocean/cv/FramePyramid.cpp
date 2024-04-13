@@ -699,38 +699,6 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 	return layers;
 }
 
-FramePyramid& FramePyramid::operator=(const FramePyramid& right)
-{
-	if (this != &right)
-	{
-		if (right.isNull())
-		{
-			clear();
-			return *this;
-		}
-
-		ocean_assert(right.memory_.isOwner());
-
-		memory_ = Memory(right.memory_.size(), memoryAlignmentBytes_);
-		memcpy(memory_.data(), right.memory_.constdata(), memory_.size());
-
-		const LegacyFrame& frame = right.finestLayer();
-
-		layers_.clear();
-		layers_.push_back(LegacyFrame(frame.frameType(), frame.timestamp(), memory_.data<uint8_t>(), false));
-
-		for (unsigned int n = 1; n < right.layers() && layers_[n - 1u].width() > 1u && layers_[n - 1u].height() > 1u; ++n)
-		{
-			const unsigned int layerWidth = layers_[n - 1u].width() / 2u;
-			const unsigned int layerHeight = layers_[n - 1u].height() / 2u;
-
-			layers_.push_back(LegacyFrame(FrameType(layerWidth, layerHeight, frame.pixelFormat(), frame.pixelOrigin()), frame.timestamp(), layers_[n - 1u].data() + layers_[n - 1u].size(), false));
-		}
-	}
-
-	return *this;
-}
-
 FramePyramid& FramePyramid::operator=(FramePyramid&& right) noexcept
 {
 	if (this != &right)

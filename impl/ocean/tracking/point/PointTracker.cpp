@@ -251,8 +251,8 @@ PointTracker& PointTracker::operator=(const PointTracker& pointTracker)
 	{
 		database_ = pointTracker.database_;
 
-		previousFramePyramid_ = pointTracker.previousFramePyramid_;
-		currentFramePyramid_ = pointTracker.currentFramePyramid_;
+		previousFramePyramid_ = CV::FramePyramid(pointTracker.previousFramePyramid_, true /*copyData*/);
+		currentFramePyramid_ = CV::FramePyramid(pointTracker.currentFramePyramid_, true);
 
 		previousFrameIndex_ = pointTracker.previousFrameIndex_;
 		featurePointStrengthThreshold_ = pointTracker.featurePointStrengthThreshold_;

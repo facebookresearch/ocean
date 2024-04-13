@@ -434,13 +434,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		inline const Memory& memory() const;
 
 		/**
-		 * Assigns a frame pyramid to this one.
-		 * @param right The right pyramid to be assigned
-		 * @return Reference to this object
-		 */
-		FramePyramid& operator=(const FramePyramid& right);
-
-		/**
 		 * Move operator
 		 * @param right The right frame to assign
 		 * @return Reference to this frame
@@ -571,6 +564,13 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return True, if succeeded
 		 */
 		bool replace(const Frame& frame, const bool forceOwner, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE) = delete;
+
+		/**
+		 * Disabled assign operator
+		 * Use a constructor or the move operator instead.
+		 * @return Reference to this object
+		 */
+		FramePyramid& operator=(const FramePyramid&) = delete;
 
 	protected:
 

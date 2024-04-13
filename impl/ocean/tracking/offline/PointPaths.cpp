@@ -474,7 +474,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 
 	// now we go on with the major backward iteration (which has a minor forward iteration afterwards)
 
-	previousFramePyramid = startFramePyramid;
+	previousFramePyramid = CV::FramePyramid(startFramePyramid, true /*copyData*/);
 
 	Indices32 candidateObjectPointIds;
 	Vectors2 candidateFeaturePoints = database.imagePointsWithObjectPoints<false>(startFrameIndex, candidateObjectPointIds);
@@ -802,7 +802,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 
 	Log::info() << "Pyramid parameters: " << trackingConfiguration.pyramidLayers() << " layers and " << trackingConfiguration.coarsestLayerRadius() << " search radius";
 
-	const CV::FramePyramid subRegionFramePyramid(initialFrame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker);
+	CV::FramePyramid subRegionFramePyramid(initialFrame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker);
 
 	ocean_assert(subRegion.boundingBox().isValid());
 	const unsigned int subRegionWidth = (unsigned int)Numeric::ceil(subRegion.boundingBox().width());
@@ -1029,7 +1029,9 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 	}
 #endif
 
-	previousFramePyramid = subRegionFramePyramid;
+	ocean_assert(subRegionFramePyramid.isOwner());
+
+	previousFramePyramid = std::move(subRegionFramePyramid);
 	previousFeaturePoints = subRegionFeaturePoints;
 	previousFeatureStrengths = subRegionFeatureStrengths;
 	previousObjectPointIds = subRegionFrameObjectPointIds;

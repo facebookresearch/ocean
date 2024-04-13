@@ -73,15 +73,14 @@ SLAMPlaneTracker::FramePyramidTrackerComponent::IterationResult SLAMPlaneTracker
 		ocean_assert(componentHomographies_.isValidIndex(currentIndex));
 		componentHomographies_[currentIndex] = SquareMatrix3(true);
 
-		// **TODO** ensure that a copy of the pyramid data is created
-		componentInitialFramePyramid_ = currentFramePyramid_;
+		componentInitialFramePyramid_ = CV::FramePyramid(currentFramePyramid_, true /*copyData*/);
 	}
 	else if (previousFramePyramid_)
 	{
 		ocean_assert(componentHomographies_.isValidIndex(previousIndex));
 		ocean_assert(!componentHomographies_[previousIndex].isNull());
 
-		// adjust the sub-region from the initial frame so that it matches with the pevious frame
+		// adjust the sub-region from the initial frame so that it matches with the previous frame
 		const CV::SubRegion previousSubRegion(componentParent_.initialSubRegion_ * componentHomographies_[previousIndex]);
 
 		// determine the homography between the previous and the current frame
@@ -704,8 +703,7 @@ SLAMPlaneTracker::FramePyramidTrackerComponent::IterationResult SLAMPlaneTracker
 			componentParent_.eventCallbacks_(TrackerPoseStateEvent(componentParent_.id(), componentPoses_[currentIndex]));
 		}
 
-		// **TODO** ensure that a copy of the pyramid data is created
-		componentInitialFramePyramid_ = currentFramePyramid_;
+		componentInitialFramePyramid_ = CV::FramePyramid(currentFramePyramid_, true /*copyData*/);
 	}
 	else if (previousFramePyramid_)
 	{
