@@ -178,81 +178,18 @@ bool FramePyramid::replace(const Frame& frame, const DownsamplingMode downsampli
 	ocean_assert(frame.isValid());
 	ocean_assert(layers >= 1u);
 
-	//**TODO** call downsampling function-based replace() function here
-
 	if (downsamplingMode == DM_FILTER_11 && !frame.hasAlphaChannel())
 	{
 		return replace8BitPerChannel11(frame, layers, true /*copyFirstLayer*/, worker);
 	}
 
-	if (!replace(frame.frameType(), true /*reserveFirstLayerMemory*/, true /*forceOwner*/, layers))
-	{
-		clear();
-
-		return false;
-	}
-
-	ocean_assert(!layers_.empty());
-	ocean_assert(memory_.size() >= frame.frameTypeSize());
-
-	constexpr unsigned int memoryPaddingElements = 0u;
-	Frame memoryFinestLayer(frame.frameType(), memory_.data(), Frame::CM_USE_KEEP_LAYOUT, memoryPaddingElements);
-
-	if (!memoryFinestLayer.copy(0, 0, frame))
-	{
-		ocean_assert(false && "This should never happen!");
-		return false;
-	}
-
-	if (downsamplingMode == DM_FILTER_11)
-	{
-		ocean_assert(frame.hasAlphaChannel());
-
-		for (size_t layerIndex = 1; layerIndex < layers_.size(); ++layerIndex)
-		{
-			const Frame&  sourceLayer = layers_[layerIndex - 1u];
-			Frame& targetLayer = layers_[layerIndex];
-
-			if (!FrameShrinkerAlpha::Comfort::divideByTwo<false>(sourceLayer, targetLayer, worker))
-			{
-				clear();
-
-				return false;
-			}
-		}
-	}
-	else
-	{
-		ocean_assert(downsamplingMode == DM_FILTER_14641);
-
-		for (size_t layerIndex = 1; layerIndex < layers_.size(); ++layerIndex)
-		{
-			const Frame& sourceLayer = layers_[layerIndex - 1u];
-			Frame& targetLayer = layers_[layerIndex];
-
-			if (!FrameShrinker::downsampleByTwo14641(sourceLayer, targetLayer, worker))
-			{
-				clear();
-
-				return false;
-			}
-		}
-	}
-
-	for (Frame& layer : layers_)
-	{
-		layer.setTimestamp(frame.timestamp());
-	}
-
-	return true;
+	return replace(frame, downsamplingFunction(downsamplingMode, frame.pixelFormat()), layers, worker);
 }
 
 bool FramePyramid::replace(Frame&& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, Worker* worker)
 {
 	ocean_assert(frame.isValid());
 	ocean_assert(layers >= 1u);
-
-	//**TODO** call downsampling function-based replace() function here
 
 	if (downsamplingMode == DM_FILTER_11 && !frame.hasAlphaChannel())
 	{
@@ -266,58 +203,9 @@ bool FramePyramid::replace(Frame&& frame, const DownsamplingMode downsamplingMod
 		return true;
 	}
 
-	if (!replace(frame.frameType(), false /*reserveFirstLayerMemory*/, true /*forceOwner*/, layers))
-	{
-		clear();
+	const FrameType::PixelFormat pixelFormat = frame.pixelFormat();
 
-		return false;
-	}
-
-	ocean_assert(!layers_.empty());
-
-	layers_[0] = std::move(frame);
-
-	if (downsamplingMode == DM_FILTER_11)
-	{
-		ocean_assert(frame.hasAlphaChannel());
-
-		for (size_t layerIndex = 1u; layerIndex < layers_.size(); ++layerIndex)
-		{
-			const Frame& sourceLayer = layers_[layerIndex - 1u];
-			Frame& targetLayer = layers_[layerIndex];
-
-			if (!FrameShrinkerAlpha::Comfort::divideByTwo<false>(sourceLayer, targetLayer, worker))
-			{
-				clear();
-
-				return false;
-			}
-		}
-	}
-	else
-	{
-		ocean_assert(downsamplingMode == DM_FILTER_14641);
-
-		for (size_t layerIndex = 1u; layerIndex < layers_.size(); ++layerIndex)
-		{
-			const Frame& sourceLayer = layers_[layerIndex - 1u];
-			Frame& targetLayer = layers_[layerIndex];
-
-			if (!FrameShrinker::downsampleByTwo14641(sourceLayer, targetLayer, worker))
-			{
-				clear();
-
-				return false;
-			}
-		}
-	}
-
-	for (size_t layerIndex = 1; layerIndex < layers_.size(); ++layerIndex)
-	{
-		layers_[layerIndex].setTimestamp(layers_[0].timestamp());
-	}
-
-	return true;
+	return replace(std::move(frame), downsamplingFunction(downsamplingMode, pixelFormat), layers, worker);
 }
 
 bool FramePyramid::replace(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, Worker* worker)
@@ -817,10 +705,9 @@ FramePyramid::DownsamplingFunction FramePyramid::downsamplingFunction(const CV::
 		}
 
 		case DM_FILTER_14641:
+		{
 			return downsampleByTwo14641;
-
-		case CV::FramePyramid::DM_CUSTOM:
-			break;
+		}
 	}
 
 	ocean_assert(false && "This should never happen!");

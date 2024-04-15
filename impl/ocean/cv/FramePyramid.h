@@ -35,7 +35,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		/**
 		 * Definition of individual down sampling modes.
 		 */
-		enum DownsamplingMode
+		enum DownsamplingMode : uint32_t
 		{
 			/**
 			 * Down sampling is realized by a 2x2 averaging filter.
@@ -64,12 +64,7 @@ class OCEAN_CV_EXPORT FramePyramid
 			 * The center of the filter is applied to every even pixel location in the source frame.<br>
 			 * At the border of frames, the filter responses are determined based on mirrored pixel values.
 			 */
-			DM_FILTER_14641,
-
-			/**
-			 * A custom down sampling mode. // **TODO** removed once LegacyFrame was removed
-			 */
-			DM_CUSTOM
+			DM_FILTER_14641
 		};
 
 		/**
@@ -123,6 +118,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		/**
 		 * Creates a new pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
 		 * This constructor is intentionally restrictive to reduce binary impact when used, use other constructors or functions in case more flexibility is needed an binary size does not matter.<br>
+		 * The constructor mainly calls replace8BitPerChannel11().
 		 * @param frame The frame for which the pyramid will be created, must be valid
 		 * @param width The width of the given frame in pixel, with range [1, infinity)
 		 * @param height The height of the given frame in pixel, with range [1, infinity)
@@ -141,7 +137,8 @@ class OCEAN_CV_EXPORT FramePyramid
 		/**
 		 * Creates a new pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
 		 * This constructor is intentionally restrictive to reduce binary impact when used, use other constructors or functions in case more flexibility is needed an binary size does not matter.<br>
-		 * In case the provided frame not a valid 1-plane DT_UNSIGNED_INTEGER_8 frame, the pyramid will be invalid.
+		 * In case the provided frame not a valid 1-plane DT_UNSIGNED_INTEGER_8 frame, the pyramid will be invalid.<br>
+		 * The constructor mainly calls replace8BitPerChannel11().
 		 * @param frame The frame for which the pyramid will be created, with 1 plane and data type DT_UNSIGNED_INTEGER_8, must be valid
 		 * @param layers Number of pyramid layers to be created, with range [1, infinity)
 		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exist)
