@@ -89,6 +89,12 @@ bool TestFramePyramid::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testReplaceWithFrame(testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testReplace11(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
@@ -236,6 +242,13 @@ TEST(TestFramePyramid, ConstructFromPyramid)
 {
 	Worker worker;
 	EXPECT_TRUE(TestFramePyramid::testConstructFromPyramid(GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFramePyramid, ReplaceWithFrame)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFramePyramid::testReplaceWithFrame(GTEST_TEST_DURATION, worker));
 }
 
 
@@ -1637,7 +1650,7 @@ bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing replace with frame type()";
+	Log::info() << "Testing replace with frame type:";
 
 	bool allSucceeded = true;
 
@@ -1784,6 +1797,214 @@ bool TestFramePyramid::testReplaceWithFrameType(const double testDuration)
 			}
 
 			previousFrameType = frameType;
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing replace with frame:";
+
+	bool allSucceeded = true;
+
+	const FrameType::PixelFormats pixelFormats =
+	{
+		FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32,
+		FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::genericPixelFormat<uint8_t, 4u>()
+	};
+
+	RandomGenerator randomGenerator;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		CV::FramePyramid framePyramid;
+
+		FrameType previousFrameType;
+		unsigned int previousPyramidLayers = 0u;
+		size_t previousMemorySize = 0;
+
+		bool finestLayerWasOwner = false;
+
+		for (unsigned int nIteration = 0u; nIteration < 10u; ++nIteration)
+		{
+			const size_t previousPyramidMemorySize = framePyramid.memory().size();
+			const void* previousPyramidMemory = framePyramid.memory().constdata();
+
+			FrameType newFrameType = previousFrameType;
+
+			unsigned int layers = framePyramid.layers();
+
+			if (nIteration == 0u || RandomI::boolean(randomGenerator))
+			{
+				const unsigned int width = RandomI::random(randomGenerator, 1u, 2000u);
+				const unsigned int height = RandomI::random(randomGenerator, 1u, 2000u);
+
+				const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+				const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+				newFrameType = FrameType(width, height, pixelFormat, pixelOrigin);
+
+				layers = RandomI::random(randomGenerator, 1u, 100u);
+			}
+			else
+			{
+				// request a similar pyramid as before
+
+				if (RandomI::random(randomGenerator, 1u == 0u))
+				{
+					const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(previousFrameType.channels());
+					const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+					newFrameType = FrameType(previousFrameType, pixelFormat, pixelOrigin);
+
+					layers = RandomI::random(randomGenerator, 1u, framePyramid.layers());
+				}
+			}
+
+			Frame frame = CV::CVUtilities::randomizedFrame(newFrameType, false, &randomGenerator);
+
+			const Frame copyFrame(frame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+
+			const CV::FramePyramid::DownsamplingMode downsamplingMode = RandomI::random(randomGenerator, {CV::FramePyramid::DM_FILTER_11, CV::FramePyramid::DM_FILTER_14641});
+
+			Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
+
+			const bool moveFirstLayer = RandomI::boolean(randomGenerator);
+
+			bool localResult = false;
+
+			if (moveFirstLayer)
+			{
+				localResult = framePyramid.replace(std::move(frame), downsamplingMode, layers, useWorker);
+			}
+			else
+			{
+				localResult = framePyramid.replace(frame, downsamplingMode, layers, useWorker);
+			}
+
+			if (localResult)
+			{
+				const unsigned int expectedLayers = std::min(layers, determineMaxLayerCount(copyFrame.width(), copyFrame.height()));
+
+				if (framePyramid.layers() != expectedLayers)
+				{
+					allSucceeded = false;
+				}
+
+				if (!framePyramid.isOwner())
+				{
+					allSucceeded = false;
+				}
+
+				if (framePyramid.finestLayer().frameType() != newFrameType)
+				{
+					allSucceeded = false;
+				}
+
+				const bool copyFirstLayer = !moveFirstLayer;
+
+				unsigned int testTotalLayers = 0u;
+				const size_t newMemorySize = CV::FramePyramid::calculateMemorySize(copyFrame.width(), copyFrame.height(), copyFrame.pixelFormat(), expectedLayers, copyFirstLayer, &testTotalLayers);
+
+				ocean_assert(testTotalLayers == expectedLayers);
+
+				if (nIteration == 0u)
+				{
+					if (framePyramid.memory().size() != newMemorySize)
+					{
+						allSucceeded = false;
+					}
+				}
+				else
+				{
+					if (framePyramid.memory().size() < newMemorySize)
+					{
+						allSucceeded = false;
+					}
+				}
+
+				UnorderedIndexSet32 readOnlyLayers;
+				UnorderedIndexSet32 ownerLayers;
+				UnorderedIndexSet32 outsideMemoryBlockLayers;
+
+				for (unsigned int n = 0u; n < expectedLayers; ++n)
+				{
+					ownerLayers.emplace(n);
+				}
+
+				if (moveFirstLayer)
+				{
+					outsideMemoryBlockLayers.emplace(0u);
+				}
+				else if (nIteration != 0u)
+				{
+					// special case, the finest layer in the previous pyramid owned the memory, and the new pyramid perfectly fits
+
+					if (finestLayerWasOwner)
+					{
+						if (previousFrameType == newFrameType && expectedLayers <= previousPyramidLayers && newMemorySize <= previousMemorySize)
+						{
+							// further, the downsampling is applied layer by layer, this could be optimized further in FramePyramid::replace8BitPerChannel11()
+
+							if (downsamplingMode != CV::FramePyramid::DM_FILTER_11 || FrameType::formatHasAlphaChannel(copyFrame.pixelFormat()))
+							{
+								outsideMemoryBlockLayers.emplace(0u);
+							}
+						}
+					}
+				}
+
+				if (!validateConstructFromFrame(framePyramid, downsamplingMode, copyFrame, expectedLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+				{
+					allSucceeded = false;
+				}
+
+				if (nIteration != 0u)
+				{
+					const bool expectUpdatedMemory = previousPyramidMemorySize < newMemorySize;
+
+					if (expectUpdatedMemory)
+					{
+						if (framePyramid.memory().constdata() == previousPyramidMemory)
+						{
+							allSucceeded = false;
+						}
+					}
+					else
+					{
+						if (framePyramid.memory().constdata() != previousPyramidMemory)
+						{
+							allSucceeded = false;
+						}
+					}
+				}
+			}
+			else
+			{
+				allSucceeded = false;
+			}
+
+			previousFrameType = newFrameType;
+			previousPyramidLayers = framePyramid.layers();
+			previousMemorySize = framePyramid.memory().size();
+
+			finestLayerWasOwner = framePyramid.isValid() && framePyramid.finestLayer().isOwner();
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));

@@ -174,6 +174,14 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		static bool testReplaceWithFrameType(const double testDuration);
 
 		/**
+		 * Tests the replacement of a frame pyramid using a frame type.
+		 * @param testDuration Requested duration of test loop in seconds
+		 * @param worker The worker object to distribute the computation
+		 * @return True, if the test succeeded; otherwise, false is returned.
+		 */
+		static bool testReplaceWithFrame(const double testDuration, Worker& worker);
+
+		/**
 		 * Tests the replacement of a frame pyramid using a 1-1 downsampling.
 		 * @param testDuration Requested duration of test loop in seconds
 		 * @param worker The worker object to distribute the computation
