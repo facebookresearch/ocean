@@ -382,6 +382,18 @@ class FREAKDescriptorT
  		 */
 		static FramePyramid createFramePyramidWithBlur8BitsPerChannel(const Frame& frame, const unsigned int kernelWidth, const unsigned int kernelHeight, const unsigned int layers, Worker* worker = nullptr);
 
+		/**
+		 * Downsamples a frame by two applying a 1-1 filter after applying a Gaussian blur to the source layer.
+		 * @param finerLayer The finer pyramid layer, must be valid
+		 * @param coarserLayer The coarser pyramid layer, must be valid
+		 * @param worker The optional worker to distribute the computation
+		 * @param kernelWidth The width of the Gaussian kernel, in pixel, with range [1, infinity), must odd
+		 * @param kernelHeight The height of the Gaussian kernel, in pixel, with range [1, infinity), must odd
+		 * @param reusableFrame A reusable frame which can be used internally
+		 * @return True, if succeeded
+		 */
+		static bool blurAndDownsampleByTwo11(const Frame& finerLayer, Frame& coarserLayer, Worker* worker, const unsigned int kernelWidth, const unsigned int kernelHeight, Frame& reusableFrame);
+
 	private:
 
 		/// The number of cells per keypoint that this implementation is using
@@ -1190,53 +1202,57 @@ FramePyramid FREAKDescriptorT<tSize>::createFramePyramidWithBlur8BitsPerChannel(
 	ocean_assert(frame.isValid() && frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 	ocean_assert(kernelWidth != 0u && kernelWidth % 2u == 1u);
 	ocean_assert(kernelHeight != 0u && kernelHeight % 2u == 1u);
-	ocean_assert(layers >= 0u);
+	ocean_assert(layers >= 1u);
 
-	FramePyramid pyramid(layers, frame.frameType());
+	Frame reusableFrame;
 
-	if (pyramid.layers() < layers)
+	const FramePyramid::DownsamplingFunction downsamplingFunction = std::bind(&FREAKDescriptorT<tSize>::blurAndDownsampleByTwo11, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, kernelWidth, kernelHeight, reusableFrame);
+
+	FramePyramid framePyramid(frame, downsamplingFunction, layers, worker);
+
+	if (framePyramid.layers() != layers)
 	{
 		return FramePyramid();
 	}
 
-	if (pyramid.isValid() && pyramid.layers() != 0u)
+	return framePyramid;
+}
+
+template <size_t tSize>
+bool FREAKDescriptorT<tSize>::blurAndDownsampleByTwo11(const Frame& finerLayer, Frame& coarserLayer, Worker* worker, const unsigned int kernelWidth, const unsigned int kernelHeight, Frame& reusableFrame)
+{
+	ocean_assert(finerLayer.isValid());
+	ocean_assert(coarserLayer.isValid());
+
+	ocean_assert(kernelWidth >= 1u && kernelWidth % 2u == 1u);
+	ocean_assert(kernelHeight >= 1u && kernelHeight % 2u == 1u);
+
+	ocean_assert(finerLayer.numberPlanes() == 1u && finerLayer.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
+	ocean_assert(finerLayer.isPixelFormatCompatible(coarserLayer.pixelFormat()));
+
+	reusableFrame.set(finerLayer.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+
+	if (!reusableFrame.isValid())
 	{
-		ocean_assert(frame.width() == pyramid[0].width() && frame.height() == pyramid[0].height());
-
-		ocean_assert(!pyramid.finestLayer().isOwner());
-
-		if (!pyramid.finestLayer().copy(0, 0, frame))
-		{
-			ocean_assert(false && "This should never happen!");
-			return FramePyramid();
-		}
-
-		ocean_assert(!pyramid.finestLayer().isOwner());
-
-		Frame intermediateMemory(frame.frameType());
-
-		for (unsigned int i = 1u; i < pyramid.layers(); ++i)
-		{
-			const Frame previousLayer(pyramid[i - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			ocean_assert(previousLayer.width() <= intermediateMemory.width() && previousLayer.height() <= intermediateMemory.height() && FrameType::arePixelFormatsCompatible(previousLayer.pixelFormat(), intermediateMemory.pixelFormat()));
-
-			if (kernelWidth <= previousLayer.width() && kernelHeight <= previousLayer.height())
-			{
-				if (CV::FrameFilterGaussian::filter<uint8_t, uint32_t>(previousLayer.constdata<uint8_t>(), intermediateMemory.data<uint8_t>(), previousLayer.width(), previousLayer.height(), previousLayer.channels(), previousLayer.paddingElements(), intermediateMemory.paddingElements(), kernelWidth, kernelHeight, -1.0f, worker) == false)
-				{
-					return FramePyramid();
-				}
-
-				CV::FrameShrinker::downsampleByTwo8BitPerChannel11(intermediateMemory.constdata<uint8_t>(), pyramid[i].data<uint8_t>(), previousLayer.width(), previousLayer.height(), previousLayer.channels(), intermediateMemory.paddingElements(), pyramid[i].paddingElements(), worker);
-			}
-			else
-			{
-				CV::FrameShrinker::downsampleByTwo8BitPerChannel11(previousLayer.constdata<uint8_t>(), pyramid[i].data<uint8_t>(), previousLayer.width(), previousLayer.height(), previousLayer.channels(), previousLayer.paddingElements(), pyramid[i].paddingElements(), worker);
-			}
-		}
+		ocean_assert(false && "This should never happen!");
+		return false;
 	}
 
-	return pyramid;
+	const Frame* sourceLayer = &finerLayer;
+
+	if (kernelWidth <= finerLayer.width() && kernelHeight <= finerLayer.height())
+	{
+		if (!CV::FrameFilterGaussian::filter<uint8_t, uint32_t>(finerLayer.constdata<uint8_t>(), reusableFrame.data<uint8_t>(), finerLayer.width(), finerLayer.height(), finerLayer.channels(), finerLayer.paddingElements(), reusableFrame.paddingElements(), kernelWidth, kernelHeight, -1.0f, worker))
+		{
+			return false;
+		}
+
+		sourceLayer = &reusableFrame;
+	}
+
+	CV::FrameShrinker::downsampleByTwo8BitPerChannel11(sourceLayer->constdata<uint8_t>(), coarserLayer.data<uint8_t>(), sourceLayer->width(), sourceLayer->height(), sourceLayer->channels(), sourceLayer->paddingElements(), coarserLayer.paddingElements(), worker);
+
+	return true;
 }
 
 template <size_t tSize>
