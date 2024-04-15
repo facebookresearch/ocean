@@ -56,7 +56,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     endif()
 
     if (tinyxml2_FOUND)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC tinyxml2)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC tinyxml2::tinyxml2)
     endif()
 
     # Installation
