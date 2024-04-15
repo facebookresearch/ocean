@@ -1807,6 +1807,11 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 
 	Log::info() << "Testing replace8BitPerChannel11()";
 
+	// the (for binary size optimized) replace8BitPerChannel11() function does not contain a special downsampling for alpha channels
+	// therefore, testing pixel formats without alpha channel only
+
+	const FrameType::PixelFormats pixelFormats = {FrameType::FORMAT_Y8, FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::FORMAT_RGB24, FrameType::genericPixelFormat<uint8_t, 4u>()};
+
 	bool allSucceeded = true;
 
 	RandomGenerator randomGenerator;
@@ -1818,7 +1823,7 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 2000u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 2000u);
 
-		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, {FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32});
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
 
 		const unsigned int layers = RandomI::random(randomGenerator, 1u, 100u);
 		const unsigned int expectedLayers = std::min(layers, determineMaxLayerCount(width, height));
@@ -1983,6 +1988,11 @@ bool TestFramePyramid::testConstructor11(const double testDuration, Worker& work
 
 	Log::info() << "Testing restrictive constructor applying 1-1 downsampling:";
 
+	// the (for binary size optimized) replace8BitPerChannel11() function does not contain a special downsampling for alpha channels
+	// therefore, testing pixel formats without alpha channel only
+
+	const FrameType::PixelFormats pixelFormats = {FrameType::FORMAT_Y8, FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::FORMAT_RGB24, FrameType::genericPixelFormat<uint8_t, 4u>()};
+
 	bool allSucceeded = true;
 
 	RandomGenerator randomGenerator;
@@ -1994,7 +2004,7 @@ bool TestFramePyramid::testConstructor11(const double testDuration, Worker& work
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 2000u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 2000u);
 
-		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, {FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32});
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
 
 		const unsigned int layers = RandomI::random(randomGenerator, 1u, 100u);
 		const unsigned int expectedLayers = std::min(layers, determineMaxLayerCount(width, height));
