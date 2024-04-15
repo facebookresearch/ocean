@@ -1886,16 +1886,27 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 			Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
 			const bool moveFirstLayer = RandomI::boolean(randomGenerator);
+			const bool copyFirstLayer = !moveFirstLayer;
+
+			const bool useFrameFunction = RandomI::boolean(randomGenerator);
 
 			bool localResult = false;
 
-			if (moveFirstLayer)
+			if (useFrameFunction)
 			{
-				localResult = framePyramid.replace(std::move(frame), downsamplingMode, layers, useWorker);
+				if (moveFirstLayer)
+				{
+
+					localResult = framePyramid.replace(std::move(frame), downsamplingMode, layers, useWorker);
+				}
+				else
+				{
+					localResult = framePyramid.replace(frame, downsamplingMode, layers, useWorker);
+				}
 			}
 			else
 			{
-				localResult = framePyramid.replace(frame, downsamplingMode, layers, useWorker);
+				localResult = framePyramid.replace8BitPerChannel(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), frame.pixelOrigin(), downsamplingMode, layers, frame.paddingElements(), copyFirstLayer, useWorker, frame.pixelFormat(), frame.timestamp());
 			}
 
 			if (localResult)
@@ -1907,17 +1918,30 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 					allSucceeded = false;
 				}
 
-				if (!framePyramid.isOwner())
+				const bool expectedFirstLayerOwner = useFrameFunction || copyFirstLayer;
+
+				if (expectedFirstLayerOwner)
 				{
-					allSucceeded = false;
+					if (!framePyramid.isOwner())
+					{
+						allSucceeded = false;
+					}
+				}
+				else
+				{
+					for (unsigned int layerIndex = 1u; layerIndex < expectedLayers; ++layerIndex)
+					{
+						if (!framePyramid.isOwner(layerIndex))
+						{
+							allSucceeded = false;
+						}
+					}
 				}
 
 				if (framePyramid.finestLayer().frameType() != newFrameType)
 				{
 					allSucceeded = false;
 				}
-
-				const bool copyFirstLayer = !moveFirstLayer;
 
 				unsigned int testTotalLayers = 0u;
 				const size_t newMemorySize = CV::FramePyramid::calculateMemorySize(copyFrame.width(), copyFrame.height(), copyFrame.pixelFormat(), expectedLayers, copyFirstLayer, &testTotalLayers);
@@ -1943,9 +1967,17 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 				UnorderedIndexSet32 ownerLayers;
 				UnorderedIndexSet32 outsideMemoryBlockLayers;
 
-				for (unsigned int n = 0u; n < expectedLayers; ++n)
+				if (!useFrameFunction && !copyFirstLayer)
 				{
-					ownerLayers.emplace(n);
+					readOnlyLayers.emplace(0u);
+				}
+
+				for (unsigned int layerIndex = 0u; layerIndex < expectedLayers; ++layerIndex)
+				{
+					if (expectedFirstLayerOwner || layerIndex != 0u)
+					{
+						ownerLayers.emplace(layerIndex);
+					}
 				}
 
 				if (moveFirstLayer)

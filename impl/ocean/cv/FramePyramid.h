@@ -353,6 +353,27 @@ class OCEAN_CV_EXPORT FramePyramid
 		bool replace(Frame&& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
 
 		/**
+		 * Replaces this frame pyramid based on a new frame.
+		 * The function will re-used the existing pyramid's memory if possible.<br>
+		 * The resulting pyramid will contain a copy of the given frame (as finest pyramid layer).
+		 * @param frame The frame for which the pyramid will be created, must be valid
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param channels The number of channels the given frame has, with range [1, infinity)
+		 * @param pixelOrigin The pixel origin of the given frame
+		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
+		 * @param layers Number of pyramid layers to be created, with range [1, infinity)
+		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
+		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exist)
+		 * @param worker Optional worker object to distribute the computation
+		 * @param pixelFormat The explicit pixel format which will be used for each pyramid layer, must be compatible with DT_UNSIGNED_INTEGER_8 and 'channels'; FORMAT_UNDEFINED to use a generic pixel format
+		 * @param timestamp Timestamp to be assigned to the frame pyramid (e.g., the timestamp of the frame used to created the timestamp)
+		 * @return True, if the frame pyramid was replaced
+		 * @see replace().
+		 */
+		bool replace8BitPerChannel(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const DownsamplingMode downsamplingMode, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const FrameType::PixelFormat pixelFormat = FrameType::FORMAT_UNDEFINED, const Timestamp timestamp = Timestamp(false));
+
+		/**
 		 * Replaces this frame pyramid by a new frame with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
 		 * This function is intentionally restrictive to reduce binary impact when used, use other function or the constructor in case more flexibility is needed an binary size does not matter.<br>
 		 * The function will re-used the existing pyramid's memory of possible.

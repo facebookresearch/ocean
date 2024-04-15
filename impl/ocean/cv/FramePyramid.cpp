@@ -305,9 +305,40 @@ bool FramePyramid::replace(Frame&& frame, const DownsamplingFunction& downsampli
 	return true;
 }
 
+bool FramePyramid::replace8BitPerChannel(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const DownsamplingMode downsamplingMode, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const FrameType::PixelFormat pixelFormat, const Timestamp timestamp)
+{
+	ocean_assert(frame != nullptr && width >= 1u && height >= 1u);
+	ocean_assert(channels >= 1u);
+	ocean_assert(layers >= 1u);
+
+	if (frame == nullptr || width == 0u || height == 0u || channels == 0u || layers == 0u)
+	{
+		clear();
+		return false;
+	}
+
+	const FrameType::PixelFormat usePixelFormat = pixelFormat == FrameType::FORMAT_UNDEFINED ? FrameType::genericPixelFormat<uint8_t>(channels) : pixelFormat;
+
+	const FrameType layerFrameType(width, height, usePixelFormat, pixelOrigin);
+	ocean_assert(layerFrameType.isValid());
+
+	if (copyFirstLayer) // **TODO** simply once replace(const Frame&) supports copyFirstLayer
+	{
+		const Frame layerFrame(layerFrameType, frame, Frame::CM_USE_KEEP_LAYOUT, framePaddingElements, timestamp);
+
+		return replace(layerFrame, downsamplingMode, layers, worker);
+	}
+	else
+	{
+		Frame layerFrame(layerFrameType, frame, Frame::CM_USE_KEEP_LAYOUT, framePaddingElements, timestamp);
+
+		return replace(std::move(layerFrame), downsamplingMode, layers, worker);
+	}
+}
+
 bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const FrameType::PixelFormat pixelFormat, const Timestamp timestamp)
 {
-	ocean_assert(frame != nullptr && width >= 1u && height >= 1u && layers > 0u);
+	ocean_assert(frame != nullptr && width >= 1u && height >= 1u);
 	ocean_assert(channels >= 1u);
 	ocean_assert(layers >= 1u);
 
