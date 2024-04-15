@@ -15,6 +15,47 @@ OCEAN_SOURCE_DIRECTORY=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/nu
 OCEAN_BUILD_ROOT_DIRECTORY="/tmp"
 OCEAN_INSTALL_ROOT_DIRECTORY="/tmp"
 
+# Displays the supported parameters of this script
+display_help()
+{
+    echo "Script to build Ocean:"
+    echo ""
+    echo "  $(basename "$0") [-h|--help] [THIRD_PARTY_ROOT_DIRECTORY]"
+    echo ""
+    echo "Arguments:"
+    echo ""
+    echo "  THIRD_PARTY_ROOT_DIRECTORY : The optional location where the third-party libraries of Ocean are"
+    echo "                               installed, if they were built manually. Otherwise standard CMake locations"
+    echo "                               will be searched for compatible third-party libraries."
+    echo ""
+    echo "  -h | --help                : This summary"
+    echo ""
+}
+
+THIRD_PARTY_ROOT_DIRECTORY=""
+
+if [[ $# -gt 0 ]]; then
+    key="$1"
+    case $key in
+        -h|--help)
+        display_help
+        exit 0
+        ;;
+        *)
+        THIRD_PARTY_ROOT_DIRECTORY="${key}"
+        ;;
+    esac
+fi
+
+if [ -z "${THIRD_PARTY_ROOT_DIRECTORY}" ]; then
+    echo "WARNING: No location for the Ocean third-party libraries has been specified; please ensure that all dependencies are satisfied."
+else
+    if [ ! -d "${THIRD_PARTY_ROOT_DIRECTORY}" ]; then
+        echo "ERROR: The following directory for the third-party libraries cannot be found: ${THIRD_PARTY_ROOT_DIRECTORY} - did you run the script to build the third-party libraries?"
+        exit 1
+    fi
+fi
+
 # Builds Ocean for Android with a specific build config
 #
 # ANDROID_ABI: The identifier of the Android ABI for which the build will be configured, cf. https://developer.android.com/ndk/guides/abis
@@ -41,8 +82,8 @@ function run_build_for_android {
         exit 1
     fi
 
-    OCEAN_BUILD_DIRECTORY="${OCEAN_BUILD_ROOT_DIRECTORY}/ocean_build_${ANDROID_ABI}_${LIBRARY_TYPE}_${BUILD_TYPE}"
-    OCEAN_INSTALL_DIRECTORY="${OCEAN_INSTALL_ROOT_DIRECTORY}/ocean_install_${ANDROID_ABI}_${LIBRARY_TYPE}_${BUILD_TYPE}"
+    OCEAN_BUILD_DIRECTORY="${OCEAN_BUILD_ROOT_DIRECTORY}/ocean/build/android/${ANDROID_ABI}_${LIBRARY_TYPE}_${BUILD_TYPE}"
+    OCEAN_INSTALL_DIRECTORY="${OCEAN_INSTALL_ROOT_DIRECTORY}/ocean/install/android/${ANDROID_ABI}_${LIBRARY_TYPE}_${BUILD_TYPE}"
 
     echo " "
     echo "ANDROID_ABI: ${ANDROID_ABI}"
@@ -54,17 +95,34 @@ function run_build_for_android {
     echo "OCEAN_INSTALL_DIRECTORY: ${OCEAN_INSTALL_DIRECTORY}"
     echo " "
 
-    cmake -S"${OCEAN_SOURCE_DIRECTORY}" \
-        -B"${OCEAN_BUILD_DIRECTORY}" \
-        -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
-        -DANDROID_ABI="${ANDROID_ABI}" \
-        -DANDROID_PLATFORM="${ANDROID_SDK_VERSION}" \
-        -DCMAKE_ANDROID_STL=c++_static \
-        -DCMAKE_ANDROID_NDK="${ANDROID_NDK}" \
-        -DCMAKE_TOOLCHAIN_FILE="${ANDROID_NDK}/build/cmake/android.toolchain.cmake" \
-        -DCMAKE_INSTALL_PREFIX="${OCEAN_INSTALL_DIRECTORY}" \
-        -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
-        -DOCEAN_BUILD_THIRD_PARTY_LIBS=TRUE
+    CMAKE_CONFIGURE_COMMAND="cmake \\
+    -S\"${OCEAN_SOURCE_DIRECTORY}\" \\
+    -B\"${OCEAN_BUILD_DIRECTORY}\" \\
+    -DCMAKE_BUILD_TYPE=\"${BUILD_TYPE}\" \\
+    -DANDROID_ABI=\"${ANDROID_ABI}\" \\
+    -DANDROID_PLATFORM=\"${ANDROID_SDK_VERSION}\" \\
+    -DCMAKE_ANDROID_STL=c++_static \\
+    -DCMAKE_ANDROID_NDK=\"${ANDROID_NDK}\" \\
+    -DCMAKE_TOOLCHAIN_FILE=\"${ANDROID_NDK}/build/cmake/android.toolchain.cmake\" \\
+    -DCMAKE_INSTALL_PREFIX=\"${OCEAN_INSTALL_DIRECTORY}\" \\
+    -DBUILD_SHARED_LIBS=\"${ENABLE_BUILD_SHARED_LIBS}\""
+
+    if [ -n "${THIRD_PARTY_ROOT_DIRECTORY}" ]; then
+        OCEAN_THIRD_PARTY_DIRECTORY="${THIRD_PARTY_ROOT_DIRECTORY}/${ANDROID_ABI}_${LIBRARY_TYPE}_${BUILD_TYPE}"
+
+        echo "OCEAN_THIRD_PARTY_DIRECTORY: ${OCEAN_THIRD_PARTY_DIRECTORY}"
+        echo " "
+
+        # The Android NDK makes it so that CMake ignore CMAKE_PREFIX_PATH; because of that CMAKE_FIND_ROOT_PATH needs to be set. Details:
+        # https://discourse.cmake.org/t/cmake-does-not-find-libraries-when-compiling-for-android/5098/5
+        CMAKE_CONFIGURE_COMMAND+="  \\
+    -DCMAKE_PREFIX_PATH=\"${OCEAN_THIRD_PARTY_DIRECTORY}\" \\
+    -DCMAKE_MODULE_PATH=\"${OCEAN_THIRD_PARTY_DIRECTORY}\" \\
+    -DCMAKE_FIND_ROOT_PATH=\"${OCEAN_THIRD_PARTY_DIRECTORY}\""
+    fi
+
+    echo "CMAKE_CONFIGURE_COMMAND = ${CMAKE_CONFIGURE_COMMAND}"
+    eval "${CMAKE_CONFIGURE_COMMAND}"
 
     cmake --build "${OCEAN_BUILD_DIRECTORY}" --target install -- -j16
 
