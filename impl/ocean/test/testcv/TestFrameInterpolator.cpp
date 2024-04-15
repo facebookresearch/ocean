@@ -5,6 +5,7 @@
 #include "ocean/base/Frame.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/RandomI.h"
+#include "ocean/base/Processor.h"
 
 #include "ocean/cv/CVUtilities.h"
 
@@ -32,7 +33,7 @@ bool TestFrameInterpolator::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testResizeUseCase(testDuration, worker) && allSucceeded;
+	allSucceeded = testResizeUseCase(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -154,10 +155,44 @@ TEST(TestFrameInterpolator, ResizeUnsignedChar4Channel_1920x1080_400x235_Nearest
 }
 
 
-TEST(TestFrameInterpolator, ResizeUseCase)
+TEST(TestFrameInterpolator, ResizeUseCase_1)
 {
-	Worker worker;
-	EXPECT_TRUE(TestFrameInterpolator::testResizeUseCase(GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameInterpolator::testResizeUseCase(GTEST_TEST_DURATION, 1u));
+}
+
+TEST(TestFrameInterpolator, ResizeUseCase_2)
+{
+	EXPECT_TRUE(TestFrameInterpolator::testResizeUseCase(GTEST_TEST_DURATION, 2u));
+}
+
+TEST(TestFrameInterpolator, ResizeUseCase_3)
+{
+	EXPECT_TRUE(TestFrameInterpolator::testResizeUseCase(GTEST_TEST_DURATION, 3u));
+}
+
+TEST(TestFrameInterpolator, ResizeUseCase_4)
+{
+	EXPECT_TRUE(TestFrameInterpolator::testResizeUseCase(GTEST_TEST_DURATION, 4u));
+}
+
+TEST(TestFrameInterpolator, ResizeUseCase_5)
+{
+	EXPECT_TRUE(TestFrameInterpolator::testResizeUseCase(GTEST_TEST_DURATION, 5u));
+}
+
+TEST(TestFrameInterpolator, ResizeUseCase_6)
+{
+	EXPECT_TRUE(TestFrameInterpolator::testResizeUseCase(GTEST_TEST_DURATION, 6u));
+}
+
+TEST(TestFrameInterpolator, ResizeUseCase_7)
+{
+	EXPECT_TRUE(TestFrameInterpolator::testResizeUseCase(GTEST_TEST_DURATION, 7u));
+}
+
+TEST(TestFrameInterpolator, ResizeUseCase_8)
+{
+	EXPECT_TRUE(TestFrameInterpolator::testResizeUseCase(GTEST_TEST_DURATION, 8u));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -377,11 +412,43 @@ bool TestFrameInterpolator::testResize(const unsigned int sourceWidth, const uns
 	return allSucceeded;
 }
 
-bool TestFrameInterpolator::testResizeUseCase(const double testDuration, Worker& worker)
+bool TestFrameInterpolator::testResizeUseCase(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Testing resize() with focus on production use case:";
+
+	bool allSucceeded = true;
+
+	for (unsigned int workerThreads : {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u, 12u, 15u, 16u})
+	{
+		Log::info() << " ";
+
+		if (!testResizeUseCase(testDuration, workerThreads))
+		{
+			allSucceeded = false;
+		}
+	}
+
+	Log::info() << " ";
+
+	if (allSucceeded)
+	{
+		Log::info() << "Resize with production use case validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Resize with production use case validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestFrameInterpolator::testResizeUseCase(const double testDuration, const unsigned int workerThreads)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "... with " << workerThreads << " worker threads:";
 
 	const std::vector<CV::FrameInterpolator::ResizeMethod> resizeMethods =
 	{
@@ -401,6 +468,17 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration, Worker&
 	RandomGenerator randomGenerator;
 
 	bool allSucceeded = true;
+
+	const unsigned int previousProcessorCores = Processor::get().cores();
+
+	Processor::get().forceCores(workerThreads);
+
+	Worker worker(Worker::TYPE_ALL_CORES);
+
+	if (worker.threads() != workerThreads)
+	{
+		allSucceeded = false;
+	}
 
 	const Timestamp startTimestamp(true);
 
@@ -509,6 +587,15 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration, Worker&
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (Processor::realCores() == previousProcessorCores)
+	{
+		Processor::get().forceCores(0u);
+	}
+	else
+	{
+		Processor::get().forceCores(previousProcessorCores);
+	}
 
 	if (allSucceeded)
 	{

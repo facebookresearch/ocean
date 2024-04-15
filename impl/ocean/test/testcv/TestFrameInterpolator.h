@@ -59,10 +59,17 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolator
 		/**
 		 * Tests the resize function with focus on production use case.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param worker The worker object to distribute the computation
 		 * @return True, if succeeded
 		 */
-		static bool testResizeUseCase(const double testDuration, Worker& worker);
+		static bool testResizeUseCase(const double testDuration);
+
+		/**
+		 * Tests the resize function with focus on production use case.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param workerThreads The number of worker threads to be used, with range [1, 64]
+		 * @return True, if succeeded
+		 */
+		static bool testResizeUseCase(const double testDuration, const unsigned int workerThreads);
 
 	protected:
 
