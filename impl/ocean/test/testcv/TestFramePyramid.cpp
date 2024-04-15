@@ -1070,7 +1070,7 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 						bool localResult = false;
 
-						const CV::FramePyramid::DownsamplingFunction downsamplingFunction = TestFramePyramid::downsamplingFunction(downsamplingMode);
+						const CV::FramePyramid::DownsamplingFunction downsamplingFunction = CV::FramePyramid::downsamplingFunction(downsamplingMode, frame.pixelFormat());
 
 						const bool useDownsamplingFunction = RandomI::boolean(randomGenerator);
 
@@ -2233,7 +2233,10 @@ bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FrameP
 {
 	ocean_assert(frame && framePyramid && layers >= 1u);
 
-	return validateFramePyramid(frame, framePyramid, downsamplingFunction(downsamplingMode), layers, allowCompatibleFrameType);
+	const CV::FramePyramid::DownsamplingFunction downsamplingFunction = CV::FramePyramid::downsamplingFunction(downsamplingMode, frame.pixelFormat());
+	ocean_assert(downsamplingFunction);
+
+	return validateFramePyramid(frame, framePyramid, downsamplingFunction, layers, allowCompatibleFrameType);
 }
 
 bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool allowCompatibleFrameType)
@@ -2335,7 +2338,10 @@ bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& frameP
 	ocean_assert(frame.isValid());
 	ocean_assert(numberLayers >= 1u);
 
-	return validateConstructFromFrame(framePyramid, downsamplingFunction(downsamplingMode), frame, numberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers);
+	const CV::FramePyramid::DownsamplingFunction downsamplingFunction = CV::FramePyramid::downsamplingFunction(downsamplingMode, frame.pixelFormat());
+	ocean_assert(downsamplingFunction);
+
+	return validateConstructFromFrame(framePyramid, downsamplingFunction, frame, numberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers);
 }
 
 bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingFunction& downsamplingFunction, const Frame& frame, const unsigned int numberLayers, const UnorderedIndexSet32& readOnlyLayers, const UnorderedIndexSet32& ownerLayers, const UnorderedIndexSet32& outsideMemoryBlockLayers)
@@ -2642,34 +2648,6 @@ bool TestFramePyramid::verifyPyramidOwnership(const CV::FramePyramid& framePyram
 	}
 
 	return true;
-}
-
-bool TestFramePyramid::downsampleByTwo11(const Frame& finerLayer, Frame& coarserLayer, Worker* worker)
-{
-	return CV::FrameShrinker::downsampleByTwo11(finerLayer, coarserLayer, worker);
-}
-
-bool TestFramePyramid::downsampleByTwo14641(const Frame& finerLayer, Frame& coarserLayer, Worker* worker)
-{
-	return CV::FrameShrinker::downsampleByTwo14641(finerLayer, coarserLayer, worker);
-}
-
-CV::FramePyramid::DownsamplingFunction TestFramePyramid::downsamplingFunction(const CV::FramePyramid::DownsamplingMode downsamplingMode)
-{
-	switch (downsamplingMode)
-	{
-		case CV::FramePyramid::DM_FILTER_11:
-			return downsampleByTwo11;
-
-		case CV::FramePyramid::DM_FILTER_14641:
-			return downsampleByTwo14641;
-
-		case CV::FramePyramid::DM_CUSTOM:
-			break;
-	}
-
-	ocean_assert(false && "This should never happen!");
-	return nullptr;
 }
 
 }

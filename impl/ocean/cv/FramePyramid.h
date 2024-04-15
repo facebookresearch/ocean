@@ -11,6 +11,7 @@
 #include "ocean/base/Worker.h"
 
 #include "ocean/cv/FrameShrinker.h"
+#include "ocean/cv/FrameShrinkerAlpha.h"
 
 #include <functional>
 
@@ -554,6 +555,41 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return Reference to this object
 		 */
 		FramePyramid& operator=(const FramePyramid&) = delete;
+
+		/**
+		 * Downsamples a frame with 1-1 filter.
+		 * @param finerLayer The finer pyramid layer, must be valid
+		 * @param coarserLayer The coarser pyramid layer, must be valid
+		 * @param worker The optional worker to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool downsampleByTwo11(const Frame& finerLayer, Frame& coarserLayer, Worker* worker);
+
+		/**
+		 * Downsamples a frame with 1-1 filter which contains an alpha channel.
+		 * @param finerLayer The finer pyramid layer, must be valid
+		 * @param coarserLayer The coarser pyramid layer, must be valid
+		 * @param worker The optional worker to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool downsampleAlphaByTwo11(const Frame& finerLayer, Frame& coarserLayer, Worker* worker);
+
+		/**
+		 * Downsamples a frame with 1-4-6-4-1 filter.
+		 * @param finerLayer The finer pyramid layer, must be valid
+		 * @param coarserLayer The coarser pyramid layer, must be valid
+		 * @param worker The optional worker to distribute the computation
+		 * @return True, if succeeded
+		 */
+		static bool downsampleByTwo14641(const Frame& finerLayer, Frame& coarserLayer, Worker* worker);
+
+		/**
+		 * Returns the downsampling function for a specified downsampling mode.
+		 * @param downsamplingMode The downsampling mode for which the function will be returned
+		 * @param pixelFormat The pixel format for which the downsampling function will be returned, must be valid
+		 * @return The downsampling function, nullptr if unknown
+		 */
+		static CV::FramePyramid::DownsamplingFunction downsamplingFunction(const CV::FramePyramid::DownsamplingMode downsamplingMode, const FrameType::PixelFormat pixelFormat);
 
 	protected:
 

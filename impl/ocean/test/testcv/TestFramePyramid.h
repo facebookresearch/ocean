@@ -274,31 +274,6 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		 * @return True, if all properties match
 		 */
 		static bool verifyPyramidOwnership(const CV::FramePyramid& framePyramid, const bool isValid, const bool isOwner, const Indices32& layerIsOwner = Indices32());
-
-		/**
-		 * Downsamples a frame with 1-1 filter.
-		 * @param finerLayer The finer pyramid layer, must be valid
-		 * @param coarserLayer The coarser pyramid layer, must be valid
-		 * @param worker The optional worker to distribute the computation
-		 * @return True, if succeeded
-		 */
-		static bool downsampleByTwo11(const Frame& finerLayer, Frame& coarserLayer, Worker* worker);
-
-		/**
-		 * Downsamples a frame with 1-4-6-4-1 filter.
-		 * @param finerLayer The finer pyramid layer, must be valid
-		 * @param coarserLayer The coarser pyramid layer, must be valid
-		 * @param worker The optional worker to distribute the computation
-		 * @return True, if succeeded
-		 */
-		static bool downsampleByTwo14641(const Frame& finerLayer, Frame& coarserLayer, Worker* worker);
-
-		/**
-		 * Returns the downsampling function for a specified downsampling mode.
-		 * @param downsamplingMode The downsampling mode for which the function will be returned
-		 * @return The downsampling function, nullptr if unknown
-		 */
-		static CV::FramePyramid::DownsamplingFunction downsamplingFunction(const CV::FramePyramid::DownsamplingMode downsamplingMode);
 };
 
 }

@@ -779,6 +779,54 @@ size_t FramePyramid::calculateMemorySize(const unsigned int width, const unsigne
 	return size_t(bytes);
 }
 
+bool FramePyramid::downsampleByTwo11(const Frame& finerLayer, Frame& coarserLayer, Worker* worker)
+{
+	return CV::FrameShrinker::downsampleByTwo11(finerLayer, coarserLayer, worker);
+}
+
+bool FramePyramid::downsampleAlphaByTwo11(const Frame& finerLayer, Frame& coarserLayer, Worker* worker)
+{
+	return FrameShrinkerAlpha::Comfort::divideByTwo<false>(finerLayer, coarserLayer, worker);
+}
+
+bool FramePyramid::downsampleByTwo14641(const Frame& finerLayer, Frame& coarserLayer, Worker* worker)
+{
+	return CV::FrameShrinker::downsampleByTwo14641(finerLayer, coarserLayer, worker);
+}
+
+FramePyramid::DownsamplingFunction FramePyramid::downsamplingFunction(const CV::FramePyramid::DownsamplingMode downsamplingMode, const FrameType::PixelFormat pixelFormat)
+{
+	ocean_assert(FrameType::dataType(pixelFormat) == FrameType::DT_UNSIGNED_INTEGER_8);
+	ocean_assert(FrameType::numberPlanes(pixelFormat) == 1u);
+
+	if (FrameType::dataType(pixelFormat) != FrameType::DT_UNSIGNED_INTEGER_8 || FrameType::numberPlanes(pixelFormat) != 1u)
+	{
+		return nullptr;
+	}
+
+	switch (downsamplingMode)
+	{
+		case DM_FILTER_11:
+		{
+			if (FrameType::formatHasAlphaChannel(pixelFormat))
+			{
+				return downsampleAlphaByTwo11;
+			}
+
+			return downsampleByTwo11;
+		}
+
+		case DM_FILTER_14641:
+			return downsampleByTwo14641;
+
+		case CV::FramePyramid::DM_CUSTOM:
+			break;
+	}
+
+	ocean_assert(false && "This should never happen!");
+	return nullptr;
+}
+
 }
 
 }
