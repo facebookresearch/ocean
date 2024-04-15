@@ -1287,8 +1287,7 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 					ownerLayers.emplace(layerIndex);
 				}
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-				frame.makeContinuous(); // **TODO** workaround until LegacyFrame is not used anymore
+				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				const CV::FramePyramid::DownsamplingMode dowsamplingMode = RandomI::random(randomGenerator, {CV::FramePyramid::DM_FILTER_11, CV::FramePyramid::DM_FILTER_14641});
 
@@ -1838,8 +1837,7 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 		{
 			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
-			frame.makeContinuous(); // **TODO** temporary workaround until LegacyFrame is still used in FramePyramid
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
 
 			Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
@@ -1916,8 +1914,7 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 
 		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(newWidth, newHeight, pixelFormat, pixelOrigin), false, &randomGenerator);
-		frame.makeContinuous(); // **TODO** temporary workaround until LegacyFrame is still used in FramePyramid
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(newWidth, newHeight, pixelFormat, pixelOrigin), false, &randomGenerator);
 
 		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
@@ -2014,7 +2011,6 @@ bool TestFramePyramid::testConstructor11(const double testDuration, Worker& work
 		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
-		frame.makeContinuous(); // **TODO** temporary workaround until LegacyFrame is still used in FramePyramid
 
 		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
@@ -2068,7 +2064,6 @@ bool TestFramePyramid::testConstructor11(const double testDuration, Worker& work
 			// now, re replace the pyramid
 
 			frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
-			frame.makeContinuous(); // **TODO** temporary workaround until LegacyFrame is still used in FramePyramid
 
 			useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
@@ -2392,8 +2387,7 @@ bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& frameP
 			}
 		}
 
-		const size_t layerSizeBytes = layer.size(); // **TODO** switch to Frame-based function once LegacyFrame is removed
-		const bool isOwnedByMemoryBlock = framePyramid.memory().isInside(layer.constdata<void>(), (const uint8_t*)(layer.constdata<void>()) + layerSizeBytes);
+		const bool isOwnedByMemoryBlock = framePyramid.memory().isInside(layer.constdata<void>(), (const uint8_t*)(layer.constdata<void>()) + layer.size());
 
 		{
 			// testing is owned
