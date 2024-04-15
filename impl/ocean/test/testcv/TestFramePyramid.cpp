@@ -1885,57 +1885,58 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 
 			Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
-			const bool moveFirstLayer = RandomI::boolean(randomGenerator);
-			const bool copyFirstLayer = !moveFirstLayer;
+			const unsigned int expectedLayers = std::min(layers, determineMaxLayerCount(frame.width(), frame.height()));
 
+			const bool copyFirstLayer = RandomI::boolean(randomGenerator);
 			const bool useFrameFunction = RandomI::boolean(randomGenerator);
+
+			UnorderedIndexSet32 expectedReadOnlyLayers;
+			UnorderedIndexSet32 expectedOwnerLayers;
+			UnorderedIndexSet32 expectedOutsideMemoryBlockLayers;
+
+			for (unsigned int layerIndex = 1u; layerIndex < expectedLayers; ++layerIndex)
+			{
+				expectedOwnerLayers.emplace(layerIndex);
+			}
 
 			bool localResult = false;
 
 			if (useFrameFunction)
 			{
-				if (moveFirstLayer)
+				if (copyFirstLayer)
 				{
+					localResult = framePyramid.replace(frame, downsamplingMode, layers, useWorker);
 
-					localResult = framePyramid.replace(std::move(frame), downsamplingMode, layers, useWorker);
+					expectedOwnerLayers.emplace(0u);
 				}
 				else
 				{
-					localResult = framePyramid.replace(frame, downsamplingMode, layers, useWorker);
+					localResult = framePyramid.replace(std::move(frame), downsamplingMode, layers, useWorker);
+
+					expectedOwnerLayers.emplace(0u);
+					expectedOutsideMemoryBlockLayers.emplace(0u);
 				}
 			}
 			else
 			{
 				localResult = framePyramid.replace8BitPerChannel(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), frame.pixelOrigin(), downsamplingMode, layers, frame.paddingElements(), copyFirstLayer, useWorker, frame.pixelFormat(), frame.timestamp());
+
+				if (copyFirstLayer)
+				{
+					expectedOwnerLayers.emplace(0u);
+				}
+				else
+				{
+					expectedReadOnlyLayers.emplace(0u);
+					expectedOutsideMemoryBlockLayers.emplace(0u);
+				}
 			}
 
 			if (localResult)
 			{
-				const unsigned int expectedLayers = std::min(layers, determineMaxLayerCount(copyFrame.width(), copyFrame.height()));
-
 				if (framePyramid.layers() != expectedLayers)
 				{
 					allSucceeded = false;
-				}
-
-				const bool expectedFirstLayerOwner = useFrameFunction || copyFirstLayer;
-
-				if (expectedFirstLayerOwner)
-				{
-					if (!framePyramid.isOwner())
-					{
-						allSucceeded = false;
-					}
-				}
-				else
-				{
-					for (unsigned int layerIndex = 1u; layerIndex < expectedLayers; ++layerIndex)
-					{
-						if (!framePyramid.isOwner(layerIndex))
-						{
-							allSucceeded = false;
-						}
-					}
 				}
 
 				if (framePyramid.finestLayer().frameType() != newFrameType)
@@ -1963,46 +1964,22 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 					}
 				}
 
-				UnorderedIndexSet32 readOnlyLayers;
-				UnorderedIndexSet32 ownerLayers;
-				UnorderedIndexSet32 outsideMemoryBlockLayers;
-
-				if (!useFrameFunction && !copyFirstLayer)
-				{
-					readOnlyLayers.emplace(0u);
-				}
-
-				for (unsigned int layerIndex = 0u; layerIndex < expectedLayers; ++layerIndex)
-				{
-					if (expectedFirstLayerOwner || layerIndex != 0u)
-					{
-						ownerLayers.emplace(layerIndex);
-					}
-				}
-
-				if (moveFirstLayer)
-				{
-					outsideMemoryBlockLayers.emplace(0u);
-				}
-				else if (nIteration != 0u)
+				if (nIteration != 0u && finestLayerWasOwner)
 				{
 					// special case, the finest layer in the previous pyramid owned the memory, and the new pyramid perfectly fits
 
-					if (finestLayerWasOwner)
+					if (previousFrameType == newFrameType && expectedLayers <= previousPyramidLayers && newMemorySize <= previousMemorySize)
 					{
-						if (previousFrameType == newFrameType && expectedLayers <= previousPyramidLayers && newMemorySize <= previousMemorySize)
-						{
-							// further, the downsampling is applied layer by layer, this could be optimized further in FramePyramid::replace8BitPerChannel11()
+						// further, the downsampling is applied layer by layer, this could be optimized further in FramePyramid::replace8BitPerChannel11()
 
-							if (downsamplingMode != CV::FramePyramid::DM_FILTER_11 || FrameType::formatHasAlphaChannel(copyFrame.pixelFormat()))
-							{
-								outsideMemoryBlockLayers.emplace(0u);
-							}
+						if (downsamplingMode != CV::FramePyramid::DM_FILTER_11 || FrameType::formatHasAlphaChannel(copyFrame.pixelFormat()))
+						{
+							expectedOutsideMemoryBlockLayers.emplace(0u);
 						}
 					}
 				}
 
-				if (!validateConstructFromFrame(framePyramid, downsamplingMode, copyFrame, expectedLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+				if (!validateConstructFromFrame(framePyramid, downsamplingMode, copyFrame, expectedLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers))
 				{
 					allSucceeded = false;
 				}
