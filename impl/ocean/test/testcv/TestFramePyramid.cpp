@@ -1080,14 +1080,24 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 						const unsigned int testLayers = benchmarkIteration ? layers : RandomI::random(1u, 0xFFFFFFFFu);
 
 						const bool useConstructor = RandomI::boolean(randomGenerator);
-
-						bool localResult = false;
-
-						const CV::FramePyramid::DownsamplingFunction downsamplingFunction = CV::FramePyramid::downsamplingFunction(downsamplingMode, frame.pixelFormat());
-
 						const bool useDownsamplingFunction = RandomI::boolean(randomGenerator);
 
+						const CV::FramePyramid::DownsamplingFunction downsamplingFunction = useDownsamplingFunction ? CV::FramePyramid::downsamplingFunction(downsamplingMode, frame.pixelFormat()) : nullptr;
+
+						const unsigned int expectedLayers = std::min(testLayers, determineMaxLayerCount(testWidth, testHeight));
+
+						UnorderedIndexSet32 expectedReadOnlyLayers;
+						UnorderedIndexSet32 expectedOwnerLayers;
+						UnorderedIndexSet32 expectedOutsideMemoryBlockLayers;
+
+						for (unsigned int layerIndex = 0u; layerIndex < expectedLayers; ++layerIndex)
+						{
+							expectedOwnerLayers.emplace(layerIndex);
+						}
+
 						CV::FramePyramid framePyramid;
+
+						bool localResult = false;
 
 						performance.start();
 
@@ -1102,6 +1112,8 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 									else
 									{
 										framePyramid = CV::FramePyramid(std::move(frame), downsamplingFunction, testLayers, useWorker);
+
+										expectedOutsideMemoryBlockLayers.emplace(0u);
 									}
 								}
 								else
@@ -1113,6 +1125,8 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 									else
 									{
 										framePyramid = CV::FramePyramid(std::move(frame), downsamplingMode, testLayers, useWorker);
+
+										expectedOutsideMemoryBlockLayers.emplace(0u);
 									}
 								}
 
@@ -1129,6 +1143,8 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 									else
 									{
 										localResult = framePyramid.replace(std::move(frame), downsamplingFunction, testLayers, useWorker);
+
+										expectedOutsideMemoryBlockLayers.emplace(0u);
 									}
 								}
 								else
@@ -1140,6 +1156,8 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 									else
 									{
 										localResult = framePyramid.replace(std::move(frame), downsamplingMode, testLayers, useWorker);
+
+										expectedOutsideMemoryBlockLayers.emplace(0u);
 									}
 								}
 							}
@@ -1151,8 +1169,6 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 							allSucceeded = false;
 						}
 
-						const unsigned int expectedLayers = std::min(testLayers, determineMaxLayerCount(testWidth, testHeight));
-
 						const size_t expectedMemorySize = CV::FramePyramid::calculateMemorySize(testWidth, testHeight, pixelFormat, expectedLayers, copyFirstLayer);
 
 						if (framePyramid.memory().size() != expectedMemorySize)
@@ -1162,21 +1178,7 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 						ocean_assert(framePyramid.layers() == expectedLayers);
 
-						UnorderedIndexSet32 readOnlyLayers;
-						UnorderedIndexSet32 ownerLayers;
-						UnorderedIndexSet32 outsideMemoryBlockLayers;
-
-						for (unsigned int layerIndex = 0u; layerIndex < expectedLayers; ++layerIndex)
-						{
-							ownerLayers.emplace(layerIndex);
-						}
-
-						if (!copyFirstLayer)
-						{
-							outsideMemoryBlockLayers.emplace(0u);
-						}
-
-						if (!validateConstructFromFrame(framePyramid, downsamplingMode, copyFrame, expectedLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+						if (!validateConstructFromFrame(framePyramid, downsamplingMode, copyFrame, expectedLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers))
 						{
 							allSucceeded = false;
 						}
