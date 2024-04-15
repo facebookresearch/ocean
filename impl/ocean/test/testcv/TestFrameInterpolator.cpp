@@ -432,7 +432,7 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration, Worker&
 			else
 			{
 				targetHeight = targetMaxDimension;
-				targetWidth = 1.0f * float(width) / float(height) * float(targetHeight);
+				targetWidth = int(1.0f * float(width) / float(height) * float(targetHeight));
 
 				targetWidth -= targetWidth % 32; // ensure targetWidth is a multiple of 32
 			}
