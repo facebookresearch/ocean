@@ -1358,7 +1358,7 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 
 	const FrameType::PixelFormats pixelFormats =
 	{
-		FrameType::FORMAT_Y8, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGB32,
+		FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32,
 		FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::genericPixelFormat<uint8_t, 4u>()
 	};
 
