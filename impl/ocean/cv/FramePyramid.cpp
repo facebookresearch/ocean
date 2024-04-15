@@ -109,7 +109,7 @@ bool FramePyramid::replace(const FrameType& frameType, const bool reserveFirstLa
 		return false;
 	}
 
-	if (resultingLayers <= layers_.size() && layers_.front().frameType() == frameType && resultingLayers <= (unsigned int)(layers_.size()))
+	if (bytes <= memory_.size() && resultingLayers <= layers_.size() && layers_.front().frameType() == frameType && resultingLayers <= (unsigned int)(layers_.size()))
 	{
 		// in the case the frame pyramid has the correct size and the correct frame type we may be done
 
@@ -231,14 +231,19 @@ bool FramePyramid::replace(const Frame& frame, const DownsamplingFunction& downs
 	ocean_assert(!layers_.empty());
 	ocean_assert(memory_.size() >= frame.frameTypeSize());
 
-	constexpr unsigned int memoryPaddingElements = 0u;
-	Frame memoryFinestLayer(frame.frameType(), memory_.data(), Frame::CM_USE_KEEP_LAYOUT, memoryPaddingElements);
+#ifdef OCEAN_DEBUG
+	void* const debugFinestLayerData = layers_.front().data<void>();
+#endif
 
-	if (!memoryFinestLayer.copy(0, 0, frame))
+	if (!layers_.front().copy(0, 0, frame))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
 	}
+
+#ifdef OCEAN_DEBUG
+	ocean_assert(debugFinestLayerData == layers_.front().data<void>()); // ensuring ownership has not changed
+#endif
 
 	for (size_t layerIndex = 1; layerIndex < layers_.size(); ++layerIndex)
 	{
