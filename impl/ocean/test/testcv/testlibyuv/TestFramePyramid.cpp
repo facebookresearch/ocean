@@ -116,7 +116,7 @@ void TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 			for (unsigned int y = 0u; y < frame.height(); ++y)
 			{
-				memcpy(framePyramid[0].row(y), frame.constrow<void>(y), frame.planeWidthBytes(0u));
+				memcpy(framePyramid[0].row<void>(y), frame.constrow<void>(y), frame.planeWidthBytes(0u));
 			}
 
 			for (unsigned int n = 1u; n < framePyramid.layers(); ++n)

@@ -12,6 +12,8 @@
 
 #include "ocean/cv/FrameShrinker.h"
 
+#include <functional>
+
 namespace Ocean
 {
 
@@ -64,19 +66,19 @@ class OCEAN_CV_EXPORT FramePyramid
 			DM_FILTER_14641,
 
 			/**
-			 * A custom down sampling mode.
+			 * A custom down sampling mode. // **TODO** removed once LegacyFrame was removed
 			 */
 			DM_CUSTOM
 		};
 
 		/**
-		 * Definition of a callback function applying the frame down sampling.
-		 * The first parameter holds the source frame.<br>
-		 * The second parameter holds the target frame receiving the down sampled image content, the frame type must not be changed.<br>
-		 * The third parameter might be an optional worker object to distribute the computation.
-		 * Returns True, if succeeded
+		 * Definition of a function allowing to downsample a frame.
+		 * @param sourceLayer The source layer to downsample
+		 * @param targetLayer The target layer reviving the downsampled image content
+		 * @param worker Optional worker to distribute the computation
+		 * @return True, if succeeded
 		 */
-		typedef Callback<bool, const LegacyFrame&, LegacyFrame&, Worker*> CallbackDownsampling;
+		using DownsamplingFunction = std::function<bool(const Frame& sourceLayer, Frame& targetLayer, Worker* worker)>;
 
 		/**
 		 * Definition of a value that can be used to create as many pyramid layers as possible (so that the coarsest pyramid layer has resolution 1x1).
@@ -175,7 +177,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
 		 * @param worker Optional worker object to distribute the computation
 		 */
-		inline FramePyramid(const Frame& frame, const CallbackDownsampling& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
+		inline FramePyramid(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
 
 		/**
 		 * Creates a frame pyramid based on a frame.
@@ -185,7 +187,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
 		 * @param worker Optional worker object to distribute the computation
 		 */
-		inline FramePyramid(Frame&& frame, const CallbackDownsampling& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
+		inline FramePyramid(Frame&& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
 
 		/**
 		 * Creates a new frame pyramid based on an existing frame pyramid.
@@ -201,28 +203,28 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param layer Index of the layer frame to be returned, with range [0, layers())
 		 * @return Pyramid layer frame
 		 */
-		inline const LegacyFrame& layer(const unsigned int layer) const;
+		inline const Frame& layer(const unsigned int layer) const;
 
 		/**
 		 * Returns the frame of a specified layer.
 		 * @param layer Index of the layer frame to be returned, with range [0, layers())
 		 * @return Pyramid layer frame
 		 */
-		inline LegacyFrame& layer(const unsigned int layer);
+		inline Frame& layer(const unsigned int layer);
 
 		/**
 		 * Returns the finest layer frame of this pyramid.
 		 * Beware: The frame will not be the owner of the frame data, if you need a copy of this frame enforce to copy the frame buffer!
 		 * @return Finest pyramid layer frame
 		 */
-		inline const LegacyFrame& finestLayer() const;
+		inline const Frame& finestLayer() const;
 
 		/**
 		 * Returns the coarsest layer frame of this pyramid.
 		 * Beware: The frame will not be the owner of the frame data, if you need a copy of this frame enforce to copy the frame buffer!
 		 * @return Finest pyramid layer frame
 		 */
-		inline LegacyFrame& finestLayer();
+		inline Frame& finestLayer();
 
 		/**
 		 * Returns the coarsest layer frame of this pyramid regarding to the number of valid layers.
@@ -230,7 +232,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Beware: The frame will not be the owner of the frame data, if you need a copy of this frame enforce to copy the frame buffer!<br>
 		 * @return Finest pyramid layer frame
 		 */
-		inline const LegacyFrame& coarsestLayer() const;
+		inline const Frame& coarsestLayer() const;
 
 		/**
 		 * Returns the finest layer frame of this pyramid regarding to the number of valid layers.
@@ -238,7 +240,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Beware: The frame will not be the owner of the frame data, if you need a copy of this frame enforce to copy the frame buffer!<br>
 		 * @return Finest pyramid layer frame
 		 */
-		inline LegacyFrame& coarsestLayer();
+		inline Frame& coarsestLayer();
 
 		/**
 		 * Returns the number of layers this pyramid holds.
@@ -337,7 +339,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return True, if the frame pyramid was replaced
 		 * @see replace8BitPerChannel11().
 		 */
-		bool replace(const Frame& frame, const CallbackDownsampling& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
+		bool replace(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
 
 		/**
 		 * Replaces this frame pyramid based on a new frame.
@@ -350,7 +352,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return True, if the frame pyramid was replaced
 		 * @see replace8BitPerChannel11().
 		 */
-		bool replace(Frame&& frame, const CallbackDownsampling& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
+		bool replace(Frame&& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
 
 		/**
 		 * Replaces this frame pyramid by a new frame with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
@@ -446,7 +448,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param layer Index of the layer frame to be returned, with range [0, layers())
 		 * @return Pyramid layer frame
 		 */
-		inline const LegacyFrame& operator[](const unsigned int layer) const;
+		inline const Frame& operator[](const unsigned int layer) const;
 
 		/**
 		 * Returns the frame of a specified layer.
@@ -454,7 +456,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param layer Index of the layer frame to be returned, with range [0, layers())
 		 * @return Pyramid layer frame
 		 */
-		inline LegacyFrame& operator[](const unsigned int layer);
+		inline Frame& operator[](const unsigned int layer);
 
 		/**
 		 * Returns whether this pyramid holds at least one frame layer.
@@ -510,28 +512,9 @@ class OCEAN_CV_EXPORT FramePyramid
 		explicit FramePyramid(Frame&&) = delete;
 
 		/**
-		 * Deprecated.
-		 *
-		 * Disabled constructor.
-		 */
-		explicit FramePyramid(LegacyFrame&&) = delete;
-
-		/**
 		 * Disabled constructor.
 		 */
 		FramePyramid(const Frame&, const bool) = delete;
-
-		/**
-		 * Deprecated.
-		 *
-		 * Disabled constructor.
-		 */
-		FramePyramid(const LegacyFrame&, const bool) = delete;
-
-		/**
-		 * Disabled constructor.
-		 */
-		FramePyramid(const Frame&, const unsigned int, Worker*) = delete;
 
 		/**
 		 * Replaces this frame pyramid with a new pyramid defined by the frame type of the finest layer.
@@ -574,8 +557,8 @@ class OCEAN_CV_EXPORT FramePyramid
 
 	protected:
 
-		/// Layers of this pyramid.
-		LegacyFrames layers_;
+		/// The individual layers of this pyramid, zero if not valid.
+		Frames layers_;
 
 		/// Optional memory which may be used by at least one pyramid layer.
 		Memory memory_;
@@ -613,50 +596,50 @@ inline FramePyramid::FramePyramid(Frame&& frame, const DownsamplingMode downsamp
 	ocean_assert_and_suppress_unused(result, result);
 }
 
-inline FramePyramid::FramePyramid(const Frame& frame, const CallbackDownsampling& downsamplingFunction, const unsigned int layers, Worker* worker)
+inline FramePyramid::FramePyramid(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, Worker* worker)
 {
 	const bool result = replace(frame, downsamplingFunction, layers, worker);
 	ocean_assert_and_suppress_unused(result, result);
 }
 
-inline FramePyramid::FramePyramid(Frame&& frame, const CallbackDownsampling& downsamplingFunction, const unsigned int layers, Worker* worker)
+inline FramePyramid::FramePyramid(Frame&& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, Worker* worker)
 {
 	const bool result = replace(std::move(frame), downsamplingFunction, layers, worker);
 	ocean_assert_and_suppress_unused(result, result);
 }
 
-inline const LegacyFrame& FramePyramid::layer(const unsigned int layer) const
+inline const Frame& FramePyramid::layer(const unsigned int layer) const
 {
 	ocean_assert(layer < layers_.size());
 	return layers_[layer];
 }
 
-inline LegacyFrame& FramePyramid::layer(const unsigned int layer)
+inline Frame& FramePyramid::layer(const unsigned int layer)
 {
 	ocean_assert(layer < layers_.size());
 	return layers_[layer];
 }
 
-inline const LegacyFrame& FramePyramid::finestLayer() const
+inline const Frame& FramePyramid::finestLayer() const
 {
 	ocean_assert(isValid());
 	return layers_.front();
 }
 
-inline LegacyFrame& FramePyramid::finestLayer()
+inline Frame& FramePyramid::finestLayer()
 {
 	ocean_assert(isValid());
 	return layers_.front();
 }
 
-inline const LegacyFrame& FramePyramid::coarsestLayer() const
+inline const Frame& FramePyramid::coarsestLayer() const
 {
 	ocean_assert(isValid());
 
 	return layers_.back();
 }
 
-inline LegacyFrame& FramePyramid::coarsestLayer()
+inline Frame& FramePyramid::coarsestLayer()
 {
 	ocean_assert(isValid());
 
@@ -753,13 +736,13 @@ inline void FramePyramid::clear()
 	memory_.free();
 }
 
-inline const LegacyFrame& FramePyramid::operator[](const unsigned int layer) const
+inline const Frame& FramePyramid::operator[](const unsigned int layer) const
 {
 	ocean_assert(layer < layers_.size());
 	return layers_[layer];
 }
 
-inline LegacyFrame& FramePyramid::operator[](const unsigned int layer)
+inline Frame& FramePyramid::operator[](const unsigned int layer)
 {
 	ocean_assert(layer < layers_.size());
 	return layers_[layer];

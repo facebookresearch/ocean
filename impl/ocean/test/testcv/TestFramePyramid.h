@@ -10,8 +10,6 @@
 
 #include "ocean/cv/FramePyramid.h"
 
-#include <functional>
-
 namespace Ocean
 {
 
@@ -34,15 +32,6 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		 * Default value to create as many layers as possible.
 		 */
 		static constexpr unsigned int ALL_LAYERS = (unsigned int)(-1);
-
-		/**
-		 * Definition of a function allowing to downsample a frame.
-		 * @param sourceLayer The source layer to downsample
-		 * @param targetLayer The target layer reviving the downsampled image content
-		 * @param worker Optional worker to distribute the computation
-		 * @return True, if succeeded
-		 */
-		using DownsamplingFunction = std::function<bool(const Frame& sourceLayer, Frame& targetLayer, Worker* worker)>;
 
 	public:
 
@@ -229,7 +218,7 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		 * @param allowCompatibleFrameType True, to allow a compatible frame type; False, to expect a perfectly matching frame type
 		 * @return True, if succeeded
 		 */
-		static bool validateFramePyramid(const Frame& frame, const CV::FramePyramid& framePyramid, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool allowCompatibleFrameType = false);
+		static bool validateFramePyramid(const Frame& frame, const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool allowCompatibleFrameType = false);
 
 		/**
 		 * Validates if the frame pyramid was created correctly with the specified settings.
@@ -255,7 +244,7 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		 * @param outsideMemoryBlockLayers The indices of all layers which are expected to have their memory outside of the pyramid's memory block
 		 * @return True, if the pyramid is correct
 		 */
-		static bool validateConstructFromFrame(const CV::FramePyramid& framePyramid, const DownsamplingFunction& downsamplingFunction, const Frame& frame, const unsigned int numberLayers, const UnorderedIndexSet32& readOnlyLayers, const UnorderedIndexSet32& ownerLayers, const UnorderedIndexSet32& outsideMemoryBlockLayers);
+		static bool validateConstructFromFrame(const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingFunction& downsamplingFunction, const Frame& frame, const unsigned int numberLayers, const UnorderedIndexSet32& readOnlyLayers, const UnorderedIndexSet32& ownerLayers, const UnorderedIndexSet32& outsideMemoryBlockLayers);
 
 		/**
 		 * Validates if the frame pyramid was created correctly with the specified settings.
@@ -309,7 +298,7 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		 * @param downsamplingMode The downsampling mode for which the function will be returned
 		 * @return The downsampling function, nullptr if unknown
 		 */
-		static DownsamplingFunction downsamplingFunction(const CV::FramePyramid::DownsamplingMode downsamplingMode);
+		static CV::FramePyramid::DownsamplingFunction downsamplingFunction(const CV::FramePyramid::DownsamplingMode downsamplingMode);
 };
 
 }

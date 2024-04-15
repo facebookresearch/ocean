@@ -451,7 +451,7 @@ bool TestFREAKDescriptorT<tSize>::testCreateBlurredFramePyramid(const double tes
 
 			for (unsigned int y = 0u; y < yFrame.height(); ++y)
 			{
-				if (memcmp(yFrame.constrow<void>(y), blurredFramePyramid.finestLayer().constrow(y), yFrame.planeWidthBytes(0u)) != 0)
+				if (memcmp(yFrame.constrow<void>(y), blurredFramePyramid.finestLayer().constrow<void>(y), yFrame.planeWidthBytes(0u)) != 0)
 				{
 					allSucceeded = false;
 				}
@@ -478,7 +478,7 @@ bool TestFREAKDescriptorT<tSize>::testCreateBlurredFramePyramid(const double tes
 
 				for (unsigned int y = 0u; y < coarserLayer.height(); ++y)
 				{
-					if (memcmp(coarserLayer.constrow<void>(y), twoLayerPyramid.coarsestLayer().constrow(y), coarserLayer.planeWidthBytes(0u)) != 0)
+					if (memcmp(coarserLayer.constrow<void>(y), twoLayerPyramid.coarsestLayer().constrow<void>(y), coarserLayer.planeWidthBytes(0u)) != 0)
 					{
 						allSucceeded = false;
 					}
@@ -971,7 +971,7 @@ bool TestFREAKDescriptorT<tSize>::computeOriginalDescriptor(const CV::FramePyram
 	for (unsigned int i = 0u; i < pyramid.layers(); ++i)
 	{
 		imagePyramidInfoAndPtr.dataAtLvl[i] = pyramid[i].constdata<std::uint8_t>();
-		imagePyramidInfoAndPtr.pitchAtLvl[i] = int(pyramid[i].width() + pyramid[i].paddingElements()); // **TODO** switch to strideElements() once LegacyFrame is not used anymore
+		imagePyramidInfoAndPtr.pitchAtLvl[i] = int(pyramid[i].strideElements());
 		imagePyramidInfoAndPtr.widthAtLvl[i] = int(pyramid[i].width());
 		imagePyramidInfoAndPtr.heightAtLvl[i] = int(pyramid[i].height());
 	}

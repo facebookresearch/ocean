@@ -1070,18 +1070,7 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 						bool localResult = false;
 
-						CV::FramePyramid::CallbackDownsampling downsamplingFunction; // **TODO** use TestFramePyramid::downsamplingFunction() once LegacyFrame is not used anymore
-
-						if (downsamplingMode == CV::FramePyramid::DM_FILTER_11)
-						{
-							downsamplingFunction = CV::FramePyramid::CallbackDownsampling::createStatic(CV::FrameShrinker::downsampleByTwo11);
-						}
-						else
-						{
-							ocean_assert(downsamplingMode == CV::FramePyramid::DM_FILTER_14641);
-
-							downsamplingFunction = CV::FramePyramid::CallbackDownsampling::createStatic(CV::FrameShrinker::downsampleByTwo14641);
-						}
+						const CV::FramePyramid::DownsamplingFunction downsamplingFunction = TestFramePyramid::downsamplingFunction(downsamplingMode);
 
 						const bool useDownsamplingFunction = RandomI::boolean(randomGenerator);
 
@@ -2237,7 +2226,7 @@ bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FrameP
 	return validateFramePyramid(frame, framePyramid, downsamplingFunction(downsamplingMode), layers, allowCompatibleFrameType);
 }
 
-bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FramePyramid& framePyramid, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool allowCompatibleFrameType)
+bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool allowCompatibleFrameType)
 {
 	ocean_assert(frame && framePyramid && layers >= 1u);
 	ocean_assert(downsamplingFunction);
@@ -2266,9 +2255,10 @@ bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FrameP
 
 	for (unsigned int y = 0u; y < frame.height(); ++y)
 	{
-		const unsigned int frameWidthBytes = frame.planeWidthElements(0u) * FrameType::bytesPerDataType(frame.dataType());
+		ocean_assert(frame.numberPlanes() == 1u);
+		const unsigned int frameWidthBytes = frame.planeWidthBytes(0u);
 
-		if (memcmp(frame.constrow<void>(y), framePyramid[0].constrow(y), frameWidthBytes) != 0)
+		if (memcmp(frame.constrow<void>(y), framePyramid[0].constrow<void>(y), frameWidthBytes) != 0)
 		{
 			return false;
 		}
@@ -2338,7 +2328,7 @@ bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& frameP
 	return validateConstructFromFrame(framePyramid, downsamplingFunction(downsamplingMode), frame, numberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers);
 }
 
-bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& framePyramid, const DownsamplingFunction& downsamplingFunction, const Frame& frame, const unsigned int numberLayers, const UnorderedIndexSet32& readOnlyLayers, const UnorderedIndexSet32& ownerLayers, const UnorderedIndexSet32& outsideMemoryBlockLayers)
+bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingFunction& downsamplingFunction, const Frame& frame, const unsigned int numberLayers, const UnorderedIndexSet32& readOnlyLayers, const UnorderedIndexSet32& ownerLayers, const UnorderedIndexSet32& outsideMemoryBlockLayers)
 {
 	ocean_assert(framePyramid.isValid());
 	ocean_assert(frame.isValid());
@@ -2361,7 +2351,7 @@ bool TestFramePyramid::validateConstructFromFrame(const CV::FramePyramid& frameP
 
 	for (unsigned int layerIndex = 0u; layerIndex < numberLayers; ++layerIndex)
 	{
-		const LegacyFrame& layer = framePyramid[layerIndex];
+		const Frame& layer = framePyramid[layerIndex];
 
 		{
 			// testing read-only vs. writable
@@ -2466,7 +2456,7 @@ bool TestFramePyramid::validateConstructFromPyramid(const CV::FramePyramid& fram
 
 	for (unsigned int l = 0u; l < framePyramid.layers(); l++)
 	{
-		const LegacyFrame& layer = framePyramid.layer(l);
+		const Frame& layer = framePyramid.layer(l);
 
 		// If the layer should not exist the current layer is invalid
 		if (layerWidth == 0u || layerHeight == 0u || l >= layerCount)
@@ -2480,7 +2470,7 @@ bool TestFramePyramid::validateConstructFromPyramid(const CV::FramePyramid& fram
 		FrameType expectedFrameType;
 		if (sourceLayerExists)
 		{
-			const LegacyFrame& sourceLayer = sourcePyramid.layer(l + layerIndex);
+			const Frame& sourceLayer = sourcePyramid.layer(l + layerIndex);
 			expectedFrameType =  sourceLayer.frameType();
 
 			// if the pyramid is owner of the image content it must be writable
@@ -2496,13 +2486,22 @@ bool TestFramePyramid::validateConstructFromPyramid(const CV::FramePyramid& fram
 			}
 
 			// in any case, the data (copy or reference) must be identical
-			if (memcmp(sourceLayer.constdata(), layer.constdata(), sourceLayer.size()) != 0)
+
+			ocean_assert(sourceLayer.numberPlanes() == 1u && layer.numberPlanes() == 1u);
+
+			for (unsigned int y = 0u; y < sourceLayer.height(); ++y)
 			{
-				return false;
+				const unsigned int layerWidthBytes = sourceLayer.planeWidthBytes(0u);
+				ocean_assert(layerWidthBytes == layer.planeWidthBytes(0u));
+
+				if (memcmp(sourceLayer.constrow<void>(y), layer.constrow<void>(y), layerWidthBytes) != 0)
+				{
+					return false;
+				}
 			}
 
 			// if the data has not been copied both frames must point to the same memory block
-			if (!copyData && sourceLayer.constdata() != layer.constdata())
+			if (!copyData && sourceLayer.constdata<void>() != layer.constdata<void>())
 			{
 				return false;
 			}
@@ -2519,7 +2518,7 @@ bool TestFramePyramid::validateConstructFromPyramid(const CV::FramePyramid& fram
 
 		if (!layer.isOwner() && copyData)
 		{
-			if (layer.constdata() != framePyramid.memory().constdata<uint8_t>() + totalSize || layer.size() != expectedFrameType.frameTypeSize())
+			if (layer.constdata<void>() != (const void*)(framePyramid.memory().constdata<uint8_t>() + totalSize) || layer.size() != expectedFrameType.frameTypeSize())
 			{
 				return false;
 			}
@@ -2645,7 +2644,7 @@ bool TestFramePyramid::downsampleByTwo14641(const Frame& finerLayer, Frame& coar
 	return CV::FrameShrinker::downsampleByTwo14641(finerLayer, coarserLayer, worker);
 }
 
-TestFramePyramid::DownsamplingFunction TestFramePyramid::downsamplingFunction(const CV::FramePyramid::DownsamplingMode downsamplingMode)
+CV::FramePyramid::DownsamplingFunction TestFramePyramid::downsamplingFunction(const CV::FramePyramid::DownsamplingMode downsamplingMode)
 {
 	switch (downsamplingMode)
 	{

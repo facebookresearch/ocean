@@ -1141,7 +1141,7 @@ bool FREAKDescriptorT<tSize>::computeLocalDeformationMatrixAndOrientation(const 
 
 	int magnitudeX = 0;
 	int magnitudeY = 0;
-	const unsigned int strideElements = framePyramidLevel.width() + framePyramidLevel.paddingElements(); // **TODO** switch to strideElements() once LegacyFrame is not used anymore
+	const unsigned int strideElements = framePyramidLevel.strideElements();
 	const PixelType* data = framePyramidLevel.constdata<PixelType>();
 
 	for (size_t i = 0; i < FREAKDescriptorT<tSize>::kernelRadius7Elements; ++i)
@@ -1151,7 +1151,7 @@ bool FREAKDescriptorT<tSize>::computeLocalDeformationMatrixAndOrientation(const 
 		const int u = NumericF::round32(p[0]);
 		const int v = NumericF::round32(p[1]);
 
-		ocean_assert(((unsigned int)v * strideElements + (unsigned int)u) < (framePyramidLevel.height() * framePyramidLevel.width()));
+		ocean_assert(((unsigned int)(v) * strideElements + (unsigned int)(u)) < framePyramidLevel.size());
 		const int intensity = int(data[(unsigned int)(v) * strideElements + (unsigned int)(u)]);
 
 		// TODOX Is weighting with the relative x-/y-offsets of the kernel correct? Pixels on the border of kernel have much larger weight (up to +/-7) than ones closer to the kernel center (as low as 0 for the center)
@@ -1203,17 +1203,15 @@ FramePyramid FREAKDescriptorT<tSize>::createFramePyramidWithBlur8BitsPerChannel(
 	{
 		ocean_assert(frame.width() == pyramid[0].width() && frame.height() == pyramid[0].height());
 
-		if (frame.paddingElements() == 0u)
+		ocean_assert(!pyramid.finestLayer().isOwner());
+
+		if (!pyramid.finestLayer().copy(0, 0, frame))
 		{
-			memcpy(pyramid[0].data<uint8_t>(), frame.constdata<uint8_t>(), frame.height() * frame.strideBytes());
+			ocean_assert(false && "This should never happen!");
+			return FramePyramid();
 		}
-		else
-		{
-			for (unsigned int row = 0u; row < frame.height(); ++row)
-			{
-				memcpy(pyramid[0].row(row), frame.constrow<void>(row), frame.width() * frame.channels());
-			}
-		}
+
+		ocean_assert(!pyramid.finestLayer().isOwner());
 
 		Frame intermediateMemory(frame.frameType());
 
@@ -1229,11 +1227,11 @@ FramePyramid FREAKDescriptorT<tSize>::createFramePyramidWithBlur8BitsPerChannel(
 					return FramePyramid();
 				}
 
-				CV::FrameShrinker::downsampleByTwo8BitPerChannel11(intermediateMemory.constdata<uint8_t>(), pyramid[i].data<uint8_t>(), previousLayer.width(), previousLayer.height(), previousLayer.channels(), intermediateMemory.paddingElements(), /* pyramid[i].paddingElements() */ 0u, worker);
+				CV::FrameShrinker::downsampleByTwo8BitPerChannel11(intermediateMemory.constdata<uint8_t>(), pyramid[i].data<uint8_t>(), previousLayer.width(), previousLayer.height(), previousLayer.channels(), intermediateMemory.paddingElements(), pyramid[i].paddingElements(), worker);
 			}
 			else
 			{
-				CV::FrameShrinker::downsampleByTwo8BitPerChannel11(previousLayer.constdata<uint8_t>(), pyramid[i].data<uint8_t>(), previousLayer.width(), previousLayer.height(), previousLayer.channels(), previousLayer.paddingElements(), /* pyramid[i].paddingElements() */ 0u, worker);
+				CV::FrameShrinker::downsampleByTwo8BitPerChannel11(previousLayer.constdata<uint8_t>(), pyramid[i].data<uint8_t>(), previousLayer.width(), previousLayer.height(), previousLayer.channels(), previousLayer.paddingElements(), pyramid[i].paddingElements(), worker);
 			}
 		}
 	}

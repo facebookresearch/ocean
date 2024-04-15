@@ -54,14 +54,12 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid, const unsigned int 
 				{
 					const size_t sourceLayerIndex = targetLayerIndex + size_t(firstLayerIndex);
 
-					const LegacyFrame& sourceLayer = framePyramid.layers_[sourceLayerIndex];
+					const Frame& sourceLayer = framePyramid.layers_[sourceLayerIndex];
 
-					LegacyFrame& layer = layers_[targetLayerIndex];
+					Frame& layer = layers_[targetLayerIndex];
 					ocean_assert(!layer.isOwner());
 
-					memcpy(layer.data(), sourceLayer.constdata(), sourceLayer.frameTypeSize());
-
-					layer.setTimestamp(sourceLayer.timestamp());
+					layer.copy(0, 0, sourceLayer);
 				}
 			}
 			else
@@ -73,7 +71,7 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid, const unsigned int 
 		{
 			for (unsigned int sourceLayerIndex = firstLayerIndex; sourceLayerIndex < firstLayerIndex + actualLayers; ++sourceLayerIndex)
 			{
-				layers_.emplace_back(LegacyFrame(framePyramid.layers_[sourceLayerIndex], false)); // **TODO** add non-const version once switched to Frame
+				layers_.emplace_back(framePyramid.layers_[sourceLayerIndex], Frame::ACM_USE_KEEP_LAYOUT); // **TODO** add non-const version once switched to Frame from LegacyFrame
 			}
 		}
 
@@ -163,7 +161,9 @@ bool FramePyramid::replace(const FrameType& frameType, const bool reserveFirstLa
 
 		const FrameType layerFrameType(frameType, layerWidth, layerHeight);
 
-		layers_.push_back(LegacyFrame(layerFrameType, layerData, false));
+		constexpr unsigned int layerPaddingElements = 0u;
+
+		layers_.emplace_back(layerFrameType, (void*)(layerData), Frame::CM_USE_KEEP_LAYOUT, layerPaddingElements);
 
 		layerWidth /= 2u;
 		layerHeight /= 2u;
@@ -210,8 +210,8 @@ bool FramePyramid::replace(const Frame& frame, const DownsamplingMode downsampli
 
 		for (size_t layerIndex = 1; layerIndex < layers_.size(); ++layerIndex)
 		{
-			const Frame sourceLayer(layers_[layerIndex - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			Frame targetLayer(layers_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			const Frame&  sourceLayer = layers_[layerIndex - 1u];
+			Frame& targetLayer = layers_[layerIndex];
 
 			if (!FrameShrinkerAlpha::Comfort::divideByTwo<false>(sourceLayer, targetLayer, worker))
 			{
@@ -227,8 +227,8 @@ bool FramePyramid::replace(const Frame& frame, const DownsamplingMode downsampli
 
 		for (size_t layerIndex = 1; layerIndex < layers_.size(); ++layerIndex)
 		{
-			const Frame sourceLayer(layers_[layerIndex - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			Frame targetLayer(layers_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			const Frame& sourceLayer = layers_[layerIndex - 1u];
+			Frame& targetLayer = layers_[layerIndex];
 
 			if (!FrameShrinker::downsampleByTwo14641(sourceLayer, targetLayer, worker))
 			{
@@ -239,7 +239,7 @@ bool FramePyramid::replace(const Frame& frame, const DownsamplingMode downsampli
 		}
 	}
 
-	for (LegacyFrame& layer : layers_)
+	for (Frame& layer : layers_)
 	{
 		layer.setTimestamp(frame.timestamp());
 	}
@@ -283,8 +283,8 @@ bool FramePyramid::replace(Frame&& frame, const DownsamplingMode downsamplingMod
 
 		for (size_t layerIndex = 1u; layerIndex < layers_.size(); ++layerIndex)
 		{
-			const Frame sourceLayer(layers_[layerIndex - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			Frame targetLayer(layers_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			const Frame& sourceLayer = layers_[layerIndex - 1u];
+			Frame& targetLayer = layers_[layerIndex];
 
 			if (!FrameShrinkerAlpha::Comfort::divideByTwo<false>(sourceLayer, targetLayer, worker))
 			{
@@ -300,8 +300,8 @@ bool FramePyramid::replace(Frame&& frame, const DownsamplingMode downsamplingMod
 
 		for (size_t layerIndex = 1u; layerIndex < layers_.size(); ++layerIndex)
 		{
-			const Frame sourceLayer(layers_[layerIndex - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			Frame targetLayer(layers_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			const Frame& sourceLayer = layers_[layerIndex - 1u];
+			Frame& targetLayer = layers_[layerIndex];
 
 			if (!FrameShrinker::downsampleByTwo14641(sourceLayer, targetLayer, worker))
 			{
@@ -320,7 +320,7 @@ bool FramePyramid::replace(Frame&& frame, const DownsamplingMode downsamplingMod
 	return true;
 }
 
-bool FramePyramid::replace(const Frame& frame, const CallbackDownsampling& downsamplingFunction, const unsigned int layers, Worker* worker)
+bool FramePyramid::replace(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, Worker* worker)
 {
 	ocean_assert(frame.isValid());
 	ocean_assert(layers >= 1u);
@@ -354,9 +354,6 @@ bool FramePyramid::replace(const Frame& frame, const CallbackDownsampling& downs
 
 	for (size_t layerIndex = 1; layerIndex < layers_.size(); ++layerIndex)
 	{
-		const Frame sourceLayer(layers_[layerIndex - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-		Frame targetLayer(layers_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-
 		if (!downsamplingFunction(layers_[layerIndex - 1u], layers_[layerIndex], worker))
 		{
 			clear();
@@ -365,7 +362,7 @@ bool FramePyramid::replace(const Frame& frame, const CallbackDownsampling& downs
 		}
 	}
 
-	for (LegacyFrame& layer : layers_)
+	for (Frame& layer : layers_)
 	{
 		layer.setTimestamp(frame.timestamp());
 	}
@@ -373,7 +370,7 @@ bool FramePyramid::replace(const Frame& frame, const CallbackDownsampling& downs
 	return true;
 }
 
-bool FramePyramid::replace(Frame&& frame, const CallbackDownsampling& downsamplingFunction, const unsigned int layers, Worker* worker)
+bool FramePyramid::replace(Frame&& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, Worker* worker)
 {
 	ocean_assert(frame.isValid());
 	ocean_assert(layers >= 1u);
@@ -399,9 +396,6 @@ bool FramePyramid::replace(Frame&& frame, const CallbackDownsampling& downsampli
 
 	for (size_t layerIndex = 1; layerIndex < layers_.size(); ++layerIndex)
 	{
-		const Frame sourceLayer(layers_[layerIndex - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-		Frame targetLayer(layers_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-
 		if (!downsamplingFunction(layers_[layerIndex - 1u], layers_[layerIndex], worker))
 		{
 			clear();
@@ -469,15 +463,19 @@ bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned 
 		{
 			// the pyramid memory contains the first layer (writable)
 
-			layers_.push_back(LegacyFrame(FrameType(width, height, usePixelFormat, pixelOrigin), timestamp, memory_.data<uint8_t>(), false));
+			constexpr unsigned int layerPaddingElements = 0u;
+
+			const FrameType layerFrameType(width, height, usePixelFormat, pixelOrigin);
+
+			layers_.emplace_back(layerFrameType, memory_.data<uint8_t>(), Frame::CM_USE_KEEP_LAYOUT, layerPaddingElements, timestamp);
 		}
 		else
 		{
 			// the pyramid memory does not contain the first layer, so we use the provided frame (as read-only)
 
-			Frame tmpFrame(FrameType(width, height, usePixelFormat, pixelOrigin), frame, Frame::CM_USE_KEEP_LAYOUT, framePaddingElements, timestamp);
+			const FrameType layerFrameType(width, height, usePixelFormat, pixelOrigin);
 
-			layers_.push_back(LegacyFrame(tmpFrame, LegacyFrame::FCM_USE_IF_POSSIBLE)); // **TODO** temporary workaround until `layers_` does not use `LegacyFrame` anymore
+			layers_.emplace_back(layerFrameType, frame, Frame::CM_USE_KEEP_LAYOUT, framePaddingElements, timestamp);
 		}
 
 		uint8_t* pyramidLayerData = memory_.data<uint8_t>();
@@ -498,7 +496,9 @@ bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned 
 
 			const FrameType layerFrameType(layerWidth, layerHeight, usePixelFormat, pixelOrigin);
 
-			layers_.push_back(LegacyFrame(layerFrameType, timestamp, pyramidLayerData, false));
+			constexpr unsigned int layerPaddingElements = 0u;
+
+			layers_.emplace_back(layerFrameType, pyramidLayerData, Frame::CM_USE_KEEP_LAYOUT, layerPaddingElements, timestamp);
 			ocean_assert(layers_.size() == n + 1u);
 			ocean_assert(!layers_.back().isOwner());
 
@@ -520,7 +520,7 @@ bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned 
 			continue;
 		}
 
-		ocean_assert(memory_.isInside(layers_[n].constdata(), layers_[n].size()));
+		ocean_assert(memory_.isInside(layers_[n].constdata<void>(), layers_[n].size()));
 	}
 
 #endif // OCEAN_DEBUG
@@ -551,14 +551,14 @@ bool FramePyramid::isOwner(const unsigned int layerIndex) const
 			return false;
 		}
 
-		for (const LegacyFrame& layer : layers_)
+		for (const Frame& layer : layers_)
 		{
 			if (layer.isOwner())
 			{
 				continue;
 			}
 
-			if (memory_.isOwner() && memory_.isInside(layer.constdata(), layer.size()))
+			if (memory_.isOwner() && memory_.isInside(layer.constdata<void>(), layer.size()))
 			{
 				continue;
 			}
@@ -571,14 +571,14 @@ bool FramePyramid::isOwner(const unsigned int layerIndex) const
 
 	if (layerIndex < layers_.size())
 	{
-		const LegacyFrame& layer = layers_[layerIndex];
+		const Frame& layer = layers_[layerIndex];
 
 		if (layer.isOwner())
 		{
 			return true;
 		}
 
-		if (memory_.isOwner() && memory_.isInside(layer.constdata(), layer.size()))
+		if (memory_.isOwner() && memory_.isInside(layer.constdata<void>(), layer.size()))
 		{
 			return true;
 		}
