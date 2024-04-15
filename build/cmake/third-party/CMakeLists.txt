@@ -36,6 +36,7 @@ elseif(BUILD_PASS_INDEX EQUAL 2)
     include(freetype.cmake)
     include(opencv.cmake)
     include(assimp.cmake)
+    include(wxwidgets.cmake)
 endif()
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
