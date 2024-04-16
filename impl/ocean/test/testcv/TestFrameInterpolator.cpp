@@ -469,16 +469,7 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration, const u
 
 	bool allSucceeded = true;
 
-	const unsigned int previousProcessorCores = Processor::get().cores();
-
-	Processor::get().forceCores(workerThreads);
-
-	Worker worker(Worker::TYPE_ALL_CORES);
-
-	if (worker.threads() != workerThreads)
-	{
-		allSucceeded = false;
-	}
+	Worker worker(workerThreads, Worker::TYPE_CUSTOM);
 
 	const Timestamp startTimestamp(true);
 
@@ -587,15 +578,6 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration, const u
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
-
-	if (Processor::realCores() == previousProcessorCores)
-	{
-		Processor::get().forceCores(0u);
-	}
-	else
-	{
-		Processor::get().forceCores(previousProcessorCores);
-	}
 
 	if (allSucceeded)
 	{
