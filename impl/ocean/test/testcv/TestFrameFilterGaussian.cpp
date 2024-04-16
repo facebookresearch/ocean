@@ -57,6 +57,14 @@ bool TestFrameFilterGaussian::test(const double testDuration, Worker& worker)
 	allSucceeded = testReusableMemoryComfort<float>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testInplace<uint8_t, uint32_t>(testDuration, worker) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testInplace<float, float>(testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -184,27 +192,36 @@ TEST(TestFrameFilterGaussian, Filter_float_float_1920x1080_4Channel_15)
 
 TEST(TestFrameFilterGaussian, ReusableMemory_uint8)
 {
-	Worker worker;
 	EXPECT_TRUE((TestFrameFilterGaussian::testReusableMemory<uint8_t, uint32_t>(GTEST_TEST_DURATION)));
 }
 
 TEST(TestFrameFilterGaussian, ReusableMemory_float)
 {
-	Worker worker;
 	EXPECT_TRUE((TestFrameFilterGaussian::testReusableMemory<float, float>(GTEST_TEST_DURATION)));
 }
 
 
 TEST(TestFrameFilterGaussian, ReusableMemoryComfort_uint8)
 {
-	Worker worker;
 	EXPECT_TRUE((TestFrameFilterGaussian::testReusableMemoryComfort<uint8_t>(GTEST_TEST_DURATION)));
 }
 
 TEST(TestFrameFilterGaussian, ReusableMemoryComfort_float)
 {
-	Worker worker;
 	EXPECT_TRUE((TestFrameFilterGaussian::testReusableMemoryComfort<float>(GTEST_TEST_DURATION)));
+}
+
+
+TEST(TestFrameFilterGaussian, Inplace_uint8)
+{
+	Worker worker;
+	EXPECT_TRUE((TestFrameFilterGaussian::testInplace<uint8_t, uint32_t>(GTEST_TEST_DURATION, worker)));
+}
+
+TEST(TestFrameFilterGaussian, Inplace_float)
+{
+	Worker worker;
+	EXPECT_TRUE((TestFrameFilterGaussian::testInplace<float, float>(GTEST_TEST_DURATION, worker)));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -687,6 +704,93 @@ bool TestFrameFilterGaussian::testReusableMemoryComfort(const double testDuratio
 			Log::info() << " ";
 		}
 	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+template <typename T, typename TFilter>
+bool TestFrameFilterGaussian::testInplace(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing in-place filtering '" << TypeNamer::name<T>() << "':";
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int filterSize = RandomI::random(randomGenerator, 3u, 15u) | 0x01u;
+
+		const unsigned int width = RandomI::random(randomGenerator, filterSize, 200u);
+		const unsigned int height = RandomI::random(randomGenerator, filterSize, 200u);
+
+		const unsigned int channels = RandomI::random(randomGenerator, 1u, 4u);
+
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+
+		Frame inplaceFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+		Frame copyInplaceFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
+		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+		Worker* useWorkerA = Random::boolean(randomGenerator) ? &worker : nullptr;
+
+		if (!CV::FrameFilterGaussian::filter<T, TFilter>(frame.constdata<T>(), targetFrame.data<T>(), frame.width(), frame.height(), frame.channels(), frame.paddingElements(), targetFrame.paddingElements(), filterSize, filterSize, -1.0f, useWorkerA))
+		{
+			allSucceeded = false;
+		}
+
+		if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
+		{
+			ocean_assert(false && "Invalid padding memory!");
+			return false;
+		}
+
+		Worker* useWorkerB = Random::boolean(randomGenerator) ? &worker : nullptr;
+
+		if (!CV::FrameFilterGaussian::filter<T, TFilter>(inplaceFrame.data<T>(), inplaceFrame.width(), inplaceFrame.height(), inplaceFrame.channels(), inplaceFrame.paddingElements(), filterSize, filterSize, -1.0f, useWorkerB))
+		{
+			allSucceeded = false;
+		}
+
+		if (!CV::CVUtilities::isPaddingMemoryIdentical(inplaceFrame, copyInplaceFrame))
+		{
+			ocean_assert(false && "Invalid padding memory!");
+			return false;
+		}
+
+		for (unsigned int y = 0u; y < targetFrame.height(); ++y)
+		{
+			for (unsigned int x = 0u; x < targetFrame.width(); ++x)
+			{
+				const T* pixelA = targetFrame.constpixel<T>(x, y);
+				const T* pixelB = inplaceFrame.constpixel<T>(x, y);
+
+				for (unsigned int n = 0u; n < frame.channels(); ++n)
+				{
+					if (pixelA[n] != pixelB[n])
+					{
+						allSucceeded = false;
+					}
+				}
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
 	{

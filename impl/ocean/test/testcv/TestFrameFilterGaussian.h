@@ -98,6 +98,17 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilterGaussian
 		 */
 		template <typename T>
 		static bool testReusableMemoryComfort(const double testDuration);
+
+		/**
+		 * Tests the in-place Gaussian blur filter.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @return True, if succeeded
+		 * @tparam T The data type of each pixel channel, e.g., 'unsigned char', or 'float'
+		 * @tparam TFilter The data type of each filter value, e.g., 'unsigned int', or 'float'
+		 */
+		template <typename T, typename TFilter>
+		static bool testInplace(const double testDuration, Worker& worker);
 };
 
 }
