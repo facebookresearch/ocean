@@ -3,7 +3,6 @@
 #include "ocean/test/testcv/TestFramePyramid.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
-#include "ocean/base/Processor.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/String.h"
 
@@ -853,8 +852,6 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 
 	RandomGenerator randomGenerator;
 
-	const Indices32 threads = {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u, 12u, 32u, 33u, 48u, 64u};
-
 	const Indices32 widths =  {640u, 641u, 640u, 641u, 800u, 1280u, 1920u, 3840u, 3840u};
 	const Indices32 heights = {480u, 480u, 481u, 481u, 640u,  720u, 1080u, 2048u, 2160u};
 
@@ -864,13 +861,9 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 		FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::genericPixelFormat<uint8_t, 4u>()
 	};
 
-	const unsigned int previousProcessorCores = Processor::get().cores();
-
-	for (const unsigned int thread : threads)
+	for (const unsigned int threads : {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u, 12u, 32u, 33u, 48u, 64u})
 	{
-		Processor::get().forceCores(thread);
-
-		Worker extremeWorker(Worker::TYPE_ALL_CORES);
+		Worker extremeWorker(threads, Worker::TYPE_CUSTOM);
 
 		for (unsigned int n = 0u; n < widths.size(); ++n)
 		{
@@ -906,15 +899,6 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 				}
 			}
 		}
-	}
-
-	if (Processor::realCores() == previousProcessorCores)
-	{
-		Processor::get().forceCores(0u);
-	}
-	else
-	{
-		Processor::get().forceCores(previousProcessorCores);
 	}
 
 	if (allSucceeded)
