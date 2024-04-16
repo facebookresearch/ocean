@@ -8,6 +8,7 @@
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/Memory.h"
+#include "ocean/base/ScopedValue.h"
 
 namespace Ocean
 {
@@ -504,24 +505,26 @@ inline void FrameFilterGaussian::filter1Channel8Bit121NEON(const uint8_t* source
 
 	if (reusableMemory != nullptr)
 	{
-		if (reusableMemory->responseRowsMemory_.size() != (innerPixels * 3u) * sizeof(uint16_t))
+		if (reusableMemory->responseRowsMemory_.size() != (width * 3u) * sizeof(uint16_t))
 		{
-			reusableMemory->responseRowsMemory_ = Memory::create<uint16_t>(innerPixels * 3u);
+			reusableMemory->responseRowsMemory_ = Memory::create<uint16_t>(width * 3u);
 		}
 
 		responseRows = reusableMemory->responseRowsMemory_.data<uint16_t>();
 	}
 	else
 	{
-		memoryResponseRows = Memory::create<uint16_t>(innerPixels * 3u);
+		memoryResponseRows = Memory::create<uint16_t>(width * 4u);
 		responseRows = memoryResponseRows.data<uint16_t>();
 	}
 
 	ocean_assert(responseRows != nullptr);
 
-	uint16_t* responseTopRow = responseRows + innerPixels * 0u;
+	uint16_t* responseTopRow = responseRows + width * 0u;
 
 	// first, we determine the horizontal filter response for the 1D filter [1 2 1]
+
+	responseTopRow[0] = source[0] * 3u + source[1]; // special handling for first pixel response
 
 	for (unsigned int n = 0u; n < innerPixels; n += 16u)
 	{
@@ -554,28 +557,38 @@ inline void FrameFilterGaussian::filter1Channel8Bit121NEON(const uint8_t* source
 		low_u_16x8 = vmlal_u8(low_u_16x8, vget_low_u8(source_1_u_8x16), constant_2_u_8x8);
 		high_u_16x8 = vmlal_u8(high_u_16x8, vget_high_u8(source_1_u_8x16), constant_2_u_8x8);
 
-		vst1q_u16(responseTopRow + n + 0u, low_u_16x8);
-		vst1q_u16(responseTopRow + n + 8u, high_u_16x8);
+		vst1q_u16(responseTopRow + 1u + n + 0u, low_u_16x8);
+		vst1q_u16(responseTopRow + 1u + n + 8u, high_u_16x8);
 	}
+
+	responseTopRow[width - 1u] = source[width - 2u] + source[width - 1u] * 3u; // special handling for last pixel response
 
 	// due to border mirroring, our top and center row is identical for the first iteration
 	uint16_t* responseCenterRow = responseTopRow;
-	uint16_t* responseBottomRow = responseRows + innerPixels * 2u;
-
-	const uint8_t* topRow = source;
-	const uint8_t* centerRow = source;
+	uint16_t* responseBottomRow = responseRows + width * 2u;
+	uint8_t* const sourceExtraCopy = (uint8_t*)(responseRows + width * 3u);
 
 	source += sourceStrideElements;
 
 	for (unsigned int y = 0u; y < height; ++y)
 	{
+		if (y == height - 2u)
+		{
+			// we need to make a copy of the last source row for in-place filtering
+			memcpy(sourceExtraCopy, source, width * sizeof(uint8_t));
+		}
+
 		// for each iteration, we have a pre-calculated (horizontal) response for the top and center row already
+
+		responseBottomRow[0u] = source[0] * 3u + source[1];
 
 		// handle left pixel:                       (outside) (inside)
 		// |  3  1                                         1 |  2  1
 		// | [6] 2                                         2 | [4] 2
 		// |  3  1     the filter factors are based on:    1 |  2  1
-		*target++ = ((topRow[0] + source[0]) * 3u + (topRow[1] + source[1]) * 1u + centerRow[0] * 6u + centerRow[1] * 2u + 8u) / 16u; // bottomRow == source
+
+		// using scoped value for intermediate storage as source and target can be identical e.g., for implace filtering
+		const ScopedValue<uint8_t> firstPixelValue(*target, uint8_t((responseTopRow[0] + responseCenterRow[0] * 2u + responseBottomRow[0] + 8u) / 16u));
 
 		for (unsigned int n = 0u; n < innerPixels; n += 16u)
 		{
@@ -610,12 +623,12 @@ inline void FrameFilterGaussian::filter1Channel8Bit121NEON(const uint8_t* source
 
 
 			// load the pre-calculated values for top
-			const uint16x8_t topLow_u_16x8 = vld1q_u16(responseTopRow + n + 0u);
-			const uint16x8_t topHigh_u_16x8 = vld1q_u16(responseTopRow + n + 8u);
+			const uint16x8_t topLow_u_16x8 = vld1q_u16(responseTopRow + 1u + n + 0u);
+			const uint16x8_t topHigh_u_16x8 = vld1q_u16(responseTopRow + 1u + n + 8u);
 
 			// load the pre-calculated values for bottom
-			const uint16x8_t centerLow_u_16x8 = vld1q_u16(responseCenterRow + n + 0u);
-			const uint16x8_t centerHigh_u_16x8 = vld1q_u16(responseCenterRow + n + 8u);
+			const uint16x8_t centerLow_u_16x8 = vld1q_u16(responseCenterRow + 1u + n + 0u);
+			const uint16x8_t centerHigh_u_16x8 = vld1q_u16(responseCenterRow + 1u + n + 8u);
 
 			// result = top + bottom
 			uint16x8_t resultLow_u_16x8 = vaddq_u16(topLow_u_16x8, bottomLow_u_16x8);
@@ -627,26 +640,26 @@ inline void FrameFilterGaussian::filter1Channel8Bit121NEON(const uint8_t* source
 
 			// write the results for the bottom row so that we can use them as new pre-calculated values in the next iteration
 			// as we may re-calculate the last 16 pixels once again in the very last iteration, we cannot simply write the results to the center row
-			vst1q_u16(responseBottomRow + n + 0u, bottomLow_u_16x8);
-			vst1q_u16(responseBottomRow + n + 8u, bottomHigh_u_16x8);
+			vst1q_u16(responseBottomRow + 1u + n + 0u, bottomLow_u_16x8);
+			vst1q_u16(responseBottomRow + 1u + n + 8u, bottomHigh_u_16x8);
 
 			// result = (result + 8) / 16
 			const uint8x16_t result_u_8x16 = vcombine_u8(vrshrn_n_u16(resultLow_u_16x8, 4), vrshrn_n_u16(resultHigh_u_16x8, 4));
 
-			vst1q_u8(target + n, result_u_8x16);
+			vst1q_u8(target + 1u + n, result_u_8x16);
 		}
 
-		// handle right pixel:
-		// 1  3  |
-		// 2 [6] |
-		// 1  3  |
-		target[innerPixels] = ((topRow[innerPixels + 0u] + source[innerPixels + 0u]) * 1u + (topRow[innerPixels + 1u] + source[innerPixels + 1u]) * 3u + centerRow[innerPixels + 0u] * 2u + centerRow[innerPixels + 1u] * 6u + 8u) / 16u; // bottomRow == source
+		responseBottomRow[width - 1u] = source[width - 2u] + source[width - 1u] * 3u;
+
+		// handle right pixel:                      (inside) (outside)
+		// 1  3  |                                    1  2  | 1
+		// 2 [6] |                                    2 [4] | 2
+		// 1  3  |                                    1  2  | 1
+
+		target[width - 1u] = uint8_t((responseTopRow[width - 1u] + responseCenterRow[width - 1u] * 2u + responseBottomRow[width - 1u] + 8u) / 16u);
 
 		source += sourceStrideElements;
-		target += targetStrideElements - 1u; // -1 as we have incremented target by one
-
-		topRow += sourceStrideElements;
-		centerRow += sourceStrideElements;
+		target += targetStrideElements;
 
 		std::swap(responseTopRow, responseCenterRow);
 
@@ -654,15 +667,14 @@ inline void FrameFilterGaussian::filter1Channel8Bit121NEON(const uint8_t* source
 		{
 			// the next row will not have any border mirroring anymore
 
-			responseCenterRow = responseRows + innerPixels * 1u;
-			topRow -= sourceStrideElements;
+			responseCenterRow = responseRows + width * 1u;
 		}
 		else if (y == height - 2u)
 		{
 			// the next iteration will handle the last row in the frame
 			// the bottom row will be mirrored which is actually the last row again
 
-			source -= sourceStrideElements;
+			source = sourceExtraCopy;
 		}
 
 		std::swap(responseCenterRow, responseBottomRow);
