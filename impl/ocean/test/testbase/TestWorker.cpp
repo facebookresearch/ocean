@@ -3,6 +3,7 @@
 #include "ocean/test/testbase/TestWorker.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
+#include "ocean/base/Processor.h"
 #include "ocean/base/Timestamp.h"
 
 #include <cmath>
@@ -34,6 +35,12 @@ bool TestWorker::test(const double testDuration)
 
 	bool allSucceeded = true;
 
+	Log::info() << " ";
+
+	allSucceeded = testConstructor() && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
 	Log::info() << " ";
 
 	allSucceeded = testDelay(testDuration, worker) && allSucceeded;
@@ -83,6 +90,11 @@ bool TestWorker::test(const double testDuration)
 }
 
 #ifdef OCEAN_USE_GTEST
+
+TEST(TestWorker, Constructor)
+{
+	EXPECT_TRUE(TestWorker::testConstructor());
+}
 
 TEST(TestWorker, Delay)
 {
@@ -146,6 +158,45 @@ TEST(TestWorker, SeparableAndAbortableFunction)
 
 #endif // OCEAN_USE_GTEST
 
+bool TestWorker::testConstructor()
+{
+	Log::info() << "Test constructor:";
+
+	bool allSucceeded = true;
+
+	{
+		const Worker defaultWorker;
+
+		const unsigned int expectedThreads = std::min(Processor::get().cores(), 16u);
+
+		if (defaultWorker.threads() != expectedThreads)
+		{
+			allSucceeded = false;
+		}
+	}
+
+	for (unsigned int threads = 1u; threads <= 64u; ++threads)
+	{
+		const Worker customWorker(threads, Worker::TYPE_CUSTOM);
+
+		if (customWorker.threads() != threads)
+		{
+			allSucceeded = false;
+		}
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
 bool TestWorker::testDelay(const double testDuration, Worker& worker)
 {
 	ocean_assert(worker);
@@ -154,7 +205,7 @@ bool TestWorker::testDelay(const double testDuration, Worker& worker)
 
 	const Timestamp startTimestamp(true);
 
-	unsigned long long iterations = 0ull;
+	uint64_t iterations = 0ull;
 
 	double minimalFirstStartDelay = DBL_MAX;
 	double maximalLastStartDelay = -DBL_MAX;
@@ -168,14 +219,14 @@ bool TestWorker::testDelay(const double testDuration, Worker& worker)
 
 	do
 	{
-		std::vector<unsigned long long> ticks(worker.threads(), 0ull)	;
+		std::vector<uint64_t> ticks(worker.threads(), 0ull);
 
-		const unsigned long long startTick = HighPerformanceTimer::ticks();
-		worker.executeFunction(Worker::Function::createStatic(&TestWorker::staticWorkerFunctionDelay, ticks.data(), 0u, 0u), 0u, worker.threads(), 1u, 2u);
-		const unsigned long long stopTick = HighPerformanceTimer::ticks();
+		const uint64_t startTick = HighPerformanceTimer::ticks();
+			worker.executeFunction(Worker::Function::createStatic(&TestWorker::staticWorkerFunctionDelay, ticks.data(), 0u, 0u), 0u, worker.threads(), 1u, 2u);
+		const uint64_t stopTick = HighPerformanceTimer::ticks();
 
-		unsigned long long firstStartDelay = (unsigned long long)(-1);
-		unsigned long long lastStartDelay = 0ull;
+		uint64_t firstStartDelay = uint64_t(-1);
+		uint64_t lastStartDelay = 0ull;
 
 		for (size_t n = 0; n < ticks.size(); ++n)
 		{
@@ -197,7 +248,7 @@ bool TestWorker::testDelay(const double testDuration, Worker& worker)
 		maximalStopDelay = max(maximalStopDelay, stop);
 		averageStopDelay += stop;
 
-		iterations++;
+		++iterations;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -279,7 +330,7 @@ bool TestWorker::testStaticWorkerSumOfSquares(const double testDuration, Worker&
 	do
 	{
 		performance.start();
-		staticWorkerFunctionSumOfSquares(values.data(), 0u, numberValues);
+			staticWorkerFunctionSumOfSquares(values.data(), 0u, numberValues);
 		performance.stop();
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
@@ -292,7 +343,7 @@ bool TestWorker::testStaticWorkerSumOfSquares(const double testDuration, Worker&
 	do
 	{
 		multicorePerformance.start();
-		worker.executeFunction(Worker::Function::createStatic(&TestWorker::staticWorkerFunctionSumOfSquares, values.data(), 0u, 0u), 0, numberValues, 1u, 2u);
+			worker.executeFunction(Worker::Function::createStatic(&TestWorker::staticWorkerFunctionSumOfSquares, values.data(), 0u, 0u), 0, numberValues, 1u, 2u);
 		multicorePerformance.stop();
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
@@ -314,7 +365,9 @@ bool TestWorker::testStaticWorkerSumOfSquareRoots(const double testDuration, Wor
 	std::vector<double> values(numberValues);
 
 	for (unsigned int n = 0u; n < numberValues; ++n)
+	{
 		values[n] = 2u;
+	}
 
 	staticWorkerFunctionSumOfSquareRoots(values.data(), 0u, numberValues);
 
@@ -324,7 +377,7 @@ bool TestWorker::testStaticWorkerSumOfSquareRoots(const double testDuration, Wor
 	do
 	{
 		performance.start();
-		staticWorkerFunctionSumOfSquareRoots(values.data(), 0u, numberValues);
+			staticWorkerFunctionSumOfSquareRoots(values.data(), 0u, numberValues);
 		performance.stop();
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
@@ -337,7 +390,7 @@ bool TestWorker::testStaticWorkerSumOfSquareRoots(const double testDuration, Wor
 	do
 	{
 		multicorePerformance.start();
-		worker.executeFunction(Worker::Function::createStatic(&TestWorker::staticWorkerFunctionSumOfSquareRoots, values.data(), 0u, 0u), 0, numberValues, 1u, 2u);
+			worker.executeFunction(Worker::Function::createStatic(&TestWorker::staticWorkerFunctionSumOfSquareRoots, values.data(), 0u, 0u), 0, numberValues, 1u, 2u);
 		multicorePerformance.stop();
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
@@ -404,7 +457,7 @@ bool TestWorker::testSeparableAndAbortableFunction(Worker& worker)
 	worker.executeSeparableAndAbortableFunction(Worker::AbortableFunction::createStatic(&TestWorker::staticWorkerFunctionSeparableAndAbortable, &resultValue, 0u, 0u, &abortState), 0u, 8u, 1u, 2u, 3u, 2u);
 	const Timestamp stopTimestamp(true);
 
-	// Normally we should expect a delay ~1 milli seconds.
+	// Normally we should expect a delay ~1 milliseconds.
 	// However, Gtests are executed in parallel (e.g., 16 threads per worker * 10 tests).
 	// It seems that the test servers have too much load,
 	// so that we simply have to select an outstanding high test threshold ~0.5 seconds.
@@ -431,25 +484,25 @@ bool TestWorker::testSeparableAndAbortableFunction(Worker& worker)
 	return result;
 }
 
-void TestWorker::staticWorkerFunctionDelay(unsigned long long* time, const unsigned int first, const unsigned int number)
+void TestWorker::staticWorkerFunctionDelay(uint64_t* time, const unsigned int first, const unsigned int size)
 {
 	ocean_assert(time);
-	ocean_assert_and_suppress_unused(number == 1u, number);
+	ocean_assert_and_suppress_unused(size == 1u, size);
 
 	time[first] = HighPerformanceTimer::ticks();
 }
 
-void TestWorker::staticWorkerFunction(const unsigned int first, const unsigned int number)
+void TestWorker::staticWorkerFunction(const unsigned int first, const unsigned int size)
 {
-	Log::info() << "Static worker function call: [" << first << ", " << first + number - 1u<< "]: " << number << " elements";
+	Log::info() << "Static worker function call: [" << first << ", " << first + size - 1u << "]: " << size << " elements";
 }
 
-void TestWorker::staticWorkerFunctionSumOfSquares(unsigned int* values, const unsigned int first, const unsigned int number)
+void TestWorker::staticWorkerFunctionSumOfSquares(unsigned int* values, const unsigned int first, const unsigned int size)
 {
 	ocean_assert(values);
 
 	const unsigned int* v = values + first;
-	const unsigned int* const vEnd = v + number;
+	const unsigned int* const vEnd = v + size;
 
 	unsigned int result = 0;
 
@@ -462,12 +515,12 @@ void TestWorker::staticWorkerFunctionSumOfSquares(unsigned int* values, const un
 	*(values + first) = result;
 }
 
-void TestWorker::staticWorkerFunctionSumOfSquareRoots(double* values, const unsigned int first, const unsigned int number)
+void TestWorker::staticWorkerFunctionSumOfSquareRoots(double* values, const unsigned int first, const unsigned int size)
 {
 	ocean_assert(values);
 
 	const double* v = values + first;
-	const double* const vEnd = v + number;
+	const double* const vEnd = v + size;
 
 	double result = 0.0;
 

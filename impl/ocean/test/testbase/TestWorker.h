@@ -32,6 +32,12 @@ class OCEAN_TEST_BASE_EXPORT TestWorker : protected Worker
 		static bool test(const double testDuration);
 
 		/**
+		 * Tests the constructor.
+		 * @return True, if succeeded
+		 */
+		static bool testConstructor();
+
+		/**
 		 * Tests the worker delay.
 		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to be used
@@ -75,44 +81,44 @@ class OCEAN_TEST_BASE_EXPORT TestWorker : protected Worker
 		 * @return True, if succeeded
 		 */
 		static bool testSeparableAndAbortableFunction(Worker& worker);
-	
+
 	private:
 
 		/**
 		 * Static worker function.
-		 * @param time The time parameters
-		 * @param first First element
-		 * @param number Number elements
+		 * @param time The time parameters, must be valid
+		 * @param first The first element
+		 * @param size The number of elements, with range [1, infinity)
 		 */
-		static void staticWorkerFunctionDelay(unsigned long long* time, const unsigned int first, const unsigned int number);
+		static void staticWorkerFunctionDelay(uint64_t* time, const unsigned int first, const unsigned int size);
 
 		/**
 		 * Static worker function.
-		 * @param first First element
-		 * @param number Number elements
+		 * @param first The first element
+		 * @param size The number of elements, with range [1, infinity)
 		 */
-		static void staticWorkerFunction(const unsigned int first, const unsigned int number);
+		static void staticWorkerFunction(const unsigned int first, const unsigned int size);
 
 		/**
 		 * Static worker function to calculate the sum of square values.
-		 * @param values Values to be handled
-		 * @param first First element
-		 * @param number Number elements
+		 * @param values The values to be handled, must be valid
+		 * @param first The first element
+		 * @param size The number of elements, with range [1, infinity)
 		 */
-		static void staticWorkerFunctionSumOfSquares(unsigned int* values, const unsigned int first, const unsigned int number);
+		static void staticWorkerFunctionSumOfSquares(unsigned int* values, const unsigned int first, const unsigned int size);
 
 		/**
 		 * Static worker function to calculate the sum of square root values.
-		 * @param values Values to be handled
-		 * @param first First element
-		 * @param number Number elements
+		 * @param values The values to be handled, must be valid
+		 * @param first The first element
+		 * @param size The number of elements, with range [1, infinity)
 		 */
-		static void staticWorkerFunctionSumOfSquareRoots(double* values, const unsigned int first, const unsigned int number);
+		static void staticWorkerFunctionSumOfSquareRoots(double* values, const unsigned int first, const unsigned int size);
 
 		/**
 		 * Static abortable worker function.
 		 * @param result Function result
-		 * @param abort Abort state
+		 * @param abort The abort state
 		 * @return True, if succeeded and not aborted
 		 */
 		static bool staticWorkerFunctionAbortable(double* result, bool* abort);
@@ -120,9 +126,9 @@ class OCEAN_TEST_BASE_EXPORT TestWorker : protected Worker
 		/**
 		 * Static separable and abortable worker function.
 		 * @param result Function result
-		 * @param first First object to be handled
+		 * @param first The first object to be handled
 		 * @param size Number of objects to be handled
-		 * @param abort Abort state
+		 * @param abort The abort state
 		 * @return True, if succeeded and not aborted
 		 */
 		static bool staticWorkerFunctionSeparableAndAbortable(double* result, const unsigned int first, const unsigned int size, bool* abort);

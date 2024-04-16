@@ -47,7 +47,7 @@ class OCEAN_BASE_EXPORT Worker
 		/**
 		 * Definition of CPU load types.
 		 */
-		enum LoadType
+		enum LoadType : uint32_t
 		{
 			/// One CPU core is used.
 			TYPE_ONE_CORE,
@@ -58,7 +58,9 @@ class OCEAN_BASE_EXPORT Worker
 			/// All CPU cores are used.
 			TYPE_ALL_CORES,
 			/// For each CPU core two thread are used.
-			TYPE_DOUBLE_CORES
+			TYPE_DOUBLE_CORES,
+			/// A custom amount of CPU cores is used.
+			TYPE_CUSTOM
 		};
 
 		/**
@@ -189,10 +191,17 @@ class OCEAN_BASE_EXPORT Worker
 		/**
 		 * Creates a new worker object.
 		 * The load type defines the number of cores to be used, however the worker will not address more than 'maximalNumberCores'.
-		 * @param loadType Load type used for this worker
+		 * @param loadType Load type used for this worker, must not be TYPE_CUSTOM
 		 * @param maximalNumberCores The maximal number of cores to be used, with range [1, infinity)
 		 */
 		explicit Worker(const LoadType loadType = TYPE_ALL_CORES, const unsigned int maximalNumberCores = 16u);
+
+		/**
+		 * Creates a new worker object with a custom amount of worker threads.
+		 * @param numberCores The number of threads to use, with range [1, infinity)
+		 * @param loadType Must be TYPE_CUSTOM
+		 */
+		Worker(const unsigned int numberCores, const LoadType loadType);
 
 		/**
 		 * Destructs a worker object.

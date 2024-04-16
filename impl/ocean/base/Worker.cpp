@@ -133,6 +133,7 @@ void Worker::WorkerThread::threadRun()
 
 Worker::Worker(const LoadType loadType, const unsigned int maximalNumberCores)
 {
+	ocean_assert(loadType != TYPE_CUSTOM);
 	ocean_assert(maximalNumberCores >= 1u);
 
 	unsigned int processors = max(1u, Processor::get().cores());
@@ -158,6 +159,11 @@ Worker::Worker(const LoadType loadType, const unsigned int maximalNumberCores)
 		case TYPE_DOUBLE_CORES:
 			cores = max(1u, processors * 2u);
 			break;
+
+		case TYPE_CUSTOM:
+			ocean_assert(false && "Invalid type, using default behavior!");
+			cores = max(1u, processors);
+			break;
 	}
 
 	cores = min(cores, maximalNumberCores);
@@ -174,6 +180,35 @@ Worker::Worker(const LoadType loadType, const unsigned int maximalNumberCores)
 		const unsigned int workerSeedValue = RandomI::random32();
 
 		for (unsigned int n = 0u; n < cores; ++n)
+		{
+			WorkerThread* newWorkerThread = new WorkerThread(workerSeedValue, n);
+
+			ocean_assert(newWorkerThread != nullptr);
+
+			newWorkerThread->start(signals_[n]);
+
+			workerThreads_.emplace_back(newWorkerThread);
+		}
+	}
+}
+
+Worker::Worker(const unsigned int numberCores, const LoadType loadType)
+{
+	ocean_assert(numberCores >= 1u);
+	ocean_assert_and_suppress_unused(loadType == TYPE_CUSTOM, loadType);
+
+	workerThreads_.reserve(numberCores);
+
+	if (numberCores > 1u)
+	{
+		signals_.setSize(numberCores);
+
+		// we determine one global seed value for all threads in one worker
+		// however, each worker thread will receive an own seed value based on the global seed value and the index of the thread
+
+		const unsigned int workerSeedValue = RandomI::random32();
+
+		for (unsigned int n = 0u; n < numberCores; ++n)
 		{
 			WorkerThread* newWorkerThread = new WorkerThread(workerSeedValue, n);
 
