@@ -459,11 +459,10 @@ bool TestFREAKDescriptorT<tSize>::testCreateBlurredFramePyramid(const double tes
 
 			// the remaining layers are based on the blurred version of the finer pyramid layer and then downsampled
 
-			for (unsigned int n = 1u; n < blurredFramePyramid.layers(); ++n)
-			{
-				Frame finerLayer(blurredFramePyramid[n - 1u], Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
-				ocean_assert(finerLayer.isValid());
+			Frame finerLayer(yFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
+			for (unsigned int layerIndex = 1u; layerIndex < blurredFramePyramid.layers(); ++layerIndex)
+			{
 				if (kernelWidth <= finerLayer.width() && kernelHeight <= finerLayer.height()) // we skip the blur if the layer is already too small
 				{
 					if (!CV::FrameFilterGaussian::filter<uint8_t, uint32_t>(finerLayer.data<uint8_t>(), finerLayer.width(), finerLayer.height(), finerLayer.channels(), finerLayer.paddingElements(), kernelWidth, kernelHeight, -1.0f, &worker))
@@ -474,15 +473,20 @@ bool TestFREAKDescriptorT<tSize>::testCreateBlurredFramePyramid(const double tes
 
 				const CV::FramePyramid twoLayerPyramid(std::move(finerLayer), CV::FramePyramid::DM_FILTER_11, 2u, &worker);
 
-				Frame coarserLayer(blurredFramePyramid[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+				const Frame blurredFrameCoarserLayer(blurredFramePyramid[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+				Frame testCoarserLayer(twoLayerPyramid.coarsestLayer(), Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
-				for (unsigned int y = 0u; y < coarserLayer.height(); ++y)
+				ocean_assert(blurredFrameCoarserLayer.isFrameTypeCompatible(testCoarserLayer, false));
+
+				for (unsigned int y = 0u; y < blurredFrameCoarserLayer.height(); ++y)
 				{
-					if (memcmp(coarserLayer.constrow<void>(y), twoLayerPyramid.coarsestLayer().constrow<void>(y), coarserLayer.planeWidthBytes(0u)) != 0)
+					if (memcmp(testCoarserLayer.constrow<void>(y), blurredFrameCoarserLayer.constrow<void>(y), testCoarserLayer.planeWidthBytes(0u)) != 0)
 					{
 						allSucceeded = false;
 					}
 				}
+
+				finerLayer = std::move(testCoarserLayer);
 			}
 		}
 		else
