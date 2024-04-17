@@ -1087,8 +1087,7 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 		Frame::ACM_COPY_KEEP_LAYOUT_DO_NOT_COPY_PADDING_DATA,
 		Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA,
 		Frame::ACM_USE_OR_COPY,
-		Frame::ACM_USE_OR_COPY_KEEP_LAYOUT,
-		Frame::temporary_ACM_USE_KEEP_LAYOUT
+		Frame::ACM_USE_OR_COPY_KEEP_LAYOUT
 	};
 
 	// ensuring that an invalid frame can be copied but creates an invalid frame

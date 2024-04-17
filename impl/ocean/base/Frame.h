@@ -1819,9 +1819,6 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 			ACM_USE_OR_COPY = ACM_USE_KEEP_LAYOUT | ACM_COPY_REMOVE_PADDING_LAYOUT,
 			/// The source memory is used if the source is not owner of the memory; The source memory is copied if the source is owner of the memory, padding layout is preserved, but padding data is not copied.
 			ACM_USE_OR_COPY_KEEP_LAYOUT = ACM_USE_KEEP_LAYOUT | ACM_COPY_KEEP_LAYOUT_DO_NOT_COPY_PADDING_DATA,
-
-			/// Same value as ACM_USE_KEEP_LAYOUT, should be used when switching from LegacyFrame to Frame, so that we can find these places later again in the code.
-			temporary_ACM_USE_KEEP_LAYOUT = ACM_USE_KEEP_LAYOUT
 		};
 
 		/**
