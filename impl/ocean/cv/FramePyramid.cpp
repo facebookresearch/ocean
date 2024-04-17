@@ -329,18 +329,9 @@ bool FramePyramid::replace8BitPerChannel(const uint8_t* frame, const unsigned in
 	const FrameType layerFrameType(width, height, usePixelFormat, pixelOrigin);
 	ocean_assert(layerFrameType.isValid());
 
-	if (copyFirstLayer) // **TODO** simply once replace(const Frame&) supports copyFirstLayer
-	{
-		const Frame layerFrame(layerFrameType, frame, Frame::CM_USE_KEEP_LAYOUT, framePaddingElements, timestamp);
+	const Frame layerFrame(layerFrameType, frame, Frame::CM_USE_KEEP_LAYOUT, framePaddingElements, timestamp);
 
-		return replace(layerFrame, downsamplingMode, layers, true /*copyFirstLayer*/, worker);
-	}
-	else
-	{
-		Frame layerFrame(layerFrameType, frame, Frame::CM_USE_KEEP_LAYOUT, framePaddingElements, timestamp);
-
-		return replace(std::move(layerFrame), downsamplingMode, layers, worker);
-	}
+	return replace(layerFrame, downsamplingMode, layers, copyFirstLayer, worker);
 }
 
 bool FramePyramid::replace8BitPerChannel11(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const FrameType::PixelFormat pixelFormat, const Timestamp timestamp)
