@@ -383,7 +383,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameInterpolatorBilinear
 		/**
 		 * Validation function for the bilinear interpolation of 2D homogeneous image transformations (+ constant background color for unknown image content).
 		 * @param source The frame which will be interpolated based on the homography, must be valid
-		 * @param validationTarget The interpolated frame that will be validated, must the same pixel format and origin as 'paddingFrame' and must be valid
+		 * @param validationTarget The interpolated frame that will be validated, must the same pixel format and origin as 'source' and must be valid
 		 * @param source_H_target The 2D homogeneous image transformation that has been used to interpolate/warp the frame, transforming points defined in the interpolatedFrame to the source frame, i.e. pointFrame = transformation * pointInterpolatedFrame, must not be singular
 		 * @param backgroundColor The background color for all pixels for which no valid source pixel exists, one for each frame channel, must be valid
 		 * @param interpolatedFrameOrigin The origin of the interpolated frame defining the global position of the interpolated frame's pixel coordinate (0, 0), with range (-infinity, infinity)x(-infinity, infinity)

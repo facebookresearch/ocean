@@ -133,11 +133,9 @@ static void drawLines(Frame& frame, const FiniteLinesD2& lines, const unsigned c
 		}
 	}
 
-	Frame paddingFrame(frame, Frame::ACM_USE_KEEP_LAYOUT);
-
 	for (const FiniteLineD2& line : lines)
 	{
-		CV::Canvas::line<1u>(paddingFrame, Scalar(line.point0().x()), Scalar(line.point0().y()), Scalar(line.point1().x()), Scalar(line.point1().y()), color);
+		CV::Canvas::line<1u>(frame, Scalar(line.point0().x()), Scalar(line.point0().y()), Scalar(line.point1().x()), Scalar(line.point1().y()), color);
 	}
 }
 

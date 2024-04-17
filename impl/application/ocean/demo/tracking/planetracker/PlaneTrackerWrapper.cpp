@@ -384,12 +384,12 @@ bool PlaneTrackerWrapper::trackNewFrame(Frame& frame, double& time, const Vector
 		// draw x-axis
 		const Vector3 xAxisInWorld = originInWorld + Vector3(0.5, 0, 0);
 		const Vector2 xAxisInCamera = camera_.projectToImage<true>(pose, xAxisInWorld, false);
-		CV::Canvas::line<5u>(currentPaddingFrameRGB, originInCamera.x(), originInCamera.y(), xAxisInCamera.x(), xAxisInCamera.y(), red);
+		CV::Canvas::line<5u>(currentFrameRGB, originInCamera.x(), originInCamera.y(), xAxisInCamera.x(), xAxisInCamera.y(), red);
 
 		// draw y-axis
 		const Vector3 yAxisInWorld = originInWorld + Vector3(0, 0.5, 0);
 		const Vector2 yAxisInCamera = camera_.projectToImage<true>(pose, yAxisInWorld, false);
-		CV::Canvas::line<5u>(currentPaddingFrameRGB, originInCamera.x(), originInCamera.y(), yAxisInCamera.x(), yAxisInCamera.y(), green);
+		CV::Canvas::line<5u>(currentFrameRGB, originInCamera.x(), originInCamera.y(), yAxisInCamera.x(), yAxisInCamera.y(), green);
 
 		// draw z-axis
 		const Vector3 zAxisInWorld = originInWorld + Vector3(0, 0, 0.5);

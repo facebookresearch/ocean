@@ -42,11 +42,11 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT QuadDetector
 
 		/**
 		 * Detects boundary patterns (possible candidates) and filters them
-		 * @param yPaddingFrame The image in which boundary patterns will be searched, must be valid
-		 * @param frameBorder Defines a perimeter inside the image along the image border in which nothing will be processed (in pixels), range: [0, min(yPaddingFrame.width(), yPaddingFrame.height())/2)
+		 * @param yFrame The image in which boundary patterns will be searched, must be valid
+		 * @param frameBorder Defines a perimeter inside the image along the image border in which nothing will be processed (in pixels), range: [0, min(yFrame.width(), yFrame.height())/2)
 		 * @return A vector of detected boundary patterns
 		 */
-		static Quads detectQuads(const Frame& yPaddingFrame, const uint32_t frameBorder = 0u);
+		static Quads detectQuads(const Frame& yFrame, const uint32_t frameBorder = 0u);
 
 	protected:
 
@@ -57,7 +57,7 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT QuadDetector
 		 * @param lShapes A list of L-shapes, must be valid
 		 * @param finiteLines The list of finite lines from the list of L-shapes was constructed, must be valid
 		 * @param angleThreshold The maximum deviation from a right angle when comparing adjacent and connected L-shapes, range: [0, deg2rad(90)) (in radian)
-		 * @param frameBorder Defines a perimeter inside the image along the image border in which nothing will be processed (in pixels), range: [0, min(yPaddingFrame.width(), yPaddingFrame.height())/2)
+		 * @param frameBorder Defines a perimeter inside the image along the image border in which nothing will be processed (in pixels), range: [0, min(yFrame.width(), yFrame.height())/2)
 		 * @return A vector of detected boundary patterns
 		 */
 		static Quads extractQuads(const Frame& yFrame, const CV::Detector::ShapeDetector::LShapes& lShapes, const FiniteLines2& finiteLines, const Scalar angleThreshold, const uint32_t frameBorder);
