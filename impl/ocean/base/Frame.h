@@ -2335,26 +2335,12 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		inline Frame(Frame&& frame) noexcept;
 
 		/**
-		 * Move constructor for a Frame object.
-		 * @param legacyFrame The frame to be moved
-		 */
-		explicit Frame(LegacyFrame&& legacyFrame) noexcept;
-
-		/**
 		 * Creates a second version of a given frame.
 		 * Beware: The pixel memory will either be copied or used only, this depends on 'advancedCopyMode'.<br>
 		 * @param frame The frame to copy, can be invalid
 		 * @param advancedCopyMode The copy mode to be applied
 		 */
 		Frame(const Frame& frame, const AdvancedCopyMode advancedCopyMode) noexcept;
-
-		/**
-		 * Creates a second version of a given frame.
-		 * Beware: The pixel memory will either be copied or used only, this depends on 'advancedCopyMode'.<br>
-		 * @param legacyFrame The frame to copy
-		 * @param advancedCopyMode The copy mode to be applied
-		 */
-		Frame(const LegacyFrame& legacyFrame, const AdvancedCopyMode advancedCopyMode);
 
 		/**
 		 * Creates a frame with specified width, height, pixel format and frame origin and an optional padding.
@@ -2938,13 +2924,6 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		Frame& operator=(Frame&& right) noexcept;
 
 		/**
-		 * Move operator for Frame object.
-		 * @param right The right frame to moved
-		 * @return Reference to this frame
-		 */
-		Frame& operator=(LegacyFrame&& right) noexcept;
-
-		/**
 		 * Determines the number of padding elements at the end of a row of a plane for which the pixel format, the image width and the plane's stride (in bytes) are known.
 		 * @param pixelFormat The pixel format of the image, must be valid
 		 * @param imageWidth The width of the image in pixels, with range [0, infinity)
@@ -2969,22 +2948,9 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		/**
 		 * Deleted constructor to prevent misuse.
 		 * @param frame The frame to copy
-		 */
-		Frame(const LegacyFrame& frame) = delete;
-
-		/**
-		 * Deleted constructor to prevent misuse.
-		 * @param frame The frame to copy
 		 * @param copyData Determines whether this new frame will make an own copy of the given frame data or whether the pixel data is used only
 		 */
 		Frame(const Frame& frame, const bool copyData) = delete;
-
-		/**
-		 * Deleted constructor to prevent misuse.
-		 * @param frame The frame to copy
-		 * @param copyData Determines whether this new frame will make an own copy of the given frame data or whether the pixel data is used only
-		 */
-		Frame(const LegacyFrame& frame, const bool copyData) = delete;
 
 		/**
 		 * Deleted constructor to prevent misuse.
@@ -3008,13 +2974,6 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		Frame(const Frame& frame, const CopyMode copyMode) = delete;
 
 		/**
-		 * Deleted constructor to prevent misuse, use `AdvancedCopyMode` instead.
-		 * @param frame The frame to be copied
-		 * @param copyMode The copy mode which would be used to create the object
-		 */
-		Frame(const LegacyFrame& frame, const CopyMode copyMode) = delete;
-
-		/**
 		 * Deleted constructor to prevent misuse.
 		 * @param frameType The frame type which would be used
 		 * @param timestamp The timestamp which would be used to create the object
@@ -3027,13 +2986,6 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		 * @param timestamp The timestamp which would be used to create the object
 		 */
 		Frame(const Frame& frame, const Timestamp& timestamp) = delete;
-
-		/**
-		 * Deleted constructor to prevent misuse.
-		 * @param frame The frame to be copied
-		 * @param timestamp The timestamp which would be used to create the object
-		 */
-		Frame(const LegacyFrame& frame, const Timestamp& timestamp) = delete;
 
 		/**
 		 * Deleted constructor to prevent misuse, use `Frame(const FrameType& frameType, const T* data, const CopyMode copyMode, const unsigned int paddingElements = 0u, const Timestamp& timestamp = Timestamp(false));` instead.

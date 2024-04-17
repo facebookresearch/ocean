@@ -2178,15 +2178,6 @@ Frame::Frame(const Frame& frame) :
 	// nothing to do here
 }
 
-Frame::Frame(LegacyFrame&& frame) noexcept :
-	FrameType()
-{
-	*this = std::move(frame);
-
-	ocean_assert(planes_.size() >= 1);
-	ocean_assert(!frame.isValid());
-}
-
 Frame::Frame(const Frame& frame, const AdvancedCopyMode advancedCopyMode) noexcept
 {
 	if (frame.isValid())
@@ -2214,90 +2205,6 @@ Frame::Frame(const Frame& frame, const AdvancedCopyMode advancedCopyMode) noexce
 				release();
 				return;
 			}
-		}
-	}
-	else
-	{
-		// one invalid plane
-		planes_.assign(1, Plane());
-	}
-
-	ocean_assert(planes_.size() >= 1);
-}
-
-Frame::Frame(const LegacyFrame& frame, const AdvancedCopyMode advancedCopyMode) :
-	FrameType(frame.frameType()),
-	timestamp_(frame.timestamp()),
-	relativeTimestamp_(frame.relativeTimestamp())
-{
-	if (frame.isValid())
-	{
-		const unsigned int numberPlanes = FrameType::numberPlanes(frame.pixelFormat());
-
-		planes_.reserve(numberPlanes);
-
-		const unsigned int bytesPerDataType = frame.bytesPerDataType();
-		ocean_assert(bytesPerDataType >= 1u);
-
-		unsigned int memoryOffset = 0u;
-
-		unsigned int planeWidth;
-		unsigned int planeHeight;
-		unsigned int planeChannels;
-
-		for (unsigned int planeIndex = 0u; planeIndex < numberPlanes; ++planeIndex)
-		{
-			const bool planeResult = planeLayout(frame.pixelFormat(), frame.width(), frame.height(), planeIndex, planeWidth, planeHeight, planeChannels);
-			ocean_assert_and_suppress_unused(planeResult, planeResult);
-
-			ocean_assert(planeWidth != 0u);
-			ocean_assert(planeHeight != 0u);
-			ocean_assert(planeChannels != 0u);
-
-			constexpr unsigned int targetPaddingElements = 0u; // the source frame does not contain any padding elements
-			constexpr unsigned int sourcePaddingElements = 0u;
-			constexpr bool makeCopyOfPaddingData = false;
-
-			const bool useData = advancedCopyMode == ACM_USE_KEEP_LAYOUT || (advancedCopyMode == ACM_USE_OR_COPY && !frame.isOwner()) || (advancedCopyMode == ACM_USE_OR_COPY_KEEP_LAYOUT && !frame.isOwner());
-
-			if (useData)
-			{
-				ocean_assert(advancedCopyMode != ACM_COPY_REMOVE_PADDING_LAYOUT);
-				ocean_assert(advancedCopyMode != ACM_COPY_KEEP_LAYOUT_DO_NOT_COPY_PADDING_DATA);
-				ocean_assert(advancedCopyMode != ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-				ocean_assert(advancedCopyMode != ACM_USE_OR_COPY || !frame.isOwner());
-				ocean_assert(advancedCopyMode != ACM_USE_OR_COPY_KEEP_LAYOUT || !frame.isOwner());
-
-				if (frame.frameData != nullptr)
-				{
-					planes_.push_back(Plane(planeWidth, planeHeight, planeChannels, bytesPerDataType, (void*)((uint8_t*)(frame.frameData) + memoryOffset), sourcePaddingElements));
-				}
-				else
-				{
-					ocean_assert(frame.constFrameData != nullptr);
-					planes_.push_back(Plane(planeWidth, planeHeight, planeChannels, bytesPerDataType, (const void*)((const uint8_t*)(frame.constFrameData) + memoryOffset), sourcePaddingElements));
-				}
-			}
-			else
-			{
-				ocean_assert(advancedCopyMode != ACM_USE_KEEP_LAYOUT);
-				ocean_assert(advancedCopyMode != ACM_USE_OR_COPY || frame.isOwner());
-				ocean_assert(advancedCopyMode != ACM_USE_OR_COPY_KEEP_LAYOUT || frame.isOwner());
-
-				planes_.push_back(Plane(planeWidth, planeHeight, planeChannels, bytesPerDataType, (const void*)((const uint8_t*)(frame.constdata<void>()) + memoryOffset), targetPaddingElements, sourcePaddingElements, makeCopyOfPaddingData));
-			}
-
-			if (!planes_.back().isValid())
-			{
-				ocean_assert(false && "This should never happen!");
-
-				// we may have ran out of memory, so we need to release the entire frame
-
-				release();
-				return;
-			}
-
-			memoryOffset += planes_.back().size();
 		}
 	}
 	else
@@ -2948,102 +2855,6 @@ Frame& Frame::operator=(Frame&& right) noexcept
 		relativeTimestamp_ = right.relativeTimestamp_;
 		right.timestamp_.toInvalid();
 		right.relativeTimestamp_.toInvalid();
-	}
-
-	ocean_assert(planes_.size() >= 1);
-
-	return *this;
-}
-
-Frame& Frame::operator=(LegacyFrame&& right) noexcept
-{
-	ocean_assert((void*)(this) != (void*)(&right));
-
-	release();
-
-	if (right.isValid())
-	{
-		FrameType::operator=(right.frameType());
-
-		const unsigned int numberPlanes = FrameType::numberPlanes(right.pixelFormat());
-
-		planes_ = Planes(numberPlanes, Plane());
-
-		const unsigned int bytesPerDataType = right.bytesPerDataType();
-		ocean_assert(bytesPerDataType >= 1u);
-
-		unsigned int memoryOffset = 0u;
-
-		unsigned int planeWidth;
-		unsigned int planeHeight;
-		unsigned int planeChannels;
-
-		for (unsigned int planeIndex = 0u; planeIndex < numberPlanes; ++planeIndex)
-		{
-			const bool planeResult = planeLayout(right.pixelFormat(), right.width(), right.height(), planeIndex, planeWidth, planeHeight, planeChannels);
-			ocean_assert_and_suppress_unused(planeResult, planeResult);
-
-			Plane& plane = planes_[planeIndex];
-
-			ocean_assert(!plane.isValid());
-
-			if (planeIndex == 0u)
-			{
-				plane.allocatedData_ = right.allocatedData_;
-
-				if (right.frameData != nullptr)
-				{
-					plane.constData_ = right.frameData;
-					plane.data_ = right.frameData;
-				}
-				else
-				{
-					plane.constData_ = right.constFrameData;
-
-					ocean_assert(plane.data_ == nullptr);
-				}
-			}
-			else
-			{
-				ocean_assert(plane.allocatedData_ == nullptr);
-
-				if (right.frameData != nullptr)
-				{
-					plane.constData_ = right.frameData + memoryOffset;
-					plane.data_ = right.frameData + memoryOffset;
-				}
-				else
-				{
-					ocean_assert(right.constFrameData != nullptr);
-
-					plane.constData_ = right.constFrameData + memoryOffset;
-					ocean_assert(plane.data_ == nullptr);
-				}
-			}
-
-			plane.width_ = planeWidth;
-			plane.height_ = planeHeight;
-			plane.channels_ = planeChannels;
-			plane.elementTypeSize_ = bytesPerDataType;
-			plane.paddingElements_ = 0u;
-			plane.strideBytes_ = plane.calculateStrideBytes();
-			plane.bytesPerPixel_ = plane.calculateBytesPerPixel();
-
-			memoryOffset += plane.size();
-
-			ocean_assert(plane.isValid());
-		}
-
-		((FrameType&)right) = FrameType();
-
-		right.allocatedData_ = nullptr;
-		right.constFrameData = nullptr;
-		right.frameData = nullptr;
-
-		timestamp_ = right.frameTimestamp;
-		relativeTimestamp_ = right.frameRelativeTimestamp;
-		right.frameTimestamp.toInvalid();
-		right.frameRelativeTimestamp.toInvalid();
 	}
 
 	ocean_assert(planes_.size() >= 1);
