@@ -75,13 +75,6 @@ Frame CVUtilities::visualizeDistortion(const PinholeCamera& pinholeCamera, const
 	return result;
 }
 
-void CVUtilities::randomizeFrame(LegacyFrame& legacyFrame, RandomGenerator* randomGenerator, const bool limitedValueRange)
-{
-	Frame frame(legacyFrame, Frame::temporary_ACM_USE_KEEP_LAYOUT);
-
-	randomizeFrame(frame, false, randomGenerator, limitedValueRange);
-}
-
 template <>
 void CVUtilities::randomizMemory(Float16* data, const unsigned int widthElements, const unsigned int height, const unsigned int paddingElements, RandomGenerator& randomGenerator, const bool limitedValueRange)
 {

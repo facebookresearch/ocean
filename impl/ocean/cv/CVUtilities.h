@@ -137,15 +137,6 @@ class OCEAN_CV_EXPORT CVUtilities
 
 		/**
 		 * Creates randomized data for a given frame.
-		 * Integer pixel formats as well as float pixel formats receive values between 0 and 255 for each pixel and channel.
-		 * @param legacyFrame Frame to fill with randomized data, may be invalid
-		 * @param randomGenerator Optional explicit random generator to be used, nullptr to use any
-		 * @param limitedValueRange True, to use a value range of [0, 255] and [-128, 127] independently of the actual element data type; False, to use the full value range
-		 */
-		static void randomizeFrame(LegacyFrame& legacyFrame, RandomGenerator* randomGenerator = nullptr, const bool limitedValueRange = false);
-
-		/**
-		 * Creates randomized data for a given frame.
 		 * Integer pixel formats as well as float pixel formats will receive values in the range [0, 255] or [-128, 127] for each pixel and channel if 'limitedValueRange == true'
 		 * @param frame The frame to fill with randomized data, may be invalid
 		 * @param skipPaddingArea True, to leave elements within the padding area untouched; False, to randomize the entire memory
