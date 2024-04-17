@@ -1143,7 +1143,7 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 												expectedOwnerLayers.emplace(0u);
 											}
 
-											framePyramid = CV::FramePyramid(std::move(frame), downsamplingFunction, testLayers, useWorker);
+											framePyramid = CV::FramePyramid(downsamplingFunction, std::move(frame), testLayers, useWorker);
 										}
 										else
 										{
@@ -1161,7 +1161,7 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 									}
 									else
 									{
-										framePyramid = CV::FramePyramid(std::move(frame), downsamplingMode, testLayers, useWorker);
+										framePyramid = CV::FramePyramid(downsamplingMode, std::move(frame), testLayers, useWorker);
 
 										expectedOutsideMemoryBlockLayers.emplace(0u);
 									}
@@ -1192,7 +1192,7 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 												expectedOwnerLayers.emplace(0u);
 											}
 
-											localResult = framePyramid.replace(std::move(frame), downsamplingFunction, testLayers, useWorker);
+											localResult = framePyramid.replace(downsamplingFunction, std::move(frame), testLayers, useWorker);
 										}
 										else
 										{
@@ -1224,7 +1224,7 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 												expectedOwnerLayers.emplace(0u);
 											}
 
-											localResult = framePyramid.replace(std::move(frame), downsamplingMode, testLayers, useWorker);
+											localResult = framePyramid.replace(downsamplingMode, std::move(frame), testLayers, useWorker);
 										}
 										else
 										{
@@ -1999,7 +1999,7 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 				{
 					if (RandomI::boolean(randomGenerator))
 					{
-						localResult = framePyramid.replace(std::move(frame), downsamplingMode, layers, useWorker);
+						localResult = framePyramid.replace(downsamplingMode, std::move(frame), layers, useWorker);
 
 						expectedOwnerLayers.emplace(0u);
 						expectedOutsideMemoryBlockLayers.emplace(0u);

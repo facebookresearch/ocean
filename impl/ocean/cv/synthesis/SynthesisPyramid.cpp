@@ -48,8 +48,8 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 	}
 
 	// we reserve memory for a (full) frame pyramid
-	synthesisFramePyramid_.replace(frame.frameType(), true /*forceOwner*/);
-	synthesisMaskPyramid_.replace(mask.frameType(), true /*forceOwner*/);
+	synthesisFramePyramid_.replace(frame.frameType(), true /*forceOwner*/, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE);
+	synthesisMaskPyramid_.replace(mask.frameType(), true /*forceOwner*/, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE);
 
 	// we copy the finest pyramid layer information
 	synthesisFramePyramid_[0].copy(0, 0, frame);

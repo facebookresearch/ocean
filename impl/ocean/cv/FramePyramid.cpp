@@ -186,28 +186,6 @@ bool FramePyramid::replace(const Frame& frame, const DownsamplingMode downsampli
 	return replace(frame, downsamplingFunction(downsamplingMode, frame.pixelFormat()), layers, copyFirstLayer, worker);
 }
 
-bool FramePyramid::replace(Frame&& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, Worker* worker)
-{
-	ocean_assert(frame.isValid());
-	ocean_assert(layers >= 1u);
-
-	if (downsamplingMode == DM_FILTER_11 && !frame.hasAlphaChannel())
-	{
-		if (!replace8BitPerChannel11(frame, layers, false /*copyFirstLayer*/, worker))
-		{
-			return false;
-		}
-
-		layers_[0] = std::move(frame);
-
-		return true;
-	}
-
-	const FrameType::PixelFormat pixelFormat = frame.pixelFormat();
-
-	return replace(std::move(frame), downsamplingFunction(downsamplingMode, pixelFormat), layers, worker);
-}
-
 bool FramePyramid::replace(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool copyFirstLayer, Worker* worker)
 {
 	ocean_assert(frame.isValid());
@@ -270,7 +248,29 @@ bool FramePyramid::replace(const Frame& frame, const DownsamplingFunction& downs
 	return true;
 }
 
-bool FramePyramid::replace(Frame&& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, Worker* worker)
+bool FramePyramid::replace(const DownsamplingMode downsamplingMode, Frame&& frame, const unsigned int layers, Worker* worker)
+{
+	ocean_assert(frame.isValid());
+	ocean_assert(layers >= 1u);
+
+	if (downsamplingMode == DM_FILTER_11 && !frame.hasAlphaChannel())
+	{
+		if (!replace8BitPerChannel11(frame, layers, false /*copyFirstLayer*/, worker))
+		{
+			return false;
+		}
+
+		layers_[0] = std::move(frame);
+
+		return true;
+	}
+
+	const FrameType::PixelFormat pixelFormat = frame.pixelFormat();
+
+	return replace(downsamplingFunction(downsamplingMode, pixelFormat), std::move(frame), layers, worker);
+}
+
+bool FramePyramid::replace(const DownsamplingFunction& downsamplingFunction, Frame&& frame, const unsigned int layers, Worker* worker)
 {
 	ocean_assert(frame.isValid());
 	ocean_assert(layers >= 1u);

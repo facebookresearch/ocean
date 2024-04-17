@@ -211,7 +211,7 @@ FrameTracker::FrameTrackerComponent::IterationResult PatternTracker::FineTrackin
 		}
 
 		// we apply a simple Gaussian blur as we expect the pattern frame to have perfect edges which could be difficult for tracking
-		if (!patternFramePyramid_.replace(std::move(targetFrame), CV::FramePyramid::DM_FILTER_14641, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, scopedWorker()))
+		if (!patternFramePyramid_.replace(CV::FramePyramid::DM_FILTER_14641, std::move(targetFrame), CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, scopedWorker()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return IR_FAILED;

@@ -180,16 +180,6 @@ class OCEAN_CV_EXPORT FramePyramid
 
 		/**
 		 * Creates a frame pyramid based on a frame applying a custom downsampling.
-		 * The resulting pyramid will re-used the given frame (as finest pyramid layer); thus, ensure that the frame's memory is valid as long as this pyramid exists.
-		 * @param frame The frame for which the pyramid will be created, must be valid
-		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
-		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
-		 * @param worker Optional worker object to distribute the computation
-		 */
-		inline FramePyramid(Frame&& frame, const DownsamplingMode downsamplingMode, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
-
-		/**
-		 * Creates a frame pyramid based on a frame applying a custom downsampling.
 		 * The resulting pyramid will contain a copy of the given frame (as finest pyramid layer) or will just use the memory, depending on 'copyFirstLayer'.
 		 * @param frame The frame for which the pyramid will be created, must be valid
 		 * @param downsamplingFunction The custom function used to downsample the individual pyramid layers, must be valid
@@ -202,12 +192,22 @@ class OCEAN_CV_EXPORT FramePyramid
 		/**
 		 * Creates a frame pyramid based on a frame applying a custom downsampling.
 		 * The resulting pyramid will re-used the given frame (as finest pyramid layer); thus, ensure that the frame's memory is valid as long as this pyramid exists.
+		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
 		 * @param frame The frame for which the pyramid will be created, must be valid
-		 * @param downsamplingFunction The custom function used to downsample the individual pyramid layers, must be valid
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
 		 * @param worker Optional worker object to distribute the computation
 		 */
-		inline FramePyramid(Frame&& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
+		inline FramePyramid(const DownsamplingMode downsamplingMode, Frame&& frame, const unsigned int layers, Worker* worker);
+
+		/**
+		 * Creates a frame pyramid based on a frame applying a custom downsampling.
+		 * The resulting pyramid will re-used the given frame (as finest pyramid layer); thus, ensure that the frame's memory is valid as long as this pyramid exists.
+		 * @param downsamplingFunction The custom function used to downsample the individual pyramid layers, must be valid
+		 * @param frame The frame for which the pyramid will be created, must be valid
+		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
+		 * @param worker Optional worker object to distribute the computation
+		 */
+		inline FramePyramid(const DownsamplingFunction& downsamplingFunction, Frame&& frame, const unsigned int layers, Worker* worker);
 
 		/**
 		 * Creates a new frame pyramid based on an existing frame pyramid.
@@ -334,20 +334,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return True, if the frame pyramid was replaced
 		 * @see replace8BitPerChannel11().
 		 */
-		bool replace(const Frame& frame, const DownsamplingMode downsamplingMode, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, const bool copyFirstLayer = true, Worker* worker = nullptr);
-
-		/**
-		 * Replaces this frame pyramid based on a new frame.
-		 * The function will re-used the existing pyramid's memory if possible.<br>
-		 * The resulting pyramid will re-used the given frame (as finest pyramid layer); thus, ensure that the frame's memory is valid as long as this pyramid exists.
-		 * @param frame The frame for which the pyramid will be created, must be valid
-		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
-		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
-		 * @param worker Optional worker object to distribute the computation
-		 * @return True, if the frame pyramid was replaced
-		 * @see replace8BitPerChannel11().
-		 */
-		bool replace(Frame&& frame, const DownsamplingMode downsamplingMode, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
+		bool replace(const Frame& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, const bool copyFirstLayer, Worker* worker);
 
 		/**
 		 * Replaces this frame pyramid based on a new frame.
@@ -361,20 +348,33 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return True, if the frame pyramid was replaced
 		 * @see replace8BitPerChannel11().
 		 */
-		bool replace(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, const bool copyFirstLayer = true, Worker* worker = nullptr);
+		bool replace(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool copyFirstLayer, Worker* worker);
 
 		/**
 		 * Replaces this frame pyramid based on a new frame.
 		 * The function will re-used the existing pyramid's memory if possible.<br>
 		 * The resulting pyramid will re-used the given frame (as finest pyramid layer); thus, ensure that the frame's memory is valid as long as this pyramid exists.
+		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
 		 * @param frame The frame for which the pyramid will be created, must be valid
-		 * @param downsamplingFunction The custom function used to downsample the individual pyramid layers, must be valid
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if the frame pyramid was replaced
 		 * @see replace8BitPerChannel11().
 		 */
-		bool replace(Frame&& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
+		bool replace(const DownsamplingMode downsamplingMode, Frame&& frame, const unsigned int layers, Worker* worker);
+
+		/**
+		 * Replaces this frame pyramid based on a new frame.
+		 * The function will re-used the existing pyramid's memory if possible.<br>
+		 * The resulting pyramid will re-used the given frame (as finest pyramid layer); thus, ensure that the frame's memory is valid as long as this pyramid exists.
+		 * @param downsamplingFunction The custom function used to downsample the individual pyramid layers, must be valid
+		 * @param frame The frame for which the pyramid will be created, must be valid
+		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
+		 * @param worker Optional worker object to distribute the computation
+		 * @return True, if the frame pyramid was replaced
+		 * @see replace8BitPerChannel11().
+		 */
+		bool replace(const DownsamplingFunction& downsamplingFunction, Frame&& frame, const unsigned int layers, Worker* worker);
 
 		/**
 		 * Replaces this frame pyramid based on a new frame.
@@ -439,7 +439,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param forceOwner True, to force the pyramid to be the owner of the memory afterwards; False, to allow that the pyramid is not owning the memory (because the memory is managed outside of this pyramid)
 		 * @return True, if succeeded
 		 */
-		inline bool replace(const FrameType& frameType, const bool forceOwner, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE);
+		inline bool replace(const FrameType& frameType, const bool forceOwner, const unsigned int layers);
 
 		/**
 		 * Reduces the number of pyramid layers.
@@ -703,21 +703,21 @@ inline FramePyramid::FramePyramid(const Frame& frame, const DownsamplingMode dow
 	ocean_assert_and_suppress_unused(result, result);
 }
 
-inline FramePyramid::FramePyramid(Frame&& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, Worker* worker)
-{
-	const bool result = replace(std::move(frame), downsamplingMode, layers, worker);
-	ocean_assert_and_suppress_unused(result, result);
-}
-
 inline FramePyramid::FramePyramid(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool copyFirstLayer, Worker* worker)
 {
 	const bool result = replace(frame, downsamplingFunction, layers, copyFirstLayer, worker);
 	ocean_assert_and_suppress_unused(result, result);
 }
 
-inline FramePyramid::FramePyramid(Frame&& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, Worker* worker)
+inline FramePyramid::FramePyramid(const DownsamplingMode downsamplingMode, Frame&& frame, const unsigned int layers, Worker* worker)
 {
-	const bool result = replace(std::move(frame), downsamplingFunction, layers, worker);
+	const bool result = replace(downsamplingMode, std::move(frame), layers, worker);
+	ocean_assert_and_suppress_unused(result, result);
+}
+
+inline FramePyramid::FramePyramid(const DownsamplingFunction& downsamplingFunction, Frame&& frame, const unsigned int layers, Worker* worker)
+{
+	const bool result = replace(downsamplingFunction, std::move(frame), layers, worker);
 	ocean_assert_and_suppress_unused(result, result);
 }
 
