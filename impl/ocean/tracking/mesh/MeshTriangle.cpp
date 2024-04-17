@@ -254,11 +254,8 @@ bool MeshTriangle::rectifyTriangleAndIdentifyReferenceCorrespondences(
 	// computing this value
 	const unsigned int lookupTableBinSize = minmax(1u, (unsigned int)(std::min(textureSubregionWidth, textureSubregionHeight) / 4u), 50u);
 	const unsigned char kMaskValue = 0xFF;
-	Frame continuousYFrame(yFrame, Frame::ACM_USE_KEEP_LAYOUT);
-	continuousYFrame.makeContinuous();
-	rectifiedFrame.makeContinuous();
-	rectifiedFrameMask.makeContinuous();
-	CV::Advanced::FrameRectification::triangleObjectMaskIF8BitPerChannel<kNumChannels>(continuousYFrame.constdata<uint8_t>(), continuousYFrame.paddingElements(), continuousYFrame.pixelOrigin(), AnyCameraPinhole(pinholeCamera), pose_cameraFlipped_T_world, paddedScaledUvTriangle2 - textureSubregionTopLeft, paddedTriangle3, rectifiedFrame.data<uint8_t>(), rectifiedFrameMask.data<uint8_t>(), textureSubregionWidth, textureSubregionHeight, rectifiedFrame.paddingElements(), rectifiedFrameMask.paddingElements(), worker, kMaskValue, lookupTableBinSize);
+
+	CV::Advanced::FrameRectification::triangleObjectMaskIF8BitPerChannel<kNumChannels>(yFrame.constdata<uint8_t>(), yFrame.paddingElements(), yFrame.pixelOrigin(), AnyCameraPinhole(pinholeCamera), pose_cameraFlipped_T_world, paddedScaledUvTriangle2 - textureSubregionTopLeft, paddedTriangle3, rectifiedFrame.data<uint8_t>(), rectifiedFrameMask.data<uint8_t>(), textureSubregionWidth, textureSubregionHeight, rectifiedFrame.paddingElements(), rectifiedFrameMask.paddingElements(), worker, kMaskValue, lookupTableBinSize);
 	ocean_assert(rectifiedFrame.width() == textureSubregionWidth);
 	ocean_assert(rectifiedFrame.height() == textureSubregionHeight);
 

@@ -207,7 +207,7 @@ int main(int argc, char** argv)
 			oss << directory << filenamePrefices[rI] << std::setw(4) << std::setfill('0') << tagID << ".png";
 			const std::string outputFilename = oss.str();
 
-			const bool savedFile = Media::OpenImageLibraries::Image::writeImage(Frame(tagFrame, Frame::ACM_USE_KEEP_LAYOUT), outputFilename);
+			const bool savedFile = Media::OpenImageLibraries::Image::writeImage(tagFrame, outputFilename);
 
 			if (savedFile == false)
 			{
