@@ -108,21 +108,37 @@ bool TestSignal::test(const double testDuration)
 	allSucceeded = testSignalBasics() && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testSingleSignal() && allSucceeded;
+	allSucceeded = testSingleSignalStandard() && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testSingleSignalTimeout() && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testSingleSignalLoop() && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
 	Log::info() << " ";
 
 	allSucceeded = testAsyncFunction(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
 	Log::info() << " ";
 
 	allSucceeded = testMultipleSignals() && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
 	Log::info() << " ";
 
 	allSucceeded = testSubsetSignals() && allSucceeded;
@@ -148,14 +164,20 @@ TEST(TestSignal, SignalBasics)
 	EXPECT_TRUE(TestSignal::testSignalBasics());
 }
 
-#ifndef OCEAN_PLATFORM_BUILD_APPLE_IOS_SUMULATOR // iOS simulator does not allow for testing the precise signal performance
-
-TEST(TestSignal, SingleSignal)
+TEST(TestSignal, SingleSignalStandard)
 {
-	EXPECT_TRUE(TestSignal::testSingleSignal());
+	EXPECT_TRUE(TestSignal::testSingleSignalStandard());
 }
 
-#endif // OCEAN_PLATFORM_BUILD_APPLE_IOS_SUMULATOR
+TEST(TestSignal, SingleSignalTimeout)
+{
+	EXPECT_TRUE(TestSignal::testSingleSignalTimeout());
+}
+
+TEST(TestSignal, SingleSignalLoop)
+{
+	EXPECT_TRUE(TestSignal::testSingleSignalLoop());
+}
 
 TEST(TestSignal, AsyncFunction)
 {
@@ -211,87 +233,157 @@ bool TestSignal::testSignalBasics()
 	return allSucceeded;
 }
 
-bool TestSignal::testSingleSignal()
+bool TestSignal::testSingleSignalStandard()
 {
-	bool allSucceeded = true;
-
-	Log::info() << "Test single signal:";
+	Log::info() << "Test single signal (standard):";
 	Log::info() << " ";
+
+	bool allSucceeded = true;
 
 	Signal signal;
 	HighPerformanceTimer timer;
 
-	SignalThread thread(timer, 2.0, signal);
+	constexpr double interval = 2.0;
 
-	Log::info() << "...without timeout";
+	SignalThread thread(timer, interval, signal);
 
 	timer.start();
 	thread.startThread();
 
-	Timestamp startTimestamp(true);
-	signal.wait();
-	Timestamp stopTimestamp(true);
-
-	if (fabs(double(stopTimestamp - startTimestamp) - 2.0) < 0.1)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
-	}
-
-	thread.joinThread();
-
-
-	Log::info() << "...with timeout";
-	timer.start();
-	thread.startThread();
-
-	startTimestamp.toNow();
-	const bool waitResult = signal.wait(1000u);
-	stopTimestamp.toNow();
-
-	if (fabs(double(stopTimestamp - startTimestamp) - 1.0) < 0.1 && !waitResult)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-#ifdef _ANDROID
-		Log::info() << "The test failed, however as this function is not available on Android platforms we rate the result as expected.";
-#else
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
-#endif
-	}
-
-	thread.joinThread();
-
-
-	Log::info() << "...without timeout (multiple times)";
-
-	SignalThread secondThread(timer, 0.1, signal);
-
-	startTimestamp.toNow();
-	for (unsigned int n = 0u; n < 100u; ++n)
-	{
-		timer.start();
-		secondThread.startThread();
+	const Timestamp startTimestamp(true);
 		signal.wait();
-		secondThread.joinThread();
-	}
-	stopTimestamp.toNow();
+	const Timestamp stopTimestamp(true);
 
-	if (fabs(double(stopTimestamp - startTimestamp) - 10.0) < 0.5)
+	const double actualInterval = double(stopTimestamp - startTimestamp);
+	ocean_assert(actualInterval >= 0.0);
+
+	const double error = std::fabs(actualInterval - interval);
+
+	constexpr double threshold = 0.1;
+
+	if (error > threshold)
 	{
-		Log::info() << "Validation: succeeded.";
+		allSucceeded = false;
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded with error " << error << "s.";
 	}
 	else
 	{
-		Log::info() << "Validation: FAILED!";
+		Log::info() << "Validation: FAILED with error " << error << "s!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestSignal::testSingleSignalTimeout()
+{
+	Log::info() << "Test single signal with timeout:";
+	Log::info() << " ";
+
+	bool allSucceeded = true;
+
+	Signal signal;
+	HighPerformanceTimer timer;
+
+	constexpr double interval = 2.0;
+
+	SignalThread thread(timer, interval, signal);
+
+	timer.start();
+	thread.startThread();
+
+	constexpr double timeout = 1.0;
+	constexpr unsigned int timeoutMs = (unsigned int)(timeout * 1000.0);
+
+	const Timestamp startTimestamp(true);
+		const bool waitResult = signal.wait(timeoutMs);
+	const Timestamp stopTimestamp(true);
+
+	if (waitResult)
+	{
 		allSucceeded = false;
+	}
+
+	const double actualInterval = double(stopTimestamp - startTimestamp);
+	ocean_assert(actualInterval >= 0.0);
+
+	const double error = std::fabs(actualInterval - timeout);
+
+#if defined(OCEAN_USE_GTEST) && defined(OCEAN_PLATFORM_BUILD_APPLE)
+	constexpr double threshold = 0.5; // using an extremely generous threshold in case the test is not executed on a real device
+#else
+	constexpr double threshold = 0.1;
+#endif
+
+	if (error > threshold)
+	{
+		allSucceeded = false;
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded with error " << error << "s.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED with error " << error << "s!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestSignal::testSingleSignalLoop()
+{
+	Log::info() << "Test single signal with loop:";
+	Log::info() << " ";
+
+	bool allSucceeded = true;
+
+	Signal signal;
+	HighPerformanceTimer timer;
+
+	constexpr double interval = 0.1;
+	constexpr unsigned int iterations = 100u;
+
+	SignalThread thread(timer, interval, signal);
+
+	const Timestamp startTimestamp(true);
+
+		for (unsigned int n = 0u; n < iterations; ++n)
+		{
+			timer.start();
+
+			thread.startThread();
+				signal.wait();
+			thread.joinThread();
+		}
+
+	const Timestamp stopTimestamp(true);
+
+	const double actualDuration = double(stopTimestamp - startTimestamp);
+	ocean_assert(actualDuration >= 0.0);
+
+	constexpr double expectedDuration = interval * double(iterations);
+
+	const double error = std::fabs(actualDuration - expectedDuration);
+
+	constexpr double threshold = 0.5;
+
+	if (error > threshold)
+	{
+		allSucceeded = false;
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded with error " << error << "s.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED with error " << error << "s!";
 	}
 
 	return allSucceeded;

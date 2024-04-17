@@ -121,10 +121,22 @@ class OCEAN_TEST_BASE_EXPORT TestSignal
 		static bool testSignalBasics();
 
 		/**
-		 * Tests one signal.
+		 * Tests one signal without timeout.
 		 * @return True, if succeeded
 		 */
-		static bool testSingleSignal();
+		static bool testSingleSignalStandard();
+
+		/**
+		 * Tests one signal with timeout.
+		 * @return True, if succeeded
+		 */
+		static bool testSingleSignalTimeout();
+
+		/**
+		 * Tests one signal in a loop.
+		 * @return True, if succeeded
+		 */
+		static bool testSingleSignalLoop();
 
 		/**
 		 * Tests a pulse, wait, release cycle via an async function execution.
