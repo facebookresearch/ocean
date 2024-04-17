@@ -622,48 +622,6 @@ class OCEAN_CV_EXPORT FrameConverter
 				static bool isSupported(const FrameType& sourceType, const FrameType& targetType, const Options& options = Options());
 
 				/**
-				 * Deprecated: Use `bool convert(const Frame& source, const FrameType& targetType, Frame& target, const bool forceCopy, Worker* worker)` instead
-				 *
-				 * Converts a frame with arbitrary dimension, pixel format and pixel origin into a frame with the same dimension but different pixel format or pixel origin.
-				 * Beware: The timestamp of the target frame is undefined after calling this method.
-				 * @param source The source frame to convert, must be valid
-				 * @param targetType Frame type of the target frame
-				 * @param target The target frame which will be modified if the frame type is not compatible, or if the target frame is not owner of the frame data
-				 * @param forceCopy True, if the resulting target image is expected to be the owner of the image data, otherwise the source frame will be the owner of the image data if possible
-				 * @param worker Optional worker object to distribute the conversion computation to different CPU cores
-				 * @return True, if the frame type conversion is supported and succeeded
-				 *
-				 * Here is an example showing how to use this function:
-				 * @code
-				 * bool function(const LegacyFrame& anyFrame)
-				 * {
-				 *     // we do not know which pixel format (and pixel origin) the given frame has
-				 *     // however, we know that we need e.g., a grayscale frame with 8 bit
-				 *
-				 *     Frame yFrame8;
-				 *     if (!FrameConverter::Comfort::convert(anyFrame, FrameType(anyFrame, FrameType::FORMAT_Y8), yFrame8, false)) // 'false' as we try to avoid a copy if possible
-				 *     {
-				 *         // the given frame could not be converted into a Y8 frame, so we stop here
-				 *         return false;
-				 *     }
-				 *
-				 *     // from now on we have access to a Y8 frame, it may be
-				 *     // - a frame not owning the frame data but referencing the memory only (in case 'anyFrame' provided a plain Y8 block)
-				 *     // - a frame owning the frame data if the given image was converted to a Y8 frame
-				 *
-				 *     // we can use the memory as long as anyFrame exists
-				 *     const uint8_t* data = yFrame8.constdata<uint8_t>();
-				 *
-				 *     // do something here
-				 *
-				 *     return true;
-				 * }
-				 * @endcode
-				 * @see isSupported().
-				 */
-				static bool convert(const LegacyFrame& source, const FrameType& targetType, LegacyFrame& target, const bool forceCopy = true, Worker* worker = nullptr);
-
-				/**
 				 * Converts a frame with arbitrary dimension, pixel format and pixel origin into a frame with the same dimension but different pixel format or pixel origin.
 				 * @param source The source frame to convert, must be valid
 				 * @param targetType The frame type of the target frame, must be valid
@@ -737,19 +695,6 @@ class OCEAN_CV_EXPORT FrameConverter
 				 * @see isSupported(), convert().
 				 */
 				static bool convertAndCopy(const Frame& source, Frame& target, Worker* worker = nullptr, const Options& options = Options());
-
-				/**
-				 * Deprecated: Use `bool change(Frame& frame, const FrameType& targetType, const bool forceCopy = true, Worker* worker)` instead.
-				 *
-				 * Converts / changes a frame with arbitrary dimension, pixel format and pixel origin into a frame with the same dimension but different pixel format or pixel origin.
-				 * Beware: The timestamp of the target frame is undefined after calling this method.
-				 * @param frame The frame to convert
-				 * @param targetType Frame type of the target frame
-				 * @param forceCopy True, if the resulting target image is expected to are the owner of the image data, otherwise the source frame will be the owner of the image data if possible
-				 * @param worker Optional worker object to distribute the conversion computation to different CPU cores
-				 * @return True, if the frame type conversion is supported and succeeded
-				 */
-				static bool change(LegacyFrame& frame, const FrameType& targetType, const bool forceCopy = true, Worker* worker = nullptr);
 
 				/**
 				 * Converts / changes a frame with arbitrary dimension, pixel format and pixel origin into a frame with the same dimension but different pixel format or pixel origin.
