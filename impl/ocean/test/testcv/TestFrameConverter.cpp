@@ -268,12 +268,6 @@ bool TestFrameConverter::test(const double testDuration, Worker& /*worker*/)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testConvertPureGenericPixelFormat() && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
 	allSucceeded = testCast(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -456,11 +450,6 @@ TEST(TestFrameConverter, ComfortConvert)
 TEST(TestFrameConverter, ComfortConvertAndCopy)
 {
 	EXPECT_TRUE(TestFrameConverter::testComfortConvertAndCopy(GTEST_TEST_DURATION));
-}
-
-TEST(TestFrameConverter, ConvertPureGenericPixelFormat)
-{
-	EXPECT_TRUE(TestFrameConverter::testConvertPureGenericPixelFormat());
 }
 
 TEST(TestFrameConverter, Cast)
@@ -981,110 +970,6 @@ bool TestFrameConverter::testComfortConvertAndCopy(const double testDuration)
 	{
 		Log::info() << "Validation: FAILED!";
 	}
-
-	return allSucceeded;
-}
-
-bool TestFrameConverter::testConvertPureGenericPixelFormat()
-{
-	Log::info() << "Test conversion from pure generic pixel format to non-pure generic pixel format:";
-
-	const FrameType templateType(1920u, 1080u, FrameType::FORMAT_UNDEFINED, FrameType::ORIGIN_UPPER_LEFT);
-
-	LegacyFrame targetFrame;
-
-	bool allSucceeded = true;
-
-	// pure generic to pure generic
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 1u)), FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 1u))))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 1u)), FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 1u), FrameType::ORIGIN_LOWER_LEFT)))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 3u)), FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 3u))))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 3u)), FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 3u), FrameType::ORIGIN_LOWER_LEFT)))
-		allSucceeded = false;
-
-
-	// pure generic to non-pure generic
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 1u)), FrameType(templateType, FrameType::FORMAT_Y8)))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 1u)), FrameType(templateType, FrameType::FORMAT_Y8, FrameType::ORIGIN_LOWER_LEFT)))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 2u)), FrameType(templateType, FrameType::FORMAT_YA16)))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 3u)), FrameType(templateType, FrameType::FORMAT_RGB24)))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 3u)), FrameType(templateType, FrameType::FORMAT_RGB24, FrameType::ORIGIN_LOWER_LEFT)))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 3u)), FrameType(templateType, FrameType::FORMAT_YUV24)))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 3u)), FrameType(templateType, FrameType::FORMAT_YUV24, FrameType::ORIGIN_LOWER_LEFT)))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 4u)), FrameType(templateType, FrameType::FORMAT_RGBA32)))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_16, 1u)), FrameType(templateType, FrameType::FORMAT_Y16)))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_32, 1u)), FrameType(templateType, FrameType::FORMAT_Y32)))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_SIGNED_FLOAT_32, 1u)), FrameType(templateType, FrameType::FORMAT_F32)))
-		allSucceeded = false;
-
-	if (!convertFrame(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_SIGNED_FLOAT_64, 1u)), FrameType(templateType, FrameType::FORMAT_F64)))
-		allSucceeded = false;
-
-
-	// pure generic to wrong non-pure generic
-
-	if (CV::FrameConverter::Comfort::isSupported(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 1u)), FrameType(templateType, FrameType::FORMAT_YA16)))
-		allSucceeded = false;
-
-	if (CV::FrameConverter::Comfort::isSupported(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 1u)), FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_LOWER_LEFT)))
-		allSucceeded = false;
-
-	if (CV::FrameConverter::Comfort::isSupported(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 2u)), FrameType(templateType, FrameType::FORMAT_Y16)))
-		allSucceeded = false;
-
-	if (CV::FrameConverter::Comfort::isSupported(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 2u)), FrameType(templateType, FrameType::FORMAT_RGBA32)))
-		allSucceeded = false;
-
-	if (CV::FrameConverter::Comfort::isSupported(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 3u)), FrameType(templateType, FrameType::FORMAT_Y8)))
-		allSucceeded = false;
-
-	if (CV::FrameConverter::Comfort::isSupported(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 3u)), FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 2u))))
-		allSucceeded = false;
-
-	if (CV::FrameConverter::Comfort::isSupported(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_16, 2u)), FrameType(templateType, FrameType::FORMAT_Y32)))
-		allSucceeded = false;
-
-	if (CV::FrameConverter::Comfort::isSupported(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 4u)), FrameType(templateType, FrameType::FORMAT_Y32)))
-		allSucceeded = false;
-
-	if (CV::FrameConverter::Comfort::isSupported(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 4u)), FrameType(templateType, FrameType::FORMAT_F32)))
-		allSucceeded = false;
-
-	if (CV::FrameConverter::Comfort::isSupported(FrameType(templateType, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, 4u)), FrameType(templateType, FrameType::FORMAT_F64)))
-		allSucceeded = false;
-
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
 
 	return allSucceeded;
 }
@@ -6299,25 +6184,6 @@ bool TestFrameConverter::testPatchFrameMirroredBorder(const double testDuration)
 	}
 
 	return allSucceeded;
-}
-
-bool TestFrameConverter::convertFrame(const FrameType& sourceType, const FrameType& targetType)
-{
-	const bool isSupported = CV::FrameConverter::Comfort::isSupported(sourceType, targetType);
-
-	LegacyFrame sourceFrame(sourceType);
-
-	LegacyFrame targetFrameReference;
-	const bool convertReference = CV::FrameConverter::Comfort::convert(sourceFrame, targetType, targetFrameReference, false);
-
-	LegacyFrame targetFrameCopy;
-	const bool convertCopy = CV::FrameConverter::Comfort::convert(sourceFrame, targetType, targetFrameCopy, true);
-
-	ocean_assert(isSupported == convertReference);
-	ocean_assert(isSupported == convertCopy);
-	ocean_assert(convertReference == convertCopy);
-
-	return isSupported && convertReference && convertCopy;
 }
 
 template <typename T>

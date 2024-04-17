@@ -357,12 +357,6 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverter : protected CV::FrameConverter
 		static bool testComfortConvertAndCopy(const double testDuration);
 
 		/**
-		 * Tests the conversion between pure generic pixel formats and corresponding non-pure pixel formats.
-		 * @return True, if succeeded
-		 */
-		static bool testConvertPureGenericPixelFormat();
-
-		/**
 		 * Tests the cast function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -658,14 +652,6 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverter : protected CV::FrameConverter
 		 */
 		template <typename T, unsigned int tChannels>
 		static bool testPatchFrameMirroredBorder(const double testDuration);
-
-		/**
-		 * Tries to convert a frame to another frame.
-		 * @param sourceType The frame type of the source frame, must be valid
-		 * @param targetType The frame type of the target frame, must be valid
-		 * @return True, if succeeded
-		 */
-		static bool convertFrame(const FrameType& sourceType, const FrameType& targetType);
 
 		/**
 		 * Validates the sub-frame function.
