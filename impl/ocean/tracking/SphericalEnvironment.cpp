@@ -1105,7 +1105,7 @@ bool SphericalEnvironment::nonHomographyMask(const CV::FramePyramid& previousFra
 {
 	Frame adjustedPreviousFrame;
 	Frame adjustedPreviousMask;
-	if (!CV::Advanced::PanoramaFrame::cameraFrame2cameraFrame(previousCamera, previousOrientation, Frame(previousFramePyramid.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT), Frame(), currentCamera, currentOrientation, adjustedPreviousFrame, adjustedPreviousMask, maskValue, 20u, worker))
+	if (!CV::Advanced::PanoramaFrame::cameraFrame2cameraFrame(previousCamera, previousOrientation, previousFramePyramid.finestLayer(), Frame(), currentCamera, currentOrientation, adjustedPreviousFrame, adjustedPreviousMask, maskValue, 20u, worker))
 	{
 		return false;
 	}

@@ -40,16 +40,12 @@ bool DescriptorHandling::replaceDescriptorPyramid(const CV::FramePyramid& yFrame
 
 	if (yFramePyramidForDescriptors.layers() != yFramePyramid.layers())
 	{
-		const Frame tmpFrame(yFramePyramid.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
-
-		yFramePyramidForDescriptors = CV::FramePyramid(tmpFrame, yFramePyramid.layers(), true /*coypFirstLayer*/, worker);
+		yFramePyramidForDescriptors = CV::FramePyramid(yFramePyramid.finestLayer(), yFramePyramid.layers(), true /*coypFirstLayer*/, worker);
 	}
 
 	for (unsigned int n = 0u; n < yFramePyramid.layers(); ++n)
 	{
-		Frame yFrameLayerForDescriptors(yFramePyramidForDescriptors[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-
-		CV::FrameFilterGaussian::filter(Frame(yFramePyramid[n], Frame::temporary_ACM_USE_KEEP_LAYOUT), yFrameLayerForDescriptors, 3u, worker);
+		CV::FrameFilterGaussian::filter(yFramePyramid[n], yFramePyramidForDescriptors[n], 3u, worker);
 	}
 
 	return true;

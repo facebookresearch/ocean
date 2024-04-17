@@ -473,7 +473,7 @@ bool HomographyImageAligner::alignNewFrame(Frame& frame, double& time, SquareMat
 
 		SquareMatrix3 internalCurrentHomographyPrevious;
 		const Scalar squarePixelErrorThreshold = pixelErrorThreshold_ * pixelErrorThreshold_;
-		if (Tracking::HomographyImageAlignmentSparse::determineHomographyWithPoints(Frame(previousFramePyramid_.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT), previousFramePyramid_, currentFramePyramid_, CV::SubRegion(), trackingNumberFeaturePoints_, trackingPatchSize_, trackingCoarsestLayerRadius_, true, trackingSubPixelIterations_, internalCurrentHomographyPrevious, scopedWorker(), previousPoints, currentPoints, validPointIndices, squarePixelErrorThreshold, trackingZeroMean_))
+		if (Tracking::HomographyImageAlignmentSparse::determineHomographyWithPoints(previousFramePyramid_.finestLayer(), previousFramePyramid_, currentFramePyramid_, CV::SubRegion(), trackingNumberFeaturePoints_, trackingPatchSize_, trackingCoarsestLayerRadius_, true, trackingSubPixelIterations_, internalCurrentHomographyPrevious, scopedWorker(), previousPoints, currentPoints, validPointIndices, squarePixelErrorThreshold, trackingZeroMean_))
 		{
 			scopedPerformance.release();
 

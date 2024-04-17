@@ -915,7 +915,7 @@ bool FREAKDescriptorT<tSize>::computeDescriptor(const FramePyramid& pyramid, con
 		for (; cellId < 12u; ++cellId)
 		{
 			ocean_assert(pointPyramidLevel + 1u < pyramid.layers());
-			const Frame nextFramePyramidLayer(pyramid.layer(pointPyramidLevel + 1u), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			const Frame& nextFramePyramidLayer = pyramid.layer(pointPyramidLevel + 1u);
 
 			const float cellX = point[0] + scaleFactors[scaleLevel] * warpedCellX[cellId];
 			const float cellY = point[1] + scaleFactors[scaleLevel] * warpedCellY[cellId];
@@ -940,7 +940,7 @@ bool FREAKDescriptorT<tSize>::computeDescriptor(const FramePyramid& pyramid, con
 		}
 
 		// Loop 1
-		const Frame currentFramePyramidLayer(pyramid.layer(pointPyramidLevel), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& currentFramePyramidLayer = pyramid.layer(pointPyramidLevel);
 
 		ocean_assert(cellId == 12u || computationFailed == true);
 		for (; computationFailed == false && cellId < 24u; ++cellId)
@@ -1134,7 +1134,7 @@ bool FREAKDescriptorT<tSize>::computeLocalDeformationMatrixAndOrientation(const 
 
 	constexpr float cornerX[4] = {-7.0f, -7.0f, 7.0f, 7.0f};
 	constexpr float cornerY[4] = {-7.0f, 7.0f, -7.0f, 7.0f};
-	const Frame framePyramidLevel(pyramid.layer(pointPyramidLevel), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+	const Frame& framePyramidLevel = pyramid.layer(pointPyramidLevel);
 
 	for (size_t i = 0; i < 4; ++i)
 	{
@@ -1314,7 +1314,7 @@ bool FREAKDescriptorT<tSize>::extractHarrisCornersAndComputeDescriptors(const Fr
 			break;
 		}
 
-		const Frame pyramidLayer(pyramid[layer], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& pyramidLayer = pyramid[layer];
 
 		if (pyramidLayer.width() < Scalar(2) * border + Scalar(10) || pyramidLayer.height() < Scalar(2) * border + Scalar(10))
 		{

@@ -71,9 +71,9 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 		// individual initialization strategies exist with individual visual results
 		if (iterationIndex == 0u)
 		{
-			Frame frame(synthesisFramePyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			const Frame mask(synthesisMaskPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			const Frame filter = synthesisFilterPyramid_.isValid() ? Frame(synthesisFilterPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT) : Frame();
+			Frame& frame = synthesisFramePyramid_[layerIndex];
+			const Frame& mask = synthesisMaskPyramid_[layerIndex];
+			const Frame& filter = synthesisFilterPyramid_.isValid() ? synthesisFilterPyramid_[layerIndex] : Frame();
 
 			ocean_assert(frame.isValid() && mask.isValid() && FrameType(frame, mask.pixelFormat()) == mask.frameType());
 			ocean_assert(!filter.isValid() || filter.frameType() == mask.frameType());
@@ -199,9 +199,9 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 		{
 			// now as we have a synthesis information from the previous (coarser layer) we can propagate the information to this current layer
 
-			Frame frame(synthesisFramePyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			const Frame mask(synthesisMaskPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			const Frame filter = synthesisFilterPyramid_.isValid() ? Frame(synthesisFilterPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT) : Frame();
+			Frame& frame = synthesisFramePyramid_[layerIndex];
+			const Frame& mask = synthesisMaskPyramid_[layerIndex];
+			const Frame& filter = synthesisFilterPyramid_.isValid() ? synthesisFilterPyramid_[layerIndex] : Frame();
 
 			ocean_assert(frame.isValid() && mask.isValid() && FrameType(frame, mask.pixelFormat()) == mask.frameType());
 			ocean_assert(!filter.isValid() || filter.frameType() == mask.frameType());
@@ -307,8 +307,8 @@ bool SynthesisPyramidI1::applyInpainting(const Constraints& constraints, RandomG
 		// individual initialization strategies exist with individual visual results
 		if (iterationIndex == 0u)
 		{
-			Frame frame(synthesisFramePyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			const Frame mask(synthesisMaskPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			Frame& frame = synthesisFramePyramid_[layerIndex];
+			const Frame& mask = synthesisMaskPyramid_[layerIndex];
 			ocean_assert(frame.isValid() && mask.isValid());
 
 			const PixelBoundingBox& boundingBox = synthesisBoundingBoxes_[layerIndex];
@@ -325,8 +325,8 @@ bool SynthesisPyramidI1::applyInpainting(const Constraints& constraints, RandomG
 		{
 			// now as we have a synthesis information from the previous (coarser layer) we can propagate the information to this current layer
 
-			Frame frame(synthesisFramePyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			const Frame mask(synthesisMaskPyramid_[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			Frame& frame = synthesisFramePyramid_[layerIndex];
+			const Frame& mask = synthesisMaskPyramid_[layerIndex];
 			ocean_assert(frame.isValid() && mask.isValid());
 
 			const PixelBoundingBox& boundingBox = synthesisBoundingBoxes_[layerIndex];

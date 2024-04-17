@@ -52,12 +52,12 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 	synthesisMaskPyramid_.replace(mask.frameType(), true /*forceOwner*/);
 
 	// we copy the finest pyramid layer information
-	Frame(synthesisFramePyramid_[0], Frame::temporary_ACM_USE_KEEP_LAYOUT).copy(0, 0, frame);
-	Frame(synthesisMaskPyramid_[0], Frame::temporary_ACM_USE_KEEP_LAYOUT).copy(0, 0, mask);
+	synthesisFramePyramid_[0].copy(0, 0, frame);
+	synthesisMaskPyramid_[0].copy(0, 0, mask);
 
 	if (filter)
 	{
-		Frame(synthesisFilterPyramid_[0], Frame::temporary_ACM_USE_KEEP_LAYOUT).copy(0, 0, filter);
+		synthesisFilterPyramid_[0].copy(0, 0, filter);
 	}
 
 	// now we down-sample the frame data as long as no mask pixel exists anymore
@@ -66,10 +66,10 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 	{
 		bool hasMaskPixel = false;
 
-		Frame nextPyramidLayerFrame(synthesisFramePyramid_[n + 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-		Frame nextPyramidLayerMask(synthesisMaskPyramid_[n + 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		Frame& nextPyramidLayerFrame = synthesisFramePyramid_[n + 1u];
+		Frame& nextPyramidLayerMask = synthesisMaskPyramid_[n + 1u];
 
-		if (!Advanced::AdvancedFrameShrinker::divideByTwo(Frame(synthesisFramePyramid_[n], Frame::temporary_ACM_USE_KEEP_LAYOUT), nextPyramidLayerFrame, Frame(synthesisMaskPyramid_[n], Frame::temporary_ACM_USE_KEEP_LAYOUT), nextPyramidLayerMask, false, &hasMaskPixel, worker))
+		if (!Advanced::AdvancedFrameShrinker::divideByTwo(synthesisFramePyramid_[n], nextPyramidLayerFrame, synthesisMaskPyramid_[n], nextPyramidLayerMask, false, &hasMaskPixel, worker))
 		{
 			return false;
 		}
@@ -114,7 +114,7 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 	{
 		for (unsigned int n = 0u; n < synthesisFramePyramid_.layers() - 1u; ++n)
 		{
-			Frame frameLayer(synthesisFramePyramid_[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			Frame& frameLayer = synthesisFramePyramid_[n];
 			Frame maskLayer(synthesisMaskPyramid_[n], Frame::ACM_COPY_REMOVE_PADDING_LAYOUT); // we copy the mask layer, otherwise it would be changed during filtering
 
 			Advanced::AdvancedFrameFilterGaussian::Comfort::filter(frameLayer, maskLayer, 3u, 0x00u, worker);
@@ -124,7 +124,7 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 	// apply smoothing on coarsest layer (n-1)
 	if (binomialFilterOnCoarsestLayers)
 	{
-		Frame frameLayer(synthesisFramePyramid_.coarsestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		Frame& frameLayer = synthesisFramePyramid_.coarsestLayer();
 		Frame maskLayer(synthesisMaskPyramid_.coarsestLayer(), Frame::ACM_COPY_REMOVE_PADDING_LAYOUT); // we copy the mask layer, otherwise it would be changed during filtering
 
 		Advanced::AdvancedFrameFilterGaussian::Comfort::filter(frameLayer, maskLayer, 3u, 0x00u, worker);
@@ -135,7 +135,7 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 
 	for (unsigned int n = 0u; n < synthesisFramePyramid_.layers(); ++n)
 	{
-		Frame layerMask(synthesisMaskPyramid_[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		Frame& layerMask = synthesisMaskPyramid_[n];
 		Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(layerMask.data<uint8_t>(), layerMask.width(), layerMask.height(), layerMask.paddingElements(), 3u, false, synthesisBoundingBoxes_[n], worker);
 	}
 
@@ -173,7 +173,7 @@ void SynthesisPyramid::determineBoundingBoxes(Worker* worker)
 
 	for (unsigned int n = synthesisMaskPyramid_.layers() - 1u; n != (unsigned int)(-1); --n)
 	{
-		const Frame mask(synthesisMaskPyramid_[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& mask = synthesisMaskPyramid_[n];
 
 		if (n == synthesisMaskPyramid_.layers() - 1u)
 		{
@@ -199,7 +199,7 @@ PixelBoundingBoxes SynthesisPyramid::slowDetermineBoundingBoxes(const FramePyram
 
 	for (unsigned int n = maskPyramid.layers() - 1u; n != (unsigned int)(-1); --n)
 	{
-		const Frame mask(maskPyramid[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& mask = maskPyramid[n];
 
 		result[n] = MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
 	}

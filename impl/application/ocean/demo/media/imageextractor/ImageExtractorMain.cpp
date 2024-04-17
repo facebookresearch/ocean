@@ -99,7 +99,7 @@ class FrameHandler
 
 							filename = outputDirectoryAndBaseFilename_ + image_suffix_ + String::toAString(level, 2u) + "_" + filenameIndex + ".png";
 
-							if (!Media::Utilities::saveImage(Frame(pyramid[level], Frame::temporary_ACM_USE_KEEP_LAYOUT), filename, false))
+							if (!Media::Utilities::saveImage(pyramid[level], filename, false))
 							{
 								std::cout << "Could not save " << filename << std::endl;
 							}

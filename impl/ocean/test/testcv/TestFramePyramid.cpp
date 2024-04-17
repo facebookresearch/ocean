@@ -1544,7 +1544,7 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 
 		UnorderedIndexSet32 readOnlyLayers;
 
-		if (!validateConstructFromFrame(newPyramid, downsamplingMode, Frame(framePyramid[firstSourceLayerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT), expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+		if (!validateConstructFromFrame(newPyramid, downsamplingMode, framePyramid[firstSourceLayerIndex], expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
 		{
 			allSucceeded = false;
 		}
@@ -2625,7 +2625,7 @@ bool TestFramePyramid::validateFramePyramid(const Frame& frame, const CV::FrameP
 			return false;
 		}
 
-		const Frame pyramidLayer(framePyramid[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& pyramidLayer = framePyramid[n];
 
 		const size_t planeWidthBytes = size_t(coarserLayer.planeWidthBytes(0u));
 		ocean_assert(planeWidthBytes != 0);

@@ -255,8 +255,8 @@ bool ImageQuality::multiScaleStructuralSimilarity8BitPerChannel(const uint8_t* c
 		double meanSSIM = -1.0;
 		double meanContrast = -1.0;
 
-		const Frame layerX(pyramidX[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-		const Frame layerY(pyramidY[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& layerX = pyramidX[n];
+		const Frame& layerY = pyramidY[n];
 
 		if (!structuralSimilarity8BitPerChannel(layerX.constdata<uint8_t>(), pyramidY[n].constdata<uint8_t>(), layerX.width(), layerX.height(), channels, layerX.paddingElements(), layerY.paddingElements(), meanSSIM, meanContrast, worker))
 		{

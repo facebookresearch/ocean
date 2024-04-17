@@ -413,20 +413,20 @@ bool QRCodeTracker3D::trackQRCode(const SharedAnyCamera& previousSharedAnyCamera
 	{
 		if (QRCodesDebugElements::get().isElementActive(QRCodesDebugElements::EI_TRACKING_FINDER_PATTERNS))
 		{
-			const Frame yFrames[2] =
+			const Frame* yFrames[2] =
 			{
-				Frame(framePyramidA.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT),
-				Frame(framePyramidB.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT)
+				&framePyramidA.finestLayer(),
+				&framePyramidB.finestLayer(),
 			};
 
-			debugFrameStereo = Frame(FrameType(yFrames[0].width() * 2u, yFrames[0].height(), FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT));
+			debugFrameStereo = Frame(FrameType(yFrames[0]->width() * 2u, yFrames[0]->height(), FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT));
 
-			debugFrameA = debugFrameStereo.subFrame(0u, 0u, yFrames[0].width(), yFrames[0].height());
-			debugFrameB = debugFrameStereo.subFrame(yFrames[0].width(), 0u, yFrames[0].width(), yFrames[0].height());
+			debugFrameA = debugFrameStereo.subFrame(0u, 0u, yFrames[0]->width(), yFrames[0]->height());
+			debugFrameB = debugFrameStereo.subFrame(yFrames[0]->width(), 0u, yFrames[0]->width(), yFrames[0]->height());
 
 			for (size_t iFrame = 0; iFrame < 2; ++iFrame)
 			{
-				const Frame& yFrame = yFrames[iFrame];
+				const Frame& yFrame = *yFrames[iFrame];
 				ocean_assert(yFrame.isValid());
 
 				Frame rgbFrame;
@@ -600,7 +600,7 @@ bool QRCodeTracker3D::trackQRCode(const SharedAnyCamera& previousSharedAnyCamera
 		const unsigned int cropSize = std::max(29u, (unsigned int)(imageModuleSizeInPixels * Scalar(27) + Scalar(0.5)));
 		const Scalar cropSize_2 = Scalar(cropSize) * Scalar(0.5);
 
-		const Frame frame(framePyramid.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& frame = framePyramid.finestLayer();
 
 		for (size_t iPoint = 0; iPoint < trackedImagePoints.size(); ++iPoint)
 		{
@@ -790,8 +790,8 @@ bool QRCodeTracker3D::trackQRCode(const SharedAnyCamera& previousSharedAnyCamera
 
 			if (triangulateFinderPatternsStereo(sharedAnyCameraA, sharedAnyCameraB, world_T_device, device_T_cameraA, device_T_cameraB, finderPatternTripletA, finderPatternTripletB, worldPoints, averageFinderPatternCenterDistance))
 			{
-				const Frame yFrameA = Frame(framePyramidA.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
-				const Frame yFrameB = Frame(framePyramidB.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+				const Frame& yFrameA = framePyramidA.finestLayer();
+				const Frame& yFrameB = framePyramidB.finestLayer();
 
 				CV::Detector::QRCodes::QRCode code;
 				HomogenousMatrix4 world_T_code;

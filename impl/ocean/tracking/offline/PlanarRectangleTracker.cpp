@@ -327,7 +327,7 @@ PlanarRectangleTracker::FramePyramidTrackerComponent::IterationResult PlanarRect
 			return IR_FAILED;
 		}
 
-		const Frame currentFrame(currentFramePyramid_.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& currentFrame = currentFramePyramid_.finestLayer();
 		Frame initialRectifiedFrame(FrameType(currentFrame, initialRectifiedCamera_.width(), initialRectifiedCamera_.height()));
 
 		// the homography transforming points in the rectified frame into points in the current camera frame
@@ -390,7 +390,7 @@ PlanarRectangleTracker::FramePyramidTrackerComponent::IterationResult PlanarRect
 		for (unsigned int n = 0u; n < poseOptimizationIterations; ++n)
 		{
 			HomogenousMatrix4 optimizedPose;
-			if (!optimizePose(Frame(currentFramePyramid_.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT), currentPose, optimizedPose, scopedWorker(), n + 1u == poseOptimizationIterations ? &initialImagePoints : nullptr, n + 1u == poseOptimizationIterations ? &currentImagePoints : nullptr, &imagePointsReliable))
+			if (!optimizePose(currentFramePyramid_.finestLayer(), currentPose, optimizedPose, scopedWorker(), n + 1u == poseOptimizationIterations ? &initialImagePoints : nullptr, n + 1u == poseOptimizationIterations ? &currentImagePoints : nullptr, &imagePointsReliable))
 			{
 				break;
 			}

@@ -528,7 +528,7 @@ bool HomographyTracker::addNewFeaturePointsToPyramidLayer(const CV::FramePyramid
 	ocean_assert(layer < yFramePyramid.layers());
 	ocean_assert(layer < pointsPyramid.size());
 
-	const Frame layerFrame(yFramePyramid[layer], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+	const Frame& layerFrame = yFramePyramid[layer];
 	Vectors2& layerPoints = pointsPyramid[layer];
 
 	if (layerPoints.size() >= size_t(minimalFeatures))

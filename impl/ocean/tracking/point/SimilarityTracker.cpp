@@ -339,7 +339,7 @@ bool SimilarityTracker::determineFeaturePoints(const CV::FramePyramid& framePyra
 
 		// we have a valid frame pyramid of a previous frame
 
-		const Frame previousPyramidLayer(framePyramid[usedLayerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& previousPyramidLayer = framePyramid[usedLayerIndex];
 
 		const unsigned int layerSizeFactor = CV::FramePyramid::sizeFactor(usedLayerIndex);
 

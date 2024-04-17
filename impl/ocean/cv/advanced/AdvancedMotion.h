@@ -633,7 +633,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackArbitraryPointsBidirecti
 
 	for (unsigned int n = 0u; n < maximalTrackingLayers; ++n)
 	{
-		const Frame previousLayer(previousPyramid[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& previousLayer = previousPyramid[n];
 
 		if (previousLayer.width() < tSize || previousLayer.height() < tSize)
 		{
@@ -1194,7 +1194,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackReliableReferencePoints(
 	ocean_assert(horizontalBins >= 1u);
 	ocean_assert(verticalBins >= 1u);
 
-	const Frame previousFrame(previousPyramid.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+	const Frame& previousFrame = previousPyramid.finestLayer();
 
 	const unsigned int width = previousFrame.width();
 	const unsigned int height = previousFrame.height();
@@ -1530,8 +1530,8 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 
 	for (unsigned int layerIndex = numberLayers - 1u; layerIndex < numberLayers; --layerIndex)
 	{
-		const Frame previousLayer((*previousPyramid)[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-		const Frame nextLayer((*nextPyramid)[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& previousLayer = (*previousPyramid)[layerIndex];
+		const Frame& nextLayer = (*nextPyramid)[layerIndex];
 
 		const uint8_t* const previousLayerData = previousLayer.constdata<uint8_t>();
 		const uint8_t* const nextLayerData = nextLayer.constdata<uint8_t>();
@@ -1676,8 +1676,8 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 
 	for (int l = int(numberLayers) - 1; l >= 0; --l)
 	{
-		const Frame previousFrame((*previousPyramid)[l], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-		const Frame currentFrame((*currentPyramid)[l], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame previousFrame = (*previousPyramid)[l];
+		const Frame currentFrame = (*currentPyramid)[l];
 
 		const uint8_t* const previousFrameData = previousFrame.constdata<uint8_t>();
 		const uint8_t* const currentFrameData = currentFrame.constdata<uint8_t>();

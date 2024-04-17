@@ -325,25 +325,24 @@ class ScopedPlugin
 
 	if (imageOutputValue.isString())
 	{
-		Frame rightPaddingFrame(rightTrackingFrame, Frame::temporary_ACM_USE_KEEP_LAYOUT);
-
-		CV::FrameBlender::blend<true>(Frame(leftTrackingFrame, Frame::temporary_ACM_USE_KEEP_LAYOUT), rightPaddingFrame, 0x80, WorkerPool::get().conditionalScopedWorker(multicore)());
-
-		CV::FrameConverter::Comfort::change(rightPaddingFrame, FrameType(rightPaddingFrame, FrameType::FORMAT_RGB24), WorkerPool::get().conditionalScopedWorker(multicore)());
-
-		for (size_t n = 0; n < leftFeatures.size(); ++n)
+		if (CV::FrameBlender::blend<true>(leftTrackingFrame, rightTrackingFrame, 0x80, WorkerPool::get().conditionalScopedWorker(multicore)()))
 		{
-			if (validFeatures[n])
-			{
-				CV::Canvas::line<1u>(rightPaddingFrame, leftFeatures[n], rightFeatures[n], CV::Canvas::green(rightPaddingFrame.pixelFormat()));
-			}
-			else if (outputnotmatched)
-			{
-				CV::Canvas::point<5u>(rightPaddingFrame, leftFeatures[n], CV::Canvas::red(rightPaddingFrame.pixelFormat()));
-			}
-		}
+			CV::FrameConverter::Comfort::change(rightTrackingFrame, FrameType(rightTrackingFrame, FrameType::FORMAT_RGB24), WorkerPool::get().conditionalScopedWorker(multicore)());
 
-		Media::Utilities::saveImage(rightPaddingFrame, imageOutputValue.stringValue(), false);
+			for (size_t n = 0; n < leftFeatures.size(); ++n)
+			{
+				if (validFeatures[n])
+				{
+					CV::Canvas::line<1u>(rightTrackingFrame, leftFeatures[n], rightFeatures[n], CV::Canvas::green(rightTrackingFrame.pixelFormat()));
+				}
+				else if (outputnotmatched)
+				{
+					CV::Canvas::point<5u>(rightTrackingFrame, leftFeatures[n], CV::Canvas::red(rightTrackingFrame.pixelFormat()));
+				}
+			}
+
+			Media::Utilities::saveImage(rightTrackingFrame, imageOutputValue.stringValue(), false);
+		}
 	}
 
 	if (outputValue.isNull() && imageOutputValue.isNull())

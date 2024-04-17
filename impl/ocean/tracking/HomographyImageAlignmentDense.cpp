@@ -1507,8 +1507,8 @@ bool HomographyImageAlignmentDense::optimizeAlignmentMultiResolution(const CV::F
 
 	for (int layerIndex = int(coarsestLayerIndex); layerIndex >= 0; --layerIndex)
 	{
-		const Frame templateFrame(templateFramePyramid[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-		const Frame currentFrame(currentFramePyramid[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& templateFrame = templateFramePyramid[layerIndex];
+		const Frame& currentFrame = currentFramePyramid[layerIndex];
 
 		const CV::SubRegion& templateSubRegion = templateSubRegions[layerIndex];
 

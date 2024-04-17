@@ -425,8 +425,8 @@ void Motion<TMetric>::trackPointsInPyramidMirroredBorderSubset(const FramePyrami
 
 	for (unsigned int layerIndex = numberLayers - 1u; layerIndex < numberLayers; --layerIndex)
 	{
-		const Frame previousFrame((*previousPyramid)[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-		const Frame currentFrame((*currentPyramid)[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& previousFrame = (*previousPyramid)[layerIndex];
+		const Frame& currentFrame = (*currentPyramid)[layerIndex];
 
 		const unsigned int previousWidth = previousFrame.width();
 		const unsigned int previousHeight = previousFrame.height();

@@ -312,8 +312,8 @@ bool QRCodeDetector3D::detectQRCodesWithPyramids(const SharedAnyCameras& sharedA
 
 		const Frames layerFrames =
 		{
-			Frame(framePyramids[0].layer(layerIndex), Frame::temporary_ACM_USE_KEEP_LAYOUT),
-			Frame(framePyramids[1].layer(layerIndex), Frame::temporary_ACM_USE_KEEP_LAYOUT),
+			Frame(framePyramids[0].layer(layerIndex), Frame::ACM_USE_KEEP_LAYOUT),
+			Frame(framePyramids[1].layer(layerIndex), Frame::ACM_USE_KEEP_LAYOUT),
 		};
 
 		const SharedAnyCameras layerCameras =

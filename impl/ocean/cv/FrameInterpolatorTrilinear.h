@@ -248,11 +248,11 @@ inline void FrameInterpolatorTrilinear::interpolate8BitPerChannel(const FramePyr
 	const unsigned int indexFine = (unsigned int)position.z();
 	const unsigned int indexCoarse = indexFine + (indexFine + 1u < framePyramid.layers() ? 1u : 0u);
 
-	const Frame frameFine(framePyramid.layer(indexFine), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+	const Frame& frameFine = framePyramid.layer(indexFine);
 	const unsigned int widthFine = frameFine.width();
 	const unsigned int heightFine = frameFine.height();
 
-	const Frame frameCoarse(framePyramid.layer(indexCoarse), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+	const Frame& frameCoarse = framePyramid.layer(indexCoarse);
 	const unsigned int widthCoarse = frameCoarse.width();
 	const unsigned int heightCoarse = frameCoarse.height();
 

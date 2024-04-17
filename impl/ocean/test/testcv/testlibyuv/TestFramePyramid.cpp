@@ -121,8 +121,8 @@ void TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 			for (unsigned int n = 1u; n < framePyramid.layers(); ++n)
 			{
-				const Frame finerLayer(framePyramid[n - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-				Frame coarserLayer(framePyramid[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+				const Frame& finerLayer = framePyramid[n - 1u];
+				Frame& coarserLayer = framePyramid[n];
 
 				libyuv::ARGBScale(finerLayer.constdata<uint8_t>(), finerLayer.strideBytes(0u), finerLayer.width(), finerLayer.height(), coarserLayer.data<uint8_t>(), coarserLayer.strideBytes(0u), coarserLayer.width(), coarserLayer.height(), libyuv::kFilterBilinear);
 			}

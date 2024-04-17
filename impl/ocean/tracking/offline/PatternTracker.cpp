@@ -35,7 +35,7 @@ PatternTracker::RoughPoseBaseComponent::RoughPoseBaseComponent(PatternTracker& p
 	camera_(pinholeCamera),
 	subTracker_(false)
 {
-	featureMap_ = Blob::FeatureMap(Frame(parent_.patternFrame_, Frame::temporary_ACM_USE_KEEP_LAYOUT), parent_.patternDimension_, Scalar(1), true, 0u, WorkerPool::get().scopedWorker()());
+	featureMap_ = Blob::FeatureMap(parent_.patternFrame_, parent_.patternDimension_, Scalar(1), true, 0u, WorkerPool::get().scopedWorker()());
 
 	subTracker_.setUsedFeatures(2000u, 4000u);
 	subTracker_.setFeatureMap(featureMap_, true);
@@ -283,7 +283,7 @@ bool PatternTracker::FineTrackingComponent::optimizePose(const PinholeCamera& pi
 	}
 
 	// this layer of the pattern will be used for pose optimization
-	const Frame trackerPatternLayer(patternFramePyramid_[layer], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+	const Frame& trackerPatternLayer = patternFramePyramid_[layer];
 
 	HomogenousMatrix4 intermediatePose(pose);
 	for (unsigned int i = 0u; i < iterations_; ++i)

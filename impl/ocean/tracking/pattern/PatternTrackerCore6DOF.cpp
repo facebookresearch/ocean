@@ -1773,7 +1773,7 @@ bool PatternTrackerCore6DOF::optimizePoseByRectification(const PinholeCamera& pi
 
 	if (pattern.isPlanar())
 	{
-		const Frame pyramidLayer(currentFramePyramid.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& pyramidLayer = currentFramePyramid.finestLayer();
 
 		// Perform a planar rectification with a lookup table.
 		CV::Advanced::FrameRectification::planarRectangleObjectMaskIF8BitPerChannel<1u>(pyramidLayer.constdata<uint8_t>(), pyramidLayer.paddingElements(), pyramidLayer.pixelOrigin(), AnyCameraPinhole(pinholeCamera), roughPoseIF, pattern.corner0(), pattern.corner3(), pattern.corner1(), rectifiedFrame.data<uint8_t>(), rectifiedFrameMask.data<uint8_t>(), rectifiedFrame.width(), rectifiedFrame.height(), rectifiedFrame.paddingElements(), rectifiedFrameMask.paddingElements(), worker, 0xFF, 50u);

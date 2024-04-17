@@ -473,7 +473,7 @@ bool TestFREAKDescriptorT<tSize>::testCreateBlurredFramePyramid(const double tes
 
 				const CV::FramePyramid twoLayerPyramid(std::move(finerLayer), CV::FramePyramid::DM_FILTER_11, 2u, &worker);
 
-				const Frame blurredFrameCoarserLayer(blurredFramePyramid[layerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+				const Frame& blurredFrameCoarserLayer = blurredFramePyramid[layerIndex];
 				Frame testCoarserLayer(twoLayerPyramid.coarsestLayer(), Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
 				ocean_assert(blurredFrameCoarserLayer.isFrameTypeCompatible(testCoarserLayer, false));

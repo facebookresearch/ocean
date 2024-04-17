@@ -99,7 +99,7 @@ bool PatchTracker::trackFrame(const Index32 frameIndex, const AnyCamera& anyCame
 
 	if (debugFrame != nullptr)
 	{
-		Frame yFrame(yCurrentFramePyramid->finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		Frame yFrame(yCurrentFramePyramid->finestLayer(), Frame::ACM_USE_KEEP_LAYOUT);
 		yFrame.setPixelFormat(FrameType::FORMAT_Y8);
 
 		if (CV::FrameConverter::Comfort::convert(yFrame, FrameType(yFrame, FrameType::FORMAT_RGB24), *debugFrame, CV::FrameConverter::CP_ALWAYS_COPY, worker, CV::FrameConverter::Options(true)))
@@ -264,8 +264,7 @@ bool PatchTracker::trackVRSFile(const std::string& vrsFile, Database& database, 
 
 		for (unsigned int n = 0u; n < yCurrentFramePyramid->layers(); ++n) // **TODO**
 		{
-			Frame layer(yCurrentFramePyramid->layer(n), Frame::temporary_ACM_USE_KEEP_LAYOUT);
-			CV::FrameFilterGaussian::filter(layer, 5u, WorkerPool::get().scopedWorker()());
+			CV::FrameFilterGaussian::filter(yCurrentFramePyramid->layer(n), 5u, WorkerPool::get().scopedWorker()());
 		}
 
 		patchTracker.trackFrame(frameIndex, *currentAnyCamera, world_T_camera, yCurrentFramePyramid, yFrame.timestamp(), WorkerPool::get().scopedWorker()());
@@ -597,7 +596,7 @@ void PatchTracker::addUnlocatedPoints(const Index32 frameIndex, const AnyCamera&
 	constexpr unsigned int detectorThreshold = 15u;
 
 	reusableHarrisCorners.clear();
-	CV::Detector::HarrisCornerDetector::detectCorners(Frame(yCurrentFramePyramid.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT), detectorThreshold, true, reusableHarrisCorners, true, worker);
+	CV::Detector::HarrisCornerDetector::detectCorners(yCurrentFramePyramid.finestLayer(), detectorThreshold, true, reusableHarrisCorners, true, worker);
 
 	std::sort(reusableHarrisCorners.begin(), reusableHarrisCorners.end());
 

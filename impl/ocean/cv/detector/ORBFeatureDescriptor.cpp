@@ -30,7 +30,7 @@ void ORBFeatureDescriptor::detectReferenceFeaturesAndDetermineDescriptors(const 
 
 	for (unsigned int i = 0u; i < framePyramid.layers(); ++i)
 	{
-		const Frame layer(framePyramid[i], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& layer = framePyramid[i];
 		ocean_assert(FrameType::formatIsGeneric(layer.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
 
 		ORBFeatures orbFeatures;

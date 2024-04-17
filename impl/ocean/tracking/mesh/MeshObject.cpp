@@ -58,7 +58,7 @@ MeshObject::MeshObject(const Frame& yTextureFrame, const UVTextureMapping::MeshU
 	for (unsigned int pyramidLevel = 0u; pyramidLevel < texturePyramid_.layers(); ++pyramidLevel)
 	{
 		const Scalar scale_originalTextureFromDownsampledTexture = Scalar(texturePyramid_.sizeFactor(pyramidLevel));
-		const Frame scaledImage(texturePyramid_[pyramidLevel], Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		const Frame& scaledImage = texturePyramid_[pyramidLevel];
 
 		const Vectors2 keypoints = CV::Detector::FeatureDetector::determineHarrisPoints(scaledImage.constdata<uint8_t>(), scaledImage.width(), scaledImage.height(), scaledImage.paddingElements(), CV::SubRegion(), 0u, 0u, 6u, worker);
 
@@ -366,7 +366,7 @@ bool MeshObject::optimizePoseByRectification(const MeshObjectTrackingOptions& op
 	ocean_assert(pose_world_T_camera_.isValid());
 	ocean_assert(currentFramePyramid.layers() > 0u);
 
-	const Frame yFrame(currentFramePyramid.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+	const Frame& yFrame = currentFramePyramid.finestLayer();
 	ocean_assert(yFrame.channels() == 1u);
 
 	HomogenousMatrix4 pose_cameraFlipped_T_world(PinholeCamera::standard2InvertedFlipped(pose_world_T_camera_));

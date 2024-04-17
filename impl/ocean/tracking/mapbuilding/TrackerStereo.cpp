@@ -262,7 +262,7 @@ void TrackerStereo::createDebuggingElementFeatureCorrespondences(const AnyCamera
 
 	for (unsigned int nCamera = 0u; nCamera < 2u; ++nCamera)
 	{
-		Frame yFrame = nCamera == 0u ? Frame(yPreviousFramePyramidA_.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT) : Frame(yPreviousFramePyramidB_.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+		Frame yFrame = nCamera == 0u ? Frame(yPreviousFramePyramidA_.finestLayer(), Frame::ACM_USE_KEEP_LAYOUT) : Frame(yPreviousFramePyramidB_.finestLayer(), Frame::ACM_USE_KEEP_LAYOUT);
 		Frame& debugFrame = nCamera == 0u ? debugFrameA : debugFrameB;
 
 		yFrame.setPixelFormat(FrameType::FORMAT_Y8);

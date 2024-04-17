@@ -99,7 +99,7 @@ SLAMPlaneTracker::FramePyramidTrackerComponent::IterationResult SLAMPlaneTracker
 		for (unsigned int n = 0u; n < 2u; ++n)
 		{
 			SquareMatrix3 optimizedAbsoluteHomography;
-			if (!optimizeHomography(componentInitialFramePyramid_, Frame(currentFramePyramid_.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT), componentParent_.initialSubRegion_, absoluteHomography, optimizedAbsoluteHomography, initialImagePoints, currentImagePoints, scopedWorker()))
+			if (!optimizeHomography(componentInitialFramePyramid_, currentFramePyramid_.finestLayer(), componentParent_.initialSubRegion_, absoluteHomography, optimizedAbsoluteHomography, initialImagePoints, currentImagePoints, scopedWorker()))
 			{
 				// the tracking region could not been tracked from the previous frame to the current frame
 				// thus, we expect the tracking region to be invisible from now on and we can finish here
@@ -537,7 +537,7 @@ SLAMPlaneTracker::FramePyramidTrackerComponent::IterationResult SLAMPlaneTracker
 		ocean_assert(componentObjectPoints_[0].empty() && componentObjectPoints_[1].empty());
 
 		const Box2 boundingBox(componentInitialSubRegion_.boundingBox());
-		componentInitialImagePoints_ = CV::Detector::FeatureDetector::determineHarrisPoints(Frame(currentFramePyramid_.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT), componentInitialSubRegion_, 0u, 0u, 20u, scopedWorker());
+		componentInitialImagePoints_ = CV::Detector::FeatureDetector::determineHarrisPoints(currentFramePyramid_.finestLayer(), componentInitialSubRegion_, 0u, 0u, 20u, scopedWorker());
 		componentInitialImagePoints_ = Geometry::SpatialDistribution::distributeAndFilter(componentInitialImagePoints_.data(), componentInitialImagePoints_.size(), boundingBox.left(), boundingBox.top(), boundingBox.width(), boundingBox.height(), 20u, 20u);
 
 		for (unsigned int p = 0u; p < 2u; ++p)
@@ -755,7 +755,7 @@ SLAMPlaneTracker::FramePyramidTrackerComponent::IterationResult SLAMPlaneTracker
 		for (unsigned int n = 0u; n < 3u; ++n)
 		{
 			HomogenousMatrix4 optimizedPose;
-			if (!optimizePose(componentInitialFramePyramid_, Frame(currentFramePyramid_.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT), componentParent_.initialSubRegion_, componentInitialPose_, currentPose, optimizedPose, previousImagePoints, currentImagePoints, scopedWorker()))
+			if (!optimizePose(componentInitialFramePyramid_, currentFramePyramid_.finestLayer(), componentParent_.initialSubRegion_, componentInitialPose_, currentPose, optimizedPose, previousImagePoints, currentImagePoints, scopedWorker()))
 			{
 				// the tracking region could not been tracked from the previous frame to the current frame
 				// thus, we expect the tracking region to be invisible from now on and we can finish here
