@@ -1535,27 +1535,18 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 			}
 		}
 
+		const CV::FramePyramid newPyramid(framePyramid, firstSourceLayerIndex, sourceLayers, copyData);
+
+		if (!verifyPyramidOwnership(newPyramid, true, copyData))
 		{
-			// test const pyramid
-
-			const CV::FramePyramid newPyramid(framePyramid, firstSourceLayerIndex, sourceLayers, copyData);
-
-			if (!verifyPyramidOwnership(newPyramid, true, copyData))
-			{
-				allSucceeded = false;
-			}
-
-			UnorderedIndexSet32 readOnlyLayers;
-
-			if (!validateConstructFromFrame(newPyramid, downsamplingMode, Frame(framePyramid[firstSourceLayerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT), expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
-			{
-				allSucceeded = false;
-			}
+			allSucceeded = false;
 		}
 
-		{
-			// **TODO** add test for non-const pyramid once LegacyFrame is not used anymore
+		UnorderedIndexSet32 readOnlyLayers;
 
+		if (!validateConstructFromFrame(newPyramid, downsamplingMode, Frame(framePyramid[firstSourceLayerIndex], Frame::temporary_ACM_USE_KEEP_LAYOUT), expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+		{
+			allSucceeded = false;
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));

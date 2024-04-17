@@ -71,7 +71,7 @@ FramePyramid::FramePyramid(const FramePyramid& framePyramid, const unsigned int 
 		{
 			for (unsigned int sourceLayerIndex = firstLayerIndex; sourceLayerIndex < firstLayerIndex + actualLayers; ++sourceLayerIndex)
 			{
-				layers_.emplace_back(framePyramid.layers_[sourceLayerIndex], Frame::ACM_USE_KEEP_LAYOUT); // **TODO** add non-const version once switched to Frame from LegacyFrame
+				layers_.emplace_back(framePyramid.layers_[sourceLayerIndex], Frame::ACM_USE_KEEP_LAYOUT);
 			}
 		}
 
