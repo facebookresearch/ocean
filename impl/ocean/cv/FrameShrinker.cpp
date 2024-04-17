@@ -42,30 +42,6 @@ bool FrameShrinker::downsampleByTwo11(const Frame& source, Frame& target, Worker
 	return false;
 }
 
-bool FrameShrinker::downsampleByTwo11(const LegacyFrame& source, LegacyFrame& target, Worker* worker)
-{
-	ocean_assert(source && source.isContinuous());
-	ocean_assert(&source != &target);
-
-	const FrameType::DataType dataType = source.dataType();
-
-	if (dataType == FrameType::DT_UNSIGNED_INTEGER_8)
-	{
-		const unsigned int targetWidth = source.width() / 2u;
-		const unsigned int targetHeight = source.height() / 2u;
-
-		target.set(FrameType(source, targetWidth, targetHeight), false, true);
-		ocean_assert(source.constdata() != target.data());
-
-		downsampleByTwo8BitPerChannel11(source.constdata(), target.data(), source.width(), source.height(), source.channels(), 0u, 0u, worker);
-
-		return true;
-	}
-
-	ocean_assert(false && "FrameShrinker: Invalid frame!");
-	return false;
-}
-
 bool FrameShrinker::downsampleBinayMaskByTwo11(const Frame& source, Frame& target, const unsigned int threshold, Worker* worker)
 {
 	ocean_assert(source.isValid());
@@ -84,32 +60,6 @@ bool FrameShrinker::downsampleBinayMaskByTwo11(const Frame& source, Frame& targe
 				target.set(FrameType(source, width_2, height_2), false /*forceOwner*/, true /*forceWritable*/);
 
 				downsampleBinayMaskByTwo8BitPerChannel11(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), threshold, worker);
-				return true;
-			}
-		}
-	}
-
-	ocean_assert(false && "FrameShrinker: Invalid frame!");
-	return false;
-}
-
-bool FrameShrinker::downsampleByTwoBinary(const LegacyFrame& source, LegacyFrame& target, const unsigned int threshold, Worker* worker)
-{
-	if (source && source.width() > 1u && source.height() > 1u && source.numberPlanes() == 1u && source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
-	{
-		const unsigned int width_2 = source.width() / 2u;
-		const unsigned int height_2 = source.height() / 2u;
-
-		switch (source.channels())
-		{
-			case 1u:
-			{
-				target.set(FrameType(source, width_2, height_2), false, true);
-
-				constexpr unsigned int sourcePaddingElements = 0u;
-				constexpr unsigned int targetPaddingElements = 0u;
-
-				downsampleBinayMaskByTwo8BitPerChannel11(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), sourcePaddingElements, targetPaddingElements, threshold, worker);
 				return true;
 			}
 		}
@@ -158,41 +108,6 @@ bool FrameShrinker::downsampleByTwo14641(const Frame& source, Frame& target, Wor
 
 			return true;
 		}
-	}
-
-	ocean_assert(false && "FrameShrinker: Invalid frame!");
-	return false;
-}
-
-bool FrameShrinker::downsampleByTwo14641(const LegacyFrame& source, LegacyFrame& target, Worker* worker)
-{
-	if (source.isNull() || (source.width() < 2u && source.height() < 2u))
-	{
-		return false;
-	}
-
-	if (target.isNull() == false)
-	{
-		// downsampling supports e.g., 640x480 -> 320x240 or 641x481 -> 321x241
-
-		if (((source.width() + 0u) / 2u != target.width() && (source.width() + 1u) / 2u != target.width())
-			|| ((source.height() + 0u) / 2u != target.height() && (source.height() + 1u) / 2u != target.height()))
-		{
-			return false;
-		}
-	}
-
-	if (source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
-	{
-		const unsigned int targetWidth = target.isNull() ? (source.width() / 2u) : target.width();
-		const unsigned int targetHeight = target.isNull() ? (source.height() / 2u) : target.height();
-
-		ocean_assert(targetWidth >= 1u && targetHeight >= 1u);
-
-		target.set(FrameType(targetWidth, targetHeight, source.pixelFormat(), source.pixelOrigin()), false, true);
-		downsampleByTwo8BitPerChannel14641(source.constdata(), target.data(), source.width(), source.height(), target.width(), target.height(), source.channels(), 0u, 0u, worker);
-
-		return true;
 	}
 
 	ocean_assert(false && "FrameShrinker: Invalid frame!");

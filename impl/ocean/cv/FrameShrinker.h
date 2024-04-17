@@ -79,36 +79,6 @@ class OCEAN_CV_EXPORT FrameShrinker
 		static bool downsampleBinayMaskByTwo11(const Frame& source, Frame& target, const unsigned int threshold = 766u, Worker* worker = nullptr);
 
 		/**
-		 * Deprecated.
-		 *
-		 * Reduces the resolution of a given frame by two, taking 2x2 (= four) pixel values into account:
-		 * <pre>
-		 * | 1 1 |
-		 * | 1 1 | * 1/4
-		 * </pre>
-		 * If the given source image has an odd frame dimension the last pixel row or the last pixel column is filtered together with the two valid rows or columns respectively.<br>
-		 * If the type of the target frame does not match to the input frame the target frame (and image buffer) will be replaced by the correct one.
-		 * @param source The source frame to resize, must be valid
-		 * @param target The target frame receiving the down sampled frame data, can be invalid
-		 * @param worker Optional worker object to distribute the computational load to several CPU cores
-		 * @return True, if succeeded
-		 */
-		static bool downsampleByTwo11(const LegacyFrame& source, LegacyFrame& target, Worker* worker = nullptr);
-
-		/**
-		 * Deprecated.
-		 *
-		 * Reduces the resolution of a given binary frame with 8bit per pixel with values 0 and 255 by two, taking four pixel values into account.
-		 * If the type of the target frame does not match to the input frame the target frame (and image buffer) will be replaced by the correct one.
-		 * @param source The source frame to resize, must be valid
-		 * @param target The target frame receiving the down sampled frame data, can be invalid
-		 * @param threshold Minimal sum threshold of four pixels to result in a pixel with value 255
-		 * @param worker Optional worker object to distribute the computational load to several CPU cores
-		 * @return True, if succeeded
-		 */
-		static bool downsampleByTwoBinary(const LegacyFrame& source, LegacyFrame& target, const unsigned int threshold = 766u, Worker* worker = nullptr);
-
-		/**
 		 * Reduces the resolution of a given frame by two, applying a 1-4-6-4-1 downsampling.
 		 * Each downsampled pixel is based on  5x5 (= 25) corresponding pixels from the source image:
 		 * <pre>
@@ -129,27 +99,6 @@ class OCEAN_CV_EXPORT FrameShrinker
 		static bool downsampleByTwo14641(const Frame& source, Frame& target, Worker* worker = nullptr);
 
 		/**
-		 * Deprecated.
-		 *
-		 * Reduces the resolution of a given frame by two, taking 5x5 (= 25) pixel values into account:<br>
-		 * <pre>
-		 * | 1  4  6  4 1 |
-		 * | 4 16 24 16 4 |
-		 * | 6 24 36 24 6 | * 1/256
-		 * | 4 16 24 16 4 |
-		 * | 1  4  6  4 1 |
-		 * </pre>
-		 * The filter values are determined at even pixel coordinates (0, 2, 4, ...).
-		 * If the type of the target frame does not match to the input frame the target frame (and image buffer) will be replaced by the correct one.<br>
-		 * By default, the resolution of the target frame will be set to (source.width() / 2, source.height() / 2).
-		 * @param source The source frame to resize, must be valid
-		 * @param target The target frame receiving the down sampled frame data, with resolution [source.width() / 2, (source.width() + 1) / 2]x[source.height() / 2, (source.height() + 1) / 2], can be invalid
-		 * @param worker Optional worker object to distribute the computational load to several CPU cores
-		 * @return True, if succeeded
-		 */
-		static bool downsampleByTwo14641(const LegacyFrame& source, LegacyFrame& target, Worker* worker = nullptr);
-
-		/**
 		 * Reduces the resolution of a given frame by two, taking four pixel values into account.
 		 * If the given source image has an odd frame dimension the last pixel row or the last pixel column is filtered together with the two valid rows or columns respectively.<br>
 		 * @param frame The frame to down sample, must be valid
@@ -168,28 +117,6 @@ class OCEAN_CV_EXPORT FrameShrinker
 		static inline bool downsampleBinayMaskByTwo11(Frame& mask, const unsigned int threshold = 766u, Worker* worker = nullptr);
 
 		/**
-		 * Deprecated.
-		 *
-		 * Reduces the resolution of a given frame by two, taking four pixel values into account.
-		 * If the given source image has an odd frame dimension the last pixel row or the last pixel column is filtered together with the two valid rows or columns respectively.<br>
-		 * @param frame The frame to down sample, must be valid
-		 * @param worker Optional worker object to distribute the computational load to several CPU cores
-		 * @return True, if succeeded
-		 */
-		static inline bool downsampleByTwo11(LegacyFrame& frame, Worker* worker = nullptr);
-
-		/**
-		 * Deprecated.
-		 *
-		 * Reduces the resolution of a given binary frame with 8bit per pixel with values 0 and 255 by two, taking four pixel values into account.
-		 * @param frame The frame to down sample, must be valid
-		 * @param threshold Minimal sum threshold of four pixels to result in a pixel with value 255
-		 * @param worker Optional worker object to distribute the computational load to several CPU cores
-		 * @return True, if succeeded
-		 */
-		static inline bool downsampleByTwoBinary(LegacyFrame& frame, const unsigned int threshold = 766u, Worker* worker = nullptr);
-
-		/**
 		 * Reduces the resolution of a given frame by two, applying a 1-4-6-4-1 downsampling.
 		 * Each downsampled pixel is based on  5x5 (= 25) corresponding pixels from the source image:
 		  * <pre>
@@ -206,18 +133,6 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @return True, if succeeded
 		 */
 		static inline bool downsampleByTwo14641(Frame& frame, Worker* worker = nullptr);
-
-		/**
-		 * Deprecated.
-		 *
-		 * Reduces the resolution of a given frame by two, taking 5x5 (= 25) pixel values into account.
-		 * The filter values are determined at even pixel coordinates (0, 2, 4, ...).<br>
-		 * The resulting frame will have the resolution (frame.width() / 2, frame.height() / 2).
-		 * @param frame The frame to down sample, must be valid
-		 * @param worker Optional worker object to distribute the computational load to several CPU cores
-		 * @return True, if succeeded
-		 */
-		static inline bool downsampleByTwo14641(LegacyFrame& frame, Worker* worker = nullptr);
 
 		/**
 		 * Fills the buffer of a pyramid frame for frames with 1 plane and data type DT_UNSIGNED_INTEGER_8.
@@ -545,45 +460,9 @@ inline bool FrameShrinker::downsampleBinayMaskByTwo11(Frame& mask, const unsigne
 	return true;
 }
 
-inline bool FrameShrinker::downsampleByTwo11(LegacyFrame& frame, Worker* worker)
-{
-	LegacyFrame tmpFrame;
-	if (!downsampleByTwo11(frame, tmpFrame, worker))
-	{
-		return false;
-	}
-
-	frame = std::move(tmpFrame);
-	return true;
-}
-
-inline bool FrameShrinker::downsampleByTwoBinary(LegacyFrame& frame, const unsigned int threshold, Worker* worker)
-{
-	LegacyFrame tmpFrame;
-	if (!downsampleByTwoBinary(frame, tmpFrame, threshold, worker))
-	{
-		return false;
-	}
-
-	frame = std::move(tmpFrame);
-	return true;
-}
-
 inline bool FrameShrinker::downsampleByTwo14641(Frame& frame, Worker* worker)
 {
 	Frame tmpFrame;
-	if (!downsampleByTwo14641(frame, tmpFrame, worker))
-	{
-		return false;
-	}
-
-	frame = std::move(tmpFrame);
-	return true;
-}
-
-inline bool FrameShrinker::downsampleByTwo14641(LegacyFrame& frame, Worker* worker)
-{
-	LegacyFrame tmpFrame;
 	if (!downsampleByTwo14641(frame, tmpFrame, worker))
 	{
 		return false;
