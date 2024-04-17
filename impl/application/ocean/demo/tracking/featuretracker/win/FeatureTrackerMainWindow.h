@@ -31,7 +31,7 @@ class FeatureTrackerMainWindow :
 		/**
 		 * Destructs the main window.
 		 */
-		virtual ~FeatureTrackerMainWindow();
+		~FeatureTrackerMainWindow() override;
 
 	protected:
 
@@ -39,7 +39,7 @@ class FeatureTrackerMainWindow :
 		 * Function called by the windows message loop if the process is idling.
 		 * @see Window::onIdle().
 		 */
-		virtual void onIdle();
+		void onIdle() override;
 
 	protected:
 

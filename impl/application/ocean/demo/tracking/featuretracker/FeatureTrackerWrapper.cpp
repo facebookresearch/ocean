@@ -818,7 +818,7 @@ bool FeatureTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 
 		if (objectCone_.isValid() || objectCylinder_.isValid() || objectTriangles_.size() > 0u)
 		{
-			// TODO Add support for Anycamera for the visualization functions below.
+			// **TODO** Add support for AnyCamera for the visualization functions below.
 
 			if (anyCamera_->anyCameraType() == AnyCameraType::PINHOLE)
 			{

@@ -132,7 +132,7 @@ class FeatureTrackerWrapper
 
 #ifdef OCEAN_USE_DEVICES_VRS
 
-	/// Device player that is used for VRS replay
+		/// Device player that is used for VRS replay
 		std::shared_ptr<Devices::VRS::DevicePlayer> devicePlayer_;
 
 #endif
