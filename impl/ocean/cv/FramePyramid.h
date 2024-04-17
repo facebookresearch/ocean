@@ -148,7 +148,27 @@ class OCEAN_CV_EXPORT FramePyramid
 		inline FramePyramid(const Frame& frame, const unsigned int layers, const bool copyFirstLayer, Worker* worker = nullptr);
 
 		/**
-		 * Creates a frame pyramid based on a frame.
+		 * Creates a frame pyramid based on a frame with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a custom downsampling.
+		 * The resulting pyramid will contain a copy of the given frame (as finest pyramid layer) or will just use the memory, depending on 'copyFirstLayer'.<br>
+		 * The constructor mainly calls replace8BitPerChannel().
+		 * @param frame The frame for which the pyramid will be created, must be valid
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param channels The number of channels the given frame has, with range [1, infinity)
+		 * @param pixelOrigin The pixel origin of the given frame
+		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
+		 * @param layers Number of pyramid layers to be created, with range [1, infinity)
+		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
+		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exist)
+		 * @param worker Optional worker object to distribute the computation
+		 * @param pixelFormat The explicit pixel format which will be used for each pyramid layer, must be compatible with DT_UNSIGNED_INTEGER_8 and 'channels'; FORMAT_UNDEFINED to use a generic pixel format
+		 * @param timestamp Timestamp to be assigned to the frame pyramid (e.g., the timestamp of the frame used to created the timestamp)
+		 * @see replace8BitPerChannel().
+		 */
+		inline FramePyramid(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const DownsamplingMode downsamplingMode, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const FrameType::PixelFormat pixelFormat = FrameType::FORMAT_UNDEFINED, const Timestamp timestamp = Timestamp(false));
+
+		/**
+		 * Creates a frame pyramid based on a frame applying a custom downsampling.
 		 * The resulting pyramid will contain a copy of the given frame (as finest pyramid layer) or will just use the memory, depending on 'copyFirstLayer'.
 		 * @param frame The frame for which the pyramid will be created, must be valid
 		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
@@ -159,7 +179,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		inline FramePyramid(const Frame& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, const bool copyFirstLayer, Worker* worker);
 
 		/**
-		 * Creates a frame pyramid based on a frame.
+		 * Creates a frame pyramid based on a frame applying a custom downsampling.
 		 * The resulting pyramid will re-used the given frame (as finest pyramid layer); thus, ensure that the frame's memory is valid as long as this pyramid exists.
 		 * @param frame The frame for which the pyramid will be created, must be valid
 		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
@@ -169,7 +189,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		inline FramePyramid(Frame&& frame, const DownsamplingMode downsamplingMode, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, Worker* worker = nullptr);
 
 		/**
-		 * Creates a frame pyramid based on a frame.
+		 * Creates a frame pyramid based on a frame applying a custom downsampling.
 		 * The resulting pyramid will contain a copy of the given frame (as finest pyramid layer) or will just use the memory, depending on 'copyFirstLayer'.
 		 * @param frame The frame for which the pyramid will be created, must be valid
 		 * @param downsamplingFunction The custom function used to downsample the individual pyramid layers, must be valid
@@ -180,7 +200,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		inline FramePyramid(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool copyFirstLayer, Worker* worker);
 
 		/**
-		 * Creates a frame pyramid based on a frame.
+		 * Creates a frame pyramid based on a frame applying a custom downsampling.
 		 * The resulting pyramid will re-used the given frame (as finest pyramid layer); thus, ensure that the frame's memory is valid as long as this pyramid exists.
 		 * @param frame The frame for which the pyramid will be created, must be valid
 		 * @param downsamplingFunction The custom function used to downsample the individual pyramid layers, must be valid
@@ -665,6 +685,15 @@ inline FramePyramid::FramePyramid(const uint8_t* frame, const unsigned int width
 inline FramePyramid::FramePyramid(const Frame& frame, const unsigned int layers, const bool copyFirstLayer, Worker* worker)
 {
 	const bool result = replace8BitPerChannel11(frame, layers, copyFirstLayer, worker);
+	ocean_assert_and_suppress_unused(result, result);
+}
+
+inline FramePyramid::FramePyramid(const uint8_t* frame, const unsigned int width, const unsigned int height, const unsigned int channels, const FrameType::PixelOrigin pixelOrigin, const DownsamplingMode downsamplingMode, const unsigned int layers, const unsigned int framePaddingElements, const bool copyFirstLayer, Worker* worker, const FrameType::PixelFormat pixelFormat, const Timestamp timestamp)
+{
+	ocean_assert(frame != nullptr && width >= 1u && height >= 1u && layers >= 1u);
+	ocean_assert(channels >= 1u);
+
+	const bool result = replace8BitPerChannel(frame, width, height, channels, pixelOrigin, downsamplingMode, layers, framePaddingElements, copyFirstLayer, worker, pixelFormat, timestamp);
 	ocean_assert_and_suppress_unused(result, result);
 }
 
