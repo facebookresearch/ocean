@@ -1208,7 +1208,7 @@ FramePyramid FREAKDescriptorT<tSize>::createFramePyramidWithBlur8BitsPerChannel(
 
 	const FramePyramid::DownsamplingFunction downsamplingFunction = std::bind(&FREAKDescriptorT<tSize>::blurAndDownsampleByTwo11, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, kernelWidth, kernelHeight, reusableFrame);
 
-	FramePyramid framePyramid(frame, downsamplingFunction, layers, worker);
+	FramePyramid framePyramid(frame, downsamplingFunction, layers, true /*copyFirstLayer*/, worker);
 
 	if (framePyramid.layers() != layers)
 	{

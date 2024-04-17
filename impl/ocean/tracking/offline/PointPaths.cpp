@@ -83,7 +83,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 
 	Log::info() << "Pyramid parameters: " << trackingConfiguration.pyramidLayers() << " layers and " << trackingConfiguration.coarsestLayerRadius() << " search radius";
 
-	const CV::FramePyramid startFramePyramid(initialFrame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker);
+	const CV::FramePyramid startFramePyramid(initialFrame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), false /*copyFirstLayer*/, worker);
 
 	const unsigned int horizontalBins = trackingConfiguration.horizontalBins(initialFrame.width(), 4u);
 	const unsigned int verticalBins = trackingConfiguration.verticalBins(initialFrame.height(), 4u);
@@ -802,7 +802,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 
 	Log::info() << "Pyramid parameters: " << trackingConfiguration.pyramidLayers() << " layers and " << trackingConfiguration.coarsestLayerRadius() << " search radius";
 
-	CV::FramePyramid subRegionFramePyramid(initialFrame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker);
+	CV::FramePyramid subRegionFramePyramid(initialFrame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), true /*copyFirstLayer*/, worker);
 
 	ocean_assert(subRegion.boundingBox().isValid());
 	const unsigned int subRegionWidth = (unsigned int)Numeric::ceil(subRegion.boundingBox().width());

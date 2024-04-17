@@ -515,8 +515,8 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 		return false;
 	}
 
-	const FramePyramid previousPyramid(previousFrame, downsamplingMode, idealLayers, worker);
-	const FramePyramid currentPyramid(currentFrame, downsamplingMode, idealLayers, worker);
+	const FramePyramid previousPyramid(previousFrame, downsamplingMode, idealLayers, false /*copyFirstLayer*/, worker);
+	const FramePyramid currentPyramid(currentFrame, downsamplingMode, idealLayers, false /*copyFirstLayer*/, worker);
 
 	return trackPointsSubPixelMirroredBorder<tSize>(previousPyramid, currentPyramid, previousPoints, roughPoints, currentPoints, coarsestLayerRadius, subPixelIterations, worker, metricResults, metricIdentityResults);
 }
@@ -779,8 +779,8 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackArbitraryPointsBidirecti
 		return false;
 	}
 
-	const FramePyramid previousPyramid(previousFrame, downsamplingMode, layers, worker);
-	const FramePyramid nextPyramid(nextFrame, downsamplingMode, layers, worker);
+	const FramePyramid previousPyramid(previousFrame, downsamplingMode, layers, false /*copyFirstLayer*/, worker);
+	const FramePyramid nextPyramid(nextFrame, downsamplingMode, layers, false /*copyFirstLayer*/, worker);
 
 	return trackArbitraryPointsBidirectionalSubPixelMirroredBorder<tSize>(previousPyramid, nextPyramid, coarsestLayerRadius, previousImagePoints, nextImagePoints, maximalSqrError, previousSubRegion, horizontalBins, verticalBins, strength, worker, trackingLayers);
 }
@@ -1176,8 +1176,8 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 		return false;
 	}
 
-	const FramePyramid previousPyramid(previousFrame, downsamplingMode, layers, worker);
-	const FramePyramid nextPyramid(nextFrame, downsamplingMode, layers, worker);
+	const FramePyramid previousPyramid(previousFrame, downsamplingMode, layers, false /*copyFirstLayer*/, worker);
+	const FramePyramid nextPyramid(nextFrame, downsamplingMode, layers, false /*copyFirstLayer*/, worker);
 
 	return trackPointsBidirectionalSubPixelMirroredBorder<tSize>(previousPyramid, nextPyramid, coarsestLayerRadius, previousImagePoints, nextImagePoints, maximalSqrError, worker, validIndices, subPixelIterations);
 }

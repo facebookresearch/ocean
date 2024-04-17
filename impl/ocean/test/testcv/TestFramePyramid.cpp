@@ -880,11 +880,13 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 
 					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
 
+					const bool copyFirstLayer = RandomI::boolean(randomGenerator);
+
 					const unsigned int layers = CV::FramePyramid::idealLayers(width, height, 0u, 0u);
 
 					for (unsigned int layerIndex = 1u; layerIndex <= layers; ++layerIndex)
 					{
-						const CV::FramePyramid framePyramid(frame, downsamplingMode, layerIndex, &extremeWorker);
+						const CV::FramePyramid framePyramid(frame, downsamplingMode, layerIndex, copyFirstLayer, &extremeWorker);
 
 						if (!validateFramePyramid(frame, framePyramid, downsamplingMode, layerIndex))
 						{
@@ -958,7 +960,7 @@ bool TestFramePyramid::testCreationFramePyramidDeprecated(const unsigned int wid
 
 					if (RandomI::boolean(randomGenerator))
 					{
-						framePyramid = CV::FramePyramid(frame, downsamplingMode, layers, useWorker);
+						framePyramid = CV::FramePyramid(frame, downsamplingMode, layers, true /*copyFirstLayer*/, useWorker);
 					}
 					else
 					{
@@ -1091,11 +1093,27 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 								{
 									if (copyFirstLayer)
 									{
-										framePyramid = CV::FramePyramid(frame, downsamplingFunction, testLayers, useWorker);
+										framePyramid = CV::FramePyramid(frame, downsamplingFunction, testLayers, true /*copyFirstLayer*/, useWorker);
+
+										expectedOwnerLayers.emplace(0u);
 									}
 									else
 									{
-										framePyramid = CV::FramePyramid(std::move(frame), downsamplingFunction, testLayers, useWorker);
+										// we can either move the frame, or we can only use the memory
+
+										if (RandomI::boolean(randomGenerator))
+										{
+											if (frame.isOwner())
+											{
+												expectedOwnerLayers.emplace(0u);
+											}
+
+											framePyramid = CV::FramePyramid(std::move(frame), downsamplingFunction, testLayers, useWorker);
+										}
+										else
+										{
+											framePyramid = CV::FramePyramid(frame, downsamplingFunction, testLayers, false /*copyFirstLayer*/, useWorker);
+										}
 
 										expectedOutsideMemoryBlockLayers.emplace(0u);
 									}
@@ -1104,7 +1122,7 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 								{
 									if (copyFirstLayer)
 									{
-										framePyramid = CV::FramePyramid(frame, downsamplingMode, testLayers, useWorker);
+										framePyramid = CV::FramePyramid(frame, downsamplingMode, testLayers, true /*copyFirstLayer*/, useWorker);
 									}
 									else
 									{
@@ -1112,11 +1130,11 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 										expectedOutsideMemoryBlockLayers.emplace(0u);
 									}
+
+									expectedOwnerLayers.emplace(0u);
 								}
 
 								localResult = framePyramid.isValid();
-
-								expectedOwnerLayers.emplace(0u);
 							}
 							else
 							{
@@ -1317,47 +1335,61 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 
 			do
 			{
-				UnorderedIndexSet32 readOnlyLayers;
-				UnorderedIndexSet32 ownerLayers;
-				UnorderedIndexSet32 outsideMemoryBlockLayers;
-
-				const unsigned int expectedNumberLayers = std::min(determineMaxLayerCount(width, height), layerCount);
-
-				for (unsigned int layerIndex = 0u; layerIndex < expectedNumberLayers; ++layerIndex)
-				{
-					ownerLayers.emplace(layerIndex);
-				}
-
 				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				const CV::FramePyramid::DownsamplingMode dowsamplingMode = RandomI::random(randomGenerator, {CV::FramePyramid::DM_FILTER_11, CV::FramePyramid::DM_FILTER_14641});
 
+				const bool copyFirstLayer = RandomI::boolean(randomGenerator);
+
+				UnorderedIndexSet32 expectedReadOnlyLayers;
+				UnorderedIndexSet32 expectedOwnerLayers;
+				UnorderedIndexSet32 expectedOutsideMemoryBlockLayers;
+
+				const unsigned int expectedNumberLayers = std::min(determineMaxLayerCount(width, height), layerCount);
+
+				for (unsigned int layerIndex = 1u; layerIndex < expectedNumberLayers; ++layerIndex)
+				{
+					expectedOwnerLayers.emplace(layerIndex);
+				}
+
+				if (copyFirstLayer)
+				{
+					expectedOwnerLayers.emplace(0u);
+				}
+				else
+				{
+					expectedOutsideMemoryBlockLayers.emplace(0u);
+
+					if (dowsamplingMode == CV::FramePyramid::DM_FILTER_11 && !frame.hasAlphaChannel())
+					{
+						expectedReadOnlyLayers.emplace(0u);
+					}
+				}
+
 				performance.start();
-					const CV::FramePyramid framePyramid(frame, dowsamplingMode, layerCount, useWorker);
+					const CV::FramePyramid framePyramid(frame, dowsamplingMode, layerCount, copyFirstLayer, useWorker);
 				performance.stop();
 
-				if (!validateConstructFromFrame(framePyramid, dowsamplingMode, frame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+				if (!validateConstructFromFrame(framePyramid, dowsamplingMode, frame, expectedNumberLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers))
 				{
 					allSucceeded = false;
 				}
 
 				if (dowsamplingMode == CV::FramePyramid::DM_FILTER_11)
 				{
-					const bool copyFirstLayer = RandomI::boolean(randomGenerator);
 
 					if (!copyFirstLayer)
 					{
-						readOnlyLayers.emplace(0u);
-						ownerLayers.erase(0u);
-						outsideMemoryBlockLayers.emplace(0u);
+						expectedReadOnlyLayers.emplace(0u);
+						expectedOutsideMemoryBlockLayers.emplace(0u);
 					}
 
-					if (!validateConstructFromFrame(CV::FramePyramid(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), frame.pixelOrigin(), layerCount, frame.paddingElements(), copyFirstLayer, useWorker, FrameType::FORMAT_UNDEFINED, frame.timestamp()), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+					if (!validateConstructFromFrame(CV::FramePyramid(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.channels(), frame.pixelOrigin(), layerCount, frame.paddingElements(), copyFirstLayer, useWorker, FrameType::FORMAT_UNDEFINED, frame.timestamp()), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers))
 					{
 						allSucceeded = false;
 					}
 
-					if (!validateConstructFromFrame(CV::FramePyramid(frame, layerCount, copyFirstLayer, useWorker), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, readOnlyLayers, ownerLayers, outsideMemoryBlockLayers))
+					if (!validateConstructFromFrame(CV::FramePyramid(frame, layerCount, copyFirstLayer, useWorker), CV::FramePyramid::DM_FILTER_11, frame, expectedNumberLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers))
 					{
 						allSucceeded = false;
 					}
@@ -1427,7 +1459,7 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 
 		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
-		const CV::FramePyramid framePyramid(frame, downsamplingMode, layers, useWorker);
+		const CV::FramePyramid framePyramid(frame, downsamplingMode, layers, true /*copyFirstLayer*/, useWorker);
 
 		if (!framePyramid.isValid())
 		{
@@ -1577,7 +1609,7 @@ bool TestFramePyramid::testConstructFromPyramidDeprecated(const CV::FramePyramid
 
 		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
-		CV::FramePyramid framePyramid = CV::FramePyramid(frame, downsamplingMode, 2u, nullptr);
+		CV::FramePyramid framePyramid = CV::FramePyramid(frame, downsamplingMode, 2u, true /*copyFirstLayer*/, nullptr);
 		allSucceeded = testConstructFromPyramidDeprecated(framePyramid, true,  0u, ALL_LAYERS, testDuration, worker) && allSucceeded;
 		Log::info() << " ";
 		allSucceeded = testConstructFromPyramidDeprecated(framePyramid, false, 0u, ALL_LAYERS, testDuration, worker) && allSucceeded;
@@ -1597,7 +1629,7 @@ bool TestFramePyramid::testConstructFromPyramidDeprecated(const CV::FramePyramid
 		Log::info() << " ";
 		Log::info() << " ";
 
-		framePyramid = CV::FramePyramid(frame, downsamplingMode, ALL_LAYERS, nullptr);
+		framePyramid = CV::FramePyramid(frame, downsamplingMode, ALL_LAYERS, true /*copyFirstLayer*/, nullptr);
 		allSucceeded = testConstructFromPyramidDeprecated(framePyramid, true,  0u, ALL_LAYERS, testDuration, worker) && allSucceeded;
 		Log::info() << " ";
 		allSucceeded = testConstructFromPyramidDeprecated(framePyramid, false, 0u, ALL_LAYERS, testDuration, worker) && allSucceeded;

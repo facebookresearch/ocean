@@ -812,8 +812,8 @@ bool SphericalEnvironment::determinePointCorrespondencesHomography(const Frame& 
 
 	ocean_assert(pyramidLayers >= 1u);
 
-	const CV::FramePyramid sourceFramePyramid(sourceFrame, downsamplingMode, pyramidLayers, worker);
-	const CV::FramePyramid transformedTargetPyramid(transformedTarget, downsamplingMode, pyramidLayers, worker);
+	const CV::FramePyramid sourceFramePyramid(sourceFrame, downsamplingMode, pyramidLayers, false /*copyFirstLayer*/, worker);
+	const CV::FramePyramid transformedTargetPyramid(transformedTarget, downsamplingMode, pyramidLayers, false /*copyFirstLayer*/, worker);
 
 	// in general, now the source frame and the transformed target frame align so that source points and target points should be almost identical
 	// however, as the transformed target frame has an translational offset we need to adjust the locations accordingly
@@ -1004,7 +1004,7 @@ bool SphericalEnvironment::determinePointCorrespondencesHomography(const CV::Fra
 
 	ocean_assert(pyramidLayers >= 1u);
 
-	const CV::FramePyramid transformedTargetPyramid(transformedTarget, downsamplingMode, pyramidLayers, worker);
+	const CV::FramePyramid transformedTargetPyramid(transformedTarget, downsamplingMode, pyramidLayers, false /*copyFirstLayer*/, worker);
 
 	// in general, now the source frame and the transformed target frame align so that source points and target points should be almost identical
 	// however, as the transformed target frame has an translational offset we need to adjust the locations accordingly

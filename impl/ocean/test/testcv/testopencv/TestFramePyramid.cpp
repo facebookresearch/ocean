@@ -267,7 +267,7 @@ void TestFramePyramid::testFramePyramid(const unsigned int width, const unsigned
 		if (iteration % 3u == 0u)
 		{
 			performanceOcean11.start();
-				CV::FramePyramid framePyramid(frame, CV::FramePyramid::DM_FILTER_11, layers, nullptr);
+				const CV::FramePyramid framePyramid(frame, CV::FramePyramid::DM_FILTER_11, layers, true /*copyFirstLayer*/, nullptr);
 			performanceOcean11.stop();
 
 			ocean_assert(framePyramid.layers() == layers);
@@ -275,7 +275,7 @@ void TestFramePyramid::testFramePyramid(const unsigned int width, const unsigned
 		else if (iteration % 3u == 1u)
 		{
 			performanceOcean14641.start();
-				CV::FramePyramid framePyramid(frame, CV::FramePyramid::DM_FILTER_14641, layers, nullptr);
+				const CV::FramePyramid framePyramid(frame, CV::FramePyramid::DM_FILTER_14641, layers, true /*copyFirstLayer*/, nullptr);
 			performanceOcean14641.stop();
 
 			ocean_assert(framePyramid.layers() == layers);
