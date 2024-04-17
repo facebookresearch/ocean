@@ -312,7 +312,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return True, if the frame pyramid was replaced
 		 * @see replace8BitPerChannel11().
 		 */
-		bool replace(const Frame& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, const bool copyFirstLayer, Worker* worker);
+		bool replace(const Frame& frame, const DownsamplingMode downsamplingMode, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, const bool copyFirstLayer = true, Worker* worker = nullptr);
 
 		/**
 		 * Replaces this frame pyramid based on a new frame.
@@ -339,7 +339,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @return True, if the frame pyramid was replaced
 		 * @see replace8BitPerChannel11().
 		 */
-		bool replace(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool copyFirstLayer, Worker* worker);
+		bool replace(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers = AS_MANY_LAYERS_AS_POSSIBLE, const bool copyFirstLayer = true, Worker* worker = nullptr);
 
 		/**
 		 * Replaces this frame pyramid based on a new frame.
