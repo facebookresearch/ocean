@@ -602,59 +602,6 @@ bool TestFramePyramid::testIsOwner(const double testDuration)
 			}
 		}
 
-#if 0 // **TODO** activate once we have switched to Frame in FramePyramid
-
-		{
-			// testing pyramid from Frame owning the memory
-
-			const Frame frame(FrameType(width, height, pixelFormat, pixelOrigin));
-
-			CV::FramePyramid framePyramid(frame, true /*copyData*/);
-
-			if (!verifyPyramidOwnership(framePyramid, true /*isValid*/, true /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
-
-			CV::FramePyramid movedFramePyramid(std::move(framePyramid));
-
-			if (!verifyPyramidOwnership(movedFramePyramid, true /*isValid*/, true /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
-
-			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)) // NOLINT(bugprone-use-after-move)
-			{
-				allSucceeded = false;
-			}
-		}
-
-		{
-			// testing pyramid from Frame owning the memory
-
-			const Frame frame(FrameType(width, height, pixelFormat, pixelOrigin));
-
-			CV::FramePyramid framePyramid(frame, false /*copyData*/);
-
-			if (!verifyPyramidOwnership(framePyramid, true /*isValid*/, false /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
-
-			CV::FramePyramid movedFramePyramid(std::move(framePyramid));
-
-			if (!verifyPyramidOwnership(movedFramePyramid, true /*isValid*/, false /*isOwner*/))
-			{
-				allSucceeded = false;
-			}
-
-			if (!verifyPyramidOwnership(framePyramid, false /*isValid*/, false /*isOwner*/)) // NOLINT(bugprone-use-after-move)
-			{
-				allSucceeded = false;
-			}
-		}
-#endif
-
 		{
 			// testing pyramid from pyramid and making a copy
 
