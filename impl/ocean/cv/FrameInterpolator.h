@@ -212,7 +212,7 @@ bool FrameInterpolator::resize(const T* source, T* target, const unsigned int so
 		return true;
 	}
 
-	if constexpr (tResizeMethod == RM_NEAREST_PYRAMID_LAYER_11_BILINEAR)
+	if constexpr (tResizeMethod == RM_NEAREST_PYRAMID_LAYER_11_BILINEAR || tResizeMethod == RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR)
 	{
 		if constexpr (std::is_same<T, uint8_t>::value == false)
 		{
@@ -225,7 +225,16 @@ bool FrameInterpolator::resize(const T* source, T* target, const unsigned int so
 
 		if (sourceWidth / 2u == targetWidth && sourceHeight / 2u == targetHeight)
 		{
-			FrameShrinker::downsampleByTwo8BitPerChannel11(source_u8, target_u8, sourceWidth, sourceHeight, tChannels, sourcePaddingElements, targetPaddingElements, worker);
+			if constexpr (tResizeMethod == RM_NEAREST_PYRAMID_LAYER_11_BILINEAR)
+			{
+				FrameShrinker::downsampleByTwo8BitPerChannel11(source_u8, target_u8, sourceWidth, sourceHeight, tChannels, sourcePaddingElements, targetPaddingElements, worker);
+			}
+			else
+			{
+				ocean_assert(tResizeMethod == RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR);
+				FrameShrinker::downsampleByTwo8BitPerChannel14641(source_u8, target_u8, sourceWidth, sourceHeight, targetWidth, targetHeight, tChannels, sourcePaddingElements, targetPaddingElements, worker);
+			}
+
 			return true;
 		}
 		else if (targetWidth < sourceWidth && targetHeight < sourceHeight)
@@ -257,7 +266,17 @@ bool FrameInterpolator::resize(const T* source, T* target, const unsigned int so
 			{
 				constexpr FrameType::PixelOrigin anyPixelOrientation = FrameType::ORIGIN_UPPER_LEFT;
 
-				const FramePyramid framePyramid(source_u8, sourceWidth, sourceHeight, tChannels, anyPixelOrientation, layers, sourcePaddingElements, false /*copyFirstLayer*/, worker);
+				FramePyramid framePyramid;
+
+				if constexpr (tResizeMethod == RM_NEAREST_PYRAMID_LAYER_11_BILINEAR)
+				{
+					framePyramid = FramePyramid(source_u8, sourceWidth, sourceHeight, tChannels, anyPixelOrientation, layers, sourcePaddingElements, false /*copyFirstLayer*/, worker);
+				}
+				else
+				{
+					ocean_assert(tResizeMethod == RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR);
+					framePyramid = FramePyramid(source_u8, sourceWidth, sourceHeight, tChannels, anyPixelOrientation, FramePyramid::DM_FILTER_14641, layers, sourcePaddingElements, false /*copyFirstLayer*/, worker);
+				}
 
 				if (!framePyramid.isValid())
 				{
@@ -268,72 +287,6 @@ bool FrameInterpolator::resize(const T* source, T* target, const unsigned int so
 				const Frame& coarsestPyramidLayer = framePyramid.coarsestLayer();
 
 				FrameInterpolatorBilinear::resize<T, tChannels>(coarsestPyramidLayer.constdata<T>(), target, coarsestPyramidLayer.width(), coarsestPyramidLayer.height(), targetWidth, targetHeight, coarsestPyramidLayer.paddingElements(), targetPaddingElements, worker);
-
-				return true;
-			}
-		}
-
-		FrameInterpolatorBilinear::resize<T, tChannels>(source, target, sourceWidth, sourceHeight, targetWidth, targetHeight, sourcePaddingElements, targetPaddingElements, worker);
-		return true;
-	}
-
-	if constexpr (tResizeMethod == RM_NEAREST_PYRAMID_LAYER_14641_BILINEAR)
-	{
-		if constexpr (std::is_same<T, uint8_t>::value == false)
-		{
-			ocean_assert(false && "Missing implementation!");
-			return false;
-		}
-
-		const uint8_t* const source_u8 = (const uint8_t*)(source);
-		uint8_t* const target_u8 = (uint8_t*)(target);
-
-		if (sourceWidth / 2u == targetWidth && sourceHeight / 2u == targetHeight)
-		{
-			FrameShrinker::downsampleByTwo8BitPerChannel14641(source_u8, target_u8, sourceWidth, sourceHeight, targetWidth, targetHeight, tChannels, sourcePaddingElements, targetPaddingElements, worker);
-			return true;
-		}
-		else if (targetWidth < sourceWidth && targetHeight < sourceHeight)
-		{
-			ocean_assert(targetWidth > 0u && targetHeight >= 0u);
-			const unsigned int invalidCoarsestWidth = targetWidth - 1u;
-			const unsigned int invalidCoarsestHeight = targetHeight - 1u;
-
-			unsigned int coarsestLayerWidth = 0u;
-			unsigned int coarsestLayerHeight = 0u;
-
-			unsigned int layers = CV::FramePyramid::idealLayers(sourceWidth, sourceHeight, invalidCoarsestWidth, invalidCoarsestHeight, &coarsestLayerWidth, &coarsestLayerHeight);
-
-			if (layers == 0u)
-			{
-				ocean_assert(false && "This should never happen!");
-				return false;
-			}
-
-			if (coarsestLayerWidth == targetWidth && coarsestLayerHeight == targetHeight)
-			{
-				// the target frame matches with the resolution of the last pyramid layer, so that we can avoid copying the memory from the coarsest pyramid layer
-
-				ocean_assert(layers >= 2u);
-				layers -= 1u;
-			}
-
-			if (layers >= 2u)
-			{
-				constexpr FrameType::PixelOrigin anyPixelOrientation = FrameType::ORIGIN_UPPER_LEFT;
-
-				const FramePyramid framePyramid(source_u8, sourceWidth, sourceHeight, tChannels, anyPixelOrientation, FramePyramid::DM_FILTER_14641, layers, sourcePaddingElements, false /*copyFirstLayer*/, worker);
-
-				if (!framePyramid.isValid())
-				{
-					ocean_assert(false && "This should never happen!");
-					return false;
-				}
-
-				const Frame& coarsestPyramidLayer = framePyramid.coarsestLayer();
-
-				FrameInterpolatorBilinear::resize<T, tChannels>(coarsestPyramidLayer.constdata<T>(), target, coarsestPyramidLayer.width(), coarsestPyramidLayer.height(), targetWidth, targetHeight, coarsestPyramidLayer.paddingElements(), targetPaddingElements, worker);
-
 				return true;
 			}
 		}
