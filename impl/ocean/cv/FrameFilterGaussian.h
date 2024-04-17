@@ -503,18 +503,20 @@ inline void FrameFilterGaussian::filter1Channel8Bit121NEON(const uint8_t* source
 	Memory memoryResponseRows; // memory for three response rows, each row contains 'innerPixels' uint16_t elements
 	uint16_t* responseRows = nullptr;
 
+	const unsigned int reusableMemoryNecessaryElements = width * 4u;
+
 	if (reusableMemory != nullptr)
 	{
-		if (reusableMemory->responseRowsMemory_.size() != (width * 3u) * sizeof(uint16_t))
+		if (reusableMemory->responseRowsMemory_.size() != reusableMemoryNecessaryElements * sizeof(uint16_t))
 		{
-			reusableMemory->responseRowsMemory_ = Memory::create<uint16_t>(width * 3u);
+			reusableMemory->responseRowsMemory_ = Memory::create<uint16_t>(reusableMemoryNecessaryElements);
 		}
 
 		responseRows = reusableMemory->responseRowsMemory_.data<uint16_t>();
 	}
 	else
 	{
-		memoryResponseRows = Memory::create<uint16_t>(width * 4u);
+		memoryResponseRows = Memory::create<uint16_t>(reusableMemoryNecessaryElements);
 		responseRows = memoryResponseRows.data<uint16_t>();
 	}
 
