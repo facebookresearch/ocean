@@ -219,7 +219,11 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 
 	RandomGenerator randomGenerator;
 
+	bool allSucceeded = true;
+
 	constexpr uint8_t dark = 0x40u;
+
+	constexpr uint64_t minimalIterations = 100u;
 
 	uint64_t iterations = 0ull;
 	uint64_t succeeded = 0ull;
@@ -244,77 +248,70 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 			CV::Canvas::line<1u>(frame, Scalar(0), Scalar(int(verticalLeft) + n), Scalar(int(width - 1u)), Scalar(int(verticalRight) + n), &dark);
 		}
 
-		Lines2 testLines(4);
-		testLines[0] = Line2(Vector2(Scalar(horizontalTop - 5), 0), (Vector2(Scalar(horizontalBottom - 5), Scalar(height - 1u)) - Vector2(Scalar(horizontalTop - 5), 0)).normalized());
-		testLines[1] = Line2(Vector2(Scalar(horizontalTop + 5), 0), (Vector2(Scalar(horizontalBottom + 5), Scalar(height - 1u)) - Vector2(Scalar(horizontalTop + 5), 0)).normalized());
-		testLines[2] = Line2(Vector2(0, Scalar(verticalLeft - 5)), (Vector2(Scalar(width - 1u), Scalar(verticalRight - 5)) - Vector2(0, Scalar(verticalLeft - 5))).normalized());
-		testLines[3] = Line2(Vector2(0, Scalar(verticalLeft + 5)), (Vector2(Scalar(width - 1u), Scalar(verticalRight + 5)) - Vector2(0, Scalar(verticalLeft + 5))).normalized());
+		Lines2 testLines =
+		{
+			Line2(Vector2(Scalar(horizontalTop - 5), 0), (Vector2(Scalar(horizontalBottom - 5), Scalar(height - 1u)) - Vector2(Scalar(horizontalTop - 5), 0)).normalized()),
+			Line2(Vector2(Scalar(horizontalTop + 5), 0), (Vector2(Scalar(horizontalBottom + 5), Scalar(height - 1u)) - Vector2(Scalar(horizontalTop + 5), 0)).normalized()),
+			Line2(Vector2(0, Scalar(verticalLeft - 5)), (Vector2(Scalar(width - 1u), Scalar(verticalRight - 5)) - Vector2(0, Scalar(verticalLeft - 5))).normalized()),
+			Line2(Vector2(0, Scalar(verticalLeft + 5)), (Vector2(Scalar(width - 1u), Scalar(verticalRight + 5)) - Vector2(0, Scalar(verticalLeft + 5))).normalized())
+		};
 
 		// apply some image blur
 		CV::FrameFilterGaussian::filter(frame, 7u, &worker);
 
-		CV::Detector::LineDetectorHough::InfiniteLines infiniteLines0, infiniteLines1;
+		CV::Detector::LineDetectorHough::InfiniteLines infiniteLines0;
 
 		performance0.start();
 			const bool result0 = CV::Detector::LineDetectorHough::detectLines(frame, CV::Detector::LineDetectorHough::FT_SOBEL, CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL, infiniteLines0, nullptr, true, 80u, 8u, 5u, true, &worker, 360u, (unsigned int)(-1), false, Scalar(10), Numeric::deg2rad(5));
 		performance0.stop();
 
-		ocean_assert_and_suppress_unused(result0, result0);
+		if (!result0)
+		{
+			allSucceeded = false;
+		}
+
+		CV::Detector::LineDetectorHough::InfiniteLines infiniteLines1;
 
 		performance1.start();
 			const bool result1 = CV::Detector::LineDetectorHough::detectLinesWithAdaptiveThreshold(frame, CV::Detector::LineDetectorHough::FT_SOBEL, CV::Detector::LineDetectorHough::FR_HORIZONTAL_VERTICAL, infiniteLines1, nullptr, true, Scalar(10), 61u, 8u, 5u, true, &worker, 360u, (unsigned int)(-1), false, Scalar(10), Numeric::deg2rad(5));
 		performance1.stop();
 
-		ocean_assert_and_suppress_unused(result1, result1);
+		if (!result1)
+		{
+			allSucceeded = false;
+		}
 
 		std::sort(infiniteLines0.rbegin(), infiniteLines0.rend());
 		std::sort(infiniteLines1.rbegin(), infiniteLines1.rend());
 
 		unsigned int foundLines = 0u;
 
-		for (size_t n = 0; n < infiniteLines0.size() && n < 4; ++n)
+		for (const CV::Detector::LineDetectorHough::InfiniteLines& infiniteLines : {infiniteLines0, infiniteLines1})
 		{
-			const Line2& line0 = infiniteLines0[n];
-			const Line2 transformedLine0(line0.point() + Vector2(Scalar(width / 2u), Scalar(height / 2u)), line0.direction());
-
-			bool lineFound = false;
-
-			for (size_t m = 0; !lineFound && m < 4; ++m)
+			for (size_t n = 0; n < infiniteLines.size() && n < testLines.size(); ++n)
 			{
-				const Scalar cosValue = transformedLine0.direction() * testLines[m].direction();
+				const Line2& line = infiniteLines[n];
+				const Line2 transformedLine(line.point() + Vector2(Scalar(width / 2u), Scalar(height / 2u)), line.direction());
 
-				if (Numeric::abs(cosValue) > Numeric::cos(Numeric::deg2rad(2.5)) && Numeric::abs(transformedLine0.distance(testLines[m].point())) < 2.5)
+				bool lineFound = false;
+
+				for (size_t m = 0; !lineFound && m < testLines.size(); ++m)
 				{
-					lineFound = true;
+					const Scalar angle = transformedLine.direction().angle(testLines[m].direction());
+
+					constexpr Scalar angleThreshold = Scalar(2.5);
+					constexpr Scalar distanceThreshold = Scalar(3.5);
+
+					if ((angle <= Numeric::deg2rad(angleThreshold) || angle >= Numeric::deg2rad(Scalar(180) - angleThreshold)) && Numeric::abs(transformedLine.distance(testLines[m].point())) <= distanceThreshold)
+					{
+						lineFound = true;
+					}
 				}
-			}
 
-			if (lineFound)
-			{
-				++foundLines;
-			}
-		}
-
-		for (size_t n = 0; n < infiniteLines1.size() && n < 4; ++n)
-		{
-			const Line2& line1 = infiniteLines1[n];
-			const Line2 transformedLine1(line1.point() + Vector2(Scalar(width / 2u), Scalar(height / 2u)), line1.direction());
-
-			bool lineFound = false;
-
-			for (size_t m = 0; !lineFound && m < 4; ++m)
-			{
-				const Scalar cosValue = transformedLine1.direction() * testLines[m].direction();
-
-				if (Numeric::abs(cosValue) > Numeric::cos(Numeric::deg2rad(2.5)) && Numeric::abs(transformedLine1.distance(testLines[m].point())) < 2.5)
+				if (lineFound)
 				{
-					lineFound = true;
+					++foundLines;
 				}
-			}
-
-			if (lineFound)
-			{
-				++foundLines;
 			}
 		}
 
@@ -325,7 +322,7 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (iterations < minimalIterations || startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Performance static threshold: " << performance0.averageMseconds() << "ms";
 	Log::info() << "Performance dynamic threshold: " << performance1.averageMseconds() << "ms";
@@ -333,9 +330,21 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
 	constexpr double threshold = std::is_same<Scalar, float>::value ? 0.85 : 0.95;
+
+	if (percent < threshold)
+	{
+		allSucceeded = false;
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded with " << String::toAString(percent * 100.0, 1u) << "%";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED! with " << String::toAString(percent * 100.0, 1u) << "%";
+	}
 
 	return percent >= threshold;
 }
