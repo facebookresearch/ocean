@@ -83,9 +83,7 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 
 	const Timestamp startTimestamp(true);
 
-#ifndef OCEAN_USE_GTEST
 	do
-#endif
 	{
 		Network::TCPServer tcpServer;
 
@@ -208,10 +206,13 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 				allSucceeded = false;
 			}
 		}
-	}
-#ifndef OCEAN_USE_GTEST
-	while (startTimestamp + testDuration > Timestamp(true));
+
+#ifdef OCEAN_USE_GTEST
+		// one execution is enough for GTest
+		break;
 #endif
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
 	{
