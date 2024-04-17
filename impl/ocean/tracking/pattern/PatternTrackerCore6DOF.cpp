@@ -999,26 +999,14 @@ bool PatternTrackerCore6DOF::determinePoses(const bool allowRecognition, const F
 
 		if (pyramidLayers >= 2u)
 		{
-			// **TODO** use FrameInterpolator::resize() when supporting 11 downsampling, once LegacyFrame has been replaced
-
-			const FrameType secondLayerType(yFrame, yFrame.width() / 2u, yFrame.height() / 2u);
-
-			// we create a pyramid with one layer less than necessary - as we do not need to copy the actual image
-			framePyramid = CV::FramePyramid(pyramidLayers - 1u, secondLayerType);
-
-			Frame secondLayer(framePyramid.finestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
-
-			CV::FrameShrinker::downsampleByTwo8BitPerChannel11(yFrame.constdata<uint8_t>(), secondLayer.data<uint8_t>(), yFrame.width(), yFrame.height(), 1u, yFrame.paddingElements(), secondLayer.paddingElements(), nullptr);
-
-			for (unsigned int n = 1u; n < framePyramid.layers(); ++n)
+			if (framePyramid.replace8BitPerChannel11(yFrame, pyramidLayers, false /*copyFirstLayer*/, nullptr))
 			{
-				const Frame previousLayer(framePyramid[n - 1u], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-				Frame currentLayer(framePyramid[n], Frame::temporary_ACM_USE_KEEP_LAYOUT);
-
-				CV::FrameShrinker::downsampleByTwo8BitPerChannel11(previousLayer.constdata<uint8_t>(), currentLayer.data<uint8_t>(), previousLayer.width(), previousLayer.height(), 1u, previousLayer.paddingElements(), currentLayer.paddingElements(), nullptr);
+				yFrameDownsampled = Frame(framePyramid.coarsestLayer(), Frame::ACM_USE_KEEP_LAYOUT);
 			}
-
-			yFrameDownsampled = Frame(framePyramid.coarsestLayer(), Frame::temporary_ACM_USE_KEEP_LAYOUT);
+			else
+			{
+				ocean_assert(false && "This should never happen!");
+			}
 		}
 
 		ocean_assert(yFrameDownsampled);
