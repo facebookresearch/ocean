@@ -435,8 +435,6 @@ bool TestFrameFilterSeparable::testExtremeDimensions(const double testDuration, 
 
 	const ProcessorInstructions processorInstructions = Processor::get().instructions();
 
-	unsigned long long iterations = 0ull;
-
 	bool allSucceeded = true;
 
 	const Timestamp startTimestamp(true);
@@ -445,9 +443,6 @@ bool TestFrameFilterSeparable::testExtremeDimensions(const double testDuration, 
 	{
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 64u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 64u);
-
-		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
 		unsigned int horizontalFilterSize = RandomI::random(1u, width);
 		unsigned int verticalFilterSize = RandomI::random(1u, height);
@@ -468,40 +463,40 @@ bool TestFrameFilterSeparable::testExtremeDimensions(const double testDuration, 
 
 		for (unsigned int channels = 1u; channels <= 5u; ++channels)
 		{
-			const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<T>(channels);
-
-			Frame source(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-			Frame target(source.frameType(), targetPaddingElements);
-
-			CV::CVUtilities::randomizeFrame(source, false, &randomGenerator, true);
-			CV::CVUtilities::randomizeFrame(target, false, &randomGenerator, true);
-
-			const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-			Worker* useWorker = (iterations % 2ull == 0ull) ? nullptr : &worker;
-
-			constexpr CV::FrameFilterSeparable::ReusableMemory* reusableMemory = nullptr;
-
-			CV::FrameFilterSeparable::filter<T, TFilter>(source.constdata<T>(), target.data<T>(), source.width(), source.height(), source.channels(), sourcePaddingElements, targetPaddingElements, horizontalFilter.data(), horizontalFilterSize, verticalFilter.data(), verticalFilterSize, useWorker, reusableMemory, processorInstructions);
-
-			if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetCopy))
+			for (const bool useWorker : {true, false})
 			{
-				ocean_assert(false && "Invalid padding memory!");
-				return false;
-			}
+				const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<T>(channels);
 
-			const std::vector<float> normalizedHorizontalFilter(normalizedFilter(horizontalFilter));
-			const std::vector<float> normalizedVerticalFilter(normalizedFilter(verticalFilter));
+				const Frame source = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame target = CV::CVUtilities::randomizedFrame(source.frameType(), false, &randomGenerator);
 
-			double averageAbsError = NumericD::maxValue();
-			double maximalAbsError = NumericD::maxValue();
-			TestFrameFilterSeparable::validateFilter<T>(source.constdata<T>(), target.constdata<T>(), source.width(), source.height(), source.channels(), normalizedHorizontalFilter, normalizedVerticalFilter, &averageAbsError, &maximalAbsError, nullptr, sourcePaddingElements, targetPaddingElements, 0u);
-			if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
-			{
-				allSucceeded = false;
+				const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+				constexpr CV::FrameFilterSeparable::ReusableMemory* reusableMemory = nullptr;
+
+				if (!CV::FrameFilterSeparable::filter<T, TFilter>(source.constdata<T>(), target.data<T>(), source.width(), source.height(), source.channels(), source.paddingElements(), target.paddingElements(), horizontalFilter.data(), horizontalFilterSize, verticalFilter.data(), verticalFilterSize, useWorker ? &worker : nullptr, reusableMemory, processorInstructions))
+				{
+					allSucceeded = false;
+				}
+
+				if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetCopy))
+				{
+					ocean_assert(false && "Invalid padding memory!");
+					return false;
+				}
+
+				const std::vector<float> normalizedHorizontalFilter(normalizedFilter(horizontalFilter));
+				const std::vector<float> normalizedVerticalFilter(normalizedFilter(verticalFilter));
+
+				double averageAbsError = NumericD::maxValue();
+				double maximalAbsError = NumericD::maxValue();
+				TestFrameFilterSeparable::validateFilter<T>(source.constdata<T>(), target.constdata<T>(), source.width(), source.height(), source.channels(), normalizedHorizontalFilter, normalizedVerticalFilter, &averageAbsError, &maximalAbsError, nullptr, source.paddingElements(), target.paddingElements(), 0u);
+				if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
+				{
+					allSucceeded = false;
+				}
 			}
 		}
-		iterations++;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -611,14 +606,8 @@ bool TestFrameFilterSeparable::testReusableMemory(const double testDuration)
 
 		do
 		{
-			const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-			const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame frame(FrameType(width, height, FrameType::genericPixelFormat<T, 3u>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-			Frame target(frame.frameType(), targetPaddingElements);
-
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator, true);
-			CV::CVUtilities::randomizeFrame(target, false, &randomGenerator, true);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T, 3u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator, true);
+			Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator, true);
 
 			const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -626,7 +615,7 @@ bool TestFrameFilterSeparable::testReusableMemory(const double testDuration)
 			const std::vector<TFilter> verticalFilter(randomFilter<TFilter>(randomGenerator, filterSize));
 
 			performance.start();
-				CV::FrameFilterSeparable::filter<T, TFilter>(frame.constdata<T>(), target.data<T>(), frame.width(), frame.height(), frame.channels(), framePaddingElements, targetPaddingElements, horizontalFilter.data(), filterSize, verticalFilter.data(), filterSize, nullptr, useReusableMemory ? &reusableMemory : nullptr, processorInstructions);
+				CV::FrameFilterSeparable::filter<T, TFilter>(frame.constdata<T>(), target.data<T>(), frame.width(), frame.height(), frame.channels(), frame.paddingElements(), target.paddingElements(), horizontalFilter.data(), filterSize, verticalFilter.data(), filterSize, nullptr, useReusableMemory ? &reusableMemory : nullptr, processorInstructions);
 			performance.stop();
 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetCopy))
@@ -640,7 +629,7 @@ bool TestFrameFilterSeparable::testReusableMemory(const double testDuration)
 
 			double averageAbsError = NumericD::maxValue();
 			double maximalAbsError = NumericD::maxValue();
-			TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), frame.channels(), normalizedHorizontalFilter, normalizedVerticalFilter, &averageAbsError, &maximalAbsError, nullptr, framePaddingElements, targetPaddingElements, 0u);
+			TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), frame.channels(), normalizedHorizontalFilter, normalizedVerticalFilter, &averageAbsError, &maximalAbsError, nullptr, frame.paddingElements(), target.paddingElements(), 0u);
 			if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
 			{
 				allSucceeded = false;
@@ -705,14 +694,8 @@ bool TestFrameFilterSeparable::testReusableMemoryComfort(const double testDurati
 
 		do
 		{
-			const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-			const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame frame(FrameType(width, height, FrameType::genericPixelFormat<T, 3u>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-			Frame target(frame.frameType(), targetPaddingElements);
-
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator, true);
-			CV::CVUtilities::randomizeFrame(target, false, &randomGenerator, true);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T, 3u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator, true);
+			Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator, true);
 
 			const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -734,7 +717,7 @@ bool TestFrameFilterSeparable::testReusableMemoryComfort(const double testDurati
 
 			double averageAbsError = NumericD::maxValue();
 			double maximalAbsError = NumericD::maxValue();
-			TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), frame.channels(), normalizedHorizontalFilter, normalizedVerticalFilter, &averageAbsError, &maximalAbsError, nullptr, framePaddingElements, targetPaddingElements, 0u);
+			TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), frame.channels(), normalizedHorizontalFilter, normalizedVerticalFilter, &averageAbsError, &maximalAbsError, nullptr, frame.paddingElements(), target.paddingElements(), 0u);
 			if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
 			{
 				allSucceeded = false;
@@ -795,14 +778,8 @@ bool TestFrameFilterSeparable::testFilter8BitPerChannel(const unsigned int width
 
 		do
 		{
-			const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-			const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame frame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-			Frame target(frame.frameType(), targetPaddingElements);
-
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator, true);
-			CV::CVUtilities::randomizeFrame(target, false, &randomGenerator, true);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator, true);
+			Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator, true);
 
 			const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -812,7 +789,7 @@ bool TestFrameFilterSeparable::testFilter8BitPerChannel(const unsigned int width
 			constexpr CV::FrameFilterSeparable::ReusableMemory* reusableMemory = nullptr;
 
 			performance.start();
-			CV::FrameFilterSeparable::filter<T, TFilter>(frame.constdata<T>(), target.data<T>(), frame.width(), frame.height(), frame.channels(), framePaddingElements, targetPaddingElements, horizontalFilter.data(), horizontalFilterSize, verticalFilter.data(), verticalFilterSize, useWorker, reusableMemory, processorInstructions);
+				CV::FrameFilterSeparable::filter<T, TFilter>(frame.constdata<T>(), target.data<T>(), frame.width(), frame.height(), frame.channels(), frame.paddingElements(), target.paddingElements(), horizontalFilter.data(), horizontalFilterSize, verticalFilter.data(), verticalFilterSize, useWorker, reusableMemory, processorInstructions);
 			performance.stop();
 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetCopy))
@@ -826,7 +803,7 @@ bool TestFrameFilterSeparable::testFilter8BitPerChannel(const unsigned int width
 
 			double averageAbsError = NumericD::maxValue();
 			double maximalAbsError = NumericD::maxValue();
-			TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), channels, normalizedHorizontalFilter, normalizedVerticalFilter, &averageAbsError, &maximalAbsError, nullptr, framePaddingElements, targetPaddingElements, 0u);
+			TestFrameFilterSeparable::validateFilter<T>(frame.constdata<T>(), target.constdata<T>(), frame.width(), frame.height(), channels, normalizedHorizontalFilter, normalizedVerticalFilter, &averageAbsError, &maximalAbsError, nullptr, frame.paddingElements(), target.paddingElements(), 0u);
 			if (averageAbsError > averageErrorThreshold || maximalAbsError > maximalErrorThreshold)
 			{
 				allSucceeded = false;
@@ -928,20 +905,17 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversalExtremeResolutions(co
 
 		for (unsigned int channels = 1u; channels <= 5u; ++channels)
 		{
-			unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-			unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame sourceFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-			Frame targetFrame(sourceFrame.frameType(), targetPaddingElements);
-
-			CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator, true);
-			CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator, true);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator, true);
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(sourceFrame.frameType(), false, &randomGenerator, true);
 
 			Worker* useWorker = (iterations % 2ull == 0ull) ? nullptr : &worker;
 
 			const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-			CV::FrameFilterSeparable::filterUniversal<T>(sourceFrame.constdata<T>(), targetFrame.data<T>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), sourceFrame.paddingElements(), targetFrame.paddingElements(), horizontalFilter.data(), (unsigned int)(horizontalFilter.size()), verticalFilter.data(), (unsigned int)(verticalFilter.size()), useWorker);
+			if (!CV::FrameFilterSeparable::filterUniversal<T>(sourceFrame.constdata<T>(), targetFrame.data<T>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), sourceFrame.paddingElements(), targetFrame.paddingElements(), horizontalFilter.data(), (unsigned int)(horizontalFilter.size()), verticalFilter.data(), (unsigned int)(verticalFilter.size()), useWorker))
+			{
+				allSucceeded = false;
+			}
 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
 			{
@@ -1027,6 +1001,8 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const unsigned int w
 		Log::info() << "... filtering " << width << "x" << height << ", " << channels << " channels and filter size " << horizontalFilterSize << "x" << verticalFilterSize << ":";
 	}
 
+	bool allSucceeded = true;
+
 	RandomGenerator randomGenerator;
 
 	double sumAverageError = 0.0;
@@ -1047,14 +1023,8 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const unsigned int w
 
 		do
 		{
-			unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-			unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame sourceFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-			Frame targetFrame(sourceFrame.frameType(), targetPaddingElements);
-
-			CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator, true);
-			CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator, true);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator, true);
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(sourceFrame.frameType(), false, &randomGenerator, true);
 
 			std::vector<float> horizontalFilter(horizontalFilterSize);
 			std::vector<float> verticalFilter(verticalFilterSize);
@@ -1088,13 +1058,18 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const unsigned int w
 			const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 			performance.start();
-			CV::FrameFilterSeparable::filterUniversal<T>(sourceFrame.constdata<T>(), targetFrame.data<T>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), sourceFrame.paddingElements(), targetFrame.paddingElements(), horizontalFilter.data(), (unsigned int)(horizontalFilter.size()), verticalFilter.data(), (unsigned int)(verticalFilter.size()), useWorker);
+				const bool localResult = CV::FrameFilterSeparable::filterUniversal<T>(sourceFrame.constdata<T>(), targetFrame.data<T>(), sourceFrame.width(), sourceFrame.height(), sourceFrame.channels(), sourceFrame.paddingElements(), targetFrame.paddingElements(), horizontalFilter.data(), (unsigned int)(horizontalFilter.size()), verticalFilter.data(), (unsigned int)(verticalFilter.size()), useWorker);
 			performance.stop();
 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
 			{
 				ocean_assert(false && "Invalid padding memory!");
 				return false;
+			}
+
+			if (!localResult)
+			{
+				allSucceeded = false;
 			}
 
 			double averageAbsError = NumericD::maxValue();
@@ -1130,7 +1105,7 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const unsigned int w
 	ocean_assert(measurements != 0ull);
 	const double averageAbsError = sumAverageError / double(measurements);
 
-	const bool allSucceeded = averageAbsError <= averageErrorThreshold && maximalError <= maximalErrorThreshold;
+	allSucceeded = allSucceeded && averageAbsError <= averageErrorThreshold && maximalError <= maximalErrorThreshold;
 
 	if (width > 64u)
 	{

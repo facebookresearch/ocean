@@ -346,18 +346,15 @@ bool TestFrameFilterGaussian::testExtremeDimensions(const unsigned int channels,
 		{
 			for (const bool useWorker : {false, true})
 			{
-				const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-				Frame frame(FrameType(filterSize + x, filterSize + y, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-				Frame target(frame.frameType(), targetPaddingElements);
-
-				CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
-				CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
+				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(filterSize + x, filterSize + y, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
 
 				const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				CV::FrameFilterGaussian::filter<T, TFilter>(frame.constdata<T>(), target.data<T>(), frame.width(), frame.height(), frame.channels(), frame.paddingElements(), target.paddingElements(), filterSize, filterSize, -1.0f, useWorker ? &worker : nullptr, reusableMemory, processorInstructions);
+				if (!CV::FrameFilterGaussian::filter<T, TFilter>(frame.constdata<T>(), target.data<T>(), frame.width(), frame.height(), frame.channels(), frame.paddingElements(), target.paddingElements(), filterSize, filterSize, -1.0f, useWorker ? &worker : nullptr, reusableMemory, processorInstructions))
+				{
+					allSucceeded = false;
+				}
 
 				if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetCopy))
 				{
@@ -479,25 +476,24 @@ bool TestFrameFilterGaussian::testFilter(const unsigned int width, const unsigne
 
 		do
 		{
-			const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-			const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame frame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-			Frame target(frame.frameType(), targetPaddingElements);
-
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
-			CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
 
 			const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 			performance.start();
-			CV::FrameFilterGaussian::filter<T, TFilter>(frame.constdata<T>(), target.data<T>(), frame.width(), frame.height(), frame.channels(), frame.paddingElements(), target.paddingElements(), filterSize, filterSize, -1.0f, useWorker, reusableMemory, processorInstructions);
+				const bool localResult = CV::FrameFilterGaussian::filter<T, TFilter>(frame.constdata<T>(), target.data<T>(), frame.width(), frame.height(), frame.channels(), frame.paddingElements(), target.paddingElements(), filterSize, filterSize, -1.0f, useWorker, reusableMemory, processorInstructions);
 			performance.stop();
 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetCopy))
 			{
 				ocean_assert(false && "Invalid padding memory!");
 				return false;
+			}
+
+			if (!localResult)
+			{
+				allSucceeded = false;
 			}
 
 			double averageAbsError = NumericD::maxValue();
@@ -573,25 +569,24 @@ bool TestFrameFilterGaussian::testReusableMemory(const double testDuration)
 
 				do
 				{
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame frame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-					Frame target(frame.frameType(), targetPaddingElements);
-
-					CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
-					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
+					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+					Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					performance.start();
-						CV::FrameFilterGaussian::filter<T, TFilter>(frame.constdata<T>(), target.data<T>(), frame.width(), frame.height(), frame.channels(), frame.paddingElements(), target.paddingElements(), filterSize, filterSize, -1.0f, nullptr, useReusableMemory ? &reusableMemory : nullptr, processorInstructions);
+						const bool localResult = CV::FrameFilterGaussian::filter<T, TFilter>(frame.constdata<T>(), target.data<T>(), frame.width(), frame.height(), frame.channels(), frame.paddingElements(), target.paddingElements(), filterSize, filterSize, -1.0f, nullptr, useReusableMemory ? &reusableMemory : nullptr, processorInstructions);
 					performance.stop();
 
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetCopy))
 					{
 						ocean_assert(false && "Invalid padding memory!");
 						return false;
+					}
+
+					if (!localResult)
+					{
+						allSucceeded = false;
 					}
 
 					double averageAbsError = NumericD::maxValue();
@@ -665,25 +660,24 @@ bool TestFrameFilterGaussian::testReusableMemoryComfort(const double testDuratio
 
 				do
 				{
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame frame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-					Frame target(frame.frameType(), targetPaddingElements);
-
-					CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
-					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
+					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+					Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 					performance.start();
-						CV::FrameFilterGaussian::filter(frame, target, filterSize, nullptr, useReusableMemory ? &reusableMemory : nullptr);
+						const bool localResult = CV::FrameFilterGaussian::filter(frame, target, filterSize, nullptr, useReusableMemory ? &reusableMemory : nullptr);
 					performance.stop();
 
 					if (!CV::CVUtilities::isPaddingMemoryIdentical(target, targetCopy))
 					{
 						ocean_assert(false && "Invalid padding memory!");
 						return false;
+					}
+
+					if (!localResult)
+					{
+						allSucceeded = false;
 					}
 
 					double averageAbsError = NumericD::maxValue();
