@@ -13,7 +13,6 @@
 #include "ocean/test/testbase/TestHighPerformanceTimer.h"
 #include "ocean/test/testbase/TestInheritance.h"
 #include "ocean/test/testbase/TestKdTree.h"
-#include "ocean/test/testbase/TestLegacyFrame.h"
 #include "ocean/test/testbase/TestLock.h"
 #include "ocean/test/testbase/TestMedian.h"
 #include "ocean/test/testbase/TestMemory.h"
@@ -94,15 +93,6 @@ bool testBase(const double testDuration, Worker& worker, const std::string& test
 		Log::info() << " ";
 		Log::info() << " ";
 		allSucceeded = TestDataType::test(testDuration) && allSucceeded;
-	}
-
-	if (testSet.empty() || testSet.find("legacyframe") != testSet.end())
-	{
-		Log::info() << " ";
-		Log::info() << " ";
-		Log::info() << " ";
-		Log::info() << " ";
-		allSucceeded = TestLegacyFrame::test(testDuration) && allSucceeded;
 	}
 
 	if (testSet.empty() || testSet.find("frame") != testSet.end())

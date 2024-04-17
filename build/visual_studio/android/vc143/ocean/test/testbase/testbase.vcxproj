@@ -82,7 +82,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestHighPerformanceTimer.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestInheritance.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestKdTree.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestLegacyFrame.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestLock.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestMedian.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestMemory.h" />
@@ -118,7 +117,6 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestHighPerformanceTimer.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestInheritance.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestKdTree.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestLegacyFrame.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestLock.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestMedian.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestMemory.cpp" />

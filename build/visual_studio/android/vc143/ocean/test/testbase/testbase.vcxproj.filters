@@ -90,9 +90,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestMoveBehavior.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestLegacyFrame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -189,9 +186,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestMoveBehavior.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestLegacyFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestFrame.cpp">
