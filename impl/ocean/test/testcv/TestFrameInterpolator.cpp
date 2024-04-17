@@ -352,8 +352,13 @@ bool TestFrameInterpolator::testResize(const unsigned int sourceWidth, const uns
 					ocean_assert(sourceFrame.numberPlanes() == 1u);
 
 					performance.start();
-						CV::FrameInterpolator::resize<uint8_t, tChannels, tResizeMethod>(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceFrame.width(), sourceFrame.height(), targetFrame.width(), targetFrame.height(), sourceFrame.paddingElements(), targetFrame.paddingElements(), useWorker);
+						const bool result = CV::FrameInterpolator::resize<uint8_t, tChannels, tResizeMethod>(sourceFrame.constdata<uint8_t>(), targetFrame.data<uint8_t>(), sourceFrame.width(), sourceFrame.height(), targetFrame.width(), targetFrame.height(), sourceFrame.paddingElements(), targetFrame.paddingElements(), useWorker);
 					performance.stop();
+
+					if (!result)
+					{
+						allSucceeded = false;
+					}
 				}
 				else
 				{
