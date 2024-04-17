@@ -509,19 +509,19 @@ bool FramePyramid::isOwner(const unsigned int layerIndex) const
 	return false;
 }
 
-unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidWidthOrHeight)
+unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidCoarsestWidthOrHeight, unsigned int* coarsestLayerWidth, unsigned int* coarsestLayerHeight)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 
 	unsigned int layerSize = std::min(width, height);
 
-	if (layerSize <= invalidWidthOrHeight)
+	if (layerSize <= invalidCoarsestWidthOrHeight)
 	{
 		// the resolution is already too small for one pyramid layer
 		return 0u;
 	}
 
-	ocean_assert(invalidWidthOrHeight < layerSize);
+	ocean_assert(invalidCoarsestWidthOrHeight < layerSize);
 
 	unsigned int layers = 1u;
 
@@ -529,7 +529,7 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 	{
 		const unsigned int nextLayerSize = layerSize / 2u;
 
-		if (nextLayerSize <= invalidWidthOrHeight)
+		if (nextLayerSize <= invalidCoarsestWidthOrHeight)
 		{
 			break;
 		}
@@ -539,14 +539,24 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 		++layers;
 	}
 
+	if (coarsestLayerWidth != nullptr)
+	{
+		*coarsestLayerWidth = width >> (layers - 1u);
+	}
+
+	if (coarsestLayerHeight != nullptr)
+	{
+		*coarsestLayerHeight = height >> (layers - 1u);
+	}
+
 	return layers;
 }
 
-unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidWidth, const unsigned int invalidHeight)
+unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidCoarsestWidth, const unsigned int invalidCoarsestHeight, unsigned int* coarsestLayerWidth, unsigned int* coarsestLayerHeight)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 
-	if (width <= invalidWidth || height <= invalidHeight)
+	if (width <= invalidCoarsestWidth || height <= invalidCoarsestHeight)
 	{
 		// the resolution is already too small for one pyramid layer
 		return 0u;
@@ -554,8 +564,8 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 
 	unsigned int layerWidth = width;
 	unsigned int layerHeight = height;
-	ocean_assert(invalidWidth < layerWidth);
-	ocean_assert(invalidHeight < layerHeight);
+	ocean_assert(invalidCoarsestWidth < layerWidth);
+	ocean_assert(invalidCoarsestHeight < layerHeight);
 
 	unsigned int layers = 1u;
 
@@ -564,7 +574,7 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 		const unsigned int nextLayerWidth = layerWidth / 2u;
 		const unsigned int nextLayerHeight = layerHeight / 2u;
 
-		if (nextLayerWidth <= invalidWidth || nextLayerHeight <= invalidHeight)
+		if (nextLayerWidth <= invalidCoarsestWidth || nextLayerHeight <= invalidCoarsestHeight)
 		{
 			break;
 		}
@@ -575,15 +585,25 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 		++layers;
 	}
 
+	if (coarsestLayerWidth != nullptr)
+	{
+		*coarsestLayerWidth = layerWidth;
+	}
+
+	if (coarsestLayerHeight != nullptr)
+	{
+		*coarsestLayerHeight = layerHeight;
+	}
+
 	return layers;
 }
 
-unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidWidth, const unsigned int invalidHeight, const unsigned int layerFactor, const unsigned int maximalRadius, const unsigned int coarsestLayerRadius)
+unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidCoarsestWidth, const unsigned int invalidCoarsestHeight, const unsigned int layerFactor, const unsigned int maximalRadius, const unsigned int coarsestLayerRadius, unsigned int* coarsestLayerWidth, unsigned int* coarsestLayerHeight)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(layerFactor >= 2u && coarsestLayerRadius >= 2u);
 
-	if (width <= invalidWidth || height <= invalidHeight)
+	if (width <= invalidCoarsestWidth || height <= invalidCoarsestHeight)
 	{
 		// the resolution is already too small for one pyramid layer
 		return 0u;
@@ -600,7 +620,7 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 		const unsigned int nextLayerWidth = layerWidth / layerFactor;
 		const unsigned int nextLayerHeight = layerHeight / layerFactor;
 
-		if (nextLayerWidth <= invalidWidth || nextLayerHeight <= invalidHeight)
+		if (nextLayerWidth <= invalidCoarsestWidth || nextLayerHeight <= invalidCoarsestHeight)
 		{
 			break;
 		}
@@ -616,6 +636,16 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 		totalRadius *= layerFactor;
 
 		++layers;
+	}
+
+	if (coarsestLayerWidth != nullptr)
+	{
+		*coarsestLayerWidth = layerWidth;
+	}
+
+	if (coarsestLayerHeight != nullptr)
+	{
+		*coarsestLayerHeight = layerHeight;
 	}
 
 	return layers;

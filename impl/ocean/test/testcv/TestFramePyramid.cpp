@@ -298,7 +298,13 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 		{
 			// testing maximal number of layers
 
-			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, 0u /*invalidWidthOrHeight*/);
+			unsigned int coarsestLayerWidth = RandomI::random32(randomGenerator);
+			unsigned int coarsestLayerHeight = RandomI::random32(randomGenerator);
+
+			unsigned int* useCoarsestLayerWidth = RandomI::boolean(randomGenerator) ? &coarsestLayerWidth : nullptr;
+			unsigned int* useCoarsestLayerHeight = RandomI::boolean(randomGenerator) ? &coarsestLayerHeight : nullptr;
+
+			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, 0u /*invalidCoarsestWidthOrHeight*/, useCoarsestLayerWidth, useCoarsestLayerHeight);
 
 			if (layers == 0u)
 			{
@@ -329,6 +335,22 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 			{
 				allSucceeded = false;
 			}
+
+			if (useCoarsestLayerWidth != nullptr)
+			{
+				if (*useCoarsestLayerWidth != layerWidth)
+				{
+					allSucceeded = false;
+				}
+			}
+
+			if (useCoarsestLayerHeight != nullptr)
+			{
+				if (*useCoarsestLayerHeight != layerHeight)
+				{
+					allSucceeded = false;
+				}
+			}
 		}
 
 		const unsigned int invalidWidth = RandomI::random(randomGenerator, 0u, width - 1u);
@@ -339,7 +361,13 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 
 			const unsigned int invalidSize = std::min(invalidWidth, invalidHeight);
 
-			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, invalidSize);
+			unsigned int coarsestLayerWidth = RandomI::random32(randomGenerator);
+			unsigned int coarsestLayerHeight = RandomI::random32(randomGenerator);
+
+			unsigned int* useCoarsestLayerWidth = RandomI::boolean(randomGenerator) ? &coarsestLayerWidth : nullptr;
+			unsigned int* useCoarsestLayerHeight = RandomI::boolean(randomGenerator) ? &coarsestLayerHeight : nullptr;
+
+			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, invalidSize, useCoarsestLayerWidth, useCoarsestLayerHeight);
 
 			if (layers == 0u)
 			{
@@ -364,12 +392,34 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 			{
 				allSucceeded = false;
 			}
+
+			if (useCoarsestLayerWidth != nullptr)
+			{
+				if (*useCoarsestLayerWidth != testWidth)
+				{
+					allSucceeded = false;
+				}
+			}
+
+			if (useCoarsestLayerHeight != nullptr)
+			{
+				if (*useCoarsestLayerHeight != testHeight)
+				{
+					allSucceeded = false;
+				}
+			}
 		}
 
 		{
 			// testing function defining invalid width and height
 
-			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, invalidWidth, invalidHeight);
+			unsigned int coarsestLayerWidth = RandomI::random32(randomGenerator);
+			unsigned int coarsestLayerHeight = RandomI::random32(randomGenerator);
+
+			unsigned int* useCoarsestLayerWidth = RandomI::boolean(randomGenerator) ? &coarsestLayerWidth : nullptr;
+			unsigned int* useCoarsestLayerHeight = RandomI::boolean(randomGenerator) ? &coarsestLayerHeight : nullptr;
+
+			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, invalidWidth, invalidHeight, useCoarsestLayerWidth, useCoarsestLayerHeight);
 
 			if (layers == 0u)
 			{
@@ -394,6 +444,22 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 			{
 				allSucceeded = false;
 			}
+
+			if (useCoarsestLayerWidth != nullptr)
+			{
+				if (*useCoarsestLayerWidth != testWidth)
+				{
+					allSucceeded = false;
+				}
+			}
+
+			if (useCoarsestLayerHeight != nullptr)
+			{
+				if (*useCoarsestLayerHeight != testHeight)
+				{
+					allSucceeded = false;
+				}
+			}
 		}
 
 		{
@@ -410,7 +476,13 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 
 			const unsigned int coarsestLayerRadius = RandomI::random(randomGenerator, 2u, 20u);
 
-			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, invalidWidth, invalidHeight, layerFactor, maximalRadius, coarsestLayerRadius);
+			unsigned int coarsestLayerWidth = RandomI::random32(randomGenerator);
+			unsigned int coarsestLayerHeight = RandomI::random32(randomGenerator);
+
+			unsigned int* useCoarsestLayerWidth = RandomI::boolean(randomGenerator) ? &coarsestLayerWidth : nullptr;
+			unsigned int* useCoarsestLayerHeight = RandomI::boolean(randomGenerator) ? &coarsestLayerHeight : nullptr;
+
+			const unsigned int layers = CV::FramePyramid::idealLayers(width, height, invalidWidth, invalidHeight, layerFactor, maximalRadius, coarsestLayerRadius, useCoarsestLayerWidth, useCoarsestLayerHeight);
 
 			unsigned int testWidth = width;
 			unsigned int testHeight = height;
@@ -446,6 +518,22 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 				// we should not add more layers than necessary
 
 				allSucceeded = false;
+			}
+
+			if (useCoarsestLayerWidth != nullptr)
+			{
+				if (*useCoarsestLayerWidth != testWidth)
+				{
+					allSucceeded = false;
+				}
+			}
+
+			if (useCoarsestLayerHeight != nullptr)
+			{
+				if (*useCoarsestLayerHeight != testHeight)
+				{
+					allSucceeded = false;
+				}
 			}
 		}
 	}
