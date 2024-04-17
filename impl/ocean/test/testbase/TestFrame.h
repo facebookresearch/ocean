@@ -86,18 +86,12 @@ class OCEAN_TEST_BASE_EXPORT TestFrame
 		 */
 		static bool testCopyConstructor(const double testDuration);
 
-		/** Tests all Frame copy constructors.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		static bool testCopyConstructorFrame(const double testDuration);
-
 		/**
-		 * Tests all move constructor for Frame object.
+		 * Tests all move constructors.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testMoveConstructorFrame(const double testDuration);
+		static bool testMoveConstructor(const double testDuration);
 
 		/**
 		 * Tests all copy operators.

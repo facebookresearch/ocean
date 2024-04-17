@@ -74,13 +74,7 @@ bool TestFrame::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testCopyConstructorFrame(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
-	allSucceeded = testMoveConstructorFrame(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructor(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -258,14 +252,9 @@ TEST(TestFrame, CopyConstructor)
 	EXPECT_TRUE(TestFrame::testCopyConstructor(GTEST_TEST_DURATION));
 }
 
-TEST(TestFrame, CopyConstructorFrame)
+TEST(TestFrame, MoveConstructor)
 {
-	EXPECT_TRUE(TestFrame::testCopyConstructorFrame(GTEST_TEST_DURATION));
-}
-
-TEST(TestFrame, MoveConstructorFrame)
-{
-	EXPECT_TRUE(TestFrame::testMoveConstructorFrame(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestFrame::testMoveConstructor(GTEST_TEST_DURATION));
 }
 
 TEST(TestFrame, CopyOperator)
@@ -499,7 +488,12 @@ bool TestFrame::testPlaneCopyContructors(const double testDuration)
 
 	Frame::Plane movedDefaultPlane(std::move(defaultPlane));
 
-	if (movedDefaultPlane.isValid() || defaultPlane.isValid())
+	if (movedDefaultPlane.isValid())
+	{
+		allSucceeded = false;
+	}
+
+	if (defaultPlane.isValid()) // NOLINT(bugprone-use-after-move)
 	{
 		allSucceeded = false;
 	}
@@ -680,7 +674,7 @@ bool TestFrame::testFrameSpecificationGenericPixelFormats(const double testDurat
 			allSucceeded = false;
 		}
 
-		if (frame.isNull() == false)
+		if (!frame.isNull()) // NOLINT(bugprone-use-after-move)
 		{
 			allSucceeded = false;
 		}
@@ -1058,7 +1052,7 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing copy constructors:";
+	Log::info() << "Testing copy constructor:";
 
 	bool allSucceeded = true;
 
@@ -1480,349 +1474,11 @@ bool TestFrame::testCopyConstructor(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestFrame::testCopyConstructorFrame(const double testDuration)
+bool TestFrame::testMoveConstructor(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing copy constructors with Frame:";
-
-	bool allSucceeded = true;
-
-	RandomGenerator randomGenerator;
-
-	const Timestamp startTimestamp(true);
-
-	const FrameType::PixelFormats pixelFormats =
-	{
-		FrameType::FORMAT_RGB24,
-		FrameType::FORMAT_ABGR32,
-		FrameType::FORMAT_Y8,
-		FrameType::FORMAT_Y10,
-		FrameType::FORMAT_Y32,
-		FrameType::FORMAT_RGB5551,
-		FrameType::FORMAT_Y_UV12,
-		FrameType::FORMAT_Y_V_U12,
-		FrameType::FORMAT_Y_U_V24,
-		FrameType::FORMAT_F64,
-		FrameType::genericPixelFormat<uint8_t, 1u>(),
-		FrameType::genericPixelFormat<float, 3u>(),
-	};
-
-	const std::vector<Frame::AdvancedCopyMode> advancedCopyModes =
-	{
-		Frame::ACM_USE_KEEP_LAYOUT,
-		Frame::ACM_COPY_REMOVE_PADDING_LAYOUT,
-		Frame::ACM_COPY_KEEP_LAYOUT_DO_NOT_COPY_PADDING_DATA,
-		Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA,
-		Frame::ACM_USE_OR_COPY,
-		Frame::ACM_USE_OR_COPY_KEEP_LAYOUT
-	};
-
-	do
-	{
-		const FrameType frameType(randomizedFrameType(pixelFormats, &randomGenerator));
-
-		const unsigned int bytesPerDataType = frameType.bytesPerDataType();
-
-		const Timestamp timestamp = Timestamp(double(RandomI::random(randomGenerator, -100, 100)));
-
-		LegacyFrame sourceFrameOwner(frameType, timestamp);
-
-		const Frame::AdvancedCopyMode advancedCopyMode = advancedCopyModes[RandomI::random(randomGenerator, (unsigned int)(advancedCopyModes.size() - 1))];
-
-		{
-			// LegacyFrame is owner of the memory
-
-			const void* sourceFrameData = sourceFrameOwner.constdata<void>();
-
-			const Frame frameCopy(sourceFrameOwner, advancedCopyMode);
-
-			if (!frameCopy.isValid())
-			{
-				allSucceeded = false;
-			}
-
-			if (frameCopy.frameType() != sourceFrameOwner.frameType())
-			{
-				allSucceeded = false;
-			}
-
-			if (frameCopy.timestamp() != timestamp)
-			{
-				allSucceeded = false;
-			}
-
-			for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
-			{
-				unsigned int planeWidth;
-				unsigned int planeHeight;
-				unsigned int planeChannels;
-
-				if (FrameType::planeLayout(frameType.pixelFormat(), frameType.width(), frameType.height(), planeIndex, planeWidth, planeHeight, planeChannels))
-				{
-					const Frame::Plane& plane = frameCopy.planes()[planeIndex];
-
-					if (plane.height() != planeHeight)
-					{
-						allSucceeded = false;
-					}
-
-					const unsigned int planeWidthBytes = planeWidth * planeChannels * bytesPerDataType;
-					const unsigned int planeSizeBytes = planeWidthBytes * planeHeight;
-
-					if (plane.widthBytes() != planeWidthBytes)
-					{
-						allSucceeded = false;
-					}
-
-					if (plane.strideBytes() != planeWidthBytes)
-					{
-						allSucceeded = false;
-					}
-
-					if (plane.paddingBytes() != 0u || plane.paddingElements() != 0u)
-					{
-						allSucceeded = false;
-					}
-
-					if (plane.elementTypeSize() != bytesPerDataType)
-					{
-						allSucceeded = false;
-					}
-
-					bool expectedIsOwner = true;
-					bool expectedIsReadOnly = true;
-
-					switch (advancedCopyMode)
-					{
-						case Frame::ACM_USE_KEEP_LAYOUT:
-							expectedIsOwner = false;
-							expectedIsReadOnly = false;
-							break;
-
-						case Frame::ACM_COPY_REMOVE_PADDING_LAYOUT:
-						case Frame::ACM_COPY_KEEP_LAYOUT_DO_NOT_COPY_PADDING_DATA:
-						case Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA:
-							expectedIsOwner = true;
-							expectedIsReadOnly = false;
-							break;
-
-						case Frame::ACM_USE_OR_COPY:
-						case Frame::ACM_USE_OR_COPY_KEEP_LAYOUT:
-							expectedIsOwner = true;
-							expectedIsReadOnly = false;
-					}
-
-					if (expectedIsOwner)
-					{
-						if (!frameCopy.isOwner())
-						{
-							allSucceeded = false;
-						}
-
-						if (!frameCopy.planes()[planeIndex].isOwner())
-						{
-							allSucceeded = false;
-						}
-
-						if (frameCopy.constdata<void>(planeIndex) == sourceFrameData)
-						{
-							allSucceeded = false;
-						}
-					}
-					else
-					{
-						if (frameCopy.isOwner())
-						{
-							allSucceeded = false;
-						}
-
-						if (frameCopy.planes()[planeIndex].isOwner())
-						{
-							allSucceeded = false;
-						}
-
-						if (frameCopy.constdata<void>(planeIndex) != sourceFrameData)
-						{
-							allSucceeded = false;
-						}
-					}
-
-					if (frameCopy.isReadOnly() != expectedIsReadOnly)
-					{
-						allSucceeded = false;
-					}
-
-					sourceFrameData = (const void*)((const uint8_t*)sourceFrameData + planeSizeBytes);
-				}
-				else
-				{
-					ocean_assert(false && "Invalid plane layout!");
-					allSucceeded = false;
-				}
-			}
-		}
-
-		{
-			// LegacyFrame is not owner of the memory
-
-			const LegacyFrame readOnlyNotOwnerFrame(sourceFrameOwner.frameType(), timestamp, sourceFrameOwner.constdata<uint8_t>(), false);
-			const LegacyFrame writableNotOwnerFrame(sourceFrameOwner.frameType(), timestamp, sourceFrameOwner.data<uint8_t>(), false);
-
-			for (unsigned int nSourceReadOnly = 0u; nSourceReadOnly < 2u; ++nSourceReadOnly)
-			{
-				const bool sourceIsReadOnly = nSourceReadOnly == 0u;
-
-				const void* sourceFrameData = sourceIsReadOnly ? readOnlyNotOwnerFrame.constdata<void>() : writableNotOwnerFrame.constdata<void>();
-
-				const Frame frameCopy(sourceIsReadOnly ? readOnlyNotOwnerFrame : writableNotOwnerFrame, advancedCopyMode);
-
-				if (!frameCopy.isValid())
-				{
-					allSucceeded = false;
-				}
-
-				if (frameCopy.frameType() != sourceFrameOwner.frameType())
-				{
-					allSucceeded = false;
-				}
-
-				if (frameCopy.timestamp() != timestamp)
-				{
-					allSucceeded = false;
-				}
-
-				for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
-				{
-					unsigned int planeWidth;
-					unsigned int planeHeight;
-					unsigned int planeChannels;
-
-					if (FrameType::planeLayout(frameType.pixelFormat(), frameType.width(), frameType.height(), planeIndex, planeWidth, planeHeight, planeChannels))
-					{
-						const Frame::Plane& plane = frameCopy.planes()[planeIndex];
-
-						if (plane.height() != planeHeight)
-						{
-							allSucceeded = false;
-						}
-
-						const unsigned int planeWidthBytes = planeWidth * planeChannels * bytesPerDataType;
-						const unsigned int planeSizeBytes = planeWidthBytes * planeHeight;
-
-						if (plane.widthBytes() != planeWidthBytes)
-						{
-							allSucceeded = false;
-						}
-
-						if (plane.strideBytes() != planeWidthBytes)
-						{
-							allSucceeded = false;
-						}
-
-						if (plane.paddingBytes() != 0u || plane.paddingElements() != 0u)
-						{
-							allSucceeded = false;
-						}
-
-						if (plane.elementTypeSize() != bytesPerDataType)
-						{
-							allSucceeded = false;
-						}
-
-						bool expectedIsOwner = true;
-						bool expectedIsReadOnly = true;
-
-						switch (advancedCopyMode)
-						{
-							case Frame::ACM_USE_KEEP_LAYOUT:
-								expectedIsOwner = false;
-								expectedIsReadOnly = sourceIsReadOnly;
-								break;
-
-							case Frame::ACM_COPY_REMOVE_PADDING_LAYOUT:
-							case Frame::ACM_COPY_KEEP_LAYOUT_DO_NOT_COPY_PADDING_DATA:
-							case Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA:
-								expectedIsOwner = true;
-								expectedIsReadOnly = false;
-								break;
-
-							case Frame::ACM_USE_OR_COPY:
-							case Frame::ACM_USE_OR_COPY_KEEP_LAYOUT:
-								expectedIsOwner = false;
-								expectedIsReadOnly = sourceIsReadOnly;
-						}
-
-						if (expectedIsOwner)
-						{
-							if (!frameCopy.isOwner())
-							{
-								allSucceeded = false;
-							}
-
-							if (!frameCopy.planes()[planeIndex].isOwner())
-							{
-								allSucceeded = false;
-							}
-
-							if (frameCopy.constdata<void>(planeIndex) == sourceFrameData)
-							{
-								allSucceeded = false;
-							}
-						}
-						else
-						{
-							if (frameCopy.isOwner())
-							{
-								allSucceeded = false;
-							}
-
-							if (frameCopy.planes()[planeIndex].isOwner())
-							{
-								allSucceeded = false;
-							}
-
-							if (frameCopy.constdata<void>(planeIndex) != sourceFrameData)
-							{
-								allSucceeded = false;
-							}
-						}
-
-						if (frameCopy.isReadOnly() != expectedIsReadOnly)
-						{
-							allSucceeded = false;
-						}
-
-						sourceFrameData = (const void*)((const uint8_t*)sourceFrameData + planeSizeBytes);
-					}
-					else
-					{
-						ocean_assert(false && "Invalid plane layout!");
-						allSucceeded = false;
-					}
-				}
-			}
-		}
-	}
-	while (startTimestamp + testDuration > Timestamp(true));
-
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
-}
-
-bool TestFrame::testMoveConstructorFrame(const double testDuration)
-{
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "Testing move constructor for LegacyFrame:";
+	Log::info() << "Testing move constructor:";
 
 	bool allSucceeded = true;
 
@@ -1857,18 +1513,23 @@ bool TestFrame::testMoveConstructorFrame(const double testDuration)
 
 			const Timestamp timestamp = Timestamp(double(RandomI::random(randomGenerator, -100, 100)));
 
-			LegacyFrame originalFrame(frameType, timestamp);
+			Frame originalFrame(frameType, Indices32(), timestamp);
 
-			for (unsigned int nSourceIsOwner = 0u; nSourceIsOwner < 2u; ++nSourceIsOwner)
+			for (const bool sourceIsOwner : {true, false})
 			{
-				const bool sourceIsOwner = nSourceIsOwner == 0u;
+				const Frame::AdvancedCopyMode copyMode = sourceIsOwner ? Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA : Frame::ACM_USE_KEEP_LAYOUT;
 
-				LegacyFrame sourceFrame(originalFrame, sourceIsOwner);
-				const void* sourceFrameData = sourceFrame.constdata<void>();
+				Frame sourceFrame(originalFrame, copyMode);
+
+				std::vector<const void*> sourceFrameDatas;
+				for (unsigned int planeIndex = 0u; planeIndex < sourceFrame.numberPlanes(); ++planeIndex)
+				{
+					sourceFrameDatas.push_back(sourceFrame.constdata<void>(planeIndex));
+				}
 
 				Frame targetFrame(std::move(sourceFrame));
 
-				if (sourceFrame.isValid())
+				if (sourceFrame.isValid()) // NOLINT(bugprone-use-after-move)
 				{
 					allSucceeded = false;
 				}
@@ -1899,7 +1560,6 @@ bool TestFrame::testMoveConstructorFrame(const double testDuration)
 						}
 
 						const unsigned int planeWidthBytes = planeWidth * planeChannels * bytesPerDataType;
-						const unsigned int planeSizeBytes = planeWidthBytes * planeHeight;
 
 						if (plane.widthBytes() != planeWidthBytes)
 						{
@@ -1921,27 +1581,15 @@ bool TestFrame::testMoveConstructorFrame(const double testDuration)
 							allSucceeded = false;
 						}
 
-						if (plane.constdata<void>() != sourceFrameData)
+						if (plane.constdata<void>() != sourceFrameDatas[planeIndex])
 						{
 							allSucceeded = false;
 						}
 
-						if (planeIndex == 0u)
+						if (plane.isOwner() != sourceIsOwner)
 						{
-							if (plane.isOwner() != sourceIsOwner)
-							{
-								allSucceeded = false;
-							}
+							allSucceeded = false;
 						}
-						else
-						{
-							if (plane.isOwner())
-							{
-								allSucceeded = false;
-							}
-						}
-
-						sourceFrameData = (const void*)((const uint8_t*)sourceFrameData + planeSizeBytes);
 					}
 					else
 					{
@@ -1957,14 +1605,19 @@ bool TestFrame::testMoveConstructorFrame(const double testDuration)
 
 			const Timestamp timestamp = Timestamp(double(RandomI::random(randomGenerator, -100, 100)));
 
-			LegacyFrame originalFrame(frameType, timestamp);
+			Frame originalFrame(frameType, Indices32(), timestamp);
 
-			for (unsigned int nSourceIsOwner = 0u; nSourceIsOwner < 2u; ++nSourceIsOwner)
+			for (const bool sourceIsOwner : {true, false})
 			{
-				const bool sourceIsOwner = nSourceIsOwner == 0u;
+				const Frame::AdvancedCopyMode copyMode = sourceIsOwner ? Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA : Frame::ACM_USE_KEEP_LAYOUT;
 
-				LegacyFrame sourceFrame(originalFrame, sourceIsOwner);
-				const void* sourceFrameData = sourceFrame.constdata<void>();
+				Frame sourceFrame(originalFrame, copyMode);
+
+				std::vector<const void*> sourceFrameDatas;
+				for (unsigned int planeIndex = 0u; planeIndex < sourceFrame.numberPlanes(); ++planeIndex)
+				{
+					sourceFrameDatas.push_back(sourceFrame.constdata<void>(planeIndex));
+				}
 
 				Indices32 paddingElementsPerPlane;
 
@@ -1980,7 +1633,7 @@ bool TestFrame::testMoveConstructorFrame(const double testDuration)
 
 				targetFrame = std::move(sourceFrame);
 
-				if (sourceFrame.isValid())
+				if (sourceFrame.isValid()) // NOLINT(bugprone-use-after-move)
 				{
 					allSucceeded = false;
 				}
@@ -2011,7 +1664,6 @@ bool TestFrame::testMoveConstructorFrame(const double testDuration)
 						}
 
 						const unsigned int planeWidthBytes = planeWidth * planeChannels * bytesPerDataType;
-						const unsigned int planeSizeBytes = planeWidthBytes * planeHeight;
 
 						if (plane.widthBytes() != planeWidthBytes)
 						{
@@ -2033,27 +1685,15 @@ bool TestFrame::testMoveConstructorFrame(const double testDuration)
 							allSucceeded = false;
 						}
 
-						if (plane.constdata<void>() != sourceFrameData)
+						if (plane.constdata<void>() != sourceFrameDatas[planeIndex])
 						{
 							allSucceeded = false;
 						}
 
-						if (planeIndex == 0u)
+						if (plane.isOwner() != sourceIsOwner)
 						{
-							if (plane.isOwner() != sourceIsOwner)
-							{
-								allSucceeded = false;
-							}
+							allSucceeded = false;
 						}
-						else
-						{
-							if (plane.isOwner())
-							{
-								allSucceeded = false;
-							}
-						}
-
-						sourceFrameData = (const void*)((const uint8_t*)sourceFrameData + planeSizeBytes);
 					}
 					else
 					{
@@ -3043,7 +2683,7 @@ bool TestFrame::testTimestamp(const double testDuration)
 			allSucceeded = false;
 		}
 
-		if (frame.timestamp().isValid())
+		if (frame.isValid() || frame.timestamp().isValid()) // NOLINT(bugprone-use-after-move)
 		{
 			allSucceeded = false;
 		}
