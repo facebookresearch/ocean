@@ -962,7 +962,7 @@ bool TestFramePyramid::testCreationFramePyramidDeprecated(const unsigned int wid
 					}
 					else
 					{
-						framePyramid.replace(frame, downsamplingMode, layers, useWorker);
+						framePyramid.replace(frame, downsamplingMode, layers, true /*copyFirstLayer*/, useWorker);
 					}
 
 				performance.stop();
@@ -1074,7 +1074,7 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 						UnorderedIndexSet32 expectedOwnerLayers;
 						UnorderedIndexSet32 expectedOutsideMemoryBlockLayers;
 
-						for (unsigned int layerIndex = 0u; layerIndex < expectedLayers; ++layerIndex)
+						for (unsigned int layerIndex = 1u; layerIndex < expectedLayers; ++layerIndex)
 						{
 							expectedOwnerLayers.emplace(layerIndex);
 						}
@@ -1115,6 +1115,8 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 								}
 
 								localResult = framePyramid.isValid();
+
+								expectedOwnerLayers.emplace(0u);
 							}
 							else
 							{
@@ -1122,11 +1124,27 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 								{
 									if (copyFirstLayer)
 									{
-										localResult = framePyramid.replace(frame, downsamplingFunction, testLayers, useWorker);
+										localResult = framePyramid.replace(frame, downsamplingFunction, testLayers, true /*copyFirstLayer*/, useWorker);
+
+										expectedOwnerLayers.emplace(0u);
 									}
 									else
 									{
-										localResult = framePyramid.replace(std::move(frame), downsamplingFunction, testLayers, useWorker);
+										// we can either move the frame, or we can only use the memory
+
+										if (RandomI::boolean(randomGenerator))
+										{
+											if (frame.isOwner())
+											{
+												expectedOwnerLayers.emplace(0u);
+											}
+
+											localResult = framePyramid.replace(std::move(frame), downsamplingFunction, testLayers, useWorker);
+										}
+										else
+										{
+											localResult = framePyramid.replace(frame, downsamplingFunction, testLayers, false /*copyFirstLayer*/, useWorker);
+										}
 
 										expectedOutsideMemoryBlockLayers.emplace(0u);
 									}
@@ -1135,11 +1153,35 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 								{
 									if (copyFirstLayer)
 									{
-										localResult = framePyramid.replace(frame, downsamplingMode, testLayers, useWorker);
+										localResult = framePyramid.replace(frame, downsamplingMode, testLayers, true /*copyFirstLayer*/, useWorker);
+
+										expectedOwnerLayers.emplace(0u);
 									}
 									else
 									{
-										localResult = framePyramid.replace(std::move(frame), downsamplingMode, testLayers, useWorker);
+										if (RandomI::boolean(randomGenerator))
+										{
+											if (frame.isReadOnly())
+											{
+												expectedReadOnlyLayers.emplace(0u);
+											}
+
+											if (frame.isOwner())
+											{
+												expectedOwnerLayers.emplace(0u);
+											}
+
+											localResult = framePyramid.replace(std::move(frame), downsamplingMode, testLayers, useWorker);
+										}
+										else
+										{
+											if (frame.isReadOnly() || (downsamplingMode == CV::FramePyramid::DM_FILTER_11 && !frame.hasAlphaChannel()))
+											{
+												expectedReadOnlyLayers.emplace(0u);
+											}
+
+											localResult = framePyramid.replace(frame, downsamplingMode, testLayers, false /*copyFirstLayer*/, useWorker);
+										}
 
 										expectedOutsideMemoryBlockLayers.emplace(0u);
 									}
@@ -1891,16 +1933,30 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 			{
 				if (copyFirstLayer)
 				{
-					localResult = framePyramid.replace(frame, downsamplingMode, layers, useWorker);
+					localResult = framePyramid.replace(frame, downsamplingMode, layers, true /*copyFirstLayer*/, useWorker);
 
 					expectedOwnerLayers.emplace(0u);
 				}
 				else
 				{
-					localResult = framePyramid.replace(std::move(frame), downsamplingMode, layers, useWorker);
+					if (RandomI::boolean(randomGenerator))
+					{
+						localResult = framePyramid.replace(std::move(frame), downsamplingMode, layers, useWorker);
 
-					expectedOwnerLayers.emplace(0u);
-					expectedOutsideMemoryBlockLayers.emplace(0u);
+						expectedOwnerLayers.emplace(0u);
+						expectedOutsideMemoryBlockLayers.emplace(0u);
+					}
+					else
+					{
+						localResult = framePyramid.replace(frame, downsamplingMode, layers, false /*copyFirstLayer*/, useWorker);
+
+						if (frame.isReadOnly() || (downsamplingMode == CV::FramePyramid::DM_FILTER_11 && !frame.hasAlphaChannel()))
+						{
+							expectedReadOnlyLayers.emplace(0u);
+						}
+
+						expectedOutsideMemoryBlockLayers.emplace(0u);
+					}
 				}
 			}
 			else

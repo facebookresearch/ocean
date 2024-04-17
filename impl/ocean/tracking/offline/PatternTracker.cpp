@@ -204,14 +204,14 @@ FrameTracker::FrameTrackerComponent::IterationResult PatternTracker::FineTrackin
 		const FrameType targetFrameType(parent_.patternFrame_, currentFrame_.pixelFormat(), currentFrame_.pixelOrigin());
 
 		Frame targetFrame;
-		if (!CV::FrameConverter::Comfort::convert(parent_.patternFrame_, targetFrameType, targetFrame, false, scopedWorker()))
+		if (!CV::FrameConverter::Comfort::convert(parent_.patternFrame_, targetFrameType, targetFrame, CV::FrameConverter::CP_ALWAYS_COPY, scopedWorker()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return IR_FAILED;
 		}
 
 		// we apply a simple Gaussian blur as we expect the pattern frame to have perfect edges which could be difficult for tracking
-		if (!patternFramePyramid_.replace(targetFrame, CV::FramePyramid::DM_FILTER_14641, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, scopedWorker()))
+		if (!patternFramePyramid_.replace(std::move(targetFrame), CV::FramePyramid::DM_FILTER_14641, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, scopedWorker()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return IR_FAILED;
@@ -895,7 +895,7 @@ bool PatternTracker::closeGaps(const unsigned int lowerFrameIndex, const unsigne
 					return false;
 				}
 
-				if (!centerPyramid.replace(zippedFrame, CV::FramePyramid::DM_FILTER_14641, pyramidLayers, scopedWorker()))
+				if (!centerPyramid.replace(zippedFrame, CV::FramePyramid::DM_FILTER_14641, pyramidLayers, true /*copyFirstLayer*/, scopedWorker()))
 				{
 					ocean_assert(false && "This should never happen!");
 					return false;
@@ -917,7 +917,7 @@ bool PatternTracker::closeGaps(const unsigned int lowerFrameIndex, const unsigne
 						return false;
 					}
 
-					if (!leftPyramid.replace(zippedFrame, CV::FramePyramid::DM_FILTER_14641, pyramidLayers, scopedWorker()))
+					if (!leftPyramid.replace(zippedFrame, CV::FramePyramid::DM_FILTER_14641, pyramidLayers, true /*copyFirstLayer*/, scopedWorker()))
 					{
 						ocean_assert(false && "This should never happen!");
 						return false;
@@ -940,7 +940,7 @@ bool PatternTracker::closeGaps(const unsigned int lowerFrameIndex, const unsigne
 						return false;
 					}
 
-					if (!rightPyramid.replace(zippedFrame, CV::FramePyramid::DM_FILTER_14641, pyramidLayers, scopedWorker()))
+					if (!rightPyramid.replace(zippedFrame, CV::FramePyramid::DM_FILTER_14641, pyramidLayers, true /*copyFirstLayer*/, scopedWorker()))
 					{
 						ocean_assert(false && "This should never happen!");
 						return false;

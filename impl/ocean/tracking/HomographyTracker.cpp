@@ -39,7 +39,7 @@ bool HomographyTracker::trackPoints(const Frame& currentFrame, const Frame& yPre
 		return false;
 	}
 
-	if (!currentFramePyramid_.replace(currentFrame, CV::FramePyramid::DM_FILTER_14641, pyramidLayers, worker))
+	if (!currentFramePyramid_.replace(currentFrame, CV::FramePyramid::DM_FILTER_14641, pyramidLayers, true /*copyFirstLayer*/, worker))
 	{
 		return false;
 	}

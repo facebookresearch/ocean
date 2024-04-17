@@ -73,7 +73,7 @@ bool ContourTracker::detectObject(const Frame& frame, const PixelContour& roughC
 		return false;
 	}
 
-	previousFramePyramid_.replace(frame, FramePyramid::DM_FILTER_14641, pyramidLayers, worker);
+	previousFramePyramid_.replace(frame, FramePyramid::DM_FILTER_14641, pyramidLayers, true /*copyFirstLayer*/, worker);
 
 	return true;
 }
@@ -98,7 +98,7 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 		return false;
 	}
 
-	if (!currentFramePyramid_.replace(frame, FramePyramid::DM_FILTER_14641, pyramidLayers, worker))
+	if (!currentFramePyramid_.replace(frame, FramePyramid::DM_FILTER_14641, pyramidLayers, true /*copyFirstLayer*/, worker))
 	{
 		return false;
 	}

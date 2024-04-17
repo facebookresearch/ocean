@@ -240,7 +240,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 			database.addPose<false>(poseId);
 		}
 
-		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker))
+		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), true /*copyFirstLayer*/, worker))
 		{
 			return false;
 		}
@@ -411,7 +411,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 			return false;
 		}
 
-		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker))
+		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), true /*copyFirstLayer*/, worker))
 		{
 			return false;
 		}
@@ -526,7 +526,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 			database.addPose<false>(poseId);
 		}
 
-		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker))
+		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), true /*copyFirstLayer*/, worker))
 		{
 			return false;
 		}
@@ -698,7 +698,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 			return false;
 		}
 
-		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker))
+		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), true /*copyFirstLayer*/, worker))
 		{
 			return false;
 		}
@@ -957,7 +957,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 			database.addPose<false>(poseId);
 		}
 
-		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker))
+		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), true /*copyFirstLayer*/, worker))
 		{
 			return false;
 		}
@@ -1064,7 +1064,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 			database.addPose<false>(poseId);
 		}
 
-		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), worker))
+		if (!currentFramePyramid.replace(frame, CV::FramePyramid::DM_FILTER_14641, trackingConfiguration.pyramidLayers(), true /*copyFirstLayer*/, worker))
 		{
 			return false;
 		}

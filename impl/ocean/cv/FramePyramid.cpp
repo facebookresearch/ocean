@@ -173,17 +173,17 @@ bool FramePyramid::replace(const FrameType& frameType, const bool reserveFirstLa
 	return true;
 }
 
-bool FramePyramid::replace(const Frame& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, Worker* worker)
+bool FramePyramid::replace(const Frame& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, const bool copyFirstLayer, Worker* worker)
 {
 	ocean_assert(frame.isValid());
 	ocean_assert(layers >= 1u);
 
 	if (downsamplingMode == DM_FILTER_11 && !frame.hasAlphaChannel())
 	{
-		return replace8BitPerChannel11(frame, layers, true /*copyFirstLayer*/, worker);
+		return replace8BitPerChannel11(frame, layers, copyFirstLayer, worker);
 	}
 
-	return replace(frame, downsamplingFunction(downsamplingMode, frame.pixelFormat()), layers, worker);
+	return replace(frame, downsamplingFunction(downsamplingMode, frame.pixelFormat()), layers, copyFirstLayer, worker);
 }
 
 bool FramePyramid::replace(Frame&& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, Worker* worker)
@@ -208,7 +208,7 @@ bool FramePyramid::replace(Frame&& frame, const DownsamplingMode downsamplingMod
 	return replace(std::move(frame), downsamplingFunction(downsamplingMode, pixelFormat), layers, worker);
 }
 
-bool FramePyramid::replace(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, Worker* worker)
+bool FramePyramid::replace(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool copyFirstLayer, Worker* worker)
 {
 	ocean_assert(frame.isValid());
 	ocean_assert(layers >= 1u);
@@ -221,7 +221,7 @@ bool FramePyramid::replace(const Frame& frame, const DownsamplingFunction& downs
 		return false;
 	}
 
-	if (!replace(frame.frameType(), true /*reserveFirstLayerMemory*/, true /*forceOwner*/, layers))
+	if (!replace(frame.frameType(), copyFirstLayer, true /*forceOwner*/, layers))
 	{
 		clear();
 
@@ -229,21 +229,28 @@ bool FramePyramid::replace(const Frame& frame, const DownsamplingFunction& downs
 	}
 
 	ocean_assert(!layers_.empty());
-	ocean_assert(memory_.size() >= frame.frameTypeSize());
+	ocean_assert(!copyFirstLayer || memory_.size() >= frame.frameTypeSize());
 
-#ifdef OCEAN_DEBUG
-	void* const debugFinestLayerData = layers_.front().data<void>();
-#endif
-
-	if (!layers_.front().copy(0, 0, frame))
+	if (copyFirstLayer)
 	{
-		ocean_assert(false && "This should never happen!");
-		return false;
-	}
+#ifdef OCEAN_DEBUG
+		void* const debugFinestLayerData = layers_.front().data<void>();
+#endif
+
+		if (!layers_.front().copy(0, 0, frame))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 #ifdef OCEAN_DEBUG
-	ocean_assert(debugFinestLayerData == layers_.front().data<void>()); // ensuring ownership has not changed
+		ocean_assert(debugFinestLayerData == layers_.front().data<void>()); // ensuring ownership has not changed
 #endif
+	}
+	else
+	{
+		layers_.front() = Frame(frame, Frame::ACM_USE_KEEP_LAYOUT);
+	}
 
 	for (size_t layerIndex = 1; layerIndex < layers_.size(); ++layerIndex)
 	{
@@ -326,7 +333,7 @@ bool FramePyramid::replace8BitPerChannel(const uint8_t* frame, const unsigned in
 	{
 		const Frame layerFrame(layerFrameType, frame, Frame::CM_USE_KEEP_LAYOUT, framePaddingElements, timestamp);
 
-		return replace(layerFrame, downsamplingMode, layers, worker);
+		return replace(layerFrame, downsamplingMode, layers, true /*copyFirstLayer*/, worker);
 	}
 	else
 	{
