@@ -24,10 +24,6 @@
 	#include "ocean/media/openimagelibraries/Image.h"
 #endif
 
-#ifdef OCEAN_ENABLED_EVERSTORE_CLIENT
-	#include "metaonly/ocean/network/everstore/EverstoreClient.h"
-#endif // OCEAN_ENABLED_EVERSTORE_CLIENT
-
 #include <random>
 
 namespace Ocean
@@ -46,8 +42,6 @@ namespace TestQRCodes
 {
 
 using namespace CV::Detector::QRCodes;
-
-// #define APPLY_IMAGE_TEST
 
 bool TestFinderPatternDetector::test(const double testDuration, Worker& worker)
 {
@@ -356,4 +350,4 @@ void TestFinderPatternDetector::paintFinderPattern(uint8_t* yFrame, const unsign
 
 } // namespace Test
 
-} // namepace Test
+} // namespace Ocean
