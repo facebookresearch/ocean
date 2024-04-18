@@ -2,8 +2,6 @@
 message(CHECK_START "assimp")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
-include(FetchContent)
-
 set(ZLIB_ROOT ${CMAKE_INSTALL_PREFIX})
 set(JPEG_ROOT ${CMAKE_INSTALL_PREFIX})
 
@@ -17,14 +15,12 @@ endif()
 
 set(ASSIMP_BUILD_ZLIB OFF CACHE BOOL "")
 
-FetchContent_Declare(
-  assimp
+CPMAddPackage(
+  NAME           assimp
   GIT_REPOSITORY https://github.com/assimp/assimp.git
   GIT_TAG        v5.4.0
   PATCH_COMMAND  ${CMAKE_COMMAND} -E remove ./cmake-modules/FindZLIB.cmake
 )
-
-FetchContent_MakeAvailable(assimp)
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(CHECK_PASS "completed")

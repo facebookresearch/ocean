@@ -20,6 +20,9 @@ set(OCEAN_TARGET_PROCESSOR_TYPE ${CMAKE_SYSTEM_PROCESSOR})
 message(CHECK_START "Third-party dependencies")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
+set(CPM_SOURCE_CACHE "${CMAKE_BINARY_DIR}/../third-party_cache")
+include(CPM.cmake)
+
 # Do not change the order of these.
 if(BUILD_PASS_INDEX EQUAL 0)
     include(libjpeg.cmake)
@@ -37,7 +40,7 @@ elseif(BUILD_PASS_INDEX EQUAL 1)
     include(libtiff.cmake)
 elseif(BUILD_PASS_INDEX EQUAL 2)
     include(freetype.cmake)
-    include(opencv.cmake)
+#    include(opencv.cmake)
     include(assimp.cmake)
     include(wxwidgets.cmake)
 endif()

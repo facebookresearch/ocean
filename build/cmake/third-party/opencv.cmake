@@ -2,8 +2,6 @@
 message(CHECK_START "opencv")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
-include(FetchContent)
-
 cmake_policy(SET CMP0144 NEW)
 
 if(BUILD_SHARED_LIBS)
@@ -30,13 +28,11 @@ set(OPENCV_BIN_INSTALL_PATH "bin" CACHE BOOL "")
 set(OPENCV_LIB_INSTALL_PATH "lib" CACHE BOOL "")
 set(OPENCV_LIB_ARCHIVE_INSTALL_PATH "lib" CACHE BOOL "")
 
-FetchContent_Declare(
-  opencv
+CPMAddPackage(
+  NAME           opencv
   GIT_REPOSITORY https://github.com/opencv/opencv.git
   GIT_TAG        4.9.0
 )
-
-FetchContent_MakeAvailable(opencv)
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(CHECK_PASS "completed")
