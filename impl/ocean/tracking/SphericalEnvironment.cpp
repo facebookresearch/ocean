@@ -431,7 +431,7 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 
 	CV::FramePyramid currentFramePyramid(frame, CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, true /*copyFirstLayer*/, worker);
 
-	if (previousFramePyramid_.isNull())
+	if (!previousFramePyramid_.isValid())
 	{
 		if (!reset(pinholeCamera, frame, initialOrientation_, approximationBinSize, worker))
 		{

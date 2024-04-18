@@ -199,7 +199,7 @@ FrameTracker::FrameTrackerComponent::IterationResult PatternTracker::FineTrackin
 	}
 
 	// check whether the pattern frame pyramid has to be created (this can not be done earlier as we need the pixel format of the camera frame)
-	if (patternFramePyramid_.isNull())
+	if (!patternFramePyramid_.isValid())
 	{
 		const FrameType targetFrameType(parent_.patternFrame_, currentFrame_.pixelFormat(), currentFrame_.pixelOrigin());
 

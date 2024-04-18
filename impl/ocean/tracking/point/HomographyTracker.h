@@ -334,7 +334,7 @@ inline HomographyTracker::KeyFrame::KeyFrame(const Timestamp& timestamp, const V
 
 inline HomographyTracker::KeyFrame::operator bool() const
 {
-	ocean_assert(timestamp_.isValid() != pyramid_.isNull());
+	ocean_assert(timestamp_.isValid() == pyramid_.isValid());
 
 	return timestamp_.isValid();
 }

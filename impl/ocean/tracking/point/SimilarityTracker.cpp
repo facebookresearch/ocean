@@ -57,7 +57,7 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 	ocean_assert(previousSubRegion.right() < yFrame.width() && previousSubRegion.bottom() < yFrame.height());
 
 	ocean_assert(yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
-	ocean_assert(keyFramePyramid_.isNull() || keyFramePyramid_.frameType().isFrameTypeCompatible(yFrame, false));
+	ocean_assert(!keyFramePyramid_.isValid() || keyFramePyramid_.frameType().isFrameTypeCompatible(yFrame, false));
 
 	if (yFrame.isNull() || yFrame.width() < 40u || yFrame.height() < 40u || !yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8) || (keyFramePyramid_ && !keyFramePyramid_.frameType().isFrameTypeCompatible(yFrame, false)) || !previousSubRegion.isValid())
 	{
@@ -271,7 +271,7 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 		}
 	}
 
-	if (keyFramePyramid_.isNull() || internalTrackerConfidence < TC_GOOD)
+	if (!keyFramePyramid_.isValid() || internalTrackerConfidence < TC_GOOD)
 	{
 		// whenever the tracker's confidence is quite low, we avoid to improve persistence
 		// this may increase drift errors but will also improve tracking quality

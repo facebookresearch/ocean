@@ -40,7 +40,7 @@ Index32 PointTracker::newFrame(const Frame& yFrame, Worker* worker)
 {
 	ocean_assert(yFrame.isValid());
 	ocean_assert(FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
-	ocean_assert(previousFramePyramid_.isNull() || previousFramePyramid_.frameType() == FrameType(yFrame, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>()));
+	ocean_assert(!previousFramePyramid_.isValid() || previousFramePyramid_.frameType() == FrameType(yFrame, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>()));
 
 	if (yFrame.isNull() || !FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u) || (previousFramePyramid_ && previousFramePyramid_.frameType() != FrameType(yFrame, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>())))
 	{

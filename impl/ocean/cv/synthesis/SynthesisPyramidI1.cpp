@@ -37,7 +37,7 @@ bool SynthesisPyramidI1::applyInpainting(const InitializationTechnique initializ
 #endif
 
 	ocean_assert(synthesisFramePyramid_.layers() == synthesisMaskPyramid_.layers());
-	ocean_assert(synthesisFilterPyramid_.isNull() || synthesisFilterPyramid_.layers() == synthesisFramePyramid_.layers());
+	ocean_assert(!synthesisFilterPyramid_.isValid() || synthesisFilterPyramid_.layers() == synthesisFramePyramid_.layers());
 	ocean_assert(synthesisBoundingBoxes_.size() >= synthesisFramePyramid_.layers());
 
 	layersReversedOrder_.clear(); // **TODO** replace - not clear

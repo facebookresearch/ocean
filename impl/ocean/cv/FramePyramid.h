@@ -466,12 +466,6 @@ class OCEAN_CV_EXPORT FramePyramid
 		inline bool isValid() const;
 
 		/**
-		 * Returns whether this pyramid does not hold any frame layer.
-		 * @return True, if so
-		 */
-		inline bool isNull() const;
-
-		/**
 		 * Returns the pyramid's memory block.
 		 * This functions is intended for testing purposes only, don't use this function.
 		 * @return The pyramid's memory block, if any
@@ -864,11 +858,6 @@ inline Frame& FramePyramid::operator[](const unsigned int layer)
 inline bool FramePyramid::isValid() const
 {
 	return !layers_.empty();
-}
-
-inline bool FramePyramid::isNull() const
-{
-	return layers_.empty();
 }
 
 inline const Memory& FramePyramid::memory() const

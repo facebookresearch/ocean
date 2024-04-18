@@ -319,7 +319,7 @@ PlanarRectangleTracker::FramePyramidTrackerComponent::IterationResult PlanarRect
 
 		initialFramePyramid_ = CV::FramePyramid(currentFramePyramid_, true /*copyData*/);
 
-		ocean_assert(initialRectifiedFramePyramid_.isNull() && !initialRectifiedCamera_.isValid() && initialRectifiedPose_.isNull());
+		ocean_assert(!initialRectifiedFramePyramid_.isValid() && !initialRectifiedCamera_.isValid() && initialRectifiedPose_.isNull());
 
 		// determined the camera and pose that observes the selected plane area from the top, centered at the rectangle's center
 		if (!lookAtTransformation(camera_, initialPose_, parent_.initialRectangleCorners_, plane_, Scalar(0.1), initialRectifiedCamera_, initialRectifiedPose_))

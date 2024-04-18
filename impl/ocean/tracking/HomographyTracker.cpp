@@ -20,7 +20,7 @@ namespace Tracking
 bool HomographyTracker::trackPoints(const Frame& currentFrame, const Frame& yPreviousFrame, RandomGenerator& randomGenerator, const Vectors2& previousPositions, SquareMatrix3& homography, Worker* worker, const Scalar frameBorder)
 {
 	ocean_assert(currentFrame.isValid());
-	ocean_assert(previousFramePyramid_.isNull() || yPreviousFrame.isValid());
+	ocean_assert(!previousFramePyramid_.isValid() || yPreviousFrame.isValid());
 	ocean_assert(yPreviousFrame.isNull() || yPreviousFrame.isFrameTypeCompatible(FrameType(currentFrame, FrameType::FORMAT_Y8), true));
 
 	ocean_assert(frameBorder >= Scalar(0) && frameBorder < Scalar(min(currentFrame.width(), currentFrame.height()) / 4u));
