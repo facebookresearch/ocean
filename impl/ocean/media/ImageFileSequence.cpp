@@ -376,12 +376,12 @@ bool ImageFileSequence::determineSequence()
 	ocean_assert(fileBase.length() > 0u);
 	std::string::size_type pos = fileBase.length() - 1u;
 
-	while (isdigit(fileBase[pos]) && pos > 0u)
+	while (isdigit((unsigned char)fileBase[pos]) && pos > 0u)
 	{
 		--pos;
 	}
 
-	if (!isdigit(fileBase[pos]))
+	if (!isdigit((unsigned char)fileBase[pos]))
 	{
 		++pos;
 	}

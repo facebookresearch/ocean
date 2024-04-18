@@ -530,7 +530,7 @@ inline bool QRCodeEncoder::Segment::isNumericData(const std::string& data)
 {
 	for (size_t i = 0; i < data.size(); ++i)
 	{
-		if (std::isdigit(data[i]) == false)
+		if (std::isdigit((unsigned char)data[i]) == false)
 		{
 			return false;
 		}

@@ -40,7 +40,7 @@ bool HTTPClient::HTTPHeader::parseHeaderLine(const std::string& line, HTTPHeader
 		firstPos = ++secondPos;
 
 		// Status Code
-		while (secondPos <= lineSize && isdigit(line[secondPos]))
+		while (secondPos <= lineSize && isdigit((unsigned char)line[secondPos]))
 		{
 			secondPos++;
 		}
@@ -60,7 +60,7 @@ bool HTTPClient::HTTPHeader::parseHeaderLine(const std::string& line, HTTPHeader
 	{
 		std::string::size_type firstPos = 13, secondPos;
 
-		while (firstPos <= lineSize && !isdigit(line[firstPos]))
+		while (firstPos <= lineSize && !isdigit((unsigned char)line[firstPos]))
 		{
 			firstPos++;
 		}
@@ -72,7 +72,7 @@ bool HTTPClient::HTTPHeader::parseHeaderLine(const std::string& line, HTTPHeader
 
 		secondPos = firstPos;
 
-		while (secondPos <= lineSize && isdigit(line[secondPos]))
+		while (secondPos <= lineSize && isdigit((unsigned char)line[secondPos]))
 		{
 			secondPos++;
 		}
