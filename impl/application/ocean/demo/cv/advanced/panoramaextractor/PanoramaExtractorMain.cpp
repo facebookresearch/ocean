@@ -23,8 +23,9 @@
 
 #include "ocean/media/Utilities.h"
 
+#include "ocean/platform/System.h"
+
 #if defined(_WINDOWS)
-	#include "ocean/platform/win/System.h"
 	#include "ocean/platform/win/Utilities.h"
 #endif
 
@@ -646,9 +647,7 @@ void drawCameraOutlineInPanoramaFrame(Frame& cameraOutlines, const PinholeCamera
 {
 	Messenger::get().setOutputType(Messenger::OUTPUT_STANDARD);
 
-#if defined(_WINDOWS)
-	const std::string frameworkPath(Platform::Win::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
-#endif
+const std::string frameworkPath(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
 
 #ifdef OCEAN_RUNTIME_STATIC
 	OCEAN_APPLY_IF_WINDOWS(Media::WIC::registerWICLibrary());

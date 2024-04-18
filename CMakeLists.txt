@@ -74,6 +74,7 @@ add_subdirectory(impl/ocean/system)
 # Demo applications (for desktop)
 if (OCEAN_BUILD_DEMOS)
     add_subdirectory(impl/application/ocean/demo/base/console)
+    add_subdirectory(impl/application/ocean/demo/cv/advanced/panoramaextractor)
 endif()
 
 if (OCEAN_BUILD_TESTS)
