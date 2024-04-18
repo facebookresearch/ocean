@@ -42,7 +42,11 @@ const int8_t QRCodeEncoder::NUM_ERROR_CORRECTION_BLOCKS[4][41] =
 	// clang-format on
 };
 
-const char* const QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
+constexpr std::array<char, 45u> QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET{
+	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+	' ', '$', '%', '*', '+', '-', '.', '/', ':'
+};
 
 bool QRCodeEncoder::Segment::generateSegmentNumeric(const std::string& data, Segments& segments)
 {
@@ -92,19 +96,22 @@ bool QRCodeEncoder::Segment::generateSegmentAlphanumeric(const std::string& data
 	unsigned int bufferSize = 0u;
 	for (size_t i = 0; i < data.size(); ++i)
 	{
-		const char* currentCharacter = std::strchr(ALPHANUMERIC_CHARSET, data[i]);
-		ocean_assert(currentCharacter != nullptr);
-
-		ocean_assert((currentCharacter - ALPHANUMERIC_CHARSET) <= 44u);
-		buffer = buffer * 45u + (unsigned int)(currentCharacter - ALPHANUMERIC_CHARSET);
-		bufferSize += 1u;
-
-		if (bufferSize == 2u)
+		for (size_t encodingValue = 0; encodingValue < QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET.size(); ++encodingValue)
 		{
-			bitBufferAppend(buffer, 11, bitBuffer);
+			if (data[i] == QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET[encodingValue])
+			{
+				buffer = buffer * Segment::ALPHANUMERIC_CHARSET.size() + encodingValue;
+				bufferSize += 1u;
 
-			buffer = 0u;
-			bufferSize = 0u;
+				if (bufferSize == 2u)
+				{
+					bitBufferAppend(buffer, 11, bitBuffer);
+
+					buffer = 0u;
+					bufferSize = 0u;
+				}
+				break;
+			}
 		}
 	}
 

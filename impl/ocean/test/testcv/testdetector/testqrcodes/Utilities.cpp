@@ -8,7 +8,7 @@
 
 #include "ocean/math/Random.h"
 
-#include <string_view>
+#include <array>
 
 namespace Ocean
 {
@@ -27,7 +27,7 @@ namespace TestQRCodes
 
 using namespace CV::Detector::QRCodes;
 
-constexpr std::string_view NUMERIC_CHARSET = "0123456789";
+constexpr std::array<char, 10u> NUMERIC_CHARSET{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
 void Utilities::drawNoisePattern(uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const Vector2& location, RandomGenerator& randomGenerator, const uint8_t foregroundColor, const Scalar extraBorder)
 {
@@ -81,8 +81,7 @@ std::string Utilities::generateRandomAlphanumericString(RandomGenerator& randomG
 {
 	ocean_assert(size != 0u);
 
-	static const std::string alphanumericCharset(QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET);
-	ocean_assert(!alphanumericCharset.empty());
+	const std::array<char, QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET.size()>& alphanumericCharset = QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET;
 
 	std::string randomString = std::string(size, ' ');
 	for (unsigned int i = 0u; i < size; ++i)

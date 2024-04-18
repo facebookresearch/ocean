@@ -8,6 +8,7 @@
 
 #include "ocean/math/Vector2.h"
 
+#include <array>
 #include <cctype>
 
 namespace Ocean
@@ -53,11 +54,11 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		{
 			public:
 
-				/// The character set for the alphanumeric data mode, cf. ISO/IEC 18004:2015, Table 5
-				static const char* const ALPHANUMERIC_CHARSET;
+				/// The character set for the alphanumeric data mode, sorted according to value assinged to them in cf. ISO/IEC 18004:2015, Table 5
+				/// Index of each character in the array corresponds to the value assigned to them in the alphanumeric encoding/decoding table.
+				static const std::array<char, 45u> ALPHANUMERIC_CHARSET;
 
 			public:
-
 				/**
 				 * Constructor for segments
 				 * @param mode The data encodation mode of this segment
@@ -540,9 +541,20 @@ inline bool QRCodeEncoder::Segment::isNumericData(const std::string& data)
 
 inline bool QRCodeEncoder::Segment::isAlphanumericData(const std::string& data)
 {
-	for (size_t i = 0; i < data.size(); ++i)
+	for (const char charUnderTest : data)
 	{
-		if (std::strchr(ALPHANUMERIC_CHARSET, data[i]) == nullptr)
+		bool charUnderTestIsAlphanumeric = false;
+
+		for (const char alphanumericChar : Segment::ALPHANUMERIC_CHARSET)
+		{
+			if (charUnderTest == alphanumericChar)
+			{
+				charUnderTestIsAlphanumeric = true;
+				break;
+			}
+		}
+
+		if (!charUnderTestIsAlphanumeric)
 		{
 			return false;
 		}

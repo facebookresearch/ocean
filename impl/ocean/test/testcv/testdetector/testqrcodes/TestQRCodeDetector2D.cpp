@@ -232,7 +232,7 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 
 			case QRCode::EM_BYTE:
 				Utilities::generateRandomByteData(randomGenerator, dataSizeInBytes, data);
-				QRCodeEncoder::encodeBinary(data, errorCorrectionCapacity, groundtruthCode) && allSucceeded;
+				QRCodeEncoder::encodeBinary(data, errorCorrectionCapacity, groundtruthCode);
 				break;
 
 			default:
