@@ -37,7 +37,7 @@ class OCEAN_TEST_BASE_EXPORT TestSignal
 				 * Creates a new thread object.
 				 * @param timer The timer providing the same time value for all threads
 				 * @param timeout The timeout the thread will wait until the corresponding signal will be pulsed, in seconds with range (0, infinity)
-				 * @param signal Signal to be used
+				 * @param signal The signal to be used
 				 */
 				SignalThread(const HighPerformanceTimer& timer, const double timeout, Signal& signal);
 
@@ -47,18 +47,18 @@ class OCEAN_TEST_BASE_EXPORT TestSignal
 				 * Thread function.
 				 * @see Thread::threadRun().
 				 */
-				virtual void threadRun();
+				void threadRun() override;
 
 			private:
 
 				/// The timer providing the same time value for all threads.
-				const HighPerformanceTimer& threadTimer;
+				const HighPerformanceTimer& timer_;
 
 				/// Timeout for the thread, in seconds with range (0, infinity)
-				const double threadTimeout;
+				const double timeout_;
 
 				/// Signal to be used.
-				Signal& threadSignal;
+				Signal& signal_;
 		};
 
 		/**
@@ -74,9 +74,9 @@ class OCEAN_TEST_BASE_EXPORT TestSignal
 				AsyncFunctionThread();
 
 				/**
-				 * Destructs the thread object and stopps any ongoing async function as fast as possible.
+				 * Destructs the thread object and stops any ongoing async function as fast as possible.
 				 */
-				virtual ~AsyncFunctionThread();
+				~AsyncFunctionThread() override;
 
 				/**
 				 * Starts the async function.
@@ -89,7 +89,7 @@ class OCEAN_TEST_BASE_EXPORT TestSignal
 				 * Thread function.
 				 * @see Thread::threadRun().
 				 */
-				virtual void threadRun();
+				void threadRun() override;
 
 				/**
 				 * The async function.
@@ -152,10 +152,16 @@ class OCEAN_TEST_BASE_EXPORT TestSignal
 		static bool testMultipleSignals();
 
 		/**
-		 * Tests the subset of multiple signals.
+		 * Tests the subset of multiple signals without timeout.
 		 * @return True, if succeeded
 		 */
-		static bool testSubsetSignals();
+		static bool testSubsetSignalsStandard();
+
+		/**
+		 * Tests the subset of multiple signals with timeout.
+		 * @return True, if succeeded
+		 */
+		static bool testSubsetSignalsTimeout();
 };
 
 }

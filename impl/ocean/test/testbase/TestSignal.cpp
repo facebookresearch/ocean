@@ -17,21 +17,23 @@ namespace TestBase
 {
 
 TestSignal::SignalThread::SignalThread(const HighPerformanceTimer& timer, const double timeout, Signal& signal) :
-	threadTimer(timer),
-	threadTimeout(timeout),
-	threadSignal(signal)
+	timer_(timer),
+	timeout_(timeout),
+	signal_(signal)
 {
-	ocean_assert(threadTimeout > 0.0);
+	ocean_assert(timeout_ > 0.0);
 }
 
 void TestSignal::SignalThread::threadRun()
 {
-	while (threadTimer.seconds() < threadTimeout)
+	setThreadPriority(Thread::PRIORTY_HIGH);
+
+	while (timer_.seconds() < timeout_)
 	{
 		Thread::sleep(0u);
 	}
 
-	threadSignal.pulse();
+	signal_.pulse();
 }
 
 TestSignal::AsyncFunctionThread::AsyncFunctionThread()
@@ -141,7 +143,13 @@ bool TestSignal::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testSubsetSignals() && allSucceeded;
+	allSucceeded = testSubsetSignalsStandard() && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testSubsetSignalsTimeout() && allSucceeded;
 
 	Log::info() << " ";
 
@@ -189,9 +197,14 @@ TEST(TestSignal, MultipleSignals)
 	EXPECT_TRUE(TestSignal::testMultipleSignals());
 }
 
-TEST(TestSignal, SubsetSignals)
+TEST(TestSignal, SubsetSignalsStandard)
 {
-	EXPECT_TRUE(TestSignal::testSubsetSignals());
+	EXPECT_TRUE(TestSignal::testSubsetSignalsStandard());
+}
+
+TEST(TestSignal, SubsetSignalsTimeout)
+{
+	EXPECT_TRUE(TestSignal::testSubsetSignalsTimeout());
 }
 
 #endif // OCEAN_USE_GTEST
@@ -518,327 +531,185 @@ bool TestSignal::testMultipleSignals()
 	return allSucceeded;
 }
 
-bool TestSignal::testSubsetSignals()
+bool TestSignal::testSubsetSignalsStandard()
 {
-	bool allSucceeded = true;
-
-	Log::info() << "Test subset signals:";
+	Log::info() << "Test subset signals (standard):";
 	Log::info() << " ";
+
+	bool allSucceeded = true;
 
 	HighPerformanceTimer timer;
 
-	Signals signals(4u);
+	const std::vector<double> intervals = {1.0, 1.5, 2.0, 2.5};
 
 	// we define four threads with individual signals, the first thread will wait 1.0 second, the second 1.5 seconds,
 	// the third 2.0 seconds and the fourth thread will wait 2.5 seconds until the corresponding signals will be invoked/pulsed
-	SignalThread signalThread0(timer, 1.0, signals[0]);
-	SignalThread signalThread1(timer, 1.5, signals[1]);
-	SignalThread signalThread2(timer, 2.0, signals[2]);
-	SignalThread signalThread3(timer, 2.5, signals[3]);
 
-	SignalThread* threads[4] =
+	Signals signals((unsigned int)(intervals.size()));
+
+	std::vector<std::unique_ptr<SignalThread>> threads;
+	threads.reserve(intervals.size());
+
+	for (size_t n = 0; n < intervals.size(); ++n)
 	{
-		&signalThread0,
-		&signalThread1,
-		&signalThread2,
-		&signalThread3
-	};
-
-
-	Log::info() << "...without timeout (1)";
-	timer.start();
-	Timestamp startTimestamp(true);
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->startThread();
+		threads.emplace_back(std::make_unique<SignalThread>(timer, intervals[n], signals[(unsigned int)(n)]));
 	}
 
-	signals.waitSubset(1u);
-	Timestamp stopTimestamp(true);
+	double error = -1.0;
 
-	if (fabs(double(stopTimestamp - startTimestamp) - 1.0) < 0.1)
+	constexpr double threshold = 0.1;
+
+	for (const unsigned int subset : {1u, 2u, 3u, 4u, 9u})
 	{
-		Log::info() << "Validation: succeeded.";
+		Log::info() << "... with subset " << subset;
+
+		timer.start();
+
+		const Timestamp startTimestamp(true);
+			for (std::unique_ptr<SignalThread>& thread : threads)
+			{
+				thread->startThread();
+			}
+
+			signals.waitSubset(subset);
+		const Timestamp stopTimestamp(true);
+
+		for (std::unique_ptr<SignalThread>& thread : threads)
+		{
+			thread->joinThread();
+		}
+
+		signals.reset();
+
+		const double actualInterval = double(stopTimestamp - startTimestamp);
+		ocean_assert(actualInterval >= 0.0);
+
+		ocean_assert(subset >= 1u);
+		const double expectedInterval = intervals[std::min(size_t(subset - 1u), intervals.size() - 1)];
+
+		const double subsetError = std::fabs(actualInterval - expectedInterval);
+
+		if (subsetError > threshold)
+		{
+			Log::debug() << "Subset error: " << subsetError;
+		}
+
+		if (subsetError > error)
+		{
+			error = subsetError;
+		}
 	}
-	else
+
+	if (error > threshold)
 	{
-		Log::info() << "Validation: FAILED!";
 		allSucceeded = false;
 	}
-
-
-	Log::info() << "...without timeout (2)";
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->joinThread();
-	}
-	signals.reset();
-
-	startTimestamp.toNow();
-	timer.start();
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->startThread();
-	}
-
-	signals.waitSubset(2u);
-	stopTimestamp.toNow();
-
-	if (fabs(double(stopTimestamp - startTimestamp) - 1.5) < 0.1)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
-	}
-
-
-	Log::info() << "...without timeout (3)";
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->joinThread();
-	}
-	signals.reset();
-
-	startTimestamp.toNow();
-	timer.start();
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->startThread();
-	}
-
-	signals.waitSubset(3u);
-	stopTimestamp.toNow();
-
-	if (fabs(double(stopTimestamp - startTimestamp) - 2.0) < 0.1)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
-	}
-
-
-	Log::info() << "...without timeout (4)";
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->joinThread();
-	}
-	signals.reset();
-
-	startTimestamp.toNow();
-	timer.start();
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->startThread();
-	}
-
-	signals.waitSubset(4u);
-	stopTimestamp.toNow();
-
-	if (fabs(double(stopTimestamp - startTimestamp) - 2.5) < 0.1)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
-	}
-
-
-
-	Log::info() << "...without timeout (9)";
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->joinThread();
-	}
-	signals.reset();
-
-	startTimestamp.toNow();
-	timer.start();
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->startThread();
-	}
-
-	signals.waitSubset(9u);
-	stopTimestamp.toNow();
-
-	if (fabs(double(stopTimestamp - startTimestamp) - 2.5) < 0.1)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
-	}
-
-
 
 	Log::info() << " ";
-	Log::info() << "...with timeout (1)";
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->joinThread();
-	}
-	signals.reset();
 
-	startTimestamp.toNow();
-	timer.start();
-	for (unsigned int n = 0u; n < 4u; ++n)
+	if (allSucceeded)
 	{
-		threads[n]->startThread();
-	}
-
-	signals.waitSubset(1u, 2000u);
-	stopTimestamp.toNow();
-
-	if (fabs(double(stopTimestamp - startTimestamp) - 1.0) < 0.1)
-	{
-		Log::info() << "Validation: succeeded.";
+		Log::info() << "Validation: succeeded with error " << error << "s.";
 	}
 	else
 	{
-#ifdef _ANDROID
-		Log::info() << "The test failed, however as this function is not available on Android platforms we rate the result as expected.";
-#else
-		Log::info() << "Validation: FAILED!";
+		Log::info() << "Validation: FAILED with error " << error << "s!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestSignal::testSubsetSignalsTimeout()
+{
+	Log::info() << "Test subset signals with timeout:";
+	Log::info() << " ";
+
+	bool allSucceeded = true;
+
+	HighPerformanceTimer timer;
+
+	const std::vector<double> intervals = {1.0, 1.5, 2.0, 2.5};
+
+	// we define four threads with individual signals, the first thread will wait 1.0 second, the second 1.5 seconds,
+	// the third 2.0 seconds and the fourth thread will wait 2.5 seconds until the corresponding signals will be invoked/pulsed
+
+	Signals signals((unsigned int)(intervals.size()));
+
+	std::vector<std::unique_ptr<SignalThread>> threads;
+	threads.reserve(intervals.size());
+
+	for (size_t n = 0; n < intervals.size(); ++n)
+	{
+		threads.emplace_back(std::make_unique<SignalThread>(timer, intervals[n], signals[(unsigned int)(n)]));
+	}
+
+	double error = -1.0;
+
+	const Indices32 subsets = {1u, 2u, 3u, 4u, 4u};
+	const Indices32 timeouts = {2000u, 2000u, 2000u, 2000u, 5000u};
+	const std::vector<double> expectedIntervals = {1.0, 1.5, 2.0, 2.0, 2.5};
+
+	ocean_assert(subsets.size() == timeouts.size());
+	ocean_assert(subsets.size() == expectedIntervals.size());
+
+	constexpr double threshold = 0.1;
+
+	for (size_t n = 0; n < subsets.size(); ++n)
+	{
+		const unsigned int subset = subsets[n];
+		const unsigned int timeout = timeouts[n];
+		const double expectedInterval = expectedIntervals[n];
+
+		Log::info() << "... with subset " << subset;
+
+		timer.start();
+
+		const Timestamp startTimestamp(true);
+			for (std::unique_ptr<SignalThread>& thread : threads)
+			{
+				thread->startThread();
+			}
+
+			signals.waitSubset(subset, timeout);
+		const Timestamp stopTimestamp(true);
+
+		for (std::unique_ptr<SignalThread>& thread : threads)
+		{
+			thread->joinThread();
+		}
+
+		signals.reset();
+
+		const double actualInterval = double(stopTimestamp - startTimestamp);
+		ocean_assert(actualInterval >= 0.0);
+
+		const double subsetError = std::fabs(actualInterval - expectedInterval);
+
+		if (subsetError > threshold)
+		{
+			Log::debug() << "Subset error: " << subsetError;
+		}
+
+		if (subsetError > error)
+		{
+			error = subsetError;
+		}
+	}
+
+	if (error > threshold)
+	{
 		allSucceeded = false;
-#endif
 	}
 
+	Log::info() << " ";
 
-	Log::info() << "...with timeout (2)";
-	for (unsigned int n = 0u; n < 4u; ++n)
+	if (allSucceeded)
 	{
-		threads[n]->joinThread();
-	}
-	signals.reset();
-
-	startTimestamp.toNow();
-	timer.start();
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->startThread();
-	}
-
-	signals.waitSubset(2u, 2000u);
-	stopTimestamp.toNow();
-
-	if (fabs(double(stopTimestamp - startTimestamp) - 1.5) < 0.1)
-	{
-		Log::info() << "Validation: succeeded.";
+		Log::info() << "Validation: succeeded with error " << error << "s.";
 	}
 	else
 	{
-#ifdef _ANDROID
-		Log::info() << "The test failed, however as this function is not available on Android platforms we rate the result as expected.";
-#else
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
-#endif
-	}
-
-
-	Log::info() << "...with timeout (3)";
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->joinThread();
-	}
-	signals.reset();
-
-	startTimestamp.toNow();
-	timer.start();
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->startThread();
-	}
-
-	signals.waitSubset(3u, 2000u);
-	stopTimestamp.toNow();
-
-	if (fabs(double(stopTimestamp - startTimestamp) - 2.0) < 0.1)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-#ifdef _ANDROID
-		Log::info() << "The test failed, however as this function is not available on Android platforms we rate the result as expected.";
-#else
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
-#endif
-	}
-
-
-	Log::info() << "...with timeout (4)";
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->joinThread();
-	}
-	signals.reset();
-
-	startTimestamp.toNow();
-	timer.start();
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->startThread();
-	}
-
-	signals.waitSubset(4u, 2000u);
-	stopTimestamp.toNow();
-
-	if (fabs(double(stopTimestamp - startTimestamp) - 2.0) < 0.1)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-#ifdef _ANDROID
-		Log::info() << "The test failed, however as this function is not available on Android platforms we rate the result as expected.";
-#else
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
-#endif
-	}
-
-
-	Log::info() << "...with timeout (4)+";
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->joinThread();
-	}
-	signals.reset();
-
-	startTimestamp.toNow();
-	timer.start();
-	for (unsigned int n = 0u; n < 4u; ++n)
-	{
-		threads[n]->startThread();
-	}
-
-	signals.waitSubset(4u, 5000u);
-	stopTimestamp.toNow();
-
-	if (fabs(double(stopTimestamp - startTimestamp) - 2.5) < 0.1)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-#ifdef _ANDROID
-		Log::info() << "The test failed, however as this function is not available on Android platforms we rate the result as expected.";
-#else
-		Log::info() << "Validation: FAILED!";
-		allSucceeded = false;
-#endif
+		Log::info() << "Validation: FAILED with error " << error << "s!";
 	}
 
 	return allSucceeded;
