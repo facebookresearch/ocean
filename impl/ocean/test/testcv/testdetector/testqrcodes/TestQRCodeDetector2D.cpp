@@ -223,13 +223,11 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 		switch (encodingMode)
 		{
 			case QRCode::EM_NUMERIC:
-				Utilities::generateRandomNumericData(randomGenerator, dataSizeInBytes, data);
-				QRCodeEncoder::encodeText(std::string((char*)data.data(), data.size()), errorCorrectionCapacity, groundtruthCode);
+				QRCodeEncoder::encodeText(Utilities::generateRandomNumericString(randomGenerator, dataSizeInBytes), errorCorrectionCapacity, groundtruthCode);
 				break;
 
 			case QRCode::EM_ALPHANUMERIC:
-				Utilities::generateRandomAlphanumericData(randomGenerator, dataSizeInBytes, data);
-				QRCodeEncoder::encodeText(std::string((char*)data.data(), data.size()), errorCorrectionCapacity, groundtruthCode);
+				QRCodeEncoder::encodeText(Utilities::generateRandomAlphanumericString(randomGenerator, dataSizeInBytes), errorCorrectionCapacity, groundtruthCode);
 				break;
 
 			case QRCode::EM_BYTE:

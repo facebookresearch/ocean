@@ -54,22 +54,20 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT Utilities
 		static std::string generateRandomString(RandomGenerator& randomGenerator, const unsigned int minSize = 1u, const unsigned int maxSize = 15u);
 
 		/**
-		 * Generates a random data that consists of the digits 0-9 only
+		 * Generates random string consisting of decimal digit characters ('0' to '9' only)
 		 * @param randomGenerator The random generator that will be used to generate the random data
-		 * @param sizeInBytes The of the data that will be generated in bytes, range: [1, infinity)
-		 * @param data The memory where the generated data will be stored. Will be initialized internally, if necessary.
-		 * @return True if the data was successfully generated, otherwise false
+		 * @param size The size of string that will be generated in number of characters, range: [1, infinity)
+		 * @return The generated randon numeric string
 		 */
-		static bool generateRandomNumericData(RandomGenerator& randomGenerator, const unsigned int sizeInBytes, std::vector<uint8_t>& data);
+		static std::string generateRandomNumericString(RandomGenerator& randomGenerator, const unsigned int size);
 
 		/**
-		 * Generates a random data that consists of the elements of the alphanumeric character set defined by the QR code standard
+		 * Generates random string consisting of characters in alphanumeric character set defined by the QR code standard
 		 * @param randomGenerator The random generator that will be used to generate the random data
-		 * @param sizeInBytes The of the data that will be generated in bytes, range: [1, infinity)
-		 * @param data The memory where the generated data will be stored. Will be initialized internally, if necessary.
-		 * @return True if the data was successfully generated, otherwise false
+		 * @param size The size of string that will be generated in number of characters, range: [1, infinity)
+		 * @return The generated randon alphanumeric string
 		 */
-		static bool generateRandomAlphanumericData(RandomGenerator& randomGenerator, const unsigned int sizeInBytes, std::vector<uint8_t>& data);
+		static std::string generateRandomAlphanumericString(RandomGenerator& randomGenerator, const unsigned int sizeInBytes);
 
 		/**
 		 * Generates a random data that consists of bytes (value range: 0-255)
@@ -79,6 +77,15 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * @return True if the data was successfully generated, otherwise false
 		 */
 		static bool generateRandomByteData(RandomGenerator& randomGenerator, const unsigned int length, std::vector<uint8_t>& data);
+
+		/**
+		 * Generates random data that consists of values that are decimal digits (between 0 and 9, inclusive)
+		 * @param randomGenerator The random generator that will be used to generate the random data
+		 * @param sizeInBytes The of the data that will be generated in bytes, range: [1, infinity)
+		 * @param data The memory where the generated data will be stored. Will be initialized internally, if necessary.
+		 * @return True if the data was successfully generated, otherwise false
+		 */
+		static bool generateRandomDecimalDigitSequenceData(RandomGenerator& randomGenerator, const unsigned int sizeInBytes, std::vector<uint8_t>& data);
 
 		/**
 		 * Generates a list of unique and random QR codes

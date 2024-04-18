@@ -8,6 +8,8 @@
 
 #include "ocean/math/Random.h"
 
+#include <string_view>
+
 namespace Ocean
 {
 
@@ -24,6 +26,8 @@ namespace TestQRCodes
 {
 
 using namespace CV::Detector::QRCodes;
+
+constexpr std::string_view NUMERIC_CHARSET = "0123456789";
 
 void Utilities::drawNoisePattern(uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const Vector2& location, RandomGenerator& randomGenerator, const uint8_t foregroundColor, const Scalar extraBorder)
 {
@@ -60,35 +64,33 @@ std::string Utilities::generateRandomString(RandomGenerator& randomGenerator, co
 	return randomString;
 }
 
-bool Utilities::generateRandomNumericData(RandomGenerator& randomGenerator, const unsigned int sizeInBytes, std::vector<uint8_t>& data)
+std::string Utilities::generateRandomNumericString(RandomGenerator& randomGenerator, const unsigned int size)
 {
-	ocean_assert(sizeInBytes != 0u);
+	ocean_assert(size != 0u);
 
-	data.resize(sizeInBytes);
-
-	for (unsigned int i = 0u; i < sizeInBytes; ++i)
+	std::string randomString = std::string(size, ' ');
+	for (unsigned int i = 0u; i < size; ++i)
 	{
-		data[i] = uint8_t(RandomI::random(randomGenerator, 9u));
+		randomString[i] = NUMERIC_CHARSET[RandomI::random(randomGenerator, (unsigned int)(NUMERIC_CHARSET.size() - 1))];
 	}
 
-	return true;
+	return randomString;
 }
 
-bool Utilities::generateRandomAlphanumericData(RandomGenerator& randomGenerator, const unsigned int sizeInBytes, std::vector<uint8_t>& data)
+std::string Utilities::generateRandomAlphanumericString(RandomGenerator& randomGenerator, const unsigned int size)
 {
-	ocean_assert(sizeInBytes != 0u);
+	ocean_assert(size != 0u);
 
-	data.resize(sizeInBytes);
-
-	const std::string alphanumericCharset(QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET);
+	static const std::string alphanumericCharset(QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET);
 	ocean_assert(!alphanumericCharset.empty());
 
-	for (size_t i = 0; i < sizeInBytes; ++i)
+	std::string randomString = std::string(size, ' ');
+	for (unsigned int i = 0u; i < size; ++i)
 	{
-		data[i] = uint8_t(alphanumericCharset[RandomI::random(randomGenerator, (unsigned int)(alphanumericCharset.size() - 1))]);
+		randomString[i] = alphanumericCharset[RandomI::random(randomGenerator, (unsigned int)(alphanumericCharset.size() - 1))];
 	}
 
-	return true;
+	return randomString;
 }
 
 bool Utilities::generateRandomByteData(RandomGenerator& randomGenerator, const unsigned int sizeInBytes, std::vector<uint8_t>& data)
@@ -100,6 +102,20 @@ bool Utilities::generateRandomByteData(RandomGenerator& randomGenerator, const u
 	for (unsigned int i = 0u; i < sizeInBytes; ++i)
 	{
 		data[i] = uint8_t(RandomI::random(randomGenerator, 255u));
+	}
+
+	return true;
+}
+
+bool Utilities::generateRandomDecimalDigitSequenceData(RandomGenerator& randomGenerator, const unsigned int sizeInBytes, std::vector<uint8_t>& data)
+{
+	ocean_assert(sizeInBytes != 0u);
+
+	data.resize(sizeInBytes);
+
+	for (unsigned int i = 0u; i < sizeInBytes; ++i)
+	{
+		data[i] = uint8_t(RandomI::random(randomGenerator, 9u));
 	}
 
 	return true;
