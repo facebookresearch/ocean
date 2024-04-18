@@ -101,6 +101,13 @@
   #define HAVE_BOOLEAN		/* prevent jmorecfg.h from redefining it */
 #endif
 
+#ifndef TRUE
+#define TRUE 1
+#endif
+#ifndef FALSE
+#define FALSE 0
+#endif
+
 /*
  * The following options affect code selection within the JPEG library,
  * but they don't need to be visible to applications using the library.
