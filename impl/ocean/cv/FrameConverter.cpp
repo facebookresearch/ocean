@@ -412,25 +412,20 @@ const void* FrameConverter::ConversionFunctionMap::function(const FrameType::Pix
 	return nullptr;
 }
 
-bool FrameConverter::Comfort::isSupported(const FrameType& sourceType, const FrameType& targetType, const Options& options)
+bool FrameConverter::Comfort::isSupported(const FrameType& sourceType, const FrameType::PixelFormat targetPixelFormat, const Options& options)
 {
-	if (!sourceType.isValid() || !targetType.isValid())
+	if (!sourceType.isValid() || targetPixelFormat == FrameType::FORMAT_UNDEFINED)
 	{
 		return false;
 	}
 
-	if (sourceType.width() != targetType.width() || sourceType.height() != targetType.height())
+	if (sourceType.width() % FrameType::widthMultiple(targetPixelFormat) != 0u || sourceType.height() % FrameType::heightMultiple(targetPixelFormat) != 0u)
 	{
 		return false;
 	}
 
-	if (targetType.width() % FrameType::widthMultiple(targetType.pixelFormat()) != 0u || targetType.height() % FrameType::heightMultiple(targetType.pixelFormat()) != 0u)
-	{
-		return false;
-	}
-
-	if (sourceType.numberPlanes() == 1u && ((sourceType.pixelFormat() == targetType.pixelFormat() && FrameType::formatIsGeneric(sourceType.pixelFormat()))
-		 || (FrameType::formatIsPureGeneric(sourceType.pixelFormat()) && sourceType.pixelFormat() == FrameType::makeGenericPixelFormat(targetType.pixelFormat()))))
+	if (sourceType.numberPlanes() == 1u && ((sourceType.pixelFormat() == targetPixelFormat && FrameType::formatIsGeneric(sourceType.pixelFormat()))
+		 || (FrameType::formatIsPureGeneric(sourceType.pixelFormat()) && sourceType.pixelFormat() == FrameType::makeGenericPixelFormat(targetPixelFormat))))
 	{
 		ocean_assert(sourceType.channels() >= 1u);
 
@@ -438,15 +433,21 @@ bool FrameConverter::Comfort::isSupported(const FrameType& sourceType, const Fra
 	}
 
 	ConversionFunctionMap::FunctionType functionType = ConversionFunctionMap::FT_INVALID;
-	const void* function = ConversionFunctionMap::get().function(sourceType.pixelFormat(), targetType.pixelFormat(), functionType, options);
+	const void* function = ConversionFunctionMap::get().function(sourceType.pixelFormat(), targetPixelFormat, functionType, options);
 
 	return function != nullptr;
 }
 
-bool FrameConverter::Comfort::convert(const Frame& source, const FrameType& targetType, Frame& target, const bool forceCopy, Worker* worker, const Options& options)
+bool FrameConverter::Comfort::isSupported(const FrameType& sourceType, const FrameType& targetType, const Options& options)
+{
+	return isSupported(sourceType, targetType.pixelFormat(), options);
+}
+
+bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::PixelFormat targetPixelFormat, const FrameType::PixelOrigin targetPixelOrigin, Frame& target, const bool forceCopy, Worker* worker, const Options& options)
 {
 	ocean_assert(source.isValid());
-	ocean_assert(targetType.isValid());
+	ocean_assert(targetPixelFormat != FrameType::FORMAT_UNDEFINED);
+	ocean_assert(targetPixelOrigin != FrameType::ORIGIN_INVALID);
 
 	if (&source == &target)
 	{
@@ -454,9 +455,23 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType& targ
 		return false;
 	}
 
-	if (source.width() != targetType.width() || source.height() != targetType.height() || source.pixelOrigin() == FrameType::ORIGIN_INVALID || targetType.pixelOrigin() == FrameType::ORIGIN_INVALID)
+	if (!source.isValid())
 	{
-		ocean_assert(false && "Invalid frame types.");
+		ocean_assert(false && "Invalid source frame.");
+		return false;
+	}
+
+	if (targetPixelFormat == FrameType::FORMAT_UNDEFINED || targetPixelOrigin == FrameType::ORIGIN_INVALID)
+	{
+		ocean_assert(false && "Invalid target pixel format or pixel origin.");
+		return false;
+	}
+
+	const FrameType targetType(source.frameType(), targetPixelFormat, targetPixelOrigin);
+
+	if (!targetType.isValid())
+	{
+		ocean_assert(false && "Invalid target frame type");
 		return false;
 	}
 
@@ -794,6 +809,20 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType& targ
 	target.setRelativeTimestamp(source.relativeTimestamp());
 
 	return true;
+}
+
+bool FrameConverter::Comfort::convert(const Frame& source, const FrameType& targetType, Frame& target, const bool forceCopy, Worker* worker, const Options& options)
+{
+	ocean_assert(source.isValid());
+	ocean_assert(targetType.isValid());
+
+	if (source.width() != targetType.width() || source.height() != targetType.height())
+	{
+		ocean_assert(false && "Invalid frame types.");
+		return false;
+	}
+
+	return convert(source, targetType.pixelFormat(), targetType.pixelOrigin(), target, forceCopy, worker, options);
 }
 
 bool FrameConverter::Comfort::convertAndCopy(const Frame& source, Frame& target, Worker* worker, const Options& options)

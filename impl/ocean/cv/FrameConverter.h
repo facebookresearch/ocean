@@ -4,15 +4,12 @@
 #define META_OCEAN_CV_FRAME_CONVERTER_H
 
 #include "ocean/cv/CV.h"
+#include "ocean/cv/CVUtilities.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/Worker.h"
 
-#include "ocean/cv/SumSquareDifferences.h"
-
 #include "ocean/math/Matrix.h"
-
-#include <map>
 
 namespace Ocean
 {
@@ -612,6 +609,18 @@ class OCEAN_CV_EXPORT FrameConverter
 			public:
 
 				/**
+				 * Returns whether the convert function of this class supports the conversion of a frame with one pixel format to a new frame with other pixel format.
+				 * @param sourceType The frame type of the source frame, must be valid
+				 * @param targetPixelFormat The pixel format of the target frame, must be valid
+				 * @param options The options to be used for conversion
+				 * @return True, if so
+				 * @see convert().
+				 */
+				static bool isSupported(const FrameType& sourceType, const FrameType::PixelFormat targetPixelFormat, const Options& options = Options());
+
+				/**
+				 * Deprecated.
+				 *
 				 * Returns whether the convert function of this class supports the conversion between two specified frame types.
 				 * @param sourceType The source frame type, with same frame dimension as the targetType, must be valid
 				 * @param targetType The target frame type, with same frame dimension as the sourceType, must be valid
@@ -622,6 +631,89 @@ class OCEAN_CV_EXPORT FrameConverter
 				static bool isSupported(const FrameType& sourceType, const FrameType& targetType, const Options& options = Options());
 
 				/**
+				 * Converts a frame with arbitrary dimension, pixel format and pixel origin into a frame with the same dimension, but different pixel format or pixel origin.
+				 * @param source The source frame to convert, must be valid
+				 * @param targetPixelFormat The pixel format of the target frame, must be valid
+				 * @param targetPixelOrigin The pixel origin of the target frame, must be valid
+				 * @param target The resulting target frame, the frame will be modified if the frame type is not compatible, or if the target frame is not owner of the frame data, or if the target frame is a read-only frame, can be invalid
+				 * @param forceCopy True, if the resulting target image is expected to be the owner of the image data, otherwise the source frame will be the owner of the image data if possible
+				 * @param worker Optional worker object to distribute the conversion computation to different CPU cores
+				 * @param options The options to be used for conversion
+				 * @return True, if the frame type conversion is supported and succeeded
+				 *
+				 * Here is an example showing how to use this function:
+				 * @code
+				 * bool function(const Frame& anyFrame)
+				 * {
+				 *     // we do not know which pixel format (and pixel origin) the given frame has
+				 *     // however, we know that we need e.g., a grayscale frame with 8 bit and pixel origin in the upper left corner of the target frame
+				 *
+				 *     Frame yFrame;
+				 *     if (!FrameConverter::Comfort::convert(anyFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, FrameConverter::CP_AVOID_COPY_IF_POSSIBLE)) // we try to avoid a copy if possible
+				 *     {
+				 *         // the given frame could not be converted into a Y8 frame, so we stop here
+				 *         return false;
+				 *     }
+				 *
+				 *     // from now on we have access to a Y8 frame, it may be
+				 *     // - a frame not owning the frame data but referencing the memory only (in case 'anyFrame' provided a plain Y8 block)
+				 *     // - a frame owning the frame data if the given image was converted to a Y8 frame
+				 *
+				 *     // we can use the memory as long as anyFrame exists
+				 *     const uint8_t* data = yFrame.constdata<uint8_t>();
+				 *
+				 *     // do something here
+				 *
+				 *     return true;
+				 * }
+				 * @endcode
+				 * @see isSupported(), convertAndCopy().
+				 */
+				static bool convert(const Frame& source, const FrameType::PixelFormat targetPixelFormat, const FrameType::PixelOrigin targetPixelOrigin, Frame& target, const bool forceCopy = true, Worker* worker = nullptr, const Options& options = Options());
+
+				/**
+				 * Converts a frame with arbitrary dimension, pixel format and pixel origin into a frame with the same dimension and pixel origin, but different pixel format.
+				 * @param source The source frame to convert, must be valid
+				 * @param targetPixelFormat The pixel format of the target frame, must be valid
+				 * @param target The resulting target frame, the frame will be modified if the frame type is not compatible, or if the target frame is not owner of the frame data, or if the target frame is a read-only frame, can be invalid
+				 * @param forceCopy True, if the resulting target image is expected to be the owner of the image data, otherwise the source frame will be the owner of the image data if possible
+				 * @param worker Optional worker object to distribute the conversion computation to different CPU cores
+				 * @param options The options to be used for conversion
+				 * @return True, if the frame type conversion is supported and succeeded
+				 *
+				 * Here is an example showing how to use this function:
+				 * @code
+				 * bool function(const Frame& anyFrame)
+				 * {
+				 *     // we do not know which pixel format (and pixel origin) the given frame has
+				 *     // however, we know that we need e.g., a grayscale frame with 8 bit with any pixel origin
+				 *
+				 *     Frame yFrame;
+				 *     if (!FrameConverter::Comfort::convert(anyFrame, FrameType::FORMAT_Y8, yFrame, FrameConverter::CP_AVOID_COPY_IF_POSSIBLE)) // we try to avoid a copy if possible
+				 *     {
+				 *         // the given frame could not be converted into a Y8 frame, so we stop here
+				 *         return false;
+				 *     }
+				 *
+				 *     // from now on we have access to a Y8 frame, it may be
+				 *     // - a frame not owning the frame data but referencing the memory only (in case 'anyFrame' provided a plain Y8 block)
+				 *     // - a frame owning the frame data if the given image was converted to a Y8 frame
+				 *
+				 *     // we can use the memory as long as anyFrame exists
+				 *     const uint8_t* data = yFrame.constdata<uint8_t>();
+				 *
+				 *     // do something here
+				 *
+				 *     return true;
+				 * }
+				 * @endcode
+				 * @see isSupported(), convertAndCopy().
+				 */
+				static inline bool convert(const Frame& source, const FrameType::PixelFormat targetPixelFormat, Frame& target, const bool forceCopy = true, Worker* worker = nullptr, const Options& options = Options());
+
+				/**
+				 * Deprecated.
+				 *
 				 * Converts a frame with arbitrary dimension, pixel format and pixel origin into a frame with the same dimension but different pixel format or pixel origin.
 				 * @param source The source frame to convert, must be valid
 				 * @param targetType The frame type of the target frame, must be valid
@@ -2546,6 +2638,11 @@ inline bool FrameConverter::ConversionFunctionMap::ConversionTriple::operator==(
 inline size_t FrameConverter::ConversionFunctionMap::ConversionTriple::operator()(const ConversionTriple& conversionTriple) const
 {
 	return size_t(conversionTriple.sourcePixelFormat_ ^ (conversionTriple.targetPixelFormat_ << uint64_t(1u)) ^ (uint64_t(conversionTriple.optionsType_) << uint64_t(2u)));
+}
+
+inline bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::PixelFormat targetPixelFormat, Frame& target, const bool forceCopy, Worker* worker, const Options& options)
+{
+	return convert(source, targetPixelFormat, source.pixelOrigin(), target, forceCopy, worker, options);
 }
 
 inline bool FrameConverter::Comfort::change(Frame& frame, const FrameType& targetType, const bool forceCopy, Worker* worker, const Options& options)

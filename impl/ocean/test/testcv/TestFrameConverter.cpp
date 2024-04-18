@@ -703,28 +703,41 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 		const FrameType::PixelOrigin targetPixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 		const FrameType sourceFrameType(width, height, sourcePixelFormat, sourcePixelOrigin);
-		const FrameType targetFrameType(width, height, targetPixelFormat, targetPixelOrigin);
 
-		Indices32 paddingElements;
-
-		if (RandomI::random(randomGenerator, 1u) == 0u)
-		{
-			for (unsigned int n = 0u; n < sourceFrameType.numberPlanes(); ++n)
-			{
-				paddingElements.push_back(RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u));
-			}
-		}
-
-		const Timestamp timestamp(double(RandomI::random(randomGenerator, -100, 100)));
-
-		Frame sourceFrame(sourceFrameType, paddingElements, timestamp);
-		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, false, &randomGenerator);
 
 		const bool forceCopy = RandomI::random(randomGenerator, 1u) == 0u;
 
 		Frame targetFrame;
-		if (CV::FrameConverter::Comfort::convert(sourceFrame, targetFrameType, targetFrame, forceCopy, nullptr, options))
+
+		bool localResult = false;
+
+		if (RandomI::boolean(randomGenerator))
 		{
+			if (sourcePixelOrigin == targetPixelOrigin && RandomI::boolean(randomGenerator))
+			{
+				// testing pixel format-only function
+
+				localResult = CV::FrameConverter::Comfort::convert(sourceFrame, targetPixelFormat, targetFrame, forceCopy, nullptr, options);
+			}
+			else
+			{
+				// testing pixel format and pixel origin function
+
+				localResult = CV::FrameConverter::Comfort::convert(sourceFrame, targetPixelFormat, targetPixelOrigin, targetFrame, forceCopy, nullptr, options);
+			}
+		}
+		else
+		{
+			// testing deprecated function
+
+			localResult = CV::FrameConverter::Comfort::convert(sourceFrame, FrameType(sourceFrame.frameType(), targetPixelFormat, targetPixelOrigin), targetFrame, forceCopy, nullptr, options);
+		}
+
+		if (localResult)
+		{
+			const FrameType targetFrameType(sourceFrame.frameType(), targetPixelFormat, targetPixelOrigin);
+
 			if (targetFrame.frameType() != targetFrameType)
 			{
 				allSucceeded = false;
@@ -735,7 +748,7 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 				allSucceeded = false;
 			}
 
-			if (targetFrame.timestamp() != timestamp)
+			if (targetFrame.timestamp() != sourceFrame.timestamp())
 			{
 				allSucceeded = false;
 			}
@@ -745,7 +758,7 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 				// identical source and pixel formats with default options can be verified by comparing the memory
 
 				Frame convetedTargetFrame;
-				if (CV::FrameConverter::Comfort::convert(targetFrame, sourceFrame.frameType(), convetedTargetFrame, forceCopy))
+				if (CV::FrameConverter::Comfort::convert(targetFrame, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convetedTargetFrame, forceCopy))
 				{
 					for (unsigned int planeIndex = 0u; planeIndex < convetedTargetFrame.numberPlanes(); ++planeIndex)
 					{
