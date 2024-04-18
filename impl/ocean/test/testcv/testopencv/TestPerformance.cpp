@@ -64,67 +64,59 @@ bool TestPerformance::performancePerspectiveWarp(const unsigned int width, const
 {
 	Log::info() << "Warp perspective test for frame size: " << width << "x" << height << ", channels " << channels;
 
-	WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
-
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels);
-	Frame frame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT));
-	Frame outputFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT));
-
-	cv::Mat cvFrame(height, width, CV_MAKETYPE(CV_8U, channels));
-	cv::Mat cvOutputFrame(height, width, CV_MAKETYPE(CV_8U, channels));
 
 	const SquareMatrix3 transformation(Scalar(0.95), Scalar(-0.05), Scalar(0.05), Scalar(1.05), Scalar(1), Scalar(0), Scalar(35.8), Scalar(-20.4), Scalar(1));
 	ocean_assert(!transformation.isSingular());
 	const cv::Matx33d cvTransformationInv = CV::OpenCVUtilities::toCvMatx33(transformation.inverted()); // Invert here or add cv::WARP_INVERSE_MAP to cv::warpPerspective()
 
 	HighPerformanceStatistic timerOcean, timerOpenCV;
+
 	const Timestamp startTimestamp(true);
-	unsigned int counter = 0u;
 
 	do
 	{
-		// Generation of random test data for Ocean
-		CV::CVUtilities::randomizeFrame(frame);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false);
+		Frame outputFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false);
+
+		cv::Mat cvFrame(height, width, CV_MAKETYPE(CV_8U, channels));
+		cv::Mat cvOutputFrame(height, width, CV_MAKETYPE(CV_8U, channels));
+
 		CV::OpenCVUtilities::toCvMat(frame).copyTo(cvFrame);
 
-		// Run Ocean
-		if (channels == 1u)
-		{
-			timerOcean.start();
-			CV::FrameInterpolatorBilinear::homography<uint8_t, 1u>(frame.constdata<uint8_t>(), width, height, transformation, nullptr, outputFrame.data<uint8_t>(), CV::PixelPositionI(0, 0), width, height, frame.paddingElements(), outputFrame.paddingElements(), scopedWorker());
-			timerOcean.stop();
-		}
-		else if (channels == 3u)
-		{
-			timerOcean.start();
-			CV::FrameInterpolatorBilinear::homography<uint8_t, 3u>(frame.constdata<uint8_t>(), width, height, transformation, nullptr, outputFrame.data<uint8_t>(), CV::PixelPositionI(0, 0), width, height, frame.paddingElements(), outputFrame.paddingElements(), scopedWorker());
-			timerOcean.stop();
-		}
-		else if (channels == 4u)
-		{
-			timerOcean.start();
-			CV::FrameInterpolatorBilinear::homography<uint8_t, 4u>(frame.constdata<uint8_t>(), width, height, transformation, nullptr, outputFrame.data<uint8_t>(), CV::PixelPositionI(0, 0), width, height, frame.paddingElements(), outputFrame.paddingElements(), scopedWorker());
-			timerOcean.stop();
-		}
-		else
-		{
-			Log::info() << "Adapt code for this number of channels: " << channels;
-			return false;
-		}
+		timerOcean.start();
+
+			switch (channels)
+			{
+				case 1u:
+					CV::FrameInterpolatorBilinear::homography<uint8_t, 1u>(frame.constdata<uint8_t>(), width, height, transformation, nullptr, outputFrame.data<uint8_t>(), CV::PixelPositionI(0, 0), width, height, frame.paddingElements(), outputFrame.paddingElements(), WorkerPool::get().scopedWorker()());
+					break;
+
+				case 3u:
+					CV::FrameInterpolatorBilinear::homography<uint8_t, 3u>(frame.constdata<uint8_t>(), width, height, transformation, nullptr, outputFrame.data<uint8_t>(), CV::PixelPositionI(0, 0), width, height, frame.paddingElements(), outputFrame.paddingElements(), WorkerPool::get().scopedWorker()());
+					break;
+
+				case 4u:
+					CV::FrameInterpolatorBilinear::homography<uint8_t, 4u>(frame.constdata<uint8_t>(), width, height, transformation, nullptr, outputFrame.data<uint8_t>(), CV::PixelPositionI(0, 0), width, height, frame.paddingElements(), outputFrame.paddingElements(), WorkerPool::get().scopedWorker()());
+					break;
+
+				default:
+					ocean_assert(false && "This should never happen!");
+					return false;
+			}
+
+		timerOcean.stop();
 
 		// Run OpenCV
 		timerOpenCV.start();
-		cv::warpPerspective(cvFrame, cvOutputFrame, cvTransformationInv, cvOutputFrame.size(), cv::INTER_LINEAR);
+			cv::warpPerspective(cvFrame, cvOutputFrame, cvTransformationInv, cvOutputFrame.size(), cv::INTER_LINEAR);
 		timerOpenCV.stop();
-
-		counter++;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Ocean, best: " << String::toAString(timerOcean.bestMseconds(), 2u) + "ms, avg: " + String::toAString(timerOcean.averageMseconds(), 2u) << "ms, median: " << String::toAString(timerOcean.medianMseconds(), 2u) << "ms";
 	Log::info() << "OpenCV, best: " << String::toAString(timerOpenCV.bestMseconds(), 2u) + "ms, avg: " + String::toAString(timerOpenCV.averageMseconds(), 2u) << "ms, median: " << String::toAString(timerOpenCV.medianMseconds(), 2u) << "ms";
 	Log::info() << "Ratio best: " << String::toAString(timerOcean.bestMseconds() / timerOpenCV.bestMseconds(), 2u) + ", avg: " + String::toAString(timerOcean.averageMseconds() / timerOpenCV.averageMseconds(), 2u) << ", median: " << String::toAString(timerOcean.medianMseconds() / timerOpenCV.medianMseconds(), 2u);
-	Log::info() << "Counter: " << counter;
 	Log::info() << "Test duration: " << testDuration;
 
 	return true;

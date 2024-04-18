@@ -792,7 +792,6 @@ bool TestInitializerI1::testAppearanceMapping(const unsigned int width, const un
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 100u, height);
 
 				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-				CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

@@ -331,10 +331,8 @@ bool TestEigenUtilities::testFrame2Matrix(const double testDuration)
 	{
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 500u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 500u);
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u) == 0u ? 0u : RandomI::random(randomGenerator, 1u, 100u);
 
-		Frame frame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-		CV::CVUtilities::randomizeFrame(frame, /* skipPaddingArea */ false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), /* skipPaddingArea */ false, &randomGenerator);
 
 		Eigen::Matrix<TTarget, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> rowMajorMatrix;
 		Eigen::Matrix<TTarget, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor> columnMajorMatrix;

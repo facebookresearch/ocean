@@ -1800,7 +1800,6 @@ bool TestMaskAnalyzer::testComputeDistanceTransform8Bit(const uint32_t width, co
 		const uint32_t testHeight = measurePerformance ? height : RandomI::random(randomGenerator, 1u, 3072u);
 
 		const uint32_t sourcePaddingElements = RandomI::random(randomGenerator, 0u, 100u);
-		const uint32_t targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
 
 		const uint8_t referenceValue = uint8_t(RandomI::random(randomGenerator, 255u));
 
@@ -1817,8 +1816,7 @@ bool TestMaskAnalyzer::testComputeDistanceTransform8Bit(const uint32_t width, co
 		const Frame sourceFrame = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, (createDataWithoutReferenceValue ? referenceValue + uint8_t(RandomI::random(randomGenerator, 1u, 254u)) /* <- intentional overflow! */ : referenceValue), sourcePaddingElements, &randomGenerator);
 		ocean_assert(sourceFrame == FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 
-		Frame targetFrame(FrameType(sourceFrame, FrameType::genericPixelFormat<TDistanceType, 1u>()), targetPaddingElements);
-		CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, FrameType::genericPixelFormat<TDistanceType, 1u>()), false, &randomGenerator);
 
 		const Frame targetFrameClone(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

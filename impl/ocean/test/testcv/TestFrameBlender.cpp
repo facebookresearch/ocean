@@ -134,14 +134,10 @@ bool TestFrameBlender::testConstantAlpha(const double testDuration, Worker& work
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
 
-		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const FrameType frameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT);
 
-		Frame sourceFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame targetFrame(sourceFrame.frameType(), targetPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
-		CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(frameType, false, &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(frameType, false, &randomGenerator);
 
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -313,18 +309,11 @@ bool TestFrameBlender::testBlendWithConstantValue(const double testDuration, Wor
 
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
 
-		const unsigned int alphaPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
-		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
-
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
 
-		Frame alphaFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), alphaPaddingElements);
-		Frame targetFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), targetPaddingElements);
-		Frame valueFrame(FrameType(1u, 1u, pixelFormat, FrameType::ORIGIN_UPPER_LEFT));
-
-		CV::CVUtilities::randomizeFrame(alphaFrame, false, &randomGenerator);
-		CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
-		CV::CVUtilities::randomizeFrame(valueFrame, false, &randomGenerator);
+		const Frame alphaFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame valueFrame = CV::CVUtilities::randomizedFrame(FrameType(1u, 1u, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -426,19 +415,11 @@ bool TestFrameBlender::testSeparateAlphaChannelSubFrame(const double testDuratio
 
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
 
-		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 0u, 100u);
-		const unsigned int alphaPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
-		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
-
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
 
-		Frame sourceFrame(FrameType(sourceWidth, sourceHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame alphaFrame(FrameType(sourceWidth, sourceHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), alphaPaddingElements);
-		Frame targetFrame(FrameType(targetWidth, targetHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), targetPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
-		CV::CVUtilities::randomizeFrame(alphaFrame, false, &randomGenerator);
-		CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame alphaFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(targetWidth, targetHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -562,19 +543,11 @@ bool TestFrameBlender::testSeparateAlphaChannelFullFrame(const double testDurati
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
 
-		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 0u, 100u);
-		const unsigned int alphaPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
-		const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 0u, 100u);
-
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
 
-		Frame sourceFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-		Frame alphaFrame(FrameType(sourceFrame.frameType(), FrameType::FORMAT_Y8), alphaPaddingElements);
-		Frame targetFrame(sourceFrame.frameType(), targetPaddingElements);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
-		CV::CVUtilities::randomizeFrame(alphaFrame, false, &randomGenerator);
-		CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame alphaFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame.frameType(), FrameType::FORMAT_Y8), false, &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(sourceFrame.frameType(), false, &randomGenerator);
 
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -674,14 +647,8 @@ bool TestFrameBlender::testSubFrame(const FrameType::PixelFormat sourcePixelForm
 			const unsigned int sourceWidth = RandomI::random(randomGenerator, 1u, targetWidth);
 			const unsigned int sourceHeight = RandomI::random(randomGenerator, 1u, targetHeight);
 
-			const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-			const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame sourceFrameWithAlpha(FrameType(sourceWidth, sourceHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-			Frame targetFrame(FrameType(targetWidth, targetHeight, targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT), targetPaddingElements);
-
-			CV::CVUtilities::randomizeFrame(sourceFrameWithAlpha, false, &randomGenerator);
-			CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
+			const Frame sourceFrameWithAlpha = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(targetWidth, targetHeight, targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 			const Frame targetFrameCopy(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -752,17 +719,11 @@ bool TestFrameBlender::testFullFrame(const FrameType::PixelFormat sourcePixelFor
 		{
 			for (const bool performanceIteration : {true, false})
 			{
-				const unsigned int sourceFrameWithAlphaPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetFrameWithoutAlphaPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
 				const unsigned int widthToUse = performanceIteration ? width : RandomI::random(randomGenerator, 1u, width);
 				const unsigned int heightToUse = performanceIteration ? height : RandomI::random(randomGenerator, 1u, height);
 
-				Frame sourceFrameWithAlpha(FrameType(widthToUse, heightToUse, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), sourceFrameWithAlphaPaddingElements);
-				Frame targetFrame(FrameType(widthToUse, heightToUse, targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT), targetFrameWithoutAlphaPaddingElements);
-
-				CV::CVUtilities::randomizeFrame(sourceFrameWithAlpha, false, &randomGenerator);
-				CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
+				const Frame sourceFrameWithAlpha = CV::CVUtilities::randomizedFrame(FrameType(widthToUse, heightToUse, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(widthToUse, heightToUse, targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				const Frame targetFrameCopy(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

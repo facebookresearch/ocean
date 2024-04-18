@@ -90,14 +90,8 @@ bool TestMaskCreator::testJoinMasks(const unsigned int width, const unsigned int
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, width);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, height);
 
-				const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-				const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-				Frame maskFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), maskPaddingElements);
-				Frame targetFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), targetPaddingElements);
-
-				CV::CVUtilities::randomizeFrame(maskFrame, false, &randomGenerator);
-				CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
+				const Frame maskFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 				const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
