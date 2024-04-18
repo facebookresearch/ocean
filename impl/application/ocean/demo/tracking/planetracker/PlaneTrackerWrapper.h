@@ -15,7 +15,7 @@
 
 #include "ocean/media/FrameMedium.h"
 
-#include "ocean/tracking/plane/PlaneTracker.h"
+#include "metaonly/ocean/tracking/plane/PlaneTracker.h"
 
 /**
  * @ingroup applicationdemotracking
