@@ -14,7 +14,7 @@ bool FrameFilterSeparable::filter(const Frame& source, Frame& target, const std:
 	ocean_assert(sumFilterValues(horizontalFilter.data(), horizontalFilter.size()) != 0u);
 	ocean_assert(sumFilterValues(verticalFilter.data(), verticalFilter.size()) != 0u);
 
-	if (source.isNull() || source.width() < (unsigned int)(horizontalFilter.size()) || source.height() < (unsigned int)(verticalFilter.size()))
+	if (!source.isValid() || source.width() < (unsigned int)(horizontalFilter.size()) || source.height() < (unsigned int)(verticalFilter.size()))
 	{
 		return false;
 	}

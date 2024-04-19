@@ -19,7 +19,7 @@ bool FrequencyAnalysis::image2frequencies(const Frame& frame, Complex* frequenci
 {
 	ocean_assert(frame.isValid() && frequencies != nullptr);
 
-	if (frame.isNull() || frequencies == nullptr)
+	if (!frame.isValid() || frequencies == nullptr)
 	{
 		return false;
 	}
@@ -38,7 +38,7 @@ bool FrequencyAnalysis::frequencies2image(const Complex* frequencies, Frame& fra
 {
 	ocean_assert(frequencies != nullptr && frame.isValid());
 
-	if (frame.isNull() || frequencies == nullptr)
+	if (!frame.isValid() || frequencies == nullptr)
 	{
 		return false;
 	}

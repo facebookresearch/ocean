@@ -279,7 +279,7 @@ bool SynthesisPyramidF1::createInpaintingResult(Frame& frame, Worker* worker) co
 	ocean_assert(frame.isValid());
 	ocean_assert(FrameType(layersReversedOrder_.back().frame().frameType(), frame.pixelFormat()) == frame.frameType());
 
-	if (layersReversedOrder_.empty() || frame.isNull() || FrameType(layersReversedOrder_.back().frame().frameType(), frame.pixelFormat()) != frame.frameType())
+	if (layersReversedOrder_.empty() || !frame.isValid() || FrameType(layersReversedOrder_.back().frame().frameType(), frame.pixelFormat()) != frame.frameType())
 	{
 		return false;
 	}

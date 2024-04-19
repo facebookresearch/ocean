@@ -165,7 +165,7 @@ bool FrameInterpolatorNearestPixel::Comfort::transform(const Frame& input, Frame
 {
 	ocean_assert(!lookupTable.isEmpty() && input.isValid());
 
-	ocean_assert(output.isNull() || (output.width() == (unsigned int)(lookupTable.sizeX()) && output.height() == (unsigned int)(lookupTable.sizeY())));
+	ocean_assert(!output.isValid() || (output.width() == (unsigned int)(lookupTable.sizeX()) && output.height() == (unsigned int)(lookupTable.sizeY())));
 
 	if (input.dataType() == FrameType::DT_UNSIGNED_INTEGER_8 && input.numberPlanes() == 1u)
 	{
@@ -199,7 +199,7 @@ bool FrameInterpolatorNearestPixel::Comfort::transformMask(const Frame& input, F
 {
 	ocean_assert(!lookupTable.isEmpty() && input.isValid());
 
-	ocean_assert(output.isNull() || (output.width() == (unsigned int)(lookupTable.sizeX()) && output.height() == (unsigned int)(lookupTable.sizeY())));
+	ocean_assert(!output.isValid() || (output.width() == (unsigned int)(lookupTable.sizeX()) && output.height() == (unsigned int)(lookupTable.sizeY())));
 
 	if (input.dataType() == FrameType::DT_UNSIGNED_INTEGER_8 && input.numberPlanes() == 1u)
 	{

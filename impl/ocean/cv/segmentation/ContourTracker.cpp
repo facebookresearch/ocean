@@ -41,7 +41,7 @@ bool ContourTracker::detectObject(const Frame& frame, const PixelContour& roughC
 	}
 
 	ocean_assert(frame.isValid());
-	ocean_assert(yFrame.isNull() || yFrame.isFrameTypeCompatible(FrameType(frame, FrameType::FORMAT_Y8), true));
+	ocean_assert(!yFrame.isValid() || yFrame.isFrameTypeCompatible(FrameType(frame, FrameType::FORMAT_Y8), true));
 
 	ocean_assert(roughContour.isDistinct());
 
@@ -87,7 +87,7 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 	}
 
 	ocean_assert(frame.isValid());
-	ocean_assert(yFrame.isNull() || yFrame.isFrameTypeCompatible(FrameType(frame, FrameType::FORMAT_Y8), true));
+	ocean_assert(!yFrame.isValid() || yFrame.isFrameTypeCompatible(FrameType(frame, FrameType::FORMAT_Y8), true));
 
 	// we need a pyramid frame for the next iteration
 	const unsigned int pyramidLayers = FramePyramid::idealLayers(frame.width(), frame.height(), 15u, 15u, 2u, 80u); // **TODO** unique parameter (must be class properties)

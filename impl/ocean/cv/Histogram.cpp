@@ -75,7 +75,7 @@ bool Histogram::adjustColorToReference(Frame& frame, const Frame& reference, Wor
 	ocean_assert(frame.pixelFormat() == reference.pixelFormat());
 	ocean_assert(frame.pixelOrigin() == reference.pixelOrigin());
 
-	if (frame.isNull() || reference.isNull() || frame.pixelFormat() != reference.pixelFormat() || frame.pixelOrigin() != reference.pixelOrigin())
+	if (!frame.isValid() || !reference.isValid() || frame.pixelFormat() != reference.pixelFormat() || frame.pixelOrigin() != reference.pixelOrigin())
 	{
 		return false;
 	}
@@ -108,7 +108,7 @@ bool Histogram::adjustColorToReference(Frame& frame, const Frame& reference, con
 	ocean_assert(frame.pixelFormat() == reference.pixelFormat());
 	ocean_assert(frame.pixelOrigin() == reference.pixelOrigin());
 
-	if (frame.isNull() || reference.isNull() || frame.pixelFormat() != reference.pixelFormat() || frame.pixelOrigin() != reference.pixelOrigin())
+	if (!frame.isValid() || !reference.isValid() || frame.pixelFormat() != reference.pixelFormat() || frame.pixelOrigin() != reference.pixelOrigin())
 	{
 		return false;
 	}
@@ -141,7 +141,7 @@ bool Histogram::adjustColorToReference(const Frame& source, Frame& target, const
 	ocean_assert(source.pixelFormat() == reference.pixelFormat());
 	ocean_assert(source.pixelOrigin() == reference.pixelOrigin());
 
-	if (source.isNull() || reference.isNull() || source.pixelFormat() != reference.pixelFormat() || source.pixelOrigin() != reference.pixelOrigin())
+	if (!source.isValid() || !reference.isValid() || source.pixelFormat() != reference.pixelFormat() || source.pixelOrigin() != reference.pixelOrigin())
 	{
 		return false;
 	}

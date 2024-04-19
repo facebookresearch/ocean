@@ -141,7 +141,7 @@ bool FrameRectification::Comfort::triangleObject(const Frame& cameraFrame, const
 
 	ocean_assert(cameraFrame.numberPlanes() == 1u && cameraFrame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 
-	if (cameraFrame.isNull() || targetFrame.isNull() || !camera.isValid())
+	if (!cameraFrame.isValid() || !targetFrame.isValid() || !camera.isValid())
 	{
 		return false;
 	}
@@ -198,7 +198,7 @@ bool FrameRectification::Comfort::planarRectangleObjectMask(const Frame& cameraF
 
 	ocean_assert(cameraFrame.numberPlanes() == 1u && cameraFrame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 
-	if (cameraFrame.isNull() || targetFrame.isNull() || !camera.isValid() || cameraFrame.width() != camera.width() || cameraFrame.height() != camera.height())
+	if (!cameraFrame.isValid() || !targetFrame.isValid() || !camera.isValid() || cameraFrame.width() != camera.width() || cameraFrame.height() != camera.height())
 	{
 		return false;
 	}
@@ -254,7 +254,7 @@ bool FrameRectification::Comfort::arbitraryRectangleObjectMask(const Frame& came
 
 	ocean_assert(cameraFrame.numberPlanes() == 1u && cameraFrame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 
-	if (cameraFrame.isNull() || targetFrame.isNull() || !camera.isValid() || cameraFrame.width() != camera.width() || cameraFrame.height() != camera.height())
+	if (!cameraFrame.isValid() || !targetFrame.isValid() || !camera.isValid() || cameraFrame.width() != camera.width() || cameraFrame.height() != camera.height())
 	{
 		return false;
 	}
@@ -312,7 +312,7 @@ bool FrameRectification::Comfort::triangleObjectMask(const Frame& cameraFrame, c
 
 	ocean_assert(cameraFrame.numberPlanes() == 1u && cameraFrame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 
-	if (cameraFrame.isNull() || targetFrame.isNull() || !camera.isValid() || cameraFrame.width() != camera.width() || cameraFrame.height() != camera.height())
+	if (!cameraFrame.isValid() || !targetFrame.isValid() || !camera.isValid() || cameraFrame.width() != camera.width() || cameraFrame.height() != camera.height())
 	{
 		return false;
 	}

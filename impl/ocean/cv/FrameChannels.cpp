@@ -10,7 +10,7 @@ namespace CV
 
 bool FrameChannels::Comfort::separateTo1Channel(const Frame& sourceFrame, Frames& targetFrames, const FrameType::PixelFormat targetPixelFormat)
 {
-	if (sourceFrame.isNull() || sourceFrame.numberPlanes() != 1u || !sourceFrame.formatIsGeneric(sourceFrame.pixelFormat()))
+	if (!sourceFrame.isValid() || sourceFrame.numberPlanes() != 1u || !sourceFrame.formatIsGeneric(sourceFrame.pixelFormat()))
 	{
 		ocean_assert(false && "Invalid source frame!");
 		return false;
@@ -97,7 +97,7 @@ bool FrameChannels::Comfort::separateTo1Channel(const Frame& sourceFrame, Frames
 
 bool FrameChannels::Comfort::separateTo1Channel(const Frame& sourceFrame, const std::initializer_list<Frame*>& targetFrames, const FrameType::PixelFormat targetPixelFormat)
 {
-	if (sourceFrame.isNull() || sourceFrame.numberPlanes() != 1u || !sourceFrame.formatIsGeneric(sourceFrame.pixelFormat()))
+	if (!sourceFrame.isValid() || sourceFrame.numberPlanes() != 1u || !sourceFrame.formatIsGeneric(sourceFrame.pixelFormat()))
 	{
 		ocean_assert(false && "Invalid source frame!");
 		return false;

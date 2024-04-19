@@ -404,7 +404,7 @@ Frame FrameMean::meanFrame8BitPerChannel(FrameProviderInterface& frameProviderIn
 			frameProviderInterface.frameCacheRequest(n + 1u, n + 1u);
 		}
 
-		if (frame.isNull() || frame->isNull())
+		if (frame.isNull() || !frame->isValid())
 		{
 			return Frame();
 		}

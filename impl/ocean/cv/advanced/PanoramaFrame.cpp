@@ -73,12 +73,12 @@ bool PanoramaFrame::addFrame(const PinholeCamera& pinholeCamera, const SquareMat
 {
 	ocean_assert(pinholeCamera.isValid() && frame.isValid() && frame.numberPlanes() == 1u);
 
-	if (!pinholeCamera.isValid() || frame.isNull() || frame.numberPlanes() != 1u)
+	if (!pinholeCamera.isValid() || !frame.isValid() || frame.numberPlanes() != 1u)
 	{
 		return false;
 	}
 
-	if (frame_.isNull())
+	if (!frame_.isValid())
 	{
 		if (!reset(pinholeCamera, frame, orientation, approximationBinSize, worker))
 		{
@@ -102,7 +102,7 @@ bool PanoramaFrame::cameraFrame2panoramaSubFrame(const PinholeCamera& pinholeCam
 	ocean_assert(pinholeCamera.width() == frame.width() && pinholeCamera.height() == frame.height());
 	ocean_assert(fineAdjustment == nullptr || ((unsigned int)(fineAdjustment->sizeX()) == pinholeCamera.width() && (unsigned int)(fineAdjustment->sizeY()) == pinholeCamera.height()));
 
-	ocean_assert(mask.isNull() || FrameType(frame, FrameType::FORMAT_Y8) == mask.frameType());
+	ocean_assert(!mask.isValid() || FrameType(frame, FrameType::FORMAT_Y8) == mask.frameType());
 
 	if (mask && FrameType(frame, FrameType::FORMAT_Y8) != mask.frameType())
 	{
@@ -535,7 +535,7 @@ bool PanoramaFrame::reset(const PinholeCamera& pinholeCamera, const Frame& frame
 bool PanoramaFrame::reset(const PixelPosition& topLeft, const Frame& frame, const Frame& mask, Worker* worker)
 {
 	ocean_assert(dimensionWidth_ != 0u && dimensionHeight_ != 0u);
-	ocean_assert(frame.isValid() && (mask.isNull() || FrameType(frame, FrameType::FORMAT_Y8) == mask.frameType()));
+	ocean_assert(frame.isValid() && (!mask.isValid() || FrameType(frame, FrameType::FORMAT_Y8) == mask.frameType()));
 
 	frame_.copy(0, 0, frame);
 
@@ -1142,7 +1142,7 @@ Vector2 PanoramaFrame::cameraPixel2cameraPixel(const PinholeCamera& inputCamera,
 bool PanoramaFrame::cameraFrame2cameraFrame(const PinholeCamera& inputCamera, const SquareMatrix3& inputOrientation, const Frame& inputFrame, const Frame& inputMask, const PinholeCamera& outputCamera, const SquareMatrix3& outputOrientation, Frame& outputFrame, Frame& outputMask, const uint8_t maskValue, const unsigned int approximationBinsSize, Worker* worker)
 {
 	ocean_assert(inputCamera.isValid() && inputFrame.isValid() && inputCamera.width() == inputFrame.width() && inputCamera.height() == inputFrame.height());
-	ocean_assert(inputMask.isNull() || (inputFrame.width() == inputMask.width() && inputFrame.height() == inputMask.height() && inputFrame.pixelOrigin() == inputMask.pixelOrigin()));
+	ocean_assert(!inputMask.isValid() || (inputFrame.width() == inputMask.width() && inputFrame.height() == inputMask.height() && inputFrame.pixelOrigin() == inputMask.pixelOrigin()));
 	ocean_assert(!inputOrientation.isSingular() && !outputOrientation.isSingular());
 	ocean_assert(outputCamera.isValid());
 

@@ -15,7 +15,7 @@ bool FrameFilterGaussian::filter(const Frame& source, Frame& target, const unsig
 	ocean_assert(source.isValid());
 	ocean_assert(filterSize >= 1u && filterSize % 2u == 1u);
 
-	if (source.isNull() || source.width() < filterSize || source.height() < filterSize || filterSize == 0u || filterSize % 2u != 1u)
+	if (!source.isValid() || source.width() < filterSize || source.height() < filterSize || filterSize == 0u || filterSize % 2u != 1u)
 	{
 		return false;
 	}
@@ -49,7 +49,7 @@ bool FrameFilterGaussian::filter(Frame& frame, const unsigned int filterSize, Wo
 	ocean_assert(frame.isValid());
 	ocean_assert(filterSize >= 1u && filterSize % 2u == 1u);
 
-	if (frame.isNull() || frame.width() < filterSize || frame.height() < filterSize || filterSize == 0u || filterSize % 2u != 1u)
+	if (!frame.isValid() || frame.width() < filterSize || frame.height() < filterSize || filterSize == 0u || filterSize % 2u != 1u)
 	{
 		return false;
 	}

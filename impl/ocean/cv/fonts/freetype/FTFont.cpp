@@ -395,7 +395,7 @@ bool FTFont::textExtent(const std::string& text, PixelBoundingBoxesI& rowBoundin
 
 bool FTFont::characterFrame(Frame& frame, SharedCharacters* characters) const
 {
-	if (charactersFrame_.isNull())
+	if (!charactersFrame_.isValid())
 	{
 		return false;
 	}

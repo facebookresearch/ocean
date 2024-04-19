@@ -217,7 +217,7 @@ inline const Box2& SubRegion::boundingBox() const
 
 inline bool SubRegion::isEmpty() const
 {
-	return triangles_.empty() && mask_.isNull();
+	return triangles_.empty() && !mask_.isValid();
 }
 
 inline const Frame& SubRegion::mask() const

@@ -39,8 +39,8 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 		return false;
 	}
 
-	ocean_assert(filter.isNull() || filter.frameType() == mask.frameType());
-	ocean_assert((filter.isNull() || CV::MaskAnalyzer::hasValue(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFF, 0u)) && "The filter does not contain any valid pixel, so we will not have any source pixel!");
+	ocean_assert(!filter.isValid() || filter.frameType() == mask.frameType());
+	ocean_assert((!filter.isValid() || CV::MaskAnalyzer::hasValue(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFF, 0u)) && "The filter does not contain any valid pixel, so we will not have any source pixel!");
 
 	if (filter && filter.frameType() != mask.frameType())
 	{
@@ -104,7 +104,7 @@ bool SynthesisPyramid::arrange(const Frame& frame, const Frame& mask, Worker* wo
 
 	ocean_assert(synthesisFramePyramid_.layers() >= 1u);
 	ocean_assert(synthesisFramePyramid_.layers() == synthesisMaskPyramid_.layers());
-	ocean_assert(filter.isNull() || synthesisFramePyramid_.layers() == synthesisFilterPyramid_.layers());
+	ocean_assert(!filter.isValid() || synthesisFramePyramid_.layers() == synthesisFilterPyramid_.layers());
 
 	// determine the mask bounding boxes in the individual layers
 	determineBoundingBoxes(worker);

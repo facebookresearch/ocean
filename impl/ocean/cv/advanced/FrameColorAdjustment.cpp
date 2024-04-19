@@ -15,16 +15,16 @@ bool FrameColorAdjustment::adjustFrameBilinear(const Frame& reference, const Fra
 {
 	ocean_assert(reference.isValid() && frame.isValid());
 
-	ocean_assert(referenceMask.isNull() || (referenceMask.width() == reference.width() && referenceMask.height() == reference.height() && referenceMask.pixelOrigin() == reference.pixelOrigin()));
-	ocean_assert(frameMask.isNull() || (frameMask.width() == frame.width() && frameMask.height() == frame.height() && frameMask.pixelOrigin() == frame.pixelOrigin()));
+	ocean_assert(!referenceMask.isValid() || (referenceMask.width() == reference.width() && referenceMask.height() == reference.height() && referenceMask.pixelOrigin() == reference.pixelOrigin()));
+	ocean_assert(!frameMask.isValid() || (frameMask.width() == frame.width() && frameMask.height() == frame.height() && frameMask.pixelOrigin() == frame.pixelOrigin()));
 
 	if (reference.isValid() && frame.isValid() && reference.frameType() == frame.frameType() && frame.numberPlanes() == 1u && frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 	{
-		const uint8_t* referenceMaskData = referenceMask.isNull() ? nullptr : referenceMask.constdata<uint8_t>();
-		const uint8_t* frameMaskData = frameMask.isNull() ? nullptr : frameMask.constdata<uint8_t>();
+		const uint8_t* referenceMaskData = referenceMask.isValid() ? referenceMask.constdata<uint8_t>() : nullptr;
+		const uint8_t* frameMaskData = frameMask.isValid() ? frameMask.constdata<uint8_t>() : nullptr;
 
-		const unsigned int referenceMaskPaddingElements = referenceMask.isNull() ? 0u : referenceMask.paddingElements();
-		const unsigned int frameMaskPaddingElements = frameMask.isNull() ? 0u : frameMask.paddingElements();
+		const unsigned int referenceMaskPaddingElements = referenceMask.isValid() ? referenceMask.paddingElements() : 0u;
+		const unsigned int frameMaskPaddingElements = frameMask.isValid() ? frameMask.paddingElements() : 0u;
 
 		switch (frame.channels())
 		{

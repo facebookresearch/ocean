@@ -71,12 +71,12 @@ bool FrameShrinker::downsampleBinayMaskByTwo11(const Frame& source, Frame& targe
 
 bool FrameShrinker::downsampleByTwo14641(const Frame& source, Frame& target, Worker* worker)
 {
-	if (source.isNull() || (source.width() < 2u && source.height() < 2u))
+	if (!source.isValid() || (source.width() < 2u && source.height() < 2u))
 	{
 		return false;
 	}
 
-	if (target.isNull() == false)
+	if (target.isValid())
 	{
 		// downsampling supports e.g., 640x480 -> 320x240 or 641x481 -> 321x241
 
@@ -89,8 +89,8 @@ bool FrameShrinker::downsampleByTwo14641(const Frame& source, Frame& target, Wor
 
 	if (source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8 && source.numberPlanes() == 1u)
 	{
-		const unsigned int targetWidth = target.isNull() ? (source.width() / 2u) : target.width();
-		const unsigned int targetHeight = target.isNull() ? (source.height() / 2u) : target.height();
+		const unsigned int targetWidth = target.isValid() ? target.width() : (source.width() / 2u);
+		const unsigned int targetHeight = target.isValid() ? target.height() : (source.height() / 2u);
 
 		ocean_assert(targetWidth >= 1u && targetHeight >= 1u);
 

@@ -18,7 +18,7 @@ bool AdvancedFrameFilterGaussian::Comfort::filter(Frame& frame, Frame& mask, con
 
 	const unsigned int filterSize_2 = filterSize / 2u;
 
-	if (frame.isNull() || frame.width() <= filterSize_2 || frame.height() <= filterSize_2 || filterSize == 0u || filterSize % 2u != 1u)
+	if (!frame.isValid() || frame.width() <= filterSize_2 || frame.height() <= filterSize_2 || filterSize == 0u || filterSize % 2u != 1u)
 	{
 		return false;
 	}
@@ -59,7 +59,7 @@ bool AdvancedFrameFilterGaussian::Comfort::filter(const Frame& source, const Fra
 
 	const unsigned int filterSize_2 = filterSize / 2u;
 
-	if (source.isNull() || source.width() <= filterSize_2 || source.height() <= filterSize_2 || filterSize == 0u || filterSize % 2u != 1u)
+	if (!source.isValid() || source.width() <= filterSize_2 || source.height() <= filterSize_2 || filterSize == 0u || filterSize % 2u != 1u)
 	{
 		return false;
 	}
