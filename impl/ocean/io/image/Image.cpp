@@ -37,7 +37,7 @@ Frame decodeImage(const void* buffer, const size_t size, const std::string& imag
 	Frame frame = Media::OpenImageLibraries::Image::decodeImage(buffer, size, imageBufferTypeIn, imageBufferTypeOut);
 #endif
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		frame = Media::Special::Image::decodeImage(buffer, size, imageBufferTypeIn, imageBufferTypeOut);
 	}
@@ -87,7 +87,7 @@ Frame readImage(const std::string& filename)
 	Frame frame = Media::OpenImageLibraries::Image::readImage(filename);
 #endif
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		frame = Media::Special::Image::readImage(filename);
 	}

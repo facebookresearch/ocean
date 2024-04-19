@@ -144,7 +144,7 @@ bool IAMainWindow::loadImage(const std::string& filename)
 
 	image_ = Media::Utilities::loadImage(filename);
 
-	if (image_.isNull())
+	if (!image_.isValid())
 	{
 		wxMessageBox(std::wstring(L"Failed to open the image\n\"") + String::toWString(filename) + std::wstring(L"\""), L"Error", wxOK | wxICON_ERROR, this);
 		return false;

@@ -32,7 +32,7 @@ VanishingProjectionMainWindow::VanishingProjectionMainWindow(HINSTANCE instance,
 		frame_ = Media::Utilities::loadImage(String::toAString(mediaFile));
 	}
 
-	if (frame_.isNull())
+	if (!frame_.isValid())
 	{
 		frame_ = Frame(FrameType(800u, 800u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT));
 		frame_.setValue(0xFF);

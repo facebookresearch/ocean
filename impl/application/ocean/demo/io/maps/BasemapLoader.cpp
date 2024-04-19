@@ -132,7 +132,7 @@ using namespace Ocean;
 
 	const Frame frame = IO::Maps::Utilities::drawToImage(*tile);
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		Log::error() << "Failed to draw tile to image";
 		return 1;

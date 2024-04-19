@@ -42,7 +42,7 @@ bool GIMediaTexture2D::isValid() const
 
 bool GIMediaTexture2D::textureColor(const TextureCoordinate& textureCoordinate, RGBAColor& color) const
 {
-	if (textureFrame_.isNull())
+	if (!textureFrame_.isValid())
 	{
 		return false;
 	}

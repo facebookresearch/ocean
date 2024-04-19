@@ -209,7 +209,7 @@ TransformRef Utilities::createBox(const EngineRef& engine, const Vector3& dimens
 		return TransformRef();
 	}
 
-	if (frame.isNull() || !frame.isOwner())
+	if (!frame.isValid() || !frame.isOwner())
 	{
 		ocean_assert(false && "Frame must be valid and must own the memory");
 		return TransformRef();

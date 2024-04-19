@@ -862,7 +862,7 @@ bool TestImageIO::testInterchangeability(const double testDuration)
 						std::string decodedImageType;
 						Frame targetFrame = Media::OpenImageLibraries::Image::decodeImage(buffer.data(), buffer.size(), std::string(), &decodedImageType);
 
-						if (targetFrame.isNull() || imageType != decodedImageType)
+						if (!targetFrame.isValid() || imageType != decodedImageType)
 						{
 							allSucceeded = false;
 						}
@@ -895,7 +895,7 @@ bool TestImageIO::testInterchangeability(const double testDuration)
 						std::string decodedImageType;
 						Frame targetFrame = Media::ImageIO::Image::decodeImage(buffer.data(), buffer.size(), std::string(), &decodedImageType);
 
-						if (targetFrame.isNull() || imageType != decodedImageType)
+						if (!targetFrame.isValid() || imageType != decodedImageType)
 						{
 							allSucceeded = false;
 						}

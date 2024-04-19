@@ -31,7 +31,7 @@ CameraUndistortionMainWindow::CameraUndistortionMainWindow(HINSTANCE instance, c
 
 void CameraUndistortionMainWindow::onInitialized()
 {
-	if (distortedFrame_.isNull())
+	if (!distortedFrame_.isValid())
 	{
 		return;
 	}
