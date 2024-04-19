@@ -438,7 +438,7 @@ bool HomographyImageAligner::alignNewFrame(Frame& frame, double& time, SquareMat
 		return false;
 	}
 
-	ocean_assert(frame.isNull());
+	ocean_assert(!frame.isValid());
 
 	ocean_assert(trackingCoarsestLayerRadius_ >= 2u);
 

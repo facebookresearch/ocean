@@ -119,7 +119,7 @@ class ScopedPlugin
 	Frame leftFrame = Media::Utilities::loadImage(leftValue.stringValue());
 	Frame rightFrame = Media::Utilities::loadImage(rightValue.stringValue());
 
-	if (leftFrame.isNull() || rightFrame.isNull())
+	if (!leftFrame.isValid() || !rightFrame.isValid())
 	{
 		Log::error() << "Could not load left or right stereo image";
 		return 1;

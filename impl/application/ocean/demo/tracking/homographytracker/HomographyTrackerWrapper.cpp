@@ -283,7 +283,7 @@ bool HomographyTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 		return false;
 	}
 
-	ocean_assert(frame.isNull());
+	ocean_assert(!frame.isValid());
 
 	if (newObjectPosition.x() >= Scalar(0))
 	{

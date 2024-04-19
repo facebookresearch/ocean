@@ -279,7 +279,7 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 
 	const Frame patternFrame = Media::Utilities::loadImage(patternAbsoluteFile());
 
-	if (patternFrame.isNull())
+	if (!patternFrame.isValid())
 	{
 		Log::warning() << "The pattern file \"" << patternAbsoluteFile() << "\" could not be loaded.";
 
