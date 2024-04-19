@@ -26,7 +26,7 @@ ResourceManager::~ResourceManager()
 
 void ResourceManager::addFrameResolution(const unsigned int id, const FrameRef& frame)
 {
-	ocean_assert(frame && *frame);
+	ocean_assert(frame && frame->isValid());
 
 	if (frame.isNull() || frame->width() == 0u || frame->height() == 0u)
 	{

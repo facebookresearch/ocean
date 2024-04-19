@@ -22,7 +22,7 @@ ImageList::ImageList(const Frame& frame, const double scaleFactor)
 	ocean_assert(frame.numberPlanes() == 1u);
 	ocean_assert(scaleFactor > 0.0);
 
-	if (frame.isNull() || frame.numberPlanes() != 1u || scaleFactor <= 0.0)
+	if (!frame.isValid() || frame.numberPlanes() != 1u || scaleFactor <= 0.0)
 	{
 		return;
 	}

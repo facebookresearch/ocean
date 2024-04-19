@@ -37,7 +37,7 @@ ScopedCFStringRef Utilities::toCFString(const std::wstring& value)
 
 ScopedCGImageRef Utilities::toCGImage(const Frame& frame, bool copyData)
 {
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		return ScopedCGImageRef();
 	}
