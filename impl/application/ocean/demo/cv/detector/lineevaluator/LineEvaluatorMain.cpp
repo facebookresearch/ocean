@@ -245,7 +245,7 @@ static bool evaluateDetector(const IO::File& lineFile, const DetectorFunction de
 	const Frame image = loadCorrespondingImage(lineFile);
 
 	Frame yImage;
-	if (image.isNull() || !CV::FrameConverter::Comfort::convert(image, FrameType(image, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yImage, false))
+	if (!image.isValid() || !CV::FrameConverter::Comfort::convert(image, FrameType(image, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yImage, false))
 	{
 		return false;
 	}
