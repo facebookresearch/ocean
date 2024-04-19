@@ -8,7 +8,6 @@
 
 #include "ocean/math/Vector2.h"
 
-#include <array>
 #include <cctype>
 
 namespace Ocean
@@ -52,12 +51,6 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		 */
 		class OCEAN_CV_DETECTOR_QRCODES_EXPORT Segment
 		{
-			public:
-
-				/// The character set for the alphanumeric data mode, sorted according to value assinged to them in cf. ISO/IEC 18004:2015, Table 5
-				/// Index of each character in the array corresponds to the value assigned to them in the alphanumeric encoding/decoding table.
-				static const std::array<char, 45u> ALPHANUMERIC_CHARSET;
-
 			public:
 				/**
 				 * Constructor for segments
@@ -145,6 +138,15 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 				 * @sa ALPHANUMERIC_CHARSET
 				 */
 				static inline bool isAlphanumericData(const std::string& data);
+
+				/**
+				 * Returns the character set for the alphanumeric data mode
+				 * The character set for the alphanumeric data mode, cf. ISO/IEC 18004:2015, Table 5. The index
+				 * of each character in the string corresponds to the value assigned to them in the alphanumeric
+				 * encoding/decoding table.
+				 * @return The character set for the alphanumeric data mode.
+				 */
+				static inline const std::string& getAlphanumericCharset();
 
 			protected:
 
@@ -541,26 +543,30 @@ inline bool QRCodeEncoder::Segment::isNumericData(const std::string& data)
 
 inline bool QRCodeEncoder::Segment::isAlphanumericData(const std::string& data)
 {
-	for (const char charUnderTest : data)
+	if (data.empty())
 	{
-		bool charUnderTestIsAlphanumeric = false;
+		return false;
+	}
 
-		for (const char alphanumericChar : Segment::ALPHANUMERIC_CHARSET)
-		{
-			if (charUnderTest == alphanumericChar)
-			{
-				charUnderTestIsAlphanumeric = true;
-				break;
-			}
-		}
+	const std::string& alphanumericCharset = getAlphanumericCharset();
 
-		if (!charUnderTestIsAlphanumeric)
+	for (const char character : data)
+	{
+		if (alphanumericCharset.find(character) == std::string::npos)
 		{
 			return false;
 		}
 	}
 
-	return data.size() != 0;
+	return true;
+}
+
+inline const std::string& QRCodeEncoder::Segment::getAlphanumericCharset()
+{
+	const static std::string alphanumericCharset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
+	ocean_assert(alphanumericCharset.size() == 45);
+
+	return alphanumericCharset;
 }
 
 inline void QRCodeEncoder::Segment::bitBufferAppend(const unsigned int value, size_t bits, BitBuffer& bitBuffer)

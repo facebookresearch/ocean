@@ -42,12 +42,6 @@ const int8_t QRCodeEncoder::NUM_ERROR_CORRECTION_BLOCKS[4][41] =
 	// clang-format on
 };
 
-constexpr std::array<char, 45u> QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET{
-	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-	' ', '$', '%', '*', '+', '-', '.', '/', ':'
-};
-
 bool QRCodeEncoder::Segment::generateSegmentNumeric(const std::string& data, Segments& segments)
 {
 	if (isNumericData(data) == false)
@@ -82,7 +76,7 @@ bool QRCodeEncoder::Segment::generateSegmentNumeric(const std::string& data, Seg
 
 bool QRCodeEncoder::Segment::generateSegmentAlphanumeric(const std::string& data, Segments& segments)
 {
-	if (isAlphanumericData(data) == false)
+	if (!isAlphanumericData(data))
 	{
 		return false;
 	}
@@ -92,26 +86,26 @@ bool QRCodeEncoder::Segment::generateSegmentAlphanumeric(const std::string& data
 	BitBuffer bitBuffer;
 	bitBuffer.reserve(data.size() % 2 == 0 ? 11 * data.size() : 11 * (data.size() - 1) + 6);
 
+	const std::string& alphanumericCharset = getAlphanumericCharset();
+
 	unsigned int buffer = 0u;
 	unsigned int bufferSize = 0u;
 	for (size_t i = 0; i < data.size(); ++i)
 	{
-		for (size_t encodingValue = 0; encodingValue < QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET.size(); ++encodingValue)
+		const size_t charsetIndex = alphanumericCharset.find(data[i]);
+		ocean_assert(charsetIndex < alphanumericCharset.size());
+
+		const unsigned int encodedCharacter = (unsigned int)charsetIndex;
+
+		buffer = buffer * 45u + encodedCharacter;
+		bufferSize += 1u;
+
+		if (bufferSize == 2u)
 		{
-			if (data[i] == QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET[encodingValue])
-			{
-				buffer = buffer * Segment::ALPHANUMERIC_CHARSET.size() + encodingValue;
-				bufferSize += 1u;
+			bitBufferAppend(buffer, 11, bitBuffer);
 
-				if (bufferSize == 2u)
-				{
-					bitBufferAppend(buffer, 11, bitBuffer);
-
-					buffer = 0u;
-					bufferSize = 0u;
-				}
-				break;
-			}
+			buffer = 0u;
+			bufferSize = 0u;
 		}
 	}
 

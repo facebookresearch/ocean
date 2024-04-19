@@ -81,7 +81,7 @@ std::string Utilities::generateRandomAlphanumericString(RandomGenerator& randomG
 {
 	ocean_assert(size != 0u);
 
-	const std::array<char, QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET.size()>& alphanumericCharset = QRCodeEncoder::Segment::ALPHANUMERIC_CHARSET;
+	const std::string& alphanumericCharset = QRCodeEncoder::Segment::getAlphanumericCharset();
 
 	std::string randomString = std::string(size, ' ');
 	for (unsigned int i = 0u; i < size; ++i)
