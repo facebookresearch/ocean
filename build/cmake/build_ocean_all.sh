@@ -104,13 +104,36 @@ function run_build {
 
     cmake --build "${OCEAN_BUILD_DIRECTORY}" --target install -- -j16
 
+    build_exit_code=$?
+
+    if [ "$build_exit_code" -ne 0 ]; then
+        failed_configs+=("${LIBRARY_TYPE}_${BUILD_TYPE}")
+    fi
+
     echo " "
     echo " "
     echo " "
+
+    return $build_exit_code
 }
+
+failed_configs=()
 
 run_build Debug static
 run_build Debug shared
 
 run_build Release static
 run_build Release shared
+
+if [ "${#failed_configs[@]}" -eq 0 ]; then
+    echo "All builds were successful."
+else
+    echo "Some builds have failed." >&2
+    for config in "${failed_configs[@]}"; do
+        echo "- $config" >&2
+    done
+fi
+
+if [ "${#failed_configs[@]}" -gt 0 ]; then
+    exit 1
+fi
