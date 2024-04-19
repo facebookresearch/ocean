@@ -260,7 +260,7 @@ void PixelBufferAccessor::release()
 	if (pixelBuffer_)
 	{
 #ifdef OCEAN_DEBUG
-		ocean_assert(frame_.isNull() || debugFrameData_ == frame_.constdata<void>());
+		ocean_assert(!frame_.isValid() || debugFrameData_ == frame_.constdata<void>());
 #endif
 		CVPixelBufferUnlockBaseAddress(pixelBuffer_, lockFlags_);
 

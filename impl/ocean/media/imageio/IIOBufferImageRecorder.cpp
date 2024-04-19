@@ -70,7 +70,7 @@ bool IIOBufferImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool r
 	}
 
 	recorderFrame_ = Frame(recorderFrameType);
-	if (recorderFrame_.isNull())
+	if (!recorderFrame_.isValid())
 	{
 		return false;
 	}
@@ -86,7 +86,7 @@ void IIOBufferImageRecorder::unlockBufferToFill()
 {
 	const ScopedLock scopedLock(recorderLock);
 
-	if (recorderFrame_.isNull())
+	if (!recorderFrame_.isValid())
 	{
 		ocean_assert(false && "The image buffer hasn't been locked before");
 	}

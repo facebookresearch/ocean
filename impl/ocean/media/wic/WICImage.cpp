@@ -121,7 +121,7 @@ bool WICImage::loadImage()
 
 	Frame frame = WIC::Image::readImage(url());
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		Log::error() << "Could not load the image \"" << url() << "\"";
 		return false;

@@ -28,7 +28,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 
 	Frame result;
 
-	if (result.isNull() && (imageBufferTypeIn.empty()|| imageBufferTypeIn == "bmp"))
+	if (!result.isValid() && (imageBufferTypeIn.empty()|| imageBufferTypeIn == "bmp"))
 	{
 		result = ImageBmp::decodeImage(buffer, size);
 
@@ -38,7 +38,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 		}
 	}
 
-	if (result.isNull() && (imageBufferTypeIn.empty()|| imageBufferTypeIn == "pfm"))
+	if (!result.isValid() && (imageBufferTypeIn.empty()|| imageBufferTypeIn == "pfm"))
 	{
 		result = ImagePfm::decodeImage(buffer, size);
 
@@ -48,7 +48,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 		}
 	}
 
-	if (result.isNull() && (imageBufferTypeIn.empty()|| imageBufferTypeIn == "npy"))
+	if (!result.isValid() && (imageBufferTypeIn.empty()|| imageBufferTypeIn == "npy"))
 	{
 		result = ImageNpy::decodeImage(buffer, size);
 
@@ -58,7 +58,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 		}
 	}
 
-	if (result.isNull() && (imageBufferTypeIn.empty()|| imageBufferTypeIn == "ocn"))
+	if (!result.isValid() && (imageBufferTypeIn.empty()|| imageBufferTypeIn == "ocn"))
 	{
 		result = ImageOcn::decodeImage(buffer, size);
 
@@ -73,7 +73,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 
 bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::vector<unsigned char>& buffer, const bool allowConversion, bool* hasBeenConverted)
 {
-	if (frame.isNull() || imageType.empty())
+	if (!frame.isValid() || imageType.empty())
 	{
 		return false;
 	}

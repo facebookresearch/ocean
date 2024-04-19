@@ -168,7 +168,7 @@ bool OILImage::loadImage()
 
 	Frame newFrame(OpenImageLibraries::Image::readImage(url_));
 
-	if (newFrame.isNull())
+	if (!newFrame.isValid())
 	{
 		return false;
 	}

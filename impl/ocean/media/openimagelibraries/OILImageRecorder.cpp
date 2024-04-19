@@ -61,7 +61,7 @@ bool OILImageRecorder::lockBufferToFill(Frame& recorderFrame, const bool /*respe
 	}
 
 	recorderFrame_ = Frame(recorderFrameType);
-	if (recorderFrame_.isNull())
+	if (!recorderFrame_.isValid())
 	{
 		return false;
 	}
@@ -77,7 +77,7 @@ void OILImageRecorder::unlockBufferToFill()
 {
 	const ScopedLock scopedLock(recorderLock);
 
-	if (recorderFrame_.isNull())
+	if (!recorderFrame_.isValid())
 	{
 		ocean_assert(false && "The image buffer hasn't been locked before");
 	}

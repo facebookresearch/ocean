@@ -87,7 +87,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 
 bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::vector<uint8_t>& buffer, const bool allowConversion, bool* hasBeenConverted)
 {
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		return false;
 	}
@@ -237,7 +237,7 @@ Frame Image::readImage(const std::string& filename)
 
 bool Image::writeImage(const Frame& frame, const std::string& filename, const bool allowConversion, bool* hasBeenConverted)
 {
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		return false;
 	}

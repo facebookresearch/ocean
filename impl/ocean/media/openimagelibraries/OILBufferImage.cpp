@@ -149,7 +149,7 @@ bool OILBufferImage::loadImage()
 
 	Frame newFrame(Image::decodeImage(imageBuffer, imageBufferSize, imageBufferType));
 
-	if (newFrame.isNull())
+	if (!newFrame.isValid())
 	{
 		return false;
 	}

@@ -124,7 +124,7 @@ bool IIOImage::loadImage()
 
 	Frame frame = ImageIO::Image::readImage(url());
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		Log::error() << "Could not load the image \"" << url() << "\"";
 		return false;

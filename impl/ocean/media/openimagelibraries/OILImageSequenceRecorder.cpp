@@ -84,7 +84,7 @@ bool OILImageSequenceRecorder::setStartIndex(const unsigned int index)
 
 bool OILImageSequenceRecorder::addImage(const Frame& frame)
 {
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		return false;
 	}
@@ -210,7 +210,7 @@ bool OILImageSequenceRecorder::lockBufferToFill(Frame& recorderFrame, const bool
 		}
 	}
 
-	ocean_assert(frame_.isNull());
+	ocean_assert(!frame_.isValid());
 	if (frame_)
 	{
 		return false;

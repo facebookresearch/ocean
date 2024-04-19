@@ -34,7 +34,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 	Frame result;
 
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_JPG
-	if (result.isNull() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "jpg" || imageBufferTypeIn == "jpeg" || imageBufferTypeIn == "jpe"))
+	if (!result.isValid() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "jpg" || imageBufferTypeIn == "jpeg" || imageBufferTypeIn == "jpe"))
 	{
 		result = ImageJpg::decodeImage(buffer, size);
 
@@ -46,7 +46,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 #endif // OCEAN_MEDIA_OIL_SUPPORT_JPG
 
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_PNG
-	if (result.isNull() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "png"))
+	if (!result.isValid() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "png"))
 	{
 		result = ImagePng::decodeImage(buffer, size);
 
@@ -57,7 +57,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 	}
 #endif // OCEAN_MEDIA_OIL_SUPPORT_PNG
 
-	if (result.isNull() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "bmp"))
+	if (!result.isValid() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "bmp"))
 	{
 		result = Media::Special::ImageBmp::decodeImage(buffer, size);
 
@@ -68,7 +68,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 	}
 
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_TIF
-	if (result.isNull() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "tif" || imageBufferTypeIn == "tiff"))
+	if (!result.isValid() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "tif" || imageBufferTypeIn == "tiff"))
 	{
 		result = ImageTif::decodeImage(buffer, size);
 
@@ -80,7 +80,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 #endif // OCEAN_MEDIA_OIL_SUPPORT_TIF
 
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_GIF
-	if (result.isNull() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "gif"))
+	if (!result.isValid() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "gif"))
 	{
 		constexpr size_t maximalImages = 1;
 
@@ -99,7 +99,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 #endif // OCEAN_MEDIA_OIL_SUPPORT_GIF
 
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_WEBP
-	if (result.isNull() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "webp"))
+	if (!result.isValid() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "webp"))
 	{
 		result = ImageWebp::decodeImage(buffer, size);
 
@@ -110,7 +110,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 	}
 #endif // OCEAN_MEDIA_OIL_SUPPORT_WEBP
 
-	if (result.isNull() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "pfm"))
+	if (!result.isValid() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "pfm"))
 	{
 		result = Media::Special::ImagePfm::decodeImage(buffer, size);
 
@@ -120,7 +120,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 		}
 	}
 
-	if (result.isNull() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "npy"))
+	if (!result.isValid() && (imageBufferTypeIn.empty() || imageBufferTypeIn == "npy"))
 	{
 		result = Media::Special::ImageNpy::decodeImage(buffer, size);
 
@@ -135,7 +135,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 
 bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::vector<unsigned char>& buffer, const bool allowConversion, bool* hasBeenConverted)
 {
-	if (frame.isNull() || imageType.empty())
+	if (!frame.isValid() || imageType.empty())
 	{
 		return false;
 	}

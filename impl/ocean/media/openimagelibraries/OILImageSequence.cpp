@@ -47,7 +47,7 @@ bool OILImageSequence::loadImage(const std::string& filename, const Timestamp ti
 {
 	Frame result = Image::readImage(filename);
 
-	if (result.isNull())
+	if (!result.isValid())
 	{
 		return false;
 	}

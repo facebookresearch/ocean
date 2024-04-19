@@ -108,7 +108,7 @@ bool IIOBufferImage::loadImage()
 
 	Frame frame = ImageIO::Image::decodeImage(imageBuffer, imageBufferSize);
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		Log::error() << "Could not load the image \"" << url() << "\"";
 		return false;

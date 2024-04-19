@@ -46,7 +46,7 @@ bool ImageSequenceRecorder::setStartIndex(const unsigned int index)
 
 bool ImageSequenceRecorder::addImage(const Frame& frame)
 {
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		return false;
 	}

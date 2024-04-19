@@ -68,7 +68,7 @@ bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::v
 {
 	ocean_assert(properties.isValid());
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		return false;
 	}
@@ -97,7 +97,7 @@ bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::v
 	{
 		return false;
 	}
-	
+
 	if (!IIOObject::writeFrameToImageDestination(imageDestination.object(), frame, properties))
 	{
 		return false;
@@ -115,27 +115,27 @@ bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::v
 bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::vector<uint8_t>& buffer, const bool allowConversion, bool* hasBeenConverted, const Properties& properties)
 {
 	ocean_assert(properties.isValid());
-	
-	if (frame.isNull())
+
+	if (!frame.isValid())
 	{
 		return false;
 	}
-	
+
 	const ScopedCFStringRef typeIdentifier = IIOObject::findUniformTypeIdentifier(imageType);
-	
+
 	if (typeIdentifier.object() == nullptr)
 	{
 		return false;
 	}
-	
+
 	const ScopedCFMutableDataRef mutableData(CFDataCreateMutable(nullptr, 0));
 	const ScopedCGImageDestinationRef imageDestination(CGImageDestinationCreateWithData(mutableData.object(), typeIdentifier.object(), 1, nullptr));
-	
+
 	if (mutableData.object() == nullptr || imageDestination.object() == nullptr)
 	{
 		return false;
 	}
-	
+
 	if (!IIOObject::writeFrameToImageDestination(imageDestination.object(), frame, allowConversion, hasBeenConverted, properties))
 	{
 		return false;
@@ -143,10 +143,10 @@ bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::v
 
 	const uint8_t* data = CFDataGetMutableBytePtr(mutableData.object());
 	const size_t size = size_t(CFDataGetLength(mutableData.object()));
-	
+
 	buffer.resize(size);
 	memcpy(buffer.data(), data, size);
-	
+
 	return true;
 }
 
