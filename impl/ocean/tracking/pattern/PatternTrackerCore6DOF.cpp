@@ -235,7 +235,7 @@ unsigned int PatternTrackerCore6DOF::addPattern(const std::string& filename, con
 	{
 		const Frame patternFrame = Media::Utilities::loadImage(filename);
 
-		if (patternFrame.isNull())
+		if (!patternFrame.isValid())
 		{
 			return (unsigned int)(-1);
 		}
@@ -897,7 +897,7 @@ bool PatternTrackerCore6DOF::writeFeatureMap(const std::string& filename, const 
 bool PatternTrackerCore6DOF::readFeatureMap(const std::string& filename, Frame& pattern, CV::Detector::Blob::BlobFeatures& representativeFeatures)
 {
 	ocean_assert(!filename.empty());
-	ocean_assert(pattern.isNull() && representativeFeatures.empty());
+	ocean_assert(!pattern.isValid() && representativeFeatures.empty());
 
 	std::ifstream stream;
 	stream.open(filename, std::ios::binary);
@@ -940,7 +940,7 @@ bool PatternTrackerCore6DOF::readFeatureMap(const std::string& filename, Frame& 
 
 	pattern = Media::Utilities::loadImage(patternBuffer.data(), patternBuffer.size());
 
-	if (pattern.isNull())
+	if (!pattern.isValid())
 	{
 		return false;
 	}

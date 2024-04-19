@@ -424,7 +424,7 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 
 	ocean_assert(pinholeCamera.isValid() && frame.isValid() && frame.numberPlanes() == 1u);
 
-	if (!pinholeCamera.isValid() || frame.isNull() || frame.numberPlanes() != 1u)
+	if (!pinholeCamera.isValid() || !frame.isValid() || frame.numberPlanes() != 1u)
 	{
 		return false;
 	}
@@ -618,7 +618,7 @@ bool SphericalEnvironment::optimizeOrientation(const PinholeCamera& pinholeCamer
 	ocean_assert(isValid());
 	ocean_assert(pinholeCamera.isValid() && !orientation.isSingular());
 	ocean_assert(frame.isValid());
-	ocean_assert(mask.isNull() || FrameType::formatIsGeneric(mask.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
+	ocean_assert(!mask.isValid() || FrameType::formatIsGeneric(mask.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
 
 	Frame referenceFrame, referenceMask;
 	if (!extractFrame(pinholeCamera, orientation, referenceFrame, referenceMask, approximationBinSize, worker))
@@ -626,7 +626,7 @@ bool SphericalEnvironment::optimizeOrientation(const PinholeCamera& pinholeCamer
 		return false;
 	}
 
-	ocean_assert(mask.isNull() || (mask.width() == referenceMask.width() && mask.height() == referenceMask.height() && mask.pixelOrigin() == referenceMask.pixelOrigin()));
+	ocean_assert(!mask.isValid() || (mask.width() == referenceMask.width() && mask.height() == referenceMask.height() && mask.pixelOrigin() == referenceMask.pixelOrigin()));
 
 	if (mask)
 	{
@@ -642,7 +642,7 @@ bool SphericalEnvironment::optimizeOrientation(const PinholeCamera& pinholeCamer
 		return false;
 	}
 
-	ocean_assert(referenceMask.isNull());
+	ocean_assert(!referenceMask.isValid());
 
 	const Vectors3 referenceObjectPoints(Geometry::Utilities::createObjectPoints(pinholeCamera, HomogenousMatrix4(orientation), ConstArrayAccessor<Vector2>(referenceImagePoints), pinholeCamera.hasDistortionParameters(), 10));
 
@@ -671,9 +671,9 @@ bool SphericalEnvironment::optimizeOrientation(const PinholeCamera& pinholeCamer
 			return false;
 		}
 
-		ocean_assert(mask.isNull() || (mask.width() == referenceMask.width() && mask.height() == referenceMask.height() && mask.pixelOrigin() == referenceMask.pixelOrigin()));
+		ocean_assert(!mask.isValid() || (mask.width() == referenceMask.width() && mask.height() == referenceMask.height() && mask.pixelOrigin() == referenceMask.pixelOrigin()));
 
-		if (mask)
+		if (mask.isValid())
 		{
 			CV::Segmentation::MaskCreator::joinMasks(mask.constdata<uint8_t>(), referenceMask.data<uint8_t>(), referenceMask.width(), referenceMask.height(), mask.paddingElements(), referenceMask.paddingElements(), maskValue(), worker);
 		}
@@ -689,7 +689,7 @@ bool SphericalEnvironment::optimizeOrientation(const PinholeCamera& pinholeCamer
 			return false;
 		}
 
-		ocean_assert(referenceMask.isNull());
+		ocean_assert(!referenceMask.isValid());
 
 		if (!determineTransformationTable2x2(pinholeCamera.width(), pinholeCamera.height(), frameImagePoints, referenceImagePoints, *fineAdjustment))
 		{

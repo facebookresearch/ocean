@@ -66,7 +66,7 @@ bool BlobTracker6DOF::determinePoses(const Frame& frame, const PinholeCamera& pi
 	ocean_assert(frame.isValid() && pinholeCamera.isValid());
 	ocean_assert(frame.width() == pinholeCamera.width() && frame.height() == pinholeCamera.height());
 
-	if (frame.isNull() || frame.width() != pinholeCamera.width() || frame.height() != pinholeCamera.height())
+	if (!frame.isValid() || frame.width() != pinholeCamera.width() || frame.height() != pinholeCamera.height())
 	{
 		return false;
 	}
@@ -81,7 +81,7 @@ bool BlobTracker6DOF::determinePoses(const Frame& frame, const PinholeCamera& pi
 	ocean_assert(transformations.empty());
 	transformations.clear();
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		return false;
 	}

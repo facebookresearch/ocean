@@ -31,7 +31,7 @@ FeatureMap::FeatureMap(const Frame& frame, const Vector2& dimension, const Scala
 	usingHarrisFeatures_(useHarrisFeatures)
 {
 	ocean_assert(dimension.x() > 0);
-	if (frame.isNull() || dimension.x() <= 0)
+	if (!frame.isValid() || dimension.x() <= 0)
 	{
 		return;
 	}

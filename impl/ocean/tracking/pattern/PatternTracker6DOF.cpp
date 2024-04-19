@@ -26,7 +26,7 @@ PatternTracker6DOF::~PatternTracker6DOF()
 
 unsigned int PatternTracker6DOF::addPattern(const Frame& frame, const Vector2& dimension, Worker* worker)
 {
-	if (frame.isNull() || dimension.x() <= 0)
+	if (!frame.isValid() || dimension.x() <= 0)
 	{
 		return (unsigned int)(-1);
 	}
@@ -47,7 +47,7 @@ unsigned int PatternTracker6DOF::addPattern(const std::string& filename, const V
 
 unsigned int PatternTracker6DOF::addCylinderPattern(const Frame& frame, const UVTextureMapping::CylinderUVTextureMapping& cylinderUVTextureMapping, Worker* worker)
 {
-	if (frame.isNull() || !cylinderUVTextureMapping.isValid())
+	if (!frame.isValid() || !cylinderUVTextureMapping.isValid())
 	{
 		return (unsigned int)(-1);
 	}
@@ -63,7 +63,7 @@ unsigned int PatternTracker6DOF::addCylinderPattern(const Frame& frame, const UV
 
 unsigned int PatternTracker6DOF::addConePattern(const Frame& frame, const UVTextureMapping::ConeUVTextureMapping& coneUVTextureMapping, Worker* worker)
 {
-	if (frame.isNull() || !coneUVTextureMapping.isValid())
+	if (!frame.isValid() || !coneUVTextureMapping.isValid())
 	{
 		return (unsigned int)(-1);
 	}

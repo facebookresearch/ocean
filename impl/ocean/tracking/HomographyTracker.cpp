@@ -21,7 +21,7 @@ bool HomographyTracker::trackPoints(const Frame& currentFrame, const Frame& yPre
 {
 	ocean_assert(currentFrame.isValid());
 	ocean_assert(!previousFramePyramid_.isValid() || yPreviousFrame.isValid());
-	ocean_assert(yPreviousFrame.isNull() || yPreviousFrame.isFrameTypeCompatible(FrameType(currentFrame, FrameType::FORMAT_Y8), true));
+	ocean_assert(!yPreviousFrame.isValid() || yPreviousFrame.isFrameTypeCompatible(FrameType(currentFrame, FrameType::FORMAT_Y8), true));
 
 	ocean_assert(frameBorder >= Scalar(0) && frameBorder < Scalar(min(currentFrame.width(), currentFrame.height()) / 4u));
 

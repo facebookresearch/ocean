@@ -20,7 +20,7 @@ MeshObjectTracker::~MeshObjectTracker()
 
 unsigned int MeshObjectTracker::add(const Frame& textureFrame, const UVTextureMapping::MeshUVTextureMappingRef& meshUVTextureMappingRef, Worker* worker)
 {
-	if (textureFrame.isNull() || !meshUVTextureMappingRef || !meshUVTextureMappingRef->isValid())
+	if (!textureFrame.isValid() || !meshUVTextureMappingRef || !meshUVTextureMappingRef->isValid())
 	{
 		return MeshObjectTrackerCore::kInvalidRegisteredObjectId;
 	}

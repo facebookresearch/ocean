@@ -68,7 +68,7 @@ bool FeatureTracker6DOF::determinePoses(const Frame& frame, const PinholeCamera&
 	ocean_assert(transformations.empty());
 	transformations.clear();
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		return false;
 	}

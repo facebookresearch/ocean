@@ -158,7 +158,7 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 
 	ocean_assert(!previousFramePyramid_.isValid() || previousFramePyramid_.frameType() == FrameType(yFrame, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>()));
 
-	if (yFrame.isNull() || yFrame.width() < 40u || yFrame.height() < 40u
+	if (!yFrame.isValid() || yFrame.width() < 40u || yFrame.height() < 40u
 		|| !FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u)
 		|| (previousFramePyramid_ && previousFramePyramid_.frameType() != FrameType(yFrame, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>())))
 	{

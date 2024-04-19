@@ -193,7 +193,7 @@ Frame Utilities::paintCorrespondencesBlend(const Frame& frame0, const Frame& fra
 	Vector2 offset0;
 	Vector2 offset1;
 	Frame result = blendFrames(adjustedFrame0, adjustedFrame1, offset0, offset1, FrameType::FORMAT_RGB24, worker);
-	if (result.isNull())
+	if (!result.isValid())
 	{
 		return Frame();
 	}
