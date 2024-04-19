@@ -3,14 +3,6 @@
 #include "ocean/base/Frame.h"
 #include "ocean/base/String.h"
 
-// This define decides whether the frame class uses an own memory manager (if defined) or whether the normal malloc()/free() functionality is used instead
-// #define OCEAN_USE_FRAME_MEMORY_MANAGER
-
-#ifdef OCEAN_USE_FRAME_MEMORY_MANAGER
-	#include "ocean/base/Singleton.h"
-	#include "ocean/base/Thread.h"
-#endif
-
 namespace Ocean
 {
 

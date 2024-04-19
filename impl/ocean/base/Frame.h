@@ -8,8 +8,6 @@
 #include "ocean/base/ObjectRef.h"
 #include "ocean/base/Timestamp.h"
 
-#include <vector>
-
 namespace Ocean
 {
 
@@ -2865,6 +2863,13 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		inline bool isNull() const;
 
 		/**
+		 * Returns whether this frame is valid.
+		 * This function is mainly callying `FrameType::isValid()`, while in debug builds, addtional checks are performed.
+		 * @return True, if so
+		 */
+		inline bool isValid() const;
+
+		/**
 		 * Returns whether two frame objects have any amount of intersecting memory.
 		 * This frame and the given frame must both be valid.<br>
 		 * Use this function to ensure that e.g., a source buffer and target buffer is completely independent.<br>
@@ -4301,14 +4306,41 @@ bool Frame::hasTransparentPixel(const T /*opaque*/) const
 
 inline bool Frame::isNull() const
 {
+	return !isValid();
+}
+
+inline bool Frame::isValid() const
+{
 	ocean_assert(planes_.size() >= 1);
 
-	return !planes_.front().isValid();
+	const bool frameTypeIsValid = FrameType::isValid();
+
+#ifdef OCEAN_DEBUG
+	{
+		// we ensure that the state of `planes_` is consistent with the state of `FrameType::isValid()`
+
+		size_t debugValidPlanes = 0;
+
+		for (const Plane& plane : planes_)
+		{
+			if (plane.isValid())
+			{
+				++debugValidPlanes;
+			}
+		}
+
+		const bool debugIsValid = !planes_.empty() && debugValidPlanes == planes_.size();
+
+		ocean_assert(debugIsValid == frameTypeIsValid);
+	}
+#endif // OCEAN_DEBUG
+
+	return frameTypeIsValid;
 }
 
 inline Frame::operator bool() const
 {
-	return !isNull();
+	return isValid();
 }
 
 }
