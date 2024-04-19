@@ -29,14 +29,6 @@ namespace TestQRCodes
  */
 class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestFinderPatternDetector : protected CV::Detector::QRCodes::FinderPatternDetector
 {
-	protected:
-
-		/// Handle for test images, first: filename, second: Everstore handle
-		typedef std::pair<std::string, std::string> HandlePair;
-
-		/// Vector of handle pairs
-		typedef std::vector<HandlePair> HandlePairs;
-
 	public:
 
 		/**
@@ -59,19 +51,16 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestFinderPatternDetector : protecte
 	protected:
 
 		 /**
-		  * Paint a finder pattern into a grayscale image
-		  * @param yFrame Pointer to the data of a grayscale image. Must be valid.
-		  * @param width The width of the frame pointed to by `yFrame`, range: [29, infinity)
-		  * @param height The height of the frame pointer to by `yFrame`, range: [29, infinity)
+		  * Paint a finder pattern into a grayscale image.
+		  * @param yFrame The grayscale image, with pixel format FORMAT_Y8, with resolution [29, infinity)x[29, infinity), must be valid
 		  * @param location The location of the center of the finder pattern that will be drawn. Must inside the image and at least `round(length)` pixels away from frame border
 		  * @param length Diameter of the finder pattern in horizontal direction, range: [7, infinity)
 		  * @param rotation The rotation angle in radian, range: (-infinity, infinity)
 		  * @param foregroundColor Color that is used for the finder pattern (usually black), range: [0, 255]
 		  * @param backgroundColor Background color that the finder pattern is drawn on (usually white), range: [0, 255]
-		  * @param paddingElements Optional padding elements of the input frame `yFrame`
 		  * @param worker Optional worker instance
 		  */
-		static void paintFinderPattern(uint8_t* yFrame, const unsigned int width, const unsigned int height, const Vector2& location, const Scalar& length, const Scalar& rotation, const unsigned char foregroundColor, const unsigned char backgroundColor, const unsigned int paddingElements = 0u, Worker* worker = nullptr);
+		static void paintFinderPattern(Frame& yFrame, const Vector2& location, const Scalar& length, const Scalar& rotation, const uint8_t foregroundColor, const uint8_t backgroundColor, Worker* worker = nullptr);
 };
 
 } // namespace TestQRCodes
@@ -82,4 +71,4 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestFinderPatternDetector : protecte
 
 } // namespace Test
 
-} // namespace Test
+} // namespace Ocean

@@ -1,15 +1,12 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
 #include "ocean/test/testcv/testdetector/testqrcodes/TestFinderPatternDetector.h"
-
 #include "ocean/test/testcv/testdetector/testqrcodes/Utilities.h"
 
 #include "ocean/base/RandomI.h"
-#include "ocean/base/WorkerPool.h"
 
 #include "ocean/cv/Canvas.h"
-#include "ocean/cv/FrameConverter.h"
-#include "ocean/cv/FrameConverterY8.h"
+#include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameFilterGaussian.h"
 #include "ocean/cv/FrameInterpolatorBilinear.h"
 
@@ -17,14 +14,6 @@
 
 #include "ocean/math/Random.h"
 #include "ocean/math/Rotation.h"
-
-#ifdef __APPLE__
-	#include "ocean/media/imageio/Image.h"
-#else
-	#include "ocean/media/openimagelibraries/Image.h"
-#endif
-
-#include <random>
 
 namespace Ocean
 {
@@ -127,11 +116,12 @@ bool TestFinderPatternDetector::testDetectFinderPatternSyntheticData(const unsig
 		Scalar length;
 		Scalar rotation;
 	};
+
 	typedef std::vector<GroundtruthFinderPattern> GroundtruthFinderPatterns;
 
-	unsigned long long finderPatternsTotal = 0ull;
-	unsigned long long truePositiveDetections = 0ull;
-	unsigned long long falsePositiveDetections = 0ull;
+	uint64_t finderPatternsTotal = 0ull;
+	uint64_t truePositiveDetections = 0ull;
+	uint64_t falsePositiveDetections = 0ull;
 
 	RandomGenerator randomGenerator;
 
@@ -143,8 +133,6 @@ bool TestFinderPatternDetector::testDetectFinderPatternSyntheticData(const unsig
 
 		const unsigned int width = RandomI::random(randomGenerator, 250u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 250u, 1920u);
-
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
 		GroundtruthFinderPatterns groundtruthFinderPatterns;
 		const unsigned int finderPatternsCount = RandomI::random(randomGenerator, 1u, 50u);
@@ -198,19 +186,19 @@ bool TestFinderPatternDetector::testDetectFinderPatternSyntheticData(const unsig
 			}
 		}
 
-		Frame frame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 		frame.setValue(backgroundColor);
 
 		for (const GroundtruthFinderPattern& groundtruthFinderPattern : groundtruthFinderPatterns)
 		{
 			const uint8_t foregroundColor = uint8_t(RandomI::random(randomGenerator, 0u, 50u));
 
-			paintFinderPattern(frame.data<uint8_t>(), width, height, groundtruthFinderPattern.location, groundtruthFinderPattern.length, groundtruthFinderPattern.rotation, foregroundColor, backgroundColor, frame.paddingElements(), &worker);
+			paintFinderPattern(frame, groundtruthFinderPattern.location, groundtruthFinderPattern.length, groundtruthFinderPattern.rotation, foregroundColor, backgroundColor, &worker);
 		}
 
 		for (const Vector2& noiseLocation : noiseLocations)
 		{
-			const unsigned char foregroundColor = (unsigned char)(RandomI::random(randomGenerator, 0u, 50u));
+			const uint8_t foregroundColor = uint8_t(RandomI::random(randomGenerator, 0u, 50u));
 
 			Utilities::drawNoisePattern(frame.data<uint8_t>(), width, height, frame.paddingElements(), noiseLocation, randomGenerator, foregroundColor);
 		}
@@ -289,36 +277,38 @@ bool TestFinderPatternDetector::testDetectFinderPatternSyntheticData(const unsig
 	else
 	{
 		Log::info() << "Validation: FAILED!";
-		Log::info() << "Random generator seed: " << randomGenerator.seed();
 	}
 
 	return succeeded;
 }
 
-void TestFinderPatternDetector::paintFinderPattern(uint8_t* yFrame, const unsigned int width, const unsigned int height, const Vector2& location, const Scalar& length, const Scalar& rotationAngle, const unsigned char foregroundColor, const unsigned char backgroundColor, const unsigned int paddingElements, Worker* worker)
+void TestFinderPatternDetector::paintFinderPattern(Frame& yFrame, const Vector2& location, const Scalar& length, const Scalar& rotationAngle, const uint8_t foregroundColor, const uint8_t backgroundColor, Worker* worker)
 {
-	ocean_assert(yFrame != nullptr);
-	ocean_assert(width >= 29u && height >= 29u);
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.width() >= 29u && yFrame.height() >= 29u);
+
 	ocean_assert(length >= Scalar(7));
-	ocean_assert(length < Scalar(width) && length < Scalar(height));
+	ocean_assert(length < Scalar(yFrame.width()) && length < Scalar(yFrame.height()));
 	ocean_assert(location.x() >= Scalar(Numeric::round32(length)));
 	ocean_assert(location.y() >= Scalar(Numeric::round32(length)));
-	ocean_assert(location.x() < Scalar(width) - Scalar(Numeric::round32(length)));
-	ocean_assert(location.y() < Scalar(height) - Scalar(Numeric::round32(length)));
+	ocean_assert(location.x() < Scalar(yFrame.width()) - Scalar(Numeric::round32(length)));
+	ocean_assert(location.y() < Scalar(yFrame.height()) - Scalar(Numeric::round32(length)));
 
 	const unsigned int patternFrameSize = (unsigned int)Numeric::round32(Scalar(2) * length);
 
-	Frame finderPatternFrame(FrameType(patternFrameSize, patternFrameSize, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
-	memset(finderPatternFrame.data<uint8_t>(), backgroundColor, finderPatternFrame.size());
+	Frame yFinderPatternFrame(FrameType(patternFrameSize, patternFrameSize, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
+	yFinderPatternFrame.setValue(backgroundColor);
 
 	// Draw the axis aligned finder pattern (size is rounded but will be correct later)
 
-	const unsigned int bitWidth = (unsigned int)Numeric::round32(length / Scalar(7));
-	ocean_assert(7u * bitWidth + 2u < width && 7u * bitWidth + 2u < height);
-	const unsigned int padding = 2u;
-	CV::Canvas::rectangle(finderPatternFrame, padding, padding, 7u * bitWidth, 7u * bitWidth, &foregroundColor);
-	CV::Canvas::rectangle(finderPatternFrame, padding + bitWidth, padding + bitWidth, 5u * bitWidth, 5u * bitWidth, &backgroundColor);
-	CV::Canvas::rectangle(finderPatternFrame, padding + 2u * bitWidth, padding + 2u * bitWidth, 3u * bitWidth, 3u * bitWidth, &foregroundColor);
+	const unsigned int bitWidth = (unsigned int)(Numeric::round32(length / Scalar(7)));
+	ocean_assert(7u * bitWidth + 2u < yFrame.width() && 7u * bitWidth + 2u < yFrame.height());
+
+	constexpr unsigned int padding = 2u;
+
+	CV::Canvas::rectangle(yFinderPatternFrame, padding, padding, 7u * bitWidth, 7u * bitWidth, &foregroundColor);
+	CV::Canvas::rectangle(yFinderPatternFrame, padding + bitWidth, padding + bitWidth, 5u * bitWidth, 5u * bitWidth, &backgroundColor);
+	CV::Canvas::rectangle(yFinderPatternFrame, padding + 2u * bitWidth, padding + 2u * bitWidth, 3u * bitWidth, 3u * bitWidth, &foregroundColor);
 
 	// Compute the transformation from the axis-aligned, integer-scaled pattern above to the rotated, correctly scaled one
 
@@ -336,10 +326,9 @@ void TestFinderPatternDetector::paintFinderPattern(uint8_t* yFrame, const unsign
 
 	// Apply the transformation and copy the result to the correct sub-frame
 
-	Frame targetFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, Frame::CM_USE_KEEP_LAYOUT, paddingElements);
-	Frame targetSubFrame = targetFrame.subFrame(patternFrameOffsetX, patternFrameOffsetY, finderPatternFrame.width(), finderPatternFrame.height());
+	Frame ySubFrame = yFrame.subFrame(patternFrameOffsetX, patternFrameOffsetY, yFinderPatternFrame.width(), yFinderPatternFrame.height());
 
-	CV::FrameInterpolatorBilinear::Comfort::affine(finderPatternFrame, targetSubFrame, affineTransform, &backgroundColor, worker);
+	CV::FrameInterpolatorBilinear::Comfort::affine(yFinderPatternFrame, ySubFrame, affineTransform, &backgroundColor, worker);
 }
 
 } // namespace TestQRCodes
