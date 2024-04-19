@@ -81,7 +81,7 @@ RMVTracker6DOF::ObjectId RMVTracker6DOF::registerObject(const std::string& descr
 
 	const Frame pattern = Media::Utilities::loadImage(description);
 
-	if (pattern.isNull())
+	if (!pattern.isValid())
 	{
 		Log::error() << "The defined tracking object \"" << description << "\" holds no image data.";
 		return invalidObjectId();

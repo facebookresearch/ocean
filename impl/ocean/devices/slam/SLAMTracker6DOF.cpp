@@ -125,7 +125,7 @@ void SLAMTracker6DOF::threadRun()
 		{
 			const FrameRef frame = frameMedium->frame();
 
-			if (frame.isNull() || frame->isNull() || frame->timestamp() <= frameTimestamp_)
+			if (frame.isNull() || !frame->isValid() || frame->timestamp() <= frameTimestamp_)
 			{
 				sleep(1u);
 				continue;

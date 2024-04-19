@@ -90,7 +90,7 @@ PatternTracker6DOF::ObjectId PatternTracker6DOF::registerObject(const std::strin
 	{
 		Frame frame(Media::Utilities::loadImage(description));
 
-		if (frame.isNull())
+		if (!frame.isValid())
 		{
 			Log::error() << "The defined tracking object \"" << description << "\" holds no image data.";
 			return invalidObjectId();
