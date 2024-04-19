@@ -109,7 +109,7 @@ bool MainWindow::loadFile(const std::string& filename)
 {
 	const Frame frame = IO::Image::readImage(filename);
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		wxMessageBox(std::wstring(L"Failed to open the image\n\"") + String::toWString(filename) + std::wstring(L"\""), L"Error", wxOK | wxICON_ERROR, this);
 		return false;
@@ -134,7 +134,7 @@ bool MainWindow::loadMask(const std::string& filename)
 {
 	const Frame frame = IO::Image::readImage(filename);
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		wxMessageBox(std::wstring(L"Failed to open the image\n\"") + String::toWString(filename) + std::wstring(L"\""), L"Error", wxOK | wxICON_ERROR, this);
 		return false;

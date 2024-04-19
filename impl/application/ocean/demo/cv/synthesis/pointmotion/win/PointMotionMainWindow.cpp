@@ -80,7 +80,7 @@ void PointMotionMainWindow::onIdle()
 	{
 		const FrameRef frame(frameMedium_->frame());
 
-		if (frame && !frame->isNull() && (frame->timestamp() != frameTimestamp_))
+		if (frame && frame->isValid() && (frame->timestamp() != frameTimestamp_))
 		{
 			onFrame(*frame);
 

@@ -913,7 +913,7 @@ void ShapeDetectorMainWindow::invokeShapeDetector()
 		Frame yResponseTopDown;
 		Frame yResponseBottomUp;
 
-		if (fResponsesTopDown.isNull() || fResponsesBottomUp.isNull())
+		if (!fResponsesTopDown.isValid() || !fResponsesBottomUp.isValid())
 		{
 			yResponseTopDown.set(FrameType(yFrameTransposed.frameType(), FrameType::FORMAT_Y8), true /*forceOwner*/, true /*forceWritable*/);
 			yResponseTopDown.setValue(0x00u);

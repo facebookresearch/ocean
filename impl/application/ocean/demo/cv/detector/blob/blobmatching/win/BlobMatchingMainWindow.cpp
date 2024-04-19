@@ -43,18 +43,24 @@ BlobMatchingMainWindow::~BlobMatchingMainWindow()
 
 void BlobMatchingMainWindow::onInitialized()
 {
-	ocean_assert(patternFrame_.isNull());
+	ocean_assert(!patternFrame_.isValid());
 
 	if (!patternMediaName_.empty())
+	{
 		patternFrame_ = Media::Utilities::loadImage(patternMediaName_);
+	}
 
-	if (patternFrame_.isNull())
+	if (!patternFrame_.isValid())
+	{
 		patternFrame_ = Media::Utilities::loadImage(Platform::Win::System::environmentVariable("OCEAN_DEVELOPMENT_PATH") + std::string("/data/testsuite/media/images/tracking/sift640.bmp"));
+	}
 
-	if (patternFrame_.isNull())
+	if (!patternFrame_.isValid())
+	{
 		patternFrame_ = Media::Utilities::loadImage(std::string("sift640.bmp"));
+	}
 
-	if (patternFrame_.isNull())
+	if (!patternFrame_.isValid())
 	{
 		Platform::Utilities::showMessageBox("Error", "Could not load pattern!");
 		return;
@@ -67,26 +73,40 @@ void BlobMatchingMainWindow::onInitialized()
 	}
 
 	if (!inputMediaName_.empty())
+	{
 		inputMedium_ = Media::Manager::get().newMedium(inputMediaName_);
+	}
 
 	if (inputMedium_.isNull())
+	{
 		inputMedium_ = Media::Manager::get().newMedium("LiveVideoId:1", Media::Medium::LIVE_VIDEO);
+	}
 
 	if (inputMedium_.isNull())
+	{
 		inputMedium_ = Media::Manager::get().newMedium("LiveVideoId:0", Media::Medium::LIVE_VIDEO);
+	}
 
 	if (inputMedium_)
 	{
 		if (!inputResolution_.empty())
 		{
 			if (inputResolution_ == "320x240")
+			{
 				inputMedium_->setPreferredFrameDimension(320u, 240u);
+			}
 			else if (inputResolution_ == "640x480")
+			{
 				inputMedium_->setPreferredFrameDimension(640u, 480u);
+			}
 			else if (inputResolution_ == "1280x720")
+			{
 				inputMedium_->setPreferredFrameDimension(1280u, 720u);
+			}
 			else if (inputResolution_ == "1920x1080")
+			{
 				inputMedium_->setPreferredFrameDimension(1920u, 1080u);
+			}
 		}
 
 		inputMedium_->start();
@@ -103,7 +123,7 @@ void BlobMatchingMainWindow::onIdle()
 	{
 		const FrameRef frame(inputMedium_->frame());
 
-		if (frame && *frame && (frame->timestamp() != frameTimestamp_))
+		if (frame && frame->isValid() && (frame->timestamp() != frameTimestamp_))
 		{
 			onFrame(*frame);
 

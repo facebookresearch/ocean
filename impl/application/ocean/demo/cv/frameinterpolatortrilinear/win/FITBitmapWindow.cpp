@@ -48,7 +48,7 @@ void FITBitmapWindow::onPaint()
 
 void FITBitmapWindow::interpolateNativeFrame()
 {
-	if (nativeFrame_.isNull() || nativeFrame_.pixelFormat() != FrameType::FORMAT_RGB24)
+	if (!nativeFrame_.isValid() || nativeFrame_.pixelFormat() != FrameType::FORMAT_RGB24)
 	{
 		return;
 	}

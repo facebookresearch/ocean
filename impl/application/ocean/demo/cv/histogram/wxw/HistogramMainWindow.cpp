@@ -64,7 +64,7 @@ bool HistogramMainWindow::loadFrame(const std::string& filename)
 {
 	const Frame frame(Media::Utilities::loadImage(filename));
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		return false;
 	}

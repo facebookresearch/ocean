@@ -90,7 +90,7 @@ void ContourFinderMainWindow::onIdle()
 	{
 		const FrameRef frame(frameMedium_->frame());
 
-		if (frame && !frame->isNull())
+		if (frame && frame->isValid())
 		{
 			onFrame(*frame);
 

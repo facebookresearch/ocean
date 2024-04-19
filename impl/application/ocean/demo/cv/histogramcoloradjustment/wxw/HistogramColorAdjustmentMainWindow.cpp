@@ -65,7 +65,7 @@ bool HistogramColorAdjustmentMainWindow::loadFrame(const std::string& filename)
 {
 	const Frame frame(Media::Utilities::loadImage(filename));
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		return false;
 	}
@@ -97,7 +97,7 @@ bool HistogramColorAdjustmentMainWindow::loadReference(const std::string& filena
 {
 	const Frame frame(Media::Utilities::loadImage(filename));
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		return false;
 	}

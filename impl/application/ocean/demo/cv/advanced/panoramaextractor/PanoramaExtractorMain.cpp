@@ -131,7 +131,7 @@ bool writeMetadata(const std::string& filename, const Euler& euler, const Scalar
  * Adds random noise to an euler orientation.
  * @param euler The euler orientation to which the random noise will be added, must be valid
  * @param maximalNoise The maximal noise to be added to each of the three orientation parameters in radian, with range [0, PI/2)
- * @return The resulting orientation contianing random noise
+ * @return The resulting orientation containing random noise
  */
 Euler addNoise(const Euler& euler, const Scalar maximalNoise);
 
@@ -397,7 +397,7 @@ bool extractImageToDirectory(const IO::File& panoramaFile, const FrameType::Pixe
 	ocean_assert(imuInaccuracy >= 0 && imuInaccuracy < Numeric::pi_2());
 
 	Frame frame = Media::Utilities::loadImage(panoramaFile());
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		Log::info() << "Failed to load panorama frame \"" << panoramaFile() << "\"";
 		return false;
@@ -407,7 +407,7 @@ bool extractImageToDirectory(const IO::File& panoramaFile, const FrameType::Pixe
 		return false;
 
 	// The panorama frame holds an additional mask identifying valid and invalid pixels (pixels that are covered by visual information)
-	// As we use 360 degree panorama frames, all pixels are coverted with (valid) visual information so that we simply create a mask frame with same value for each pixel
+	// As we use 360 degree panorama frames, all pixels are converted with (valid) visual information so that we simply create a mask frame with same value for each pixel
 
 	Frame mask(FrameType(frame, FrameType::FORMAT_Y8));
 	mask.setValue(0x00);
@@ -428,7 +428,7 @@ bool extractImageToDirectory(const IO::File& panoramaFile, const FrameType::Pixe
 	const unsigned int imageNumber = (unsigned int)(Numeric::ceil(coverage / angleStep));
 	ocean_assert(imageNumber >= 1u);
 
-	// We radjust the step width to have a equally distributed images. If the
+	// We adjust the step width to have a equally distributed images. If the
 	// input image is only covered partially, extract the image around the
 	// of the input image.
 	angleStep = coverage / Scalar(imageNumber);

@@ -47,24 +47,24 @@ ORBMatchingMainWindow::~ORBMatchingMainWindow()
 
 void ORBMatchingMainWindow::onInitialized()
 {
-	ocean_assert(patternFrame_.isNull());
+	ocean_assert(!patternFrame_.isValid());
 
 	if (!patternMediaName_.empty())
 	{
 		patternFrame_ = Media::Utilities::loadImage(patternMediaName_);
 	}
 
-	if (patternFrame_.isNull())
+	if (!patternFrame_.isValid())
 	{
 		patternFrame_ = Media::Utilities::loadImage(Platform::Win::System::environmentVariable("OCEAN_DEVELOPMENT_PATH") + std::string("/data/testsuite/media/images/tracking/sift640.bmp"));
 	}
 
-	if (patternFrame_.isNull())
+	if (!patternFrame_.isValid())
 	{
 		patternFrame_ = Media::Utilities::loadImage(std::string("sift640.bmp"));
 	}
 
-	if (patternFrame_.isNull())
+	if (!patternFrame_.isValid())
 	{
 		Platform::Utilities::showMessageBox("Error", "Could not load pattern!");
 		return;

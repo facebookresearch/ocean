@@ -99,7 +99,7 @@ void FITMainWindow::onFrame(const Frame& frame)
 
 void FITMainWindow::onInterpolateBilinearNativeFrame(const Frame& source, Frame& target)
 {
-	if (source.isNull() || target.isNull() || source.pixelFormat() != FrameType::FORMAT_RGB24)
+	if (!source.isValid() || !target.isValid() || source.pixelFormat() != FrameType::FORMAT_RGB24)
 	{
 		return;
 	}
@@ -125,7 +125,7 @@ void FITMainWindow::onInterpolateBilinearNativeFrame(const Frame& source, Frame&
 
 void FITMainWindow::onInterpolateTrilinearNativeFrame(const Frame& source, Frame& target)
 {
-	if (source.isNull() || target.isNull() || source.pixelFormat() != FrameType::FORMAT_RGB24)
+	if (!source.isValid() || !target.isValid() || source.pixelFormat() != FrameType::FORMAT_RGB24)
 	{
 		return;
 	}
