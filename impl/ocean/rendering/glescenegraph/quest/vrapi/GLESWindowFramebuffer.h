@@ -12,7 +12,7 @@
 
 #include "ocean/platform/gles/EGLContext.h"
 
-#include "ocean/platform/meta/quest/vrapi/GLESFramebuffer.h"
+#include "metaonly/ocean/platform/meta/quest/vrapi/GLESFramebuffer.h"
 
 #include "ocean/rendering/WindowFramebuffer.h"
 

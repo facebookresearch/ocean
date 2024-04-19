@@ -16,7 +16,7 @@
 #include "ocean/math/HomogenousMatrix4.h"
 #include "ocean/math/Rotation.h"
 
-#include "ocean/platform/meta/quest/vrapi/HeadsetPoses.h"
+#include "metaonly/ocean/platform/meta/quest/vrapi/HeadsetPoses.h"
 
 #include "ocean/tracking/Utilities.h"
 

@@ -10,7 +10,7 @@
 
 #include "ocean/math/HomogenousMatrix4.h"
 
-#include "ocean/platform/meta/quest/vrapi/TrackedRemoteDevice.h"
+#include "metaonly/ocean/platform/meta/quest/vrapi/TrackedRemoteDevice.h"
 
 namespace Ocean
 {

@@ -6,7 +6,7 @@
 #include "ocean/math/Rotation.h"
 #include "ocean/math/SquareMatrix4.h"
 
-#include "ocean/platform/meta/quest/vrapi/HeadsetPoses.h"
+#include "metaonly/ocean/platform/meta/quest/vrapi/HeadsetPoses.h"
 
 namespace Ocean
 {
