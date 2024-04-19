@@ -27,8 +27,6 @@ namespace TestQRCodes
 
 using namespace CV::Detector::QRCodes;
 
-constexpr std::array<char, 10u> NUMERIC_CHARSET{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-
 void Utilities::drawNoisePattern(uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const Vector2& location, RandomGenerator& randomGenerator, const uint8_t foregroundColor, const Scalar extraBorder)
 {
 	ocean_assert(yFrame != nullptr);
@@ -68,10 +66,12 @@ std::string Utilities::generateRandomNumericString(RandomGenerator& randomGenera
 {
 	ocean_assert(size != 0u);
 
+	const std::string& numericCharset = getNumericCharset();
+
 	std::string randomString = std::string(size, ' ');
 	for (unsigned int i = 0u; i < size; ++i)
 	{
-		randomString[i] = NUMERIC_CHARSET[RandomI::random(randomGenerator, (unsigned int)(NUMERIC_CHARSET.size() - 1))];
+		randomString[i] = numericCharset[RandomI::random(randomGenerator, (unsigned int)(numericCharset.size() - 1))];
 	}
 
 	return randomString;
@@ -214,6 +214,14 @@ bool Utilities::generateUniqueRandomQRCodes(RandomGenerator& randomGenerator, co
 	codes = std::move(uniqueRandomCodes);
 
 	return true;
+}
+
+const std::string& Utilities::getNumericCharset()
+{
+	static const std::string numericCharset = "0123456789";
+	ocean_assert(numericCharset.size() == 10u);
+
+	return numericCharset;
 }
 
 } // namespace TestQRCodes

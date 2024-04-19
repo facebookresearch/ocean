@@ -95,6 +95,12 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * @return True if the requested number of QR codes were successfully generated, otherwise false
 		 */
 		static bool generateUniqueRandomQRCodes(RandomGenerator& randomGenerator, const unsigned int numberCodes, CV::Detector::QRCodes::QRCodes& codes);
+
+		/**
+		 * Returns the numeric charset used for encoding numeric data
+		 * @return The numeric charset
+		 */
+		static const std::string& getNumericCharset();
 };
 
 } // namespace TestQRCodes
