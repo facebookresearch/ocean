@@ -645,36 +645,22 @@ class NumericT
 		static inline bool isInsideRange(const T lower, const T value, const T upper, const T epsilon);
 
 		/**
-		 * Returns whether a parameter lies below a given border tolerating a small epsilon.
+		 * Returns whether a parameter lies on or below a given border tolerating a small epsilon.
 		 * @param value The value to check, with range (-infinity, infinity)
 		 * @param upper The upper border, with range (-infinity, infinity)
-		 * @return True, if so
+		 * @param epsilon Accuracy epsilon, with range [0, infinity)
+		 * @return True, if 'value <= upper + epsilon'
 		 */
-		static inline bool isBelow(const T value, const T upper);
+		static constexpr bool isBelow(const T value, const T upper, const T epsilon = NumericT<T>::eps());
 
 		/**
-		 * Returns whether a parameter lies below a given border tolerating a weak epsilon.
-		 * @param value The value to check, with range (-infinity, infinity)
-		 * @param upper The upper border, with range (-infinity, infinity)
-		 * @return True, if so
-		 */
-		static inline bool isWeakBelow(const T value, const T upper);
-
-		/**
-		 * Returns whether a parameter lies above a given border tolerating a small epsilon.
+		 * Returns whether a parameter lies on or above a given border tolerating a small epsilon.
 		 * @param value The value to check, with range (-infinity, infinity)
 		 * @param lower The lower border, with range (-infinity, infinity)
-		 * @return True, if so
+		 * @param epsilon Accuracy epsilon, with range [0, infinity)
+		 * @return True, if 'lower - epsilon <= value'
 		 */
-		static inline bool isAbove(const T value, const T lower);
-
-		/**
-		 * Returns whether a parameter lies above a given border tolerating a weak epsilon.
-		 * @param value The value to check, with range (-infinity, infinity)
-		 * @param lower The lower border, with range (-infinity, infinity)
-		 * @return True, if so
-		 */
-		static inline bool isWeakAbove(const T value, const T lower);
+		static constexpr bool isAbove(const T value, const T lower, const T epsilon = NumericT<T>::eps());
 
 		/**
 		 * Returns a value which is not a number (nan).
@@ -1627,8 +1613,7 @@ inline float NumericT<float>::tan(const float value)
 template <typename T>
 inline T NumericT<T>::asin(const T value)
 {
-	ocean_assert(NumericT<T>::isWeakBelow(value, 1));
-	ocean_assert(NumericT<T>::isWeakAbove(value, -1));
+	ocean_assert(NumericT<T>::isInsideWeakRange(T(-1), value, T(1)));
 
 	return ::asin(max(T(-1), min(T(1), value)));
 }
@@ -1640,8 +1625,7 @@ inline T NumericT<T>::asin(const T value)
 template <>
 inline float NumericT<float>::asin(const float value)
 {
-	ocean_assert(NumericT<float>::isWeakBelow(value, 1));
-	ocean_assert(NumericT<float>::isWeakAbove(value, -1));
+	ocean_assert(NumericT<float>::isInsideWeakRange(-1.0f, value, 1.0f));
 
 	return asinf(max(-1.0f, min(1.0f, value)));
 }
@@ -1649,8 +1633,7 @@ inline float NumericT<float>::asin(const float value)
 template <typename T>
 inline T NumericT<T>::acos(const T value)
 {
-	ocean_assert(NumericT<T>::isWeakBelow(value, 1));
-	ocean_assert(NumericT<T>::isWeakAbove(value, -1));
+	ocean_assert(NumericT<T>::isInsideWeakRange(T(-1), value, T(1)));
 
 	return ::acos(max(T(-1), min(T(1), value)));
 }
@@ -1662,8 +1645,7 @@ inline T NumericT<T>::acos(const T value)
 template <>
 inline float NumericT<float>::acos(const float value)
 {
-	ocean_assert(NumericT<float>::isWeakBelow(value, 1));
-	ocean_assert(NumericT<float>::isWeakAbove(value, -1));
+	ocean_assert(NumericT<float>::isInsideWeakRange(-1.0f, value, 1.0f));
 
 	return acosf(max(-1.0f, min(1.0f, value)));
 }
@@ -1850,7 +1832,9 @@ template <typename T>
 inline T NumericT<T>::angleAdjustNull(const T angle)
 {
 	if (angle > -pi() && angle <= pi())
+	{
 		return angle;
+	}
 
 	const T adjusted = fmod(angle, pi2());
 
@@ -2948,27 +2932,23 @@ inline bool NumericT<T>::isInsideRange(const T lower, const T value, const T upp
 }
 
 template <typename T>
-inline bool NumericT<T>::isBelow(const T value, const T upper)
+constexpr bool NumericT<T>::isBelow(const T value, const T upper, const T epsilon)
 {
-	return value - eps() < upper;
+	static_assert(std::is_floating_point<T>::value, "Invalid data type!");
+
+	ocean_assert(epsilon >= T(0));
+
+	return value <= upper + epsilon;
 }
 
 template <typename T>
-inline bool NumericT<T>::isWeakBelow(const T value, const T upper)
+constexpr bool NumericT<T>::isAbove(const T value, const T lower, const T epsilon)
 {
-	return value - weakEps() < upper;
-}
+	static_assert(std::is_floating_point<T>::value, "Invalid data type!");
 
-template <typename T>
-inline bool NumericT<T>::isAbove(const T value, const T lower)
-{
-	return value + eps() > lower;
-}
+	ocean_assert(epsilon >= T(0));
 
-template <typename T>
-inline bool NumericT<T>::isWeakAbove(const T value, const T lower)
-{
-	return value + weakEps() > lower;
+	return lower - epsilon <= value;
 }
 
 template <typename T>
