@@ -225,10 +225,10 @@ BOOL Application::InitInstance()
 	SceneDescription::SDX::X3D::registerX3DLibrary();
 	SceneDescription::SDL::Assimp::registerAssimpLibrary();
 #else
-	IO::Directory directory((*config)["plugins"]["version"][Build::buildString()]["plugindirectory"](""));
+	IO::Directory directory((*config_)["plugins"]["version"][Build::buildString()]["plugindirectory"](""));
 	if (directory.isNull())
 	{
-		directory = IO::Directory((*config)["plugins"]["plugindirectory"](""));
+		directory = IO::Directory((*config_)["plugins"]["plugindirectory"](""));
 	}
 
 	if (usesDefaultPluginDirectory() || directory.isValid() == false)
