@@ -720,7 +720,7 @@ bool TestSpecial::testAnyImageEncodeDecode(const double testDuration)
 			std::string decoderTypeExplicit;
 			const Frame targetFrameExplicit = Media::Special::Image::decodeImage(buffer.data(), buffer.size(), encoderType, &decoderTypeExplicit);
 
-			if (targetFrameExplicit.isNull() || encoderType != decoderTypeExplicit)
+			if (!targetFrameExplicit.isValid() || encoderType != decoderTypeExplicit)
 			{
 				allSucceeded = false;
 			}
@@ -744,7 +744,7 @@ bool TestSpecial::testAnyImageEncodeDecode(const double testDuration)
 			std::string decoderTypeImplicit;
 			const Frame targetFrameImplicit = Media::Special::Image::decodeImage(buffer.data(), buffer.size(), "", &decoderTypeImplicit);
 
-			if (targetFrameImplicit.isNull() || encoderType != decoderTypeImplicit)
+			if (!targetFrameImplicit.isValid() || encoderType != decoderTypeImplicit)
 			{
 				allSucceeded = false;
 			}

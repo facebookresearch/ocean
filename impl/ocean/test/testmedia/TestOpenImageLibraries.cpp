@@ -876,7 +876,7 @@ bool TestOpenImageLibraries::testAnyImageEncodeDecode(const double testDuration)
 				std::string decoderTypeExplicit;
 				const Frame targetFrameExplicit = Media::OpenImageLibraries::Image::decodeImage(buffer.data(), buffer.size(), encoderType, &decoderTypeExplicit);
 
-				if (targetFrameExplicit.isNull() || encoderType != decoderTypeExplicit)
+				if (!targetFrameExplicit.isValid() || encoderType != decoderTypeExplicit)
 				{
 					allSucceeded = false;
 				}
@@ -900,7 +900,7 @@ bool TestOpenImageLibraries::testAnyImageEncodeDecode(const double testDuration)
 				std::string decoderTypeImplicit;
 				const Frame targetFrameImplicit = Media::OpenImageLibraries::Image::decodeImage(buffer.data(), buffer.size(), "", &decoderTypeImplicit);
 
-				if (targetFrameImplicit.isNull() || encoderType != decoderTypeImplicit)
+				if (!targetFrameImplicit.isValid() || encoderType != decoderTypeImplicit)
 				{
 					allSucceeded = false;
 				}
@@ -982,7 +982,7 @@ bool TestOpenImageLibraries::testJpgImageEncodeDecode(const unsigned int width, 
 		if (compressionSucceeded)
 		{
 			performanceDecoding.start();
-			const Frame targetFrame = Media::OpenImageLibraries::ImageJpg::decodeImage(buffer.data(), buffer.size());
+				const Frame targetFrame = Media::OpenImageLibraries::ImageJpg::decodeImage(buffer.data(), buffer.size());
 			performanceDecoding.stop();
 
 			if (targetFrame)
@@ -1724,7 +1724,7 @@ bool TestOpenImageLibraries::testBufferImageRecorder(const FrameType& frameType,
 
 	FrameRef targetFrame = image->frame();
 
-	if (targetFrame.isNull() || targetFrame->isNull())
+	if (targetFrame.isNull() || !targetFrame->isValid())
 	{
 		return false;
 	}
@@ -1751,7 +1751,7 @@ bool TestOpenImageLibraries::testBufferImageRecorder(const FrameType& frameType,
 
 	targetFrame = image->frame();
 
-	if (targetFrame.isNull() || targetFrame->isNull())
+	if (targetFrame.isNull() || !targetFrame->isValid())
 	{
 		return false;
 	}

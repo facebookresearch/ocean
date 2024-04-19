@@ -824,7 +824,7 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 					}
 					else
 					{
-						ocean_assert(pyramidMemory.isNull());
+						ocean_assert(!pyramidMemory.isValid());
 					}
 
 					if (!result)

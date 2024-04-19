@@ -674,7 +674,7 @@ bool TestFrame::testFrameSpecificationGenericPixelFormats(const double testDurat
 			allSucceeded = false;
 		}
 
-		if (!frame.isNull()) // NOLINT(bugprone-use-after-move)
+		if (frame.isValid()) // NOLINT(bugprone-use-after-move)
 		{
 			allSucceeded = false;
 		}
@@ -684,7 +684,7 @@ bool TestFrame::testFrameSpecificationGenericPixelFormats(const double testDurat
 		{
 			frame.release();
 
-			if (frame.isNull() == false)
+			if (frame.isValid())
 			{
 				allSucceeded = false;
 			}
@@ -775,7 +775,7 @@ bool TestFrame::testFrameSpecificationNonGenericPixelFormats(const double testDu
 		{
 			frame.release();
 
-			if (frame.isNull() == false)
+			if (frame.isValid())
 			{
 				allSucceeded = false;
 			}
@@ -3350,7 +3350,7 @@ bool TestFrame::testSetFrameType(const double testDuration)
 
 		Frame newSourceFrame;
 		newSourceFrame.set(sourceFrameType, forceOwner, forceWritable);
-		if (newSourceFrame.isNull() || newSourceFrame.frameType() != sourceFrameType || newSourceFrame.isContinuous() == false)
+		if (!newSourceFrame.isValid() || newSourceFrame.frameType() != sourceFrameType || newSourceFrame.isContinuous() == false)
 		{
 			allSucceeded = false;
 		}
@@ -3369,7 +3369,7 @@ bool TestFrame::testSetFrameType(const double testDuration)
 
 		Frame newTargetFrame;
 		newTargetFrame.set(targetFrameType, forceOwner, forceWritable);
-		if (newTargetFrame.isNull() || newTargetFrame.frameType() != targetFrameType || newTargetFrame.isContinuous() == false)
+		if (!newTargetFrame.isValid() || newTargetFrame.frameType() != targetFrameType || newTargetFrame.isContinuous() == false)
 		{
 			allSucceeded = false;
 		}
@@ -3388,7 +3388,7 @@ bool TestFrame::testSetFrameType(const double testDuration)
 
 		Frame readOnlyFrame(constNewTargetFrame, Frame::ACM_USE_KEEP_LAYOUT);
 		readOnlyFrame.set(targetFrameType, forceOwner, forceWritable);
-		if (readOnlyFrame.isNull() || readOnlyFrame.frameType() != targetFrameType || readOnlyFrame.isContinuous() == false)
+		if (!readOnlyFrame.isValid() || readOnlyFrame.frameType() != targetFrameType || readOnlyFrame.isContinuous() == false)
 		{
 			allSucceeded = false;
 		}
@@ -6772,7 +6772,7 @@ bool TestFrame::validateFrameSpecification(const Frame& frame, const FrameType& 
 		}
 	}
 
-	if (frame.isNull())
+	if (!frame.isValid())
 	{
 		return false;
 	}

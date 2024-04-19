@@ -128,7 +128,7 @@ bool testCVDetector(const double testDuration, Worker& worker, const std::string
 		}
 	}
 
-	if (testFrame.isNull())
+	if (!testFrame.isValid())
 	{
 		Log::info() << "No specific test image is used";
 	}
