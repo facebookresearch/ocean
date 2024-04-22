@@ -9,7 +9,5 @@ CPMAddPackage(
   PATCH_COMMAND       ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/zlib/CMakeLists.txt" .
 )
 
-FetchContent_MakeAvailable(zlib)
-
 list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(CHECK_PASS "completed")
