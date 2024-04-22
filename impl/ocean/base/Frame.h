@@ -2686,7 +2686,7 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		 * @param planeIndex The index of the plane for which the data will be returned, with range [0, planes().size())
 		 * @return The plane's writable pixel data
 		 * @tparam T The explicit data type of the value of each pixel channel
-		 * @see isNull(), isReadOnly().
+		 * @see isValid(), isReadOnly().
 		 */
 		template <typename T>
 		inline T* data(const unsigned int planeIndex = 0u);
@@ -2696,7 +2696,7 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		 * @param planeIndex The index of the plane for which the data will be returned, with range [0, planes().size())
 		 * @return The plane's read-only pixel data
 		 * @tparam T The explicit data type of the value of each pixel channel
-		 * @see isNull().
+		 * @see isValid().
 		 */
 		template <typename T>
 		inline const T* constdata(const unsigned int planeIndex = 0u) const;
@@ -2855,12 +2855,6 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		 */
 		template <typename T>
 		bool hasTransparentPixel(const T opaque) const;
-
-		/**
-		 * Returns whether this frame holds no data.
-		 * @return True, if so
-		 */
-		inline bool isNull() const;
 
 		/**
 		 * Returns whether this frame is valid.
@@ -4302,11 +4296,6 @@ template <typename T>
 bool Frame::hasTransparentPixel(const T /*opaque*/) const
 {
 	return false;
-}
-
-inline bool Frame::isNull() const
-{
-	return !isValid();
 }
 
 inline bool Frame::isValid() const

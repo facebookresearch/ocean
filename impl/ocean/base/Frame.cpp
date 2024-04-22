@@ -2298,14 +2298,14 @@ Frame::~Frame()
 
 bool Frame::copy(const Frame& source, const bool copyTimestamp)
 {
-	ocean_assert(source);
+	ocean_assert(source.isValid());
 
 	if (this == &source)
 	{
 		return true;
 	}
 
-	if (source.isNull())
+	if (!source.isValid())
 	{
 		return false;
 	}
@@ -2781,7 +2781,7 @@ Frame& Frame::operator=(const Frame& right) noexcept
 		return *this;
 	}
 
-	if (right.isNull())
+	if (!right.isValid())
 	{
 		return *this;
 	}
