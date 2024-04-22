@@ -382,6 +382,17 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 		 */
 		static const TrackedQRCodesMap& invalidTrackedQRCodesMap();
 
+		/**
+		 * Disabled copy constructor.
+		 */
+		QRCodeTracker3D(const QRCodeTracker3D&) = delete;
+
+		/**
+		 * Disabled assign operator.
+		 * @return The reference to this object
+		 */
+		QRCodeTracker3D operator=(const QRCodeTracker3D&) = delete;
+
 	protected:
 
 		/// The function pointer to the function that provides new 6DOF detections of QR codes.

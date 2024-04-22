@@ -14,10 +14,6 @@
 
 #if defined(OCEAN_TRACKING_QRCODES_QRCODEDEBUGELEMENTS_ENABLED)
 	#include "ocean/cv/FrameConverter.h"
-
-	#if defined(_WINDOWS)
-		#include "ocean/platform/win/Utilities.h"
-	#endif // WINDOWS
 #endif // OCEAN_TRACKING_QRCODES_QRCODEDEBUGELEMENTS_ENABLED
 
 using namespace Ocean::CV::Detector::QRCodes;
