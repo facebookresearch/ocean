@@ -15,6 +15,8 @@ OPTION(BUILD_STATIC ON)
 OPTION(BUILD_EXECUTABLES OFF)
 OPTION(BUILD_TESTS OFF)
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 include ( CheckIncludeFile )
 check_include_file ( stddef.h HAVE_STDDEF_H )
 check_include_file ( stdlib.h HAVE_STDLIB_H )
@@ -52,6 +54,3 @@ install(TARGETS jpeg
 
 message(STATUS "headers: ${HEADERS}")
 install(FILES ${HEADERS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include")
-
-
-

@@ -3,6 +3,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 add_subdirectory(imageio)
+add_subdirectory(openimagelibraries)
 add_subdirectory(special)
 
 if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
