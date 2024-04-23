@@ -33,6 +33,14 @@
 		5DD14AA31D953F8B00CCA9F0 /* TestBitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0BFEC1BD526DE00ABBC5B /* TestBitstream.h */; };
 		5DD14AA41D953F8B00CCA9F0 /* TestIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0BFEE1BD526DE00ABBC5B /* TestIO.h */; };
 		5DD14AA51D953F8B00CCA9F0 /* TestCompression.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0BFED1BD526DE00ABBC5B /* TestCompression.h */; };
+		930173F52BD70FA8004E1B03 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930173F42BD70FA8004E1B03 /* TestUtilities.cpp */; };
+		930173F62BD70FA8004E1B03 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930173F42BD70FA8004E1B03 /* TestUtilities.cpp */; };
+		930173F72BD70FA8004E1B03 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930173F42BD70FA8004E1B03 /* TestUtilities.cpp */; };
+		930173F82BD70FA8004E1B03 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930173F42BD70FA8004E1B03 /* TestUtilities.cpp */; };
+		930173FA2BD70FAF004E1B03 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 930173F92BD70FAF004E1B03 /* TestUtilities.h */; };
+		930173FB2BD70FAF004E1B03 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 930173F92BD70FAF004E1B03 /* TestUtilities.h */; };
+		930173FC2BD70FAF004E1B03 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 930173F92BD70FAF004E1B03 /* TestUtilities.h */; };
+		930173FD2BD70FAF004E1B03 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 930173F92BD70FAF004E1B03 /* TestUtilities.h */; };
 		9326812F2B2CE4D900D0890D /* TestDirectory.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326812E2B2CE4D900D0890D /* TestDirectory.h */; };
 		932681302B2CE4D900D0890D /* TestDirectory.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326812E2B2CE4D900D0890D /* TestDirectory.h */; };
 		932681312B2CE4D900D0890D /* TestDirectory.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326812E2B2CE4D900D0890D /* TestDirectory.h */; };
@@ -69,6 +77,8 @@
 		5DD0BFEE1BD526DE00ABBC5B /* TestIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestIO.h; path = ../../../../../../impl/ocean/test/testio/TestIO.h; sourceTree = "<group>"; };
 		5DD0BFFF1BD5270700ABBC5B /* libOceanTestIOD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestIOD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DD14AA91D953F8B00CCA9F0 /* libOceanTestIOD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestIOD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		930173F42BD70FA8004E1B03 /* TestUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestUtilities.cpp; path = ../../../../../../impl/ocean/test/testio/TestUtilities.cpp; sourceTree = "<group>"; };
+		930173F92BD70FAF004E1B03 /* TestUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestUtilities.h; path = ../../../../../../impl/ocean/test/testio/TestUtilities.h; sourceTree = "<group>"; };
 		9326812E2B2CE4D900D0890D /* TestDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDirectory.h; path = ../../../../../../impl/ocean/test/testio/TestDirectory.h; sourceTree = "<group>"; };
 		932681332B2CE4E500D0890D /* TestDirectory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestDirectory.cpp; path = ../../../../../../impl/ocean/test/testio/TestDirectory.cpp; sourceTree = "<group>"; };
 		9EE8BCA82B89A04E00517978 /* TestFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFile.cpp; path = ../../../../../../impl/ocean/test/testio/TestFile.cpp; sourceTree = "<group>"; };
@@ -137,6 +147,7 @@
 				932681332B2CE4E500D0890D /* TestDirectory.cpp */,
 				9EE8BCA82B89A04E00517978 /* TestFile.cpp */,
 				5DD0BFE71BD526BE00ABBC5B /* TestIO.cpp */,
+				930173F42BD70FA8004E1B03 /* TestUtilities.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -150,6 +161,7 @@
 				9326812E2B2CE4D900D0890D /* TestDirectory.h */,
 				9EE8BCAD2B89A06000517978 /* TestFile.h */,
 				5DD0BFEE1BD526DE00ABBC5B /* TestIO.h */,
+				930173F92BD70FAF004E1B03 /* TestUtilities.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -165,6 +177,7 @@
 				9326812F2B2CE4D900D0890D /* TestDirectory.h in Headers */,
 				5DD0BFEF1BD526DE00ABBC5B /* TestBitstream.h in Headers */,
 				5DD0BFF11BD526DE00ABBC5B /* TestIO.h in Headers */,
+				930173FA2BD70FAF004E1B03 /* TestUtilities.h in Headers */,
 				5DD0BFF01BD526DE00ABBC5B /* TestCompression.h in Headers */,
 				50D2EDDB2268DCEA000CD0D5 /* TestBase64.h in Headers */,
 			);
@@ -178,6 +191,7 @@
 				932681302B2CE4D900D0890D /* TestDirectory.h in Headers */,
 				5DD0BFF91BD5270700ABBC5B /* TestBitstream.h in Headers */,
 				5DD0BFFA1BD5270700ABBC5B /* TestIO.h in Headers */,
+				930173FB2BD70FAF004E1B03 /* TestUtilities.h in Headers */,
 				5DD0BFFB1BD5270700ABBC5B /* TestCompression.h in Headers */,
 				50D2EDDC2268DCEA000CD0D5 /* TestBase64.h in Headers */,
 			);
@@ -191,6 +205,7 @@
 				932681312B2CE4D900D0890D /* TestDirectory.h in Headers */,
 				5DD14AA31D953F8B00CCA9F0 /* TestBitstream.h in Headers */,
 				5DD14AA41D953F8B00CCA9F0 /* TestIO.h in Headers */,
+				930173FC2BD70FAF004E1B03 /* TestUtilities.h in Headers */,
 				5DD14AA51D953F8B00CCA9F0 /* TestCompression.h in Headers */,
 				50D2EDDD2268DCEA000CD0D5 /* TestBase64.h in Headers */,
 			);
@@ -204,6 +219,7 @@
 				932681322B2CE4D900D0890D /* TestDirectory.h in Headers */,
 				C0E9B1301DACEE6500895C4B /* TestBitstream.h in Headers */,
 				C0E9B1311DACEE6500895C4B /* TestIO.h in Headers */,
+				930173FD2BD70FAF004E1B03 /* TestUtilities.h in Headers */,
 				C0E9B1321DACEE6500895C4B /* TestCompression.h in Headers */,
 				50D2EDDE2268DCEA000CD0D5 /* TestBase64.h in Headers */,
 			);
@@ -365,6 +381,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				930173F52BD70FA8004E1B03 /* TestUtilities.cpp in Sources */,
 				50D2EDE02268DD04000CD0D5 /* TestBase64.cpp in Sources */,
 				932681342B2CE4E500D0890D /* TestDirectory.cpp in Sources */,
 				5DD0BFEA1BD526BE00ABBC5B /* TestIO.cpp in Sources */,
@@ -378,6 +395,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				930173F62BD70FA8004E1B03 /* TestUtilities.cpp in Sources */,
 				50D2EDE12268DD04000CD0D5 /* TestBase64.cpp in Sources */,
 				932681352B2CE4E500D0890D /* TestDirectory.cpp in Sources */,
 				5DD0BFF41BD5270700ABBC5B /* TestIO.cpp in Sources */,
@@ -391,6 +409,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				930173F72BD70FA8004E1B03 /* TestUtilities.cpp in Sources */,
 				50D2EDE22268DD04000CD0D5 /* TestBase64.cpp in Sources */,
 				932681362B2CE4E500D0890D /* TestDirectory.cpp in Sources */,
 				5DD14A9E1D953F8B00CCA9F0 /* TestIO.cpp in Sources */,
@@ -404,6 +423,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				930173F82BD70FA8004E1B03 /* TestUtilities.cpp in Sources */,
 				50D2EDE32268DD04000CD0D5 /* TestBase64.cpp in Sources */,
 				932681372B2CE4E500D0890D /* TestDirectory.cpp in Sources */,
 				C0E9B12B1DACEE6500895C4B /* TestIO.cpp in Sources */,

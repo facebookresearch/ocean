@@ -6,6 +6,7 @@
 #include "ocean/test/testio/TestCompression.h"
 #include "ocean/test/testio/TestDirectory.h"
 #include "ocean/test/testio/TestFile.h"
+#include "ocean/test/testio/TestUtilities.h"
 
 #include "ocean/base/String.h"
 #include "ocean/base/Utilities.h"
@@ -68,6 +69,14 @@ bool testIO(const double testDuration, const std::string& testFunctions)
 		Log::info() << "-";
 		Log::info() << " ";
 		allSucceeded = TestFile::test(testDuration) && allSucceeded;
+	}
+
+	if (testSet.empty() || testSet.find("utilities") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+		allSucceeded = TestUtilities::test(testDuration) && allSucceeded;
 	}
 
 	Log::info() << " ";

@@ -8,6 +8,40 @@ namespace Ocean
 namespace IO
 {
 
+bool Utilities::readFile(const std::string& filename, Buffer& buffer)
+{
+	ocean_assert(!filename.empty());
+
+	if (filename.empty())
+	{
+		return false;
+	}
+
+	std::ifstream stream(filename, std::ios::binary);
+
+	if (!stream.is_open())
+	{
+		return false;
+	}
+
+	stream.seekg(0, std::ios_base::end);
+		const std::istream::pos_type fileSize = stream.tellg();
+	stream.seekg(0, std::ios_base::beg);
+
+	buffer.clear();
+
+	if (fileSize != 0)
+	{
+		buffer.resize(fileSize);
+
+		stream.read((char*)(buffer.data()), buffer.size());
+
+		return stream.good();
+	}
+
+	return true;
+}
+
 void Utilities::encodeHomogenousMatrix4(const HomogenousMatrix4& matrix, Buffer& buffer)
 {
 	static_assert(sizeof(HomogenousMatrixD4) == 8 * 16, "Invalid data type!");
@@ -25,7 +59,7 @@ void Utilities::encodeHomogenousMatrix4(const HomogenousMatrix4& matrix, Buffer&
 	}
 }
 
-bool Utilities::decodeHomogenousMatrix4(const unsigned char*& data, size_t& size, HomogenousMatrix4& matrix)
+bool Utilities::decodeHomogenousMatrix4(const uint8_t*& data, size_t& size, HomogenousMatrix4& matrix)
 {
 	static_assert(sizeof(HomogenousMatrixD4) == 8 * 16, "Invalid data type!");
 
@@ -79,7 +113,7 @@ void Utilities::encodeVectors2(const Vector2* vectors, const size_t size, Buffer
 	}
 }
 
-bool Utilities::decodeVectors2(const unsigned char*& data, size_t& size, Vectors2& vectors)
+bool Utilities::decodeVectors2(const uint8_t*& data, size_t& size, Vectors2& vectors)
 {
 	static_assert(sizeof(unsigned long long) == 8, "Invalid data type!");
 	static_assert(sizeof(VectorD2) == 8 * 2, "Invalid data type!");
@@ -150,7 +184,7 @@ void Utilities::encodeVectors3(const Vector3* vectors, const size_t size, Buffer
 	}
 }
 
-bool Utilities::decodeVectors3(const unsigned char*& data, size_t& size, Vectors3& vectors)
+bool Utilities::decodeVectors3(const uint8_t*& data, size_t& size, Vectors3& vectors)
 {
 	static_assert(sizeof(unsigned long long) == 8, "Invalid data type!");
 	static_assert(sizeof(VectorD3) == 8 * 3, "Invalid data type!");
@@ -223,7 +257,7 @@ void Utilities::encodeVectors4(const Vector4* vectors, const size_t size, Buffer
 	}
 }
 
-bool Utilities::decodeVectors4(const unsigned char*& data, size_t& size, Vectors4& vectors)
+bool Utilities::decodeVectors4(const uint8_t*& data, size_t& size, Vectors4& vectors)
 {
 	static_assert(sizeof(unsigned long long) == 8, "Invalid data type!");
 	static_assert(sizeof(VectorD4) == 8 * 4, "Invalid data type!");

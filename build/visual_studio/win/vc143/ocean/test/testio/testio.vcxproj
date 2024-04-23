@@ -57,6 +57,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestDirectory.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestFile.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestIO.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestUtilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestBase64.cpp" />
@@ -65,6 +66,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestDirectory.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestFile.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestIO.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestUtilities.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BDB1850F-DD21-4FA6-B936-54CB2345EE5A}</ProjectGuid>
