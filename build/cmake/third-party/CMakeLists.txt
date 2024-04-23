@@ -41,9 +41,10 @@ elseif(BUILD_PASS_INDEX EQUAL 1)
     include(libtiff.cmake)
 elseif(BUILD_PASS_INDEX EQUAL 2)
     include(freetype.cmake)
-    include(opencv.cmake)
     include(assimp.cmake)
     include(wxwidgets.cmake)
+    # Disabled by default
+    # include(opencv.cmake)
 endif()
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
