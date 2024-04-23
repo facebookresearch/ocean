@@ -41,6 +41,23 @@ if (BUILD_SHARED_LIBS)
     endif()
 endif()
 
+if (ANDROID)
+    # If specified, use the following variable to determine the location of the third-party
+    # libraries that are required. This is provided by Gradle.
+    if (OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE)
+        if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+            set(CMAKE_FIND_ROOT_PATH ${OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE}/${ANDROID_ABI}_shared_Debug)
+        else()
+            set(CMAKE_FIND_ROOT_PATH ${OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE}/${ANDROID_ABI}_shared_Release)
+        endif()
+
+        message(STATUS "OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE = ${OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE}")
+    else()
+        message(STATUS "OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE = [not defined]")
+    endif()
+endif()
+
+
 message(STATUS " ")
 message(STATUS "BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS}")
 message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
