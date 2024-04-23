@@ -49,7 +49,9 @@ function run_build {
         -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
         -DBUILD_PASS_INDEX="0"
 
-    cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16
+    if ! cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16; then
+        failed_configs+=("${LIBRARY_TYPE}_${BUILD_TYPE}_0")
+    fi
 
     echo " "
     echo "PASS 1"
@@ -60,7 +62,9 @@ function run_build {
         -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
         -DBUILD_PASS_INDEX="1"
 
-    cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16
+    if ! cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16; then
+        failed_configs+=("${LIBRARY_TYPE}_${BUILD_TYPE}_1")
+    fi
 
     echo " "
     echo "PASS 2"
@@ -71,7 +75,9 @@ function run_build {
         -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
         -DBUILD_PASS_INDEX="2"
 
-    cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16
+    if ! cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16; then
+        failed_configs+=("${LIBRARY_TYPE}_${BUILD_TYPE}_2")
+    fi
 
     echo " "
     echo " "
@@ -84,3 +90,15 @@ run_build Debug shared
 run_build Release static
 run_build Release shared
 
+if [ "${#failed_configs[@]}" -eq 0 ]; then
+    echo "All builds were successful."
+else
+    echo "Some builds have failed." >&2
+    for config in "${failed_configs[@]}"; do
+        echo "- $config" >&2
+    done
+fi
+
+if [ "${#failed_configs[@]}" -gt 0 ]; then
+    exit 1
+fi
