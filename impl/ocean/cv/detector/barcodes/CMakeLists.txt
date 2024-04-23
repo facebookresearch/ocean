@@ -2,11 +2,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(barcodes)
-
 if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
 
-    set(OCEAN_TARGET_NAME "ocean_cv_detector")
+    set(OCEAN_TARGET_NAME "ocean_cv_detector_barcodes")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES ${CMAKE_CURRENT_LIST_DIR}/*.h)
@@ -20,7 +18,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_CV_DETECTOR_EXPORT)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_CV_DETECTOR_BARCODES_EXPORT)
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
@@ -30,7 +28,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
         PUBLIC
             ocean_base
             ocean_cv
-            ocean_geometry
+            ocean_cv_detector
             ocean_math
     )
 
@@ -41,7 +39,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/cv/detector
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/cv/detector/barcodes
             COMPONENT include
     )
 
