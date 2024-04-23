@@ -9,6 +9,15 @@
 
 #include "ocean/cv/detector/MessengerCodeDetector.h"
 
+#include "ocean/test/TestDataCollection.h"
+#include "ocean/test/TestDataManager.h"
+
+#ifdef OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
+	#ifndef OCEAN_USE_TEST_DATA_COLLECTION
+		#define OCEAN_USE_TEST_DATA_COLLECTION
+	#endif
+#endif // OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
+
 namespace Ocean
 {
 
@@ -27,13 +36,38 @@ namespace TestDetector
  */
 class OCEAN_TEST_CV_DETECTOR_EXPORT TestMessengerCodeDetector : protected CV::Detector::MessengerCodeDetector
 {
-	protected:
+	public:
 
-		/// Handle for test images, first: filename, second: Everstore handle
-		typedef std::pair<std::string, std::string> HandlePair;
+		/**
+		 * This class implements a test data collection based on local files.
+		 */
+		class FileDataCollection : public TestDataCollection
+		{
+			public:
 
-		/// Vector of handle pairs
-		typedef std::vector<HandlePair> HandlePairs;
+				/**
+				 * Creates a new test data collection object.
+				 * @param imageFilenames The filenames of all local images which will be part of the test collection
+				 */
+				explicit FileDataCollection(std::vector<std::string>&& imageFilenames);
+
+				/**
+				 * Returns the test data object associated with a specified index.
+				 * @see TestDataCollection::data().
+				 */
+				SharedTestData data(const size_t index) override;
+
+				/**
+				 * Returns the number of data object objects this collection holds.
+				 * @see TestDataCollection::size().
+				 */
+				size_t size() override;
+
+			protected:
+
+				/// The filenames of all local images belonging to this test collection.
+				std::vector<std::string> filenames_;
+		};
 
 	public:
 
@@ -68,9 +102,11 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestMessengerCodeDetector : protected CV::De
 		 */
 		static bool testStressTest(const double testDuration, Worker& worker);
 
+#ifdef OCEAN_USE_TEST_DATA_COLLECTION
+
 		/**
 		 * Tests real images in which exactly one bullseye is visible (in the center of the image).
-		 * The images are either downloaded from Everstore or loaded locally from disk.
+		 * The images needs to be provided via a test data collection with name "messengercodedetector_1bullseye".
 		 * @param worker The worker object
 		 * @return True, if succeeded
 		 */
@@ -78,7 +114,7 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestMessengerCodeDetector : protected CV::De
 
 		/**
 		 * Tests real images in which no Messenger code is visible.
-		 * The images are either downloaded from Everstore or loaded locally from disk.
+		 * The images needs to be provided via a test data collection with name "messengercodedetector_0code".
 		 * @param worker The worker object
 		 * @return True, if succeeded
 		 */
@@ -86,11 +122,13 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestMessengerCodeDetector : protected CV::De
 
 		/**
 		 * Tests real images in which exactly one Messenger code is visible.
-		 * The images are either downloaded from Everstore or loaded locally from disk.
+		 * The images needs to be provided via a test data collection with name "messengercodedetector_1code".
 		 * @param worker The worker object
 		 * @return True, if succeeded
 		 */
 		static bool testDetect1Code(Worker& worker);
+
+#endif // OCEAN_USE_TEST_DATA_COLLECTION
 
 	protected:
 
@@ -124,38 +162,17 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestMessengerCodeDetector : protected CV::De
 		 * @param foregroundColor The foreground color to be used
 		 */
 		static void paintNoise(Frame& yFrame, const Vector2& location, const uint8_t foregroundColor);
-
-		/**
-		 * Loads a test image either from Everstore or from a specified disk location.
-		 * @param handlePair The handle defining the image to be loaded
-		 * @return The resulting image grayscale image, if successful
-		 */
-		static Frame loadTestImage(const HandlePair& handlePair);
-
-		/**
-		 * Returns the absolute path to the test images, if any.
-		 * @return Absolute path to test images
-		 */
-		static std::string testImagesDirectory();
-
-		/**
-		 * Returns a predefined list of handles of images containing exactly one bullseye.
-		 * @return The list of handles
-		 */
-		static HandlePairs testImage1Bullseye();
-
-		/**
-		 * Returns a predefined list of Everstore handles of images containing no messenger code.
-		 * @return The list of handles
-		 */
-		static HandlePairs testImages0Code();
-
-		/**
-		 * Returns a predefined list of Everstore handles of images containing exactly one messenger code.
-		 * @return The list of handles
-		 */
-		static HandlePairs testImages1Code();
 };
+
+#ifdef OCEAN_USE_TEST_DATA_COLLECTION
+
+/**
+ * Registers the data collections for the MessengerCodeDetector test.
+ * @return The scoped subscriptions for the registered data collections
+ */
+TestDataManager::ScopedSubscriptions TestMessengerCodeDetector_registerTestDataCollections();
+
+#endif // OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
 
 }
 

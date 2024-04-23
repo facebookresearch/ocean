@@ -16,15 +16,7 @@
 #include "ocean/math/Vector2.h"
 #include "ocean/math/Vector3.h"
 
-#ifdef OCEAN_ENABLED_EVERSTORE_CLIENT
-	#include "ocean/media/openimagelibraries/Image.h"
-
-	#include "metaonly/ocean/network/everstore/EverstoreClient.h"
-#else
-	#ifdef __APPLE__
-		#include "ocean/media/imageio/Image.h"
-	#endif
-#endif // OCEAN_ENABLED_EVERSTORE_CLIENT
+#include "ocean/io/image/Image.h"
 
 namespace Ocean
 {
@@ -40,7 +32,39 @@ namespace TestDetector
 
 using namespace CV::Detector;
 
-// #define APPLY_IMAGE_TEST
+TestMessengerCodeDetector::FileDataCollection::FileDataCollection(std::vector<std::string>&& filenames) :
+	filenames_(std::move(filenames))
+{
+	ocean_assert(!filenames_.empty());
+}
+
+SharedTestData TestMessengerCodeDetector::FileDataCollection::data(const size_t index)
+{
+	ocean_assert(index < filenames_.size());
+
+	if (index >= filenames_.size())
+	{
+		return nullptr;
+	}
+
+	Frame image = IO::Image::readImage(filenames_[index]);
+
+	if (image.isValid())
+	{
+		if (CV::FrameConverter::Comfort::change(image, FrameType(image, FrameType::FORMAT_Y8)))
+		{
+			return std::make_shared<TestData>(std::move(image), Value());
+		}
+	}
+
+	ocean_assert(false && "Failed to load the image!");
+	return nullptr;
+}
+
+size_t TestMessengerCodeDetector::FileDataCollection::size()
+{
+	return filenames_.size();
+}
 
 bool TestMessengerCodeDetector::test(const double testDuration, Worker& worker)
 {
@@ -71,7 +95,11 @@ bool TestMessengerCodeDetector::test(const double testDuration, Worker& worker)
 
 	allSucceeded = testStressTest(testDuration, worker) && allSucceeded;
 
-#if defined(APPLY_IMAGE_TEST) || defined(OCEAN_ENABLED_EVERSTORE_CLIENT)
+#ifdef OCEAN_USE_TEST_DATA_COLLECTION
+
+	#ifdef OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
+		const TestDataManager::ScopedSubscriptions scopedSubscriptions = TestMessengerCodeDetector_registerTestDataCollections();
+	#endif // OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -91,7 +119,7 @@ bool TestMessengerCodeDetector::test(const double testDuration, Worker& worker)
 
 	allSucceeded = testDetect1Code(worker) && allSucceeded;
 
-#endif
+#endif // OCEAN_USE_TEST_DATA_COLLECTION
 
 	Log::info() << " ";
 
@@ -109,58 +137,94 @@ bool TestMessengerCodeDetector::test(const double testDuration, Worker& worker)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestMessengerCodeDetector, ExtractCodeCandidates)
+} // namespace TestDetector
+
+/**
+ * This class implements a simple instance for the GTest ensuring test data collections are registered.
+ */
+class TestMessengerCodeDetector : public ::testing::Test
 {
-	EXPECT_TRUE(TestMessengerCodeDetector::testExtractCodeCandidates(GTEST_TEST_DURATION));
+	protected:
+
+		/**
+		 * Sets up the test.
+		 */
+		void SetUp() override
+		{
+#ifdef OCEAN_USE_TEST_DATA_COLLECTION
+			scopedSubscriptions_ = TestCV::TestDetector::TestMessengerCodeDetector_registerTestDataCollections();
+#endif // OCEAN_USE_TEST_DATA_COLLECTION
+		}
+
+		/**
+		 * Tears down the test.
+		 */
+		void TearDown() override
+		{
+			scopedSubscriptions_.clear();
+		}
+
+	protected:
+
+		/// The subscriptions to all registered data collections.
+		TestDataManager::ScopedSubscriptions scopedSubscriptions_;
+};
+
+TEST_F(TestMessengerCodeDetector, ExtractCodeCandidates)
+{
+	EXPECT_TRUE(TestDetector::TestMessengerCodeDetector::testExtractCodeCandidates(GTEST_TEST_DURATION));
 }
 
-TEST(TestMessengerCodeDetector, BullseyeDetectionArtificialFilterSize0)
+TEST_F(TestMessengerCodeDetector, BullseyeDetectionArtificialFilterSize0)
 {
-	EXPECT_TRUE(TestMessengerCodeDetector::testBullseyeDetectionArtificial(0u, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestDetector::TestMessengerCodeDetector::testBullseyeDetectionArtificial(0u, GTEST_TEST_DURATION));
 }
 
-TEST(TestMessengerCodeDetector, BullseyeDetectionArtificialFilterSize3)
+TEST_F(TestMessengerCodeDetector, BullseyeDetectionArtificialFilterSize3)
 {
-	EXPECT_TRUE(TestMessengerCodeDetector::testBullseyeDetectionArtificial(3u, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestDetector::TestMessengerCodeDetector::testBullseyeDetectionArtificial(3u, GTEST_TEST_DURATION));
 }
 
-TEST(TestMessengerCodeDetector, BullseyeDetectionArtificialFilterSize5)
+TEST_F(TestMessengerCodeDetector, BullseyeDetectionArtificialFilterSize5)
 {
-	EXPECT_TRUE(TestMessengerCodeDetector::testBullseyeDetectionArtificial(5u, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestDetector::TestMessengerCodeDetector::testBullseyeDetectionArtificial(5u, GTEST_TEST_DURATION));
 }
 
-TEST(TestMessengerCodeDetector, BullseyeDetectionArtificialFilterSize7)
+TEST_F(TestMessengerCodeDetector, BullseyeDetectionArtificialFilterSize7)
 {
-	EXPECT_TRUE(TestMessengerCodeDetector::testBullseyeDetectionArtificial(7u, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestDetector::TestMessengerCodeDetector::testBullseyeDetectionArtificial(7u, GTEST_TEST_DURATION));
 }
 
-TEST(TestMessengerCodeDetector, StressTest)
+TEST_F(TestMessengerCodeDetector, StressTest)
 {
 	Worker worker;
-	EXPECT_TRUE(TestMessengerCodeDetector::testStressTest(GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestDetector::TestMessengerCodeDetector::testStressTest(GTEST_TEST_DURATION, worker));
 }
 
-#if defined(OCEAN_ENABLED_EVERSTORE_CLIENT)
+#ifdef OCEAN_USE_TEST_DATA_COLLECTION
 
-TEST(TestMessengerCodeDetector, Detect1Bullseye)
+TEST_F(TestMessengerCodeDetector, Detect1Bullseye)
 {
 	Worker worker;
-	EXPECT_TRUE(TestMessengerCodeDetector::testDetect1Bullseye(worker));
+	EXPECT_TRUE(TestDetector::TestMessengerCodeDetector::testDetect1Bullseye(worker));
 }
 
-TEST(TestMessengerCodeDetector, Detect0CodeEverstoreTest)
+TEST_F(TestMessengerCodeDetector, Detect0CodeTest)
 {
 	Worker worker;
-	EXPECT_TRUE(TestMessengerCodeDetector::testDetect0Code(worker));
+	EXPECT_TRUE(TestDetector::TestMessengerCodeDetector::testDetect0Code(worker));
 }
 
-TEST(TestMessengerCodeDetector, Detect1CodeEverstoreTest)
+TEST_F(TestMessengerCodeDetector, Detect1CodeTest)
 {
 	Worker worker;
-	EXPECT_TRUE(TestMessengerCodeDetector::testDetect1Code(worker));
+	EXPECT_TRUE(TestDetector::TestMessengerCodeDetector::testDetect1Code(worker));
 }
 
-#endif // OCEAN_ENABLED_EVERSTORE_CLIENT
+#endif // OCEAN_USE_TEST_DATA_COLLECTION
+
+namespace TestDetector
+{
 
 #endif // OCEAN_USE_GTEST
 
@@ -562,67 +626,80 @@ bool TestMessengerCodeDetector::testStressTest(const double testDuration, Worker
 	return true;
 }
 
+#ifdef OCEAN_USE_TEST_DATA_COLLECTION
+
 bool TestMessengerCodeDetector::testDetect1Bullseye(Worker& worker)
 {
 	Log::info() << "Detection of exactly 1 Bullseye:";
 
 	bool allSucceeded = true;
 
-	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
+	const SharedTestDataCollection dataCollection = TestDataManager::get().testDataCollection("messengercodedetector_1bullseye");
 
-	const HandlePairs handlePairs1Code = testImage1Bullseye();
-
-	for (const HandlePair& handlePair : handlePairs1Code)
+	if (dataCollection && dataCollection->size() > 0)
 	{
-		Frame testImageY8 = loadTestImage(handlePair);
-		ocean_assert(testImageY8.pixelFormat() == FrameType::FORMAT_Y8);
-
-		if (testImageY8.isValid() == false)
+		for (size_t dataIndex = 0; dataIndex < dataCollection->size(); ++dataIndex)
 		{
-			Log::info() << "Failed to download image: " << handlePair.first;
+			const SharedTestData data = dataCollection->data(dataIndex);
 
-			allSucceeded = false;
-			continue;
-		}
-
-		const Vector2 imageCenter(Scalar(testImageY8.width()) * Scalar(0.5), Scalar(testImageY8.height()) * Scalar(0.5));
-		const Scalar distance5 = Scalar(std::min(testImageY8.width(), testImageY8.height())) * Scalar(0.05);
-
-		// we rotate the image four times by 90 degree
-
-		for (unsigned int rotateIteration = 0u; rotateIteration < 4u; ++rotateIteration)
-		{
-			for (unsigned int workerIteration = 0u; workerIteration < maxWorkerIterations; ++workerIteration)
+			if (data && data->dataType() == TestData::DT_IMAGE)
 			{
-				Worker* useWorker = (workerIteration == 0u) ? nullptr : &worker;
+				Frame yTestImage = Frame(data->image(), Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				const Bullseyes bullseyes = CV::Detector::MessengerCodeDetector::detectBullseyes(testImageY8.constdata<uint8_t>(), testImageY8.width(), testImageY8.height(), testImageY8.paddingElements(), useWorker);
+				ocean_assert(yTestImage.isValid() && yTestImage.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+				if (yTestImage.isValid() && yTestImage.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+				{
+					const Vector2 imageCenter(Scalar(yTestImage.width()) * Scalar(0.5), Scalar(yTestImage.height()) * Scalar(0.5));
+					const Scalar distance5 = Scalar(std::min(yTestImage.width(), yTestImage.height())) * Scalar(0.05);
 
-				if (bullseyes.empty())
-				{
-					allSucceeded = false;
-				}
-				else
-				{
-					for (const Bullseye& bullseye : bullseyes)
+					// we rotate the image four times by 90 degree
+
+					for (unsigned int rotateIteration = 0u; rotateIteration < 4u; ++rotateIteration)
 					{
-						if (bullseye.position().distance(imageCenter) > distance5)
+						for (const bool useWorker : {false, true})
 						{
-							allSucceeded = false;
+							const Bullseyes bullseyes = CV::Detector::MessengerCodeDetector::detectBullseyes(yTestImage.constdata<uint8_t>(), yTestImage.width(), yTestImage.height(), yTestImage.paddingElements(), useWorker ? &worker : nullptr);
+
+							if (bullseyes.empty())
+							{
+								allSucceeded = false;
+							}
+							else
+							{
+								for (const Bullseye& bullseye : bullseyes)
+								{
+									if (bullseye.position().distance(imageCenter) > distance5)
+									{
+										allSucceeded = false;
+									}
+								}
+							}
+
+							Frame rotatedImage;
+							if (!CV::FrameInterpolatorNearestPixel::Comfort::rotate90(yTestImage, rotatedImage, true))
+							{
+								ocean_assert(false && "Should never happen!");
+								allSucceeded = false;
+							}
+
+							yTestImage = std::move(rotatedImage);
 						}
 					}
-				}
 
-				Frame rotatedImage;
-				if (!CV::FrameInterpolatorNearestPixel::Comfort::rotate90(testImageY8, rotatedImage, true))
-				{
-					ocean_assert(false && "Should never happen!");
-					allSucceeded = false;
+					continue;
 				}
-
-				testImageY8 = std::move(rotatedImage);
 			}
+
+			Log::error() << "Invalid test image with index " << dataIndex;
+
+			allSucceeded = false;
 		}
+	}
+	else
+	{
+		Log::error() << "Failed to access test data";
+
+		allSucceeded = false;
 	}
 
 	if (allSucceeded)
@@ -643,34 +720,45 @@ bool TestMessengerCodeDetector::testDetect0Code(Worker& worker)
 
 	bool allSucceeded = true;
 
-	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
+	const SharedTestDataCollection dataCollection = TestDataManager::get().testDataCollection("messengercodedetector_0code");
 
-	const HandlePairs handlePairs0Code = testImages0Code();
-
-	for (const HandlePair& handlePair : handlePairs0Code)
+	if (dataCollection && dataCollection->size() > 0)
 	{
-		const Frame testImageY8 = loadTestImage(handlePair);
-		ocean_assert(testImageY8.pixelFormat() == FrameType::FORMAT_Y8);
-
-		if (testImageY8.isValid() == false)
+		for (size_t dataIndex = 0; dataIndex < dataCollection->size(); ++dataIndex)
 		{
-			Log::info() << "Failed to download image: " << handlePair.first;
+			const SharedTestData data = dataCollection->data(dataIndex);
+
+			if (data && data->dataType() == TestData::DT_IMAGE)
+			{
+				const Frame yTestImage = data->image();
+
+				ocean_assert(yTestImage.isValid() && yTestImage.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+				if (yTestImage.isValid() && yTestImage.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+				{
+					for (const bool useWorker : {false, true})
+					{
+						CV::Detector::MessengerCodeDetector::Codes codes = CV::Detector::MessengerCodeDetector::detectMessengerCodes(yTestImage.constdata<uint8_t>(), yTestImage.width(), yTestImage.height(), yTestImage.paddingElements(), useWorker ? &worker : nullptr);
+
+						if (codes.size() != 0)
+						{
+							allSucceeded = false;
+						}
+					}
+
+					continue;
+				}
+			}
+
+			Log::error() << "Invalid test image with index " << dataIndex;
 
 			allSucceeded = false;
-			continue;
 		}
+	}
+	else
+	{
+		Log::error() << "Failed to access test data";
 
-		for (unsigned int workerIteration = 0u; workerIteration < maxWorkerIterations; ++workerIteration)
-		{
-			Worker* useWorker = (workerIteration == 0u) ? nullptr : &worker;
-
-			CV::Detector::MessengerCodeDetector::Codes codes = CV::Detector::MessengerCodeDetector::detectMessengerCodes(testImageY8.constdata<uint8_t>(), testImageY8.width(), testImageY8.height(), testImageY8.paddingElements(), useWorker);
-
-			if (codes.size() != 0)
-			{
-				allSucceeded = false;
-			}
-		}
+		allSucceeded = false;
 	}
 
 	if (allSucceeded)
@@ -689,40 +777,45 @@ bool TestMessengerCodeDetector::testDetect1Code(Worker& worker)
 {
 	Log::info() << "Detection of exactly 1 Messenger code:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	bool allSucceeded = true;
 
-	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
+	const SharedTestDataCollection dataCollection = TestDataManager::get().testDataCollection("messengercodedetector_1code");
 
-	const HandlePairs handlePairs1Code = testImages1Code();
-
-	for (const HandlePair& handlePair : handlePairs1Code)
+	if (dataCollection && dataCollection->size() > 0)
 	{
-		const Frame testImageY8 = loadTestImage(handlePair);
-		ocean_assert(testImageY8.pixelFormat() == FrameType::FORMAT_Y8);
-
-		if (testImageY8.isValid() == false)
+		for (size_t dataIndex = 0; dataIndex < dataCollection->size(); ++dataIndex)
 		{
-			Log::info() << "Failed to download image: " << handlePair.first;
+			const SharedTestData data = dataCollection->data(dataIndex);
 
-			allSucceeded = false;
-			continue;
-		}
-
-		for (unsigned int workerIteration = 0u; workerIteration < maxWorkerIterations; ++workerIteration)
-		{
-			Worker* useWorker = (workerIteration == 0u) ? nullptr : &worker;
-
-			CV::Detector::MessengerCodeDetector::Codes codes = CV::Detector::MessengerCodeDetector::detectMessengerCodes(testImageY8.constdata<uint8_t>(), testImageY8.width(), testImageY8.height(), testImageY8.paddingElements(), useWorker);
-
-			if (codes.size() == 1)
+			if (data && data->dataType() == TestData::DT_IMAGE)
 			{
-				++validIterations;
+				const Frame yTestImage = data->image();
+
+				ocean_assert(yTestImage.isValid() && yTestImage.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+				if (yTestImage.isValid() && yTestImage.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+				{
+					for (const bool useWorker : {false, true})
+					{
+						CV::Detector::MessengerCodeDetector::Codes codes = CV::Detector::MessengerCodeDetector::detectMessengerCodes(yTestImage.constdata<uint8_t>(), yTestImage.width(), yTestImage.height(), yTestImage.paddingElements(), useWorker ? &worker : nullptr);
+
+						if (codes.size() == 1)
+						{
+							++validIterations;
+						}
+
+						++iterations;
+					}
+
+					continue;
+				}
 			}
 
-			++iterations;
+			Log::error() << "Invalid test image with index " << dataIndex;
+
+			allSucceeded = false;
 		}
 	}
 
@@ -749,6 +842,8 @@ bool TestMessengerCodeDetector::testDetect1Code(Worker& worker)
 
 	return allSucceeded;
 }
+
+#endif // OCEAN_USE_TEST_DATA_COLLECTION
 
 Vectors2 TestMessengerCodeDetector::createCodeCorners(const Vector2& codeCenter, const Scalar distance, RandomGenerator& randomGenerator)
 {
@@ -844,252 +939,198 @@ void TestMessengerCodeDetector::paintNoise(Frame& yFrame, const Vector2& locatio
 	}
 }
 
-Frame TestMessengerCodeDetector::loadTestImage(const HandlePair& handlePair)
+#ifdef OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
+
+TestDataManager::ScopedSubscriptions TestMessengerCodeDetector_registerTestDataCollections()
 {
+	std::string absolutePath = "";
+	ocean_assert(!absolutePath.empty());
 
-#if defined(OCEAN_ENABLED_EVERSTORE_CLIENT)
+	TestDataManager::ScopedSubscriptions scopedSubscriptions;
 
-	Network::EverstoreClient::Buffer buffer;
-	if (!Network::EverstoreClient::download(handlePair.second, buffer))
 	{
-		ocean_assert(false && "Failed to download image from everstore!");
-		return Frame();
+		std::vector<std::string> filenames1Bullseye =
+		{
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00001.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00002.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00003.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00004.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00005.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00006.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00007.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00008.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00009.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00010.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00011.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00012.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00013.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00014.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00015.png",
+			absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00016.png"
+		};
+
+		scopedSubscriptions.emplace_back(TestDataManager::get().registerTestDataCollection("messengercodedetector_1bullseye", std::make_unique<TestMessengerCodeDetector::FileDataCollection>(std::move(filenames1Bullseye))));
 	}
 
-	const Frame image = Media::OpenImageLibraries::Image::decodeImage(buffer.data(), buffer.size());
-
-#elif defined(__APPLE__)
-	const Frame image = Media::ImageIO::Image::readImage(handlePair.first);
-#else
-	const Frame image; // missing implementation
-	OCEAN_SUPPRESS_UNUSED_WARNING(handlePair);
-#endif
-
-	if (!image.isValid())
 	{
-		ocean_assert(false && "This should never happen!");
-		return Frame();
+		std::vector<std::string> filenames0Code =
+		{
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00001.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00002.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00003.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00004.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00005.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00006.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00007.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00008.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00009.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00010.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00011.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00012.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00013.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00014.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00015.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00016.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00017.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00018.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00019.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00020.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00021.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00022.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00023.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00024.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00025.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00026.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00027.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00028.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00029.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00030.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00031.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00032.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00033.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00034.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00035.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00036.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00037.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00038.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00039.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00040.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00041.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00042.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00043.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00044.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00045.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00046.png",
+			absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00047.png"
+		};
+
+		scopedSubscriptions.emplace_back(TestDataManager::get().registerTestDataCollection("messengercodedetector_0code", std::make_unique<TestMessengerCodeDetector::FileDataCollection>(std::move(filenames0Code))));
 	}
 
-	Frame yImage;
-	if (!CV::FrameConverter::Comfort::convert(image, FrameType(image, FrameType::FORMAT_Y8), yImage, CV::FrameConverter::CP_ALWAYS_COPY))
 	{
-		ocean_assert(false && "This should never happen!");
-		Frame();
+		std::vector<std::string> filenames1Code =
+		{
+			absolutePath + "messenger_codes_test_images/1_code/test_image_001.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_002.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_003.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_004.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_005.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_006.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_007.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_008.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_009.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_010.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_011.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_012.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_013.png",
+			absolutePath + "messenger_codes_test_images/1_code/test_image_014.png",
+
+			absolutePath + "messenger_codes_test_images/far_to_close/IMG_0445.png",
+			absolutePath + "messenger_codes_test_images/far_to_close/IMG_0446.png",
+			absolutePath + "messenger_codes_test_images/far_to_close/IMG_0447.png",
+			absolutePath + "messenger_codes_test_images/far_to_close/IMG_0448.png",
+			absolutePath + "messenger_codes_test_images/far_to_close/IMG_0449.png",
+			absolutePath + "messenger_codes_test_images/far_to_close/IMG_0450.png",
+			absolutePath + "messenger_codes_test_images/far_to_close/IMG_0451.png",
+			absolutePath + "messenger_codes_test_images/far_to_close/IMG_0452.png",
+			absolutePath + "messenger_codes_test_images/far_to_close/IMG_0453.png",
+
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00001.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00002.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00003.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00004.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00005.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00006.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00007.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00008.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00009.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00010.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00011.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00012.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00013.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00014.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00015.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00016.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00017.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00018.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00019.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00020.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00021.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00022.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00023.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00024.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00025.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00026.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00027.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00028.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00029.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00030.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00031.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00032.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00033.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00034.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00035.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00036.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00037.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00038.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00039.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00040.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00041.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00042.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00043.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00044.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00045.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00046.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00047.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00048.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00049.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00050.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00051.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00052.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00053.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00054.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00055.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00056.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00057.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00058.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00059.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00060.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00061.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00062.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00063.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00064.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00065.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00066.png",
+			absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00067.png"
+		};
+
+		scopedSubscriptions.emplace_back(TestDataManager::get().registerTestDataCollection("messengercodedetector_1code", std::make_unique<TestMessengerCodeDetector::FileDataCollection>(std::move(filenames1Code))));
 	}
 
-	return yImage;
+	return scopedSubscriptions;
 }
 
-std::string TestMessengerCodeDetector::testImagesDirectory()
-{
-	std::string absolutePath;
-
-#if defined(APPLY_IMAGE_TEST)
-
-	#ifdef OCEAN_ENABLED_EVERSTORE_CLIENT
-		#error Either Everstore or local images.
-	#endif
-
-	absolutePath = "";
-	ocean_assert(!absolutePath.empty() && "Define a valid absolute path");
-
-#endif
-
-	return absolutePath;
-}
-
-TestMessengerCodeDetector::HandlePairs TestMessengerCodeDetector::testImage1Bullseye()
-{
-	const std::string absolutePath = testImagesDirectory();
-
-	HandlePairs handlePairs;
-
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00001.png", "GEvQ_QJgQThtJ9AAAEMJfxqlD8lvbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00002.png", "GGYY9wKPDEIxIvgHAIhlL7QyTGsgbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00003.png", "GH6s_ALnkYigPSoBACEG2wbH-gwRbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00004.png", "GLWu8AJR_00FT98BAAXriHdM-QYAbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00005.png", "GPIx9wLmBUv4wUEEAEvtnK9SiVFlbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00006.png", "GPrc9QLIFTnh1E8BABJjelwvL6F6buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00007.png", "GCE99gJ24na1KbACAEQDaHum5xwIbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00008.png", "GLcQ9wJMsf8fFMsBAJFVDUZRVG0ubuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00009.png", "GH2b9wJ0dAYzDHoAAM2zonaYby82buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00010.png", "GDp-_AIyHHjALRQCAE_O5_63lRxkbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00011.png", "GIVB9wLlPbg68JAAAKuZ2Umd8MIQbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00012.png", "GK389AL1q0QEFu4GAJ5f_tx3PqRIbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00013.png", "GEx-_AKA0scWOcgHACVGnFnegsRabuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00014.png", "GKz39QKqIdt3RT0HABvNe2kwfcJlbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00015.png", "GB_Q9wJIFP3ZcX4AAFPtMKiWFT9hbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "bullseyes_test_images/1_bullseye/test_image_1bullseye_00016.png", "GJdT-AJRAL1d0P4AAOPky5W_WNoabuZcAAAD");
-
-	return handlePairs;
-}
-
-TestMessengerCodeDetector::HandlePairs TestMessengerCodeDetector::testImages0Code()
-{
-	const std::string absolutePath = testImagesDirectory();
-
-	HandlePairs handlePairs;
-
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00001.png", "GHKs9AK1NZ0FXooGAOxa4zb5X2d4buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00002.png", "GKIC9AJ3Th0Kd-4BAMntoZdFlUw7buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00003.png", "GIzX8QLrpw71DRUBAOyHxBY1dlw6buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00004.png", "GIqg8wL7pj3BQREIAFd0TR5LF3lJbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00005.png", "GBcG9QKZaEsKSCABANyneYuPMQ5UbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00006.png", "GPwU9QI3JXOsvn4HADwCmSxtj6EXbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00007.png", "GDnz8gLoroGBxysHAIXzXlA-UGZBbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00008.png", "GBPt8gKSHUK_Rp8HABYVZRGbW7ZGbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00009.png", "GJHP8gL14ztfgLEIAPp_1mVFfrAUbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00010.png", "GGUR8wLTTrOGRBQBAJPA7stV0U8abuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00011.png", "GAzH9AIL8Yb-6DAHAKnI5nXUWGFjbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00012.png", "GINt9wJQ35TBwfYAADoq5q8huQp0buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00013.png", "GCJ0_AJzeddQ6tUBACo2-_N05BM0buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00014.png", "GHVZ8QI4DhB_0bgHAN_R4V7mvB40buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00015.png", "GLGP9AKMPA-4pg8BAHZjTbPrG4g7buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00016.png", "GOjd8QJ-mw24SdkGAJseZdL4GntybuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00017.png", "GGZV9QI3_YNH5CAIAJcTiTvzVIN3buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00018.png", "GGrb8wK0pS0KCcYHAMqF0VmbpcUUbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00019.png", "GKmL9ALHClw62UoBAMGqsOqeX_JZbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00020.png", "GFke8gI14lhKD_MHALLcHjR2ChMKbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00021.png", "GCHg9QL0MgZZ6c0CAEu88gKI5tpdbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00022.png", "GNm_9AIzUPjP3zUBAKo0VdNzRLMWbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00023.png", "GJLg8QKA2svBZJ0AAK8w9e4LnRw6buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00024.png", "GGWD8gKTVQWglcYBAGayOJLCTIhNbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00025.png", "GB8G9QIxB1_tKNIBAN5xrQY6bJ9bbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00026.png", "GBfm9wKF8PUyhrsDAPNzi-GiBklybuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00027.png", "GF5e8gKzo_YrpigCAC3R5VQCu_V2buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00028.png", "GIvX8QJLhH8M2FkCAN-87e88SMoYbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00029.png", "GGWs9AI7h1XVfk8BAAJgqGyzaZUXbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00030.png", "GNcR9AL8xoCKIVkDABfcSsrB-4MmbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00031.png", "GHBx_ALaxaenFdYBAP4U-hQKnGcdbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00032.png", "GHWg8wJgE3y-0gABAFBALG6VucUfbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00033.png", "GDhB8QIDO8WW0FgBACNCg3c9MgETbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00034.png", "GFjK8wL7REAVvwUEAPaNmMpmhgkTbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00035.png", "GI2c8wKCig-nJx4BAAZ-fmM-xlIgbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00036.png", "GIxP9gIQHbx3SfcAABW3sTz0L09DbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00037.png", "GGiI8gLkSyCJSJcCADRi-w4PNW8qbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00038.png", "GB4t8gKeg5z34WYBAMqKJ9lxdptibuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00039.png", "GJoN9ALL0tg7OsEAAP_l3Fj7ancfbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00040.png", "GIGy8wL-j7w4V3kAAGmPW82I9mIzbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00041.png", "GDNz9gJOYxAoz3sAAAuNyaDFKoE7buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00042.png", "GOB68wKBF2BgmT4IAAizWeI4T8ERbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00043.png", "GA0w8gIEbNSfk9sBAPVuIOAU4PppbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00044.png", "GPzd8QI107BTXJwBAAGwJAp9s9BHbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00045.png", "GN0V_AIp9aBQol8BAOnaerby3owZbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00046.png", "GHhJ9AI5owWPx-cAANAfKof14uVrbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/0_code/test_image_0code_00047.png", "GNvj8QI0MaJ9O44AAEaPBQAE1nENbuZcAAAD");
-
-	return handlePairs;
-}
-
-TestMessengerCodeDetector::HandlePairs TestMessengerCodeDetector::testImages1Code()
-{
-	const std::string absolutePath = testImagesDirectory();
-
-	HandlePairs handlePairs;
-
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_001.png", "GAGD8AKtT_5ys9ECAIZus57wh11PbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_002.png", "GHIq8wLKK_cZM0IBAOrWVBGgAtdhbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_003.png", "GBkH7wKSmEv54d0AADwuSOoQeiI0buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_004.png", "GLRM8AJjKSYmu3oAAK3945OLNp5mbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_005.png", "GMwB8AKrZ4vbFngIAEcztZq1mCAhbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_006.png", "GC128ALH341_CvoAAI_QKyMeEQIBbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_007.png", "GEr48wKxrW3bX8gAACSVRXXGqulMbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_008.png", "GD5q8gIRPerSHgUHAAbMI32NYNYVbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_009.png", "GOtn9ALl_y9dh8MHADbHvyypAphebuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_010.png", "GPCC8AKIrSDV1h0FAE0gaEtKgd8jbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_011.png", "GNn-7wIpMwiXWvwBAHStz4b7AE4tbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_012.png", "GI7w7wKRItPSkTYIAOXLgumCyj4tbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_013.png", "GH7Z8AJJRRxRqJUAAMT0QlszWSI6buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code/test_image_014.png", "GI4Q8QI5Zuc_VQEBALMl3oUM8thMbuZcAAAD");
-
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/MNMessengerCodeKitTests_Gaussian_blur_0.8/messengerCodeTestImage1.png", "GG0f_AJ6Lvw_RHMAAHIATdZg-mtPbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/MNMessengerCodeKitTests_Gaussian_blur_0.8/messengerCodeTestImage2.png", "GNLj8QK8xX9tiEUBADgDk3qr_7V0buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/MNMessengerCodeKitTests_Gaussian_blur_0.8/messengerCodeTestImage3.png", "GLFM8AJTUDO6eWoBAKHE92PGB8IbbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/MNMessengerCodeKitTests_Gaussian_blur_0.8/messengerCodeTestImage6.png", "GBEG9QJIKtWSVC8BAJYjzYC-629zbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/MNMessengerCodeKitTests_Gaussian_blur_0.8/messengerCodeTestImage4.png", "GH3-8gKbGrTm8C4HAMDgONwO8aZFbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/MNMessengerCodeKitTests_Gaussian_blur_0.8/messengerCodeTestImage5.png", "GI1n9AISJISTAFUBAIfUnEtSgydvbuZcAAAD");
-
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/far_to_close/IMG_0445.png", "GEk-9ALvgiDspxIBANuNvjlyiA4jbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/far_to_close/IMG_0446.png", "GBcd9AJHZ4XBzWYBAO0K5IeXr0xnbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/far_to_close/IMG_0447.png", "GG8Y9wIEuY0OKswCAF1QGCnguSlsbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/far_to_close/IMG_0448.png", "GKZb_AIi4GM1EMUAAIkVqdNXb5AMbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/far_to_close/IMG_0449.png", "GLGH8wIjlntIJcoAAPAmTR2oKaovbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/far_to_close/IMG_0450.png", "GMUm9wKq2XTu4NsCACYzWQ6oYgU4buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/far_to_close/IMG_0451.png", "GOat8QI3JTYwT_EBAFDekRKsQLBabuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/far_to_close/IMG_0452.png", "GJOx8gJon9BcNDoHAMBT6Ttw6O0FbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/far_to_close/IMG_0453.png", "GHzK9gIn8RAyMfMBAFPglM8_3m0ybuZcAAAD");
-
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00001.png", "GICg8wJ68fw1RggEAInAqcob200WbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00002.png", "GP1Z8wKm5KmxlzEBALPBB78gT09VbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00003.png", "GPUW8wIGSWEewfkGABeE_WEseEF-buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00004.png", "GLFM8ALWO8QdQhkCAM6rl-0btJNRbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00005.png", "GJ_P9AIZuCf3uEYDABzS5-qnR2xpbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00006.png", "GHyx8QL55Kz5yC8CAJlhZxftUyIgbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00007.png", "GMYN8gJQgAUsnwoBAFMLqvjCY4gMbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00008.png", "GJbj9wJipvyKR-sAADqvH5B30sdtbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00009.png", "GKKP9AIcudOavMsAAFLtsqTN-CZfbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00010.png", "GG8W_QL7yGvCQ80AAFnvkhEPpSUKbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00011.png", "GFnN8gLVBrQ9MTgBADYcifvZovFsbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00012.png", "GECK9gKFlz4ZofQAADzaYQDgYThxbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00013.png", "GOZ68wILweqobwUCACE_PyTYQYw2buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00014.png", "GB6d9AJLEQLaVWkDANKYyzstdx4AbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00015.png", "GPX78QK8WHvyGOkBAH_AwJfcux57buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00016.png", "GPLd8QIaYW-BgbkAAMWY0nEqwRRzbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00017.png", "GJuP8gIdqJXiYm0AAIgVQ4C0jphubuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00018.png", "GJ1K8wJY2kcZFjsBAMlKxY_Gy41sbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00019.png", "GGrN8gIvJAytn1YBAFQmQ75YUaF0buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00020.png", "GCSM_AI56Nj7wekBAF3Kx-dyVRxQbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00021.png", "GKxC8gION8FyCFMBAGJhf59cojxjbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00022.png", "GAPS9QL-seIuYzgBAJVaT7SeUXADbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00023.png", "GFym9ALG_-iXBeMBAEYj79bweN5qbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00024.png", "GNox9wKgo-eauEoBAMgSFrV4gAV_buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00025.png", "GHqy8wLxVQUmpaECAG1XOTCqrVI3buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00026.png", "GDnz8gKK7dIoXoAGAJlRt2EWL0hZbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00027.png", "GH1B9wKGWVtovSYBAJ_dcjLuxT5XbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00028.png", "GL4d_AKuhTd0RhYBAEwrdGH4DXg4buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00029.png", "GO1_8wLwXFGGZA8JAMpK6f94ttAWbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00030.png", "GNgR9AIOr_LLikMBABj3S3V7EC9ZbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00031.png", "GGmQ8wI1AvpTLk4HAC1gXXMrSaAObuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00032.png", "GPkU9QLO1qi-v10BAGeoiu-9XvQdbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00033.png", "GGF18gLZkx8CEVIBAL2fs7UFW_JnbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00034.png", "GJRe9AKZGNrFR00BAGUE3994iGFpbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00035.png", "GCYY9ALP-I8Hyq4HAPqiVFdLob9bbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00036.png", "GPVS9AJbfO_0oyYIAKwRZaeep7tqbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00037.png", "GDa18QLutfcFDkEBAAWk3M6dgWd4buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00038.png", "GNYu9QLYBVw01fwGAHjsmRGIWzZGbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00039.png", "GLHh8gKwSwosWtIAANB4BKfpGJZUbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00040.png", "GN6n9gIqGN7q5-kAANxZc7BJn-RsbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00041.png", "GIhr9QIHsipAzDoEACWmMdcIVjEcbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00042.png", "GJM_8wKQdTYipcsJADgmO3MYuJ8mbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00043.png", "GEJq8gIeJ8nig00HANYwyqm_v7shbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00044.png", "GBkT_AK14UxGXw4BAO53LcsRhVx1buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00045.png", "GNNC8gLmjBm2jjUBAJWitXvWvWFvbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00046.png", "GAnJ8gIjj5RvLBoBAP3FnTK90W9YbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00047.png", "GAOe9QK1Mwz_euUHAMC9R0YOhUBGbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00048.png", "GB469QIj8Yr5hTMBAA9pQPQBqe9obuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00049.png", "GN7m8QLFNhiKZzoBAIbPva_hk2t2buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00050.png", "GLBC8gLZyY6IYXIAAHZbv9ZfDpBRbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00051.png", "GGgV_ALK4ajTXYcAAF6Lpfa9HA0rbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00052.png", "GOU78gJBjMrZSPkGAD7yKQdf1Z87buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00053.png", "GPoU9QL79gLAkA0HAPs78eWdTAMbbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00054.png", "GCjs8wLCOBIKgg4BAASE1Zbwsbh5buZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00055.png", "GKXU9wIz211a0YwAAKZHrCfxXfFFbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00056.png", "GMho8gJQjF_8I7gCAGHDW8ITVc4ybuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00057.png", "GINW9gLyEY5Em-EBAOa_J3hv89cBbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00058.png", "GJbO9wJMpyTzIK8BAMWMVLbvK90PbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00059.png", "GOsr9AL87NRsY_0HABx1czV0WbsvbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00060.png", "GJdy9AJS1fpBbPcHAFw8NNMJvYhWbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00061.png", "GKLV8gLqDVFNdtwBANOXB6VzCQImbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00062.png", "GHCs9AIoB6O7qkkHAEL99vv_k9kabuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00063.png", "GC_h8gLM-dFutuQHAKXnDVnyLrpUbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00064.png", "GBrN8QK9TW5RLecGALWQz1j5Xf1EbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00065.png", "GF-b8wKUrFo3O8cAADyzThymMkkDbuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00066.png", "GA1a8wIWi5Xr0wMBABpV0J0KFRhObuZcAAAD");
-	handlePairs.emplace_back(absolutePath + "messenger_codes_test_images/1_code_additional/test_image_1code_00067.png", "GB4Y9AIaZ-RUr80AAFYj0GxmNdszbuZcAAAD");
-
-	return handlePairs;
-}
+#endif // OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
 
 }
 
