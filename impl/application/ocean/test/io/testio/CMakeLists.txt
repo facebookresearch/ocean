@@ -70,7 +70,7 @@ if (ANDROID)
             ocean_base_jni
             ocean_io
             ocean_platform_android
-            ocean_test_io
+            ocean_test_testio
     )
 
     # Installation
