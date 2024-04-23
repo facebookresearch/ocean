@@ -26,7 +26,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     endif()
 
     if (NOT tinyxml2_FOUND)
-        message(STATUS "Exluding 'ocean/io/XMLConfig.{cpp, h}' because tinxml2 hasn't been found.")
+        message(STATUS "Exluding 'ocean/io/XMLConfig.{cpp, h}' because tinyxml2 hasn't been found.")
         list(REMOVE_ITEM OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/XMLConfig.h")
         list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/XMLConfig.cpp")
     endif()
