@@ -704,6 +704,7 @@ bool TestImageIO::testAnyImageEncodeDecode(const double testDuration)
 	const std::vector<std::string> encoderTypes = {"bmp", "jpg", "heic", "png", "tif"};
 
 	const Timestamp startTimestamp(true);
+
 	do
 	{
 		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false);
@@ -731,7 +732,7 @@ bool TestImageIO::testAnyImageEncodeDecode(const double testDuration)
 			std::string decoderTypeExplicit;
 			const Frame targetFrameExplicit = Media::ImageIO::Image::decodeImage(buffer.data(), buffer.size(), encoderType, &decoderTypeExplicit);
 
-			if (targetFrameExplicit.isNull() || encoderType != decoderTypeExplicit)
+			if (!targetFrameExplicit.isValid() || encoderType != decoderTypeExplicit)
 			{
 				allSucceeded = false;
 			}
@@ -755,7 +756,7 @@ bool TestImageIO::testAnyImageEncodeDecode(const double testDuration)
 			std::string decoderTypeImplicit;
 			const Frame targetFrameImplicit = Media::ImageIO::Image::decodeImage(buffer.data(), buffer.size(), "", &decoderTypeImplicit);
 
-			if (targetFrameImplicit.isNull() || encoderType != decoderTypeImplicit)
+			if (!targetFrameImplicit.isValid() || encoderType != decoderTypeImplicit)
 			{
 				allSucceeded = false;
 			}
@@ -1602,7 +1603,7 @@ bool TestImageIO::testBufferImageRecorder(const FrameType& frameType, const std:
 
 	FrameRef targetFrame = image->frame();
 
-	if (targetFrame.isNull() || targetFrame->isNull())
+	if (targetFrame.isNull() || !targetFrame->isValid())
 	{
 		return false;
 	}
@@ -1629,7 +1630,7 @@ bool TestImageIO::testBufferImageRecorder(const FrameType& frameType, const std:
 
 	targetFrame = image->frame();
 
-	if (targetFrame.isNull() || targetFrame->isNull())
+	if (targetFrame.isNull() || !targetFrame->isValid())
 	{
 		return false;
 	}
