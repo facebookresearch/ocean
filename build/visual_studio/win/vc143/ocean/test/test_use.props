@@ -3,12 +3,15 @@
   <PropertyGroup>
     <_PropertySheetDisplayName>Use Ocean Test</_PropertySheetDisplayName>
   </PropertyGroup>
+
   <PropertyGroup>
     <ocean_test_use_imported>True</ocean_test_use_imported>
   </PropertyGroup>
+
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_test_common_imported)' != 'True'" Project="test_common.props"/>
   </ImportGroup>
+
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
     <Link>
       <AdditionalDependencies>OceanTestD.lib;%(AdditionalDependencies)</AdditionalDependencies>

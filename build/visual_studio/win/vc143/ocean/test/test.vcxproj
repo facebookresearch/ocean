@@ -52,6 +52,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\Test.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\TestData.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\TestDataManager.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\TestDataCollection.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\test\TestData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\test\TestDataManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{76633F53-CD8D-47EC-B1BA-32C82C740AA8}</ProjectGuid>

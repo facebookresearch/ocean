@@ -72,6 +72,13 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\Test.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\TestData.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\TestDataCollection.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\TestDataManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\test\TestData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\test\TestDataManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

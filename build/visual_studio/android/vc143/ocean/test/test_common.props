@@ -68,4 +68,9 @@
       <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm_cl50_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
+  
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\base\base_use.props"/>
+  </ImportGroup>
 </Project>
