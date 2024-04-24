@@ -97,9 +97,7 @@ bool TestMessengerCodeDetector::test(const double testDuration, Worker& worker)
 
 #ifdef OCEAN_USE_TEST_DATA_COLLECTION
 
-	#ifdef OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
-		const TestDataManager::ScopedSubscriptions scopedSubscriptions = TestMessengerCodeDetector_registerTestDataCollections();
-	#endif // OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
+	const TestDataManager::ScopedSubscriptions scopedSubscriptions = TestMessengerCodeDetector_registerTestDataCollections();
 
 	Log::info() << " ";
 	Log::info() << "-";
