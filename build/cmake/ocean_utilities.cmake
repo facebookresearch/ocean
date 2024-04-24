@@ -2,7 +2,7 @@
 
 # The builtin variable APPLE is set to true for both, macOS and iOS. While there is a dedicated
 # builtin variable for iOS (IOS), there is no such variable for only macOS. So, it's added here.
-if (APPLE AND ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if (APPLE AND (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
     set(MACOS TRUE)
 endif()
 
