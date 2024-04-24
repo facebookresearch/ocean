@@ -19,6 +19,7 @@
 #include "ocean/test/testcv/testdetector/TestShapeDetector.h"
 
 #include "ocean/base/Build.h"
+#include "ocean/base/CommandArguments.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Frame.h"
 #include "ocean/base/PluginManager.h"

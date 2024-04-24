@@ -20,10 +20,6 @@
 
 #include "ocean/test/testcv/testdetector/testqrcodes/TestCVDetectorQRCodes.h"
 
-#if defined(OCEAN_ENABLED_EVERSTORE_CLIENT)
-	#include <folly/init/Init.h>
-#endif // OCEAN_ENABLED_EVERSTORE_CLIENT
-
 using namespace Ocean;
 
 #if defined(_WINDOWS)
@@ -102,12 +98,8 @@ using namespace Ocean;
 
 	Messenger::get().setOutputType(messageOutput);
 
-#if defined(OCEAN_ENABLED_EVERSTORE_CLIENT)
-	Log::info() << "Initializing folly ...";
-
-	argc = std::min(argc, 1);
-	folly::init(&argc, &argv);
-#endif // OCEAN_ENABLED_EVERSTORE_CLIENT
+	// setting the raw command arguments in case they are needed later during the test
+	CommandArguments::Manager::get().setRawArguments(argv, argc);
 
 	const Timestamp startTimestamp(true);
 
