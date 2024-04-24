@@ -31,7 +31,7 @@ SharedTestDataCollection TestDataManager::testDataCollection(const std::string& 
 
 	if (iData != testDataCollectionMap_.cend())
 	{
-		return iData->second;
+		return iData->second.second;
 	}
 
 	return nullptr;
@@ -49,27 +49,46 @@ if (name.empty() || !testDataCollection)
 
 	const ScopedLock scopedLock(lock_);
 
-	if (testDataCollectionMap_.find(name) != testDataCollectionMap_.cend())
+	TestDataCollectionMap::iterator iData = testDataCollectionMap_.find(name);
+
+	if (testDataCollectionMap_.find(name) == testDataCollectionMap_.cend())
 	{
-		ocean_assert(false && "The test data collection exists already!");
-		return ScopedSubscription();
+		iData = testDataCollectionMap_.emplace(name, TestDataCollectionPair(0u, nullptr)).first;
+	}
+	else
+	{
+		Log::debug() << "Test data collection '" << name << "' << already registered, updating the data";
 	}
 
-	testDataCollectionMap_.emplace(name, std::move(testDataCollection));
+	ocean_assert(iData != testDataCollectionMap_.cend());
+
+	TestDataCollectionPair& testDataCollectionPair = iData->second;
+
+	++testDataCollectionPair.first;
+	testDataCollectionPair.second = std::move(testDataCollection);
 
 	return ScopedSubscription(name, std::bind(&TestDataManager::unregisterTestDataCollection, this, std::placeholders::_1));
 }
 
 void TestDataManager::unregisterTestDataCollection(const std::string& name)
 {
+	ocean_assert(!name.empty());
+
 	const ScopedLock scopedLock(lock_);
 
-	const TestDataCollectionMap::const_iterator iData = testDataCollectionMap_.find(name);
-	ocean_assert(iData != testDataCollectionMap_.cend());
+	TestDataCollectionMap::iterator iData = testDataCollectionMap_.find(name);
+	ocean_assert(iData != testDataCollectionMap_.end());
 
-	if (iData != testDataCollectionMap_.cend())
+	if (iData != testDataCollectionMap_.end())
 	{
-		testDataCollectionMap_.erase(iData);
+		TestDataCollectionPair& testDataCollectionPair = iData->second;
+
+		ocean_assert(testDataCollectionPair.first >= 1u);
+
+		if (--testDataCollectionPair.first == 0u)
+		{
+			testDataCollectionMap_.erase(iData);
+		}
 	}
 }
 

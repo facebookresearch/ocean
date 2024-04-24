@@ -40,9 +40,14 @@ class OCEAN_TEST_EXPORT TestDataManager : public Singleton<TestDataManager>
 	protected:
 
 		/**
+		 * Definition of a pair combining a counter with a shared pointer.
+		 */
+		using TestDataCollectionPair = std::pair<unsigned int, std::shared_ptr<TestDataCollection>>;
+
+		/**
 		 * Definition of an unordered map mapping collection names to collection objects.
 		 */
-		using TestDataCollectionMap = std::unordered_map<std::string, std::shared_ptr<TestDataCollection>>;
+		using TestDataCollectionMap = std::unordered_map<std::string, TestDataCollectionPair>;
 
 	public:
 
