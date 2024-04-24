@@ -79,11 +79,6 @@ class OCEAN_MEDIA_OIL_EXPORT OILBufferImage : virtual public BufferImage
 		 * @return True, if succeeded
 		 */
 		bool loadImage();
-
-	protected:
-
-		/// Recent frame type.
-		FrameType imageRecentFrameType;
 };
 
 }

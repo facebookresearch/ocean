@@ -6,6 +6,8 @@
 #include "ocean/media/Media.h"
 #include "ocean/media/FrameMedium.h"
 
+#include "ocean/base/Memory.h"
+
 namespace Ocean
 {
 
@@ -59,8 +61,8 @@ class OCEAN_MEDIA_EXPORT BufferImage : virtual public FrameMedium
 
 		/**
 		 * Sets or changes the buffer of this image, the given memory buffer is copied and stored internally.
-		 * @param buffer Memory buffer to be copied
-		 * @param size Size of the given memory buffer in bytes
+		 * @param buffer The buffer to be copied, must be valid
+		 * @param size The size of the given memory buffer in bytes, with range [1, infinity)
 		 * @param imageBufferType Type of the image that is stored in the given buffer, should be specified if known (e.g. the file extension of a corresponding image file)
 		 * @return True, if succeeded
 		 */
@@ -76,42 +78,39 @@ class OCEAN_MEDIA_EXPORT BufferImage : virtual public FrameMedium
 
 		/**
 		 * Creates a new buffer image by an arbitrary url defining the name of the resulting object.
-		 * @param url Arbitrary name to identify this pixel image later, if neccessary
+		 * @param url Arbitrary name to identify this pixel image later, if necessary
 		 */
 		explicit BufferImage(const std::string& url);
 
 		/**
 		 * Destructs a buffer image object.
 		 */
-		~BufferImage() override;
+		~BufferImage() override = default;
 
 	protected:
 
 		/// Start timestamp.
-		Timestamp mediumStartTimestamp;
+		Timestamp startTimestamp_;
 
 		/// Pause timestamp.
-		Timestamp mediumPauseTimestamp;
+		Timestamp pauseTimestamp_;
 
 		/// Stop timestamp.
-		Timestamp mediumStopTimestamp;
+		Timestamp stopTimestamp_;
 
 		/// Determining whether this image is 'started' and holds valid image data.
-		bool imageStarted;
+		bool started_ = false;
 
-		/// The internal buffer of this image.
-		void* imageBuffer;
-
-		/// The size of the internal buffer in bytes.
-		size_t imageBufferSize;
+		/// The object's memory.
+		Memory memory_;
 
 		/// The type of the buffer image.
-		std::string imageBufferType;
+		std::string bufferType_;
 };
 
 inline const std::string& BufferImage::getImageBufferType() const
 {
-	return imageBufferType;
+	return bufferType_;
 }
 
 }

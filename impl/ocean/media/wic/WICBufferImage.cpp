@@ -36,13 +36,13 @@ bool WICBufferImage::start()
 	const ScopedLock scopedLock(lock_);
 
 	isValid_ = loadImage();
-	imageStarted = isValid_;
+	started_ = isValid_;
 
-	if (imageStarted)
+	if (started_)
 	{
-		mediumStartTimestamp.toNow();
-		mediumPauseTimestamp = Timestamp();
-		mediumStopTimestamp = Timestamp();
+		startTimestamp_.toNow();
+		pauseTimestamp_.toInvalid();
+		stopTimestamp_.toInvalid();
 	}
 
 	return isValid_;
@@ -59,11 +59,11 @@ bool WICBufferImage::stop()
 
 	release();
 
-	imageStarted = false;
+	started_ = false;
 
-	mediumStartTimestamp = Timestamp();
-	mediumPauseTimestamp = Timestamp();
-	mediumStopTimestamp.toNow();
+	startTimestamp_.toInvalid();
+	pauseTimestamp_.toInvalid();
+	stopTimestamp_.toNow();
 
 	return true;
 }
@@ -78,7 +78,7 @@ MediumRef WICBufferImage::clone() const
 		const BufferImageRef bufferImage(WICLibrary::newImage(url_, true));
 		ocean_assert(bufferImage);
 
-		bufferImage->setBufferImage(imageBuffer, imageBufferSize);
+		bufferImage->setBufferImage(memory_.constdata(), memory_.size());
 		return bufferImage;
 	}
 
@@ -103,12 +103,12 @@ bool WICBufferImage::setPreferredFramePixelFormat(const FrameType::PixelFormat f
 
 bool WICBufferImage::loadImage()
 {
-	if (imageBuffer == nullptr || imageBufferSize == 0)
+	if (memory_.isNull())
 	{
 		return false;
 	}
 
-	Frame frame = Image::decodeImage(imageBuffer, imageBufferSize);
+	Frame frame = Image::decodeImage(memory_.constdata(), memory_.size(), bufferType_);
 
 	if (!frame.isValid())
 	{

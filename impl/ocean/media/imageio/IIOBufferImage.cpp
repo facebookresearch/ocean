@@ -36,13 +36,13 @@ bool IIOBufferImage::start()
 	const ScopedLock scopedLock(lock_);
 
 	isValid_ = loadImage();
-	imageStarted = isValid_;
+	started_ = isValid_;
 
-	if (imageStarted)
+	if (started_)
 	{
-		mediumStartTimestamp.toNow();
-		mediumPauseTimestamp = Timestamp();
-		mediumStopTimestamp = Timestamp();
+		startTimestamp_.toNow();
+		pauseTimestamp_.toInvalid();
+		stopTimestamp_.toInvalid();
 	}
 
 	return isValid_;
@@ -59,11 +59,11 @@ bool IIOBufferImage::stop()
 
 	release();
 
-	imageStarted = false;
+	started_ = false;
 
-	mediumStartTimestamp = Timestamp();
-	mediumPauseTimestamp = Timestamp();
-	mediumStopTimestamp.toNow();
+	startTimestamp_.toInvalid();
+	pauseTimestamp_.toInvalid();
+	stopTimestamp_.toNow();
 
 	return true;
 }
@@ -78,7 +78,7 @@ MediumRef IIOBufferImage::clone() const
 		const BufferImageRef bufferImage(IIOLibrary::newImage(url_, true));
 		ocean_assert(bufferImage);
 
-		bufferImage->setBufferImage(imageBuffer, imageBufferSize);
+		bufferImage->setBufferImage(memory_.constdata(), memory_.size());
 		return bufferImage;
 	}
 
@@ -88,7 +88,9 @@ MediumRef IIOBufferImage::clone() const
 bool IIOBufferImage::setPreferredFramePixelFormat(const FrameType::PixelFormat format)
 {
 	if (format == preferredFrameType_.pixelFormat())
+	{
 		return true;
+	}
 
 	if (frameCollection_.isNull() || format == FrameType::FORMAT_UNDEFINED)
 	{
@@ -101,12 +103,12 @@ bool IIOBufferImage::setPreferredFramePixelFormat(const FrameType::PixelFormat f
 
 bool IIOBufferImage::loadImage()
 {
-	if (imageBuffer == nullptr || imageBufferSize == 0)
+	if (memory_.isNull())
 	{
 		return false;
 	}
 
-	Frame frame = ImageIO::Image::decodeImage(imageBuffer, imageBufferSize);
+	Frame frame = ImageIO::Image::decodeImage(memory_.constdata(), memory_.size());
 
 	if (!frame.isValid())
 	{

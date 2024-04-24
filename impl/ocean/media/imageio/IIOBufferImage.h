@@ -84,11 +84,6 @@ class OCEAN_MEDIA_IIO_EXPORT IIOBufferImage :
 		 * Releases the image.
 		 */
 		void release();
-
-	protected:
-
-		/// Recent frame type.
-		FrameType imageRecentFrameType;
 };
 
 }

@@ -37,13 +37,13 @@ bool OILBufferImage::start()
 	const ScopedLock scopedLock(lock_);
 
 	isValid_ = loadImage();
-	imageStarted = isValid_;
+	started_ = isValid_;
 
-	if (imageStarted)
+	if (started_)
 	{
-		mediumStartTimestamp.toNow();
-		mediumPauseTimestamp = Timestamp();
-		mediumStopTimestamp = Timestamp();
+		startTimestamp_.toNow();
+		pauseTimestamp_.toInvalid();
+		stopTimestamp_.toInvalid();
 	}
 
 	return isValid_;
@@ -60,11 +60,11 @@ bool OILBufferImage::stop()
 
 	release();
 
-	imageStarted = false;
+	started_ = false;
 
-	mediumStartTimestamp = Timestamp();
-	mediumPauseTimestamp = Timestamp();
-	mediumStopTimestamp.toNow();
+	startTimestamp_.toInvalid();
+	pauseTimestamp_.toInvalid();
+	stopTimestamp_.toNow();
 
 	return true;
 }
@@ -78,7 +78,7 @@ MediumRef OILBufferImage::clone() const
 		const BufferImageRef bufferImage(OILLibrary::newImage(url_, true));
 		ocean_assert(bufferImage);
 
-		bufferImage->setBufferImage(imageBuffer, imageBufferSize);
+		bufferImage->setBufferImage(memory_.constdata(), memory_.size());
 		return bufferImage;
 	}
 
@@ -140,14 +140,14 @@ bool OILBufferImage::loadImage()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (imageBuffer == nullptr || imageBufferSize == 0)
+	if (memory_.isNull())
 	{
 		return false;
 	}
 
 	const Timestamp frameTimestamp(true);
 
-	Frame newFrame(Image::decodeImage(imageBuffer, imageBufferSize, imageBufferType));
+	Frame newFrame(Image::decodeImage(memory_.constdata(), memory_.size(), bufferType_));
 
 	if (!newFrame.isValid())
 	{

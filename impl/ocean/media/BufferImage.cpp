@@ -10,66 +10,63 @@ namespace Media
 
 BufferImage::BufferImage(const std::string& url) :
 	Medium(url),
-	FrameMedium(url),
-	imageStarted(false),
-	imageBuffer(nullptr),
-	imageBufferSize(0)
+	FrameMedium(url)
 {
 	type_ = Type(type_ | BUFFER_IMAGE);
 	isValid_ = true;
 }
 
-BufferImage::~BufferImage()
-{
-	free(imageBuffer);
-}
-
 bool BufferImage::isStarted() const
 {
-	return imageStarted;
+	return started_;
 }
 
 Timestamp BufferImage::startTimestamp() const
 {
-	return mediumStartTimestamp;
+	return startTimestamp_;
 }
 
 Timestamp BufferImage::pauseTimestamp() const
 {
-	return mediumPauseTimestamp;
+	return pauseTimestamp_;
 }
 
 Timestamp BufferImage::stopTimestamp() const
 {
-	return mediumStopTimestamp;
+	return stopTimestamp_;
 }
 
 bool BufferImage::setBufferImage(const void* buffer, const size_t size, const std::string& imageType)
 {
+	ocean_assert(buffer != nullptr && size != 0);
+	if (buffer == nullptr || size == 0)
+	{
+		return false;
+	}
+
 	const ScopedLock scopedLock(lock_);
 
-	if (!imageStarted)
+	if (!started_)
 	{
-		if (size != imageBufferSize)
+		if (memory_.size() != size)
 		{
-			free(imageBuffer);
-			imageBufferSize = 0;
+			memory_ = Memory(size);
 
-			imageBuffer = malloc(size);
-			ocean_assert(size == 0 || imageBuffer != nullptr);
-
-			imageBufferSize = size;
+			if (memory_.isNull())
+			{
+				return false;
+			}
 		}
 
-		memcpy(imageBuffer, buffer, size);
+		memcpy(memory_.data(), buffer, size);
 
-		imageBufferType = imageType;
+		bufferType_ = imageType;
 
 		return true;
 	}
 	else
 	{
-		ocean_assert(false && "Pixel image is not started!");
+		ocean_assert(false && "Buffer image is not started!");
 	}
 
 	return false;
