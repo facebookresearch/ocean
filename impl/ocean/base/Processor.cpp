@@ -20,6 +20,11 @@
 namespace Ocean
 {
 
+Processor::Processor()
+{
+	processorInstructions_ = realInstructions();
+}
+
 bool Processor::forceCores(const unsigned int cores)
 {
 	const ScopedLock scopedLock(lock_);
@@ -355,7 +360,6 @@ ProcessorInstructions Processor::realInstructions()
 
 		while (std::getline(stream, line))
 		{
-
 			if (line.compare(0, flagsKey.length(), flagsKey) != 0)
 			{
 				continue;

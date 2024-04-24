@@ -49,13 +49,17 @@ enum ProcessorInstructions : uint32_t
 	/// AES instructions.
 	PI_AES = 1 << 10u,
 
+	/// All SSE instructions between (including) SSE and SSE2.
+	PI_GROUP_SSE_2 = PI_SSE | PI_SSE_2,
 	/// All SSE instructions between (including) SSE and SSE4.1.
 	PI_GROUP_SSE_4_1 = PI_SSE | PI_SSE_2 | PI_SSE_3 | PI_SSSE_3 | PI_SSE_4_1,
 	/// All AVX instructions between (including) AVX and AVX2.
 	PI_GROUP_AVX_2 = PI_AVX | PI_AVX_2,
+	/// All AVX instructions between (including) AVX and AVX2 and SSE instructions between (including) SSE and SSE2, e.g., for processors supporting SSSE3 but not SSE3.
+	PI_GROUP_AVX_2_SSE_2 = PI_GROUP_SSE_2 | PI_GROUP_AVX_2,
 	/// All NEON instructions (which is currently NEON only).
 	PI_GROUP_NEON = PI_NEON,
-	/// All AVX instructions between (including) AVX and AVX2 and SSE instructions between (including) SSE and SSE4.1 and
+	/// All AVX instructions between (including) AVX and AVX2 and SSE instructions between (including) SSE and SSE4.1.
 	PI_GROUP_AVX_2_SSE_4_1 = PI_GROUP_SSE_4_1 | PI_GROUP_AVX_2
 };
 
@@ -167,13 +171,13 @@ class OCEAN_BASE_EXPORT Processor : public Singleton<Processor>
 
 		/**
 		 * Returns the best group of instructions value for a set of given processor instructions.
-		 * The function may return the following groups in the following order: PI_GROUP_AVX_2_SSE_4_1, PI_GROUP_SSE_4_1, PI_GROUP_AVX_2, PI_GROUP_NEON.
+		 * The function may return the following groups in the following order: PI_GROUP_AVX_2_SSE_4_1, PI_GROUP_SSE_4_1, PI_GROUP_AVX_2_SSE_2, PI_GROUP_AVX_2, PI_GROUP_SSE_2, PI_GROUP_NEON.
 		 * @param instructions The set of instructions for which the best group will be returned
 		 * @return The best group of instructions, PI_NONE if no group is matching
 		 * @tparam tIndependentOfBinary True, to return the best group without checking the binaries capabilities; False, to return groups which are supported by the current binary only
 		 */
 		template <bool tIndependentOfBinary>
-		static inline ProcessorInstructions bestInstructionGroup_AVX2_SSE41_NEON(const ProcessorInstructions instructions);
+		static inline ProcessorInstructions bestInstructionGroup(const ProcessorInstructions instructions);
 
 		/**
 		 * Returns whether the processor/system is using the little endian convention (like e.g., x86) or whether the big endian convention is used.
@@ -186,7 +190,7 @@ class OCEAN_BASE_EXPORT Processor : public Singleton<Processor>
 		/**
 		 * Constructs a new processor object.
 		 */
-		Processor() = default;
+		Processor();
 
 #if defined(__APPLE__)
 
@@ -251,12 +255,7 @@ inline ProcessorInstructions Processor::instructions()
 		return forcedProcessorInstructions_;
 	}
 
-	if (processorInstructions_ == invalidProcessorInstructions())
-	{
-		processorInstructions_ = realInstructions();
-	}
-
-	ocean_assert(processorInstructions_ == realInstructions());
+	ocean_assert(processorInstructions_ != invalidProcessorInstructions());
 	return processorInstructions_;
 }
 
@@ -401,7 +400,7 @@ class ProcessorInstructionChecker<tHighestInstructions, PI_NEON>
 };
 
 template <bool tIndependentOfBinary>
-inline ProcessorInstructions Processor::bestInstructionGroup_AVX2_SSE41_NEON(const ProcessorInstructions instructions)
+inline ProcessorInstructions Processor::bestInstructionGroup(const ProcessorInstructions instructions)
 {
 	if ((instructions & PI_GROUP_AVX_2_SSE_4_1) == PI_GROUP_AVX_2_SSE_4_1)
 	{
@@ -413,9 +412,19 @@ inline ProcessorInstructions Processor::bestInstructionGroup_AVX2_SSE41_NEON(con
 		return PI_GROUP_SSE_4_1;
 	}
 
+	if ((instructions & PI_GROUP_AVX_2_SSE_2) == PI_GROUP_AVX_2_SSE_2)
+	{
+		return PI_GROUP_AVX_2_SSE_2;
+	}
+
 	if ((instructions & PI_GROUP_AVX_2) == PI_GROUP_AVX_2)
 	{
 		return PI_GROUP_AVX_2;
+	}
+
+	if ((instructions & PI_GROUP_SSE_2) == PI_GROUP_SSE_2)
+	{
+		return PI_GROUP_SSE_2;
 	}
 
 	if ((instructions & PI_GROUP_NEON) == PI_GROUP_NEON)
@@ -427,7 +436,7 @@ inline ProcessorInstructions Processor::bestInstructionGroup_AVX2_SSE41_NEON(con
 }
 
 template <>
-inline ProcessorInstructions Processor::bestInstructionGroup_AVX2_SSE41_NEON<false>(const ProcessorInstructions instructions)
+inline ProcessorInstructions Processor::bestInstructionGroup<false>(const ProcessorInstructions instructions)
 {
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41 && defined(OCEAN_HARDWARE_AVX_VERSION) && OCEAN_HARDWARE_AVX_VERSION >= 20
 	if ((instructions & PI_GROUP_AVX_2_SSE_4_1) == PI_GROUP_AVX_2_SSE_4_1)
@@ -443,10 +452,24 @@ inline ProcessorInstructions Processor::bestInstructionGroup_AVX2_SSE41_NEON<fal
 	}
 #endif
 
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 20 && defined(OCEAN_HARDWARE_AVX_VERSION) && OCEAN_HARDWARE_AVX_VERSION >= 20
+	if ((instructions & PI_GROUP_AVX_2_SSE_2) == PI_GROUP_AVX_2_SSE_2)
+	{
+		return PI_GROUP_AVX_2_SSE_2;
+	}
+#endif
+
 #if defined(OCEAN_HARDWARE_AVX_VERSION) && OCEAN_HARDWARE_AVX_VERSION >= 20
 	if ((instructions & PI_GROUP_AVX_2) == PI_GROUP_AVX_2)
 	{
 		return PI_GROUP_AVX_2;
+	}
+#endif
+
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 20
+	if ((instructions & PI_GROUP_SSE_2) == PI_GROUP_SSE_2)
+	{
+		return PI_GROUP_SSE_2;
 	}
 #endif
 
