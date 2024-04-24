@@ -385,8 +385,8 @@ void OnDeviceRelocalizerTracker6DOF::threadRun()
 
 		frameTimestamp = frames.front()->timestamp();
 
-		if (!CV::FrameConverter::Comfort::convert(*frames[0], FrameType(*frames[0], FrameType::FORMAT_Y8), yFrameA, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr, CV::FrameConverter::Options(0.6f, true))
-			|| !CV::FrameConverter::Comfort::convert(*frames[1], FrameType(*frames[1], FrameType::FORMAT_Y8), yFrameB, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr, CV::FrameConverter::Options(0.6f, true)))
+		if (!CV::FrameConverter::Comfort::convert(*frames[0], FrameType::FORMAT_Y8, yFrameA, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr, CV::FrameConverter::Options(0.6f, true))
+			|| !CV::FrameConverter::Comfort::convert(*frames[1], FrameType::FORMAT_Y8, yFrameB, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr, CV::FrameConverter::Options(0.6f, true)))
 		{
 			ocean_assert(false && "This should never happen!");
 			break;

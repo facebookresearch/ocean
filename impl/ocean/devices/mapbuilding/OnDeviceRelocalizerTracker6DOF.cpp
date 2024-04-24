@@ -211,7 +211,7 @@ void OnDeviceRelocalizerTracker6DOF::threadRun()
 
 			ocean_assert(relocalizer_.isValid());
 
-			if (!CV::FrameConverter::Comfort::convert(*frame, FrameType(*frame, FrameType::FORMAT_Y8), yFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+			if (!CV::FrameConverter::Comfort::convert(*frame, FrameType::FORMAT_Y8, yFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 			{
 				ocean_assert(false && "This should never happen!");
 				break;
