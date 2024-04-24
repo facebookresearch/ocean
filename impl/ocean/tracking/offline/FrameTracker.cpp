@@ -190,7 +190,7 @@ bool FrameTracker::FrameTrackerComponent::onSetupIteration(const unsigned int in
 	}
 
 	const FrameType::PixelFormat targetPixelFormat = FrameType::formatRemoveAlphaChannel(FrameType::genericSinglePlanePixelFormat(frame->pixelFormat()));
-	if (!CV::FrameConverter::Comfort::convert(*frame, FrameType(*frame, targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT), currentFrame_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(*frame, targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT, currentFrame_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 	{
 		return false;
 	}
@@ -243,7 +243,7 @@ bool FrameTracker::FramePyramidTrackerComponent::onSetupIteration(const unsigned
 	const FrameType::PixelFormat targetPixelFormat = FrameType::formatRemoveAlphaChannel(FrameType::genericSinglePlanePixelFormat(frame->pixelFormat()));
 
 	Frame currentFrame;
-	if (!CV::FrameConverter::Comfort::convert(*frame, FrameType(*frame, targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT), currentFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(*frame, targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT, currentFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 	{
 		return false;
 	}

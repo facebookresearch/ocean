@@ -784,7 +784,7 @@ const uint32_t* BlobTracker6DOF::createIntegralImage(const Frame& frame, Worker*
 {
 	ocean_assert(frame.isValid());
 
-	if (!FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		ocean_assert(false && "This should never happen!");
 		return nullptr;

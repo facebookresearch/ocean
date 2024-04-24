@@ -241,7 +241,7 @@ unsigned int PatternTrackerCore6DOF::addPattern(const std::string& filename, con
 		}
 
 		Frame yFrame;
-		if (!CV::FrameConverter::Comfort::convert(patternFrame, FrameType(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+		if (!CV::FrameConverter::Comfort::convert(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		{
 			return (unsigned int)(-1);
 		}
@@ -260,7 +260,7 @@ unsigned int PatternTrackerCore6DOF::addPattern(const std::string& filename, con
 	ocean_assert(patternFrame.isValid());
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(patternFrame, FrameType(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return (unsigned int)(-1);
 	}

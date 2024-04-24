@@ -37,7 +37,7 @@ FeatureMap::FeatureMap(const Frame& frame, const Vector2& dimension, const Scala
 	}
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, false, worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		Log::error() << "Failed to create a new ORB feature map: Not supported pixel format.";
 		return;

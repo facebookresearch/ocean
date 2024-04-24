@@ -41,7 +41,7 @@ QuadDetector::Quads QuadDetector::detectQuads(const Frame& yFrame, const uint32_
 	if (OculusTagDebugElements::get().isElementActive(OculusTagDebugElements::EI_BOUNDARY_PATTERN_LINE_SEGMENTS))
 	{
 		Frame rgbFrame;
-		CV::FrameConverter::Comfort::convert(yFrame, FrameType(yFrame, FrameType::FORMAT_RGB24), rgbFrame, true);
+		CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, rgbFrame, true);
 
 		for (const FiniteLine2& line : finiteLines)
 		{
@@ -63,7 +63,7 @@ QuadDetector::Quads QuadDetector::detectQuads(const Frame& yFrame, const uint32_
 	if (OculusTagDebugElements::get().isElementActive(OculusTagDebugElements::EI_BOUNDARY_PATTERN_LSHAPES_INITIAL))
 	{
 		Frame rgbFrame;
-		CV::FrameConverter::Comfort::convert(yFrame, FrameType(yFrame, FrameType::FORMAT_RGB24), rgbFrame, true);
+		CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, rgbFrame, true);
 
 		CV::Detector::Utilities::paintLShapes(rgbFrame, finiteLines, lShapes, CV::Canvas::red(rgbFrame.pixelFormat()));
 
@@ -82,7 +82,7 @@ QuadDetector::Quads QuadDetector::detectQuads(const Frame& yFrame, const uint32_
 	if (OculusTagDebugElements::get().isElementActive(OculusTagDebugElements::EI_BOUNDARY_PATTERN_LSHAPES_FINAL))
 	{
 		Frame rgbFrame;
-		CV::FrameConverter::Comfort::convert(yFrame, FrameType(yFrame, FrameType::FORMAT_RGB24), rgbFrame, true);
+		CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, rgbFrame, true);
 
 		CV::Detector::Utilities::paintLShapes(rgbFrame, finiteLines, lShapes, CV::Canvas::green(rgbFrame.pixelFormat()));
 
@@ -100,7 +100,7 @@ QuadDetector::Quads QuadDetector::detectQuads(const Frame& yFrame, const uint32_
 	if (OculusTagDebugElements::get().isElementActive(OculusTagDebugElements::EI_BOUNDARY_PATTERN_DETECTIONS))
 	{
 		Frame rgbFrame;
-		CV::FrameConverter::Comfort::convert(yFrame, FrameType(yFrame, FrameType::FORMAT_RGB24), rgbFrame, true);
+		CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, rgbFrame, true);
 
 		Utilities::drawQuads(rgbFrame, quads);
 		OculusTagDebugElements::get().updateElement(OculusTagDebugElements::EI_BOUNDARY_PATTERN_DETECTIONS, std::move(rgbFrame));

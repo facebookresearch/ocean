@@ -226,7 +226,7 @@ const QRCodeTracker3D::TrackedQRCodesMap& QRCodeTracker3D::trackQRCodes(const Sh
 				ocean_assert(yFrame.isValid());
 
 				Frame rgbFrame;
-				CV::FrameConverter::Comfort::convert(yFrame, FrameType(yFrame, FrameType::FORMAT_RGB24), rgbFrame, /* forceCopy */ true, worker);
+				CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, worker);
 				ocean_assert(rgbFrame.isValid());
 
 				QRCodesDebugElements::get().updateElement(QRCodesDebugElements::EI_CAMERA_FRAMES, std::move(rgbFrame), /* explicitHierarchy */ { String::toAString(iFrame) });
@@ -426,7 +426,7 @@ bool QRCodeTracker3D::trackQRCode(const SharedAnyCamera& previousSharedAnyCamera
 				ocean_assert(yFrame.isValid());
 
 				Frame rgbFrame;
-				CV::FrameConverter::Comfort::convert(yFrame, FrameType(yFrame, FrameType::FORMAT_RGB24), rgbFrame, /* forceCopy */ true, worker);
+				CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, worker);
 				ocean_assert(rgbFrame.isValid());
 
 				Frame& debugFrame = iFrame == 0 ? debugFrameA : debugFrameB;

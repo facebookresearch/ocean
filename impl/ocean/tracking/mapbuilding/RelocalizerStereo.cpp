@@ -158,7 +158,7 @@ bool RelocalizerStereo::relocalize(const AnyCamera& cameraA, const AnyCamera& ca
 			const Frame& yFrame = nCamera == 0u ? yFrameA : yFrameB;
 			Frame& debugFrame = nCamera == 0u ? debugFrameA : debugFrameB;
 
-			CV::FrameConverter::Comfort::convert(yFrame, FrameType(yFrame, FrameType::FORMAT_RGB24), debugFrame, CV::FrameConverter::CP_ALWAYS_COPY);
+			CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, debugFrame, CV::FrameConverter::CP_ALWAYS_COPY);
 
 			const Vectors2& imagePoints = nCamera == 0u ? imagePointsA : imagePointsB;
 			const Indices32& usedImagePointIndices = nCamera == 0u ? usedImagePointIndicesA : usedImagePointIndicesB;

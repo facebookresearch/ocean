@@ -267,7 +267,7 @@ void TrackerStereo::createDebuggingElementFeatureCorrespondences(const AnyCamera
 
 		yFrame.setPixelFormat(FrameType::FORMAT_Y8);
 
-		if (!CV::FrameConverter::Comfort::convert(yFrame, FrameType(yFrame, FrameType::FORMAT_RGB24), debugFrame, CV::FrameConverter::CP_ALWAYS_COPY))
+		if (!CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, debugFrame, CV::FrameConverter::CP_ALWAYS_COPY))
 		{
 			ocean_assert(false && "This should never happen!");
 			return;

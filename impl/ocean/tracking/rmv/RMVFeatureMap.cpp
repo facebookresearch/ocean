@@ -44,7 +44,7 @@ bool RMVFeatureMap::setFeatures(const Frame& pattern, const Vector3& dimension, 
 	ocean_assert(pattern);
 
 	Frame yPattern;
-	if (!CV::FrameConverter::Comfort::convert(pattern, FrameType(pattern, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yPattern, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(pattern, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yPattern, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
@@ -119,7 +119,7 @@ bool RMVFeatureMap::setInitializationFeatures(const Frame& pattern, const Vector
 	ocean_assert(pattern && dimension.x() > Numeric::eps() && pinholeCamera && numberInitializationObjectPoints >= 10);
 
 	Frame yPattern;
-	if (!CV::FrameConverter::Comfort::convert(pattern, FrameType(pattern, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yPattern, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(pattern, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yPattern, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		return false;
 
 	PinholeCamera adjustedCamera(pinholeCamera);

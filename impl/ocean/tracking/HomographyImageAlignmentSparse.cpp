@@ -30,11 +30,11 @@ bool HomographyImageAlignmentSparse::determineHomographyWithPoints(const Frame& 
     ocean_assert(squarePixelErrorThreshold > 0);
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(previousFrame, FrameType(previousFrame, FrameType::FORMAT_Y8), yFrame, false, worker))
+	if (!CV::FrameConverter::Comfort::convert(previousFrame, FrameType::FORMAT_Y8, yFrame, false, worker))
 	{
 		ocean_assert(false && "Incompatible frame type!");
 	}
-	
+
 	// we detect almost any feature points in the frame as we will filter them later
 	Vectors2 previousPointCandidates = CV::Detector::FeatureDetector::determineHarrisPoints(yFrame, previousSubRegion, 0u, 0u, 15u, worker);
 

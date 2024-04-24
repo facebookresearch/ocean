@@ -102,7 +102,7 @@ bool PatchTracker::trackFrame(const Index32 frameIndex, const AnyCamera& anyCame
 		Frame yFrame(yCurrentFramePyramid->finestLayer(), Frame::ACM_USE_KEEP_LAYOUT);
 		yFrame.setPixelFormat(FrameType::FORMAT_Y8);
 
-		if (CV::FrameConverter::Comfort::convert(yFrame, FrameType(yFrame, FrameType::FORMAT_RGB24), *debugFrame, CV::FrameConverter::CP_ALWAYS_COPY, worker, CV::FrameConverter::Options(true)))
+		if (CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, *debugFrame, CV::FrameConverter::CP_ALWAYS_COPY, worker, CV::FrameConverter::Options(true)))
 		{
 			const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
 
@@ -249,7 +249,7 @@ bool PatchTracker::trackVRSFile(const std::string& vrsFile, Database& database, 
 		const HomogenousMatrix4 world_T_camera(sample->positions().front(), sample->orientations().front());
 
 		Frame yFrame;
-		if (!CV::FrameConverter::Comfort::convert(*frame, FrameType(*frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(*frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
@@ -283,7 +283,7 @@ bool PatchTracker::trackVRSFile(const std::string& vrsFile, Database& database, 
 #ifdef _WINDOWS
 		{
 			Frame rgbFrame;
-			CV::FrameConverter::Comfort::convert(*frame, FrameType(*frame, FrameType::FORMAT_RGB24), rgbFrame, true, WorkerPool::get().scopedWorker()());
+			CV::FrameConverter::Comfort::convert(*frame, FrameType::FORMAT_RGB24, rgbFrame, true, WorkerPool::get().scopedWorker()());
 
 			Tracking::Utilities::visualizeDatabase(patchTracker.database_, frameIndex, rgbFrame, CV::Canvas::white(), CV::Canvas::red(), CV::Canvas::green(), 15u, 50u);
 			Platform::Win::Utilities::desktopFrameOutput(0, 0, rgbFrame);

@@ -71,7 +71,7 @@ FeatureMap::FeatureMap(const Frame& frame, const Vector2& dimension, const Scala
 	ocean_assert(frame &&  dimension.x() > 0);
 
 	Frame yFrame;
-	if (!FrameConverter::Comfort::convert(frame, FrameType(frame.width(), frame.height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		Log::error() << "Failed to create a new Blob feature map: Not supported pixel format.";
 		return;

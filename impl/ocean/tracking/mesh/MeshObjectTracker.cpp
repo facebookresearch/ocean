@@ -26,7 +26,7 @@ unsigned int MeshObjectTracker::add(const Frame& textureFrame, const UVTextureMa
 	}
 
 	Frame yTextureFrame;
-	if (!CV::FrameConverter::Comfort::convert(textureFrame, FrameType(textureFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yTextureFrame, false, worker))
+	if (!CV::FrameConverter::Comfort::convert(textureFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yTextureFrame, false, worker))
 	{
 		return MeshObjectTrackerCore::kInvalidRegisteredObjectId;
 	}
@@ -66,7 +66,7 @@ bool MeshObjectTracker::determinePoses(const Frames& frames, const SharedAnyCame
 
 	ocean_assert(frame.width() == pinholeCamera.width() && frame.height() == pinholeCamera.height());
 
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yTrackerFrame_, false, worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yTrackerFrame_, false, worker))
 	{
 		return false;
 	}

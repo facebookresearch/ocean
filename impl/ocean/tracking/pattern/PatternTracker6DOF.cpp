@@ -32,7 +32,7 @@ unsigned int PatternTracker6DOF::addPattern(const Frame& frame, const Vector2& d
 	}
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, false, worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, false, worker))
 	{
 		return (unsigned int)(-1);
 	}
@@ -53,7 +53,7 @@ unsigned int PatternTracker6DOF::addCylinderPattern(const Frame& frame, const UV
 	}
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, false, worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return (unsigned int)(-1);
 	}
@@ -69,7 +69,7 @@ unsigned int PatternTracker6DOF::addConePattern(const Frame& frame, const UVText
 	}
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, false, worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return (unsigned int)(-1);
 	}
@@ -92,7 +92,7 @@ bool PatternTracker6DOF::determinePoses(const Frame& frame, const PinholeCamera&
 	ocean_assert(frame.isValid() && pinholeCamera.isValid());
 	ocean_assert(frame.width() == pinholeCamera.width() && frame.height() == pinholeCamera.height());
 
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}

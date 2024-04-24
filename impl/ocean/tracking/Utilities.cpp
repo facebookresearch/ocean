@@ -226,8 +226,8 @@ Frame Utilities::paintCorrespondencesHorizontal(const Frame& frame0, const Frame
 	}
 
 	Frame rgbFrame0, rgbFrame1;
-	if (!CV::FrameConverter::Comfort::convert(adjustedFrame0, FrameType(adjustedFrame0, FrameType::FORMAT_RGB24), rgbFrame0, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker)
-			|| !CV::FrameConverter::Comfort::convert(adjustedFrame1, FrameType(adjustedFrame1, FrameType::FORMAT_RGB24), rgbFrame1, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(adjustedFrame0, FrameType::FORMAT_RGB24, rgbFrame0, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker)
+			|| !CV::FrameConverter::Comfort::convert(adjustedFrame1, FrameType::FORMAT_RGB24, rgbFrame1, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return Frame();
 	}
@@ -275,8 +275,8 @@ Frame Utilities::paintCorrespondencesVertical(const Frame& frame0, const Frame& 
 	}
 
 	Frame rgbFrame0, rgbFrame1;
-	if (!CV::FrameConverter::Comfort::convert(adjustedFrame0, FrameType(adjustedFrame0, FrameType::FORMAT_RGB24), rgbFrame0, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker)
-			|| !CV::FrameConverter::Comfort::convert(adjustedFrame1, FrameType(adjustedFrame1, FrameType::FORMAT_RGB24), rgbFrame1, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(adjustedFrame0, FrameType::FORMAT_RGB24, rgbFrame0, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker)
+			|| !CV::FrameConverter::Comfort::convert(adjustedFrame1, FrameType::FORMAT_RGB24, rgbFrame1, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return Frame();
 	}

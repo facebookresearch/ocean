@@ -91,7 +91,7 @@ bool RelocalizerMono::relocalize(const AnyCamera& camera, const Frame& yFrame, H
 	if (RelocalizerDebugElements::get().isElementActive(RelocalizerDebugElements::EI_CAMERA_IMAGE_WITH_FEATURES))
 	{
 		Frame debugFrame;
-		CV::FrameConverter::Comfort::convert(yFrame, FrameType(yFrame, FrameType::FORMAT_RGB24), debugFrame, CV::FrameConverter::CP_ALWAYS_COPY);
+		CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, debugFrame, CV::FrameConverter::CP_ALWAYS_COPY);
 
 		Vectors2 features;
 		features.reserve(imagePointIndices.size());

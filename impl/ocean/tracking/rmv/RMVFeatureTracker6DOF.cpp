@@ -132,7 +132,7 @@ bool RMVFeatureTracker6DOF::internDeterminePose(const Frame& frame, const Pinhol
 	ocean_assert(frame.width() == pinholeCamera.width() && frame.height() == pinholeCamera.height());
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, false, worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, false, worker))
 	{
 		return false;
 	}

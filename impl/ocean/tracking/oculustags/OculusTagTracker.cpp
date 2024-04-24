@@ -408,7 +408,7 @@ bool OculusTagTracker::trackTagsStereo(const AnyCamera& anyCameraA, const AnyCam
 			// Draw the corners of the tag as points
 
 			Frame rectifiedRgbFrame;
-			CV::FrameConverter::Comfort::convert(rectifiedYFrame, FrameType(rectifiedYFrame, FrameType::FORMAT_RGB24), rectifiedRgbFrame);
+			CV::FrameConverter::Comfort::convert(rectifiedYFrame, FrameType::FORMAT_RGB24, rectifiedRgbFrame);
 
 			const HomogenousMatrix4 tag_T_cameraA = trackedTag.tag_.world_T_tag().inverted() * world_T_device * device_T_cameraA;
 			const HomogenousMatrix4 flippedCameraA_T_tag = AnyCamera::standard2InvertedFlipped(tag_T_cameraA);

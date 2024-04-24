@@ -195,7 +195,7 @@ void TrackerMono::createDebuggingElementFeatureCorrespondences(const AnyCamera& 
 	Frame yFrame(yPreviousFramePyramid_.finestLayer(), Frame::ACM_USE_KEEP_LAYOUT);
 	yFrame.setPixelFormat(FrameType::FORMAT_Y8);
 
-	if (!CV::FrameConverter::Comfort::convert(yFrame, FrameType(yFrame, FrameType::FORMAT_RGB24), debugFrame, CV::FrameConverter::CP_ALWAYS_COPY))
+	if (!CV::FrameConverter::Comfort::convert(yFrame, FrameType::FORMAT_RGB24, debugFrame, CV::FrameConverter::CP_ALWAYS_COPY))
 	{
 		ocean_assert(false && "This should never happen!");
 		return;

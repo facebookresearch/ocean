@@ -201,10 +201,8 @@ FrameTracker::FrameTrackerComponent::IterationResult PatternTracker::FineTrackin
 	// check whether the pattern frame pyramid has to be created (this can not be done earlier as we need the pixel format of the camera frame)
 	if (!patternFramePyramid_.isValid())
 	{
-		const FrameType targetFrameType(parent_.patternFrame_, currentFrame_.pixelFormat(), currentFrame_.pixelOrigin());
-
 		Frame targetFrame;
-		if (!CV::FrameConverter::Comfort::convert(parent_.patternFrame_, targetFrameType, targetFrame, CV::FrameConverter::CP_ALWAYS_COPY, scopedWorker()))
+		if (!CV::FrameConverter::Comfort::convert(parent_.patternFrame_, currentFrame_.pixelFormat(), currentFrame_.pixelOrigin(), targetFrame, CV::FrameConverter::CP_ALWAYS_COPY, scopedWorker()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return IR_FAILED;
@@ -568,7 +566,7 @@ bool PatternTracker::FineTrackingComponent::optimizeCamera(const PinholeCamera& 
 			const FrameType::PixelOrigin targetPixelOrigin = patternFramePyramid_.frameType().pixelOrigin();
 
 			Frame currentFrame;
-			if (!CV::FrameConverter::Comfort::convert(*frame, FrameType(*frame, targetPixelFormat, targetPixelOrigin), currentFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+			if (!CV::FrameConverter::Comfort::convert(*frame, targetPixelFormat, targetPixelOrigin, currentFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 			{
 				return false;
 			}
@@ -639,7 +637,7 @@ bool PatternTracker::setPattern(const Frame& frame, const Vector2& dimension)
 
 	const FrameType::PixelFormat targetPixelFormat = FrameType::formatRemoveAlphaChannel(FrameType::genericSinglePlanePixelFormat(frame.pixelFormat()));
 
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT), patternFrame_, false))
+	if (!CV::FrameConverter::Comfort::convert(frame, targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT, patternFrame_, false))
 	{
 		return false;
 	}
@@ -889,7 +887,7 @@ bool PatternTracker::closeGaps(const unsigned int lowerFrameIndex, const unsigne
 				const FrameType::PixelFormat zippedPixelFormat = FrameType::genericSinglePlanePixelFormat(centerFrame->pixelFormat());
 				const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
 
-				if (!CV::FrameConverter::Comfort::convert(*centerFrame, FrameType(*centerFrame, zippedPixelFormat, FrameType::ORIGIN_UPPER_LEFT), zippedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
+				if (!CV::FrameConverter::Comfort::convert(*centerFrame, zippedPixelFormat, FrameType::ORIGIN_UPPER_LEFT, zippedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
 				{
 					ocean_assert(false && "This should never happen!");
 					return false;
@@ -911,7 +909,7 @@ bool PatternTracker::closeGaps(const unsigned int lowerFrameIndex, const unsigne
 						return false;
 					}
 
-					if (!CV::FrameConverter::Comfort::convert(*leftFrame, FrameType(*leftFrame, zippedPixelFormat, FrameType::ORIGIN_UPPER_LEFT), zippedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
+					if (!CV::FrameConverter::Comfort::convert(*leftFrame, zippedPixelFormat, FrameType::ORIGIN_UPPER_LEFT, zippedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
 					{
 						ocean_assert(false && "This should never happen!");
 						return false;
@@ -934,7 +932,7 @@ bool PatternTracker::closeGaps(const unsigned int lowerFrameIndex, const unsigne
 						return false;
 					}
 
-					if (!CV::FrameConverter::Comfort::convert(*rightFrame, FrameType(*rightFrame, zippedPixelFormat, FrameType::ORIGIN_UPPER_LEFT), zippedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
+					if (!CV::FrameConverter::Comfort::convert(*rightFrame, zippedPixelFormat, FrameType::ORIGIN_UPPER_LEFT, zippedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
 					{
 						ocean_assert(false && "This should never happen!");
 						return false;

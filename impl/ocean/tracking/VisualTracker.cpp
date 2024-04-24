@@ -66,7 +66,7 @@ bool VisualTracker::determinePoses(const Frames& frames, const SharedAnyCameras&
 		// For backwards compatibility, the input image will be undistorted and the AnyCamera is converted into a PinholeCamera.
 
 		Frame frameToRectify;
-		if (!CV::FrameConverter::Comfort::convert(frames.front(), FrameType(frames.front(), FrameType::FORMAT_Y8), frameToRectify, /* forceCopy */ false, worker))
+		if (!CV::FrameConverter::Comfort::convert(frames.front(), FrameType::FORMAT_Y8, frameToRectify, /* forceCopy */ false, worker))
 		{
 			Log::error() << "Failed to convert the frame";
 

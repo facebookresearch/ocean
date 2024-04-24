@@ -62,7 +62,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 	}
 
 	Frame initialFrame;
-	if (!CV::FrameConverter::Comfort::convert(*initialFrameRef, FrameType(*initialFrameRef, pixelFormat, pixelOrigin), initialFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(*initialFrameRef, pixelFormat, pixelOrigin, initialFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
@@ -227,7 +227,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 		}
 
 		Frame frame;
-		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType(*frameRef, pixelFormat, pixelOrigin), frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+		if (!CV::FrameConverter::Comfort::convert(*frameRef, pixelFormat, pixelOrigin, frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		{
 			return false;
 		}
@@ -406,7 +406,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 		}
 
 		Frame frame;
-		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType(*frameRef, pixelFormat, pixelOrigin), frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+		if (!CV::FrameConverter::Comfort::convert(*frameRef, pixelFormat, pixelOrigin, frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		{
 			return false;
 		}
@@ -513,7 +513,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 		}
 
 		Frame frame;
-		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType(*frameRef, pixelFormat, pixelOrigin), frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+		if (!CV::FrameConverter::Comfort::convert(*frameRef, pixelFormat, pixelOrigin, frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		{
 			return false;
 		}
@@ -693,7 +693,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 		}
 
 		Frame frame;
-		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType(*frameRef, pixelFormat, pixelOrigin), frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+		if (!CV::FrameConverter::Comfort::convert(*frameRef, pixelFormat, pixelOrigin, frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		{
 			return false;
 		}
@@ -792,7 +792,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 	}
 
 	Frame initialFrame;
-	if (!CV::FrameConverter::Comfort::convert(*initialFrameRef, FrameType(*initialFrameRef, pixelFormat, pixelOrigin), initialFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(*initialFrameRef, pixelFormat, pixelOrigin, initialFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
@@ -945,7 +945,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 		}
 
 		Frame frame;
-		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType(*frameRef, pixelFormat, pixelOrigin), frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+		if (!CV::FrameConverter::Comfort::convert(*frameRef, pixelFormat, pixelOrigin, frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		{
 			return false;
 		}
@@ -1052,7 +1052,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 		}
 
 		Frame frame;
-		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType(*frameRef, pixelFormat, pixelOrigin), frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+		if (!CV::FrameConverter::Comfort::convert(*frameRef, pixelFormat, pixelOrigin, frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		{
 			return false;
 		}
@@ -1390,7 +1390,7 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 	}
 
 	Frame frame;
-	if (!CV::FrameConverter::Comfort::convert(*frameRef,  FrameType(*frameRef, FrameType::FORMAT_Y8, pixelOrigin), frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType::FORMAT_Y8, pixelOrigin, frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
@@ -1683,7 +1683,7 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 		}
 
 		Frame frame;
-		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType(*frameRef, FrameType::FORMAT_Y8, pixelOrigin), frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType::FORMAT_Y8, pixelOrigin, frame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		{
 			return false;
 		}

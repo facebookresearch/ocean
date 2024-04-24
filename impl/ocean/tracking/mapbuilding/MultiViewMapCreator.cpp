@@ -301,10 +301,10 @@ bool MultiViewMapCreator::processFrame(const Frames& yFrames, const SharedAnyCam
 #ifdef DEBUG_OUTPUT_ON_WINDOWS
 #ifdef _WINDOWS
 		Frame rgbFrameA;
-		CV::FrameConverter::Comfort::convert(yFrames[stereoCameraIndices.first], FrameType(yFrames[stereoCameraIndices.first], FrameType::FORMAT_RGB24), rgbFrameA);
+		CV::FrameConverter::Comfort::convert(yFrames[stereoCameraIndices.first], FrameType::FORMAT_RGB24, rgbFrameA);
 
 		Frame rgbFrameB;
-		CV::FrameConverter::Comfort::convert(yFrames[stereoCameraIndices.second], FrameType(yFrames[stereoCameraIndices.second], FrameType::FORMAT_RGB24), rgbFrameB);
+		CV::FrameConverter::Comfort::convert(yFrames[stereoCameraIndices.second], FrameType::FORMAT_RGB24, rgbFrameB);
 
 		Frame rgbFrame(FrameType(rgbFrameA, rgbFrameA.width() * 2u, rgbFrameA.height()));
 
@@ -642,7 +642,7 @@ void MultiViewMapCreator::determineImageFeatures(const Frames& yFrames, const Sh
 		for (size_t cameraIndex = 0; cameraIndex < yFrames.size(); ++cameraIndex)
 		{
 			Frame rgbFrame;
-			if (CV::FrameConverter::Comfort::convert(yFrames[cameraIndex], FrameType(yFrames[cameraIndex], FrameType::FORMAT_RGB24), rgbFrame))
+			if (CV::FrameConverter::Comfort::convert(yFrames[cameraIndex], FrameType::FORMAT_RGB24, rgbFrame))
 			{
 				CV::Canvas::points<3u>(rgbFrame, imagePointGroups[cameraIndex], CV::Canvas::green());
 
