@@ -3,6 +3,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 add_subdirectory(testadvanced)
+add_subdirectory(testdetector)
 
 if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
