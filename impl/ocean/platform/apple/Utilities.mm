@@ -64,13 +64,13 @@ ScopedCGImageRef Utilities::toCGImage(const Frame& frame, bool copyData)
 		const FrameType::PixelFormat& pixelFormat = pixelFormats[n];
 
 		Frame convertedFrame;
-		if (CV::FrameConverter::Comfort::convert(frame, FrameType(frame, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), convertedFrame, makeCopy, WorkerPool::get().conditionalScopedWorker(frame.pixels() < 400 * 400)()))
+		if (CV::FrameConverter::Comfort::convert(frame, pixelFormat, FrameType::ORIGIN_UPPER_LEFT, convertedFrame, makeCopy, WorkerPool::get().conditionalScopedWorker(frame.pixels() < 400 * 400)()))
 		{
 			ocean_assert(convertedFrame.isContinuous());
 			ocean_assert(convertedFrame.numberPlanes() == 1u);
 			ocean_assert(FrameType::formatIsGeneric(convertedFrame.pixelFormat()));
 
-			const bool forceCopy = makeCopy || convertedFrame.constdata<void>() != frame.constdata<void>(); // we need a foce a copy if the frame has been converted
+			const bool forceCopy = makeCopy || convertedFrame.constdata<void>() != frame.constdata<void>(); // we need a force a copy if the frame has been converted
 
 			const ScopedCFDataRef data = forceCopy ? ScopedCFDataRef(CFDataCreate(nil, convertedFrame.constdata<uint8_t>(), convertedFrame.size())) : ScopedCFDataRef(CFDataCreateWithBytesNoCopy(nil, convertedFrame.constdata<uint8_t>(), convertedFrame.size(), kCFAllocatorNull));
 			const ScopedCGDataProviderRef dataProvider(CGDataProviderCreateWithCFData(data.object()));

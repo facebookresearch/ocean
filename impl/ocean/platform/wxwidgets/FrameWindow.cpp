@@ -23,7 +23,7 @@ FrameWindow::FrameWindow(const wxString& title, wxWindow* parent, const wxPoint&
 
 bool FrameWindow::setFrame(const Frame& frame)
 {
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), frame_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, frame_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 	{
 		TemporaryScopedLock scopedLock(bitmapLock_);
 			bitmap_ = wxBitmap();

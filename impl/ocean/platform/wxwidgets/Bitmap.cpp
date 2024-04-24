@@ -103,7 +103,7 @@ bool Bitmap::setFrameWithoutAlpha(const Frame& frame, const bool convertIfNecess
 	if (convertIfNecessary)
 	{
 		rgbFrame.release();
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 400u * 400u)()))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 400u * 400u)()))
 		{
 			return false;
 		}
@@ -138,7 +138,7 @@ bool Bitmap::setFrameWithAlpha(const Frame& frame, const bool convertIfNecessary
 	{
 		rgbaFrame.release();
 
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT), rgbaFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 400u * 400u)()))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT, rgbaFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 400u * 400u)()))
 		{
 			return false;
 		}
@@ -152,7 +152,7 @@ bool Bitmap::setFrameWithAlpha(const Frame& frame, const bool convertIfNecessary
 	// we need to separate the RGB channels from the alpha channel
 
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(rgbaFrame, FrameType(rgbaFrame, FrameType::FORMAT_RGB24), rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 400u * 400u)()))
+	if (!CV::FrameConverter::Comfort::convert(rgbaFrame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 400u * 400u)()))
 	{
 		return false;
 	}

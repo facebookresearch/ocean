@@ -71,7 +71,7 @@ void Utilities::frameOutput(wxDC& dc, const int x, const int y, const Frame& fra
 {
 	Frame rgbFrame;
 
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 	{
 		return;
 	}

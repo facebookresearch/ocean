@@ -56,7 +56,7 @@ void BitmapWindow::setFrame(const Frame& frame)
 	}
 
 	Frame rgbFrame;
-	if (CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24), rgbFrame, false, WorkerPool::get().scopedWorker()()))
+	if (CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, rgbFrame, false, WorkerPool::get().scopedWorker()()))
 	{
 		const bool setFrameResult = bitmap_.set(rgbFrame);
 		ocean_assert_and_suppress_unused(setFrameResult, setFrameResult);
