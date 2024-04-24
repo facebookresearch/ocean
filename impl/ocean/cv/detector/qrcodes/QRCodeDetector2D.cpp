@@ -117,8 +117,8 @@ QRCodes QRCodeDetector2D::detectQRCodes(const AnyCamera& anyCamera, const uint8_
 			finderPatterns[indexTriplet[2]], // top-right
 		};
 
-		if (finderPatternTriplet[0].isNormalReflectance() != finderPatternTriplet[1].isNormalReflectance() ||
-			finderPatternTriplet[0].isNormalReflectance() != finderPatternTriplet[2].isNormalReflectance())
+		if (finderPatternTriplet[0].isNormalReflectance() != finderPatternTriplet[1].isNormalReflectance()
+				|| finderPatternTriplet[0].isNormalReflectance() != finderPatternTriplet[2].isNormalReflectance())
 		{
 			continue;
 		}
@@ -187,8 +187,10 @@ QRCodes QRCodeDetector2D::detectQRCodes(const AnyCamera& anyCamera, const uint8_
 		int versionI = int((versionLow + versionHigh) / 2u);
 		const int numberOffsets = int(versionHigh - versionLow + 1);
 
+		HomogenousMatrices4 code_T_cameras;
+
 		bool foundCode = false;
-		for (int offset = 0; offset < numberOffsets; ++offset)
+		for (int offset = 0; !foundCode && offset < numberOffsets; ++offset)
 		{
 			versionI = offset % 2 == 0 ? (versionI - offset) : (versionI + offset);
 
@@ -201,7 +203,7 @@ QRCodes QRCodeDetector2D::detectQRCodes(const AnyCamera& anyCamera, const uint8_
 
 			const unsigned int version = (unsigned int)versionI;
 
-			HomogenousMatrices4 code_T_cameras;
+			code_T_cameras.clear();
 
 			if (computePoses(anyCamera, yFrame, width, height, paddingElements, finderPatternTriplet.data(), version, code_T_cameras))
 			{
@@ -218,21 +220,16 @@ QRCodes QRCodeDetector2D::detectQRCodes(const AnyCamera& anyCamera, const uint8_
 					QRCode code;
 					if (QRCodeDecoder::decodeQRCode(modules, code))
 					{
-						foundCode = true;
-
 						ocean_assert(code.isValid());
 						codes.emplace_back(std::move(code));
 
 						localObservations.emplace_back(code_T_camera, std::move(finderPatternTriplet));
 
+						foundCode = true;
+
 						break;
 					}
 				}
-			}
-
-			if (foundCode)
-			{
-				break;
 			}
 		}
 	}
