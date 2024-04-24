@@ -125,7 +125,7 @@ void CameraCalibrationMainWindow::onFrame(const Ocean::Frame& frame)
 	ocean_assert(calibrationCamera_.width() == frame.width() && calibrationCamera_.height() == frame.height());
 
 	Frame topLeft;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), topLeft, false, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, topLeft, false, WorkerPool::get().scopedWorker()()))
 	{
 		return;
 	}

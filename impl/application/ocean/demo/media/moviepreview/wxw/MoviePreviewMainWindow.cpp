@@ -138,7 +138,7 @@ void MoviePreviewMainWindow::onSaveImages(wxCommandEvent& /*event*/)
 			}
 
 			Frame rgbFrame;
-			if (!CV::FrameConverter::Comfort::convert(*frame, FrameType(*frame, FrameType::FORMAT_RGB24), rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+			if (!CV::FrameConverter::Comfort::convert(*frame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 			{
 				ocean_assert(false && "This should never happen!");
 				return;

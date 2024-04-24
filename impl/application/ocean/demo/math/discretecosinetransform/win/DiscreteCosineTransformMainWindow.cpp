@@ -45,7 +45,7 @@ void DiscreteCosineTransformMainWindow::onInitialized()
 	{
 		const Frame frame(Media::Utilities::loadImage(windowMediaFile_));
 
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, true))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, true))
 		{
 			return;
 		}

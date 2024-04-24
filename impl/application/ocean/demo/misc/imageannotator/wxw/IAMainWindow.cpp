@@ -459,7 +459,7 @@ void IAMainWindow::onDetectLinesLSD(wxCommandEvent& /*event*/)
 	if (wxMessageBox(std::wstring(L"Do you really want to add automatically detected lines?"), L"Information", wxICON_INFORMATION | wxYES_NO, this) == wxYES)
 	{
 		Frame frameY8;
-		if (!CV::FrameConverter::Comfort::convert(image_, FrameType(image_, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), frameY8, false, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(image_, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, frameY8, false, WorkerPool::get().scopedWorker()()))
 		{
 			wxMessageBox(std::wstring(L"Load a valid image first"), L"Error", wxOK | wxICON_ERROR, this);
 			return;
@@ -523,7 +523,7 @@ void IAMainWindow::onDetectLinesULF(wxCommandEvent& /*event*/)
 	{
 		Frame frameY8;
 
-		if (!CV::FrameConverter::Comfort::convert(image_, FrameType(image_, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), frameY8, false, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(image_, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, frameY8, false, WorkerPool::get().scopedWorker()()))
 		{
 			wxMessageBox(std::wstring(L"Load a valid image first"), L"Error", wxOK | wxICON_ERROR, this);
 			return;
@@ -819,7 +819,7 @@ bool IAMainWindow::createGradientImage(const Frame& frame, Frame& gradientFrame,
 
 	Frame yFrame;
 
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 	{
 		return false;
 	}

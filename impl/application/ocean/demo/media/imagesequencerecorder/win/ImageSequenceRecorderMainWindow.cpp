@@ -177,7 +177,7 @@ void ImageSequenceRecorderMainWindow::onKeyUp(const int key)
 void ImageSequenceRecorderMainWindow::onFrame(const Frame& frame)
 {
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24), rgbFrame, false))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, rgbFrame, false))
 	{
 		return;
 	}

@@ -62,7 +62,7 @@ void ORBPatternGenerator::generateTests(Frames& frames)
 		std::cout << "Calculate tests for the "<< i + 1 << ". image" << std::endl;
 
 		Frame yFrame;
-		if (!CV::FrameConverter::Comfort::convert(frames[i], FrameType(frames[i], FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+		if (!CV::FrameConverter::Comfort::convert(frames[i], FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 		{
 			ocean_assert(false && "This should never happen!");
 			continue;

@@ -82,7 +82,7 @@ class FrameHandler
 				std::string filename = outputDirectoryAndBaseFilename_ + image_suffix_ + filenameIndex + ".png";
 
 				Frame frameRGB24;
-				if (CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24), frameRGB24, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+				if (CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, frameRGB24, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 				{
 					if (numLevels_ > 0u)
 					{

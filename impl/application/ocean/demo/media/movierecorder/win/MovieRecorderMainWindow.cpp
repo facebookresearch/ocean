@@ -250,7 +250,7 @@ void MovieRecorderMainWindow::onFrame(const Frame& frame)
 				{
 					ocean_assert(recorderFrame.isValid() && frameTargetType_ == recorderFrame.frameType());
 
-					if (!CV::FrameConverter::Comfort::convert(frame, recorderFrame.frameType(), recorderFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+					if (!CV::FrameConverter::Comfort::convertAndCopy(frame, recorderFrame, WorkerPool::get().scopedWorker()()))
 					{
 						Log::error() << "Failed to convert image.";
 					}
@@ -272,7 +272,7 @@ void MovieRecorderMainWindow::onFrame(const Frame& frame)
 			{
 				ocean_assert(recorderFrame.isValid() && frameTargetType_ == recorderFrame.frameType());
 
-				if (!CV::FrameConverter::Comfort::convert(frame, recorderFrame.frameType(), recorderFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+				if (!CV::FrameConverter::Comfort::convertAndCopy(frame, recorderFrame, WorkerPool::get().scopedWorker()()))
 				{
 					Log::error() << "Failed to convert image.";
 				}

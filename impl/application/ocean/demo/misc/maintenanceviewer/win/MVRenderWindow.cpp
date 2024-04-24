@@ -391,7 +391,7 @@ bool MVRenderWindow::addMesh(const Vectors3& objectPoints, const Vectors2& image
 
 	if (frame)
 	{
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
 		{
 			return false;
 		}
