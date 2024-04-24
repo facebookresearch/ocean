@@ -11,7 +11,7 @@ if [ -z "${JAVA_HOME}" ]; then
   exit 1
 fi
 
-echo "Building the third-party libraries required for Ocean ...:"
+echo "Building the third-party libraries required by Ocean for Android ...:"
 echo " "
 
 OCEAN_THIRD_PARTY_SOURCE_DIRECTORY=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../build/cmake/third-party && pwd )
