@@ -279,7 +279,7 @@ class NumericT
 		 * Returns the dot product for two vectors.
 		 * @param vectorA The first vector, can be nullptr if size is 0
 		 * @param vectorB The second vector, can be nullptr if size is 0
-		 * @param size The size of both vector (the number of elements each vector holds), with range [0, infinity)
+		 * @param size The size/dimension of both vector (the number of elements each vector holds), with range [0, infinity)
 		 * @return The resulting dot product
 		 */
 		static inline T dot(const T* vectorA, const T* vectorB, const size_t size);
@@ -369,7 +369,7 @@ class NumericT
 		 * @param y Y value, with range (-infinity, infinity)
 		 * @return The power result
 		 */
-		static constexpr T integerPow(const T x, unsigned int y);
+		static constexpr T integerPow(const T x, const unsigned int y);
 
 		/**
 		 * Returns the factorial for a given value.
@@ -617,13 +617,14 @@ class NumericT
 		static inline bool isNotEqual(const std::complex<T>& first, const std::complex<T>& second, const T epsilon);
 
 		/**
-		 * Returns whether a value lies between a given range up to a small epsilon border.
+		 * Returns whether a value lies between a given range up to a provided epsilon border.
 		 * @param lower The lower border, with range (-infinity, infinity)
 		 * @param value The value to check, with range (-infinity, infinity)
 		 * @param upper The upper border, with range [lower, infinity)
+		 * @param epsilon Accuracy epsilon, with range [0, infinity)
 		 * @return True, if so
 		 */
-		static inline bool isInsideRange(const T lower, const T value, const T upper);
+		static constexpr bool isInsideRange(const T lower, const T value, const T upper, const T epsilon = NumericT<T>::eps());
 
 		/**
 		 * Returns whether a value lies between a given range up to a weak epsilon border.
@@ -632,17 +633,7 @@ class NumericT
 		 * @param upper The upper border, with range [lower, infinity)
 		 * @return True, if so
 		 */
-		static inline bool isInsideWeakRange(const T lower, const T value, const T upper);
-
-		/**
-		 * Returns whether a value lies between a given range up to a provided epsilon border.
-		 * @param lower The lower border, with range (-infinity, infinity)
-		 * @param value The value to check, with range (-infinity, infinity)
-		 * @param upper The upper border, with range [lower, infinity)
-		 * @param epsilon Accuracy epsilon, with range [0, infinity)
-		 * @return True, if so
-		 */
-		static inline bool isInsideRange(const T lower, const T value, const T upper, const T epsilon);
+		static constexpr bool isInsideWeakRange(const T lower, const T value, const T upper);
 
 		/**
 		 * Returns whether a parameter lies on or below a given border tolerating a small epsilon.
@@ -1611,46 +1602,6 @@ inline float NumericT<float>::tan(const float value)
 }
 
 template <typename T>
-inline T NumericT<T>::asin(const T value)
-{
-	ocean_assert(NumericT<T>::isInsideWeakRange(T(-1), value, T(1)));
-
-	return ::asin(max(T(-1), min(T(1), value)));
-}
-
-/**
- * Specialization of NumericT::asin().
- * @see NumericT::asin().
- */
-template <>
-inline float NumericT<float>::asin(const float value)
-{
-	ocean_assert(NumericT<float>::isInsideWeakRange(-1.0f, value, 1.0f));
-
-	return asinf(max(-1.0f, min(1.0f, value)));
-}
-
-template <typename T>
-inline T NumericT<T>::acos(const T value)
-{
-	ocean_assert(NumericT<T>::isInsideWeakRange(T(-1), value, T(1)));
-
-	return ::acos(max(T(-1), min(T(1), value)));
-}
-
-/**
- * Specialization of NumericT::acos().
- * @see NumericT::acos().
- */
-template <>
-inline float NumericT<float>::acos(const float value)
-{
-	ocean_assert(NumericT<float>::isInsideWeakRange(-1.0f, value, 1.0f));
-
-	return acosf(max(-1.0f, min(1.0f, value)));
-}
-
-template <typename T>
 inline T NumericT<T>::atan(const T value)
 {
 	return ::atan(value);
@@ -1917,7 +1868,7 @@ inline float NumericT<float>::pow(const float x, const float y)
 }
 
 template <typename T>
-constexpr T NumericT<T>::integerPow(const T x, unsigned int y)
+constexpr T NumericT<T>::integerPow(const T x, const unsigned int y)
 {
 	return y == 0u ? T(1) : x * integerPow(x, y - 1u);
 }
@@ -2907,28 +2858,58 @@ inline bool NumericT<T>::isNotEqual(const std::complex<T>& first, const std::com
 }
 
 template <typename T>
-inline bool NumericT<T>::isInsideRange(const T lower, const T value, const T upper)
+constexpr bool NumericT<T>::isInsideRange(const T lower, const T value, const T upper, const T epsilon)
 {
 	ocean_assert(lower <= upper);
-
-	return value >= lower - eps() && value <= upper + eps();
-}
-
-template <typename T>
-inline bool NumericT<T>::isInsideWeakRange(const T lower, const T value, const T upper)
-{
-	ocean_assert(lower <= upper);
-
-	return value >= lower - weakEps() && value <= upper + weakEps();
-}
-
-template <typename T>
-inline bool NumericT<T>::isInsideRange(const T lower, const T value, const T upper, const T epsilon)
-{
-	ocean_assert(lower <= upper);
-	ocean_assert(epsilon >= 0);
+	ocean_assert(epsilon >= T(0));
 
 	return value >= lower - epsilon && value <= upper + epsilon;
+}
+
+template <typename T>
+constexpr bool NumericT<T>::isInsideWeakRange(const T lower, const T value, const T upper)
+{
+	return isInsideRange(lower, value, upper, weakEps());
+}
+
+template <typename T>
+inline T NumericT<T>::asin(const T value)
+{
+	ocean_assert(NumericT<T>::isInsideWeakRange(T(-1), value, T(1)));
+
+	return ::asin(max(T(-1), min(T(1), value)));
+}
+
+/**
+ * Specialization of NumericT::asin().
+ * @see NumericT::asin().
+ */
+template <>
+inline float NumericT<float>::asin(const float value)
+{
+	ocean_assert(NumericT<float>::isInsideWeakRange(-1.0f, value, 1.0f));
+
+	return asinf(max(-1.0f, min(1.0f, value)));
+}
+
+template <typename T>
+inline T NumericT<T>::acos(const T value)
+{
+	ocean_assert(NumericT<T>::isInsideWeakRange(T(-1), value, T(1)));
+
+	return ::acos(max(T(-1), min(T(1), value)));
+}
+
+/**
+ * Specialization of NumericT::acos().
+ * @see NumericT::acos().
+ */
+template <>
+inline float NumericT<float>::acos(const float value)
+{
+	ocean_assert(NumericT<float>::isInsideWeakRange(-1.0f, value, 1.0f));
+
+	return acosf(max(-1.0f, min(1.0f, value)));
 }
 
 template <typename T>
