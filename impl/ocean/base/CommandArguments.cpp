@@ -5,6 +5,84 @@
 namespace Ocean
 {
 
+CommandArguments::Manager::Manager()
+{
+	// nothing to do here
+}
+
+bool CommandArguments::Manager::setRawArguments(const char* const* arguments, const size_t size)
+{
+	const ScopedLock scopedLock(lock_);
+
+	if (size_ != 0)
+	{
+		ocean_assert(false && "Arguments already registered!");
+		return false;
+	}
+
+	if (arguments == nullptr || size == 0)
+	{
+		return false;
+	}
+
+	ocean_assert(argumentsChar_ == nullptr && argumentsWchar_ == nullptr);
+
+	argumentsChar_ = arguments;
+	size_ = size;
+
+	return true;
+}
+
+bool CommandArguments::Manager::setRawArguments(const wchar_t* const* arguments, const size_t size)
+{
+	const ScopedLock scopedLock(lock_);
+
+	if (size_ != 0)
+	{
+		ocean_assert(false && "Arguments already registered!");
+		return false;
+	}
+
+	if (arguments == nullptr || size == 0)
+	{
+		return false;
+	}
+
+	ocean_assert(argumentsChar_ == nullptr && argumentsWchar_ == nullptr);
+
+	argumentsWchar_ = arguments;
+	size_ = size;
+
+	return true;
+}
+
+template <>
+const char* const* CommandArguments::Manager::rawArguments<char>() const
+{
+	const ScopedLock scopedLock(lock_);
+
+	ocean_assert(argumentsWchar_ == nullptr && "Wrong data type!");
+
+	return argumentsChar_;
+}
+
+template <>
+const wchar_t* const* CommandArguments::Manager::rawArguments<wchar_t>() const
+{
+	const ScopedLock scopedLock(lock_);
+
+	ocean_assert(argumentsChar_ == nullptr && "Wrong data type!");
+
+	return argumentsWchar_;
+}
+
+size_t CommandArguments::Manager::size() const
+{
+	const ScopedLock scopedLock(lock_);
+
+	return size_;
+}
+
 CommandArguments::Parameter::Parameter(const std::string& longName, const std::string& shortName, const std::string& description, const Value& defaultValue) :
 	longName_(longName),
 	shortName_(shortName),

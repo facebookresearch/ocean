@@ -4,10 +4,12 @@
 #define META_OCEAN_BASE_COMMAND_ARGUMENTS_H
 
 #include "ocean/base/Base.h"
+#include "ocean/base/Lock.h"
 #include "ocean/base/Messenger.h"
-#include "ocean/base/Value.h"
+#include "ocean/base/Singleton.h"
 #include "ocean/base/String.h"
 #include "ocean/base/Triple.h"
+#include "ocean/base/Value.h"
 
 #include <unordered_map>
 
@@ -34,6 +36,67 @@ class OCEAN_BASE_EXPORT CommandArguments
 		 */
 		template <typename T>
 		using ArgumentsT = std::vector<ArgumentT<T>>;
+
+		/**
+		 * This class implements a simple singleton holding the raw application's command arguments.
+		 */
+		class Manager : public Singleton<Manager>
+		{
+			friend class Singleton<Manager>;
+
+			public:
+
+				/**
+				 * Sets/registers the command arguments of the application.
+				 * @param arguments The arguments to set, ensure that the pointer is valid as long as the application exists, must be valid
+				 * @param size The number of provided command arguments, with range [1, infinity)
+				 */
+				bool setRawArguments(const char* const* arguments, const size_t size);
+
+				/**
+				 * Sets/registers the command arguments of the application.
+				 * @param arguments The arguments to set, ensure that the pointer is valid as long as the application exists, must be valid
+				 * @param size The number of provided command arguments, with range [1, infinity)
+				 */
+				bool setRawArguments(const wchar_t* const* arguments, const size_t size);
+
+				/**
+				 * Returns the command arguments of the application.
+				 * @return The application's command arguments, nullptr if the arguments have not been set via setArguments().
+				 * @tparam TChar The character type, `char` or `wchar_t`
+				 * @see setArguments().
+				 */
+				template <typename TChar = char>
+				const TChar* const* rawArguments() const;
+
+				/**
+				 * Returns the number of command arguments of the application.
+				 * @param The application's number of command arguments, 0 if arguments have not been set via setArguments().
+				 * @see setArguments().
+				 */
+				size_t size() const;
+
+			protected:
+
+				/**
+				 * Protected default constructor.
+				 */
+				Manager();
+
+			protected:
+
+				/// The command arguments, nullptr if no arguments are defined.
+				const char* const* argumentsChar_ = nullptr;
+
+				/// The command arguments, nullptr if no arguments are defined.
+				const wchar_t* const* argumentsWchar_ = nullptr;
+
+				/// The number of command arguments, with range [0, infinity).
+				size_t size_ = 0;
+
+				/// The manager's lock.
+				mutable Lock lock_;
+		};
 
 	protected:
 
@@ -93,7 +156,7 @@ class OCEAN_BASE_EXPORT CommandArguments
 		};
 
 		/**
-		 * Definition of a map mapping long parameter names to parameter ob jects.
+		 * Definition of a map mapping long parameter names to parameter objects.
 		 */
 		typedef std::map<std::string, Parameter> ParameterMap;
 
