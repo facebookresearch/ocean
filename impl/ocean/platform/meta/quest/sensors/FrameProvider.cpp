@@ -830,7 +830,10 @@ bool FrameProviderT<tAllowInvalidCameras>::startReceivingCameraFrames(CameraStre
 
 	CameraStreamStorageElement& storage = purposeCameraStreams_[streamKey];
 
-	storage.control->stop();
+	if (storage.control->isRunning())
+	{
+		storage.control->stop();
+	}
 	storage.consumer->setCameraType(cameraType);
 
 	auto startResult = storage.control->start();
@@ -856,7 +859,10 @@ bool FrameProviderT<tAllowInvalidCameras>::stopReceivingCameraFrames(CameraStrea
 	}
 
 	CameraStreamStorageElement& storage = purposeCameraStreams_[streamKey];
-	storage.control->stop();
+	if (storage.control->isRunning())
+	{
+		storage.control->stop();
+	}
 
 	return true;
 }
