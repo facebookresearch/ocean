@@ -25,6 +25,7 @@ include(CPM.cmake)
 
 # Do not change the order of these.
 if(BUILD_PASS_INDEX EQUAL 0)
+
     include(libjpeg.cmake)
     include(gl.cmake)
     include(zlib.cmake)
@@ -32,17 +33,28 @@ if(BUILD_PASS_INDEX EQUAL 0)
     include(giflib.cmake)
     include(openxr.cmake)
     include(tinyxml2.cmake)
-    include(curl.cmake)
+
+    # Disabled because of build errors
+    # include(curl.cmake)
+
     if (ANDROID)
         include(android.cmake)
     endif()
+
 elseif(BUILD_PASS_INDEX EQUAL 1)
+
     include(libpng.cmake)
     include(libtiff.cmake)
+
 elseif(BUILD_PASS_INDEX EQUAL 2)
+
     include(freetype.cmake)
     include(assimp.cmake)
-    include(wxwidgets.cmake)
+
+    if (MACOS OR LINUX OR WIN32)
+        include(wxwidgets.cmake)
+    endif()
+
     # Disabled by default
     # include(opencv.cmake)
 endif()
