@@ -151,7 +151,7 @@ void RMVTrackerMainWindow::onFrame(const Frame& frame)
 	}
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return;
@@ -168,7 +168,7 @@ void RMVTrackerMainWindow::onFrame(const Frame& frame)
 		const HomogenousMatrix4& resultingPose = transformations.front().transformation();
 
 		Frame rgbFrame;
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, true, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, true, WorkerPool::get().scopedWorker()()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return;

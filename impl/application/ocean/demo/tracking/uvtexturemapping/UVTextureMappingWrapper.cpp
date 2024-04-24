@@ -272,7 +272,7 @@ UVTextureMappingWrapper::UVTextureMappingWrapper(const std::vector<std::wstring>
 		if (patternFrame.width() % 3u == 0u && patternFrame.height() % 4u == 0u && patternFrame.width() * 4u == patternFrame.height() * 3u)
 		{
 			Frame cubeFrameY;
-			if (CV::FrameConverter::Comfort::convert(patternFrame, FrameType(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), cubeFrameY, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+			if (CV::FrameConverter::Comfort::convert(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, cubeFrameY, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 			{
 				CV::Detector::Blob::BlobFeatures cubeMapFeatures;
 				if (Tracking::Blob::FeatureMap::createCubeFeatureMap(cubeFrameY.constdata<uint8_t>(), cubeFrameY.width(), cubeFrameY.height(), cubeFrameY.paddingElements(), Scalar(1), cubeMapFeatures, Scalar(15), 0u, WorkerPool::get().scopedWorker()()))
@@ -302,7 +302,7 @@ UVTextureMappingWrapper::UVTextureMappingWrapper(const std::vector<std::wstring>
 		}
 
 		Frame yFrame;
-		if (CV::FrameConverter::Comfort::convert(patternFrame, FrameType(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, false, WorkerPool::get().scopedWorker()()))
+		if (CV::FrameConverter::Comfort::convert(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, false, WorkerPool::get().scopedWorker()()))
 		{
 			// Cylinder parameters: [0] patternCropWidth, [1] cylinderMetricHeight, [2] xAxisOffset,
 			// [3] yAxisIntersection.x(), [4] yAxisIntersection.y()
@@ -363,7 +363,7 @@ UVTextureMappingWrapper::UVTextureMappingWrapper(const std::vector<std::wstring>
 
 		// We want to track a (possibly truncated) cone.
 		Frame yFrame;
-		if (CV::FrameConverter::Comfort::convert(patternFrame, FrameType(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, false, WorkerPool::get().scopedWorker()()))
+		if (CV::FrameConverter::Comfort::convert(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, false, WorkerPool::get().scopedWorker()()))
 		{
 			// Cone parameters: [0] coneHeight, [1] largerDiameter, [2] smallerDiameter,
 			// [3] largerArcEnd.x(), [4] largerArcEnd.y(), [5] smallerArcEnd.x(), [6] smallerArcEnd.y(),
@@ -422,7 +422,7 @@ UVTextureMappingWrapper::UVTextureMappingWrapper(const std::vector<std::wstring>
 	if (visualTracker.isNull() && trackerName == std::string("Blob Feature Based 6DOF Tracker for meshes"))
 	{
 		Frame yFrame;
-		if (CV::FrameConverter::Comfort::convert(patternFrame, FrameType(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, false, WorkerPool::get().scopedWorker()()))
+		if (CV::FrameConverter::Comfort::convert(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, false, WorkerPool::get().scopedWorker()()))
 		{
 			if (commandArguments.size() < 6)
 			{
@@ -668,7 +668,7 @@ bool UVTextureMappingWrapper::trackNewFrame(Frame& frame, double& time)
 	trackerFrameTimestamp = liveFrame->timestamp();
 
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(*liveFrame, FrameType(*liveFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(*liveFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;

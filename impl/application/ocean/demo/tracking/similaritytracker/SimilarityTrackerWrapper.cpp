@@ -275,7 +275,7 @@ bool SimilarityTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 	const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
 
 	Frame currentFrameRGB;
-	if (!CV::FrameConverter::Comfort::convert(currentFrame, FrameType(currentFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), currentFrameRGB, true, scopedWorker()))
+	if (!CV::FrameConverter::Comfort::convert(currentFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, currentFrameRGB, true, scopedWorker()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
@@ -287,7 +287,7 @@ bool SimilarityTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 	}
 
 	Frame trackingFrame;
-	if (!CV::FrameConverter::Comfort::convert(currentFrame, FrameType(currentFrame, trackingPixelFormat_, FrameType::ORIGIN_UPPER_LEFT), trackingFrame, true, scopedWorker()))
+	if (!CV::FrameConverter::Comfort::convert(currentFrame, trackingPixelFormat_, FrameType::ORIGIN_UPPER_LEFT, trackingFrame, true, scopedWorker()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;

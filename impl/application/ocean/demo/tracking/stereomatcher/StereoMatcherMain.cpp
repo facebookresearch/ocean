@@ -132,14 +132,14 @@ class ScopedPlugin
 	const FrameType::PixelFormat pixelFormat = (pixelFormatValue.isString() && String::toLower(pixelFormatValue.stringValue()) == "y8") ? FrameType::FORMAT_Y8 : FrameType::FORMAT_RGB24;
 
 	Frame leftTrackingFrame;
-	if (!CV::FrameConverter::Comfort::convert(leftFrame, FrameType(leftFrame, pixelFormat), leftTrackingFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(multicore)()))
+	if (!CV::FrameConverter::Comfort::convert(leftFrame, pixelFormat, leftTrackingFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(multicore)()))
 	{
 		Log::error() << "Failed to convert left frame";
 		return 1;
 	}
 
 	Frame rightTrackingFrame;
-	if (!CV::FrameConverter::Comfort::convert(rightFrame, FrameType(rightFrame, pixelFormat), rightTrackingFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(multicore)()))
+	if (!CV::FrameConverter::Comfort::convert(rightFrame, pixelFormat, rightTrackingFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(multicore)()))
 	{
 		Log::error() << "Failed to convert left frame";
 		return 1;

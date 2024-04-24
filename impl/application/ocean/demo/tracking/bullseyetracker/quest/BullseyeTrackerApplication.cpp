@@ -579,7 +579,7 @@ bool BullseyeTrackerApplication::convertFrameToY8(const Frame& frame, Frame& yFr
 		const CV::FrameConverter::Options options(/* black level */ 64u, /* white balance red */ 2.0f, /* green */ 1.0f, /* blue */ 2.0f, /* gamma */ 1.0f / 2.4f);
 
 		Frame intermediateFrame;
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24), intermediateFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr, options))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, intermediateFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr, options))
 		{
 			return false;
 		}
@@ -594,5 +594,5 @@ bool BullseyeTrackerApplication::convertFrameToY8(const Frame& frame, Frame& yFr
 		options = CV::FrameConverter::Options(Scalar(0.5));
 	}
 
-	return CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr, options);
+	return CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr, options);
 }

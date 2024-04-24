@@ -116,7 +116,7 @@ void PointTrackerApplication::threadRun()
 
 		Frame displayLeft;
 
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24), displayLeft, true))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, displayLeft, true))
 		{
 			Log::error() << "Failed to convert frame!";
 			ocean_assert(false && "This should never happen!");

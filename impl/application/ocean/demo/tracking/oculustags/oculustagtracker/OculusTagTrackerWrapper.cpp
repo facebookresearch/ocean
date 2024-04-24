@@ -386,7 +386,7 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 		ocean_assert(frame.pixelOrigin() == Frame::ORIGIN_UPPER_LEFT);
 
 		Frame rgbFrame;
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24), rgbFrame, /* forceCopy */ true, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, rgbFrame, /* forceCopy */ true, WorkerPool::get().scopedWorker()()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
@@ -395,7 +395,7 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 		rgbFrames.emplace_back(std::move(rgbFrame));
 
 		Frame yFrame;
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, /* forceCopy */ false, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, /* forceCopy */ false, WorkerPool::get().scopedWorker()()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;

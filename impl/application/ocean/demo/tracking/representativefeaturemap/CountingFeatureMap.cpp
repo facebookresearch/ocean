@@ -37,7 +37,7 @@ const FeatureCount2IdMap& CountingFeatureMap::featureCount2Id()
 bool CountingFeatureMap::modifyFrameAndDetermineCorrespondences(const Frame& frame, RandomGenerator& randomGenerator, const bool rotateFrame, const bool shrinkFrame, Worker* worker)
 {
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
@@ -90,7 +90,7 @@ bool CountingFeatureMap::modifyFrameAndDetermineCorrespondences(const Frame& fra
 unsigned int CountingFeatureMap::modifyFrameAndCheckCorrespondences(const FeaturePoints& mapFeatures, const Frame& frame, RandomGenerator& randomGenerator, unsigned int minimalCorrespondences, const bool rotateFrame, const bool shrinkFrame, unsigned int* numberFrames, Worker* worker)
 {
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
@@ -138,7 +138,7 @@ unsigned int CountingFeatureMap::modifyFrameAndCheckCorrespondences(const Featur
 FeaturePoints CountingFeatureMap::determineBlobFeatures(const Frame& frame, const Scalar threshold, Worker* worker)
 {
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return FeaturePoints();
 	}
@@ -160,7 +160,7 @@ bool CountingFeatureMap::determineCorrespondences(const FeaturePoints& mapFeatur
 	ambiguousMapFeatures.clear();
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
@@ -206,7 +206,7 @@ bool CountingFeatureMap::checkCorrespondences(const FeaturePoints& mapFeatures, 
 	ocean_assert(minimalCorrespondences >= 4u);
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}

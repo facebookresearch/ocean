@@ -267,7 +267,7 @@ bool HomographyTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 	const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
 
 	Frame currentFrameRGB;
-	if (!CV::FrameConverter::Comfort::convert(currentFrame, FrameType(currentFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), currentFrameRGB, CV::FrameConverter::CP_ALWAYS_COPY, scopedWorker()))
+	if (!CV::FrameConverter::Comfort::convert(currentFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, currentFrameRGB, CV::FrameConverter::CP_ALWAYS_COPY, scopedWorker()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
@@ -277,7 +277,7 @@ bool HomographyTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 		performance_.reset();
 
 	Frame trackingFrame;
-	if (!CV::FrameConverter::Comfort::convert(currentFrame, FrameType(currentFrame, trackingPixelFormat_, FrameType::ORIGIN_UPPER_LEFT), trackingFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
+	if (!CV::FrameConverter::Comfort::convert(currentFrame, trackingPixelFormat_, FrameType::ORIGIN_UPPER_LEFT, trackingFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;

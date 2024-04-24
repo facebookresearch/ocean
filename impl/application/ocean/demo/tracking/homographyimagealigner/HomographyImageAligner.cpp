@@ -418,7 +418,7 @@ bool HomographyImageAligner::alignNewFrame(Frame& frame, double& time, SquareMat
 	const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
 
 	Frame currentFrameRGB;
-	if (!CV::FrameConverter::Comfort::convert(*currentFrame, FrameType(*currentFrame, FrameType::FORMAT_RGB24), currentFrameRGB, true, scopedWorker()))
+	if (!CV::FrameConverter::Comfort::convert(*currentFrame, FrameType::FORMAT_RGB24, currentFrameRGB, true, scopedWorker()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
@@ -432,7 +432,7 @@ bool HomographyImageAligner::alignNewFrame(Frame& frame, double& time, SquareMat
 	HighPerformanceStatistic::ScopedStatistic scopedPerformance(performance_);
 
 	Frame trackingFrame;
-	if (!CV::FrameConverter::Comfort::convert(*currentFrame, FrameType(*currentFrame, trackingPixelFormat_), trackingFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
+	if (!CV::FrameConverter::Comfort::convert(*currentFrame, trackingPixelFormat_, trackingFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;

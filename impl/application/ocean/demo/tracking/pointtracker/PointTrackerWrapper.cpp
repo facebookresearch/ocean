@@ -193,14 +193,14 @@ bool PointTrackerWrapper::trackNewFrame(Frame& frame, double& time)
 	frameTimestamp_ = liveFrame.timestamp();
 
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(liveFrame, FrameType(liveFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, true, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(liveFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, true, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
 	}
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(liveFrame, FrameType(liveFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, false, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(liveFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, false, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
