@@ -88,7 +88,7 @@ class OCEAN_CV_EXPORT FrameConverterThreshold : public FrameConverter
 		 * bool applyOtsu(const Frame& source, Frame& target, Worker* worker)
 		 * {
 		 *     Frame yFrame;
-		 *     if (!CV::FrameConverter::Comfort::convert(source, FrameType(source, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+		 *     if (!CV::FrameConverter::Comfort::convert(source, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		 *     {
 		 *         ocean_assert(false && "Unsupported pixel format!");
 		 *         return false;

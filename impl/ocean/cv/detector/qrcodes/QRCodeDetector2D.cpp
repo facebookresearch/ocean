@@ -59,7 +59,7 @@ QRCodes QRCodeDetector2D::detectQRCodes(const AnyCamera& anyCamera, const uint8_
 		Frame ySourceFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, Frame::CM_COPY_REMOVE_PADDING_LAYOUT, paddingElements);
 		Frame rgbSourceFrame;
 
-		CV::FrameConverter::Comfort::convert(ySourceFrame, FrameType(ySourceFrame, FrameType::FORMAT_RGB24), rgbSourceFrame, /* forceCopy */ true, worker);
+		CV::FrameConverter::Comfort::convert(ySourceFrame, FrameType::FORMAT_RGB24, rgbSourceFrame, /* forceCopy */ true, worker);
 		ocean_assert(rgbSourceFrame.isValid());
 
 		QRCodeDebugElements::get().updateElement(QRCodeDebugElements::EI_SOURCE_IMAGE_RGB24, std::move(rgbSourceFrame));

@@ -641,7 +641,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackArbitraryPointsBidirecti
 		}
 
 		Frame yFrame;
-		if (!FrameConverter::Comfort::convert(previousLayer, FrameType(previousLayer, FrameType::FORMAT_Y8), yFrame, FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+		if (!FrameConverter::Comfort::convert(previousLayer, FrameType::FORMAT_Y8, yFrame, FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		{
 			return false;
 		}

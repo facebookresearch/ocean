@@ -140,7 +140,7 @@ inline void ORBFeatureDescriptor::determineDescriptors(const uint32_t* linedInte
 inline bool ORBFeatureDescriptor::detectReferenceFeaturesAndDetermineDescriptors(const Frame& frame, ORBFeatures& featurePoints, const unsigned int pyramidLayers, const bool useHarrisFeatures, const unsigned int featureThreshold, Worker* worker)
 {
 	Frame yFrame;
-	if (!FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}

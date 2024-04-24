@@ -411,7 +411,7 @@ Frame FrameMean::meanFrame8BitPerChannel(FrameProviderInterface& frameProviderIn
 
 		Frame targetFrame;
 
-		if (!CV::FrameConverter::Comfort::convert(*frame, targetFrameType, targetFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+		if (!CV::FrameConverter::Comfort::convert(*frame, targetFrameType.pixelFormat(), targetFrameType.pixelOrigin(), targetFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		{
 			return Frame();
 		}

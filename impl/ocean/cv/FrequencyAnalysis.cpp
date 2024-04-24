@@ -207,7 +207,7 @@ Frame FrequencyAnalysis::magnitudeFrame(const Frame& frame, const Scalar octaves
 	ocean_assert(frame);
 
 	Frame yFrame;
-	if (!FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, false, worker))
+	if (!FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, false, worker))
 	{
 		return Frame();
 	}

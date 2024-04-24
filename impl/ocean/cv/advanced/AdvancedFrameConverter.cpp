@@ -24,7 +24,7 @@ bool AdvancedFrameConverter::convertToYUT24ScharrMagnitude(const Frame& source, 
 	ocean_assert(window >= 1u && window % 2u == 1u);
 
 	Frame yuvFrame;
-	if (!FrameConverter::Comfort::convert(source, FrameType(source, FrameType::FORMAT_YUV24), yuvFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!FrameConverter::Comfort::convert(source, FrameType::FORMAT_YUV24, yuvFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
@@ -72,7 +72,7 @@ bool AdvancedFrameConverter::convertToYUVT32ScharrMagnitude(const Frame& source,
 	ocean_assert(window >= 1u && window % 2u == 1u);
 
 	Frame yuvFrame;
-	if (!FrameConverter::Comfort::convert(source, FrameType(source, FrameType::FORMAT_YUV24), yuvFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!FrameConverter::Comfort::convert(source, FrameType::FORMAT_YUV24, yuvFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
@@ -120,13 +120,13 @@ bool AdvancedFrameConverter::convertToRGBT32ScharrMagnitude(const Frame& source,
 	ocean_assert(window >= 1u && window % 2u == 1u);
 
 	Frame rgbFrame;
-	if (!FrameConverter::Comfort::convert(source, FrameType(source, FrameType::FORMAT_RGB24), rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!FrameConverter::Comfort::convert(source, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
 
 	Frame yFrame;
-	if (!FrameConverter::Comfort::convert(source, FrameType(source, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!FrameConverter::Comfort::convert(source, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
@@ -172,13 +172,13 @@ bool AdvancedFrameConverter::convertToRGBT32ScharrMagnitude(const Frame& source,
 bool AdvancedFrameConverter::convertToRGBT32ScharrMagnitude(const Frame& source, Frame& target, Worker* worker)
 {
 	Frame rgbFrame;
-	if (!FrameConverter::Comfort::convert(source, FrameType(source, FrameType::FORMAT_RGB24), rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!FrameConverter::Comfort::convert(source, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
 
 	Frame yFrame;
-	if (!FrameConverter::Comfort::convert(source, FrameType(source, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!FrameConverter::Comfort::convert(source, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
@@ -197,7 +197,7 @@ bool AdvancedFrameConverter::convertToYUVLLL48LaplaceMagnitude(const Frame& sour
 	ocean_assert(window >= 1u && window % 2u == 1u);
 
 	Frame yuvFrame;
-	if (!CV::FrameConverter::Comfort::convert(source, FrameType(source, FrameType::FORMAT_YUV24), yuvFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!CV::FrameConverter::Comfort::convert(source, FrameType::FORMAT_YUV24, yuvFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}
@@ -284,7 +284,7 @@ bool AdvancedFrameConverter::createScharrMagnitudeIntegral(const Frame& frame, c
 	ocean_assert(frame.isValid());
 
 	Frame yFrame;
-	if (!FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	if (!FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 	{
 		return false;
 	}

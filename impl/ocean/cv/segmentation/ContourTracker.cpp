@@ -56,7 +56,7 @@ bool ContourTracker::detectObject(const Frame& frame, const PixelContour& roughC
 	else
 	{
 		Frame yFrameInner;
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrameInner, false, worker))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrameInner, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		{
 			return false;
 		}
@@ -208,7 +208,7 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 	else
 	{
 		Frame yFrameInner;
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrameInner, false, worker))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrameInner, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
 		{
 			return false;
 		}

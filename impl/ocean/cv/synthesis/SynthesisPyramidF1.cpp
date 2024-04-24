@@ -256,7 +256,7 @@ bool SynthesisPyramidF1::applyInpainting(const InitializationTechnique initializ
 			// the finer synthesis layer can be converted to 1 channel 8 bit frames to speed up the computation (while some synthesis quality may get lost)
 			if (layerIndex < forced1ChannelLayers)
 			{
-				FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), frameToUse, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker);
+				FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, frameToUse, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker);
 			}
 
 			layersReversedOrder_.emplace_back(frameToUse, mask, boundingBox);
