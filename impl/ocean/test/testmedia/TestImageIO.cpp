@@ -739,7 +739,7 @@ bool TestImageIO::testAnyImageEncodeDecode(const double testDuration)
 			else
 			{
 				Frame convertedFrame;
-				if (!CV::FrameConverter::Comfort::convert(targetFrameExplicit, sourceFrame.frameType(), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+				if (!CV::FrameConverter::Comfort::convert(targetFrameExplicit, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 				{
 					allSucceeded = false;
 				}
@@ -763,7 +763,7 @@ bool TestImageIO::testAnyImageEncodeDecode(const double testDuration)
 			else
 			{
 				Frame convertedFrame;
-				if (!CV::FrameConverter::Comfort::convert(targetFrameImplicit, sourceFrame.frameType(), convertedFrame, false))
+				if (!CV::FrameConverter::Comfort::convert(targetFrameImplicit, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, false))
 				{
 					allSucceeded = false;
 				}
@@ -1008,7 +1008,7 @@ bool TestImageIO::testBmpImageEncodeDecode(const unsigned int width, const unsig
 					// we convert the pixel format from RGB24 to match the pixel format of the source
 
 					Frame convertedFrame;
-					if (CV::FrameConverter::Comfort::convert(targetFrame, FrameType(targetFrame, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin()), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+					if (CV::FrameConverter::Comfort::convert(targetFrame, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 					{
 						ocean_assert(convertedFrame.frameType() == sourceFrame.frameType());
 
@@ -1113,7 +1113,7 @@ bool TestImageIO::testJpgImageEncodeDecode(const unsigned int width, const unsig
 					// we have to flip the resulting target frame
 
 					Frame flippedFrame;
-					if (CV::FrameConverter::Comfort::convert(targetFrame, FrameType(targetFrame, FrameType::ORIGIN_LOWER_LEFT), flippedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+					if (CV::FrameConverter::Comfort::convert(targetFrame, FrameType::ORIGIN_LOWER_LEFT, flippedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 					{
 						ocean_assert(flippedFrame.frameType() == sourceFrame.frameType());
 
@@ -1130,7 +1130,7 @@ bool TestImageIO::testJpgImageEncodeDecode(const unsigned int width, const unsig
 					// we must convert it from RGB24 to YUV24 and we may need to flip it
 
 					Frame convertedFrame;
-					if (CV::FrameConverter::Comfort::convert(targetFrame, FrameType(targetFrame, FrameType::FORMAT_YUV24, sourceFrame.pixelOrigin()), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+					if (CV::FrameConverter::Comfort::convert(targetFrame, FrameType::FORMAT_YUV24, sourceFrame.pixelOrigin(), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 					{
 						ocean_assert(convertedFrame.frameType() == sourceFrame.frameType());
 
@@ -1233,7 +1233,7 @@ bool TestImageIO::testHeicImageEncodeDecode(const unsigned int width, const unsi
 					// we have to flip the resulting target frame
 
 					Frame flippedFrame;
-					if (CV::FrameConverter::Comfort::convert(targetFrame, FrameType(targetFrame, FrameType::ORIGIN_LOWER_LEFT), flippedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+					if (CV::FrameConverter::Comfort::convert(targetFrame, FrameType::ORIGIN_LOWER_LEFT, flippedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 					{
 						ocean_assert(flippedFrame.frameType() == sourceFrame.frameType());
 
@@ -1250,7 +1250,7 @@ bool TestImageIO::testHeicImageEncodeDecode(const unsigned int width, const unsi
 					// we must convert it from RGB24 to YUV24 and we may need to flip it
 
 					Frame convertedFrame;
-					if (CV::FrameConverter::Comfort::convert(targetFrame, FrameType(targetFrame, FrameType::FORMAT_YUV24, sourceFrame.pixelOrigin()), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+					if (CV::FrameConverter::Comfort::convert(targetFrame, FrameType::FORMAT_YUV24, sourceFrame.pixelOrigin(), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 					{
 						ocean_assert(convertedFrame.frameType() == sourceFrame.frameType());
 
@@ -1516,7 +1516,7 @@ bool TestImageIO::testTifImageEncodeDecode(const unsigned int width, const unsig
 				else if (sourceFrame.frameType() == FrameType(targetFrame, FrameType::ORIGIN_LOWER_LEFT))
 				{
 					Frame flippedFrame;
-					if (CV::FrameConverter::Comfort::convert(targetFrame, FrameType(targetFrame, FrameType::ORIGIN_LOWER_LEFT), flippedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+					if (CV::FrameConverter::Comfort::convert(targetFrame, FrameType::ORIGIN_LOWER_LEFT, flippedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 					{
 						ocean_assert(flippedFrame.frameType() == sourceFrame.frameType());
 

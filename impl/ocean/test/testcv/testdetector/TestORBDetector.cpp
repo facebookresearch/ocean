@@ -38,7 +38,7 @@ bool TestORBDetector::test(const Frame& frame, const double testDuration, Worker
 	Log::info() << " ";
 
 	Frame yFrame;
-	if (frame.isValid() && !CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+	if (frame.isValid() && !CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 	{
 		ocean_assert(false && "This must never happen!");
 		Log::info() << "ORB detector test FAILED!";

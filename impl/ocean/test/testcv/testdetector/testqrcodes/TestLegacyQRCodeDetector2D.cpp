@@ -378,7 +378,7 @@ Frame TestLegacyQRCodeDetector2D::loadTestImage(const HandlePair& handlePair)
 	}
 
 	Frame imageY8;
-	if (!CV::FrameConverter::Comfort::convert(image, FrameType(image, FrameType::FORMAT_Y8), imageY8, CV::FrameConverter::CP_ALWAYS_COPY))
+	if (!CV::FrameConverter::Comfort::convert(image, FrameType::FORMAT_Y8, imageY8, CV::FrameConverter::CP_ALWAYS_COPY))
 	{
 		ocean_assert(false && "This should never happen!");
 		Frame();

@@ -727,7 +727,7 @@ bool TestSpecial::testAnyImageEncodeDecode(const double testDuration)
 			else
 			{
 				Frame convertedFrame;
-				if (!CV::FrameConverter::Comfort::convert(targetFrameExplicit, sourceFrame.frameType(), convertedFrame, false))
+				if (!CV::FrameConverter::Comfort::convert(targetFrameExplicit, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, false))
 				{
 					allSucceeded = false;
 				}
@@ -751,7 +751,7 @@ bool TestSpecial::testAnyImageEncodeDecode(const double testDuration)
 			else
 			{
 				Frame convertedFrame;
-				if (!CV::FrameConverter::Comfort::convert(targetFrameImplicit, sourceFrame.frameType(), convertedFrame, false))
+				if (!CV::FrameConverter::Comfort::convert(targetFrameImplicit, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, false))
 				{
 					allSucceeded = false;
 				}
@@ -838,7 +838,7 @@ bool TestSpecial::testBmpImageEncodeDecode(const unsigned int width, const unsig
 					// we convert the pixel format from BGR24 to match the pixel format of the source
 
 					Frame convertedFrame;
-					if (CV::FrameConverter::Comfort::convert(targetFrame, FrameType(targetFrame, sourceFrame.pixelFormat()), convertedFrame, false))
+					if (CV::FrameConverter::Comfort::convert(targetFrame, sourceFrame.pixelFormat(), convertedFrame, false))
 					{
 						ocean_assert(convertedFrame.frameType() == sourceFrame.frameType());
 
@@ -1409,7 +1409,7 @@ bool TestSpecial::determineSimilarity(const Frame& firstFrame, const Frame& seco
 	}
 
 	Frame convertedSecondFrame;
-	if (!CV::FrameConverter::Comfort::convert(secondFrame, firstFrame, convertedSecondFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+	if (!CV::FrameConverter::Comfort::convert(secondFrame, firstFrame.pixelFormat(), firstFrame.pixelOrigin(), convertedSecondFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 	{
 		return false;
 	}

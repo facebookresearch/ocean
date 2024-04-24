@@ -41,7 +41,7 @@ bool TestBlobFeatureDetector::test(const Frame& frame, const double testDuration
 	Log::info() << " ";
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, false))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 	{
 		ocean_assert(false && "This must never happen!");
 		Log::info() << "Blob detector test FAILED!";

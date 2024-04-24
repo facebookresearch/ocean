@@ -35,7 +35,7 @@ bool TestHarrisDetector::test(const Frame& frame, const double testDuration, Wor
 	bool allSucceeded = true;
 
 	Frame yFrame;
-	if (frame.isValid() && !CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+	if (frame.isValid() && !CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 	{
 		ocean_assert(false && "This must never happen!");
 		Log::info() << "Harris corner detector test FAILED!";

@@ -60,7 +60,7 @@ void TestMovie::MovieVerifier::onFrame(const Frame& frame, const SharedAnyCamera
 		if (frame.width() == expectedWidth_ && frame.height() == expectedHeight_)
 		{
 			Frame rgbFrame;
-			if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24), rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+			if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 			{
 				ocean_assert(false && "This should never happen!");
 				hasError_ = true;
@@ -494,7 +494,7 @@ bool TestMovie::testLoop()
 							}
 
 							Frame rgbFrame;
-							if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24), rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+							if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 							{
 								ocean_assert(false && "This should never happen!");
 
@@ -707,7 +707,7 @@ bool TestMovie::testPause()
 						}
 
 						Frame rgbFrame;
-						if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24), rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+						if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 						{
 							ocean_assert(false && "This should never happen!");
 

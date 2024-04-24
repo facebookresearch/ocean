@@ -51,7 +51,7 @@ SharedTestData TestMessengerCodeDetector::FileDataCollection::data(const size_t 
 
 	if (image.isValid())
 	{
-		if (CV::FrameConverter::Comfort::change(image, FrameType(image, FrameType::FORMAT_Y8)))
+		if (CV::FrameConverter::Comfort::change(image, FrameType::FORMAT_Y8))
 		{
 			return std::make_shared<TestData>(std::move(image), Value());
 		}

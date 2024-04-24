@@ -35,7 +35,7 @@ bool TestFASTDetector::test(const Frame& frame, const double testDuration, Worke
 
 	if (frame.isValid())
 	{
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 		{
 			ocean_assert(false && "This must never happen!");
 			Log::info() << "FAST detector test FAILED!";

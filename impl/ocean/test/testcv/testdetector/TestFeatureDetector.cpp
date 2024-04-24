@@ -79,7 +79,7 @@ bool TestFeatureDetector::testDetermineHarrisPoints(const Frame& testFrame, cons
 		{
 			yFrame.set(FrameType(testFrame.frameType(), FrameType::FORMAT_Y8), true, true, Indices32(1, paddingElements));
 
-			CV::FrameConverter::Comfort::convert(testFrame, FrameType(testFrame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_ALWAYS_COPY, useWorker);
+			CV::FrameConverter::Comfort::convert(testFrame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_ALWAYS_COPY, useWorker);
 			ocean_assert(yFrame.paddingElements() == paddingElements);
 		}
 		else

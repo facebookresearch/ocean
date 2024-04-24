@@ -172,7 +172,7 @@ bool TestWIC::testAnyImageEncodeDecode(const double testDuration)
 			else
 			{
 				Frame convertedFrame;
-				if (!CV::FrameConverter::Comfort::convert(targetFrameExplicit, sourceFrame.frameType(), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+				if (!CV::FrameConverter::Comfort::convert(targetFrameExplicit, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 				{
 					allSucceeded = false;
 				}
@@ -196,7 +196,7 @@ bool TestWIC::testAnyImageEncodeDecode(const double testDuration)
 			else
 			{
 				Frame convertedFrame;
-				if (!CV::FrameConverter::Comfort::convert(targetFrameImplicit, sourceFrame.frameType(), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+				if (!CV::FrameConverter::Comfort::convert(targetFrameImplicit, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 				{
 					allSucceeded = false;
 				}

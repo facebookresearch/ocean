@@ -135,13 +135,13 @@ bool testCVDetector(const double testDuration, Worker& worker, const std::string
 	}
 
 	Frame rgbFrame;
-	if (testFrame && !CV::FrameConverter::Comfort::convert(testFrame, FrameType(testFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, true, nullptr))
+	if (testFrame && !CV::FrameConverter::Comfort::convert(testFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
 	{
 		Log::info() << "Failed to converted the defined test frame to a RGB24 test frame!";
 	}
 
 	Frame yFrame;
-	if (testFrame && !CV::FrameConverter::Comfort::convert(testFrame, FrameType(testFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, true, nullptr))
+	if (testFrame && !CV::FrameConverter::Comfort::convert(testFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_ALWAYS_COPY))
 	{
 		Log::info() << "Failed to converted the defined test frame to a Y8 test frame!";
 	}

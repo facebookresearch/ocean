@@ -70,13 +70,13 @@ bool TestPointTracking::testMotion(const Frame& frame, const unsigned int channe
 	ocean_assert(frame && channels >= 1u && testDuration > 0.0);
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker))
 	{
 		return false;
 	}
 
 	Frame frame0;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::findPixelFormat(channels * 8u), FrameType::ORIGIN_UPPER_LEFT), frame0, CV::FrameConverter::CP_ALWAYS_COPY, &worker))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::findPixelFormat(channels * 8u), FrameType::ORIGIN_UPPER_LEFT, frame0, CV::FrameConverter::CP_ALWAYS_COPY, &worker))
 	{
 		ocean_assert(false && "This must never happen!");
 		return false;
