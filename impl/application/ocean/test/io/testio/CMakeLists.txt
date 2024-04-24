@@ -2,11 +2,11 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR LINUX OR WIN32)
+if (MACOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_io_testio")
 
-    if (APPLE)
+    if (MACOS)
         find_library(FOUNDATION_LIB Foundation)
     endif()
 
@@ -31,7 +31,7 @@ if (APPLE OR LINUX OR WIN32)
             ocean_test_testio
     )
 
-    if (APPLE)
+    if (MACOS)
         target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${FOUNDATION_LIB})
     endif()
 

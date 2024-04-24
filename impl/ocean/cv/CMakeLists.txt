@@ -9,7 +9,7 @@ add_subdirectory(fonts)
 add_subdirectory(segmentation)
 add_subdirectory(synthesis)
 
-if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
+if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_cv")
 

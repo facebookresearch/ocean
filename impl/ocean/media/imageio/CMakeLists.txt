@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR IOS)
+if (MACOS OR IOS)
 
     set(OCEAN_TARGET_NAME "ocean_media_imageio")
 

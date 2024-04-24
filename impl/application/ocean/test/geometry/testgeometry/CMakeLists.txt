@@ -2,11 +2,11 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR LINUX OR WIN32)
+if (MACOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_geometry_testgeometry")
 
-    if (APPLE OR IOS)
+    if (MACOS OR IOS)
         find_library(FOUNDATION_LIB Foundation)
     endif()
 

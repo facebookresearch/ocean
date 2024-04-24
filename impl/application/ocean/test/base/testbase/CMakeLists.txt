@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR LINUX OR WIN32)
+if (MACOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_base_testbase")
 
@@ -25,7 +25,7 @@ if (APPLE OR LINUX OR WIN32)
     )
 
     if (BUILD_SHARED_LIBS)
-        if (APPLE OR LINUX)
+        if (MACOS OR LINUX)
             set_property(TARGET ${OCEAN_TARGET_NAME} APPEND PROPERTY INSTALL_RPATH "${CMAKE_INSTALL_LIBDIR}")
         endif()
     endif()

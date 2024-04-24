@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR ANDROID OR IOS OR LINUX)
+if (MACOS OR ANDROID OR IOS OR LINUX)
 
     set(OCEAN_TARGET_NAME "ocean_test_testcv_testadvanced")
 

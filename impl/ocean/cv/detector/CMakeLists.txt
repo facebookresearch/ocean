@@ -6,7 +6,7 @@ add_subdirectory(barcodes)
 add_subdirectory(blob)
 add_subdirectory(qrcodes)
 
-if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
+if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_cv_detector")
 

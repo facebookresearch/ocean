@@ -6,11 +6,11 @@ add_subdirectory(android)
 add_subdirectory(apple)
 add_subdirectory(linux)
 
-if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
+if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_platform")
 
-    if (APPLE)
+    if (MACOS)
         find_library(APPKIT_LIB AppKit)
         find_library(CARBON_LIB Carbon)
     elseif (IOS)
@@ -23,13 +23,13 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
 
-    if (APPLE OR IOS)
+    if (MACOS OR IOS)
         file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp" "${CMAKE_CURRENT_LIST_DIR}/*.mm")
     else()
         file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
     endif()
 
-    if (NOT APPLE)
+    if (NOT MACOS)
         # Remove macOS-only files
         list(REMOVE_ITEM OCEAN_TARGET_HEADER_FILES
             "Keyboard.h"
@@ -62,7 +62,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_cv
     )
 
-    if (APPLE)
+    if (MACOS)
         target_link_libraries(${OCEAN_TARGET_NAME}
             PUBLIC
                 ${APPKIT_LIB}

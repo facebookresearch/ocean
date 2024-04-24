@@ -4,11 +4,11 @@ cmake_minimum_required(VERSION 3.26)
 
 add_subdirectory(testadvanced)
 
-if (APPLE OR LINUX OR WIN32)
+if (MACOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv")
 
-    if (APPLE OR IOS)
+    if (MACOS OR IOS)
         find_library(FOUNDATION_LIB Foundation)
     endif()
 

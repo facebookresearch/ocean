@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR LINUX)
+if (MACOS OR LINUX)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv_testadvanced")
 

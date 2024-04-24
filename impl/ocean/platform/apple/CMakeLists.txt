@@ -2,13 +2,13 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR IOS)
+if (MACOS OR IOS)
 
     set(OCEAN_TARGET_NAME "ocean_platform_apple")
 
     find_library(COREGRAPHICS_LIB CoreGraphics)
 
-    if (APPLE)
+    if (MACOS)
         find_library(APPKIT_LIB AppKit)
         find_library(CARBON_LIB Carbon)
     elseif (IOS)
@@ -38,7 +38,7 @@ if (APPLE OR IOS)
 
     target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${COREGRAPHICS_LIB})
 
-    if (APPLE)
+    if (MACOS)
         target_link_libraries(${OCEAN_TARGET_NAME}
             PUBLIC
                 ${APPKIT_LIB}

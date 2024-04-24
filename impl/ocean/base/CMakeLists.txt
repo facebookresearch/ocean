@@ -4,11 +4,11 @@ cmake_minimum_required(VERSION 3.26)
 
 add_subdirectory(jni)
 
-if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
+if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_base")
 
-    if (APPLE)
+    if (MACOS)
         find_library(FOUNDATION_LIB Foundation)
     elseif (IOS)
         find_library(FOUNDATION_LIB Foundation)
@@ -25,7 +25,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
 
-    if (APPLE)
+    if (MACOS OR IOS)
         file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp" "${CMAKE_CURRENT_LIST_DIR}/*.mm")
     else()
         file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
@@ -44,7 +44,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
 
     # Dependencies
-    if (APPLE)
+    if (MACOS)
         target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${FOUNDATION_LIB})
     elseif(IOS)
         target_link_libraries(${OCEAN_TARGET_NAME}

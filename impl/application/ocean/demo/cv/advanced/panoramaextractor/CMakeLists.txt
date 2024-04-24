@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR IOS) # Disabled ANDROID for now because of APPLE-only dependencies like ocean_media_imageio
+if (MACOS OR IOS) # Disabled ANDROID for now because of macOS-only dependencies like ocean_media_imageio
 
     set(OCEAN_TARGET_NAME "application_ocean_demo_cv_advanced_panoramaextractor")
 
@@ -29,7 +29,7 @@ if (APPLE OR IOS) # Disabled ANDROID for now because of APPLE-only dependencies 
             ocean_platform
     )
 
-    if (APPLE OR IOS)
+    if (MACOS OR IOS)
         target_link_libraries(${OCEAN_TARGET_NAME}
             PUBLIC
                 ocean_media_imageio

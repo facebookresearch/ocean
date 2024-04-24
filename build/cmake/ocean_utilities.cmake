@@ -1,5 +1,11 @@
 # (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
+# The builtin variable APPLE is set to true for both, macOS and iOS. While there is a dedicated
+# builtin variable for iOS (IOS), there is no such variable for only macOS. So, it's added here.
+if (APPLE AND ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    set(MACOS TRUE)
+endif()
+
 # Translates the system names CMake uses to system names Ocean prefers
 #
 # The mapping is defined as follows (CMake -> Ocean):

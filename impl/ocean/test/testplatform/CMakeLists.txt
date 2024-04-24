@@ -2,14 +2,14 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
+if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_test_testplatform")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
 
-    if (APPLE OR IOS)
+    if (MACOS OR IOS)
         file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp" "${CMAKE_CURRENT_LIST_DIR}/*.mm")
     else()
         file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
@@ -50,7 +50,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_platform
     )
 
-    if (APPLE OR IOS)
+    if (MACOS OR IOS)
         target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_apple)
     endif()
 

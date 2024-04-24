@@ -32,11 +32,11 @@ get_ocean_preprocessor_flags(OCEAN_PREPROCESSOR_FLAGS)
 get_ocean_compiler_flags(OCEAN_COMPILER_FLAGS)
 
 if (BUILD_SHARED_LIBS)
-    if (APPLE)
+    if (MACOS)
         set(CMAKE_MACOSX_RPATH 1)
     endif()
 
-    if (APPLE OR LINUX)
+    if (MACOS OR LINUX)
         set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
     endif()
 endif()

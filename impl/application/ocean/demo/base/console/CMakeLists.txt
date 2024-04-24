@@ -2,11 +2,11 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (APPLE OR LINUX OR WIN32)
+if (MACOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "application_ocean_demo_base_console")
 
-    if (APPLE)
+    if (MACOS)
         find_library(COREGRAPHICS_LIB CoreGraphics)
         find_library(FOUNDATION_LIB Foundation)
         find_library(IMAGEIO_LIB ImageIO)
@@ -27,7 +27,7 @@ if (APPLE OR LINUX OR WIN32)
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_base)
 
-    if (APPLE)
+    if (MACOS)
         target_link_libraries(${OCEAN_TARGET_NAME}
             PUBLIC
                 ${COREGRAPHICS_LIB}
