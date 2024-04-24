@@ -110,7 +110,7 @@ bool RecordableCamera::addData(const uint32_t cameraId, const SharedAnyCameraD& 
 		// ensuring that the pixel origin is upper left
 
 		Frame convertedFrame;
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::ORIGIN_UPPER_LEFT), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::ORIGIN_UPPER_LEFT, convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
