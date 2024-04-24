@@ -32,12 +32,6 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestQRCodeEncoder
 
 	protected:
 
-		/// Handle for test images, first: filename, second: Everstore handle
-		typedef std::pair<std::string, std::string> HandlePair;
-
-		/// Vector of handle pairs
-		typedef std::vector<HandlePair> HandlePairs;
-
 		/**
 		 * Definition of a helper data structure that's used to verify the QR code encoding functionality
 		 * This will contain the raw message and the values of corresponding QR code that were generated with a reference QR code generator and which are assumed to be correct.
@@ -125,9 +119,10 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestQRCodeEncoder
 		 *
 		 *   https://fburl.com/ocean_everstore_test_data (and then: qrcode/encoding_decoding_data/\*.csv)
 		 *
+		 * @param filename The name of the CSV file, must be valid
 		 * @return The verification data
 		 */
-		static QRCodeVerificationItems loadCSVTestQRCodeEncoding(const HandlePair& handlePair);
+		static QRCodeVerificationItems loadCSVTestQRCodeEncoding(const std::string& filename);
 
 #ifdef OCEAN_ENABLED_EVERSTORE_CLIENT
 
@@ -137,9 +132,10 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestQRCodeEncoder
 		 *
 		 *   https://fburl.com/ocean_everstore_test_data (and then: qrcode/encoding_decoding_data/\*.csv)
 		 *
+		 * @param handle The everstore handle of the data, must be valid
 		 * @return The verification data
 		 */
-		static QRCodeVerificationItems loadCSVEverstoreTestQRCodeEncoding(const HandlePair& handlePair);
+		static QRCodeVerificationItems loadCSVEverstoreTestQRCodeEncoding(const std::string& handle);
 
 #endif // OCEAN_ENABLED_EVERSTORE_CLIENT
 
@@ -150,12 +146,6 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestQRCodeEncoder
 		 * @return True on success, otherwise false
 		 */
 		static bool convertCSVToQRCodeVerificationItem(const std::string& lineCSV, QRCodeVerificationItem& qrcodeVerificationItem);
-
-		/**
-		 * Returns the pair of filename and Everstore handle for the QR code encoding test
-		 * @return The handle pair
-		 */
-		static HandlePair handlePairTestQRCodeEncoding();
 
 		/**
 		 * Return the absolute path to the directory containing the test data
@@ -192,4 +182,4 @@ inline TestQRCodeEncoder::QRCodeVerificationItem::QRCodeVerificationItem(const u
 
 } // namespace Test
 
-} // namespace Test
+} // namespace Ocean

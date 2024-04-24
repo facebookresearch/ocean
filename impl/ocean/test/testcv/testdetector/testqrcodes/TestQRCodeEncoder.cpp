@@ -7,17 +7,12 @@
 
 #include "ocean/cv/detector/qrcodes/QRCode.h"
 #include "ocean/cv/detector/qrcodes/QRCodeEncoder.h"
+
 #include "ocean/io/Base64.h"
 
 #ifdef OCEAN_ENABLED_EVERSTORE_CLIENT
-	#include "ocean/media/openimagelibraries/Image.h"
-
 	#include "metaonly/ocean/network/everstore/EverstoreClient.h"
-#else
-	#ifdef __APPLE__
-		#include "ocean/media/imageio/Image.h"
-	#endif
-#endif // OCEAN_ENABLED_EVERSTORE_CLIENT
+#endif
 
 #include <unordered_map>
 
@@ -102,40 +97,46 @@ bool TestQRCodeEncoder::testQRCodeEncoding(const double testDuration)
 
 	Log::info() << "QR code encoding test:";
 
-	const QRCodeVerificationItems verificationItems = TestQRCodeEncoder::loadDataTestQRCodeEncoding();
-	ocean_assert(verificationItems.empty() == false);
-
 	bool allSucceeded = true;
 
-	RandomGenerator randomGenerator;
-	Timestamp start(true);
+	const QRCodeVerificationItems verificationItems = TestQRCodeEncoder::loadDataTestQRCodeEncoding();
 
-	do
+	ocean_assert(!verificationItems.empty());
+	if (!verificationItems.empty())
 	{
-		ocean_assert(verificationItems.empty() == false);
+		RandomGenerator randomGenerator;
 
-		const unsigned int randomIndex = RandomI::random(randomGenerator, (unsigned int)(verificationItems.size() - 1));
-		const QRCodeVerificationItem& verificationItem = verificationItems[randomIndex];
+		Timestamp start(true);
 
-		QRCode testCode;
-		if (!QRCodeEncoder::encodeText(verificationItem.message_, verificationItem.errorCorrectionCapacity_, testCode) || !testCode.isValid())
+		do
 		{
-			allSucceeded = false;
+			const unsigned int randomIndex = RandomI::random(randomGenerator, (unsigned int)(verificationItems.size() - 1));
+			const QRCodeVerificationItem& verificationItem = verificationItems[randomIndex];
+
+			QRCode testCode;
+			if (!QRCodeEncoder::encodeText(verificationItem.message_, verificationItem.errorCorrectionCapacity_, testCode) || !testCode.isValid())
+			{
+				allSucceeded = false;
+			}
+
+			allSucceeded = testCode.version() == verificationItem.version_
+				&& testCode.errorCorrectionCapacity() == (unsigned int)verificationItem.errorCorrectionCapacity_
+				&& allSucceeded;
+
+			std::vector<char> modulesString(testCode.modules().size());
+			for (unsigned int i = 0u; i < testCode.modules().size(); ++i)
+			{
+				modulesString[i] = testCode.modules()[i] == 0u ? '0' : '1';
+			}
+
+			allSucceeded = std::equal(modulesString.begin(), modulesString.end(), verificationItem.modules_.begin()) && allSucceeded;
 		}
-
-		allSucceeded = testCode.version() == verificationItem.version_
-			&& testCode.errorCorrectionCapacity() == (unsigned int)verificationItem.errorCorrectionCapacity_
-			&& allSucceeded;
-
-		std::vector<char> modulesString(testCode.modules().size());
-		for (unsigned int i = 0u; i < testCode.modules().size(); ++i)
-		{
-			modulesString[i] = testCode.modules()[i] == 0u ? '0' : '1';
-		}
-
-		allSucceeded = std::equal(modulesString.begin(), modulesString.end(), verificationItem.modules_.begin()) && allSucceeded;
+		while (Timestamp(true) < start + testDuration);
 	}
-	while (Timestamp(true) < start + testDuration);
+	else
+	{
+		allSucceeded = false;
+	}
 
 	Log::info() << " ";
 
@@ -146,7 +147,6 @@ bool TestQRCodeEncoder::testQRCodeEncoding(const double testDuration)
 	else
 	{
 		Log::info() << "Validation FAILED!";
-		Log::info() << "Random generator seed: " << randomGenerator.seed();
 	}
 
 	return allSucceeded;
@@ -211,7 +211,6 @@ bool TestQRCodeEncoder::testQRCodeVersionEncodingDecoding()
 	else
 	{
 		Log::info() << "Validation FAILED";
-		Log::info() << "Random generator seed: " << randomGenerator.seed();
 	}
 
 	return allSucceeded;
@@ -299,7 +298,6 @@ bool TestQRCodeEncoder::testQRCodeFormatEncodingDecoding()
 	else
 	{
 		Log::info() << "Validation FAILED";
-		Log::info() << "Random generator seed: " << randomGenerator.seed();
 	}
 
 	return allSucceeded;
@@ -310,22 +308,24 @@ TestQRCodeEncoder::QRCodeVerificationItems TestQRCodeEncoder::loadDataTestQRCode
 
 #if defined(RUN_TESTS_AND_ENABLE_LOADING_DATA_FROM_LOCAL_DISK) || defined(OCEAN_ENABLED_EVERSTORE_CLIENT)
 
-	const HandlePair handlePair = TestQRCodeEncoder::handlePairTestQRCodeEncoding();
+	#if defined(OCEAN_ENABLED_EVERSTORE_CLIENT)
 
-#if defined(OCEAN_ENABLED_EVERSTORE_CLIENT)
+		const std::string everstoreHandle = "GEm6ewP4H9HHFFACAHe7mvzbI6MqbuZcAABN";
 
-	const QRCodeVerificationItems verificationItems = TestQRCodeEncoder::loadCSVEverstoreTestQRCodeEncoding(handlePair);
+		const QRCodeVerificationItems verificationItems = TestQRCodeEncoder::loadCSVEverstoreTestQRCodeEncoding(everstoreHandle);
 
-#elif defined(__APPLE__) || defined(__linux__)
+	#elif defined(__APPLE__) || defined(__linux__)
 
-	const QRCodeVerificationItems verificationItems = TestQRCodeEncoder::loadCSVTestQRCodeEncoding(handlePair);
+		const std:;string filename = testDataDirectory() + "/encoding_decoding_data/encoding_decoding_data_1000.csv";
 
-#else
+		const QRCodeVerificationItems verificationItems = TestQRCodeEncoder::loadCSVTestQRCodeEncoding(filename);
 
-	ocean_assert(false && "Missing implementation");
-	return QRCodeVerificationItems();
+	#else
 
-#endif
+		ocean_assert(false && "Missing implementation");
+		return QRCodeVerificationItems();
+
+	#endif
 
 	ocean_assert(verificationItems.empty() == false);
 	return verificationItems;
@@ -356,12 +356,14 @@ TestQRCodeEncoder::QRCodeVerificationItems TestQRCodeEncoder::loadDataTestQRCode
 #endif
 }
 
-TestQRCodeEncoder::QRCodeVerificationItems TestQRCodeEncoder::loadCSVTestQRCodeEncoding(const HandlePair& handlePair)
+TestQRCodeEncoder::QRCodeVerificationItems TestQRCodeEncoder::loadCSVTestQRCodeEncoding(const std::string& filename)
 {
+	ocean_assert(!filename.empty());
+
 	QRCodeVerificationItems verificationItems;
 
 	// Read the separate lines of the local file
-	std::ifstream ifstream(handlePair.first);
+	std::ifstream ifstream(filename);
 	std::string line;
 
 	while (ifstream.is_open() && std::getline(ifstream, line))
@@ -387,10 +389,12 @@ TestQRCodeEncoder::QRCodeVerificationItems TestQRCodeEncoder::loadCSVTestQRCodeE
 
 #ifdef OCEAN_ENABLED_EVERSTORE_CLIENT
 
-TestQRCodeEncoder::QRCodeVerificationItems TestQRCodeEncoder::loadCSVEverstoreTestQRCodeEncoding(const HandlePair& handlePair)
+TestQRCodeEncoder::QRCodeVerificationItems TestQRCodeEncoder::loadCSVEverstoreTestQRCodeEncoding(const std::string& handle)
 {
+	ocean_assert(!handle.empty());
+
 	Network::EverstoreClient::Buffer buffer;
-	if (Network::EverstoreClient::download(handlePair.second, buffer) == false)
+	if (Network::EverstoreClient::download(handle, buffer) == false)
 	{
 		ocean_assert(false && "Failed to download data from Everstore!");
 		return QRCodeVerificationItems();
@@ -567,11 +571,6 @@ bool TestQRCodeEncoder::convertCSVToQRCodeVerificationItem(const std::string& li
 	return true;
 }
 
-TestQRCodeEncoder::HandlePair TestQRCodeEncoder::handlePairTestQRCodeEncoding()
-{
-	return HandlePair(testDataDirectory() + "/encoding_decoding_data/encoding_decoding_data_1000.csv", "GEm6ewP4H9HHFFACAHe7mvzbI6MqbuZcAABN");
-}
-
 std::string TestQRCodeEncoder::testDataDirectory()
 {
 #if defined(RUN_TESTS_AND_ENABLE_LOADING_DATA_FROM_LOCAL_DISK)
@@ -600,4 +599,4 @@ std::string TestQRCodeEncoder::testDataDirectory()
 
 } // namespace Test
 
-} // namepace Test
+} // namespace Ocean
