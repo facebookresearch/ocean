@@ -343,18 +343,25 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverter : protected CV::FrameConverter
 		static bool test(const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the comfort conversion function for a Frame.
+		 * Tests the comfort convert function for a Frame.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testComfortConvert(const double testDuration);
 
 		/**
-		 * Tests the comfort conversion and copy function for a Frame.
+		 * Tests the comfort convert and copy function for a Frame.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testComfortConvertAndCopy(const double testDuration);
+
+		/**
+		 * Tests the comfort change function for a Frame.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testComfortChange(const double testDuration);
 
 		/**
 		 * Tests the cast function.
@@ -611,13 +618,11 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverter : protected CV::FrameConverter
 		 * @param width The width of the frame to be tested, with range [1, infinity)
 		 * @param height The height of the frame to be tested, with range [1, infinity)
 		 * @param channels The number of channels the frame has, with range [1, infinity)
-		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
-		 * @param targetPaddingElements The number of padding elements at the end of each target row, in elements, with range [0, infinity)
 		 * @return True, if succeeded
 		 * @tparam T The data type of the target frame
 		 */
 		template <typename T>
-		static bool testCast(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements);
+		static bool testCast(const unsigned int width, const unsigned int height, const unsigned int channels);
 
 		/**
 		 * Tests the cast function for from 'unsigned char' to a specified data type.
@@ -626,13 +631,11 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverter : protected CV::FrameConverter
 		 * @param channels The number of channels the frame has, with range [1, infinity)
 		 * @param normalization The normalization parameter that is applied
 		 * @param offset The offset that is added to all values
-		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
-		 * @param targetPaddingElements The number of padding elements at the end of each target row, in elements, with range [0, infinity)
 		 * @return True, if succeeded
 		 * @tparam T The data type of the target frame
 		 */
 		template <typename T>
-		static bool testNormalizedCast(const unsigned int width, const unsigned int height, const unsigned int channels, const T normalization, const T offset, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements);
+		static bool testNormalizedCast(const unsigned int width, const unsigned int height, const unsigned int channels, const T normalization, const T offset);
 
 		/**
 		 * Tests the patch creator.
