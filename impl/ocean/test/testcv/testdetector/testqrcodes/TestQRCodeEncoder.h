@@ -7,6 +7,15 @@
 #include "ocean/cv/detector/qrcodes/QRCode.h"
 #include "ocean/cv/detector/qrcodes/QRCodeEncoder.h"
 
+#include "ocean/test/TestDataCollection.h"
+#include "ocean/test/TestDataManager.h"
+
+#ifdef OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
+	#ifndef OCEAN_USE_TEST_DATA_COLLECTION
+		#define OCEAN_USE_TEST_DATA_COLLECTION
+	#endif
+#endif // OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
+
 namespace Ocean
 {
 
@@ -30,6 +39,39 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestQRCodeEncoder
 {
 	friend class TestQRCodeDecoder;
 
+	public:
+
+		/**
+		 * This class implements a test data collection based on a local file.
+		 */
+		class FileDataCollection : public TestDataCollection
+		{
+			public:
+
+				/**
+				 * Creates a new test data collection object.
+				 * @param filename The filename of the file containing the test data
+				 */
+				explicit FileDataCollection(const std::string& filename);
+
+				/**
+				 * Returns the test data object associated with a specified index.
+				 * @see TestDataCollection::data().
+				 */
+				SharedTestData data(const size_t index) override;
+
+				/**
+				 * Returns the number of data object objects this collection holds.
+				 * @see TestDataCollection::size().
+				 */
+				size_t size() override;
+
+			protected:
+
+				/// The filename of the test data belonging to this test collection.
+				std::string filename_;
+		};
+
 	protected:
 
 		/**
@@ -43,7 +85,7 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestQRCodeEncoder
 				/**
 				 * Constructor - creates an invalid instance
 				 */
-				inline QRCodeVerificationItem();
+				QRCodeVerificationItem() = default;
 
 				/**
 				 * Constructor
@@ -52,20 +94,20 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestQRCodeEncoder
 				 * @param maskingPattern The masking pattern that was used to generate the QR code
 				 * @param message The raw input message that was used to generate the QR code
 				 * @param modules The modules of a QR code as a string ("1", "0" only), must have `(4 * version + 17)^2` elements
-				 * @sa loadCSVEverstoreTestQRCodeEncoding(), loadCSVTestQRCodeEncoding()
+				 * @sa loadCSVTestQRCodeEncoding()
 				 */
 				inline QRCodeVerificationItem(const unsigned int version, const CV::Detector::QRCodes::QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, const CV::Detector::QRCodes::QRCodeEncoder::MaskingPattern maskingPattern, const std::string& message, const std::string& modules);
 
 			public:
 
 				/// Version number
-				unsigned int version_;
+				unsigned int version_ = 0u;
 
 				/// Error correction capacity
-				CV::Detector::QRCodes::QRCode::ErrorCorrectionCapacity errorCorrectionCapacity_;
+				CV::Detector::QRCodes::QRCode::ErrorCorrectionCapacity errorCorrectionCapacity_ = CV::Detector::QRCodes::QRCode::ECC_INVALID;
 
 				/// Masking pattern
-				CV::Detector::QRCodes::QRCodeEncoder::MaskingPattern maskingPattern_;
+				CV::Detector::QRCodes::QRCodeEncoder::MaskingPattern maskingPattern_ =CV::Detector::QRCodes::QRCodeEncoder::MP_PATTERN_UNKNOWN;
 
 				/// The raw message
 				std::string message_;
@@ -108,36 +150,19 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestQRCodeEncoder
 	protected:
 
 		/**
-		 * Provides verification data for the QR code encoding test
-		 * @return The verification data, the source is either 1. Everstore, 2. a file, or 3. a minimal dataset
+		 * Provides verification data for the QR code encoding test.
+		 * The source is either a test data collection, or a minimal dataset
+		 * @return The verification data, empty if the data could not be loaded
 		 */
 		static QRCodeVerificationItems loadDataTestQRCodeEncoding();
 
 		/**
-		 * Loads the verification data for the QR code encoding test from a CSV file
-		 * For details checkout the Dropbox folder:
-		 *
-		 *   https://fburl.com/ocean_everstore_test_data (and then: qrcode/encoding_decoding_data/\*.csv)
-		 *
-		 * @param filename The name of the CSV file, must be valid
+		 * Loads the verification data for the QR code encoding test from a buffer containing a CSV file.
+		 * @param buffer The pointer to the buffer, must be valid
+		 * @param size The size of the buffer, in bytes, with range [1, infinity)
 		 * @return The verification data
 		 */
-		static QRCodeVerificationItems loadCSVTestQRCodeEncoding(const std::string& filename);
-
-#ifdef OCEAN_ENABLED_EVERSTORE_CLIENT
-
-		/**
-		 * Loads the verification data for the QR code encoding test from directly from Everstore
-		 * For details checkout the Dropbox folder:
-		 *
-		 *   https://fburl.com/ocean_everstore_test_data (and then: qrcode/encoding_decoding_data/\*.csv)
-		 *
-		 * @param handle The everstore handle of the data, must be valid
-		 * @return The verification data
-		 */
-		static QRCodeVerificationItems loadCSVEverstoreTestQRCodeEncoding(const std::string& handle);
-
-#endif // OCEAN_ENABLED_EVERSTORE_CLIENT
+		static QRCodeVerificationItems loadCSVTestQRCodeEncoding(const void* buffer, const size_t size);
 
 		/**
 		 * Converts a line from a CSV file into a helper data structure that is subsequently used for testing
@@ -146,23 +171,17 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestQRCodeEncoder
 		 * @return True on success, otherwise false
 		 */
 		static bool convertCSVToQRCodeVerificationItem(const std::string& lineCSV, QRCodeVerificationItem& qrcodeVerificationItem);
-
-		/**
-		 * Return the absolute path to the directory containing the test data
-		 * Note: in order to use this function you will have define the macro `RUN_TESTS_WITH_FILES_ACCESS` and to set the path in the implementation to your copy of
-		 *
- 		 *   https://fburl.com/ocean_everstore_test_data (and then: qrcode/encoding_decoding_data/)
- 		 *
-		 * @return The absolute path of the data directory
-		 */
-		static std::string testDataDirectory();
 };
 
+#ifdef OCEAN_USE_TEST_DATA_COLLECTION
 
-inline TestQRCodeEncoder::QRCodeVerificationItem::QRCodeVerificationItem()
-{
-	// Nothing else to do.
-}
+/**
+ * Registers the data collections for the QRCodeEncoder test.
+ * @return The scoped subscription for the registered data collection
+ */
+TestDataManager::ScopedSubscription TestQRCodeEncoder_registerTestDataCollection();
+
+#endif // OCEAN_USE_LOCAL_TEST_DATA_COLLECTION
 
 inline TestQRCodeEncoder::QRCodeVerificationItem::QRCodeVerificationItem(const unsigned int version, const CV::Detector::QRCodes::QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, const CV::Detector::QRCodes::QRCodeEncoder::MaskingPattern maskingPattern, const std::string& message, const std::string& modules) :
 	version_(version),

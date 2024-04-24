@@ -34,6 +34,10 @@ bool TestQRCodeDecoder::test(const double testDuration)
 	Log::info() << "---   Test for QR code decoding:   ---";
 	Log::info() << " ";
 
+#ifdef OCEAN_USE_TEST_DATA_COLLECTION
+	const TestDataManager::ScopedSubscription scopedSubscription = TestQRCodeEncoder_registerTestDataCollection();
+#endif
+
 	bool allSucceeded = true;
 
 	allSucceeded = testQRCodeDecoding(testDuration) && allSucceeded;
@@ -54,10 +58,46 @@ bool TestQRCodeDecoder::test(const double testDuration)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestCVDetectorQRCodesQRCodeDecoder, TestQRCodeDecoding)
+} // namespace TestQRCodes
+
+/**
+ * This class implements a simple instance for the GTest ensuring test data collections are registered.
+ */
+class TestQRCodeDecoder : public ::testing::Test
 {
-	EXPECT_TRUE(TestQRCodeDecoder::testQRCodeDecoding(GTEST_TEST_DURATION));
+	protected:
+
+		/**
+		 * Sets up the test.
+		 */
+		void SetUp() override
+		{
+#ifdef OCEAN_USE_TEST_DATA_COLLECTION
+			scopedSubscription_ = TestDetector::TestQRCodes::TestQRCodeEncoder_registerTestDataCollection();
+#endif // OCEAN_USE_TEST_DATA_COLLECTION
+		}
+
+		/**
+		 * Tears down the test.
+		 */
+		void TearDown() override
+		{
+			scopedSubscription_.release();
+		}
+
+	protected:
+
+		/// The subscriptions to all registered data collections.
+		TestDataManager::ScopedSubscription scopedSubscription_;
+};
+
+TEST_F(TestQRCodeDecoder, QRCodeDecoding)
+{
+	EXPECT_TRUE(TestDetector::TestQRCodes::TestQRCodeDecoder::testQRCodeDecoding(GTEST_TEST_DURATION));
 }
+
+namespace TestQRCodes
+{
 
 #endif // OCEAN_USE_GTEST
 
