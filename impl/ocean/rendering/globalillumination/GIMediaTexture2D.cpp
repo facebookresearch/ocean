@@ -86,8 +86,10 @@ void GIMediaTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestamp 
 		{
 			ocean_assert(*frame);
 
-			CV::FrameConverter::Comfort::convert(*frame, FrameType(*frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), textureFrame_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()());
-			frameTimestamp_ = timestamp;
+			if (CV::FrameConverter::Comfort::convert(*frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, textureFrame_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+			{
+				frameTimestamp_ = timestamp;
+			}
 		}
 	}
 }

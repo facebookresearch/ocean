@@ -466,7 +466,7 @@ void GLESMediaTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestam
 							convertOptions = CV::FrameConverter::Options(gamma);
 						}
 
-						if (CV::FrameConverter::Comfort::convert(frame, frameType_, conversionFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()(), convertOptions))
+						if (CV::FrameConverter::Comfort::convert(frame, frameType_.pixelFormat(), frameType_.pixelOrigin(), conversionFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()(), convertOptions))
 						{
 							ocean_assert(conversionFrame_.numberPlanes() == 1u);
 							ocean_assert(conversionFrame_.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
