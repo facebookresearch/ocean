@@ -40,7 +40,7 @@ bool Instance::initialize(const StringSet& necessaryExtensions, const std::strin
 
 	strcpy(xrApplicationInfo.engineName, "Ocean");
 	xrApplicationInfo.engineVersion = 0;
-	xrApplicationInfo.apiVersion = XR_CURRENT_API_VERSION;
+	xrApplicationInfo.apiVersion = XR_MAKE_VERSION(1, 0, 34);
 
 	const XrExtensionPropertyGroups xrExtensionPropertyGroups = determineExtensionProperties();
 	const std::vector<const char*> enableExtensionNames = determineExistingExtensionNames(xrExtensionPropertyGroups, necessaryExtensions);
