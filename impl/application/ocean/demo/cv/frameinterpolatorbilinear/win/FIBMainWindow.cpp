@@ -82,7 +82,7 @@ void FIBMainWindow::onFrame(const Frame& frame)
 	HighPerformanceTimer timer;
 
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, false, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, false, WorkerPool::get().scopedWorker()()))
 	{
 		return;
 	}

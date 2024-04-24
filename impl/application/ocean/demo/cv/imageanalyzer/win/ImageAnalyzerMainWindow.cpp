@@ -194,7 +194,7 @@ void ImageAnalyzerMainWindow::updateImage(const std::string& filename)
 
 	const Frame image = IO::Image::readImage(filename);
 
-	if (image.isValid() && CV::FrameConverter::Comfort::convert(image, FrameType(image, FrameType::FORMAT_Y8), yImage_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+	if (image.isValid() && CV::FrameConverter::Comfort::convert(image, FrameType::FORMAT_Y8, yImage_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 	{
 		yAdjustedImage_.copy(yImage_);
 

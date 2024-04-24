@@ -98,7 +98,7 @@ void FrameConverterYUVMainWindow::onKeyDown(const int /*key*/)
 void FrameConverterYUVMainWindow::onFrame(const Frame& frame)
 {
 	Frame topLeft;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::ORIGIN_UPPER_LEFT), topLeft, false, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::ORIGIN_UPPER_LEFT, topLeft, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "Unsupported pixel format!");
 		return;
@@ -107,7 +107,7 @@ void FrameConverterYUVMainWindow::onFrame(const Frame& frame)
 	const HighPerformanceTimer timer;
 
 	Frame topLeftYUV;
-	if (!CV::FrameConverter::Comfort::convert(topLeft, FrameType(topLeft, FrameType::FORMAT_YUV24), topLeftYUV, false, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(topLeft, FrameType::FORMAT_YUV24, topLeftYUV, false, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "Unsupported pixel format!");
 		return;

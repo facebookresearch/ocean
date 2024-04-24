@@ -505,7 +505,7 @@ bool extractImageToDirectory(const IO::File& panoramaFile, const FrameType::Pixe
 	{
 		Frame cameraOutlines;
 
-		if (!CV::FrameConverter::Comfort::convert(panoramaFrame.frame(), FrameType(panoramaFrame.frame(), FrameType::FORMAT_RGB24), cameraOutlines))
+		if (!CV::FrameConverter::Comfort::convert(panoramaFrame.frame(), FrameType::FORMAT_RGB24, cameraOutlines))
 		{
 			Log::info() << "Cannot convert input image ... aborting!";
 			return false;

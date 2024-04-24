@@ -77,7 +77,7 @@ void BinarizationOtsuMainWindow::onFrame(const Frame& frame)
 	HighPerformanceTimer timer;
 	{
 		Frame yFrame;
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame.frameType(), FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_ALWAYS_COPY, &worker_))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_ALWAYS_COPY, &worker_))
 		{
 			ocean_assert(false && "This should never happen!");
 			return;

@@ -96,7 +96,7 @@ void AFCMainWindow::onKeyDown(const int /*key*/)
 void AFCMainWindow::onFrame(const Frame& frame)
 {
 	Frame topLeft;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::ORIGIN_UPPER_LEFT), topLeft, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::ORIGIN_UPPER_LEFT, topLeft, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
 	{
 		return;
 	}

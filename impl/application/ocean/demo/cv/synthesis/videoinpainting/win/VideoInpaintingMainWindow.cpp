@@ -262,7 +262,7 @@ void VideoInpaintingMainWindow::onToggleFullscreen()
 
 void VideoInpaintingMainWindow::onFrame(const Frame& frame)
 {
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), currentFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, currentFrame_, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
 	{
 		ocean_assert(false && "This should never happen!");
 		return;
@@ -296,7 +296,7 @@ void VideoInpaintingMainWindow::onFrame(const Frame& frame)
 		// as we use the previous gray frame for the mask-based video inpainting only, we create the video for this case only
 
 		Frame yCurrent;
-		if (!CV::FrameConverter::Comfort::convert(currentFrame_, FrameType(currentFrame_, FrameType::FORMAT_Y8), yCurrent, CV::FrameConverter::CP_ALWAYS_COPY, &worker_))
+		if (!CV::FrameConverter::Comfort::convert(currentFrame_, FrameType::FORMAT_Y8, yCurrent, CV::FrameConverter::CP_ALWAYS_COPY, &worker_))
 		{
 			ocean_assert(false && "This should never happen!");
 			return;

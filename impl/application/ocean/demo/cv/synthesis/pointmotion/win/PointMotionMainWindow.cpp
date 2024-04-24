@@ -121,7 +121,7 @@ void PointMotionMainWindow::onMouseUp(const MouseButton button, const int x, con
 void PointMotionMainWindow::onFrame(const Frame& frame)
 {
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
 	{
 		return;
 	}

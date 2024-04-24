@@ -110,7 +110,7 @@ void SSMainWindow::onKeyUp(const int key)
 void SSMainWindow::onFrame(const Frame& frame)
 {
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 	{
 		return;
 	}

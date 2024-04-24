@@ -141,7 +141,7 @@ bool MainWindow::loadMask(const std::string& filename)
 	}
 
 	Frame maskFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), maskFrame, true, nullptr))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, maskFrame, true, nullptr))
 	{
 		return false;
 	}

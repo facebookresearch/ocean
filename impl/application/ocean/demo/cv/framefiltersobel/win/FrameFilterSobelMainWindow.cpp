@@ -109,7 +109,7 @@ void FrameFilterSobelMainWindow::onKeyDown(const int /*key*/)
 void FrameFilterSobelMainWindow::onFrame(const Frame& frame)
 {
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
 	{
 		ocean_assert(false && "This should never happen!");
 		return;

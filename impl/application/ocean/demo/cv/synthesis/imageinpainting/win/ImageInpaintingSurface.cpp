@@ -28,7 +28,7 @@ Surface::Surface(wxWindow* parent) :
 
 bool Surface::setFrame(const Frame& frame)
 {
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), frame_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, frame_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 	{
 		return false;
 	}
@@ -47,7 +47,7 @@ bool Surface::setFrame(const Frame& frame)
 bool Surface::setMask(const Frame& mask)
 {
 	Frame topLeft;
-	if (!CV::FrameConverter::Comfort::convert(mask, FrameType(mask, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), topLeft, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(mask, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, topLeft, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 	{
 		return false;
 	}

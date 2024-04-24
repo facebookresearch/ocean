@@ -96,7 +96,7 @@ bool HistogramMainWindow::visualizeHistogram3Channels(const Frame& frame, const 
 	ocean_assert(FrameType::formatIsGeneric(frame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 3u));
 
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24), rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 	{
 		return false;
 	}

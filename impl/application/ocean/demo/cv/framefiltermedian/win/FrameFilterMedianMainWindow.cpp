@@ -89,7 +89,7 @@ void FrameFilterMedianMainWindow::onIdle()
 void FrameFilterMedianMainWindow::onFrame(const Frame& frame)
 {
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24), rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
 	{
 		return;
 	}
@@ -97,7 +97,7 @@ void FrameFilterMedianMainWindow::onFrame(const Frame& frame)
 	setFrame(rgbFrame);
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
 	{
 		return;
 	}

@@ -73,7 +73,7 @@ bool HistogramColorAdjustmentMainWindow::loadFrame(const std::string& filename)
 	ocean_assert(bitmapWindow_);
 	if (bitmapWindow_->setFrame(frame))
 	{
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), sourceFrame_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, sourceFrame_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 		{
 			sourceFrame_.release();
 		}
@@ -105,7 +105,7 @@ bool HistogramColorAdjustmentMainWindow::loadReference(const std::string& filena
 	ocean_assert(referenceWindow_);
 	if (referenceWindow_->setFrame(frame))
 	{
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), referenceFrame_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, referenceFrame_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 		{
 			referenceFrame_.release();
 		}
@@ -132,7 +132,7 @@ bool HistogramColorAdjustmentMainWindow::visualizeHistogram3Channels(const Frame
 	ocean_assert(FrameType::formatIsGeneric(frame.pixelFormat(), FrameType::DT_SIGNED_INTEGER_8, 3u));
 
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24), rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 	{
 		return false;
 	}
