@@ -114,7 +114,7 @@ bool OILBufferImage::setPreferredFramePixelFormat(const FrameType::PixelFormat p
 		else
 		{
 			Frame preferredFrame;
-			if (!CV::FrameConverter::Comfort::convert(*existingFrame, FrameType(*existingFrame, pixelFormat), preferredFrame, true, WorkerPool::get().conditionalScopedWorker(existingFrame->pixels() >= 400u * 400u)()))
+			if (!CV::FrameConverter::Comfort::convert(*existingFrame, pixelFormat, preferredFrame, true, WorkerPool::get().conditionalScopedWorker(existingFrame->pixels() >= 400u * 400u)()))
 			{
 				return false;
 			}
@@ -157,7 +157,7 @@ bool OILBufferImage::loadImage()
 	if (preferredFrameType_.pixelFormat() != FrameType::FORMAT_UNDEFINED && preferredFrameType_.pixelFormat() != newFrame.pixelFormat())
 	{
 		Frame convertedFrame;
-		if (CV::FrameConverter::Comfort::convert(newFrame, FrameType(newFrame, preferredFrameType_.pixelFormat()), convertedFrame, true, WorkerPool::get().conditionalScopedWorker(newFrame.pixels() >= 400u * 400u)()))
+		if (CV::FrameConverter::Comfort::convert(newFrame, preferredFrameType_.pixelFormat(), convertedFrame, true, WorkerPool::get().conditionalScopedWorker(newFrame.pixels() >= 400u * 400u)()))
 		{
 			std::swap(newFrame, convertedFrame);
 		}

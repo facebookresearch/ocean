@@ -837,7 +837,7 @@ bool MovieFrameProvider::handlePreviewFrame(const Frame& frame, const unsigned i
 
 	Frame intermediateFrame(frame, Frame::ACM_USE_KEEP_LAYOUT);
 
-	if (intermediateFrame.frameType() != intermediateFrameType && !CV::FrameConverter::Comfort::convert(frame, intermediateFrameType, intermediateFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
+	if (intermediateFrame.frameType() != intermediateFrameType && !CV::FrameConverter::Comfort::convert(frame, intermediateFrameType.pixelFormat(), intermediateFrameType.pixelOrigin(), intermediateFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
 	{
 		return false;
 	}

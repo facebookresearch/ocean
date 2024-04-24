@@ -90,33 +90,33 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 	{
 		return Frame();
 	}
-	
+
 	const size_t width = CGImageGetWidth(cgImage);
 	const size_t height = CGImageGetHeight(cgImage);
-	
+
 	const size_t bitsPerPixel = CGImageGetBitsPerPixel(cgImage);
 	const size_t bitsPerComponent = CGImageGetBitsPerComponent(cgImage);
-	
+
 	const size_t bytesPerRow = CGImageGetBytesPerRow(cgImage);
-	
+
 	const CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(cgImage);
 	CGColorSpaceRef cgColorSpace = CGImageGetColorSpace(cgImage);
-	
+
 	const CGColorSpaceModel cgColorSpaceMode = CGColorSpaceGetModel(cgColorSpace);
-	
+
 	const CGBitmapInfo cgBitmapInfo = CGImageGetBitmapInfo(cgImage);
-	
+
 #ifdef OCEAN_DEBUG
 	const bool notBigEndian16 = (cgBitmapInfo & kCGImageByteOrder16Big) != kCGImageByteOrder16Big;
 	const bool notBigEnding32 = (cgBitmapInfo & kCGImageByteOrder32Big) != kCGImageByteOrder32Big;
 	const bool bigEnding32_butRGB32 = (cgBitmapInfo & kCGImageByteOrder32Big) == kCGImageByteOrder32Big && cgColorSpaceMode == kCGColorSpaceModelRGB && bitsPerPixel == 32;
-	
+
 	ocean_assert(notBigEndian16); // we do not support big endian
 	ocean_assert(notBigEnding32 || bigEnding32_butRGB32);
 #endif // OCEAN_DEBUG
-	
+
 	FrameType::PixelFormat pixelFormat = FrameType::FORMAT_UNDEFINED;
-	
+
 	switch (alphaInfo)
 	{
 		case kCGImageAlphaNone:
@@ -158,32 +158,32 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 				if (bitsPerComponent == 8)
 				{
 					const size_t channels = bitsPerPixel / bitsPerComponent;
-					
+
 					if (channels == 1)
 					{
 						pixelFormat = FrameType::FORMAT_Y8;
 					}
 				}
 			}
-			
+
 			break;
 		}
-			
+
 		case kCGImageAlphaNoneSkipFirst:
 		{
 			break;
 		}
-			
+
 		case kCGImageAlphaNoneSkipLast:
 		{
 			if (cgColorSpaceMode == kCGColorSpaceModelRGB && bitsPerPixel == 32)
 			{
 				pixelFormat = FrameType::FORMAT_RGB32;
 			}
-			
+
 			break;
 		}
-			
+
 		case kCGImageAlphaLast:
 		case kCGImageAlphaPremultipliedLast: // currently, Ocean does not distinguish between non-premultiplied and pre-multiplied, so we map both cases to the corresponding pixel format with alpha channel
 		{
@@ -199,10 +199,10 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 			{
 				pixelFormat = FrameType::FORMAT_RGBA64;
 			}
-			
+
 			break;
 		}
-			
+
 		case kCGImageAlphaFirst:
 		case kCGImageAlphaPremultipliedFirst: // currently, Ocean does not distinguish between non-premultiplied and pre-multiplied, so we map both cases to the corresponding pixel format with alpha channel
 		{
@@ -210,26 +210,26 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 			{
 				pixelFormat = FrameType::FORMAT_ARGB32;
 			}
-			
+
 			break;
 		}
-			
+
 		default:
 			break;
 	}
-	
+
 	ocean_assert(pixelFormat != FrameType::FORMAT_UNDEFINED);
 	if (FrameType::FORMAT_UNDEFINED == pixelFormat)
 	{
 		return Frame();
 	}
-	
+
 	const bool isPremultiplied = alphaInfo == kCGImageAlphaPremultipliedLast || alphaInfo == kCGImageAlphaPremultipliedFirst;
-	
+
 	const ScopedCGDataProviderRef provider(CGImageGetDataProvider(cgImage), false /*needsRelease*/); // We must not release the data provider here CGDataProviderRelease(provider), this would cause segmetation faults
-	
+
 	const ScopedCFDataRef data(CGDataProviderCopyData(provider.object()));
-	
+
 	if (data.object() == nullptr || CFDataGetLength(data.object()) < height * bytesPerRow)
 	{
 		return Frame();
@@ -239,24 +239,24 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 	if (cgColorSpaceMode == kCGColorSpaceModelIndexed)
 	{
 		// we have an image with index color space, so we cannot simply copy the memory
-		
+
 		const size_t tableCount = CGColorSpaceGetColorTableCount(cgColorSpace);
-		
+
 		Memory colorTableMemory(sizeof(uint8_t) * tableCount * 3); // the table seems to store 3 channels in any case
 		uint8_t* colorTable = colorTableMemory.data<uint8_t>();
 		CGColorSpaceGetColorTable(cgColorSpace, colorTable);
-		
+
 		const uint8_t* dataPtr = (const uint8_t*)(CFDataGetBytePtr(data.object()));
-		
+
 		ocean_assert(pixelFormat == FrameType::FORMAT_Y8);
 		result.set(FrameType((unsigned int)(width), (unsigned int)(height), pixelFormat, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/, Indices32() /*paddingElements*/);
 		result.setTimestamp(Timestamp(true));
-		
+
 		for (unsigned int y = 0u; y < result.height(); ++y)
 		{
 			const uint8_t* const dataRow = dataPtr + y * bytesPerRow;
 			uint8_t* const resultRow = result.row<uint8_t>(y);
-			
+
 			for (unsigned int x = 0u; x < result.width(); ++x)
 			{
 				if (dataRow[x] < tableCount)
@@ -266,7 +266,7 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 				else
 				{
 					ocean_assert(false && "Invalid lookup table!");
-					
+
 					// we have an invalid lookup table
 					return Frame();
 				}
@@ -277,9 +277,9 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 	{
 		result.set(FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/, Indices32() /*paddingElements*/);
 		result.setTimestamp(Timestamp(true));
-		
+
 		const void* dataPtr = CFDataGetBytePtr(data.object());
-		
+
 		unsigned int dataPaddingElements = 0u;
 		if (dataPtr != nullptr && Frame::strideBytes2paddingElements(pixelFormat, (unsigned int)(width), (unsigned int)(bytesPerRow), dataPaddingElements))
 		{
@@ -294,12 +294,12 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 	else if (pixelFormat == FrameType::FORMAT_RGB48)
 	{
 		// we convert FORMAT_RGB48 images to FORMAT_RGB24 images (as for now nobody needs 16 bit depth)
-		
+
 		result.set(FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/, Indices32() /*paddingElements*/);
 		result.setTimestamp(Timestamp(true));
-		
+
 		const void* dataPtr = CFDataGetBytePtr(data.object());
-		
+
 		unsigned int dataPaddingElements = 0u;
 		if (dataPtr != nullptr && FrameType::dataIsAligned<uint16_t>(dataPtr) && Frame::strideBytes2paddingElements(pixelFormat, (unsigned int)(width), (unsigned int)(bytesPerRow), dataPaddingElements))
 		{
@@ -314,12 +314,12 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 	else if (pixelFormat == FrameType::FORMAT_RGBA64)
 	{
 		// we convert FORMAT_RGBA64 images to FORMAT_RGBA32 images (as for now nobody needs 16 bit depth)
-		
+
 		result.set(FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/, Indices32() /*paddingElements*/);
 		result.setTimestamp(Timestamp(true));
-		
+
 		const void* dataPtr = CFDataGetBytePtr(data.object());
-		
+
 		unsigned int dataPaddingElements = 0u;
 		if (dataPtr != nullptr && FrameType::dataIsAligned<uint16_t>(dataPtr) && Frame::strideBytes2paddingElements(pixelFormat, (unsigned int)(width), (unsigned int)(bytesPerRow), dataPaddingElements))
 		{
@@ -334,21 +334,21 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 	else
 	{
 		const FrameType frameType((unsigned int)(width), (unsigned int)(height), pixelFormat, FrameType::ORIGIN_UPPER_LEFT);
-		
+
 		ocean_assert(frameType.numberPlanes() == 1u);
 		ocean_assert(frameType.dataType() == FrameType::DT_UNSIGNED_INTEGER_8 || frameType.dataType() == FrameType::DT_UNSIGNED_INTEGER_16 || frameType.dataType() == FrameType::DT_UNSIGNED_INTEGER_32 || frameType.dataType() == FrameType::DT_SIGNED_FLOAT_32);
-		
+
 		const void* dataPtr = CFDataGetBytePtr(data.object());
 		unsigned int dataPaddingElements = 0u;
-		
+
 		if (dataPtr == nullptr || !Frame::strideBytes2paddingElements(pixelFormat, (unsigned int)(width), (unsigned int)(bytesPerRow), dataPaddingElements))
 		{
 			ocean_assert(false && "This should never happen!");
 			return Frame();
 		}
-		
+
 		result = Frame(frameType, dataPtr, Frame::CM_COPY_REMOVE_PADDING_LAYOUT, dataPaddingElements, Timestamp(true));
-		
+
 		if (isPremultiplied)
 		{
 			switch (pixelFormat)
@@ -356,21 +356,21 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 				case FrameType::FORMAT_YA16:
 					CV::FrameChannels::premultipliedAlphaToStraightAlpha8BitPerChannel<2u, 1u>(result.data<uint8_t>(), result.width(), result.height(), result.paddingElements());
 					break;
-					
+
 				case FrameType::FORMAT_RGBA32:
 					CV::FrameChannels::premultipliedAlphaToStraightAlpha8BitPerChannel<4u, 3u>(result.data<uint8_t>(), result.width(), result.height(), result.paddingElements());
 					break;
-					
+
 				case FrameType::FORMAT_ARGB32:
 					CV::FrameChannels::premultipliedAlphaToStraightAlpha8BitPerChannel<4u, 0u>(result.data<uint8_t>(), result.width(), result.height(), result.paddingElements());
 					break;
-					
+
 				default:
 					ocean_assert(false && "Not supported!");
 			}
 		}
 	}
-	
+
 	return result;
 }
 
@@ -456,28 +456,28 @@ bool IIOObject::writeFrameToImageDestination(CGImageDestinationRef imageDestinat
 {
 	ocean_assert(frame.isValid());
 	ocean_assert(properties.isValid());
-	
+
 	if (allowConversion == false)
 	{
 		return writeFrameToImageDestination(imageDestination, frame, properties);
 	}
-	
+
 	if (!frame || !properties.isValid())
 	{
 		return false;
 	}
-	
+
 	ScopedCGColorSpaceRef colorSpace;
 	CGBitmapInfo bitmapInfo;
 	FrameType::PixelFormat targetPixelFormat;
-	
+
 	if (!translatePixelFormat(frame.pixelFormat(), properties.colorProfileName_, colorSpace, bitmapInfo, targetPixelFormat))
 	{
 		return false;
 	}
-	
+
 	Frame targetFrame;
-	const bool conversionSuccess = CV::FrameConverter::Comfort::convert(frame, FrameType(frame, targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT), targetFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 200u * 200u)());
+	const bool conversionSuccess = CV::FrameConverter::Comfort::convert(frame, targetPixelFormat, FrameType::ORIGIN_UPPER_LEFT, targetFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 200u * 200u)());
 
 	if (hasBeenConverted)
 	{
@@ -490,31 +490,31 @@ bool IIOObject::writeFrameToImageDestination(CGImageDestinationRef imageDestinat
 	}
 
 	CFDataRef data = CFDataCreateWithBytesNoCopy(nullptr, targetFrame.constdata<uint8_t>(), targetFrame.size(), kCFAllocatorNull);
-	
+
 	const ScopedCGDataProviderRef dataProvider(CGDataProviderCreateWithCFData(data));
-	
+
 	const unsigned int bitsPerDataType = targetFrame.bytesPerDataType() * 8u;
 	const unsigned int bitsPerPixel = targetFrame.planeBytesPerPixel(0u) * 8u;
 	ocean_assert(bitsPerPixel != 0u);
-	
+
 	const ScopedCGImageRef image(CGImageCreate(targetFrame.width(), targetFrame.height(), bitsPerDataType, bitsPerPixel, targetFrame.strideBytes(0u), colorSpace.object(), bitmapInfo, dataProvider.object(), nullptr, false, kCGRenderingIntentDefault));
-	
+
 	if (image.object() == nullptr)
 	{
 		return false;
 	}
-	
+
 	CFDictionaryRef optionsDictionary = nullptr;
 	CFStringRef key = nullptr;
 	ScopedCFNumberRef value;
-	
+
 	if (properties.quality_ >= 0.0f && properties.quality_ <= 1.0f)
 	{
 		key = kCGImageDestinationLossyCompressionQuality;
 		value = ScopedCFNumberRef(CFNumberCreate(nullptr, kCFNumberFloat32Type, &properties.quality_));
 		optionsDictionary = CFDictionaryCreate(nullptr, (const void**)(&key), (const void**)(&value.object()), 1, nullptr, nullptr);
 	}
-	
+
 	CGImageDestinationAddImage(imageDestination, image.object(), optionsDictionary);
 	return CGImageDestinationFinalize(imageDestination);
 }

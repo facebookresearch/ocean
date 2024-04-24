@@ -331,7 +331,7 @@ bool ImageTif::encodeImage(const Frame& frame, std::vector<uint8_t>& buffer, con
 
 		const FrameType::PixelFormat convertedPixelFormat = frame.hasAlphaChannel() ? FrameType::FORMAT_RGBA32 : FrameType::FORMAT_RGB24;
 
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, convertedPixelFormat), convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 400u * 400u)()))
+		if (!CV::FrameConverter::Comfort::convert(frame, convertedPixelFormat, convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 400u * 400u)()))
 		{
 			return false;
 		}

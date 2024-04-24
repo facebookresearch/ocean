@@ -540,7 +540,7 @@ bool WICObject::writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IW
 	}
 
 	Frame targetFrame;
-	if (noError && !CV::FrameConverter::Comfort::convert(frame, targetFrameType, targetFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr))
+	if (noError && !CV::FrameConverter::Comfort::convert(frame, targetFrameType.pixelFormat(), targetFrameType.pixelOrigin(), targetFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, nullptr))
 	{
 		noError = false;
 	}

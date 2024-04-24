@@ -120,7 +120,7 @@ bool ImageWebp::encodeImage(const Frame& frame, std::vector<unsigned char>& buff
 			convertedPixelFormat = FrameType::FORMAT_RGB24;
 		}
 
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, convertedPixelFormat, FrameType::ORIGIN_UPPER_LEFT), convertedFrame, false, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 400u * 400u)()))
+		if (!CV::FrameConverter::Comfort::convert(frame, convertedPixelFormat, FrameType::ORIGIN_UPPER_LEFT, convertedFrame, false, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 400u * 400u)()))
 		{
 			return false;
 		}

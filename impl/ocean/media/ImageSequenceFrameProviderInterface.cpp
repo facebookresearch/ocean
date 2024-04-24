@@ -107,7 +107,7 @@ FrameRef ImageSequenceFrameProviderInterface::synchronFrameRequest(const unsigne
 		if (preferredFrameType.isValid() && preferredFrameType != frameRef->frameType())
 		{
 			Frame preferredFrame;
-			if (CV::FrameConverter::Comfort::convert(*frameRef, preferredFrameType, preferredFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+			if (CV::FrameConverter::Comfort::convert(*frameRef, preferredFrameType.pixelFormat(), preferredFrameType.pixelOrigin(), preferredFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 			{
 				return FrameRef(new Frame(std::move(preferredFrame)));
 			}

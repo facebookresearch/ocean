@@ -191,7 +191,7 @@ bool ImageJpg::encodeImage(const Frame& frame, std::vector<unsigned char>& buffe
 			}
 		}
 
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, convertedPixelFormat, FrameType::ORIGIN_UPPER_LEFT), convertedFrame, false, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 400u * 400u)()))
+		if (!CV::FrameConverter::Comfort::convert(frame, convertedPixelFormat, FrameType::ORIGIN_UPPER_LEFT, convertedFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 400u * 400u)()))
 		{
 			return false;
 		}
