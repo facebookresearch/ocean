@@ -145,7 +145,7 @@ void LineDetectorHoughMainWindow::onKeyDown(const int key)
 void LineDetectorHoughMainWindow::onFrame(const Frame& frame)
 {
 	Frame topLeft;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), topLeft, CV::FrameConverter::CP_ALWAYS_COPY, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, topLeft, CV::FrameConverter::CP_ALWAYS_COPY, &worker_))
 	{
 		return;
 	}
@@ -157,7 +157,7 @@ void LineDetectorHoughMainWindow::onFrame(const Frame& frame)
 
 	if ((mode_ & DM_FRAME_24BIT) == 0)
 	{
-		if (!CV::FrameConverter::Comfort::convert(topLeft, FrameType(detectorFrame, FrameType::FORMAT_Y8), detectorFrame, CV::FrameChannels::CP_ALWAYS_COPY, &worker_))
+		if (!CV::FrameConverter::Comfort::convert(topLeft, FrameType::FORMAT_Y8, detectorFrame, CV::FrameChannels::CP_ALWAYS_COPY, &worker_))
 		{
 			ocean_assert(false && "Unsupported pixel format!");
 			return;

@@ -443,7 +443,7 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 	for (const FrameRef& frameRef : frameRefs)
 	{
 		Frame yFrame;
-		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType(*frameRef, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, true, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, true, WorkerPool::get().scopedWorker()()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
@@ -488,7 +488,7 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 
 		Frame rgbFrame = resultFrame.subFrame(i * frameWidth, 0u, frameWidth, frameHeight);
 
-		if (!CV::FrameConverter::Comfort::convert(*frameRefs[i], FrameType(*frameRefs[i], FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, /* forceCopy */ true, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(*frameRefs[i], FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, /* forceCopy */ true, WorkerPool::get().scopedWorker()()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
@@ -552,7 +552,7 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 		Frame recorderFrame;
 		if (movieRecorder_->lockBufferToFill(recorderFrame, /* respectFrameFrequency */ false))
 		{
-			CV::FrameConverter::Comfort::convert(resultFrame, recorderFrame.frameType(), recorderFrame, CV::FrameConverter::CP_ALWAYS_COPY);
+			CV::FrameConverter::Comfort::convertAndCopy(resultFrame, recorderFrame);
 
 			movieRecorder_->unlockBufferToFill();
 		}

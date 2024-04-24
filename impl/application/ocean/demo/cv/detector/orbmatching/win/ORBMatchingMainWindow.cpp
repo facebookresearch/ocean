@@ -117,7 +117,7 @@ void ORBMatchingMainWindow::onInitialized()
 	}
 
 	Frame yPatterFrame;
-	if (!CV::FrameConverter::Comfort::convert(patternFrame_, FrameType(patternFrame_, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yPatterFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(patternFrame_, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yPatterFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return;
@@ -166,14 +166,14 @@ void ORBMatchingMainWindow::onFrame(const Frame& frame)
 	const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return;
 	}
 
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, scopedWorker()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, scopedWorker()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return;

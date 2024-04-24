@@ -288,14 +288,14 @@ bool FBMessengerCodesWrapper::detectAndDecode(Frame& frame, double& time, std::v
 	// As we will need worker objects in several function calls we simply request one for the remaining function
 
 	Frame currentFrameRGB;
-	if (!CV::FrameConverter::Comfort::convert(currentFrame, FrameType(currentFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), currentFrameRGB, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(currentFrame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, currentFrameRGB, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
 	}
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(currentFrame, FrameType(currentFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(currentFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;

@@ -245,12 +245,12 @@ static bool evaluateDetector(const IO::File& lineFile, const DetectorFunction de
 	const Frame image = loadCorrespondingImage(lineFile);
 
 	Frame yImage;
-	if (!image.isValid() || !CV::FrameConverter::Comfort::convert(image, FrameType(image, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yImage, false))
+	if (!image.isValid() || !CV::FrameConverter::Comfort::convert(image, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yImage, false))
 	{
 		return false;
 	}
 
-	// the specified threshold are defined for an image with smal image resoultion e.g, 640x480
+	// the specified threshold are defined for an image with small image resolution e.g, 640x480
 	// therefore, we need to adjust the threshold for bigger images
 
 	const double sizeFactor = minmax(1.0, double(std::min(yImage.width(), yImage.height())) / 600.0, 2.0);
@@ -315,7 +315,7 @@ static bool evaluateDetector(const IO::File& lineFile, const DetectorFunction de
 	if (createDebugImages)
 	{
 		Frame rgbImage;
-		if (!CV::FrameConverter::Comfort::convert(yImage, FrameType(yImage, FrameType::FORMAT_RGB24), rgbImage, true))
+		if (!CV::FrameConverter::Comfort::convert(yImage, FrameType::FORMAT_RGB24, rgbImage, true))
 		{
 			return false;
 		}

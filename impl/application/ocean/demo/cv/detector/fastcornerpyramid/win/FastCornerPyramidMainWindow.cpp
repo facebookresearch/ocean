@@ -186,7 +186,7 @@ Platform::Win::Bitmap FASTCornerPyramidMainWindow::detectFeatures(const Frame& f
 	Platform::Win::Bitmap bitmap(tmpFrame);
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(tmpFrame, FrameType(tmpFrame.width(), tmpFrame.height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(tmpFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
 	{
 		ocean_assert(false && "Unsupported pixel format!");
 		return bitmap;

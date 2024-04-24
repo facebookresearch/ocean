@@ -138,13 +138,13 @@ void HarrisCornerMainWindow::onMouseUp(const MouseButton /*button*/, const int x
 void HarrisCornerMainWindow::onFrame(const Frame& frame)
 {
 	Frame topLeft;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), topLeft, false, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, topLeft, false, &worker_))
 	{
 		return;
 	}
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(topLeft, FrameType(topLeft, FrameType::FORMAT_Y8), yFrame, true, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(topLeft, FrameType::FORMAT_Y8, yFrame, true, &worker_))
 	{
 		return;
 	}

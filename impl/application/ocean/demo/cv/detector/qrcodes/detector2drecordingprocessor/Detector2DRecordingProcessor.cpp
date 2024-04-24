@@ -339,13 +339,13 @@ bool processRecording(const IO::File& vrsFile, const IO::File& outputFile, const
 			return false;
 		}
 
-		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType(*frameRef, FrameType::FORMAT_RGB24), rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
+		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
 		}
 
-		if (!CV::FrameConverter::Comfort::convert(rgbFrame, FrameType(rgbFrame, FrameType::FORMAT_Y8), yFrame, CV::FrameConverter::CP_ALWAYS_COPY))
+		if (!CV::FrameConverter::Comfort::convert(rgbFrame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_ALWAYS_COPY))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
@@ -403,7 +403,7 @@ bool processRecording(const IO::File& vrsFile, const IO::File& outputFile, const
 		Frame recorderFrame;
 		if (movieRecorder->lockBufferToFill(recorderFrame, /* respectFrameFrequency */ false))
 		{
-			CV::FrameConverter::Comfort::convert(rgbFrame, recorderFrame.frameType(), recorderFrame, CV::FrameConverter::CP_ALWAYS_COPY);
+			CV::FrameConverter::Comfort::convertAndCopy(rgbFrame, recorderFrame);
 
 			movieRecorder->unlockBufferToFill();
 		}

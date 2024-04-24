@@ -320,14 +320,14 @@ bool Detector2DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 	// As we will need worker objects in several function calls we simply request one for the remaining function
 
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), rgbFrame, true, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, true, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
 	}
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, true, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, true, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;

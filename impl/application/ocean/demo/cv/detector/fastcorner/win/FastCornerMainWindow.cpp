@@ -128,7 +128,7 @@ void FASTCornerMainWindow::onFrame(const Frame& frame)
 	HighPerformanceTimer timer;
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType(frame.width(), frame.height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, CV::FrameConverter::CP_ALWAYS_COPY, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_ALWAYS_COPY, &worker_))
 	{
 		ocean_assert(false && "Should never happen!");
 		return;

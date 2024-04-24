@@ -754,7 +754,7 @@ bool ShapeDetectorMainWindow::updateImage(const std::string& filename)
 
 	const Frame image = Media::Utilities::loadImage(filename);
 
-	return CV::FrameConverter::Comfort::convert(image, FrameType(image, FrameType::FORMAT_Y8), yImage_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()());
+	return CV::FrameConverter::Comfort::convert(image, FrameType::FORMAT_Y8, yImage_, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()());
 }
 
 void ShapeDetectorMainWindow::invokeShapeDetector()
@@ -884,7 +884,7 @@ void ShapeDetectorMainWindow::invokeShapeDetector()
 	windowParameters_.repaint();
 
 	Frame rgbFrame;
-	if (!CV::FrameConverter::Comfort::convert(yFrameTransposed, FrameType(yFrameTransposed, FrameType::FORMAT_RGB24), rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::convert(yFrameTransposed, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "Should never happen!");
 		return;

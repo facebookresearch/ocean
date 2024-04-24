@@ -185,7 +185,7 @@ Platform::Win::Bitmap HCPMainWindow::detectFeatures(const Frame& frame)
 	Platform::Win::Bitmap bitmap(tmpFrame);
 
 	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(tmpFrame, FrameType(tmpFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
+	if (!CV::FrameConverter::Comfort::convert(tmpFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, &worker_))
 	{
 		ocean_assert(false && "Unsupported pixel format!");
 		return bitmap;
