@@ -22,7 +22,7 @@ CameraUndistortionMainWindow::CameraUndistortionMainWindow(HINSTANCE instance, c
 	{
 		distortedFrame_ = Media::Utilities::loadImage(mediaFilename);
 
-		if (distortedFrame_ && !CV::FrameConverter::Comfort::change(distortedFrame_, FrameType(distortedFrame_, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false, WorkerPool::get().scopedWorker()()))
+		if (distortedFrame_ && !CV::FrameConverter::Comfort::change(distortedFrame_, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 		{
 			distortedFrame_.release();
 		}

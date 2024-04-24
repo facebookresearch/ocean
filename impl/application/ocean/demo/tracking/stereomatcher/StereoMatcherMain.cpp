@@ -327,7 +327,7 @@ class ScopedPlugin
 	{
 		if (CV::FrameBlender::blend<true>(leftTrackingFrame, rightTrackingFrame, 0x80, WorkerPool::get().conditionalScopedWorker(multicore)()))
 		{
-			CV::FrameConverter::Comfort::change(rightTrackingFrame, FrameType(rightTrackingFrame, FrameType::FORMAT_RGB24), WorkerPool::get().conditionalScopedWorker(multicore)());
+			CV::FrameConverter::Comfort::change(rightTrackingFrame, FrameType::FORMAT_RGB24, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().conditionalScopedWorker(multicore)());
 
 			for (size_t n = 0; n < leftFeatures.size(); ++n)
 			{

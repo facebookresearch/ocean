@@ -159,7 +159,7 @@ FrameType ImageSequenceFrameProviderInterface::synchronFrameTypeRequest(const do
 	{
 		const FrameType preferredFrameType(*frameRef, preferredPixelFormat_, preferredPixelOrigin_);
 
-		if (preferredFrameType.isValid() && CV::FrameConverter::Comfort::isSupported(frameRef->frameType(), preferredFrameType))
+		if (preferredFrameType.isValid() && CV::FrameConverter::Comfort::isSupported(frameRef->frameType(), preferredFrameType.pixelFormat()))
 		{
 			return preferredFrameType;
 		}

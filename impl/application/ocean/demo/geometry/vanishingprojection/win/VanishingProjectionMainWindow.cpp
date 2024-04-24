@@ -40,7 +40,7 @@ VanishingProjectionMainWindow::VanishingProjectionMainWindow(HINSTANCE instance,
 
 	if (frame_)
 	{
-		CV::FrameConverter::Comfort::change(frame_, FrameType(frame_, FrameType::ORIGIN_UPPER_LEFT));
+		CV::FrameConverter::Comfort::change(frame_, FrameType::ORIGIN_UPPER_LEFT);
 	}
 }
 

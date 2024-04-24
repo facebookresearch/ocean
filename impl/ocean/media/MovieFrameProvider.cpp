@@ -223,7 +223,7 @@ bool MovieFrameProvider::setPreferredFrameType(const FrameType::PixelFormat pixe
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (frameType_.isValid() && !CV::FrameConverter::Comfort::isSupported(frameType_, FrameType(frameType_, pixelFormat, pixelOrigin)))
+	if (frameType_.isValid() && !CV::FrameConverter::Comfort::isSupported(frameType_, pixelFormat))
 	{
 		return false;
 	}
@@ -612,7 +612,7 @@ void MovieFrameProvider::threadRun()
 					if (preferredPixelFormat_ != FrameType::FORMAT_UNDEFINED && preferredPixelOrigin_ != FrameType::ORIGIN_INVALID
 							&& (preferredPixelFormat_ != frame->pixelFormat() || preferredPixelOrigin_ != frame->pixelOrigin()))
 					{
-						CV::FrameConverter::Comfort::change(*frame, FrameType(*frame, preferredPixelFormat_, preferredPixelOrigin_), false, WorkerPool::get().scopedWorker()());
+						CV::FrameConverter::Comfort::change(*frame, preferredPixelFormat_, preferredPixelOrigin_, false, WorkerPool::get().scopedWorker()());
 					}
 
 					frames_.insertElement(index, frame, true);

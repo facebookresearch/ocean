@@ -403,7 +403,7 @@ bool extractImageToDirectory(const IO::File& panoramaFile, const FrameType::Pixe
 		return false;
 	}
 
-	if (!CV::FrameConverter::Comfort::change(frame, FrameType(frame, pixelFormat), WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::change(frame, pixelFormat, WorkerPool::get().scopedWorker()()))
 		return false;
 
 	// The panorama frame holds an additional mask identifying valid and invalid pixels (pixels that are covered by visual information)

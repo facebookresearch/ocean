@@ -98,7 +98,7 @@ void MoviePreviewMainWindow::onSaveImage(wxCommandEvent& /*event*/)
 
 		if (frame)
 		{
-			CV::FrameConverter::Comfort::change(frame, FrameType(frame, FrameType::FORMAT_RGB24));
+			CV::FrameConverter::Comfort::change(frame, FrameType::FORMAT_RGB24);
 
 			wxFileDialog saveFileDialog(this, L"Open media files", L"", L"", L"Image files (*.*)|*.*", wxFD_SAVE);
 

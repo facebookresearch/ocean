@@ -66,7 +66,7 @@ void BlobMatchingMainWindow::onInitialized()
 		return;
 	}
 
-	if (!CV::FrameConverter::Comfort::change(patternFrame_, FrameType(patternFrame_, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), true, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::change(patternFrame_, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, true, WorkerPool::get().scopedWorker()()))
 	{
 		ocean_assert(false && "This should never happen!");
 		return;

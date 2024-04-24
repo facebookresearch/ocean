@@ -96,7 +96,7 @@ PatternTracker6DOF::ObjectId PatternTracker6DOF::registerObject(const std::strin
 			return invalidObjectId();
 		}
 
-		if (!CV::FrameConverter::Comfort::change(frame, FrameType(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false))
+		if (!CV::FrameConverter::Comfort::change(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, false))
 		{
 			Log::error() << "The defined tracking object \"" << description << "\" holds no usable image data.";
 			return invalidObjectId();

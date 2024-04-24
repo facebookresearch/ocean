@@ -56,7 +56,7 @@ bool PoissonBlendingMainWindow::loadFrame(const wxString& filename, Frame& frame
 		return false;
 	}
 
-	return CV::FrameConverter::Comfort::change(frame, FrameType(frame, FrameType::ORIGIN_UPPER_LEFT));
+	return CV::FrameConverter::Comfort::change(frame, FrameType::ORIGIN_UPPER_LEFT);
 }
 
 void PoissonBlendingMainWindow::onOpen(wxCommandEvent& /*event*/)
@@ -94,7 +94,7 @@ void PoissonBlendingMainWindow::onOpen(wxCommandEvent& /*event*/)
 		return;
 	}
 
-	if (!CV::FrameConverter::Comfort::change(sourceMask, FrameType(sourceMask, FrameType::FORMAT_Y8, sourceMask.pixelOrigin()), CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::change(sourceMask, FrameType::FORMAT_Y8, sourceMask.pixelOrigin(), CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 	{
 		wxMessageBox("Pixel format of source mask frame could not be converted to an 8 bit grayscale frame.");
 		return;
@@ -113,7 +113,7 @@ void PoissonBlendingMainWindow::onOpen(wxCommandEvent& /*event*/)
 		return;
 	}
 
-	if (!CV::FrameConverter::Comfort::change(targetFrame, FrameType(targetFrame, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin()), CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+	if (!CV::FrameConverter::Comfort::change(targetFrame, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin(), CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 	{
 		wxMessageBox("The target frame could not be converted so that the frame pixel format matches with the source frame.");
 		return;

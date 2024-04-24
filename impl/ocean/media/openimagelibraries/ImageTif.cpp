@@ -296,11 +296,11 @@ Frame ImageTif::decodeImage(const void* buffer, const size_t size)
 	switch (samplesPerPixel)
 	{
 		case 1u:
-			CV::FrameConverter::Comfort::change(result, FrameType(result, FrameType::FORMAT_Y8), true, WorkerPool::get().conditionalScopedWorker(result.pixels() >= 400u * 400u)());
+			CV::FrameConverter::Comfort::change(result, FrameType::FORMAT_Y8, true, WorkerPool::get().conditionalScopedWorker(result.pixels() >= 400u * 400u)());
 			break;
 
 		case 3u:
-			CV::FrameConverter::Comfort::change(result, FrameType(result, FrameType::FORMAT_RGB24), true, WorkerPool::get().conditionalScopedWorker(result.pixels() >= 400u * 400u)());
+			CV::FrameConverter::Comfort::change(result, FrameType::FORMAT_RGB24, true, WorkerPool::get().conditionalScopedWorker(result.pixels() >= 400u * 400u)());
 			break;
 
 		default:

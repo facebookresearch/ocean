@@ -869,7 +869,7 @@ bool TestImageIO::testInterchangeability(const double testDuration)
 						}
 						else
 						{
-							if (!CV::FrameConverter::Comfort::change(targetFrame, sourceFrame.frameType()))
+							if (!CV::FrameConverter::Comfort::change(targetFrame, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin()))
 							{
 								allSucceeded = false;
 							}
@@ -902,7 +902,7 @@ bool TestImageIO::testInterchangeability(const double testDuration)
 						}
 						else
 						{
-							if (!CV::FrameConverter::Comfort::change(targetFrame, sourceFrame.frameType()))
+							if (!CV::FrameConverter::Comfort::change(targetFrame, sourceFrame.frameFormat(), sourceFrame.pixelOrigin()))
 							{
 								allSucceeded = false;
 							}
@@ -1349,7 +1349,7 @@ bool TestImageIO::testPngImageEncodeDecode(const unsigned int width, const unsig
 
 				if (sourceFrame.frameType() != flippedTargetFrame.frameType())
 				{
-					CV::FrameConverter::Comfort::change(flippedTargetFrame, FrameType(flippedTargetFrame, FrameType::ORIGIN_LOWER_LEFT));
+					CV::FrameConverter::Comfort::change(flippedTargetFrame, FrameType::ORIGIN_LOWER_LEFT);
 				}
 
 				for (unsigned int y = 0u; y < sourceFrame.height(); ++y)

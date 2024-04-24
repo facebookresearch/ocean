@@ -38,7 +38,7 @@ bool TestPointTracking::test(const Frame& frame, const double testDuration, Work
 
 	for (unsigned int channels = 1u; channels <= 4u; ++channels)
 	{
-		if (CV::FrameConverter::Comfort::isSupported(frame.frameType(), FrameType(frame, FrameType::findPixelFormat(channels * 8u), FrameType::ORIGIN_UPPER_LEFT)))
+		if (CV::FrameConverter::Comfort::isSupported(frame.frameType(), FrameType::findPixelFormat(channels * 8u)))
 		{
 			if (channels > 1u)
 			{

@@ -206,14 +206,17 @@ Frame Utilities::visualizeShapeAlignment(const Frame& frame, unsigned int rectif
 	ocean_assert(frame_H_rectified.isHomography());
 
 	Frame rectifiedFrame(FrameType(frame, rectifiedWidth, rectifiedHeight));
-	CV::FrameInterpolatorBilinear::Comfort::homography(frame, rectifiedFrame, frame_H_rectified);
+	const bool homographyResult = CV::FrameInterpolatorBilinear::Comfort::homography(frame, rectifiedFrame, frame_H_rectified);
+	ocean_assert_and_suppress_unused(homographyResult, homographyResult);
 
-	CV::FrameConverter::Comfort::change(rectifiedFrame, FrameType(rectifiedFrame, FrameType::FORMAT_RGB24));
+	const bool changeResult = CV::FrameConverter::Comfort::change(rectifiedFrame, FrameType::FORMAT_RGB24);
+	ocean_assert_and_suppress_unused(changeResult, changeResult);
 
 	if (!candidateShapesOffset.isNull())
 	{
-		Frame intermediateFrame = Frame(FrameType(rectifiedFrame));
+		Frame intermediateFrame = Frame(rectifiedFrame.frameType());
 		CV::FrameInterpolatorBilinear::Comfort::affine(rectifiedFrame, intermediateFrame, SquareMatrix3(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(-candidateShapesOffset, 1)), CV::Canvas::white());
+
 		rectifiedFrame = std::move(intermediateFrame);
 	}
 

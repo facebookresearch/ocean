@@ -118,7 +118,7 @@ bool WICBufferImage::loadImage()
 
 	if (preferredFrameType_.pixelFormat() != FrameType::FORMAT_UNDEFINED && (frame.pixelFormat() != preferredFrameType_.pixelFormat() || frame.pixelOrigin() != preferredFrameType_.pixelOrigin()))
 	{
-		if (!CV::FrameConverter::Comfort::change(frame, FrameType(frame, preferredFrameType_.pixelFormat(), preferredFrameType_.pixelOrigin()), true, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::change(frame, preferredFrameType_.pixelFormat(), preferredFrameType_.pixelOrigin(), true, WorkerPool::get().scopedWorker()()))
 		{
 			return false;
 		}

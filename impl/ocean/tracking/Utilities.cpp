@@ -45,7 +45,7 @@ Frame Utilities::blendFrames(const Frame& frame0, const Frame& frame1, Vector2& 
 
 	if (pixelFormat != FrameType::FORMAT_UNDEFINED)
 	{
-		if (!CV::FrameConverter::Comfort::change(internalFrame0, FrameType(internalFrame0, pixelFormat)) || !CV::FrameConverter::Comfort::change(internalFrame1, FrameType(internalFrame1, pixelFormat)))
+		if (!CV::FrameConverter::Comfort::change(internalFrame0, pixelFormat) || !CV::FrameConverter::Comfort::change(internalFrame1, pixelFormat))
 		{
 			ocean_assert(false && "This should never happen!");
 			return Frame();
