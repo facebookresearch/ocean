@@ -27,7 +27,7 @@ As with the desktop use case, this process consists of two steps:
 
 These steps need to be repeated for all Android ABIs required.
 
-The easiest way to build the third-party libraries is by using the provided build scripts, [`build/cmake/build_third-party_for_android.sh`](build/cmake/build_third-party_for_android.sh). Simply comment out all build configurations that are not required for your project, for example:
+The easiest way to build the third-party libraries is by using the provided build scripts, [`build/cmake/build_thirdparty_android.sh`](build/cmake/build_thirdparty_android.sh). Simply comment out all build configurations that are not required for your project, for example:
 
 ```
 # run_build_for_android armeabi-v7a android-32 Debug static
@@ -57,7 +57,7 @@ Once the scripts completes, all binaries and include files of the third-party li
 
 This section provides an example of how to build the Ocean libraries so that they can be integrated into an existing Android project.
 
-First, build the required third-party libraries as described above for the required Android ABIs. Then take a look at the build script for Android-builds of Ocean, [`build/cmake/build_for_android.sh`](build/cmake/build_for_android.sh), and comment out all build configurations that are not required. Make sure the selection of enabled build configurations matches the one from the build of the third-party libraries.
+First, build the required third-party libraries as described above for the required Android ABIs. Then take a look at the build script for Android-builds of Ocean, [`build/cmake/build_ocean_android.sh`](build/cmake/build_ocean_android.sh), and comment out all build configurations that are not required. Make sure the selection of enabled build configurations matches the one from the build of the third-party libraries.
 
 All binaries and include files of Ocean will have been installed into `/tmp/ocean/install/android/${ANDROID_ABI}_${LINKING_TYPE_${BUILD_TYPE}`.
 
