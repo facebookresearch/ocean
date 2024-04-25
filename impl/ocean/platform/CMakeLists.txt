@@ -27,7 +27,6 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
         file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp" "${CMAKE_CURRENT_LIST_DIR}/*.mm")
 
         if (NOT MACOS)
-            message(STATUS "REMOVING MACOS-ONLY MM FILES")
             # Remove macOS-only files
             list(REMOVE_ITEM OCEAN_TARGET_HEADER_FILES
                 "${CMAKE_CURRENT_LIST_DIR}/Keyboard.h"
@@ -40,8 +39,6 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
                 "${CMAKE_CURRENT_LIST_DIR}/Mouse.cpp"
                 "${CMAKE_CURRENT_LIST_DIR}/Mouse.mm"
             )
-        else()
-            message(STATUS "NOT NOT NOT NOT NOT REMOVING MACOS-ONLY MM FILES")
         endif()
     else()
         file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
