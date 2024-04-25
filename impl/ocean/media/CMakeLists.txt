@@ -2,6 +2,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
+add_subdirectory(avfoundation)
 add_subdirectory(imageio)
 add_subdirectory(openimagelibraries)
 add_subdirectory(special)
