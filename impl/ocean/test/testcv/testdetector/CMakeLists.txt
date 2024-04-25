@@ -37,6 +37,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_cv
             ocean_cv_detector
             ocean_cv_detector_blob
+            ocean_io_image
             ocean_math
             ocean_media
             ocean_media_openimagelibraries
