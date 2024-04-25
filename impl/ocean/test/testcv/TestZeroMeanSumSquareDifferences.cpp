@@ -698,7 +698,18 @@ bool TestZeroMeanSumSquareDifferences::testPatch8BitPerChannel(const unsigned in
 		CV::CVUtilities::randomizeFrame(frame0, false, &randomGenerator);
 		CV::CVUtilities::randomizeFrame(frame1, false, &randomGenerator);
 
-		for (unsigned int n = 0u; n < locations; ++n)
+		// Add valid locations nearest to buffer boundaries to test for memory access violation bugs
+		centersX0[0] = tPatchSize_2;
+		centersY0[0] = tPatchSize_2;
+		centersX1[0] = tPatchSize_2;
+		centersY1[0] = tPatchSize_2;
+
+		centersX0[1] = width0 - tPatchSize_2 - 1u;
+		centersY0[1] = height0 - tPatchSize_2 - 1u;
+		centersX1[1] = width1 - tPatchSize_2 - 1u;
+		centersY1[1] = height1 - tPatchSize_2 - 1u;
+
+		for (unsigned int n = 2u; n < locations; ++n)
 		{
 			centersX0[n] = RandomI::random(randomGenerator, tPatchSize_2, width0 - tPatchSize_2 - 1u);
 			centersY0[n] = RandomI::random(randomGenerator, tPatchSize_2, height0 - tPatchSize_2 - 1u);
@@ -977,12 +988,19 @@ bool TestZeroMeanSumSquareDifferences::testBuffer8BitPerChannel(const unsigned i
 		CV::CVUtilities::randomizeFrame(frame0, false, &randomGenerator);
 		CV::CVUtilities::randomizeFrame(frame1, false, &randomGenerator);
 
-		for (unsigned int n = 0u; n < locations; ++n)
-		{
-			offsets0[n] = RandomI::random(randomGenerator, height * frame0.strideElements() - tBufferSize - 1u);
-			offsets1[n] = RandomI::random(randomGenerator, height * frame1.strideElements() - tBufferSize - 1u);
-		}
+		// Add valid locations nearest to buffer boundaries to test for memory access violation bugs
+		offsets0[0] = 0u;
+		offsets1[0] = 0u;
 
+		offsets0[1] = height * frame0.strideElements() - tBufferSize;
+		offsets1[1] = height * frame1.strideElements() - tBufferSize;
+
+		for (unsigned int n = 2u; n < locations; ++n)
+		{
+			offsets0[n] = RandomI::random(randomGenerator, height * frame0.strideElements() - tBufferSize);
+			offsets1[n] = RandomI::random(randomGenerator, height * frame1.strideElements() - tBufferSize);
+		}
+		
 		const uint8_t* const data0 = frame0.constdata<uint8_t>();
 		const uint8_t* const data1 = frame1.constdata<uint8_t>();
 
@@ -1023,7 +1041,7 @@ bool TestZeroMeanSumSquareDifferences::testBuffer8BitPerChannel(const unsigned i
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
 					if constexpr (tChannels == 1u || tChannels == 3u)
 					{
-						if constexpr (tPixels >= 15u)
+						if constexpr (tPixels >= 8u)
 						{
 							resultsSSE.resize(locations);
 
@@ -1045,7 +1063,7 @@ bool TestZeroMeanSumSquareDifferences::testBuffer8BitPerChannel(const unsigned i
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 					if constexpr (tChannels == 1u || tChannels == 3u)
 					{
-						if constexpr (tPixels >= 15u)
+						if constexpr (tPixels >= 8u)
 						{
 							resultsNEON.resize(locations);
 
@@ -1237,12 +1255,21 @@ bool TestZeroMeanSumSquareDifferences::testPatchBuffer8BitPerChannel(const unsig
 		CV::CVUtilities::randomizeFrame(frame0, false, &randomGenerator);
 		CV::CVUtilities::randomizeFrame(frame1, false, &randomGenerator);
 
-		for (unsigned int n = 0u; n < locations; ++n)
+		// Add valid locations nearest to buffer boundaries to test for memory access violation bugs
+		centersX0[0] = tPatchSize_2;
+		centersY0[0] = tPatchSize_2;
+		offsets1[0] = 0;
+
+		centersX0[1] = width0 - tPatchSize_2 - 1u;
+		centersY0[1] = height0 - tPatchSize_2 - 1u;
+		offsets1[1] = height1 * frame1.strideElements() - tBufferSize;
+
+		for (unsigned int n = 2u; n < locations; ++n)
 		{
 			centersX0[n] = RandomI::random(randomGenerator, tPatchSize_2, width0 - tPatchSize_2 - 1u);
 			centersY0[n] = RandomI::random(randomGenerator, tPatchSize_2, height0 - tPatchSize_2 - 1u);
 
-			offsets1[n] = RandomI::random(randomGenerator, height1 * frame1.strideElements() - tBufferSize - 1u);
+			offsets1[n] = RandomI::random(randomGenerator, height1 * frame1.strideElements() - tBufferSize);
 		}
 
 		const uint8_t* const data0 = frame0.constdata<uint8_t>();
@@ -1516,7 +1543,18 @@ bool TestZeroMeanSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(con
 		CV::CVUtilities::randomizeFrame(frame0, false, &randomGenerator);
 		CV::CVUtilities::randomizeFrame(frame1, false, &randomGenerator);
 
-		for (unsigned int n = 0u; n < locations; ++n)
+		// Add valid locations nearest to buffer boundaries to test for memory access violation bugs
+		centersX0[0] = 0u;
+		centersY0[0] = 0u;
+		centersX1[0] = 0u;
+		centersY1[0] = 0u;
+
+		centersX0[1] = width0 - 1u;
+		centersY0[1] = height0 - 1u;
+		centersX1[1] = width1 - 1u;
+		centersY1[1] = height1 - 1u;
+
+		for (unsigned int n = 2u; n < locations; ++n)
 		{
 			centersX0[n] = RandomI::random(randomGenerator, 0u, width0 - 1u);
 			centersY0[n] = RandomI::random(randomGenerator, 0u, height0 - 1u);

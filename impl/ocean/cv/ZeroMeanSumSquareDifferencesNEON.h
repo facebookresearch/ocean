@@ -232,20 +232,20 @@ template <>
 template <unsigned int tPixels>
 inline void ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::mean8BitPerChannel(const uint8_t* buffer, uint8_t* const meanValues)
 {
-	static_assert(tPixels >= 5u, "Invalid pixels!");
+	static_assert(tPixels >= 8u, "Invalid pixels!");
 
 	ocean_assert(buffer != nullptr && meanValues != nullptr);
 
 	constexpr unsigned int blocks16 = tPixels / 16u;
 	constexpr unsigned int remainingAfterBlocks16 = tPixels % 16u;
 
-	constexpr bool partialBlock16 = remainingAfterBlocks16 > 8u;
+	constexpr bool partialBlock16 = remainingAfterBlocks16 > 8u && tPixels >= 16u;
 	constexpr unsigned int remainingAfterPartialBlock16 = partialBlock16 ? 0u : remainingAfterBlocks16;
 
 	constexpr unsigned int blocks8 = remainingAfterPartialBlock16 / 8u;
 	constexpr unsigned int remainingAfterBlocks8 = remainingAfterPartialBlock16 % 8u;
 
-	constexpr bool partialBlock8 = remainingAfterBlocks8 >= 3u;
+	constexpr bool partialBlock8 = remainingAfterBlocks8 >= 3u && tPixels >= 8u;
 	constexpr unsigned int remainingAfterPartialBlock8 = partialBlock8 ? 0u : remainingAfterBlocks8;
 
 	constexpr unsigned int blocks1 = remainingAfterPartialBlock8;
@@ -267,6 +267,8 @@ inline void ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::mean8B
 
 	if constexpr (partialBlock16)
 	{
+		static_assert(tPixels >= 16u, "We need to guarantee that loading 16 pixels of worth of data preceding the end boundary cannot cause memory access violation");
+
 		constexpr unsigned int overlappingElements = 16u - remainingAfterBlocks16;
 		ocean_assert(overlappingElements < 8u);
 
@@ -326,7 +328,7 @@ template <>
 template <unsigned int tPixels>
 inline void ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<3u>::mean8BitPerChannel(const uint8_t* buffer, uint8_t* const meanValues)
 {
-	static_assert(tPixels >= 5u, "Invalid pixels!");
+	static_assert(tPixels >= 8u, "Invalid pixels!");
 
 	constexpr unsigned int tChannels = 3u;
 
@@ -367,6 +369,8 @@ inline void ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<3u>::mean8B
 
 	if constexpr (partialBlock16)
 	{
+		static_assert(tPixels >= 16u, "We need to guarantee that loading 16 pixels of worth of data preceding the end boundary cannot cause memory access violation");
+
 		constexpr unsigned int overlappingElements = 16u - remainingAfterBlocks16;
 		ocean_assert(overlappingElements < 8u);
 
