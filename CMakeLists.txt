@@ -104,6 +104,7 @@ if (OCEAN_BUILD_TESTS)
     add_subdirectory(impl/ocean/test/testgeometry)
     add_subdirectory(impl/ocean/test/testio)
     add_subdirectory(impl/ocean/test/testmath)
+    add_subdirectory(impl/ocean/test/testmedia)
     add_subdirectory(impl/ocean/test/testplatform)
 
     # Test applications
