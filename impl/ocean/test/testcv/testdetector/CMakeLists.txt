@@ -42,6 +42,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_media_openimagelibraries
             ocean_platform
             ocean_system
+            ocean_test
             ocean_tracking
             ocean_tracking_blob
     )

@@ -39,6 +39,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
         PUBLIC
             ocean_base
             ocean_system
+            ocean_test
     )
 
     if (ANDROID)

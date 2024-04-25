@@ -98,6 +98,7 @@ endif()
 
 if (OCEAN_BUILD_TESTS)
     # Test libraries
+    add_subdirectory(impl/ocean/test)
     add_subdirectory(impl/ocean/test/testbase)
     add_subdirectory(impl/ocean/test/testcv)
     add_subdirectory(impl/ocean/test/testdevices)

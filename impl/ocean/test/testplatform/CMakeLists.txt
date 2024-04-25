@@ -48,6 +48,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_base
             ocean_cv
             ocean_platform
+            ocean_test
     )
 
     if (MACOS OR IOS)

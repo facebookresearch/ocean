@@ -37,6 +37,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_devices
             ocean_math
             ocean_system
+            ocean_test
     )
 
     if (ANDROID)

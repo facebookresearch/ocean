@@ -36,6 +36,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_base
             ocean_geometry
             ocean_math
+            ocean_test
     )
 
     if (ANDROID)

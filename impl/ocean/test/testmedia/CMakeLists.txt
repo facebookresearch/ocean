@@ -58,6 +58,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_media_special
             # ocean_media_vrs  # Not yet available.
             ocean_system
+            ocean_test
     )
 
     if (ANDROID)
