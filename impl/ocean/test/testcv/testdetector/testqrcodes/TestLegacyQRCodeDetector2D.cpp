@@ -46,7 +46,7 @@ SharedTestData TestLegacyQRCodeDetector2D::FileDataCollection::data(const size_t
 
 	if (image.isValid())
 	{
-		if (CV::FrameConverter::Comfort::change(image, image, FrameType::FORMAT_Y8))
+		if (CV::FrameConverter::Comfort::change(image, FrameType::FORMAT_Y8))
 		{
 			return std::make_shared<TestData>(std::move(image), Value());
 		}
@@ -147,13 +147,13 @@ TEST_F(TestLegacyQRCodeDetector2D, StressTest)
 
 #ifdef OCEAN_USE_TEST_DATA_COLLECTION
 
-TEST(TestLegacyQRCodeDetector2D, DetectQRCodes_0_qrcodes)
+TEST_F(TestLegacyQRCodeDetector2D, DetectQRCodes_0_qrcodes)
 {
 	Worker worker;
 	EXPECT_TRUE(TestDetector::TestQRCodes::TestLegacyQRCodeDetector2D::testDetectQRCodes_0_qrcodes(10.0, worker, false));
 }
 
-TEST(TestLegacyQRCodeDetector2D, DetectQRCodes_1_qrcode)
+TEST_F(TestLegacyQRCodeDetector2D, DetectQRCodes_1_qrcode)
 {
 	Worker worker;
 	EXPECT_TRUE(TestDetector::TestQRCodes::TestLegacyQRCodeDetector2D::testDetectQRCodes_1_qrcode(10.0, worker, false));
