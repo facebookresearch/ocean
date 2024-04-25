@@ -2,16 +2,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(android)
-add_subdirectory(avfoundation)
-add_subdirectory(imageio)
-add_subdirectory(openimagelibraries)
-add_subdirectory(special)
-add_subdirectory(wic)
+if (ANDROID)
 
-if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
-
-    set(OCEAN_TARGET_NAME "ocean_media")
+    set(OCEAN_TARGET_NAME "ocean_media_android")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -23,9 +16,6 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     target_include_directories(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_IMPL_DIR}")
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
-    if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_MEDIA_EXPORT)
-    endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
 
@@ -33,10 +23,10 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
-            ocean_cv
             ocean_io
-            ocean_math
-            ocean_system
+            ocean_media
+            ocean_platform_android
+            -lOpenSLES
     )
 
     # Installation
@@ -46,7 +36,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/media
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/media/android
             COMPONENT include
     )
 
