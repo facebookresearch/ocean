@@ -3513,10 +3513,14 @@ inline void FrameFilterSeparable::filter(const T* source, T* target, const unsig
 template <typename T, typename TFilter>
 bool FrameFilterSeparable::filter(const T* source, T* target, const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const TFilter* horizontalFilter, const unsigned int horizontalFilterSize, const TFilter* verticalFilter, const unsigned int verticalFilterSize, Worker* worker, ReusableMemory* reusableMemory, const ProcessorInstructions processorInstructions)
 {
+	ocean_assert(source != nullptr && target != nullptr);
+	ocean_assert(width >= horizontalFilterSize && height >= verticalFilterSize);
 	ocean_assert(channels >= 1u);
 
-	ocean_assert(source && target);
-	ocean_assert(width >= horizontalFilterSize && height >= verticalFilterSize);
+	if (source == nullptr || target == nullptr || width < horizontalFilterSize || height < verticalFilterSize || channels == 0u)
+	{
+		return false;
+	}
 
 	OCEAN_SUPPRESS_UNUSED_WARNING(reusableMemory);
 
@@ -3542,32 +3546,35 @@ bool FrameFilterSeparable::filter(const T* source, T* target, const unsigned int
 		}
 	}
 
-	if (std::is_same<float, TFilter>::value)
+	if constexpr (std::is_same<float, TFilter>::value)
 	{
 		filterUniversal<T>(source, target, width, height, channels, sourcePaddingElements, targetPaddingElements, (const float*)(horizontalFilter), horizontalFilterSize, (const float*)(verticalFilter), verticalFilterSize, worker);
 		return true;
 	}
-	else if (std::is_same<unsigned int, TFilter>::value)
+	else
 	{
-		const TFilter horizontalNormalization = sumFilterValues(horizontalFilter, horizontalFilterSize);
-		ocean_assert(horizontalNormalization != TFilter(0));
-
-		std::vector<float> horizontalFloatFilter(horizontalFilterSize);
-		for (size_t n = 0; n < horizontalFloatFilter.size(); ++n)
+		if constexpr (std::is_same<unsigned int, TFilter>::value)
 		{
-			horizontalFloatFilter[n] = float(horizontalFilter[n]) / float(horizontalNormalization);
+			const TFilter horizontalNormalization = sumFilterValues(horizontalFilter, horizontalFilterSize);
+			ocean_assert(horizontalNormalization != TFilter(0));
+
+			std::vector<float> horizontalFloatFilter(horizontalFilterSize);
+			for (size_t n = 0; n < horizontalFloatFilter.size(); ++n)
+			{
+				horizontalFloatFilter[n] = float(horizontalFilter[n]) / float(horizontalNormalization);
+			}
+
+			const TFilter verticalNormalization = sumFilterValues(verticalFilter, verticalFilterSize);
+			ocean_assert(verticalNormalization != TFilter(0));
+
+			std::vector<float> verticalFloatFilter(verticalFilterSize);
+			for (size_t n = 0; n < verticalFloatFilter.size(); ++n)
+			{
+				verticalFloatFilter[n] = float(verticalFilter[n]) / float(verticalNormalization);
+			}
+
+			return filterUniversal<T>(source, target, width, height, channels, sourcePaddingElements, targetPaddingElements, horizontalFloatFilter.data(), (unsigned int)horizontalFloatFilter.size(), verticalFloatFilter.data(), (unsigned int)verticalFloatFilter.size(), worker);
 		}
-
-		const TFilter verticalNormalization = sumFilterValues(verticalFilter, verticalFilterSize);
-		ocean_assert(verticalNormalization != TFilter(0));
-
-		std::vector<float> verticalFloatFilter(verticalFilterSize);
-		for (size_t n = 0; n < verticalFloatFilter.size(); ++n)
-		{
-			verticalFloatFilter[n] = float(verticalFilter[n]) / float(verticalNormalization);
-		}
-
-		return filterUniversal<T>(source, target, width, height, channels, sourcePaddingElements, targetPaddingElements, horizontalFloatFilter.data(), (unsigned int)horizontalFloatFilter.size(), verticalFloatFilter.data(), (unsigned int)verticalFloatFilter.size(), worker);
 	}
 
 	ocean_assert(false && "Invalid combination of parameters!");
