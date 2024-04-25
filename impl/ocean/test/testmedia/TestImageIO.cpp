@@ -902,7 +902,7 @@ bool TestImageIO::testInterchangeability(const double testDuration)
 						}
 						else
 						{
-							if (!CV::FrameConverter::Comfort::change(targetFrame, sourceFrame.frameFormat(), sourceFrame.pixelOrigin()))
+							if (!CV::FrameConverter::Comfort::change(targetFrame, sourceFrame.pixelFormat(), sourceFrame.pixelOrigin()))
 							{
 								allSucceeded = false;
 							}
