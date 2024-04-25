@@ -2,11 +2,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(jni)
-
 if (ANDROID)
 
-    set(OCEAN_TARGET_NAME "ocean_media_android")
+    set(OCEAN_TARGET_NAME "ocean_media_android_jni")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -24,11 +22,8 @@ if (ANDROID)
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
-            ocean_base
-            ocean_io
-            ocean_media
+            ocean_media_android
             ocean_platform_android
-            -lOpenSLES
     )
 
     # Installation
@@ -38,7 +33,7 @@ if (ANDROID)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/media/android
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/media/android/jni
             COMPONENT include
     )
 
