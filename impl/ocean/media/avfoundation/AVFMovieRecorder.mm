@@ -21,15 +21,7 @@ namespace Media
 namespace AVFoundation
 {
 
-AVFMovieRecorder::AVFMovieRecorder() :
-	assetWriter_(nullptr),
-	assetWriterInput_(nullptr),
-	assetWriterInputPixelBufferAdaptor_(nullptr),
-	pixelBuffer_(nullptr),
-	nextFrameTimestamp_(0.0),
-	previousFrameTimestamp_(-1.0),
-	isRecording_(false),
-	isStopped_(true)
+AVFMovieRecorder::AVFMovieRecorder()
 {
 	recorderFrameEncoder = "h264";
 	recorderFrameFrequency = 30.0;

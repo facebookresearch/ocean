@@ -13,15 +13,6 @@ namespace Media
 namespace AVFoundation
 {
 
-PixelBufferAccessor::PixelBufferAccessor() :
-	pixelBuffer_(nullptr),
-	lockFlags_(0)
-{
-#ifdef OCEAN_DEBUG
-	debugFrameData_ = nullptr;
-#endif
-}
-
 PixelBufferAccessor::PixelBufferAccessor(PixelBufferAccessor&& pixelBufferAccessor)
 {
 	*this = std::move(pixelBufferAccessor);
@@ -33,14 +24,8 @@ PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const boo
 	// nothing to do here
 }
 
-PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const bool readOnly, const bool accessYPlaneOnly) :
-	pixelBuffer_(nullptr),
-	lockFlags_(0)
+PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const bool readOnly, const bool accessYPlaneOnly)
 {
-#ifdef OCEAN_DEBUG
-	debugFrameData_ = nullptr;
-#endif
-
 	if (pixelBuffer == nullptr)
 	{
 		return;

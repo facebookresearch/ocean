@@ -44,7 +44,7 @@ bool AVFFrameMedium::setRespectPlaybackTime(const bool state)
 		return true;
 	}
 
-	if (mediumStartTimestamp.isValid() || mediumPauseTimestamp.isValid())
+	if (startTimestamp_.isValid() || pauseTimestamp_.isValid())
 	{
 		return false;
 	}

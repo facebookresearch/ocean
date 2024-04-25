@@ -157,27 +157,27 @@ AVFMedium::~AVFMedium()
 
 bool AVFMedium::isStarted() const
 {
-	return mediumStartTimestamp.isValid();
+	return startTimestamp_.isValid();
 }
 
 Timestamp AVFMedium::startTimestamp() const
 {
-	return mediumStartTimestamp;
+	return startTimestamp_;
 }
 
 Timestamp AVFMedium::pauseTimestamp() const
 {
-	return mediumPauseTimestamp;
+	return pauseTimestamp_;
 }
 
 Timestamp AVFMedium::stopTimestamp() const
 {
-	return mediumStopTimestamp;
+	return stopTimestamp_;
 }
 
 bool AVFMedium::start()
 {
-	if (mediumStartTimestamp.isInvalid())
+	if (startTimestamp_.isInvalid())
 	{
 		if (!internalStart())
 		{
@@ -187,9 +187,9 @@ bool AVFMedium::start()
 
 	const ScopedLock scopedLock(lock_);
 
-	mediumStartTimestamp.toNow();
-	mediumPauseTimestamp.toInvalid();
-	mediumStopTimestamp.toInvalid();
+	startTimestamp_.toNow();
+	pauseTimestamp_.toInvalid();
+	stopTimestamp_.toInvalid();
 
 	return true;
 }
@@ -203,9 +203,9 @@ bool AVFMedium::pause()
 
 	const ScopedLock scopedLock(lock_);
 
-	mediumStartTimestamp.toInvalid();
-	mediumPauseTimestamp.toNow();
-	mediumStopTimestamp.toInvalid();
+	startTimestamp_.toInvalid();
+	pauseTimestamp_.toNow();
+	stopTimestamp_.toInvalid();
 
 	return true;
 }
@@ -219,9 +219,9 @@ bool AVFMedium::stop()
 
 	const ScopedLock scopedLock(lock_);
 
-	mediumStartTimestamp.toInvalid();
-	mediumPauseTimestamp.toInvalid();
-	mediumStopTimestamp.toNow();
+	startTimestamp_.toInvalid();
+	pauseTimestamp_.toInvalid();
+	stopTimestamp_.toNow();
 
 	return true;
 }

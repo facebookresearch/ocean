@@ -289,12 +289,12 @@ bool AVFAudio::internalPause()
 
 	ocean_assert(isValid_);
 
-	if (mediumPauseTimestamp.isValid())
+	if (pauseTimestamp_.isValid())
 	{
 		return true;
 	}
 
-	if (!mediumStartTimestamp.isValid())
+	if (!startTimestamp_.isValid())
 	{
 		return false;
 	}
@@ -310,7 +310,7 @@ bool AVFAudio::internalStop()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (mediumStopTimestamp.isValid())
+	if (stopTimestamp_.isValid())
 	{
 		return true;
 	}

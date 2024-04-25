@@ -30,7 +30,7 @@ namespace AVFoundation
 class AVFMedium : virtual public Medium
 {
 	protected:
-	
+
 		/**
 		 * This class implements a manager for audio sessions.
 		 */
@@ -50,7 +50,7 @@ class AVFMedium : virtual public Medium
 				void initialize(const AVAudioSessionCategory avAudioSessionCategory, const AVAudioSessionMode avAudioSessionMode);
 
 #endif // OCEAN_PLATFORM_BUILD_APPLE_MACOS
-			
+
 				/**
 				 * Starts an audio session.
 				 * Each successful call of start() needs to be balanced with a call of stop().
@@ -58,7 +58,7 @@ class AVFMedium : virtual public Medium
 				 * @see stop().
 				 */
 				bool start();
-			
+
 				/**
 				 * Stops an audio session after is has been started.
 				 * @see start().
@@ -70,36 +70,36 @@ class AVFMedium : virtual public Medium
 				 * The session must have been started already.
 				 */
 				void requestRecordPermission();
-			
+
 			protected:
-			
+
 				/**
 				 * Default constructor.
 				 */
 				AudioSessionManager() = default;
-			
+
 			protected:
 
 #ifndef OCEAN_PLATFORM_BUILD_APPLE_MACOS
-			
+
 				/// The usage counter.
 				unsigned int usageCounter_ = 0u;
-			
+
 				/// The audio session for iOS platforms.
 				AVAudioSession* avAudioSession_ = nullptr;
-			
+
 				/// The category which is used.
 				AVAudioSessionCategory avAudioSessionCategory_ = AVAudioSessionCategoryAmbient;
-			
+
 				/// The mode which is used.
 				AVAudioSessionMode avAudioSessionMode_ = AVAudioSessionModeDefault;
-			
+
 				/// The manager's lock.
 				Lock lock_;
 
 #endif // OCEAN_PLATFORM_BUILD_APPLE_MACOS
 		};
-	
+
 	public:
 
 		/**
@@ -181,13 +181,13 @@ class AVFMedium : virtual public Medium
 	protected:
 
 		/// Start timestamp
-		Timestamp mediumStartTimestamp;
+		Timestamp startTimestamp_;
 
 		/// Pause timestamp
-		Timestamp mediumPauseTimestamp;
+		Timestamp pauseTimestamp_;
 
 		/// Stop timestamp
-		Timestamp mediumStopTimestamp;
+		Timestamp stopTimestamp_;
 };
 
 }

@@ -214,12 +214,12 @@ bool AVFMovie::internalStart()
 
 bool AVFMovie::internalPause()
 {
-	if (mediumPauseTimestamp.isValid())
+	if (pauseTimestamp_.isValid())
 	{
 		return true;
 	}
 
-	if (!mediumStartTimestamp.isValid())
+	if (!startTimestamp_.isValid())
 	{
 		return false;
 	}
@@ -236,7 +236,7 @@ bool AVFMovie::internalPause()
 
 bool AVFMovie::internalStop()
 {
-	if (mediumStopTimestamp.isValid())
+	if (stopTimestamp_.isValid())
 	{
 		return true;
 	}
@@ -307,7 +307,7 @@ void AVFMovie::threadRun()
 		{
 			TemporaryScopedLock temporaryScopedLock(lock_);
 
-			if (mediumStartTimestamp.isValid())
+			if (startTimestamp_.isValid())
 			{
 				const AVAssetReaderStatus status = [assetReader_ status];
 
@@ -473,7 +473,7 @@ bool AVFMovie::setSpeed(const float speed)
 {
 	speed_ = speed;
 
-	if (respectPlaybackTime_ && mediumStartTimestamp.isValid())
+	if (respectPlaybackTime_ && startTimestamp_.isValid())
 	{
 		const ScopedLock scopedLock(lock_);
 

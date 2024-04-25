@@ -29,7 +29,7 @@ class PixelBufferAccessor
 		/**
 		 * Creates an invalid accessor object.
 		 */
-		PixelBufferAccessor();
+		PixelBufferAccessor() = default;
 
 		/**
 		 * Move constructor.
@@ -120,10 +120,10 @@ class PixelBufferAccessor
 	protected:
 
 		/// The pixel buffer to be accessed.
-		CVPixelBufferRef pixelBuffer_;
+		CVPixelBufferRef pixelBuffer_ = nullptr;
 
 		/// The lock flags.
-		CVPixelBufferLockFlags lockFlags_;
+		CVPixelBufferLockFlags lockFlags_ = 0;
 
 		/// The padding frame wrapping the pixel buffer.
 		Frame frame_;
@@ -131,7 +131,7 @@ class PixelBufferAccessor
 #ifdef OCEAN_DEBUG
 
 		/// Pointer to the frame's memory.
-		const void* debugFrameData_;
+		const void* debugFrameData_ = nullptr;
 
 #endif
 };

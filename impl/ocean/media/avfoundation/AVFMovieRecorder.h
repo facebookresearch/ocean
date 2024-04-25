@@ -130,31 +130,31 @@ class AVFMovieRecorder : virtual public MovieRecorder
 	protected:
 
 		/// The asset writer.
-		AVAssetWriter* assetWriter_;
+		AVAssetWriter* assetWriter_ = nullptr;
 
 		/// The input for the asset writer.
-		AVAssetWriterInput* assetWriterInput_;
+		AVAssetWriterInput* assetWriterInput_ = nullptr;
 
 		/// The pixel buffer adaptor for the input asset writer.
-		AVAssetWriterInputPixelBufferAdaptor* assetWriterInputPixelBufferAdaptor_;
+		AVAssetWriterInputPixelBufferAdaptor* assetWriterInputPixelBufferAdaptor_ = nullptr;
 
 		/// The pixel buffer to be filled.
-		CVPixelBufferRef pixelBuffer_;
+		CVPixelBufferRef pixelBuffer_ = nullptr;
 
 		/// The pixel buffer accessor.
 		PixelBufferAccessor pixelBufferAccessor_;
 
 		/// The timestamp of the next frame.
-		double nextFrameTimestamp_;
+		double nextFrameTimestamp_ = 0.0;
 
 		/// The timestamp of the previous frame.
-		double previousFrameTimestamp_;
+		double previousFrameTimestamp_ = -1.0;
 
 		/// True, if the recoder is actively recording frames; False, otherwise.
-		bool isRecording_;
+		bool isRecording_ = false;
 
 		/// True, if this recorder is stopped.
-		bool isStopped_;
+		bool isStopped_ = true;
 };
 
 inline CMTime AVFMovieRecorder::time(const double timestamp)

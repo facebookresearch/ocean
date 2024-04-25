@@ -184,28 +184,28 @@ class AVFLiveVideo :
 	protected:
 
 		/// The capture device object.
-		AVCaptureDevice* captureDevice_;
+		AVCaptureDevice* captureDevice_ = nullptr;
 
 		/// The capture session.
-		AVCaptureSession* captureSession_;
+		AVCaptureSession* captureSession_ = nullptr;
 
 		/// The device input for the capture session.
-		AVCaptureDeviceInput* captureDeviceInput_;
+		AVCaptureDeviceInput* captureDeviceInput_ = nullptr;
 
 		/// The video data output for the capture session.
-		AVCaptureVideoDataOutput* captureVideoDataOutput_;
+		AVCaptureVideoDataOutput* captureVideoDataOutput_ = nullptr;
 
 		/// The delegate object for new sample callbacks.
-		NSObject<AVCaptureVideoDataOutputSampleBufferDelegate>* sampleBufferDelegate_;
+		NSObject<AVCaptureVideoDataOutputSampleBufferDelegate>* sampleBufferDelegate_ = nullptr;
 
 		/// The number of measurements of ISO and exposure values.
-		unsigned int isoExposureMeasurements_;
+		unsigned int isoExposureMeasurements_ = 0u;
 
 		/// The sum of ISO values.
-		float isoSum_;
+		float isoSum_ = 0.0f;
 
 		/// The sum of exposure duration values, in seconds.
-		float exposureDurationSum_;
+		float exposureDurationSum_ = 0.0f;
 
 		/// The approximated camera profile of this live video.
 		SharedAnyCamera approximatedAnyCamera_;

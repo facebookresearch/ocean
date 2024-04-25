@@ -96,14 +96,7 @@ AVFLiveVideo::AVFLiveVideo(const std::string& url) :
 	AVFFrameMedium(url),
 	ConfigMedium(url),
 	LiveMedium(url),
-	LiveVideo(url),
-	captureDevice_(nullptr),
-	captureSession_(nullptr),
-	captureDeviceInput_(nullptr),
-	captureVideoDataOutput_(nullptr),
-	isoExposureMeasurements_(0u),
-	isoSum_(0.0f),
-	exposureDurationSum_(0.0f)
+	LiveVideo(url)
 {
 	isValid_ = createCaptureDevice();
 }
