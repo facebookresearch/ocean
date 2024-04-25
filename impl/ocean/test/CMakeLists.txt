@@ -2,6 +2,15 @@
 
 cmake_minimum_required(VERSION 3.26)
 
+add_subdirectory(testbase)
+add_subdirectory(testcv)
+add_subdirectory(testdevices)
+add_subdirectory(testgeometry)
+add_subdirectory(testio)
+add_subdirectory(testmath)
+add_subdirectory(testmedia)
+add_subdirectory(testplatform)
+
 if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_test")
