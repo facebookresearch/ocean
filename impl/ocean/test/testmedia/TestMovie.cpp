@@ -429,7 +429,7 @@ bool TestMovie::testLoop()
 					}
 
 					// we need to ensure that we are guaranteed to receive each individual frame
-					if (!movie->setRespectPlaybackTime(false))
+					if (!movie->setSpeed(Media::Movie::AS_FAST_AS_POSSIBLE))
 					{
 						allSucceeded = false;
 
@@ -615,7 +615,7 @@ bool TestMovie::testPause()
 				}
 
 				// we need to ensure that we are guaranteed to receive each individual frame
-				if (!movie->setRespectPlaybackTime(false))
+				if (!movie->setSpeed(Media::Movie::AS_FAST_AS_POSSIBLE))
 				{
 					allSucceeded = false;
 
@@ -992,7 +992,7 @@ bool TestMovie::readMovie(const IO::File& file, const unsigned int width, const 
 		return false;
 	}
 
-	if (!movie->setRespectPlaybackTime(false))
+	if (!movie->setSpeed(Media::Movie::AS_FAST_AS_POSSIBLE))
 	{
 		return false;
 	}

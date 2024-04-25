@@ -250,18 +250,6 @@ bool FrameMedium::setPreferredFrameFrequency(const FrameFrequency frequency)
 	return true;
 }
 
-bool FrameMedium::respectPlaybackTime() const
-{
-	return true;
-}
-
-bool FrameMedium::setRespectPlaybackTime(const bool /*state*/)
-{
-	// must be implemented in a derived class
-
-	return false;
-}
-
 bool FrameMedium::setCapacity(const size_t capacity)
 {
 	return frameCollection_.setCapacity(capacity);

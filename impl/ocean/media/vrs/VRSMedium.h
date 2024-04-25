@@ -64,6 +64,12 @@ class OCEAN_MEDIA_VRS_EXPORT VRSMedium : virtual public Medium
 		~VRSMedium() override;
 
 		/**
+		 * Specifies whether the media playback time will be respected or whether the media content will be provided as fast as possible.
+		 * @param respectPlaybackTime True, to deliver the media content based on the presentation time; False, to ignore the presentation clock and to deliver the media content as fast as possible
+		 */
+		virtual bool setRespectPlaybackTime(const bool respectPlaybackTime);
+
+		/**
 		 * Returns the id of a stream for which the name is known.
 		 * @param recordFileReader The reader from which the stream will be returned
 		 * @param name The name of the stream for which the id will be returned

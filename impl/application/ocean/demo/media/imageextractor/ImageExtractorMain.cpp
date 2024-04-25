@@ -367,7 +367,7 @@ PluginScope::~PluginScope()
 
 	// we want to receive the frames of the Movie as fast as possible
 	// and we want to ensure that we do not drop any frame
-	movie->setRespectPlaybackTime(false);
+	movie->setSpeed(Media::Movie::AS_FAST_AS_POSSIBLE);
 
 	// we pass the frames only once
 	movie->setLoop(false);

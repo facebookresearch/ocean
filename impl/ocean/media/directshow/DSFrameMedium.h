@@ -83,18 +83,6 @@ class OCEAN_MEDIA_DS_EXPORT DSFrameMedium :
 		bool setPreferredFrameFrequency(const FrameFrequency frequency) override;
 
 		/**
-		 * Returns whether the frame medium respects the media playback time or whether the frames are provided as fast as possible.
-		 * @see FrameMedium::respectPlaybackTime().
-		 */
-		bool respectPlaybackTime() const override;
-
-		/**
-		 * Specifies whether the media playback time will be respected or whether the samples are provided as fast as possible.
-		 * @see FrameMedium::setRespectPlaybackTime().
-		 */
-		bool setRespectPlaybackTime(const bool state) override;
-
-		/**
 		 * Extracts the video format of a given DirectShow media type.
 		 * @param mediaType DirectShow media type
 		 * @param frameType Resulting frame type
@@ -187,13 +175,16 @@ class OCEAN_MEDIA_DS_EXPORT DSFrameMedium :
 		 */
 		virtual void onNewSample(IMediaSample* sample, const Timestamp timestamp, const Timestamp relativeTimestamp);
 
+		/**
+		 * Specifies whether the media playback time will be respected or whether the media content will be provided as fast as possible.
+		 * @see DSMedium::setRespectPlaybackTime().
+		 */
+		bool setRespectPlaybackTime(const bool respectPlaybackTime) override;
+
 	protected:
 
 		/// DirectShow sample sink filter.
 		ScopedDSSampleSinkFilter sampleSinkFilter_;
-
-		/// Intermediate respect playback time state.
-		bool sinkRespectPlaybackTime_ = true;
 
 		/// Frame type of the most recent (upcoming frame) frame.
 		FrameType recentFrameType_;
@@ -201,8 +192,11 @@ class OCEAN_MEDIA_DS_EXPORT DSFrameMedium :
 		/// The recent camera profile, if known.
 		SharedAnyCamera recentAnyCamera_;
 
-		/// DirecShow media sub type for YUV420
-		static const GUID MEDIASUBTYPE_I420;
+		/// DirecShow media sub type for YUV420, 30323449-0000-0010-8000-00AA00389B71 'I420' == MEDIASUBTYPE_I420
+		static constexpr GUID MEDIASUBTYPE_I420 = {0x30323449, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71};
+
+		/// True, to deliver the media content based on the presentation time; False, to ignore the presentation clock and to deliver the media content as fast as possible.
+		bool respectPlaybackTime_ = true;
 };
 
 }

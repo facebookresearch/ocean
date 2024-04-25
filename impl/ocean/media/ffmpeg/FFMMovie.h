@@ -87,18 +87,6 @@ class FFMMovie :
 		bool setSpeed(const float speed) override;
 
 		/**
-		 * Returns whether the frame medium respects the media playback time or whether the samples are provided as fast as possible.
-		 * @see FrameMedium::respectPlaybackTime()
-		 */
-		bool respectPlaybackTime() const override;
-
-		/**
-		 * Specifies whether the media playback time will be respected or whether the samples are provided as fast as possible.
-		 * @see FrameMedium::setRespectPlaybackTime()
-		 */
-		bool setRespectPlaybackTime(const bool state) override;
-
-		/**
 		 * Returns the volume of the sound in db.
 		 * @see SoundMedium::soundVolume()
 		 */
@@ -216,9 +204,6 @@ class FFMMovie :
 
 		/// The playback speed of the movie.
 		std::atomic<float> speed_ = 1.0f;
-
-		/// True, to respect the media playback time; False, to provide the playback the frames as fast as possible.
-		std::atomic<bool> respectPlaybackTime_ = true;
 
 		/// True, if the movie is paused.
 		std::atomic<bool> isPaused_ = false;

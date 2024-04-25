@@ -27,20 +27,6 @@ class AVFFrameMedium :
 	virtual public AVFMedium,
 	virtual public FrameMedium
 {
-	public:
-
-		/**
-		 * Returns whether the frame medium respects the media playback time or whether the samples are provided as fast as possible.
-		 * @see FrameMedium::respectPlaybackTime()
-		 */
-		bool respectPlaybackTime() const override;
-
-		/**
-		 * Specifies whether the media playback time will be respected or whether the samples are provided as fast as possible.
-		 * @see FrameMedium::setRespectPlaybackTime()
-		 */
-		bool setRespectPlaybackTime(const bool state) override;
-
 	protected:
 
 		/**
@@ -64,9 +50,6 @@ class AVFFrameMedium :
 		virtual void onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera anyCamera, const double unixTimestamp, const double sampleTime);
 
 	protected:
-
-		/// Intermediate respect playback time state.
-		bool respectPlaybackTime_ = true;
 
 		/// The frame type of the most recent.
 		FrameType recentFrameType_;

@@ -24,9 +24,6 @@ namespace Media
 namespace DirectShow
 {
 
-// 30323449-0000-0010-8000-00AA00389B71 'I420' == MEDIASUBTYPE_I420
-const GUID DSFrameMedium::MEDIASUBTYPE_I420 = {0x30323449, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71};
-
 DSFrameMedium::DSSortableFrameType::DSSortableFrameType(DSMediaType&& dsMediaType, const MediaFrameType& frameType) :
 	SortableFrameType(frameType),
 	dsMediaType_(std::move(dsMediaType))
@@ -117,34 +114,6 @@ bool DSFrameMedium::setPreferredFrameFrequency(const FrameFrequency frequency)
 	preferredFrameType_.setFrequency(frequency);
 
 	return buildGraph();
-}
-
-bool DSFrameMedium::respectPlaybackTime() const
-{
-	return sinkRespectPlaybackTime_;
-}
-
-bool DSFrameMedium::setRespectPlaybackTime(const bool state)
-{
-	if (sampleSinkFilter_.object() != nullptr && !sampleSinkFilter_.object()->setRespectPlaybackTime(state))
-	{
-		return false;
-	}
-
-	sinkRespectPlaybackTime_ = state;
-
-	if (state == false && filterGraph_.object() != nullptr)
-	{
-		ScopedIMediaFilter mediaFilter;
-
-		if (S_OK == filterGraph_.object()->QueryInterface(IID_IMediaFilter, (void**)(&mediaFilter.resetObject())))
-		{
-			const HRESULT result = mediaFilter.object()->SetSyncSource(nullptr);
-			ocean_assert_and_suppress_unused(result == S_OK, result);
-		}
-	}
-
-	return true;
 }
 
 bool DSFrameMedium::extractFrameFormat(const AM_MEDIA_TYPE& mediaType, MediaFrameType& frameType)
@@ -314,6 +283,76 @@ bool DSFrameMedium::collectFrameFormats(IPin* pin, FrameTypes& frameTypes)
 	return true;
 }
 
+FrameType::PixelFormat DSFrameMedium::convertMediaSubtype(const GUID& mediaSubtype)
+{
+	if (mediaSubtype == MEDIASUBTYPE_ARGB32)
+		return FrameType::FORMAT_BGRA32;
+
+	if (mediaSubtype == MEDIASUBTYPE_I420)
+		return FrameType::FORMAT_Y_U_V12;
+
+	if (mediaSubtype == MEDIASUBTYPE_IYUV)
+		return FrameType::FORMAT_UNDEFINED;
+
+	if (mediaSubtype == MEDIASUBTYPE_RGB24)
+		return FrameType::FORMAT_BGR24;
+
+	if (mediaSubtype == MEDIASUBTYPE_RGB32)
+		return FrameType::FORMAT_BGR32;
+
+	if (mediaSubtype == MEDIASUBTYPE_YUY2)
+		return FrameType::FORMAT_YUYV16;
+
+	if (mediaSubtype == MEDIASUBTYPE_NV12)
+		return FrameType::FORMAT_Y_UV12;
+
+	if (mediaSubtype == MEDIASUBTYPE_YV12)
+		return FrameType::FORMAT_UNDEFINED;
+
+	return FrameType::FORMAT_UNDEFINED;
+}
+
+FrameType::PixelOrigin DSFrameMedium::extractPixelOrigin(const GUID& mediaSubtype)
+{
+	if (mediaSubtype == MEDIASUBTYPE_ARGB32 || mediaSubtype == MEDIASUBTYPE_RGB24 || mediaSubtype == MEDIASUBTYPE_RGB32)
+	{
+		return FrameType::ORIGIN_LOWER_LEFT;
+	}
+
+	if (mediaSubtype == MEDIASUBTYPE_I420 || mediaSubtype == MEDIASUBTYPE_IYUV || mediaSubtype == MEDIASUBTYPE_YUY2 || mediaSubtype == MEDIASUBTYPE_YV12 || mediaSubtype == MEDIASUBTYPE_NV12)
+	{
+		return FrameType::ORIGIN_UPPER_LEFT;
+	}
+
+	return FrameType::ORIGIN_INVALID;
+}
+
+GUID DSFrameMedium::convertPixelFormat(const FrameType::PixelFormat pixelFormat)
+{
+	switch (pixelFormat)
+	{
+		case FrameType::FORMAT_BGR24:
+			return MEDIASUBTYPE_RGB24;
+
+		case FrameType::FORMAT_BGR32:
+			return MEDIASUBTYPE_RGB32;
+
+		case FrameType::FORMAT_BGRA32:
+			return MEDIASUBTYPE_ARGB32;
+
+		case FrameType::FORMAT_Y_U_V12:
+			return MEDIASUBTYPE_I420;
+
+		case FrameType::FORMAT_YUYV16:
+			return MEDIASUBTYPE_YUY2;
+
+		default:
+			break;
+	}
+
+	return GUID_NULL;
+}
+
 bool DSFrameMedium::createFrameSampleSinkFilter()
 {
 	ocean_assert(filterGraph_.object() != nullptr);
@@ -385,7 +424,7 @@ bool DSFrameMedium::insertFrameSampleSinkFilter(IPin* outputPin, FrameType::Pixe
 		return false;
 	}
 
-	sampleSinkFilter_.object()->setRespectPlaybackTime(sinkRespectPlaybackTime_);
+	sampleSinkFilter_.object()->setRespectPlaybackTime(respectPlaybackTime_);
 
 	/*if (sinkRespectPlaybackTime == false)
 	{
@@ -503,7 +542,7 @@ void DSFrameMedium::onNewSample(IMediaSample* sample, const Timestamp timestamp,
 
 		if (finiteMedium)
 		{
-			finiteMedium->mediumHasStopped();
+			finiteMedium->hasStopped();
 		}
 	}
 	else
@@ -562,74 +601,32 @@ void DSFrameMedium::onNewSample(IMediaSample* sample, const Timestamp timestamp,
 	}
 }
 
-FrameType::PixelFormat DSFrameMedium::convertMediaSubtype(const GUID& mediaSubtype)
+bool DSFrameMedium::setRespectPlaybackTime(const bool respectPlaybackTime)
 {
-	if (mediaSubtype == MEDIASUBTYPE_ARGB32)
-		return FrameType::FORMAT_BGRA32;
-
-	if (mediaSubtype == MEDIASUBTYPE_I420)
-		return FrameType::FORMAT_Y_U_V12;
-
-	if (mediaSubtype == MEDIASUBTYPE_IYUV)
-		return FrameType::FORMAT_UNDEFINED;
-
-	if (mediaSubtype == MEDIASUBTYPE_RGB24)
-		return FrameType::FORMAT_BGR24;
-
-	if (mediaSubtype == MEDIASUBTYPE_RGB32)
-		return FrameType::FORMAT_BGR32;
-
-	if (mediaSubtype == MEDIASUBTYPE_YUY2)
-		return FrameType::FORMAT_YUYV16;
-
-	if (mediaSubtype == MEDIASUBTYPE_NV12)
-		return FrameType::FORMAT_Y_UV12;
-
-	if (mediaSubtype == MEDIASUBTYPE_YV12)
-		return FrameType::FORMAT_UNDEFINED;
-
-	return FrameType::FORMAT_UNDEFINED;
-}
-
-FrameType::PixelOrigin DSFrameMedium::extractPixelOrigin(const GUID& mediaSubtype)
-{
-	if (mediaSubtype == MEDIASUBTYPE_ARGB32 || mediaSubtype == MEDIASUBTYPE_RGB24 || mediaSubtype == MEDIASUBTYPE_RGB32)
+	if (respectPlaybackTime_ == respectPlaybackTime)
 	{
-		return FrameType::ORIGIN_LOWER_LEFT;
+		return true;
 	}
 
-	if (mediaSubtype == MEDIASUBTYPE_I420 || mediaSubtype == MEDIASUBTYPE_IYUV || mediaSubtype == MEDIASUBTYPE_YUY2 || mediaSubtype == MEDIASUBTYPE_YV12 || mediaSubtype == MEDIASUBTYPE_NV12)
+	if (sampleSinkFilter_.object() != nullptr && !sampleSinkFilter_.object()->setRespectPlaybackTime(respectPlaybackTime))
 	{
-		return FrameType::ORIGIN_UPPER_LEFT;
+		return false;
 	}
 
-	return FrameType::ORIGIN_INVALID;
-}
+	respectPlaybackTime_ = respectPlaybackTime;
 
-GUID DSFrameMedium::convertPixelFormat(const FrameType::PixelFormat pixelFormat)
-{
-	switch (pixelFormat)
+	if (respectPlaybackTime_ == false && filterGraph_.object() != nullptr)
 	{
-		case FrameType::FORMAT_BGR24:
-			return MEDIASUBTYPE_RGB24;
+		ScopedIMediaFilter mediaFilter;
 
-		case FrameType::FORMAT_BGR32:
-			return MEDIASUBTYPE_RGB32;
-
-		case FrameType::FORMAT_BGRA32:
-			return MEDIASUBTYPE_ARGB32;
-
-		case FrameType::FORMAT_Y_U_V12:
-			return MEDIASUBTYPE_I420;
-
-		case FrameType::FORMAT_YUYV16:
-			return MEDIASUBTYPE_YUY2;
-
-		default:
-			break;
+		if (S_OK == filterGraph_.object()->QueryInterface(IID_IMediaFilter, (void**)(&mediaFilter.resetObject())))
+		{
+			const HRESULT result = mediaFilter.object()->SetSyncSource(nullptr);
+			ocean_assert_and_suppress_unused(result == S_OK, result);
+		}
 	}
 
-	return GUID_NULL;
+	return true;
 }
 
 }

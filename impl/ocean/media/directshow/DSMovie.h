@@ -74,14 +74,6 @@ class OCEAN_MEDIA_DS_EXPORT DSMovie :
 		 */
 		void releaseGraph() override;
 
-		/**
-		 * **TODO** Temporary solution, needs to be removed once FrameMedium does not have setRespectPlaybackTime() anymore.
-		 *
-		 * Specifies whether the media playback time will be respected or whether the media content will be provided as fast as possible.
-		 * @see DSMedium::setRespectPlaybackTime().
-		 */
-		bool setRespectPlaybackTime(const bool respectPlaybackTime) override;
-
 	private:
 
 		/// Sound use state.

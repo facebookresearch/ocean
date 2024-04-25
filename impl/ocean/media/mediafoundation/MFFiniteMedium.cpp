@@ -32,7 +32,7 @@ double MFFiniteMedium::duration() const
 
 	const float currentSpeed = speed();
 
-	if (currentSpeed == 0.0)
+	if (currentSpeed == 0.0f)
 	{
 		return 0.0;
 	}
@@ -129,7 +129,18 @@ float MFFiniteMedium::speed() const
 
 bool MFFiniteMedium::setSpeed(const float speed)
 {
+	if (speed < 0.0f)
+	{
+		ocean_assert(false && "Invalid speed");
+		return false;
+	}
+
 	const ScopedLock scopedLock(lock_);
+
+	if (speed_ == speed)
+	{
+		return true;
+	}
 
 	ocean_assert(mediaSession_.object() != nullptr);
 
@@ -137,6 +148,38 @@ bool MFFiniteMedium::setSpeed(const float speed)
 	{
 		return false;
 	}
+
+	if (speed == 0.0f || (speed_ == 0.0f && speed > 0.0f))
+	{
+		// the caller wants to change respect-playback-time behavior, either active it or deactivate it
+
+		if (startTimestamp_.isValid())
+		{
+			return false;
+		}
+
+		releasePipeline();
+
+		const bool respectPlaybackTime = speed > 0.0f;
+
+		if (!createPipeline(respectPlaybackTime))
+		{
+			return false;
+		}
+
+		respectPlaybackTime_ = respectPlaybackTime;
+
+		if (speed == 0.0f)
+		{
+			speed_ = 0.0f;
+
+			return true;
+		}
+
+		// we need to respect the playback time, and we have to set the correct speed
+	}
+
+	ocean_assert(speed_ > 0.0f && speed > 0.0f);
 
 	bool success = false;
 

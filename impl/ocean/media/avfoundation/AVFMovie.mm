@@ -198,11 +198,13 @@ bool AVFMovie::internalStart()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (respectPlaybackTime_)
+	if (speed_ > 0.0f)
 	{
 		playerShouldStart_ = true;
 		return true;
 	}
+
+	// the movie is supposed to deliver the media content as fast as possible
 
 	if ([assetReader_ status] == AVAssetReaderStatusUnknown || [assetReader_ status] == AVAssetReaderStatusCancelled)
 	{
@@ -226,7 +228,7 @@ bool AVFMovie::internalPause()
 
 	const ScopedLock scopedLock(lock_);
 
-	if (respectPlaybackTime_)
+	if (speed_ > 0.0f)
 	{
 		[player_ setRate:0.0f];
 	}
@@ -243,7 +245,7 @@ bool AVFMovie::internalStop()
 
 	const ScopedLock scopedLock(lock_);
 
-	if (respectPlaybackTime_)
+	if (speed_ > 0.0f)
 	{
 		[player_ setRate:0.0f];
 	}
@@ -269,8 +271,10 @@ void AVFMovie::threadRun()
 	{
 		maySleep = true;
 
-		if (respectPlaybackTime_)
+		if (speed_ > 0.0f)
 		{
+			// the movie is supposed to respect the playback time
+
 			TemporaryScopedLock temporaryScopedLock(lock_);
 
 			if (playerShouldStart_ && [playerItem_ status] == AVPlayerItemStatusReadyToPlay && [player_ status] == AVPlayerStatusReadyToPlay)
@@ -305,6 +309,10 @@ void AVFMovie::threadRun()
 		}
 		else
 		{
+			// the movie is supposed to deliver the media content as fast as possible
+
+			ocean_assert(speed_ == 0.0f);
+
 			TemporaryScopedLock temporaryScopedLock(lock_);
 
 			if (startTimestamp_.isValid())
@@ -392,6 +400,8 @@ void AVFMovie::onFinishedPlaying()
 
 double AVFMovie::duration() const
 {
+	const ScopedLock scopedLock(lock_);
+
 	const float currentSpeed = speed();
 
 	if (currentSpeed == 0.0f)
@@ -471,14 +481,46 @@ bool AVFMovie::setPosition(const double position)
 
 bool AVFMovie::setSpeed(const float speed)
 {
-	speed_ = speed;
-
-	if (respectPlaybackTime_ && startTimestamp_.isValid())
+	if (speed < 0.0f)
 	{
-		const ScopedLock scopedLock(lock_);
+		ocean_assert(false && "Invalid speed");
+		return false;
+	}
 
+	const ScopedLock scopedLock(lock_);
+
+	if (speed_ == speed)
+	{
+		return true;
+	}
+
+	if (speed == 0.0f || (speed_ == 0.0f && speed > 0.0f))
+	{
+		// the caller wants to change respect-playback-time behavior, either active it or deactivate it
+
+		if (startTimestamp_.isValid())
+		{
+			return false;
+		}
+
+		if (speed == 0.0f)
+		{
+			speed_ = 0.0f;
+
+			return true;
+		}
+
+		// we need to respect the playback time, and we have to set the correct speed
+	}
+
+	ocean_assert(speed_ > 0.0f && speed > 0.0f);
+
+	if (startTimestamp_.isValid())
+	{
 		[player_ setRate:speed];
 	}
+
+	speed_ = speed;
 
 	return true;
 }

@@ -88,6 +88,17 @@ bool DSMedium::stop()
 	return false;
 }
 
+bool DSMedium::setRespectPlaybackTime(const bool respectPlaybackTime)
+{
+	if (!respectPlaybackTime)
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
+
+	return true;
+}
+
 }
 
 }

@@ -140,7 +140,7 @@ bool MovieFrameProvider::setMovie(const MovieRef& movie)
 			return false;
 		}
 
-		if (!movie_->setRespectPlaybackTime(false))
+		if (!movie_->setSpeed(Media::Movie::AS_FAST_AS_POSSIBLE))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
@@ -195,7 +195,7 @@ bool MovieFrameProvider::setMovie(const MovieRef& movie)
 			return false;
 		}
 
-		if (!moviePreview_->setRespectPlaybackTime(false))
+		if (!moviePreview_->setSpeed(Media::Movie::AS_FAST_AS_POSSIBLE))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;

@@ -108,6 +108,17 @@ Timestamp VRSMedium::stopTimestamp() const
 	return stopTimestamp_;
 }
 
+bool VRSMedium::setRespectPlaybackTime(const bool respectPlaybackTime)
+{
+	if (!respectPlaybackTime)
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
+
+	return true;
+}
+
 vrs::StreamId VRSMedium::findStreamId(const vrs::RecordFileReader& recordFileReader, const std::string& name)
 {
 	const std::set<vrs::StreamId>& streamIds = recordFileReader.getStreams();

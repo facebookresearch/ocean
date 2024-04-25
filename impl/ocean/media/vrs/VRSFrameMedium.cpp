@@ -312,31 +312,6 @@ VRSFrameMedium::~VRSFrameMedium()
 	frameCollection_.release();
 }
 
-bool VRSFrameMedium::respectPlaybackTime() const
-{
-	return respectPlaybackTime_;
-}
-
-bool VRSFrameMedium::setRespectPlaybackTime(const bool state)
-{
-	const ScopedLock scopedLock(lock_);
-
-	if (respectPlaybackTime_ == state)
-	{
-		return true;
-	}
-
-	if (startTimestamp_.isValid())
-	{
-		// the medium is already running
-		return false;
-	}
-
-	respectPlaybackTime_ = state;
-
-	return true;
-}
-
 void VRSFrameMedium::onNewCameraCalibration(SharedAnyCamera anyCamera, const HomogenousMatrixD4& device_T_camera)
 {
 	const ScopedLock scopedLock(lock_);
@@ -394,6 +369,24 @@ void VRSFrameMedium::onNewFrame(Frame&& frame, const double vrsTimestamp)
 
 	previousUnixFrameTimestamp_ = desiredUnixTimestamp;
 	previousVRSFrameTimestamp_ = vrsTimestamp;
+}
+
+bool VRSFrameMedium::setRespectPlaybackTime(const bool respectPlaybackTime)
+{
+	if (respectPlaybackTime_ == respectPlaybackTime)
+	{
+		return true;
+	}
+
+	if (startTimestamp_.isValid())
+	{
+		// the medium is already running
+		return false;
+	}
+
+	respectPlaybackTime_ = respectPlaybackTime;
+
+	return true;
 }
 
 }

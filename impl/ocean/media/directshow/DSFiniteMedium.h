@@ -106,7 +106,7 @@ class OCEAN_MEDIA_DS_EXPORT DSFiniteMedium :
 		/**
 		 * Informs this finite medium object that the medium has been stopped (without knowledge of this finite medium).
 		 */
-		void mediumHasStopped();
+		void hasStopped();
 
 		/**
 		 * Function called by the scheduler repeatedly.
@@ -116,13 +116,13 @@ class OCEAN_MEDIA_DS_EXPORT DSFiniteMedium :
 	protected:
 
 		/// DirectShow media seeking interface.
-		ScopedIMediaSeeking mediaSeekingInterface_;
+		ScopedIMediaSeeking seekingInterface_;
 
 		/// Explicit state that the medium has stopped.
-		bool mediumHasStopped_ = false;
+		bool hasStopped_ = false;
 
 		/// Medium speed.
-		float mediumSpeed_ = 1.0f;
+		float speed_ = 1.0f;
 };
 
 }

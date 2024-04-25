@@ -472,19 +472,6 @@ class OCEAN_MEDIA_EXPORT FrameMedium : virtual public Medium
 		virtual bool setPreferredFrameFrequency(const FrameFrequency frequency);
 
 		/**
-		 * Returns whether the frame medium respects the media playback time or whether the frames are provided as fast as possible.
-		 * @return True, if the media playback time is respected
-		 */
-		virtual bool respectPlaybackTime() const;
-
-		/**
-		 * Specifies whether the media playback time will be respected or whether the samples are provided as fast as possible.
-		 * @param state True, to respect the playback time
-		 * @return True, if succeeded
-		 */
-		virtual bool setRespectPlaybackTime(const bool state);
-
-		/**
 		 * Returns the capacity of the frame history of this frame medium object.
 		 * @return The capacity of frames, with range [1, infinity)
 		 */

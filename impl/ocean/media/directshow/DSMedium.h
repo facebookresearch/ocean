@@ -85,7 +85,7 @@ class OCEAN_MEDIA_DS_EXPORT DSMedium :
 		 * Specifies whether the media playback time will be respected or whether the media content will be provided as fast as possible.
 		 * @param respectPlaybackTime True, to deliver the media content based on the presentation time; False, to ignore the presentation clock and to deliver the media content as fast as possible
 		 */
-		virtual bool setRespectPlaybackTime(const bool respectPlaybackTime) = 0;
+		virtual bool setRespectPlaybackTime(const bool respectPlaybackTime);
 
 	protected:
 

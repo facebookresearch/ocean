@@ -65,6 +65,7 @@ double FFMMovie::duration() const
 	const ScopedLock scopedLock(lock_);
 
 	const float currentSpeed = speed();
+
 	if (currentSpeed == 0.0f)
 	{
 		return 0.0;
@@ -98,23 +99,12 @@ float FFMMovie::speed() const
 
 bool FFMMovie::setSpeed(const float speed)
 {
-	if (speed <= 0.0f)
+	if (speed < 0.0f)
 	{
 		return false;
 	}
 
 	speed_ = speed;
-	return true;
-}
-
-bool FFMMovie::respectPlaybackTime() const
-{
-	return respectPlaybackTime_.load();
-}
-
-bool FFMMovie::setRespectPlaybackTime(const bool state)
-{
-	respectPlaybackTime_ = state;
 
 	return true;
 }
@@ -293,11 +283,11 @@ void FFMMovie::threadRun()
 								const double relativePresentationTimestamp = double(presentationTimestamp) * double(avTimeBase.num) / double(avTimeBase.den);
 
 								const float speed = speed_.load();
-								ocean_assert(speed > 0.0f);
+								ocean_assert(speed >= 0.0f);
 
 								Timestamp displayTimestamp;
 
-								if (respectPlaybackTime_.load())
+								if (speed != 0.0f)
 								{
 									displayTimestamp = Timestamp(startTimestamp + relativePresentationTimestamp / double(speed));
 

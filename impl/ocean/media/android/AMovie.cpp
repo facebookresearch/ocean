@@ -158,7 +158,13 @@ double AMovie::duration() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	ocean_assert(speed_ > 0.0);
+	ocean_assert(speed_ >= 0.0f);
+
+	if (speed_ == 0.0f)
+	{
+		return 0.0;
+	}
+
 	return normalDuration() / double(speed_);
 }
 
@@ -196,19 +202,22 @@ bool AMovie::setPosition(const double position)
 
 float AMovie::speed() const
 {
-	const ScopedLock scopedLock(lock_);
-
 	return speed_;
 }
 
 bool AMovie::setSpeed(const float speed)
 {
-	if (speed <= 0.0f)
+	if (speed < 0.0f)
 	{
 		return false;
 	}
 
 	const ScopedLock scopedLock(lock_);
+
+	if (startTimestamp_.isValid())
+	{
+		return false;
+	}
 
 	speed_ = speed;
 
@@ -261,18 +270,6 @@ bool AMovie::setUseSound(const bool state)
 	}
 
 	useSound_ = state;
-
-	return true;
-}
-
-bool AMovie::respectPlaybackTime() const
-{
-	return respectPlaybackTime_.load();
-}
-
-bool AMovie::setRespectPlaybackTime(const bool state)
-{
-	respectPlaybackTime_ = true;
 
 	return true;
 }
@@ -375,8 +372,8 @@ void AMovie::threadRun()
 			processInputBuffer(audioMediaCodec_, presentationTime);
 		}*/
 
-		ocean_assert(speed_ > 0.0);
-		const double invSpeed = 1.0 / speed_;
+		ocean_assert(speed_ >= 0.0f);
+		const double invSpeed = NumericD::ratio(1.0, double(speed_), 0.0); // 0.0 in case the media content is supposed to be delivered as fast as possible
 
 		if (normalRelativePresentationTime >= 0.0)
 		{
@@ -404,7 +401,7 @@ void AMovie::threadRun()
 
 				// we need to wait until we reach the presentation time
 
-				while (respectPlaybackTime_.load())
+				while (invSpeed != 0.0)
 				{
 					const double relativePresentationTime = normalRelativePresentationTime * invSpeed;
 
@@ -706,8 +703,6 @@ bool AMovie::processInputBuffer(AMediaCodec* const mediaCodec, double& normalRel
 		else
 		{
 			ocean_assert(presentationTimeUs >= 0);
-
-			ocean_assert(speed_ > 0.0f);
 
 			normalRelativePresentationTime = Timestamp::microseconds2seconds(presentationTimeUs);
 		}

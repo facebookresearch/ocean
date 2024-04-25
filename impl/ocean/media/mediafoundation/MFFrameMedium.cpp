@@ -119,39 +119,6 @@ bool MFFrameMedium::setPreferredFrameFrequency(const FrameFrequency frequency)
 	return createTopology(respectPlaybackTime_);
 }
 
-bool MFFrameMedium::respectPlaybackTime() const
-{
-	const ScopedLock scopedLock(lock_);
-
-	return respectPlaybackTime_;
-}
-
-bool MFFrameMedium::setRespectPlaybackTime(const bool state)
-{
-	const ScopedLock scopedLock(lock_);
-
-	if (respectPlaybackTime_ == state)
-	{
-		return true;
-	}
-
-	if (startTimestamp_.isValid())
-	{
-		return false;
-	}
-
-	releasePipeline();
-
-	if (!createPipeline(state))
-	{
-		return false;
-	}
-
-	respectPlaybackTime_ = state;
-
-	return true;
-}
-
 bool MFFrameMedium::extractFrameFormat(IMFMediaType* mediaType, MediaFrameType& frameType)
 {
 	ocean_assert(mediaType);

@@ -32,27 +32,6 @@ AVFFrameMedium::~AVFFrameMedium()
 	// nothing to do here
 }
 
-bool AVFFrameMedium::respectPlaybackTime() const
-{
-	return respectPlaybackTime_;
-}
-
-bool AVFFrameMedium::setRespectPlaybackTime(const bool state)
-{
-	if (respectPlaybackTime_ == state)
-	{
-		return true;
-	}
-
-	if (startTimestamp_.isValid() || pauseTimestamp_.isValid())
-	{
-		return false;
-	}
-
-	respectPlaybackTime_ = state;
-	return true;
-}
-
 void AVFFrameMedium::onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera anyCamera, const double unixTimestamp, const double sampleTime)
 {
 	ocean_assert(pixelBuffer);

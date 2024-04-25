@@ -55,7 +55,7 @@ double VRSFiniteMedium::duration() const
 
 	const float currentSpeed = speed();
 
-	if (currentSpeed == 0.0)
+	if (currentSpeed == 0.0f)
 	{
 		return 0.0;
 	}
@@ -93,19 +93,38 @@ bool VRSFiniteMedium::setPosition(const double position)
 
 float VRSFiniteMedium::speed() const
 {
+	const ScopedLock scopedLock(lock_);
+
 	return speed_;
 }
 
 bool VRSFiniteMedium::setSpeed(const float speed)
 {
-	if (speed <= NumericD::eps())
+	if (speed < 0.0f)
 	{
+		ocean_assert(false && "Invalid speed");
 		return false;
 	}
 
 	const ScopedLock scopedLock(lock_);
 
+	if (speed_ == speed)
+	{
+		return true;
+	}
+
+	if (speed == 0.0f || (speed_ == 0.0f && speed > 0.0f))
+	{
+		const bool respectPlaybackTime = speed > 0.0f;
+
+		if (!setRespectPlaybackTime(respectPlaybackTime))
+		{
+			return false;
+		}
+	}
+
 	speed_ = speed;
+
 	return true;
 }
 

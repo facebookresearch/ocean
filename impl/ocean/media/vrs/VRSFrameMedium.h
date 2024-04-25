@@ -76,18 +76,6 @@ class OCEAN_MEDIA_VRS_EXPORT VRSFrameMedium :
 	public:
 
 		/**
-		 * Returns whether the frame medium respects the media playback time or whether the samples are provided as fast as possible.
-		 * @see FrameMedium::respectPlaybackTime()
-		 */
-		bool respectPlaybackTime() const override;
-
-		/**
-		 * Specifies whether the media playback time will be respected or whether the samples are provided as fast as possible.
-		 * @see FrameMedium::setRespectPlaybackTime()
-		 */
-		bool setRespectPlaybackTime(const bool state) override;
-
-		/**
 		 * Returns extrinsic camera pose in relation to the coordinate system of the device.
 		 * @return The relative extrinsic camera pose
 		 */
@@ -125,6 +113,12 @@ class OCEAN_MEDIA_VRS_EXPORT VRSFrameMedium :
 		 * @param vrsTimestamp The VRS timestamp of the frame, as given by the vrs file, must be valid
 		 */
 		void onNewFrame(Frame&& frame, const double vrsTimestamp);
+
+		/**
+		 * Specifies whether the media playback time will be respected or whether the media content will be provided as fast as possible.
+		 * @see VRSMedium::setRespectPlaybackTime().
+		 */
+		bool setRespectPlaybackTime(const bool respectPlaybackTime) override;
 
 	protected:
 

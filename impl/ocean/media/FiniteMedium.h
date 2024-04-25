@@ -32,6 +32,14 @@ class OCEAN_MEDIA_EXPORT FiniteMedium : virtual public Medium
 	public:
 
 		/**
+		 * Definition of a speed value allowing to deliver the media content as fast as possible.
+		 * At the same time, no media content is skipped.
+		 */
+		static constexpr float AS_FAST_AS_POSSIBLE = 0.0f;
+
+	public:
+
+		/**
 		 * Returns the duration of the finite medium.
 		 * @return Duration in seconds
 		 */
@@ -51,7 +59,9 @@ class OCEAN_MEDIA_EXPORT FiniteMedium : virtual public Medium
 
 		/**
 		 * Returns the speed of the finite medium.
-		 * A value of 1.0 means normal speed, 2.0 means double speed.
+		 * The speed value is relative to the media's standard speed.<br>
+		 * For example, a speed value of 1.0 means the standard speed, 2.0 is twice as fast, and 0.5 is half as fast as the standard speed.<br>
+		 * However, a speed value of 0 (or AS_FAST_AS_POSSIBLE) will ignore the standard playback time and will deliver the media content as fast as possible.
 		 * @return Speed as a factor
 		 */
 		virtual float speed() const = 0;
@@ -65,16 +75,18 @@ class OCEAN_MEDIA_EXPORT FiniteMedium : virtual public Medium
 		inline bool loop() const;
 
 		/**
-		 * Sets the recent position of the finit medium.
+		 * Sets the recent position of the finite medium.
 		 * @param position New position in seconds
 		 * @return True, if succeeded
 		 */
 		virtual bool setPosition(const double position);
 
 		/**
-		 * Sets the speed of the finite medium.
-		 * A value of 1.0 means normal speed, 2.0 means double speed.
-		 * @param speed Speed as a factor
+ 		 * Sets the speed of the finite medium.
+ 		 * The speed value is relative to the media's standard speed.<br>
+		 * For example, a speed value of 1.0 means the standard speed, 2.0 is twice as fast, and 0.5 is half as fast as the standard speed.<br>
+		 * However, a speed value of 0 (or AS_FAST_AS_POSSIBLE) will ignore the standard playback time and will deliver the media content as fast as possible.
+		 * @param speed The speed to set, with range (0, infinity), AS_FAST_AS_POSSIBLE to run the medium as fast as possible
 		 * @return True, if the speed is accepted
 		 */
 		virtual bool setSpeed(const float speed);

@@ -181,11 +181,6 @@ void DSMovie::releaseGraph()
 	releaseGraphBuilder();
 }
 
-bool DSMovie::setRespectPlaybackTime(const bool respectPlaybackTime)
-{
-	return DSFrameMedium::setRespectPlaybackTime(respectPlaybackTime);
-}
-
 }
 
 }

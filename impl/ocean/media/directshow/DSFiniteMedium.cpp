@@ -25,14 +25,14 @@ DSFiniteMedium::~DSFiniteMedium()
 {
 	Scheduler::get().unregisterFunction(Scheduler::Callback(*this, &DSFiniteMedium::onScheduler));
 
-	ocean_assert(mediaSeekingInterface_.object() == nullptr);
+	ocean_assert(seekingInterface_.object() == nullptr);
 }
 
 double DSFiniteMedium::duration() const
 {
-	float currentSpeed = speed();
+	const float currentSpeed = speed();
 
-	if (double(currentSpeed) == 0.0)
+	if (currentSpeed == 0.0f)
 	{
 		return 0.0;
 	}
@@ -42,13 +42,13 @@ double DSFiniteMedium::duration() const
 
 double DSFiniteMedium::normalDuration() const
 {
-	if (!mediaSeekingInterface_.object())
+	if (!seekingInterface_.object())
 	{
 		return 0.0;
 	}
 
 	long long units;
-	if (S_OK == mediaSeekingInterface_.object()->GetDuration(&units))
+	if (S_OK == seekingInterface_.object()->GetDuration(&units))
 	{
 		return double(units) * 0.0000001;
 	}
@@ -58,7 +58,7 @@ double DSFiniteMedium::normalDuration() const
 
 double DSFiniteMedium::position() const
 {
-	if (mediaSeekingInterface_.object() == nullptr)
+	if (seekingInterface_.object() == nullptr)
 	{
 		return 0.0;
 	}
@@ -70,7 +70,7 @@ double DSFiniteMedium::position() const
 	}
 
 	long long pos = 0l;
-	if (S_OK != mediaSeekingInterface_.object()->GetCurrentPosition(&pos))
+	if (S_OK != seekingInterface_.object()->GetCurrentPosition(&pos))
 	{
 		return 0.0;
 	}
@@ -80,7 +80,9 @@ double DSFiniteMedium::position() const
 
 bool DSFiniteMedium::setPosition(const double position)
 {
-	if (mediaSeekingInterface_.object() == nullptr)
+	const ScopedLock scopedLock(lock_);
+
+	if (seekingInterface_.object() == nullptr)
 	{
 		return false;
 	}
@@ -91,37 +93,79 @@ bool DSFiniteMedium::setPosition(const double position)
 	if (pauseTimestamp_.isValid())
 	{
 		long long units = NumericT<long long>::maxValue();
-		mediaSeekingInterface_.object()->GetDuration(&units);
+		seekingInterface_.object()->GetDuration(&units);
 
 		pos = max(0ll, pos - 10000000ll);
 		long long stopPosition = min(pos + 20000000ll, units);
 
 		stopTimestamp_.toInvalid();
 
-		return S_OK == mediaSeekingInterface_.object()->SetPositions(&pos, AM_SEEKING_AbsolutePositioning, &stopPosition, AM_SEEKING_AbsolutePositioning);
+		return S_OK == seekingInterface_.object()->SetPositions(&pos, AM_SEEKING_AbsolutePositioning, &stopPosition, AM_SEEKING_AbsolutePositioning);
 	}
 	else
 	{
-		return S_OK == mediaSeekingInterface_.object()->SetPositions(&pos, AM_SEEKING_AbsolutePositioning, nullptr, AM_SEEKING_NoPositioning);
+		return S_OK == seekingInterface_.object()->SetPositions(&pos, AM_SEEKING_AbsolutePositioning, nullptr, AM_SEEKING_NoPositioning);
 	}
 }
 
 float DSFiniteMedium::speed() const
 {
-	return mediumSpeed_;
+	const ScopedLock scopedLock(lock_);
+
+	return speed_;
 }
 
 bool DSFiniteMedium::setSpeed(const float speed)
 {
-	if (mediaSeekingInterface_.object() == nullptr)
+	if (speed < 0.0f)
 	{
-		mediumSpeed_ = speed;
+		ocean_assert(false && "Invalid speed");
+		return false;
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	if (speed_ == speed)
+	{
 		return true;
 	}
 
-	if (S_OK == mediaSeekingInterface_.object()->SetRate(double(speed)))
+	if (seekingInterface_.object() == nullptr)
 	{
-		mediumSpeed_ = speed;
+		speed_ = speed;
+		return true;
+	}
+
+	if (speed == 0.0f || (speed_ == 0.0f && speed > 0.0f))
+	{
+		// the caller wants to change respect-playback-time behavior, either active it or deactivate it
+
+		if (startTimestamp_.isValid())
+		{
+			return false;
+		}
+
+		const bool respectPlaybackTime = speed > 0.0f;
+
+		if (!setRespectPlaybackTime(respectPlaybackTime))
+		{
+			return false;
+		}
+
+		if (speed == 0.0f)
+		{
+			speed_ = 0.0f;
+
+			return true;
+		}
+
+		// we need to respect the playback time, and we have to set the correct speed
+	}
+
+	if (S_OK == seekingInterface_.object()->SetRate(double(speed)))
+	{
+		speed_ = speed;
+
 		return true;
 	}
 
@@ -135,11 +179,11 @@ bool DSFiniteMedium::taskFinished() const
 
 bool DSFiniteMedium::startGraph()
 {
-	mediumHasStopped_ = false;
+	hasStopped_ = false;
 
-	if (mediaSeekingInterface_.object() != nullptr)
+	if (seekingInterface_.object() != nullptr)
 	{
-		mediaSeekingInterface_.object()->SetRate(double(mediumSpeed_));
+		seekingInterface_.object()->SetRate(double(speed_));
 	}
 
 	return DSGraphObject::startGraph();
@@ -149,14 +193,14 @@ bool DSFiniteMedium::createFiniteInterface()
 {
 	ocean_assert(filterGraph_.object() != nullptr);
 
-	if (mediaSeekingInterface_.object() != nullptr)
+	if (seekingInterface_.object() != nullptr)
 	{
 		return true;
 	}
 
 	bool noError = true;
 
-	if (noError && S_OK != filterGraph_.object()->QueryInterface(IID_IMediaSeeking, (void**)(&mediaSeekingInterface_.resetObject())))
+	if (noError && S_OK != filterGraph_.object()->QueryInterface(IID_IMediaSeeking, (void**)(&seekingInterface_.resetObject())))
 	{
 		Log::error() << "Could not create the media seeking interface.";
 		noError = false;
@@ -172,12 +216,12 @@ bool DSFiniteMedium::createFiniteInterface()
 
 void DSFiniteMedium::releaseFiniteInterface()
 {
-	mediaSeekingInterface_.release();
+	seekingInterface_.release();
 }
 
-void DSFiniteMedium::mediumHasStopped()
+void DSFiniteMedium::hasStopped()
 {
-	mediumHasStopped_ = true;
+	hasStopped_ = true;
 }
 
 void DSFiniteMedium::onScheduler()
@@ -194,14 +238,14 @@ void DSFiniteMedium::onScheduler()
 
 			if (code == EC_COMPLETE)
 			{
-				mediumHasStopped_ = true;
+				hasStopped_ = true;
 			}
 		}
 	}
 
-	if (mediumHasStopped_)
+	if (hasStopped_)
 	{
-		mediumHasStopped_ = false;
+		hasStopped_ = false;
 
 		// if the medium is paused nothing should happen, expect that the stop time will be set to identify when the pause state has stopped
 		if (pauseTimestamp_.isValid())

@@ -49,18 +49,6 @@ class OCEAN_MEDIA_MF_EXPORT MFFrameMedium :
 		bool setPreferredFrameFrequency(const FrameFrequency frequency) override;
 
 		/**
-		 * Returns whether the frame medium respects the media playback time or whether the frames are provided as fast as possible.
-		 * @see FrameMedium::respectPlaybackTime().
-		 */
-		bool respectPlaybackTime() const override;
-
-		/**
-		 * Specifies whether the media playback time will be respected or whether the samples are provided as fast as possible.
-		 * @see FrameMedium::setRespectPlaybackTime().
-		 */
-		bool setRespectPlaybackTime(const bool state) override;
-
-		/**
 		 * Extracts the video format of a given Media Foundation media type.
 		 * @param mediaType Media Foundation media type, must be valid
 		 * @param frameType Resulting frame type

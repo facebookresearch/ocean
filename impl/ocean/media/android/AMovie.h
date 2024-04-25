@@ -152,18 +152,6 @@ class OCEAN_MEDIA_A_EXPORT AMovie final :
 		bool setUseSound(const bool state) override;
 
 		/**
-		 * Returns whether the frame medium respects the media playback time or whether the samples are provided as fast as possible.
-		 * @see FrameMedium::respectPlaybackTime()
-		 */
-		bool respectPlaybackTime() const override;
-
-		/**
-		 * Specifies whether the media playback time will be respected or whether the samples are provided as fast as possible.
-		 * @see FrameMedium::setRespectPlaybackTime()
-		 */
-		bool setRespectPlaybackTime(const bool state) override;
-
-		/**
 		 * Returns the start timestamp.
 		 * @see FiniteMedium::startTimestamp().
 		 */
@@ -271,16 +259,13 @@ class OCEAN_MEDIA_A_EXPORT AMovie final :
 		Timestamp stopTimestamp_ = Timestamp(false);
 
 		/// The playback speed of this movie.
-		float speed_ = 1.0f;
+		std::atomic<float> speed_ = 1.0f;
 
 		/// The duration of the movie with normal speed.
 		double normalDuration_ = -1.0;
 
 		/// True, to enable audio in the movie; False, to disable audio, currently AMovie does not support audio.
 		bool useSound_ = false;
-
-		/// True, to respect the movie playback time; False, to deliver the frames as fast as possible.
-		std::atomic_bool respectPlaybackTime_ = true;
 };
 
 }

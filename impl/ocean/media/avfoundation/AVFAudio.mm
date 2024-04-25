@@ -108,7 +108,8 @@ double AVFAudio::duration() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	float currentSpeed = speed();
+	const float currentSpeed = speed();
+
 	if (currentSpeed == 0.0f)
 	{
 		return 0.0;
