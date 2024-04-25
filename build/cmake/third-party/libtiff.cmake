@@ -11,6 +11,7 @@ CPMAddPackage(
   NAME           libtiff
   GIT_REPOSITORY https://github.com/libsdl-org/libtiff.git
   GIT_TAG        v4.6.0
+  PATCH_COMMAND  ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/libtiff/libtiff/CMakeLists.txt" ./libtiff
 )
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
