@@ -428,6 +428,18 @@ bool DSSoundMedium::removeSoundBranch()
 	return true;
 }
 
+bool DSSoundMedium::setRespectPlaybackTime(const bool respectPlaybackTime)
+{
+	if (!respectPlaybackTime)
+	{
+		ocean_assert(false && "DSSoundMedium does not support ignoring playback time");
+
+		return false;
+	}
+
+	return true;
+}
+
 }
 
 }

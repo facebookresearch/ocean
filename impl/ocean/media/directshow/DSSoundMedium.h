@@ -144,6 +144,12 @@ class OCEAN_MEDIA_DS_EXPORT DSSoundMedium :
 		 */
 		bool removeSoundBranch();
 
+		/**
+		 * Specifies whether the media playback time will be respected or whether the media content will be provided as fast as possible.
+		 * @see DSMedium::setRespectPlaybackTime().
+		 */
+		bool setRespectPlaybackTime(const bool respectPlaybackTime) override;
+
 	protected:
 
 		/// DirectShow basic audio interface.
