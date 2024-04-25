@@ -2,17 +2,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(android)
-add_subdirectory(avfoundation)
-add_subdirectory(imageio)
-add_subdirectory(mediafoundation)
-add_subdirectory(openimagelibraries)
-add_subdirectory(special)
-add_subdirectory(wic)
+if (WIN32)
 
-if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
-
-    set(OCEAN_TARGET_NAME "ocean_media")
+    set(OCEAN_TARGET_NAME "ocean_media_mediafoundation")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -25,7 +17,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_MEDIA_EXPORT)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_MEDIA_MF_EXPORT)
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
@@ -36,8 +28,20 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_base
             ocean_cv
             ocean_io
-            ocean_math
+            ocean_media
             ocean_system
+    )
+
+    target_link_options(${OCEAN_TARGET_NAME}
+        PUBLIC
+            Mf.lib
+            Mfplat.lib
+            Mfreadwrite.lib
+            mfuuid.lib
+            wmcodecdspuuid.lib
+            Strmbase.lib
+            Propsys.lib
+            Shlwapi.lib
     )
 
     # Installation
@@ -47,7 +51,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/media
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/media/mediafoundation
             COMPONENT include
     )
 

@@ -90,7 +90,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
         target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_media_wic
-            ocean_media_mediafoundation  # Not yet available.
+            ocean_media_mediafoundation
         )
     endif()
 
