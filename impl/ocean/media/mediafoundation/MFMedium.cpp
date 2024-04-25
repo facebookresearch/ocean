@@ -211,7 +211,7 @@ bool MFMedium::start()
 		return false;
 	}
 
-	if (!createTopology())
+	if (!createTopology(respectPlaybackTime_))
 	{
 		return false;
 	}
@@ -424,9 +424,9 @@ void MFMedium::onFormatTypeChanged(const TOPOID /*nodeId*/)
 	// nothing to do here
 }
 
-bool MFMedium::createPipeline()
+bool MFMedium::createPipeline(const bool respectPlaybackTime)
 {
-	return createMediaSession() && createMediaSource() && createTopology();
+	return createMediaSession() && createMediaSource() && createTopology(respectPlaybackTime);
 }
 
 void MFMedium::releasePipeline()

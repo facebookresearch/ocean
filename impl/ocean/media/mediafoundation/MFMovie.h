@@ -68,7 +68,7 @@ class OCEAN_MEDIA_MF_EXPORT MFMovie :
 		 * Creates and builds the topology of this object.
 		 * @see MFMedium::createTopology().
 		 */
-		bool createTopology() override;
+		bool createTopology(const bool respectPlaybackTime) override;
 
 		/**
 		 * Releases the topology.

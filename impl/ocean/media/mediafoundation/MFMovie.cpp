@@ -26,7 +26,7 @@ MFMovie::MFMovie(const std::string& url) :
 	MFSoundMedium(url),
 	Movie(url)
 {
-	isValid_ = createPipeline();
+	isValid_ = createPipeline(respectPlaybackTime_);
 }
 
 MFMovie::~MFMovie()
@@ -55,7 +55,7 @@ bool MFMovie::setUseSound(const bool state)
 
 	useSound_ = state;
 
-	return createPipeline();
+	return createPipeline(respectPlaybackTime_);
 }
 
 bool MFMovie::useSound() const
@@ -78,7 +78,7 @@ MediumRef MFMovie::clone() const
 	return MediumRef();
 }
 
-bool MFMovie::createTopology()
+bool MFMovie::createTopology(const bool respectPlaybackTime)
 {
 	if (topology_.object() != nullptr)
 	{
@@ -91,7 +91,7 @@ bool MFMovie::createTopology()
 		return false;
 	}
 
-	if (buildFrameTopology())
+	if (buildFrameTopology(respectPlaybackTime))
 	{
 		if (useSound_)
 		{

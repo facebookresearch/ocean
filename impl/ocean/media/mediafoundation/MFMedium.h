@@ -218,9 +218,10 @@ class OCEAN_MEDIA_MF_EXPORT MFMedium : virtual public Medium
 
 		/**
 		 * Creates and builds the topology of this object.
+		 * @param respectPlaybackTime True, to deliver the media content based on the presentation time; False, to ignore the presentation clock and to deliver the media content as fast as possible
 		 * @return True, if succeeded
 		 */
-		virtual bool createTopology() = 0;
+		virtual bool createTopology(const bool respectPlaybackTime) = 0;
 
 		/**
 		 * Releases the topology.
@@ -293,9 +294,10 @@ class OCEAN_MEDIA_MF_EXPORT MFMedium : virtual public Medium
 
 		/**
 		 * Creates the pipeline.
+		 * @param respectPlaybackTime True, to deliver the media content based on the presentation time; False, to ignore the presentation clock and to deliver the media content as fast as possible
 		 * @return True, if succeeded
 		 */
-		virtual bool createPipeline();
+		virtual bool createPipeline(const bool respectPlaybackTime);
 
 		/**
 		 * Releases the pipeline.
@@ -324,6 +326,9 @@ class OCEAN_MEDIA_MF_EXPORT MFMedium : virtual public Medium
 
 		/// Event callback object for this medium.
 		ScopedEventCallback eventCallback_;
+
+		/// True, to deliver the media content based on the presentation time; False, to ignore the presentation clock and to deliver the media content as fast as possible.
+		bool respectPlaybackTime_ = true;
 };
 
 }

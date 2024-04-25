@@ -17,13 +17,13 @@ namespace MediaFoundation
 MFAudio::MFAudio(const std::string& url) :
 	Medium(url),
 	FiniteMedium(url),
-	MFMedium(url),	
+	MFMedium(url),
 	MFFiniteMedium(url),
 	SoundMedium(url),
-	MFSoundMedium(url),	
+	MFSoundMedium(url),
 	Audio(url)
 {
-	isValid_ = createPipeline();
+	isValid_ = createPipeline(respectPlaybackTime_);
 }
 
 MFAudio::~MFAudio()
@@ -45,8 +45,15 @@ MediumRef MFAudio::clone() const
 	return MediumRef();
 }
 
-bool MFAudio::createTopology()
+bool MFAudio::createTopology(const bool respectPlaybackTime)
 {
+	ocean_assert(respectPlaybackTime);
+	if (!respectPlaybackTime)
+	{
+		ocean_assert(false && "MFAudio does not support ignoring playback time");
+		return false;
+	}
+
 	if (topology_.object() != nullptr)
 	{
 		return true;

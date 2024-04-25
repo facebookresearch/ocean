@@ -135,9 +135,10 @@ class OCEAN_MEDIA_MF_EXPORT MFFrameMedium :
 
 		/**
 		 * Builds the frame topology of this object.
+		 * @param respectPlaybackTime True, to deliver samples based on the presentation time; False, to ignore the presentation clock and to deliver samples as fast as possible
 		 * @return True, if succeeded
 		 */
-		virtual bool buildFrameTopology();
+		virtual bool buildFrameTopology(const bool respectPlaybackTime);
 
 		/**
 		 * Releases the frame topology of this object.
@@ -148,9 +149,6 @@ class OCEAN_MEDIA_MF_EXPORT MFFrameMedium :
 
 		/// Frame sample grabber.
 		ScopedSampleGrabber frameSampleGrabber_;
-
-		/// Intermediate respect playback time state.
-		bool sinkRespectPlaybackTime_ = true;
 
 		/// Frame type of the most recent (upcoming frame) frame.
 		FrameType recentFrameType_;

@@ -65,7 +65,7 @@ bool MFFrameMedium::setPreferredFrameDimension(const unsigned int width, const u
 	preferredFrameType_ = MediaFrameType(preferredFrameType_, width, height);
 
 	ocean_assert(topology_.object() == nullptr);
-	return createTopology();
+	return createTopology(respectPlaybackTime_);
 }
 
 bool MFFrameMedium::setPreferredFramePixelFormat(const FrameType::PixelFormat format)
@@ -88,7 +88,7 @@ bool MFFrameMedium::setPreferredFramePixelFormat(const FrameType::PixelFormat fo
 	preferredFrameType_ = MediaFrameType(preferredFrameType_, format);
 
 	ocean_assert(topology_.object() == nullptr);
-	return createTopology();
+	return createTopology(respectPlaybackTime_);
 }
 
 bool MFFrameMedium::setPreferredFrameFrequency(const FrameFrequency frequency)
@@ -116,21 +116,21 @@ bool MFFrameMedium::setPreferredFrameFrequency(const FrameFrequency frequency)
 	preferredFrameType_.setFrequency(frequency);
 
 	ocean_assert(topology_.object() == nullptr);
-	return createTopology();
+	return createTopology(respectPlaybackTime_);
 }
 
 bool MFFrameMedium::respectPlaybackTime() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	return sinkRespectPlaybackTime_;
+	return respectPlaybackTime_;
 }
 
 bool MFFrameMedium::setRespectPlaybackTime(const bool state)
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (sinkRespectPlaybackTime_ == state)
+	if (respectPlaybackTime_ == state)
 	{
 		return true;
 	}
@@ -142,9 +142,14 @@ bool MFFrameMedium::setRespectPlaybackTime(const bool state)
 
 	releasePipeline();
 
-	sinkRespectPlaybackTime_ = state;
+	if (!createPipeline(state))
+	{
+		return false;
+	}
 
-	return createPipeline();
+	respectPlaybackTime_ = state;
+
+	return true;
 }
 
 bool MFFrameMedium::extractFrameFormat(IMFMediaType* mediaType, MediaFrameType& frameType)
@@ -488,7 +493,7 @@ void MFFrameMedium::onFormatTypeChanged(const TOPOID nodeId)
 	}
 }
 
-bool MFFrameMedium::buildFrameTopology()
+bool MFFrameMedium::buildFrameTopology(const bool respectPlaybackTime)
 {
 	ocean_assert(topology_.object() != nullptr && mediaSession_.object() != nullptr && mediaSource_.object() != nullptr);
 
@@ -524,7 +529,7 @@ bool MFFrameMedium::buildFrameTopology()
 		noError = false;
 	}
 
-	if (noError && S_OK != sinkActivate.object()->SetUINT32(MF_SAMPLEGRABBERSINK_IGNORE_CLOCK, sinkRespectPlaybackTime_ ? FALSE : TRUE))
+	if (noError && S_OK != sinkActivate.object()->SetUINT32(MF_SAMPLEGRABBERSINK_IGNORE_CLOCK, respectPlaybackTime ? FALSE : TRUE))
 	{
 		noError = false;
 	}
