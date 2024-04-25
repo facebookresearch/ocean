@@ -6,21 +6,11 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_media_openimagelibraries")
 
+    find_package(GIF REQUIRED)
     find_package(PNG REQUIRED)
     find_package(JPEG REQUIRED)
-
-    set(PREPROCESSOR_DEFINES -DOCEAN_MEDIA_OIL_SUPPORT_PNG -DOCEAN_MEDIA_OIL_SUPPORT_JPG)
-
-    set(IMAGE_LIBRARIES
-        ${PNG_LIBRARIES}
-        ${JPEG_LIBRARIES}
-    )
-
-    if (LINUX)
-        find_package(GIF REQUIRED)
-        list(APPEND PREPROCESSOR_DEFINES -DOCEAN_MEDIA_OIL_SUPPORT_GIF)
-        list(APPEND IMAGE_LIBRARIES ${GIF_LIBRARIES})
-    endif()
+    find_package(TIFF REQUIRED)
+    #find_package(WEBP REQUIRED)  # Not yet available
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES ${CMAKE_CURRENT_LIST_DIR}/*.h)
@@ -37,7 +27,16 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
         list(APPEND PREPROCESSOR_DEFINES -DUSE_OCEAN_MEDIA_OIL_EXPORT)
     endif()
 
-    target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE ${PREPROCESSOR_DEFINES})
+    target_compile_definitions(${OCEAN_TARGET_NAME}
+        PRIVATE
+            ${PREPROCESSOR_DEFINES}
+        PUBLIC
+            "-DOCEAN_MEDIA_OIL_SUPPORT_PNG"
+            "-DOCEAN_MEDIA_OIL_SUPPORT_JPG"
+            "-DOCEAN_MEDIA_OIL_SUPPORT_GIF"
+            "-DOCEAN_MEDIA_OIL_SUPPORT_TIF"
+            # "-DOCEAN_MEDIA_OIL_SUPPORT_WEBP"  # Not yet available
+    )
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
 
@@ -50,7 +49,11 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_math
             ocean_media
             ocean_media_special
-            ${IMAGE_LIBRARIES}
+            GIF::GIF
+            PNG::PNG
+            JPEG::JPEG
+            TIFF::TIFF
+            # WEBP::WEBP  # Not yet available
     )
 
     # Installation
