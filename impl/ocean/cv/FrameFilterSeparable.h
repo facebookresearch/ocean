@@ -3531,6 +3531,8 @@ bool FrameFilterSeparable::filter(const T* source, T* target, const unsigned int
 			case PI_GROUP_AVX_2_SSE_4_1:
 				// temporary disabled: OCEAN_APPLY_IF_AVX((filter<T, TFilter, PI_GROUP_AVX_2_SSE_4_1>(source, target, width, height, channels, horizontalFilter, horizontalFilterSize, verticalFilter, verticalFilterSize, worker)));
 			case PI_GROUP_SSE_4_1:
+			case PI_GROUP_AVX_2_SSE_2:
+			case PI_GROUP_SSE_2:
 				OCEAN_APPLY_IF_SSE((filter<T, TFilter, PI_SSE_2>(source, target, width, height, channels, sourcePaddingElements, targetPaddingElements, horizontalFilter, horizontalFilterSize, verticalFilter, verticalFilterSize, reusableMemory, worker)));
 				return true;
 
