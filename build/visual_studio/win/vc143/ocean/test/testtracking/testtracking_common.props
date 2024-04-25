@@ -8,7 +8,7 @@
   </PropertyGroup>
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\ocean_common.props"/>
-    <Import Condition="'$(ocean_test_common_imported)' != 'True'" Project="..\test_common.props"/>
+    <Import Condition="'$(ocean_test_use_imported)' != 'True'" Project="..\test_use.props"/>
     <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\base\base_use.props"/>
     <Import Condition="'$(ocean_cvdetectorblob_use_imported)' != 'True'" Project="..\..\cv\detector\blob\cvdetectorblob_use.props"/>
     <Import Condition="'$(ocean_tracking_use_imported)' != 'True'" Project="..\..\tracking\tracking_use.props"/>
