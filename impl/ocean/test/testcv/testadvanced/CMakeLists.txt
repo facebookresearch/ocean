@@ -38,7 +38,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX)
             ocean_cv_advanced
             ocean_math
             ocean_system
-            ocean_test
+            ocean_test_testcv
     )
 
     if (ANDROID)
