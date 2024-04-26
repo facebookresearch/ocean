@@ -30,7 +30,7 @@ bool TestFrameVariance::test(const unsigned int width, const unsigned int height
 
 	bool allSucceeded = true;
 
-	for (const unsigned int window : {5u, 11u, 31u})
+	for (const unsigned int window : {5u, 11u, 21u})
 	{
 		allSucceeded = testDeviation1Channel8Bit<int8_t>(width, height, window, testDuration) && allSucceeded;
 		Log::info() << " ";
@@ -85,16 +85,16 @@ TEST(TestFrameVariance, TestDeviation1Channel8Bit_uint8_11Window)
 }
 
 
-TEST(TestFrameVariance, TestDeviation1Channel8Bit_int8_31Window)
+TEST(TestFrameVariance, TestDeviation1Channel8Bit_int8_21Window)
 {
 	Worker worker;
-	EXPECT_TRUE((TestFrameVariance::testDeviation1Channel8Bit<int8_t>(1920u, 1080u, 31u, GTEST_TEST_DURATION)));
+	EXPECT_TRUE((TestFrameVariance::testDeviation1Channel8Bit<int8_t>(1920u, 1080u, 21u, GTEST_TEST_DURATION)));
 }
 
-TEST(TestFrameVariance, TestDeviation1Channel8Bit_uint8_31Window)
+TEST(TestFrameVariance, TestDeviation1Channel8Bit_uint8_21Window)
 {
 	Worker worker;
-	EXPECT_TRUE((TestFrameVariance::testDeviation1Channel8Bit<uint8_t>(1920u, 1080u, 31u, GTEST_TEST_DURATION)));
+	EXPECT_TRUE((TestFrameVariance::testDeviation1Channel8Bit<uint8_t>(1920u, 1080u, 21u, GTEST_TEST_DURATION)));
 }
 
 TEST(TestFrameVariance, FrameStatistics)
@@ -117,6 +117,7 @@ bool TestFrameVariance::testDeviation1Channel8Bit(const unsigned int width, cons
 	bool allSucceeded = true;
 
 	RandomGenerator randomGenerator;
+
 	HighPerformanceStatistic performance;
 
 	const Timestamp startTimestamp(true);
@@ -128,28 +129,22 @@ bool TestFrameVariance::testDeviation1Channel8Bit(const unsigned int width, cons
 			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 1024u);
 
-			const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-			const unsigned int devicationPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame frame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-			Frame deviationFrame(frame.frameType(), devicationPaddingElements);
-
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
-			CV::CVUtilities::randomizeFrame(deviationFrame, false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(1u), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame deviationFrame = CV::CVUtilities::randomizedFrame(FrameType(frame.frameType(), FrameType::genericPixelFormat<uint8_t>(1u)), false, &randomGenerator);
 
 			const Frame copyDevicationFrame(deviationFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 			performance.startIf(performanceIteration);
-				CV::FrameVariance::deviation1Channel8Bit(frame.constdata<uint8_t>(), deviationFrame.data<uint8_t>(), testWidth, testHeight, frame.paddingElements(), deviationFrame.paddingElements(), window);
+				CV::FrameVariance::deviation1Channel8Bit(frame.constdata<T>(), deviationFrame.data<uint8_t>(), testWidth, testHeight, frame.paddingElements(), deviationFrame.paddingElements(), window);
 			performance.stopIf(performanceIteration);
 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(deviationFrame, copyDevicationFrame))
-				{
-					ocean_assert(false && "Invalid padding memory!");
-					return false;
-				}
+			{
+				ocean_assert(false && "Invalid padding memory!");
+				return false;
+			}
 
-			if (!validateDeviation1Channel<uint8_t, uint8_t>(frame,deviationFrame, window))
+			if (!validateDeviation1Channel<T, uint8_t>(frame, deviationFrame, window))
 			{
 				allSucceeded = false;
 			}
@@ -331,12 +326,6 @@ bool TestFrameVariance::validateDeviation1Channel(const Frame& frame, const Fram
 
 	ocean_assert(window >= 1u && window % 2u == 1u);
 
-	const T* frameData = frame.constdata<T>();
-	const TVariance* varianceData = variance.constdata<TVariance>();
-
-	const unsigned int frameStrideElements = frame.strideElements();
-	const unsigned int varianceStrideElements = variance.strideElements();
-
 	const unsigned int border = window / 2u;
 
 	const double normalization = 1.0 / double(window * window);
@@ -352,7 +341,7 @@ bool TestFrameVariance::validateDeviation1Channel(const Frame& frame, const Fram
 			{
 				for (unsigned int xx = x - border; xx <= x + border; ++xx)
 				{
-					const double value = double(frameData[yy * frameStrideElements + xx]);
+					const double value = double(frame.constpixel<T>(xx, yy)[0]);
 
 					values += value;
 					sqrValues += value * value;
@@ -373,7 +362,7 @@ bool TestFrameVariance::validateDeviation1Channel(const Frame& frame, const Fram
 			{
 				for (unsigned int xx = x - border; xx <= x + border; ++xx)
 				{
-					const double value = Scalar(frameData[yy * frameStrideElements + xx]) - meanValues;
+					const double value = double(frame.constpixel<T>(xx, yy)[0]) - meanValues;
 					errors += value * value;
 				}
 			}
@@ -382,7 +371,7 @@ bool TestFrameVariance::validateDeviation1Channel(const Frame& frame, const Fram
 			ocean_assert(controlVariance <= 256u * 256u);
 			const uint32_t controlDeviation = Approximation::sqrt(uint16_t(controlVariance));
 
-			const uint32_t testDeviation = uint32_t(varianceData[y * varianceStrideElements + x]);
+			const uint32_t testDeviation = uint32_t(variance.constpixel<TVariance>(x, y)[0]);
 
 			if (abs(int32_t(deviation) - int32_t(controlDeviation)) > 2)
 			{

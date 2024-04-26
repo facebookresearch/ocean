@@ -98,7 +98,8 @@ bool FrameVariance::deviation1Channel8Bit(const T* frame, uint8_t* deviation, co
 
 	const unsigned int border = window / 2u;
 
-	typedef typename SquareValueTyper<T>::Type TIntegral;
+	using TIntegral = typename NextLargerTyper<T>::TypePerformance;
+	static_assert(std::is_signed<T>::value == std::is_signed<TIntegral>::value, "Invalid data type!");
 
 	Frame integralFrame(FrameType(width + window, height + window, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT));
 	CV::IntegralImage::createBorderedImageMirror<T, TIntegral, 1u>(frame, integralFrame.data<TIntegral>(), width, height, border, framePaddingElements, integralFrame.paddingElements());

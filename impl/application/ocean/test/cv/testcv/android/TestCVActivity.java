@@ -52,12 +52,12 @@ public class TestCVActivity extends TextActivity
 		final int testHeight = 1080;
 
 		// Define the test duration in seconds.
-		final double testDuration = 2.0;
+		final double testDuration = 10.0;
 
 		// Use "" to execute the entire test
 		// Use e.g. "sumsquaredifferences" to execute only the sum of squared differences test
 		// Use e.g. "sumsquaredifferences, sumabsolutedifferences" to execute more than one test
-		final String testFunctions = "";
+		final String testFunctions = "framevariance";
 
 		invokeTest(testDuration, testWidth, testHeight, testFunctions);
 	}
