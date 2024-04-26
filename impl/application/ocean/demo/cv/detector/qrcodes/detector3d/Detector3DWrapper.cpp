@@ -113,18 +113,16 @@ Detector3DWrapper::Detector3DWrapper(const std::vector<std::wstring>& separatedC
 
 	// First, we get access to the frame medium that is intended to be used for the tracking
 
-	Value inputValue;
-	if (commandArguments.hasValue("input", &inputValue, false, 0u) && inputValue.isString())
+	std::string inputValue;
+	if (commandArguments.hasValue("input", inputValue, false, 0u) && !inputValue.empty())
 	{
-		const std::string argument = inputValue.stringValue();
+		IO::File fileInput(inputValue);
 
-		IO::File fileArgument(argument);
-
-		if (fileArgument.exists() && fileArgument.extension() == "vrs")
+		if (fileInput.exists() && fileInput.extension() == "vrs")
 		{
 			devicePlayer_ = std::make_shared<Devices::VRS::VRSDevicePlayer>();
 
-			if (!devicePlayer_->initialize(fileArgument()) || !devicePlayer_->start(/* speed */ 0.0f))
+			if (!devicePlayer_->initialize(fileInput()) || !devicePlayer_->start(/* speed */ 0.0f))
 			{
 				Log::error() << "Failed to load input VRS file";
 			}
@@ -137,35 +135,19 @@ Detector3DWrapper::Detector3DWrapper(const std::vector<std::wstring>& separatedC
 				else
 				{
 					frameMediums_ = devicePlayer_->frameMediums();
-
-#if defined(OCEAN_DEBUG)
-					for (const Media::FrameMediumRef& frameMedium : frameMediums_)
-					{
-						ocean_assert(!frameMedium.isNull());
-					}
-#endif
-
-					// Extract all device poses from the VRS file and use it later to retrieve the pose for each frame.
-					if (!Media::VRS::extractValuesFromVRS(fileArgument(), Media::VRS::translateRecordableTypeid("PoseRecordableClass"), "world_T_device", world_T_devices_))
-					{
-						Platform::Utilities::showMessageBox("Error", "VRS files does not contain device transformations");
-						return;
-					}
 				}
 			}
 		}
 	}
 
-	Value camera0Value;
-	if (commandArguments.hasValue("camera0", &camera0Value, false) && camera0Value.isInt())
+	int32_t camera0Value;
+	if (commandArguments.hasValue("camera0", camera0Value, false))
 	{
-		const int argument = camera0Value.intValue();
-
-		if (argument >= 0)
+		if (camera0Value >= 0)
 		{
-			if (size_t(argument) < frameMediums_.size())
+			if (size_t(camera0Value) < frameMediums_.size())
 			{
-				vrsCameraIndex0_ = (unsigned int)argument;
+				vrsCameraIndex0_ = (unsigned int)(camera0Value);
 			}
 			else
 			{
@@ -180,16 +162,14 @@ Detector3DWrapper::Detector3DWrapper(const std::vector<std::wstring>& separatedC
 		}
 	}
 
-	Value camera1Value;
-	if (commandArguments.hasValue("camera1", &camera1Value, false) && camera1Value.isInt())
+	int32_t camera1Value;
+	if (commandArguments.hasValue("camera1", camera1Value, false))
 	{
-		const int argument = camera1Value.intValue();
-
-		if (argument >= 0)
+		if (camera1Value >= 0)
 		{
-			if (size_t(argument) < frameMediums_.size())
+			if (size_t(camera1Value) < frameMediums_.size())
 			{
-				vrsCameraIndex1_ = (unsigned int)argument;
+				vrsCameraIndex1_ = (unsigned int)(camera1Value);
 			}
 			else
 			{
@@ -212,26 +192,22 @@ Detector3DWrapper::Detector3DWrapper(const std::vector<std::wstring>& separatedC
 
 	unsigned int framesPerSecond = 30u;
 
-	Value fpsValue;
-	if (commandArguments.hasValue("fps", &fpsValue, false) && fpsValue.isInt())
+	int32_t fpsValue;
+	if (commandArguments.hasValue("fps", fpsValue, false))
 	{
-		const int argument = fpsValue.intValue();
-
-		if (argument < 1)
+		if (fpsValue < 1)
 		{
 			Platform::Utilities::showMessageBox("Error", "Camera indices must be >= 1");
 			return;
 		}
 
-		framesPerSecond = (unsigned int)argument;
+		framesPerSecond = (unsigned int)(fpsValue);
 	}
 
-	Value videoValue;
-	if (commandArguments.hasValue("video", &videoValue, false) && videoValue.isString())
+	std::string videoValue;
+	if (commandArguments.hasValue("video", videoValue, false) && !videoValue.empty())
 	{
-		const std::string argument = videoValue.stringValue();
-
-		IO::File outputFile(argument);
+		IO::File outputFile(videoValue);
 
 		movieRecorder_ = Media::Manager::get().newRecorder(Media::Recorder::MOVIE_RECORDER);
 
@@ -323,18 +299,20 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 {
 	messages.clear();
 
-	if (lastFrameReached)
-	{
-		*lastFrameReached = false;
-	}
-
 	if (frameMediums_.size() < 2)
 	{
 		return false;
 	}
 
-	if (lastFrameReached)
+	if (!devicePlayer_ || !devicePlayer_->isValid())
 	{
+		return false;
+	}
+
+	if (lastFrameReached != nullptr)
+	{
+		*lastFrameReached = false;
+
 		for (const Media::FrameMediumRef& frameMedium : frameMediums_)
 		{
 			if (frameMedium->stopTimestamp().isValid())
@@ -356,24 +334,13 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 	frameRefs.reserve(frameMediums_.size());
 	device_T_camerasD.reserve(frameMediums_.size());
 
-	if (devicePlayer_ != nullptr && devicePlayer_->isValid())
+	if (devicePlayer_->isValid())
 	{
 		frameTimestamp = devicePlayer_->playNextFrame();
 
-		for (const Media::FrameMediumRef& frameMedium : frameMediums_)
+		if (!Media::FrameMedium::syncedFrames(frameMediums_, frameTimestamp, frameRefs, anyCameras, 2u, nullptr, &device_T_camerasD))
 		{
-			SharedAnyCamera anyCamera;
-			FrameRef frameRef = frameMedium->frame(frameTimestamp, &anyCamera);
-
-			if (!frameRef.isNull() && anyCamera != nullptr)
-			{
-				ocean_assert(frameRef->isValid());
-				ocean_assert(anyCamera->isValid());
-
-				frameRefs.emplace_back(std::move(frameRef));
-				anyCameras.emplace_back(std::move(anyCamera));
-				device_T_camerasD.emplace_back(frameMedium->device_T_camera());
-			}
+			return false;
 		}
 	}
 
@@ -388,8 +355,8 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 		const unsigned int cameraIndex1 = vrsCameraIndex1_;
 
 		ocean_assert(cameraIndex0 != cameraIndex1);
-		ocean_assert(cameraIndex0 < (unsigned int)anyCameras.size());
-		ocean_assert(cameraIndex1 < (unsigned int)anyCameras.size());
+		ocean_assert(cameraIndex0 < (unsigned int)(anyCameras.size()));
+		ocean_assert(cameraIndex1 < (unsigned int)(anyCameras.size()));
 
 		SharedAnyCameras selectedAnyCameras = {anyCameras[cameraIndex0], anyCameras[cameraIndex1]};
 		FrameRefs selectedFrameRefs = {frameRefs[cameraIndex0], frameRefs[cameraIndex1]};
@@ -401,7 +368,7 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 	}
 
 	HomogenousMatrixD4 world_T_deviceD;
-	if (!world_T_devices_.sample(double(frameRefs.front()->timestamp()), world_T_deviceD))
+	if (devicePlayer_->transformation("world_T_device", frameRefs.front()->timestamp(), world_T_deviceD) != Devices::DevicePlayer::TR_PRECISE)
 	{
 		Log::error() << "No transformation world_T_device is available in the sample map";
 		return false;
@@ -409,18 +376,7 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 
 	// We handle each frame only once.
 
-	// TODO - Some of the frames from Arcata sometimes have slightly different time stamps
-	#if defined(OCEAN_DEBUG)
-		for (const FrameRef& frameRef : frameRefs)
-		{
-			// All frames must be synchronized.
-			if (frameRef->timestamp() != frameRefs.front()->timestamp())
-			{
-				Log::warning() << "Deviating timestamps - frames not fully synchronized";
-			}
-		}
-	#endif
-
+	ocean_assert(frameRefs.front()->timestamp() != timestamp_);
 	if (frameRefs.front()->timestamp() == timestamp_)
 	{
 		return false;
@@ -428,13 +384,11 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 
 	timestamp_ = frameRefs.front()->timestamp();
 
-#if defined(OCEAN_DEBUG)
 	for (const FrameRef& frameRef : frameRefs)
 	{
 		// All frames must use the same pixel format.
 		ocean_assert(frameRef->pixelFormat() == frameRefs.front()->pixelFormat());
 	}
-#endif
 
 	Frames yFrames;
 
@@ -443,7 +397,7 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 	for (const FrameRef& frameRef : frameRefs)
 	{
 		Frame yFrame;
-		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, true, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(*frameRef, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
@@ -453,7 +407,7 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 	}
 
 	const unsigned int frameWidth = frameRefs.front()->width();
-	const unsigned int frameHeight= frameRefs.front()->height();
+	const unsigned int frameHeight = frameRefs.front()->height();
 
 	const unsigned int resultFrameWidth = frameWidth * (unsigned int)(frameRefs.size());
 	const unsigned int resultFrameHeight = frameHeight;
@@ -575,7 +529,6 @@ Detector3DWrapper& Detector3DWrapper::operator=(Detector3DWrapper&& detector3DWr
 
 		devicePlayer_ = std::move(detector3DWrapper.devicePlayer_);
 		frameMediums_ = std::move(detector3DWrapper.frameMediums_);
-		world_T_devices_ = std::move(detector3DWrapper.world_T_devices_);
 		timestamp_ = detector3DWrapper.timestamp_;
 		performance_ = detector3DWrapper.performance_;
 		movieRecorder_ = std::move(detector3DWrapper.movieRecorder_);

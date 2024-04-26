@@ -106,9 +106,6 @@ class Detector3DWrapper
 		/// The frame mediums to provide the image sequence.
 		Media::FrameMediumRefs frameMediums_;
 
-		/// All device poses in world coordinates that are extracted from the VRS file.
-		SampleMap<HomogenousMatrixD4> world_T_devices_;
-
 		/// The time stamp of the last frame that has been handled.
 		Timestamp timestamp_;
 
