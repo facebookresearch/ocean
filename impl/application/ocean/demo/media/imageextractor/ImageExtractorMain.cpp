@@ -20,9 +20,6 @@
 #include "ocean/media/Utilities.h"
 
 #ifdef OCEAN_RUNTIME_STATIC
-	#if defined(OCEAN_USE_MEDIA_VRS)
-		#include "metaonly/ocean/media/vrs/VRS.h"
-	#endif
 	#if defined(__APPLE__)
 		#include "ocean/media/avfoundation/AVFoundation.h"
 		#include "ocean/media/imageio/ImageIO.h"
@@ -39,18 +36,18 @@ using namespace Ocean;
 using namespace Ocean::Media;
 
 /*
-* This demo example shows to individual possibilities to extract frames from a video/movie.
-*
-* The first possibility is the application of the MovieFrameProvider (in combination with a Movie object).
-* While the Movie object delivers the actual video frames, the MovieFrameProvider can be used to access random frames.
-* Thus, the MovieFrameProvider could be used to move forward and backward within the video stream,
-* or to jump between arbitrary frames.
-* To use this option just define USE_FRAME_PROVIDER
-*
-* The second possibility is the application of the Movie object directly without using the MovieFrameProvider.
-* In this case, we can configure the Movie object to deliver video frames as fast as possible,
-* and we can define a callback function which is called whenever a new frame arrives.
-*/
+ * This demo example shows to individual possibilities to extract frames from a video/movie.
+ *
+ * The first possibility is the application of the MovieFrameProvider (in combination with a Movie object).
+ * While the Movie object delivers the actual video frames, the MovieFrameProvider can be used to access random frames.
+ * Thus, the MovieFrameProvider could be used to move forward and backward within the video stream,
+ * or to jump between arbitrary frames.
+ * To use this option just define USE_FRAME_PROVIDER
+ *
+ * The second possibility is the application of the Movie object directly without using the MovieFrameProvider.
+ * In this case, we can configure the Movie object to deliver video frames as fast as possible,
+ * and we can define a callback function which is called whenever a new frame arrives.
+ */
 
 // #define USE_FRAME_PROVIDER
 
@@ -176,9 +173,6 @@ class PluginScope
 PluginScope::PluginScope()
 {
 #ifdef OCEAN_RUNTIME_STATIC
-	#if defined(OCEAN_USE_MEDIA_VRS)
-		VRS::registerVRSLibrary();
-	#endif
 	#if defined(__APPLE__)
 		ImageIO::registerImageIOLibrary();
 		AVFoundation::registerAVFLibrary();
@@ -204,9 +198,6 @@ PluginScope::~PluginScope()
 		DirectShow::unregisterDirectShowLibrary();
 	#else
 		OpenImageLibraries::unregisterOpenImageLibrariesLibrary();
-	#endif
-	#if defined(OCEAN_USE_MEDIA_VRS)
-		VRS::unregisterVRSLibrary();
 	#endif
 #endif
 }
