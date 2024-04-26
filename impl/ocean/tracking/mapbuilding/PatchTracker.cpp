@@ -24,7 +24,7 @@
 
 #include "ocean/tracking/Solver3.h"
 
-#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
+#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
 
 #ifdef _WINDOWS
 	#include "ocean/platform/win/Utilities.h"
@@ -153,8 +153,8 @@ void PatchTracker::reset(Database* database, std::shared_ptr<UnifiedDescriptorMa
 
 bool PatchTracker::trackVRSFile(const std::string& vrsFile, Database& database, SharedAnyCamera& anyCamera, std::shared_ptr<UnifiedDescriptorMap>& descriptorMap, const std::shared_ptr<UnifiedDescriptorExtractor>& unifiedDescriptorExtractor)
 {
-	Devices::VRS::DevicePlayer devicePlayer;
-	if (!devicePlayer.loadRecording(vrsFile))
+	Devices::VRS::VRSDevicePlayer devicePlayer;
+	if (!devicePlayer.initialize(vrsFile))
 	{
 		Log::error() << "Input needs to be a valid VRS file";
 		return false;

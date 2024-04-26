@@ -14,7 +14,7 @@
 #include "ocean/media/FrameMedium.h"
 
 #if defined(USE_OCEAN_DEVICES_VRS)
-	#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
+	#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
 #endif
 
 /**
@@ -98,7 +98,7 @@ class Wrapper
 
 #if defined(USE_OCEAN_DEVICES_VRS)
 		/// Device player that is used for VRS replay
-		std::shared_ptr<Devices::VRS::DevicePlayer> devicePlayer_;
+		Devices::SharedDevicePlayer devicePlayer_;
 #endif
 
 		/// The frame medium to provide the image sequence.

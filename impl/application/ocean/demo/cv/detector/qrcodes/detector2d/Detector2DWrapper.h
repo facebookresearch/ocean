@@ -10,7 +10,7 @@
 #include "ocean/media/FrameMedium.h"
 
 #ifdef OCEAN_USE_DEVICES_VRS
-	#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
+	#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
 #endif // OCEAN_USE_DEVICES_VRS
 
 /**
@@ -104,7 +104,7 @@ class Detector2DWrapper
 
 #ifdef OCEAN_USE_DEVICES_VRS
 		/// Device player that is used for VRS replay
-		std::shared_ptr<Devices::VRS::DevicePlayer> devicePlayer_;
+		Devices::SharedDevicePlayer devicePlayer_;
 #endif // OCEAN_USE_DEVICES_VRS
 
 		/// The frame medium to provide the image sequence.

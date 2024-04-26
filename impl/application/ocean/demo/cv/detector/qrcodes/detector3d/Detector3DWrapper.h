@@ -13,7 +13,7 @@
 
 #include "ocean/media/FrameMedium.h"
 
-#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
+#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
 
 /**
  * @ingroup applicationdemocvdetectorqrcodes
@@ -101,7 +101,7 @@ class Detector3DWrapper
 		std::atomic<unsigned int> vrsCameraIndex1_ = 1u;
 
 		/// Device player that is used for VRS replay
-		std::shared_ptr<Devices::VRS::DevicePlayer> devicePlayer_;
+		Devices::SharedDevicePlayer devicePlayer_;
 
 		/// The frame mediums to provide the image sequence.
 		Media::FrameMediumRefs frameMediums_;

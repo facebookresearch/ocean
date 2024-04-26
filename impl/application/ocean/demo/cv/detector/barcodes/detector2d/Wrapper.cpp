@@ -141,9 +141,9 @@ Wrapper::Wrapper(const std::vector<std::wstring>& separatedCommandArguments)
 #if defined(USE_OCEAN_DEVICES_VRS)
 		if (fileArgument.exists() && fileArgument.extension() == "vrs")
 		{
-			devicePlayer_ = std::make_shared<Devices::VRS::DevicePlayer>();
+			devicePlayer_ = std::make_shared<Devices::VRS::VRSDevicePlayer>();
 
-			if (!devicePlayer_->loadRecording(fileArgument()) || !devicePlayer_->start(/* speed */ -1.0f))
+			if (!devicePlayer_->initialize(fileArgument()) || !devicePlayer_->start(/* speed */ -1.0f))
 			{
 				Log::error() << "Failed to load input VRS file";
 			}

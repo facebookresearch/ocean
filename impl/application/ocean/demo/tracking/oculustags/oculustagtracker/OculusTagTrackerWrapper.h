@@ -18,7 +18,7 @@
 #include "ocean/tracking/oculustags/OculusTagTracker.h"
 
 #ifdef OCEAN_USE_DEVICES_VRS
-	#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
+	#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
 #endif
 
 /**
@@ -133,7 +133,7 @@ class OculusTagTrackerWrapper
 #ifdef OCEAN_USE_DEVICES_VRS
 
 		/// Device player that is used for VRS replay
-		std::shared_ptr<Devices::VRS::DevicePlayer> devicePlayer_;
+		Devices::SharedDevicePlayer devicePlayer_;
 
 #endif
 

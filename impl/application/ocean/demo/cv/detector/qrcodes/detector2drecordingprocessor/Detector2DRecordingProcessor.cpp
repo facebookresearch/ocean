@@ -22,7 +22,7 @@
 
 #include "ocean/platform/System.h"
 
-#include "metaonly/ocean/devices/vrs/DevicePlayer.h"
+#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)
@@ -260,8 +260,8 @@ bool processRecording(const IO::File& vrsFile, const IO::File& outputFile, const
 		return false;
 	}
 
-	Devices::VRS::DevicePlayer devicePlayer;
-	if (!devicePlayer.loadRecording(vrsFile()) || !devicePlayer.start(0.0f))
+	Devices::VRS::VRSDevicePlayer devicePlayer;
+	if (!devicePlayer.initialize(vrsFile()) || !devicePlayer.start(0.0f))
 	{
 		Log::error() << "Failed to load input VRS file";
 		return false;

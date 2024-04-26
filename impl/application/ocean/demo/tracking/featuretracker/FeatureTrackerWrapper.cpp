@@ -180,9 +180,9 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 		{
 #ifdef OCEAN_USE_DEVICES_VRS
 
-			devicePlayer_ = std::make_shared<Devices::VRS::DevicePlayer>();
+			devicePlayer_ = std::make_shared<Devices::VRS::VRSDevicePlayer>();
 
-			if (!devicePlayer_->loadRecording(fileArgument()) || !devicePlayer_->start())
+			if (!devicePlayer_->initialize(fileArgument()) || !devicePlayer_->start())
 			{
 				Log::error() << "Failed to load input VRS file";
 			}

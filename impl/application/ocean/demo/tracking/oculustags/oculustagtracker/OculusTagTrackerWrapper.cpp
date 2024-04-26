@@ -154,9 +154,9 @@ OculusTagTrackerWrapper::OculusTagTrackerWrapper(const std::vector<std::wstring>
 			{
 #ifdef OCEAN_USE_DEVICES_VRS
 
-				devicePlayer_ = std::make_shared<Devices::VRS::DevicePlayer>();
+				devicePlayer_ = std::make_shared<Devices::VRS::VRSDevicePlayer>();
 
-				if (!devicePlayer_->loadRecording(fileArgument()) || !devicePlayer_->start(enableStopMotionReplay_ ? 0.0f : -1.0f))
+				if (!devicePlayer_->initialize(fileArgument()) || !devicePlayer_->start(enableStopMotionReplay_ ? 0.0f : -1.0f))
 				{
 					Log::error() << "Failed to load input VRS file";
 				}
