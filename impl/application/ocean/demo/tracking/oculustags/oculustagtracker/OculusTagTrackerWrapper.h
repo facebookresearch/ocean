@@ -7,6 +7,8 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/devices/DevicePlayer.h"
+
 #include "ocean/io/File.h"
 
 #include "ocean/math/AnyCamera.h"
@@ -16,10 +18,6 @@
 #include "ocean/media/MovieRecorder.h"
 
 #include "ocean/tracking/oculustags/OculusTagTracker.h"
-
-#ifdef OCEAN_USE_DEVICES_VRS
-	#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
-#endif
 
 /**
  * @ingroup applicationdemotracking
@@ -121,24 +119,14 @@ class OculusTagTrackerWrapper
 		/// The default tag size that is loaded from a VRS file
 		Scalar vrsDefaultTagSize_;
 
-		/// The tracked tags that are loaded from a VRS file
-		std::map<double, Tracking::OculusTags::OculusTags> map_vrsTrackedTags_;
-
 		/// The image counter.
 		unsigned int frameCounter_ = 0u;
 
 		/// Indicates how to replay the input, at normal speed or stop-motion
 		bool enableStopMotionReplay_ = true;
 
-#ifdef OCEAN_USE_DEVICES_VRS
-
-		/// Device player that is used for VRS replay
+		/// Device player that will be used for replay.
 		Devices::SharedDevicePlayer devicePlayer_;
-
-#endif
-
-		/// The device poses that will be extracted from the VRS file
-		SampleMap<HomogenousMatrixD4> world_T_devices_;
 
 		/// A movie recorder to create visualizations of the results
 		Media::MovieRecorderRef movieRecorder_;

@@ -24,6 +24,10 @@
 #include "ocean/tracking/oculustags/OculusTagDebugElements.h"
 #include "ocean/tracking/oculustags/Utilities.h"
 
+#ifdef OCEAN_USE_DEVICES_VRS
+	#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
+#endif
+
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)
 		#include "ocean/media/wic/WIC.h"
@@ -34,15 +38,9 @@
 	#endif
 #endif
 
-#ifdef OCEAN_USE_DEVICES_VRS
-	#include "metaonly/ocean/media/vrs/VRS.h"
-#endif
-
 #if defined(OCN_OCULUSTAG_DEBUGGING_ENABLED) && defined(_WINDOWS)
 	#include "ocean/platform/win/Utilities.h"
 #endif
-
-#include <unordered_map>
 
 using namespace Tracking::OculusTags;
 
@@ -108,16 +106,16 @@ OculusTagTrackerWrapper::OculusTagTrackerWrapper(const std::vector<std::wstring>
 
 	double framesPerSecond = 30.0;
 
-	Value fpsValue;
-	if (commandArguments.hasValue("fps", &fpsValue, false, 0u) && fpsValue.isInt() && fpsValue.intValue() > 0)
+	int32_t fpsValue;
+	if (commandArguments.hasValue("fps", fpsValue, false, 0u) && fpsValue > 0)
 	{
-		framesPerSecond = double(fpsValue.intValue());
+		framesPerSecond = double(fpsValue);
 	}
 
-	Value outputValue;
-	if (commandArguments.hasValue("output", &outputValue, false, 0u) && outputValue.isString())
+	std::string outputValue;
+	if (commandArguments.hasValue("output", outputValue, false, 0u) && !outputValue.empty())
 	{
-		const IO::File outputFile(outputValue.stringValue());
+		const IO::File outputFile(outputValue);
 
 		if (outputFile.exists())
 		{
@@ -141,12 +139,10 @@ OculusTagTrackerWrapper::OculusTagTrackerWrapper(const std::vector<std::wstring>
 		movieRecorder_->setFilenameSuffixed(false);
 	}
 
-	Value inputValue;
-	if ((commandArguments.hasValue("input", &inputValue, false, 0u) && inputValue.isString()))
+	std::string inputValue;
+	if ((commandArguments.hasValue("input", inputValue, false, 0u) && !inputValue.empty()))
 	{
-		const std::string argument = inputValue.stringValue();
-
-		const IO::File fileArgument(argument);
+		const IO::File fileArgument(inputValue);
 
 		if (fileArgument.exists())
 		{
@@ -176,13 +172,6 @@ OculusTagTrackerWrapper::OculusTagTrackerWrapper(const std::vector<std::wstring>
 							ocean_assert(frameMediumRef);
 						}
 #endif
-
-						// Extract all device poses from the VRS file and use it later to retrieve the pose for each frame.
-						if (!Media::VRS::extractValuesFromVRS(fileArgument(), Media::VRS::translateRecordableTypeid("PoseRecordableClass"), "world_T_device", world_T_devices_))
-						{
-							Platform::Utilities::showMessageBox("Error", "VRS files does not contain device transformations");
-							return;
-						}
 					}
 				}
 
@@ -229,14 +218,12 @@ void OculusTagTrackerWrapper::release()
 	}
 #endif
 
-#ifdef OCEAN_USE_DEVICES_VRS
 	if (devicePlayer_ && devicePlayer_->isStarted())
 	{
 		devicePlayer_->stop();
 	}
 
 	devicePlayer_ = nullptr;
-#endif
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#ifdef OCEAN_USE_MEDIA_VRS
@@ -256,6 +243,11 @@ void OculusTagTrackerWrapper::release()
 
 bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 {
+	if (!devicePlayer_ || devicePlayer_->isValid())
+	{
+		return false;
+	}
+
 	if (frameMediumRefs_.size() < 2)
 	{
 		ocean_assert(false && "The input must have two or more, synchronized cameras.");
@@ -264,16 +256,15 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 
 	if (enableStopMotionReplay_)
 	{
-#ifdef OCEAN_USE_DEVICES_VRS
 		devicePlayer_->playNextFrame();
-#endif
 	}
 
 	FrameRefs frameRefs;
 	SharedAnyCameras anyCameras;
+	HomogenousMatrices4 device_T_cameras;
 
 	bool timedOut = false;
-	if (!Media::FrameMedium::syncedFrames(frameMediumRefs_, frameTimestamp_, frameRefs, anyCameras, 2u /*waitTime*/, &timedOut))
+	if (!Media::FrameMedium::syncedFrames(frameMediumRefs_, frameTimestamp_, frameRefs, anyCameras, 2u /*waitTime*/, &timedOut, &device_T_cameras))
 	{
 		if (timedOut)
 		{
@@ -294,16 +285,6 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 		ocean_assert(anyCameras[iCamera]->width() == frameRefs[iCamera]->width() && anyCameras[iCamera]->height() == frameRefs[iCamera]->height());
 	}
 #endif
-
-	HomogenousMatrices4 device_T_cameras;
-
-	for (Media::FrameMediumRef& frameMediumRef : frameMediumRefs_)
-	{
-		ocean_assert(frameMediumRef && frameMediumRef->device_T_camera().isValid());
-		device_T_cameras.emplace_back(frameMediumRef->device_T_camera());
-	}
-
-	ocean_assert(anyCameras.size() == device_T_cameras.size());
 
 	const Timestamp timestamp = frameRefs.front()->timestamp();
 
@@ -362,17 +343,14 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 		return false;
 	}
 
-	HomogenousMatrixD4 world_T_deviceD;
-	if (!world_T_devices_.sample(double(frameRefs.front()->timestamp()), world_T_deviceD))
+	HomogenousMatrixD4 world_T_device;
+	if (devicePlayer_->transformation("world_T_device", frameRefs.front()->timestamp(), world_T_device) != Devices::DevicePlayer::TR_PRECISE)
 	{
-		Log::error() << "No transformation world_T_device is available in the sample map";
-
+		Log::error() << "No transformation world_T_device is available in the recording";
 		return false;
 	}
 
-	ocean_assert(world_T_deviceD.isValid());
-
-	const HomogenousMatrix4 world_T_device(world_T_deviceD);
+	ocean_assert(world_T_device.isValid());
 
 	Frames rgbFrames;
 	Frames yFrames;
@@ -386,7 +364,7 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 		ocean_assert(frame.pixelOrigin() == Frame::ORIGIN_UPPER_LEFT);
 
 		Frame rgbFrame;
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, rgbFrame, /* forceCopy */ true, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, rgbFrame, CV::FrameConverter::CP_ALWAYS_COPY, WorkerPool::get().scopedWorker()()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
@@ -395,7 +373,7 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 		rgbFrames.emplace_back(std::move(rgbFrame));
 
 		Frame yFrame;
-		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, /* forceCopy */ false, WorkerPool::get().scopedWorker()()))
+		if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
 		{
 			ocean_assert(false && "This should never happen!");
 			return false;
@@ -412,12 +390,9 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 	OculusTags trackedTags;
 	bool trackerResult = false;
 
-	if (++frameCounter_ >= 10u) // we skip the first frames to avoid invalid/inaccurate camera poses
-	{
-		performance_.start();
-		trackerResult = oculusTagTracker_.trackTagsStereo(*anyCameras[cameraIndex0], *anyCameras[cameraIndex1], yFrames[0], yFrames[1], world_T_device, device_T_cameras[0], device_T_cameras[1], trackedTags);
-		performance_.stop();
-	}
+	performance_.start();
+		trackerResult = oculusTagTracker_.trackTagsStereo(*anyCameras[cameraIndex0], *anyCameras[cameraIndex1], yFrames[0], yFrames[1], HomogenousMatrix4(world_T_device), HomogenousMatrix4(device_T_cameras[0]), HomogenousMatrix4(device_T_cameras[1]), trackedTags);
+	performance_.stop();
 
 	const OculusTagTracker::TrackedTagMap& trackedTagMap = oculusTagTracker_.trackedTagMap();
 
@@ -426,18 +401,9 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 		if (iterTrackedtag.second.trackingState_ == OculusTagTracker::TS_TRACKING || iterTrackedtag.second.trackingState_ == OculusTagTracker::TS_NEW_DETECTION)
 		{
 			const uint8_t* color = iterTrackedtag.second.trackingState_ == OculusTagTracker::TS_TRACKING ? CV::Canvas::yellow(rgbFrames[cameraIndex0].pixelFormat()) : CV::Canvas::red(rgbFrames[cameraIndex0].pixelFormat());
-			Tracking::OculusTags::Utilities::drawOculusTag(rgbFrames[cameraIndex0], *anyCameras[cameraIndex0], HomogenousMatrix4(world_T_device), device_T_cameras[0], iterTrackedtag.second.tag_, color);
-			Tracking::OculusTags::Utilities::drawOculusTag(rgbFrames[cameraIndex1], *anyCameras[cameraIndex1], HomogenousMatrix4(world_T_device), device_T_cameras[1], iterTrackedtag.second.tag_, color);
-		}
-	}
 
-	std::map<double, OculusTags>::const_iterator vrsTrackedTagsIter = map_vrsTrackedTags_.find(double(frameTimestamp_));
-	if (vrsTrackedTagsIter != map_vrsTrackedTags_.cend())
-	{
-		for (const OculusTag& vrsTag : vrsTrackedTagsIter->second)
-		{
-			Tracking::OculusTags::Utilities::drawOculusTag(rgbFrames[cameraIndex0], *anyCameras[cameraIndex0], HomogenousMatrix4(world_T_device), device_T_cameras[0], vrsTag, CV::Canvas::gray(rgbFrames[cameraIndex0].pixelFormat()));
-			Tracking::OculusTags::Utilities::drawOculusTag(rgbFrames[cameraIndex1], *anyCameras[cameraIndex1], HomogenousMatrix4(world_T_device), device_T_cameras[1], vrsTag, CV::Canvas::gray(rgbFrames[cameraIndex1].pixelFormat()));
+			Tracking::OculusTags::Utilities::drawOculusTag(rgbFrames[cameraIndex0], *anyCameras[cameraIndex0], HomogenousMatrix4(world_T_device), HomogenousMatrix4(device_T_cameras[0]), iterTrackedtag.second.tag_, color);
+			Tracking::OculusTags::Utilities::drawOculusTag(rgbFrames[cameraIndex1], *anyCameras[cameraIndex1], HomogenousMatrix4(world_T_device), HomogenousMatrix4(device_T_cameras[1]), iterTrackedtag.second.tag_, color);
 		}
 	}
 
@@ -446,6 +412,7 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 	if (rotateFrames)
 	{
 		rotatedRgbFrames.resize(rgbFrames.size());
+
 		CV::FrameInterpolatorNearestPixel::Comfort::rotate90(rgbFrames[cameraIndex0], rotatedRgbFrames[cameraIndex0], rotateClockwise, WorkerPool::get().scopedWorker()());
 		CV::FrameInterpolatorNearestPixel::Comfort::rotate90(rgbFrames[cameraIndex1], rotatedRgbFrames[cameraIndex1], rotateClockwise, WorkerPool::get().scopedWorker()());
 	}
@@ -609,9 +576,7 @@ OculusTagTrackerWrapper& OculusTagTrackerWrapper::operator=(OculusTagTrackerWrap
 
 		frameCounter_ = oculusTagTrackerWrapper.frameCounter_;
 
-#ifdef OCEAN_USE_DEVICES_VRS
 		devicePlayer_ = std::move(oculusTagTrackerWrapper.devicePlayer_);
-#endif
 	}
 
 	return *this;
