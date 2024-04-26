@@ -35,6 +35,13 @@ class OCEAN_DEVICES_EXPORT DevicePlayer
 	public:
 
 		/**
+		 * Definition of a speed value for the stop-motion replay mode.
+		 */
+		static constexpr float SPEED_USE_STOP_MOTION = 0.0f;
+
+	public:
+
+		/**
 		 * Creates a new device player.
 		 */
 		DevicePlayer() = default;
@@ -55,7 +62,7 @@ class OCEAN_DEVICES_EXPORT DevicePlayer
 		 * Starts the replay.
 		 * The recording can be payed with individual speed, e.g., real-time, slower than real-time, faster than real-time.<br>
 		 * Further, the player support a stop-motion mode in which the player will play one frame by another.
-		 * @param speed The speed at which the recording will be played, e.g., 2 means two times faster than normal, with range (0, infinity), 0 to play the recording in a stop-motion (frame by frame) mode
+		 * @param speed The speed at which the recording will be played, e.g., 2 means two times faster than normal, with range (0, infinity), 'SPEED_USE_STOP_MOTION' to play the recording in a stop-motion (frame by frame) mode
 		 * @return True, if succeeded
 		 * @see duration(), playNextFrame();
 		 */
@@ -68,7 +75,7 @@ class OCEAN_DEVICES_EXPORT DevicePlayer
 		virtual bool stop() = 0;
 
 		/**
-		 * Plays the next frame of the recording, the player must be started with stop-motion mode.
+		 * Plays the next frame of the recording, the player must be started with stop-motion mode ('SPEED_USE_STOP_MOTION').
 		 * In case the recording holds several media objects, the fist media objects is used to identify the next frame.<br>
 		 * This function will read all records which have been recorded before or at the same time as the next frame of the first media object.<br>
 		 * If the recording does not have any media object nothing happens.
