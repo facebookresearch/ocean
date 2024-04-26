@@ -2,11 +2,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(testqrcodes)
-
 if (MACOS OR ANDROID OR LINUX)
 
-    set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv_testdetector")
+    set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv_testdetector_testqrcodes")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES ${CMAKE_CURRENT_LIST_DIR}/*.h)
@@ -31,6 +29,7 @@ if (MACOS OR ANDROID OR LINUX)
             ocean_base
             ocean_cv
             ocean_cv_detector
+            ocean_cv_detector_qrcodes
             ocean_io
             ocean_math
             ocean_media
@@ -38,8 +37,7 @@ if (MACOS OR ANDROID OR LINUX)
             ocean_system
             ocean_test_testcv
             ocean_test_testcv_testdetector
-            ocean_tracking
-            ocean_tracking_blob
+            ocean_test_testcv_testdetector_testqrcodes
     )
 
     # Installation
