@@ -37,7 +37,6 @@ if(BUILD_PASS_INDEX EQUAL 0)
     # include(curl.cmake)
 
     if (ANDROID)
-        include(android.cmake)
         add_subdirectory(arcore-android-sdk)
     endif()
 
