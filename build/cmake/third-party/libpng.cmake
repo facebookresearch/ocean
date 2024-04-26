@@ -13,6 +13,7 @@ else()
 endif()
 
 set(PNG_TOOLS OFF CACHE BOOL "")
+set(PNG_FRAMEWORK OFF)
 
 CPMAddPackage(
   NAME           libpng
