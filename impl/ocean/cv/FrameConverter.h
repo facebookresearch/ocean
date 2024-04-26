@@ -619,18 +619,6 @@ class OCEAN_CV_EXPORT FrameConverter
 				static bool isSupported(const FrameType& sourceType, const FrameType::PixelFormat targetPixelFormat, const Options& options = Options());
 
 				/**
-				 * Deprecated.
-				 *
-				 * Returns whether the convert function of this class supports the conversion between two specified frame types.
-				 * @param sourceType The source frame type, with same frame dimension as the targetType, must be valid
-				 * @param targetType The target frame type, with same frame dimension as the sourceType, must be valid
-				 * @param options The options to be used for conversion
-				 * @return True, if so
-				 * @see convert().
-				 */
-				static bool isSupported(const FrameType& sourceType, const FrameType& targetType, const Options& options = Options());
-
-				/**
 				 * Converts a frame with arbitrary dimension, pixel format and pixel origin into a frame with the same dimension, but different pixel format or pixel origin.
 				 * @param source The source frame to convert, must be valid
 				 * @param targetPixelFormat The pixel format of the target frame, must be valid
@@ -725,48 +713,6 @@ class OCEAN_CV_EXPORT FrameConverter
 				static inline bool convert(const Frame& source, const FrameType::PixelOrigin targetPixelOrigin, Frame& target, const bool forceCopy = true, Worker* worker = nullptr, const Options& options = Options());
 
 				/**
-				 * Deprecated.
-				 *
-				 * Converts a frame with arbitrary dimension, pixel format and pixel origin into a frame with the same dimension but different pixel format or pixel origin.
-				 * @param source The source frame to convert, must be valid
-				 * @param targetType The frame type of the target frame, must be valid
-				 * @param target The resulting target frame, the frame will be modified if the frame type is not compatible, or if the target frame is not owner of the frame data, or if the target frame is a read-only frame, can be invalid
-				 * @param forceCopy True, if the resulting target image is expected to be the owner of the image data, otherwise the source frame will be the owner of the image data if possible
-				 * @param worker Optional worker object to distribute the conversion computation to different CPU cores
-				 * @param options The options to be used for conversion
-				 * @return True, if the frame type conversion is supported and succeeded
-				 *
-				 * Here is an example showing how to use this function:
-				 * @code
-				 * bool function(const Frame& anyFrame)
-				 * {
-				 *     // we do not know which pixel format (and pixel origin) the given frame has
-				 *     // however, we know that we need e.g., a grayscale frame with 8 bit
-				 *
-				 *     Frame yFrame8;
-				 *     if (!FrameConverter::Comfort::convert(anyFrame, FrameType(anyFrame, FrameType::FORMAT_Y8), yFrame8, false)) // 'false' as we try to avoid a copy if possible
-				 *     {
-				 *         // the given frame could not be converted into a Y8 frame, so we stop here
-				 *         return false;
-				 *     }
-				 *
-				 *     // from now on we have access to a Y8 frame, it may be
-				 *     // - a frame not owning the frame data but referencing the memory only (in case 'anyFrame' provided a plain Y8 block)
-				 *     // - a frame owning the frame data if the given image was converted to a Y8 frame
-				 *
-				 *     // we can use the memory as long as anyFrame exists
-				 *     const uint8_t* data = yFrame8.constdata<uint8_t>();
-				 *
-				 *     // do something here
-				 *
-				 *     return true;
-				 * }
-				 * @endcode
-				 * @see isSupported(), convertAndCopy().
-				 */
-				static bool convert(const Frame& source, const FrameType& targetType, Frame& target, const bool forceCopy = true, Worker* worker = nullptr, const Options& options = Options());
-
-				/**
 				 * Converts a frame with arbitrary dimension, pixel format and pixel origin into a frame with the same dimension but different pixel format or pixel origin.
 				 * This function does always copy the memory to the already existing memory of the target frame.
 				 * @param source The source frame to convert, must be valid
@@ -834,19 +780,6 @@ class OCEAN_CV_EXPORT FrameConverter
 				 * @return True, if the frame type conversion is supported and succeeded
 				 */
 				static inline bool change(Frame& frame, const FrameType::PixelOrigin targetPixelOrigin, const bool forceCopy = true, Worker* worker = nullptr, const Options& options = Options());
-
-				/**
-				 * Deprecated.
-				 *
-				 * Converts / changes a frame with arbitrary dimension, pixel format and pixel origin into a frame with the same dimension but different pixel format or pixel origin.
-				 * @param frame The frame to convert, must be valid
-				 * @param targetType Frame type of the target frame
-				 * @param forceCopy True, if the resulting target image is expected to are the owner of the image data, otherwise the source frame will be the owner of the image data if possible
-				 * @param worker Optional worker object to distribute the conversion computation to different CPU cores
-				 * @param options The options to be used for conversion
-				 * @return True, if the frame type conversion is supported and succeeded
-				 */
-				static inline bool change(Frame& frame, const FrameType& targetType, const bool forceCopy = true, Worker* worker = nullptr, const Options& options = Options());
 		};
 
 		/**
@@ -2741,18 +2674,6 @@ inline bool FrameConverter::Comfort::change(Frame& frame, const FrameType::Pixel
 inline bool FrameConverter::Comfort::change(Frame& frame, const FrameType::PixelOrigin targetPixelOrigin, const bool forceCopy, Worker* worker, const Options& options)
 {
 	return change(frame, frame.pixelFormat(), targetPixelOrigin, forceCopy, worker, options);
-}
-
-inline bool FrameConverter::Comfort::change(Frame& frame, const FrameType& targetType, const bool forceCopy, Worker* worker, const Options& options)
-{
-	ocean_assert(frame.width() == targetType.width() && frame.height() == targetType.height());
-
-	if (frame.width() != targetType.width() || frame.height() != targetType.height())
-	{
-		return false;
-	}
-
-	return change(frame, targetType.pixelFormat(), targetType.pixelOrigin(), forceCopy, worker, options);
 }
 
 OCEAN_RE_ENABLE_DOCUMENTATION_DIAGNOSTIC

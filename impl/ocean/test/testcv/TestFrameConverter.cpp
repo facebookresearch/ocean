@@ -724,52 +724,43 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 
 		bool localResult = false;
 
-		if (RandomI::boolean(randomGenerator))
+		constexpr Index32 ID_PIXELFORMAT_AND_PIXELORIGIN = 0u;
+		constexpr Index32 ID_PIXELFORMAT = 1u;
+		constexpr Index32 ID_PIXELORIGIN = 2u;
+
+		Indices32 possibleFunctionIds(1u, ID_PIXELFORMAT_AND_PIXELORIGIN);
+
+		if (sourcePixelOrigin == targetPixelOrigin)
 		{
-			constexpr Index32 ID_PIXELFORMAT_AND_PIXELORIGIN = 0u;
-			constexpr Index32 ID_PIXELFORMAT = 1u;
-			constexpr Index32 ID_PIXELORIGIN = 2u;
-
-			Indices32 possibleFunctionIds(1u, ID_PIXELFORMAT_AND_PIXELORIGIN);
-
-			if (sourcePixelOrigin == targetPixelOrigin)
-			{
-				possibleFunctionIds.emplace_back(ID_PIXELFORMAT);
-			}
-
-			if (sourcePixelFormat == targetPixelFormat)
-			{
-				possibleFunctionIds.emplace_back(ID_PIXELORIGIN);
-			}
-
-			switch (RandomI::random(randomGenerator, possibleFunctionIds))
-			{
-				case ID_PIXELFORMAT_AND_PIXELORIGIN:
-					// testing pixel format and pixel origin function
-					localResult = CV::FrameConverter::Comfort::convert(sourceFrame, targetPixelFormat, targetPixelOrigin, targetFrame, forceCopy, nullptr, options);
-					break;
-
-				case ID_PIXELFORMAT:
-					// testing pixel format-only function
-					localResult = CV::FrameConverter::Comfort::convert(sourceFrame, targetPixelFormat, targetFrame, forceCopy, nullptr, options);
-					break;
-
-				case ID_PIXELORIGIN:
-					// testing pixel origin-only function
-					localResult = CV::FrameConverter::Comfort::convert(sourceFrame, targetPixelOrigin, targetFrame, forceCopy, nullptr, options);
-					break;
-
-				default:
-					ocean_assert(false && "This should never happen!");
-					allSucceeded = false;
-					break;
-			};
+			possibleFunctionIds.emplace_back(ID_PIXELFORMAT);
 		}
-		else
-		{
-			// testing deprecated function
 
-			localResult = CV::FrameConverter::Comfort::convert(sourceFrame, FrameType(sourceFrame.frameType(), targetPixelFormat, targetPixelOrigin), targetFrame, forceCopy, nullptr, options);
+		if (sourcePixelFormat == targetPixelFormat)
+		{
+			possibleFunctionIds.emplace_back(ID_PIXELORIGIN);
+		}
+
+		switch (RandomI::random(randomGenerator, possibleFunctionIds))
+		{
+			case ID_PIXELFORMAT_AND_PIXELORIGIN:
+				// testing pixel format and pixel origin function
+				localResult = CV::FrameConverter::Comfort::convert(sourceFrame, targetPixelFormat, targetPixelOrigin, targetFrame, forceCopy, nullptr, options);
+				break;
+
+			case ID_PIXELFORMAT:
+				// testing pixel format-only function
+				localResult = CV::FrameConverter::Comfort::convert(sourceFrame, targetPixelFormat, targetFrame, forceCopy, nullptr, options);
+				break;
+
+			case ID_PIXELORIGIN:
+				// testing pixel origin-only function
+				localResult = CV::FrameConverter::Comfort::convert(sourceFrame, targetPixelOrigin, targetFrame, forceCopy, nullptr, options);
+				break;
+
+			default:
+				ocean_assert(false && "This should never happen!");
+				allSucceeded = false;
+				break;
 		}
 
 		if (localResult)
@@ -914,7 +905,7 @@ bool TestFrameConverter::testComfortConvertAndCopy(const double testDuration)
 
 		bool expectSuccess = true;
 
-		if (!FrameConverter::Comfort::isSupported(sourceFrameType, targetFrameType))
+		if (!FrameConverter::Comfort::isSupported(sourceFrameType, targetPixelFormat))
 		{
 			// the combination is not supported
 			expectSuccess = false;
@@ -1115,52 +1106,43 @@ bool TestFrameConverter::testComfortChange(const double testDuration)
 
 		bool localResult = false;
 
-		if (RandomI::boolean(randomGenerator))
+		constexpr Index32 ID_PIXELFORMAT_AND_PIXELORIGIN = 0u;
+		constexpr Index32 ID_PIXELFORMAT = 1u;
+		constexpr Index32 ID_PIXELORIGIN = 2u;
+
+		Indices32 possibleFunctionIds(1u, ID_PIXELFORMAT_AND_PIXELORIGIN);
+
+		if (sourcePixelOrigin == targetPixelOrigin)
 		{
-			constexpr Index32 ID_PIXELFORMAT_AND_PIXELORIGIN = 0u;
-			constexpr Index32 ID_PIXELFORMAT = 1u;
-			constexpr Index32 ID_PIXELORIGIN = 2u;
-
-			Indices32 possibleFunctionIds(1u, ID_PIXELFORMAT_AND_PIXELORIGIN);
-
-			if (sourcePixelOrigin == targetPixelOrigin)
-			{
-				possibleFunctionIds.emplace_back(ID_PIXELFORMAT);
-			}
-
-			if (sourcePixelFormat == targetPixelFormat)
-			{
-				possibleFunctionIds.emplace_back(ID_PIXELORIGIN);
-			}
-
-			switch (RandomI::random(randomGenerator, possibleFunctionIds))
-			{
-				case ID_PIXELFORMAT_AND_PIXELORIGIN:
-					// testing pixel format and pixel origin function
-					localResult = CV::FrameConverter::Comfort::change(frame, targetPixelFormat, targetPixelOrigin, forceCopy, nullptr, options);
-					break;
-
-				case ID_PIXELFORMAT:
-					// testing pixel format-only function
-					localResult = CV::FrameConverter::Comfort::change(frame, targetPixelFormat, forceCopy, nullptr, options);
-					break;
-
-				case ID_PIXELORIGIN:
-					// testing pixel origin-only function
-					localResult = CV::FrameConverter::Comfort::change(frame, targetPixelOrigin, forceCopy, nullptr, options);
-					break;
-
-				default:
-					ocean_assert(false && "This should never happen!");
-					allSucceeded = false;
-					break;
-			};
+			possibleFunctionIds.emplace_back(ID_PIXELFORMAT);
 		}
-		else
-		{
-			// testing deprecated function
 
-			localResult = CV::FrameConverter::Comfort::change(frame, FrameType(frame.frameType(), targetPixelFormat, targetPixelOrigin), forceCopy, nullptr, options);
+		if (sourcePixelFormat == targetPixelFormat)
+		{
+			possibleFunctionIds.emplace_back(ID_PIXELORIGIN);
+		}
+
+		switch (RandomI::random(randomGenerator, possibleFunctionIds))
+		{
+			case ID_PIXELFORMAT_AND_PIXELORIGIN:
+				// testing pixel format and pixel origin function
+				localResult = CV::FrameConverter::Comfort::change(frame, targetPixelFormat, targetPixelOrigin, forceCopy, nullptr, options);
+				break;
+
+			case ID_PIXELFORMAT:
+				// testing pixel format-only function
+				localResult = CV::FrameConverter::Comfort::change(frame, targetPixelFormat, forceCopy, nullptr, options);
+				break;
+
+			case ID_PIXELORIGIN:
+				// testing pixel origin-only function
+				localResult = CV::FrameConverter::Comfort::change(frame, targetPixelOrigin, forceCopy, nullptr, options);
+				break;
+
+			default:
+				ocean_assert(false && "This should never happen!");
+				allSucceeded = false;
+				break;
 		}
 
 		if (localResult)

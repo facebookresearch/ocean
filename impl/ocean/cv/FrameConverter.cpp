@@ -438,11 +438,6 @@ bool FrameConverter::Comfort::isSupported(const FrameType& sourceType, const Fra
 	return function != nullptr;
 }
 
-bool FrameConverter::Comfort::isSupported(const FrameType& sourceType, const FrameType& targetType, const Options& options)
-{
-	return isSupported(sourceType, targetType.pixelFormat(), options);
-}
-
 bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::PixelFormat targetPixelFormat, const FrameType::PixelOrigin targetPixelOrigin, Frame& target, const bool forceCopy, Worker* worker, const Options& options)
 {
 	ocean_assert(source.isValid());
@@ -811,20 +806,6 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 	return true;
 }
 
-bool FrameConverter::Comfort::convert(const Frame& source, const FrameType& targetType, Frame& target, const bool forceCopy, Worker* worker, const Options& options)
-{
-	ocean_assert(source.isValid());
-	ocean_assert(targetType.isValid());
-
-	if (source.width() != targetType.width() || source.height() != targetType.height())
-	{
-		ocean_assert(false && "Invalid frame types.");
-		return false;
-	}
-
-	return convert(source, targetType.pixelFormat(), targetType.pixelOrigin(), target, forceCopy, worker, options);
-}
-
 bool FrameConverter::Comfort::convertAndCopy(const Frame& source, Frame& target, Worker* worker, const Options& options)
 {
 	if (!source.isValid() || !target.isValid())
@@ -851,7 +832,7 @@ bool FrameConverter::Comfort::convertAndCopy(const Frame& source, Frame& target,
 		return false;
 	}
 
-	return convert(source, target.frameType(), target, true, worker, options);
+	return convert(source, target.pixelFormat(), target.pixelOrigin(), target, true, worker, options);
 }
 
 MatrixD FrameConverter::transformationMatrix_FullRangeRGB24_To_FullRangeYUV24_BT601()
