@@ -9,7 +9,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     # find_package(GIF REQUIRED)  # Blocking windows build
     find_package(PNG REQUIRED)
     find_package(JPEG REQUIRED)
-    # find_package(TIFF REQUIRED)  # Blocking macos build
+    find_package(TIFF REQUIRED)
     #find_package(WEBP REQUIRED)  # Not yet available
 
     # Source files
@@ -34,7 +34,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             "-DOCEAN_MEDIA_OIL_SUPPORT_PNG"
             "-DOCEAN_MEDIA_OIL_SUPPORT_JPG"
             # "-DOCEAN_MEDIA_OIL_SUPPORT_GIF"  # Blocking windows build
-            # "-DOCEAN_MEDIA_OIL_SUPPORT_TIF"  # Blocking macos build
+            "-DOCEAN_MEDIA_OIL_SUPPORT_TIF"
             # "-DOCEAN_MEDIA_OIL_SUPPORT_WEBP"  # Not yet available
     )
 
@@ -52,7 +52,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             # GIF::GIF  # Blocking windows build
             PNG::PNG
             JPEG::JPEG
-            # TIFF::TIFF  # Blocking macos buuild
+            TIFF::TIFF
             # WEBP::WEBP  # Not yet available
     )
 
