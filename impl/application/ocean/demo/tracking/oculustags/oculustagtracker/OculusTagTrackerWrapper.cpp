@@ -35,7 +35,7 @@
 #endif
 
 #ifdef OCEAN_USE_DEVICES_VRS
-	#include "ocean/media/vrs/VRS.h"
+	#include "metaonly/ocean/media/vrs/VRS.h"
 #endif
 
 #if defined(OCN_OCULUSTAG_DEBUGGING_ENABLED) && defined(_WINDOWS)

@@ -26,10 +26,10 @@
 #include "ocean/media/Manager.h"
 #include "ocean/media/Utilities.h"
 
-#include "ocean/media/vrs/VRS.h"
-
 #include "ocean/platform/System.h"
 #include "ocean/platform/Utilities.h"
+
+#include "metaonly/ocean/media/vrs/VRS.h"
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)

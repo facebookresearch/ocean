@@ -22,7 +22,7 @@
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(__APPLE__)
 		#include "ocean/media/imageio/ImageIO.h"
-		#include "ocean/media/vrs/VRS.h"
+		#include "metaonly/ocean/media/vrs/VRS.h"
 	#elif defined(_ANDROID)
 			#include "ocean/media/openimagelibraries/OpenImageLibraries.h"
 	#elif defined(_WINDOWS)

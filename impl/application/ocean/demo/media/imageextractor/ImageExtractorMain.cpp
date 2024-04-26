@@ -21,7 +21,7 @@
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(OCEAN_USE_MEDIA_VRS)
-		#include "ocean/media/vrs/VRS.h"
+		#include "metaonly/ocean/media/vrs/VRS.h"
 	#endif
 	#if defined(__APPLE__)
 		#include "ocean/media/avfoundation/AVFoundation.h"

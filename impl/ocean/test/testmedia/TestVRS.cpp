@@ -16,7 +16,7 @@
 #include "ocean/media/Manager.h"
 
 #ifndef OCEAN_DO_NOT_TEST_VRS
-	#include "ocean/media/vrs/VRS.h"
+	#include "metaonly/ocean/media/vrs/VRS.h"
 
 	#include "ocean/io/vrs/FlexibleRecorder.h"
 
