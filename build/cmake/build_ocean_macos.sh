@@ -5,8 +5,8 @@ echo "Building Ocean ...:"
 echo " "
 
 OCEAN_SOURCE_DIRECTORY=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../.. && pwd )
-OCEAN_BUILD_ROOT_DIRECTORY="/tmp/ocean"
-OCEAN_INSTALL_ROOT_DIRECTORY="/tmp/ocean"
+OCEAN_BUILD_ROOT_DIRECTORY="/tmp/ocean/build/macos"
+OCEAN_INSTALL_ROOT_DIRECTORY="/tmp/ocean/install/macos"
 
 # Displays the supported parameters of this script
 display_help()
@@ -25,7 +25,7 @@ display_help()
     echo ""
 }
 
-THIRD_PARTY_ROOT_DIRECTORY=""
+THIRD_PARTY_ROOT_DIRECTORY="${OCEAN_INSTALL_ROOT_DIRECTORY}"
 
 if [[ $# -gt 0 ]]; then
     key="$1"
@@ -41,13 +41,9 @@ if [[ $# -gt 0 ]]; then
     esac
 fi
 
-if [ -z "${THIRD_PARTY_ROOT_DIRECTORY}" ]; then
-    echo "WARNING: No location for the Ocean third-party libraries has been specified; please ensure that all dependencies are satisfied."
-else
-    if [ ! -d "${THIRD_PARTY_ROOT_DIRECTORY}" ]; then
-        echo "ERROR: The following directory for the third-party libraries cannot be found: ${THIRD_PARTY_ROOT_DIRECTORY} - did you run the script to build the third-party libraries?"
-        exit 1
-    fi
+if [ ! -d "${THIRD_PARTY_ROOT_DIRECTORY}" ]; then
+    echo "ERROR: The following directory for the third-party libraries cannot be found: ${THIRD_PARTY_ROOT_DIRECTORY} - did you run the script to build the third-party libraries?"
+    exit 1
 fi
 
 # Builds Ocean (Linux & macOS)
@@ -71,8 +67,8 @@ function run_build {
         exit 1
     fi
 
-    OCEAN_BUILD_DIRECTORY="${OCEAN_BUILD_ROOT_DIRECTORY}/build/${LIBRARY_TYPE}_${BUILD_TYPE}"
-    OCEAN_INSTALL_DIRECTORY="${OCEAN_INSTALL_ROOT_DIRECTORY}/install/${LIBRARY_TYPE}_${BUILD_TYPE}"
+    OCEAN_BUILD_DIRECTORY="${OCEAN_BUILD_ROOT_DIRECTORY}/${LIBRARY_TYPE}_${BUILD_TYPE}"
+    OCEAN_INSTALL_DIRECTORY="${OCEAN_INSTALL_ROOT_DIRECTORY}/${LIBRARY_TYPE}_${BUILD_TYPE}"
 
     OCEAN_THIRD_PARTY_DIRECTORY="${THIRD_PARTY_ROOT_DIRECTORY}/${LIBRARY_TYPE}_${BUILD_TYPE}"
 

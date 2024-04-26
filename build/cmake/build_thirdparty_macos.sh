@@ -5,8 +5,8 @@ echo "Building the third-party libraries required for Ocean ...:"
 echo " "
 
 OCEAN_THIRD_PARTY_SOURCE_DIRECTORY=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../build/cmake/third-party && pwd )
-OCEAN_THIRD_PARTY_BUILD_ROOT_DIRECTORY="/tmp"
-OCEAN_THIRD_PARTY_INSTALL_ROOT_DIRECTORY="/tmp"
+OCEAN_THIRD_PARTY_BUILD_ROOT_DIRECTORY="/tmp/ocean/build/macos"
+OCEAN_THIRD_PARTY_INSTALL_ROOT_DIRECTORY="/tmp/ocean/install/macos"
 
 # Builds the third-party libraries for Ocean (Linux & macOS)
 #
@@ -29,8 +29,8 @@ function run_build {
         exit 1
     fi
 
-    OCEAN_THIRD_PARTY_BUILD_DIRECTORY="${OCEAN_THIRD_PARTY_BUILD_ROOT_DIRECTORY}/ocean/build/third-party_${LIBRARY_TYPE}_${BUILD_TYPE}"
-    OCEAN_THIRD_PARTY_INSTALL_DIRECTORY="${OCEAN_THIRD_PARTY_INSTALL_ROOT_DIRECTORY}/ocean/install/${LIBRARY_TYPE}_${BUILD_TYPE}"
+    OCEAN_THIRD_PARTY_BUILD_DIRECTORY="${OCEAN_THIRD_PARTY_BUILD_ROOT_DIRECTORY}/third-party_${LIBRARY_TYPE}_${BUILD_TYPE}"
+    OCEAN_THIRD_PARTY_INSTALL_DIRECTORY="${OCEAN_THIRD_PARTY_INSTALL_ROOT_DIRECTORY}/${LIBRARY_TYPE}_${BUILD_TYPE}"
 
     echo " "
     echo "BUILD_TYPE: ${BUILD_TYPE}"
