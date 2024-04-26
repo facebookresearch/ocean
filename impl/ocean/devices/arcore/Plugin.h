@@ -14,7 +14,7 @@
  * @see pluginUnload().
  * @ingroup devicesarcore
  */
-extern "C" bool OCEAN_DEVICES_ARKIT_EXPORT pluginLoad();
+extern "C" bool OCEAN_DEVICES_ARCORE_EXPORT pluginLoad();
 
 /**
  * Tries to unload the plugin and all internal resources of 3rd party libraries.
@@ -23,7 +23,7 @@ extern "C" bool OCEAN_DEVICES_ARKIT_EXPORT pluginLoad();
  * @see pluginLoad().
  * @ingroup devicesarcore
  */
-extern "C" bool OCEAN_DEVICES_ARKIT_EXPORT pluginUnload();
+extern "C" bool OCEAN_DEVICES_ARCORE_EXPORT pluginUnload();
 
 #endif // defined(OCEAN_RUNTIME_SHARED)
 
