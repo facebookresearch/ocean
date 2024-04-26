@@ -2,26 +2,18 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(testadvanced)
-add_subdirectory(testdetector)
-add_subdirectory(testsegmentation)
+if (MACOS OR LINUX)
 
-if (MACOS OR LINUX OR WIN32)
-
-    set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv")
-
-    if (MACOS OR IOS)
-        find_library(FOUNDATION_LIB Foundation)
-    endif()
+    set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv_testsegmentation")
 
     # Source files
-    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
-    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
+    file(GLOB OCEAN_TARGET_HEADER_FILES ${CMAKE_CURRENT_LIST_DIR}/*.h)
+    file(GLOB OCEAN_TARGET_SOURCE_FILES ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
 
     # Target definition
     add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
 
-    target_include_directories(${OCEAN_TARGET_NAME} PRIVATE "${OCEAN_IMPL_DIR}")
+    target_include_directories(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_IMPL_DIR})
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_PREPROCESSOR_FLAGS})
 
@@ -36,9 +28,11 @@ if (MACOS OR LINUX OR WIN32)
         PUBLIC
             ocean_base
             ocean_cv
+            ocean_cv_segmentation
             ocean_math
             ocean_system
             ocean_test_testcv
+            ocean_test_testcv_testsegmentation
     )
 
     # Installation
@@ -48,7 +42,7 @@ endif()
 
 if (ANDROID)
 
-    set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv_android_native")
+    set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv_testsegmentation_android_native")
 
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/android/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/android/*.cpp")
@@ -66,8 +60,8 @@ if (ANDROID)
             "-fexceptions"
     )
 
-    # The output name of this target must match the one used in `android/TestCVActivity.java`
-    set_target_properties(${OCEAN_TARGET_NAME} PROPERTIES OUTPUT_NAME OceanTestCV)
+    # The output name of this target must match the one used in `android/TestCVSegmentationActivity.java`
+    set_target_properties(${OCEAN_TARGET_NAME} PROPERTIES OUTPUT_NAME OceanTestCVSegmentation)
 
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
@@ -75,8 +69,10 @@ if (ANDROID)
             ocean_base
             ocean_base_jni
             ocean_cv
+            ocean_cv_segmentation
             ocean_platform_android
             ocean_test_testcv
+            ocean_test_testcv_testsegmentation
     )
 
     # Installation
@@ -86,7 +82,7 @@ if (ANDROID)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/application/ocean/test/cv/testcv/android
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/application/ocean/test/cv/testcv/testsegmentation/android
             COMPONENT include
     )
 
