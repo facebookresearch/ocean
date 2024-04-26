@@ -110,8 +110,10 @@ bool TestPatternTracker::testPowerConsumption()
 
 	HighPerformanceStatistic performance;
 
+#ifdef OCEAN_RUNTIME_STATIC
 	Media::Android::registerAndroidLibrary();
 	Media::OpenImageLibraries::registerOpenImageLibrariesLibrary();
+#endif
 
 	const double updateFrequency = Platform::Android::PowerMonitor::determineIdealUpdateFrequency();
 
@@ -248,8 +250,10 @@ bool TestPatternTracker::testPowerConsumption()
 		allSucceeded = false;
 	}
 
+#ifdef OCEAN_RUNTIME_STATIC
 	Media::OpenImageLibraries::unregisterOpenImageLibrariesLibrary();
 	Media::Android::unregisterAndroidLibrary();
+#endif
 
 	if (allSucceeded)
 	{
