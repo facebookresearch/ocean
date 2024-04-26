@@ -25,7 +25,6 @@ include(CPM.cmake)
 
 # Do not change the order of these.
 if(BUILD_PASS_INDEX EQUAL 0)
-
     include(libjpeg.cmake)
     include(gl.cmake)
     include(zlib.cmake)
@@ -39,6 +38,7 @@ if(BUILD_PASS_INDEX EQUAL 0)
 
     if (ANDROID)
         include(android.cmake)
+        add_subdirectory(arcore-android-sdk)
     endif()
 
 elseif(BUILD_PASS_INDEX EQUAL 1)
