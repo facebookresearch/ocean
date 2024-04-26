@@ -12,6 +12,8 @@ using namespace Ocean;
 
 int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpCmdLine, int /*nCmdShow*/)
 {
+	Messenger::get().setOutputType(Messenger::OUTPUT_DEBUG_WINDOW);
+
 	RandomI::initialize();
 
 	try

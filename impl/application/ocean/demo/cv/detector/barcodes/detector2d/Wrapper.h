@@ -4,8 +4,11 @@
 
 #include "application/ocean/demo/cv/detector/barcodes/ApplicationDemoCVDetectorBarcodes.h"
 
+#include "ocean/base/CommandArguments.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
+
+#include "ocean/devices/DevicePlayer.h"
 
 #include "ocean/math/SampleMap.h"
 
@@ -13,15 +16,11 @@
 
 #include "ocean/media/FrameMedium.h"
 
-#if defined(USE_OCEAN_DEVICES_VRS)
-	#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
-#endif
-
 /**
  * @ingroup applicationdemocvdetectorbarcodes
  * @defgroup applicationdemocvdetectorbarcodesbarcodedetector2d Demo for the barcode detector (2D)
  * @{
- * Demo for the detection of barcodes using a webcam or as replay from a VRS file.
+ * Demo for the detection of barcodes using a webcam or as replay from a recording file.
  * The implementation of this class is platform independent.
  * @}
  */
@@ -96,10 +95,8 @@ class Wrapper
 
 	protected:
 
-#if defined(USE_OCEAN_DEVICES_VRS)
-		/// Device player that is used for VRS replay
+		/// Device player which may be used for replay.
 		Devices::SharedDevicePlayer devicePlayer_;
-#endif
 
 		/// The frame medium to provide the image sequence.
 		Media::FrameMediumRef frameMedium_;
@@ -113,3 +110,20 @@ class Wrapper
 		/// A movie recorder to visualize the processed data.
 		Media::MovieRecorderRef movieRecorder_;
 };
+
+#ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
+
+/**
+ * Optional registers additional command arguments.
+ * @param commandArguments The command arguments
+ */
+void Wrapper_registerExternalCommandArguments(CommandArguments& commandArguments);
+
+/**
+ * Creates a device player.
+ * @param commandArguments The command arguments to use
+ * @return The resulting device player, nullptr if the player could not be created
+ */
+Devices::SharedDevicePlayer Wrapper_createExternalDevicePlayer(const CommandArguments& commandArguments);
+
+#endif // OCEAN_USE_EXTERNAL_DEVICE_PLAYER

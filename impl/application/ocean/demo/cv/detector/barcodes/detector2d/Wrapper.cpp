@@ -3,7 +3,6 @@
 #include "application/ocean/demo/cv/detector/barcodes/detector2d/Wrapper.h"
 
 #include "ocean/base/Build.h"
-#include "ocean/base/CommandArguments.h"
 #include "ocean/base/PluginManager.h"
 #include "ocean/base/Processor.h"
 #include "ocean/base/RandomI.h"
@@ -23,10 +22,6 @@
 #include "ocean/media/ImageSequence.h"
 #include "ocean/media/Manager.h"
 #include "ocean/media/Utilities.h"
-
-#if defined(USE_OCEAN_DEVICES_VRS)
-	#include "ocean/media/vrs/VRS.h"
-#endif
 
 #include "ocean/platform/System.h"
 #include "ocean/platform/Utilities.h"
@@ -60,13 +55,17 @@ Wrapper::Wrapper(const std::vector<std::wstring>& separatedCommandArguments)
 	Processor::get().forceCores(1);
 #endif
 
-	CommandArguments commandArguments("Demo of the barcode detector that takes as input one image sequence, a web camera, or a VRS file");
+	CommandArguments commandArguments("Demo of the barcode detector that takes as input one image sequence, a web camera, or a recording file");
 	commandArguments.registerNamelessParameters("Optional the first command argument is interpreted as input parameter");
 	commandArguments.registerParameter("help", "h", "Showing this help output.");
-	commandArguments.registerParameter("input", "i", "Input to be used for tracking, either a VRS file or an image sequence");
-	commandArguments.registerParameter("streamid", "s", "The index of the camera stream from the VRS file that will be used");
+	commandArguments.registerParameter("input", "i", "The input to be used for tracking, either a recording or an image sequence");
+	commandArguments.registerParameter("mediumid", "s", "The index of the medium within the recording file in case a recording is used");
 	commandArguments.registerParameter("fps", "f", "Optional number of frames per second the video of the processed input should be encoded with, range: [1, infinity)");
 	commandArguments.registerParameter("video", "v", "Optional file name where a video of the processed input file will be stored. If not specified, will be ignored.");
+
+#ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
+	Wrapper_registerExternalCommandArguments(commandArguments);
+#endif
 
 	commandArguments.parse(separatedCommandArguments);
 
@@ -77,12 +76,6 @@ Wrapper::Wrapper(const std::vector<std::wstring>& separatedCommandArguments)
 	}
 
 	RandomI::initialize();
-
-	// First, we register or load the media plugin(s)
-	// If we have a shared runtime we simply load all media plugins available in a specific directory
-	// If we have a static runtime we explicitly need to register all plugins we want to use (at compile time)
-
-	const std::string frameworkPath(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)
@@ -112,83 +105,74 @@ Wrapper::Wrapper(const std::vector<std::wstring>& separatedCommandArguments)
 
 	// First, we get access to the frame medium that is intended to be used for the tracking
 
-	unsigned int streamId = 0u;
+#ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
+	devicePlayer_ = Wrapper_createExternalDevicePlayer(commandArguments);
+#endif
 
-	Value streamIdValue;
-	if (commandArguments.hasValue("streamid", &streamIdValue, false) && streamIdValue.isInt())
+	if (devicePlayer_)
 	{
-		const int argument = streamIdValue.intValue();
-
-		if (argument >= 0)
+		if (devicePlayer_->start())
 		{
-			streamId = (unsigned int)argument;
+			if (devicePlayer_->frameMediums().empty())
+			{
+				Log::error() << "The recording does not contain frame mediums";
+			}
+			else
+			{
+				const Media::FrameMediumRefs frameMediums = devicePlayer_->frameMediums();
+
+				int32_t mediumId = -1;
+				if (commandArguments.hasValue("mediumid", mediumId, false) && mediumId >= 0)
+				{
+					if (size_t(mediumId) < frameMediums.size())
+					{
+						frameMedium_ = frameMediums[size_t(mediumId)];
+					}
+					else
+					{
+						Log::error() << "The medium id " << mediumId << " exceeds the number of available mediums " << frameMediums.size();
+					}
+				}
+			}
 		}
 		else
 		{
-			Platform::Utilities::showMessageBox("Error", "Camera indices must be >= 0");
+			Log::error() << "Failed to start the recording";
+		}
+
+		if (frameMedium_.isNull())
+		{
+			Log::error() << "Invalid recording input";
 			return;
 		}
 	}
 
-
-	Value inputValue;
-	if (commandArguments.hasValue("input", &inputValue, false, 0u) && inputValue.isString())
+	if (frameMedium_.isNull())
 	{
-		const std::string argument = inputValue.stringValue();
-
-		IO::File fileArgument(argument);
-
-#if defined(USE_OCEAN_DEVICES_VRS)
-		if (fileArgument.exists() && fileArgument.extension() == "vrs")
+		std::string input;
+		if (commandArguments.hasValue("input", input, false, 0u) && !input.empty())
 		{
-			devicePlayer_ = std::make_shared<Devices::VRS::VRSDevicePlayer>();
-
-			if (!devicePlayer_->initialize(fileArgument()) || !devicePlayer_->start(/* speed */ -1.0f))
-			{
-				Log::error() << "Failed to load input VRS file";
-			}
-			else
-			{
-				if (devicePlayer_->frameMediums().empty())
-				{
-					Log::error() << "VRS files does not contain frame mediums";
-				}
-				else
-				{
-					Media::FrameMediumRefs frameMediums = devicePlayer_->frameMediums();
-
-#if defined(OCEAN_DEBUG)
-					for (const Media::FrameMediumRef& frameMedium : frameMediums)
-					{
-						ocean_assert(!frameMedium.isNull());
-					}
-#endif
-
-					if (size_t(streamId) < frameMediums.size())
-					{
-						frameMedium_ = frameMediums[streamId];
-					}
-					else
-					{
-						Platform::Utilities::showMessageBox("Error", "The camera index exceeds the number of available streams");
-						return;
-					}
-				}
-			}
-		}
-		else
-#endif // USE_OCEAN_DEVICES_VRS
-		{
-			frameMedium_ = Media::Manager::get().newMedium(argument);
+			frameMedium_ = Media::Manager::get().newMedium(input);
 
 			// If we have a finite medium (e.g., a movie) we loop it
 
 			const Media::FiniteMediumRef finiteMedium(frameMedium_);
+
 			if (finiteMedium)
 			{
 				finiteMedium->setLoop(true);
 			}
 		}
+		else
+		{
+			frameMedium_ = Media::Manager::get().newMedium("LiveVideoId:0");
+		}
+	}
+
+	if (frameMedium_.isNull())
+	{
+		Log::error() << "Invalid input";
+		return;
 	}
 
 	unsigned int framesPerSecond = 30u;
@@ -285,14 +269,12 @@ void Wrapper::release()
 {
 	frameMedium_.release();
 
-#if defined(USE_OCEAN_DEVICES_VRS)
 	if (devicePlayer_ && devicePlayer_->isStarted())
 	{
 		devicePlayer_->stop();
 	}
 
 	devicePlayer_ = nullptr;
-#endif // USE_OCEAN_DEVICES_VRS
 
 	if (movieRecorder_ && movieRecorder_->isRecording())
 	{
@@ -472,9 +454,7 @@ Wrapper& Wrapper::operator=(Wrapper&& barcodeDetector2DWrapper)
 		// Only one instance of this class may exist at the same time
 		ocean_assert(frameMedium_.isNull());
 
-#if defined(USE_OCEAN_DEVICES_VRS)
 		devicePlayer_ = std::move(barcodeDetector2DWrapper.devicePlayer_);
-#endif
 
 		frameMedium_ = std::move(barcodeDetector2DWrapper.frameMedium_);
 		timestamp_ = barcodeDetector2DWrapper.timestamp_;
