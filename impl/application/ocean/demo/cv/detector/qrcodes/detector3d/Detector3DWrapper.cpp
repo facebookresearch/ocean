@@ -3,7 +3,6 @@
 #include "application/ocean/demo/cv/detector/qrcodes/detector3d/Detector3DWrapper.h"
 
 #include "ocean/base/Build.h"
-#include "ocean/base/CommandArguments.h"
 #include "ocean/base/PluginManager.h"
 #include "ocean/base/Processor.h"
 #include "ocean/base/RandomI.h"
@@ -28,8 +27,6 @@
 
 #include "ocean/platform/System.h"
 #include "ocean/platform/Utilities.h"
-
-#include "metaonly/ocean/media/vrs/VRS.h"
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)
@@ -60,12 +57,12 @@ Detector3DWrapper::Detector3DWrapper(const std::vector<std::wstring>& separatedC
 	Processor::get().forceCores(1);
 #endif
 
-	CommandArguments commandArguments("Demo of the QR code detector that takes as input images sequences, web cameras, or VRS files");
+	CommandArguments commandArguments("Demo of the QR code detector that takes as input a recording file");
 	commandArguments.registerNamelessParameters("Optional the first command argument is interpreted as input parameter");
 	commandArguments.registerParameter("help", "h", "Showing this help output.");
-	commandArguments.registerParameter("input", "i", "Input to be used for tracking, either a VRS file or an image sequence");
-	commandArguments.registerParameter("camera0", "c0", "The index of the first camera stream from the VRS file that will be used");
-	commandArguments.registerParameter("camera1", "c1", "The index of the first camera stream from the VRS file that will be used");
+	commandArguments.registerParameter("input", "i", "Input to be used for tracking, a recording file");
+	commandArguments.registerParameter("camera0", "c0", "The index of the first camera stream from the recording file that will be used");
+	commandArguments.registerParameter("camera1", "c1", "The index of the first camera stream from the recording file that will be used");
 	commandArguments.registerParameter("fps", "f", "Optional number of frames per second the video of the processed input should be encoded with, range: [1, infinity)");
 	commandArguments.registerParameter("video", "v", "Optional file name where a video of the processed input file will be stored. If not specified, will be ignored.");
 
@@ -113,30 +110,26 @@ Detector3DWrapper::Detector3DWrapper(const std::vector<std::wstring>& separatedC
 
 	// First, we get access to the frame medium that is intended to be used for the tracking
 
-	std::string inputValue;
-	if (commandArguments.hasValue("input", inputValue, false, 0u) && !inputValue.empty())
+#ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
+	devicePlayer_ = Detector3DWrapper_createExternalDevicePlayer(commandArguments);
+#endif
+
+	if (devicePlayer_)
 	{
-		IO::File fileInput(inputValue);
-
-		if (fileInput.exists() && fileInput.extension() == "vrs")
+		if (devicePlayer_->start(Devices::DevicePlayer::SPEED_USE_STOP_MOTION))
 		{
-			devicePlayer_ = std::make_shared<Devices::VRS::VRSDevicePlayer>();
-
-			if (!devicePlayer_->initialize(fileInput()) || !devicePlayer_->start(/* speed */ 0.0f))
+			if (devicePlayer_->frameMediums().size() < 2)
 			{
-				Log::error() << "Failed to load input VRS file";
+				Log::error() << "The recording does not contain enough frame mediums";
 			}
 			else
 			{
-				if (devicePlayer_->frameMediums().size() < 2)
-				{
-					Log::error() << "VRS files does not contain enough frame mediums";
-				}
-				else
-				{
-					frameMediums_ = devicePlayer_->frameMediums();
-				}
+				frameMediums_ = devicePlayer_->frameMediums();
 			}
+		}
+		else
+		{
+			Log::error() << "Failed to start the recording";
 		}
 	}
 
@@ -147,7 +140,7 @@ Detector3DWrapper::Detector3DWrapper(const std::vector<std::wstring>& separatedC
 		{
 			if (size_t(camera0Value) < frameMediums_.size())
 			{
-				vrsCameraIndex0_ = (unsigned int)(camera0Value);
+				recordingCameraIndex0_ = (unsigned int)(camera0Value);
 			}
 			else
 			{
@@ -169,7 +162,7 @@ Detector3DWrapper::Detector3DWrapper(const std::vector<std::wstring>& separatedC
 		{
 			if (size_t(camera1Value) < frameMediums_.size())
 			{
-				vrsCameraIndex1_ = (unsigned int)(camera1Value);
+				recordingCameraIndex1_ = (unsigned int)(camera1Value);
 			}
 			else
 			{
@@ -184,7 +177,7 @@ Detector3DWrapper::Detector3DWrapper(const std::vector<std::wstring>& separatedC
 		}
 	}
 
-	if (vrsCameraIndex0_ == vrsCameraIndex1_)
+	if (recordingCameraIndex0_ == recordingCameraIndex1_)
 	{
 		Platform::Utilities::showMessageBox("Error", "The selected cameras must have different indices");
 		return;
@@ -351,8 +344,8 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 
 	if (frameRefs.size() > 2)
 	{
-		const unsigned int cameraIndex0 = vrsCameraIndex0_;
-		const unsigned int cameraIndex1 = vrsCameraIndex1_;
+		const unsigned int cameraIndex0 = recordingCameraIndex0_;
+		const unsigned int cameraIndex1 = recordingCameraIndex1_;
 
 		ocean_assert(cameraIndex0 != cameraIndex1);
 		ocean_assert(cameraIndex0 < (unsigned int)(anyCameras.size()));

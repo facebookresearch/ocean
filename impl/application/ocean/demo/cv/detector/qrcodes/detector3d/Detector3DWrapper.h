@@ -4,8 +4,11 @@
 
 #include "application/ocean/demo/cv/detector/qrcodes/ApplicationDemoCVDetectorQRCodes.h"
 
+#include "ocean/base/CommandArguments.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
+
+#include "ocean/devices/DevicePlayer.h"
 
 #include "ocean/math/SampleMap.h"
 
@@ -13,13 +16,11 @@
 
 #include "ocean/media/FrameMedium.h"
 
-#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
-
 /**
  * @ingroup applicationdemocvdetectorqrcodes
  * @defgroup applicationdemocvdetectorqrcodesdetector3d QR Code
  * @{
- * Demo for the 6-DOF detection QR codes (e.g., as replay from a VRS file).
+ * Demo for the 6-DOF detection QR codes (e.g., as replay from a recording file).
  * The implementation of this class is platform independent.
  * @}
  */
@@ -94,13 +95,13 @@ class Detector3DWrapper
 
 	protected:
 
-		// The index of the first camera stream from the VRS file that will be used.
-		std::atomic<unsigned int> vrsCameraIndex0_ = 0u;
+		// The index of the first camera stream from the recording file that will be used.
+		std::atomic<unsigned int> recordingCameraIndex0_ = 0u;
 
-		// The index of the second camera stream from the VRS file that will be used.
-		std::atomic<unsigned int> vrsCameraIndex1_ = 1u;
+		// The index of the second camera stream from the recording that will be used.
+		std::atomic<unsigned int> recordingCameraIndex1_ = 1u;
 
-		/// Device player that is used for VRS replay
+		/// Device player that is used for replay.
 		Devices::SharedDevicePlayer devicePlayer_;
 
 		/// The frame mediums to provide the image sequence.
@@ -115,3 +116,14 @@ class Detector3DWrapper
 		/// A movie recorder to visualize the processed data.
 		Media::MovieRecorderRef movieRecorder_;
 };
+
+#ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
+
+/**
+ * Creates a device player.
+ * @param commandArguments The command arguments to use
+ * @return The resulting device player, nullptr if the player could not be created
+ */
+Devices::SharedDevicePlayer Detector3DWrapper_createExternalDevicePlayer(const CommandArguments& commandArguments);
+
+#endif // OCEAN_USE_EXTERNAL_DEVICE_PLAYER
