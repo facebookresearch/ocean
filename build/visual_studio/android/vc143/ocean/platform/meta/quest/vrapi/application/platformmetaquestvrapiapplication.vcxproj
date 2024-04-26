@@ -71,30 +71,30 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\GLESNativeApplication.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\MRPassthroughVisualizer.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\NativeApplication.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\VRControllerVisualizer.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\VRHandVisualizer.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\VRMenu.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\VRNativeApplication.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\VRNativeApplicationAdvanced.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\VRTableMenu.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\GLESNativeApplication.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\MRPassthroughVisualizer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\NativeApplication.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\VRControllerVisualizer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\VRHandVisualizer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\VRMenu.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\VRNativeApplication.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\VRNativeApplicationAdvanced.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\VRTableMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\Application.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\CameraVRNativeApplication.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\CameraVRNativeApplicationAdvanced.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\CameraVRNativeApplicationT.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\GLESNativeApplication.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\MRPassthroughVisualizer.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\NativeApplication.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\VRControllerVisualizer.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\VRHandVisualizer.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\VRMenu.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\VRNativeApplication.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\VRNativeApplicationAdvanced.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\vrapi\application\VRTableMenu.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\Application.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\CameraVRNativeApplication.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\CameraVRNativeApplicationAdvanced.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\CameraVRNativeApplicationT.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\GLESNativeApplication.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\MRPassthroughVisualizer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\NativeApplication.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\VRControllerVisualizer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\VRHandVisualizer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\VRMenu.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\VRNativeApplication.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\VRNativeApplicationAdvanced.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\metaonly\ocean\platform\meta\quest\vrapi\application\VRTableMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
