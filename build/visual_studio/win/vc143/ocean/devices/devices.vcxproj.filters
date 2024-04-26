@@ -59,6 +59,9 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\SceneTracker6DOF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\DevicePlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\AccelerationSensor3DOF.h">
@@ -110,6 +113,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\SceneTracker6DOF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\DevicePlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

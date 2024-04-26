@@ -183,6 +183,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\AccelerationSensor3DOF.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\Device.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\DevicePlayer.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\DeviceRef.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\Factory.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\GPSTracker.cpp" />
@@ -201,6 +202,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\AccelerationSensor3DOF.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\Device.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\DevicePlayer.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\DeviceRef.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\Devices.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\Factory.h" />

@@ -118,6 +118,14 @@
 		937AEED1271A5EFC00098944 /* SceneTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937AEECF271A5EFB00098944 /* SceneTracker6DOF.cpp */; };
 		937AEED2271A5EFC00098944 /* SceneTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937AEECF271A5EFB00098944 /* SceneTracker6DOF.cpp */; };
 		937AEED3271A5EFC00098944 /* SceneTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937AEECF271A5EFB00098944 /* SceneTracker6DOF.cpp */; };
+		93DA55EB2BDACF62002865AB /* DevicePlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DA55EA2BDACF62002865AB /* DevicePlayer.h */; };
+		93DA55EC2BDACF62002865AB /* DevicePlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DA55EA2BDACF62002865AB /* DevicePlayer.h */; };
+		93DA55ED2BDACF62002865AB /* DevicePlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DA55EA2BDACF62002865AB /* DevicePlayer.h */; };
+		93DA55EE2BDACF62002865AB /* DevicePlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DA55EA2BDACF62002865AB /* DevicePlayer.h */; };
+		93DA55F02BDACF6B002865AB /* DevicePlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DA55EF2BDACF6B002865AB /* DevicePlayer.cpp */; };
+		93DA55F12BDACF6B002865AB /* DevicePlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DA55EF2BDACF6B002865AB /* DevicePlayer.cpp */; };
+		93DA55F22BDACF6B002865AB /* DevicePlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DA55EF2BDACF6B002865AB /* DevicePlayer.cpp */; };
+		93DA55F32BDACF6B002865AB /* DevicePlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DA55EF2BDACF6B002865AB /* DevicePlayer.cpp */; };
 		C041EBAE1DABDA8200BF5D76 /* MagneticTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD031D8FFF5D00BE5D21 /* MagneticTracker.cpp */; };
 		C041EBB01DABDA8200BF5D76 /* Tracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD0A1D8FFF5D00BE5D21 /* Tracker6DOF.cpp */; };
 		C041EBB11DABDA8200BF5D76 /* Measurement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD051D8FFF5D00BE5D21 /* Measurement.cpp */; };
@@ -188,6 +196,8 @@
 		934974C526125AB900AF7082 /* ObjectTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ObjectTracker.cpp; path = ../../../../../impl/ocean/devices/ObjectTracker.cpp; sourceTree = "<group>"; };
 		937AEECA271A5ECF00098944 /* SceneTracker6DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneTracker6DOF.h; path = ../../../../../impl/ocean/devices/SceneTracker6DOF.h; sourceTree = "<group>"; };
 		937AEECF271A5EFB00098944 /* SceneTracker6DOF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SceneTracker6DOF.cpp; path = ../../../../../impl/ocean/devices/SceneTracker6DOF.cpp; sourceTree = "<group>"; };
+		93DA55EA2BDACF62002865AB /* DevicePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DevicePlayer.h; path = ../../../../../impl/ocean/devices/DevicePlayer.h; sourceTree = "<group>"; };
+		93DA55EF2BDACF6B002865AB /* DevicePlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DevicePlayer.cpp; path = ../../../../../impl/ocean/devices/DevicePlayer.cpp; sourceTree = "<group>"; };
 		C041EBDE1DABDA8200BF5D76 /* libOceanDevicesD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanDevicesD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -248,6 +258,7 @@
 			children = (
 				5DF0BCF81D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp */,
 				5DF0BCFE1D8FFF5D00BE5D21 /* Device.cpp */,
+				93DA55EF2BDACF6B002865AB /* DevicePlayer.cpp */,
 				5DF0BCFF1D8FFF5D00BE5D21 /* DeviceRef.cpp */,
 				5DF0BD011D8FFF5D00BE5D21 /* Factory.cpp */,
 				5DF0BD021D8FFF5D00BE5D21 /* GPSTracker.cpp */,
@@ -272,6 +283,7 @@
 			children = (
 				5DF0BCA41D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h */,
 				5DF0BCAA1D8FFF4C00BE5D21 /* Device.h */,
+				93DA55EA2BDACF62002865AB /* DevicePlayer.h */,
 				5DF0BCAB1D8FFF4C00BE5D21 /* DeviceRef.h */,
 				5DF0BCAC1D8FFF4C00BE5D21 /* Devices.h */,
 				5DF0BCAD1D8FFF4C00BE5D21 /* Factory.h */,
@@ -315,6 +327,7 @@
 				937AEECB271A5ED000098944 /* SceneTracker6DOF.h in Headers */,
 				5DF0BCEC1D8FFF4C00BE5D21 /* Tracker.h in Headers */,
 				5DF0BCCE1D8FFF4C00BE5D21 /* DeviceRef.h in Headers */,
+				93DA55EB2BDACF62002865AB /* DevicePlayer.h in Headers */,
 				50005E1424351AC800493C2E /* GyroSensor3DOF.h in Headers */,
 				934974BD26125AA800AF7082 /* ObjectTracker.h in Headers */,
 			);
@@ -340,6 +353,7 @@
 				937AEECC271A5ED000098944 /* SceneTracker6DOF.h in Headers */,
 				5DF0BCED1D8FFF4C00BE5D21 /* Tracker.h in Headers */,
 				5DF0BCCF1D8FFF4C00BE5D21 /* DeviceRef.h in Headers */,
+				93DA55EC2BDACF62002865AB /* DevicePlayer.h in Headers */,
 				50005E1524351AC800493C2E /* GyroSensor3DOF.h in Headers */,
 				934974BE26125AA800AF7082 /* ObjectTracker.h in Headers */,
 			);
@@ -365,6 +379,7 @@
 				937AEECD271A5ED000098944 /* SceneTracker6DOF.h in Headers */,
 				5DF0BCEE1D8FFF4C00BE5D21 /* Tracker.h in Headers */,
 				5DF0BCD01D8FFF4C00BE5D21 /* DeviceRef.h in Headers */,
+				93DA55ED2BDACF62002865AB /* DevicePlayer.h in Headers */,
 				50005E1624351AC800493C2E /* GyroSensor3DOF.h in Headers */,
 				934974BF26125AA800AF7082 /* ObjectTracker.h in Headers */,
 			);
@@ -390,6 +405,7 @@
 				937AEECE271A5ED000098944 /* SceneTracker6DOF.h in Headers */,
 				C041EBD61DABDA8200BF5D76 /* Tracker.h in Headers */,
 				C041EBD81DABDA8200BF5D76 /* DeviceRef.h in Headers */,
+				93DA55EE2BDACF62002865AB /* DevicePlayer.h in Headers */,
 				50005E1724351AC800493C2E /* GyroSensor3DOF.h in Headers */,
 				934974C026125AA800AF7082 /* ObjectTracker.h in Headers */,
 			);
@@ -555,6 +571,7 @@
 				5DF0BD431D8FFF5D00BE5D21 /* Tracker6DOF.cpp in Sources */,
 				5DF0BD341D8FFF5D00BE5D21 /* Measurement.cpp in Sources */,
 				5DF0BD3D1D8FFF5D00BE5D21 /* Sensor.cpp in Sources */,
+				93DA55F02BDACF6B002865AB /* DevicePlayer.cpp in Sources */,
 				5DF0BD281D8FFF5D00BE5D21 /* Factory.cpp in Sources */,
 				50005E1924351ADE00493C2E /* GyroSensor3DOF.cpp in Sources */,
 				5DF0BD3A1D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp in Sources */,
@@ -579,6 +596,7 @@
 				5DF0BD441D8FFF5D00BE5D21 /* Tracker6DOF.cpp in Sources */,
 				5DF0BD351D8FFF5D00BE5D21 /* Measurement.cpp in Sources */,
 				5DF0BD3E1D8FFF5D00BE5D21 /* Sensor.cpp in Sources */,
+				93DA55F12BDACF6B002865AB /* DevicePlayer.cpp in Sources */,
 				5DF0BD291D8FFF5D00BE5D21 /* Factory.cpp in Sources */,
 				50005E1A24351ADE00493C2E /* GyroSensor3DOF.cpp in Sources */,
 				5DF0BD3B1D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp in Sources */,
@@ -603,6 +621,7 @@
 				5DF0BD451D8FFF5D00BE5D21 /* Tracker6DOF.cpp in Sources */,
 				5DF0BD361D8FFF5D00BE5D21 /* Measurement.cpp in Sources */,
 				5DF0BD3F1D8FFF5D00BE5D21 /* Sensor.cpp in Sources */,
+				93DA55F22BDACF6B002865AB /* DevicePlayer.cpp in Sources */,
 				5DF0BD2A1D8FFF5D00BE5D21 /* Factory.cpp in Sources */,
 				50005E1B24351ADE00493C2E /* GyroSensor3DOF.cpp in Sources */,
 				5DF0BD3C1D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp in Sources */,
@@ -627,6 +646,7 @@
 				C041EBB01DABDA8200BF5D76 /* Tracker6DOF.cpp in Sources */,
 				C041EBB11DABDA8200BF5D76 /* Measurement.cpp in Sources */,
 				C041EBB31DABDA8200BF5D76 /* Sensor.cpp in Sources */,
+				93DA55F32BDACF6B002865AB /* DevicePlayer.cpp in Sources */,
 				C041EBB41DABDA8200BF5D76 /* Factory.cpp in Sources */,
 				50005E1C24351ADE00493C2E /* GyroSensor3DOF.cpp in Sources */,
 				C041EBB51DABDA8200BF5D76 /* PositionTracker3DOF.cpp in Sources */,
