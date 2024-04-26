@@ -3,7 +3,6 @@
 #include "application/ocean/demo/cv/detector/qrcodes/detector2d/Detector2DWrapper.h"
 
 #include "ocean/base/Build.h"
-#include "ocean/base/CommandArguments.h"
 #include "ocean/base/PluginManager.h"
 #include "ocean/base/Processor.h"
 #include "ocean/base/RandomI.h"
@@ -55,10 +54,10 @@ Detector2DWrapper::Detector2DWrapper(const std::vector<std::wstring>& separatedC
 	Processor::get().forceCores(1);
 #endif
 
-	CommandArguments commandArguments("Demo of the QR code detector that takes as input images sequences, web cameras, or VRS files");
+	CommandArguments commandArguments("Demo of the QR code detector that takes as input images sequences, web cameras, or recording files");
 	commandArguments.registerNamelessParameters("Optional the first command argument is interpreted as input parameter");
 	commandArguments.registerParameter("help", "h", "Showing this help output.");
-	commandArguments.registerParameter("input", "i", "Input to be used for tracking, either a VRS file or an image sequence");
+	commandArguments.registerParameter("input", "i", "Input to be used for tracking, either a recording file or an image sequence");
 	commandArguments.registerParameter("resolution", "r", "Resolution of the input, e.g. \"1280x720\"");
 	commandArguments.registerParameter("loop", "l", "If set, will start the input again when it reaches the end");
 	commandArguments.registerParameter("olddetector", "d", "If set, the old QR code detector will be used");
@@ -107,59 +106,59 @@ Detector2DWrapper::Detector2DWrapper(const std::vector<std::wstring>& separatedC
 
 	// First, we get access to the frame medium that is intended to be used for the tracking
 
-	Value inputValue;
-	if (commandArguments.hasValue("input", &inputValue, false, 0u) && inputValue.isString())
+#ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
+	devicePlayer_ = Detector2DWrapper_createExternalDevicePlayer(commandArguments);
+#endif
+
+	if (devicePlayer_)
 	{
-		const std::string argument = inputValue.stringValue();
-
-		IO::File fileArgument(argument);
-
-#ifdef OCEAN_USE_DEVICES_VRS
-		if (fileArgument.exists() && fileArgument.extension() == "vrs")
+		if (devicePlayer_->start(Devices::DevicePlayer::SPEED_USE_STOP_MOTION))
 		{
-			devicePlayer_ = std::make_shared<Devices::VRS::VRSDevicePlayer>();
-
-			if (!devicePlayer_->initialize(fileArgument()) || !devicePlayer_->start(/* speed */ 0.0f))
+			if (devicePlayer_->frameMediums().empty())
 			{
-				Log::error() << "Failed to load input VRS file";
+				Log::error() << "The recording does not contain frame mediums";
 			}
 			else
 			{
-				if (devicePlayer_->frameMediums().empty())
-				{
-					Log::error() << "VRS files does not contain a frame medium";
-				}
-				else
-				{
-					// Only select the first medium and ignore all others
-					frameMedium_ = devicePlayer_->frameMediums().front();
-					ocean_assert(frameMedium_);
-				}
+				// Only select the first medium and ignore all others
+				frameMedium_ = devicePlayer_->frameMediums().front();
+				ocean_assert(frameMedium_);
 			}
 		}
 		else
-#endif // OCEAN_USE_DEVICES_VRS
 		{
-			// Try to get an image sequence
+			Log::error() << "Failed to start the recording";
+		}
 
-			frameMedium_ = Media::Manager::get().newMedium(argument, Media::Medium::IMAGE_SEQUENCE);
+		if (frameMedium_.isNull())
+		{
+			Log::error() << "Invalid recording input";
+			return;
+		}
+	}
 
-			const Media::ImageSequenceRef imageSequence(frameMedium_);
+	std::string input;
+	if (commandArguments.hasValue("input", input, false, 0u) && !input.empty())
+	{
+		// Try to get an image sequence
 
-			if (imageSequence)
-			{
-				// In the case we have an image sequence as input we want to process the images as fast as possible
-				// (not with any specific fps number) so we use the explicit mode
+		frameMedium_ = Media::Manager::get().newMedium(input, Media::Medium::IMAGE_SEQUENCE);
 
-				imageSequence->setMode(Media::ImageSequence::SM_EXPLICIT);
-			}
-			else
-			{
-				// Provided command argument seems to be something else but an image sequence
-				// so now we try to get any possible medium
+		const Media::ImageSequenceRef imageSequence(frameMedium_);
 
-				frameMedium_ = Media::Manager::get().newMedium(argument);
-			}
+		if (imageSequence)
+		{
+			// In the case we have an image sequence as input we want to process the images as fast as possible
+			// (not with any specific fps number) so we use the explicit mode
+
+			imageSequence->setMode(Media::ImageSequence::SM_EXPLICIT);
+		}
+		else
+		{
+			// Provided command argument seems to be something else but an image sequence
+			// so now we try to get any possible medium
+
+			frameMedium_ = Media::Manager::get().newMedium(input);
 		}
 	}
 
@@ -185,24 +184,22 @@ Detector2DWrapper::Detector2DWrapper(const std::vector<std::wstring>& separatedC
 
 	// Second, we check whether a desired frame dimension is specified for the input frame medium
 
-	Value resolutionValue;
-	if (commandArguments.hasValue("resolution", &resolutionValue, false, 0u) && resolutionValue.isString())
+	std::string resolution;
+	if (commandArguments.hasValue("resolution", resolution, false, 0u))
 	{
-		const std::string dimension = resolutionValue.stringValue();
-
-		if (dimension == "320x240")
+		if (resolution == "320x240")
 		{
 			frameMedium_->setPreferredFrameDimension(320u, 240u);
 		}
-		else if (dimension == "640x480")
+		else if (resolution == "640x480")
 		{
 			frameMedium_->setPreferredFrameDimension(640u, 480u);
 		}
-		else if (dimension == "1280x720")
+		else if (resolution == "1280x720")
 		{
 			frameMedium_->setPreferredFrameDimension(1280u, 720u);
 		}
-		else if (dimension == "1920x1080")
+		else if (resolution == "1920x1080")
 		{
 			frameMedium_->setPreferredFrameDimension(1920u, 1080u);
 		}
@@ -239,14 +236,12 @@ void Detector2DWrapper::release()
 {
 	frameMedium_.release();
 
-#ifdef OCEAN_USE_DEVICES_VRS
 	if (devicePlayer_ && devicePlayer_->isStarted())
 	{
 		devicePlayer_->stop();
 	}
 
 	devicePlayer_ = nullptr;
-#endif // OCEAN_USE_DEVICES_VRS
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)
@@ -286,7 +281,6 @@ bool Detector2DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 	SharedAnyCamera sharedAnyCamera;
 	FrameRef frameRef;
 
-#ifdef OCEAN_USE_DEVICES_VRS
 	if (devicePlayer_ != nullptr && devicePlayer_->isValid())
 	{
 		const Timestamp frameTimestamp = devicePlayer_->playNextFrame();
@@ -294,7 +288,6 @@ bool Detector2DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 		frameRef = frameMedium_->frame(frameTimestamp, &sharedAnyCamera);
 	}
 	else
-#endif // OCEAN_USE_DEVICES_VRS
 	{
 		frameRef = frameMedium_->frame(&sharedAnyCamera);
 	}
@@ -404,9 +397,7 @@ Detector2DWrapper& Detector2DWrapper::operator=(Detector2DWrapper&& detector2dWr
 
 		useOldDetector_ = detector2dWrapper.useOldDetector_;
 
-#ifdef OCEAN_USE_DEVICES_VRS
 		devicePlayer_ = std::move(detector2dWrapper.devicePlayer_);
-#endif // OCEAN_USE_DEVICES_VRS
 
 		frameMedium_ = std::move(detector2dWrapper.frameMedium_);
 		timestamp_ = detector2dWrapper.timestamp_;

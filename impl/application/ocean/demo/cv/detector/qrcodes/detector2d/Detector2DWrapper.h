@@ -4,14 +4,13 @@
 
 #include "application/ocean/demo/cv/detector/qrcodes/ApplicationDemoCVDetectorQRCodes.h"
 
+#include "ocean/base/CommandArguments.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
-#include "ocean/media/FrameMedium.h"
+#include "ocean/devices/DevicePlayer.h"
 
-#ifdef OCEAN_USE_DEVICES_VRS
-	#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
-#endif // OCEAN_USE_DEVICES_VRS
+#include "ocean/media/FrameMedium.h"
 
 /**
  * @ingroup applicationdemocvdetectorqrcodes
@@ -102,10 +101,8 @@ class Detector2DWrapper
 		/// Indicates whether the old detector should be used instead of the new one.
 		bool useOldDetector_ = false;
 
-#ifdef OCEAN_USE_DEVICES_VRS
-		/// Device player that is used for VRS replay
+		/// Device player which may be used for replay.
 		Devices::SharedDevicePlayer devicePlayer_;
-#endif // OCEAN_USE_DEVICES_VRS
 
 		/// The frame medium to provide the image sequence.
 		Media::FrameMediumRef frameMedium_;
@@ -121,3 +118,14 @@ inline Media::FrameMediumRef Detector2DWrapper::frameMedium() const
 {
 	return frameMedium_;
 }
+
+#ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
+
+/**
+ * Creates a device player.
+ * @param commandArguments The command arguments to use
+ * @return The resulting device player, nullptr if the player could not be created
+ */
+Devices::SharedDevicePlayer Detector2DWrapper_createExternalDevicePlayer(const CommandArguments& commandArguments);
+
+#endif // OCEAN_USE_EXTERNAL_DEVICE_PLAYER
