@@ -7,6 +7,8 @@
 
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/math/HomogenousMatrix4.h"
+
 #include "ocean/media/FrameMedium.h"
 
 namespace Ocean
@@ -38,6 +40,19 @@ class OCEAN_DEVICES_EXPORT DevicePlayer
 		 * Definition of a speed value for the stop-motion replay mode.
 		 */
 		static constexpr float SPEED_USE_STOP_MOTION = 0.0f;
+
+		/**
+		 * Definition of individual transformation results.
+		 */
+		enum TransformationResult : uint32_t
+		{
+			/// The transformation does not exist in the recording.
+			TR_DOES_NOT_EXIST = 0u,
+			/// The resulting transformation is valid but interpolated due to a not perfectly matching timestamp.
+			TR_INTERPOLATED,
+			/// The resulting transformation is valid and the timestamp matched perfectly with a transformation in the recording.
+			TR_PRECISE
+		};
 
 	public:
 
@@ -95,6 +110,16 @@ class OCEAN_DEVICES_EXPORT DevicePlayer
 		 * @return The media objects, empty if the recording does not contain any frame medium objects
 		 */
 		virtual Media::FrameMediumRefs frameMediums();
+
+		/**
+		 * Returns a specific transformation which is expected to be part of the recording.
+		 * This function is intended as a helper function to simplify access to important transformations which otherwise would be accessed through the player's tracking devices.
+		 * @param name The name of the transformation, must be valid
+		 * @param timestamp The timestamp for which the transformation is evaluated, must be valid
+		 * @param matrix The resulting transformation matrix
+		 * @return The transformation result
+		 */
+		virtual TransformationResult transformation(const std::string& name, const Timestamp& timestamp, HomogenousMatrixD4& matrix) = 0;
 
 		/**
 		 * Returns whether this player is currently started.
