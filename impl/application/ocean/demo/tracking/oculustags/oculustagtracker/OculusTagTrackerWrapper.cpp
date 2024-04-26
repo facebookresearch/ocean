@@ -3,7 +3,6 @@
 #include "application/ocean/demo/tracking/oculustags/oculustagtracker/OculusTagTrackerWrapper.h"
 
 #include "ocean/base/Build.h"
-#include "ocean/base/CommandArguments.h"
 #include "ocean/base/PluginManager.h"
 #include "ocean/base/Processor.h"
 #include "ocean/base/WorkerPool.h"
@@ -24,10 +23,6 @@
 #include "ocean/tracking/oculustags/OculusTagDebugElements.h"
 #include "ocean/tracking/oculustags/Utilities.h"
 
-#ifdef OCEAN_USE_DEVICES_VRS
-	#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
-#endif
-
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)
 		#include "ocean/media/wic/WIC.h"
@@ -43,13 +38,6 @@
 #endif
 
 using namespace Tracking::OculusTags;
-
-OculusTagTrackerWrapper::OculusTagTrackerWrapper() :
-	frameTimestamp_(false),
-	frameCounter_(0u)
-{
-	// nothing to do here
-}
 
 OculusTagTrackerWrapper::OculusTagTrackerWrapper(OculusTagTrackerWrapper&& oculusTagTrackerWrapper) noexcept
 {
@@ -78,9 +66,6 @@ OculusTagTrackerWrapper::OculusTagTrackerWrapper(const std::vector<std::wstring>
 		Media::AVFoundation::registerAVFLibrary();
 		Media::ImageIO::registerImageIOLibrary();
 	#endif
-	#ifdef OCEAN_USE_MEDIA_VRS
-		Media::VRS::registerVRSLibrary();
-	#endif
 #else
 	PluginManager::get().collectPlugins(frameworkPath + std::string("/bin/plugins/") + Build::buildString());
 
@@ -91,9 +76,7 @@ OculusTagTrackerWrapper::OculusTagTrackerWrapper(const std::vector<std::wstring>
 
 	CommandArguments commandArguments;
 	commandArguments.registerNamelessParameters("Optional the first command argument is interpreted as input parameter");
-	commandArguments.registerParameter("input", "i", "Input to be used for tracking, either a VRS file or a directory with image sequences and transformations file");
-	commandArguments.registerParameter("poses", "p", "Optional explicit poses file in case the VRS files does not contain any HMD poses");
-	commandArguments.registerParameter("normal-speed", "ns", "If set, will replay the input at normal speed. Otherwise it will use stop-motion.");
+	commandArguments.registerParameter("input", "i", "Input to be used for tracking, a recording file");
 	commandArguments.registerParameter("fps", "f", "Optionally set the FPS of the output video.");
 	commandArguments.registerParameter("output", "o", "Optional file name where a video with a visualization of the results will be stored");
 
@@ -139,50 +122,32 @@ OculusTagTrackerWrapper::OculusTagTrackerWrapper(const std::vector<std::wstring>
 		movieRecorder_->setFilenameSuffixed(false);
 	}
 
-	std::string inputValue;
-	if ((commandArguments.hasValue("input", inputValue, false, 0u) && !inputValue.empty()))
-	{
-		const IO::File fileArgument(inputValue);
-
-		if (fileArgument.exists())
-		{
-			if (fileArgument.extension() == "vrs")
-			{
-#ifdef OCEAN_USE_DEVICES_VRS
-
-				devicePlayer_ = std::make_shared<Devices::VRS::VRSDevicePlayer>();
-
-				if (!devicePlayer_->initialize(fileArgument()) || !devicePlayer_->start(enableStopMotionReplay_ ? 0.0f : -1.0f))
-				{
-					Log::error() << "Failed to load input VRS file";
-				}
-				else
-				{
-					if (devicePlayer_->frameMediums().empty())
-					{
-						Log::error() << "VRS files does not contain a frame medium";
-					}
-					else
-					{
-						frameMediumRefs_ = devicePlayer_->frameMediums();
-
-#ifdef OCEAN_DEBUG
-						for (Media::FrameMediumRef& frameMediumRef : frameMediumRefs_)
-						{
-							ocean_assert(frameMediumRef);
-						}
+#ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
+	devicePlayer_ = OculusTagTrackerWrapper_createExternalDevicePlayer(commandArguments);
 #endif
-					}
-				}
 
-#else // OCEAN_USE_DEVICES_VRS
-
-				Platform::Utilities::showMessageBox("Error", "This build has no VRS support.");
-				exit(0);
-
-#endif // OCEAN_USE_DEVICES_VRS
+	if (devicePlayer_)
+	{
+		if (devicePlayer_->start(Devices::DevicePlayer::SPEED_USE_STOP_MOTION))
+		{
+			if (devicePlayer_->frameMediums().size() < 2)
+			{
+				Log::error() << "The recording does not contain enough frame mediums";
+			}
+			else
+			{
+				frameMediumRefs_ = devicePlayer_->frameMediums();
 			}
 		}
+		else
+		{
+			Log::error() << "Failed to start the recording";
+		}
+	}
+	else
+	{
+		Log::error() << "No valid recording file";
+		return;
 	}
 
 	if (frameMediumRefs_.empty())
@@ -226,9 +191,6 @@ void OculusTagTrackerWrapper::release()
 	devicePlayer_ = nullptr;
 
 #ifdef OCEAN_RUNTIME_STATIC
-	#ifdef OCEAN_USE_MEDIA_VRS
-		Media::VRS::unregisterVRSLibrary();
-	#endif
 	#if defined(_WINDOWS)
 		Media::MediaFoundation::unregisterMediaFoundationLibrary();
 		Media::WIC::unregisterWICLibrary();

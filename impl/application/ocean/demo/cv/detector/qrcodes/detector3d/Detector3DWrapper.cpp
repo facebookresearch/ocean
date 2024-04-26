@@ -132,6 +132,11 @@ Detector3DWrapper::Detector3DWrapper(const std::vector<std::wstring>& separatedC
 			Log::error() << "Failed to start the recording";
 		}
 	}
+	else
+	{
+		Log::error() << "No valid recording file";
+		return;
+	}
 
 	int32_t camera0Value;
 	if (commandArguments.hasValue("camera0", camera0Value, false))

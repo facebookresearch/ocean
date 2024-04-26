@@ -4,6 +4,7 @@
 
 #include "application/ocean/demo/tracking/ApplicationDemoTracking.h"
 
+#include "ocean/base/CommandArguments.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
@@ -49,7 +50,7 @@ class OculusTagTrackerWrapper
 		/**
 		 * Creates an invalid tracker object.
 		 */
-		OculusTagTrackerWrapper();
+		OculusTagTrackerWrapper() = default;
 
 		/**
 		 * Move constructor.
@@ -113,12 +114,6 @@ class OculusTagTrackerWrapper
 		/// The Oculus Tag tracker object.
 		Tracking::OculusTags::OculusTagTracker oculusTagTracker_;
 
-		/// The tag size information that is loaded from a VRS file
-		std::map<double, Tracking::OculusTags::TagSizeMap> map_vrsTagSizeMap_;
-
-		/// The default tag size that is loaded from a VRS file
-		Scalar vrsDefaultTagSize_;
-
 		/// The image counter.
 		unsigned int frameCounter_ = 0u;
 
@@ -131,3 +126,14 @@ class OculusTagTrackerWrapper
 		/// A movie recorder to create visualizations of the results
 		Media::MovieRecorderRef movieRecorder_;
 };
+
+#ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
+
+/**
+ * Creates a device player.
+ * @param commandArguments The command arguments to use
+ * @return The resulting device player, nullptr if the player could not be created
+ */
+Devices::SharedDevicePlayer OculusTagTrackerWrapper_createExternalDevicePlayer(const CommandArguments& commandArguments);
+
+#endif // OCEAN_USE_EXTERNAL_DEVICE_PLAYER
