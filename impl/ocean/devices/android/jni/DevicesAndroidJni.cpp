@@ -9,13 +9,19 @@ using namespace Ocean;
 
 jboolean Java_com_facebook_ocean_devices_android_DevicesAndroidJni_registerLibrary(JNIEnv* env, jobject javaThis)
 {
+#if defined(OCEAN_RUNTIME_STATIC)
 	Devices::Android::registerAndroidLibrary();
+#endif
+
 	return true;
 }
 
 jboolean Java_com_facebook_ocean_devices_android_DevicesAndroidJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
 {
+#if defined(OCEAN_RUNTIME_STATIC)
 	Devices::Android::unregisterAndroidLibrary();
+#endif
+
 	return true;
 }
 
