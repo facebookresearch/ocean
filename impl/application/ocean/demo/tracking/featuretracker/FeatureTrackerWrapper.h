@@ -5,10 +5,12 @@
 
 #include "application/ocean/demo/tracking/ApplicationDemoTracking.h"
 
+#include "ocean/base/CommandArguments.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/devices/OrientationTracker3DOF.h"
+#include "ocean/devices/DevicePlayer.h"
 
 #include "ocean/math/Cone3.h"
 #include "ocean/math/Cylinder3.h"
@@ -19,10 +21,6 @@
 #include "ocean/media/FrameMedium.h"
 
 #include "ocean/tracking/VisualTracker.h"
-
-#ifdef OCEAN_USE_DEVICES_VRS
-	#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
-#endif
 
 /**
  * @ingroup applicationdemotracking
@@ -130,12 +128,8 @@ class FeatureTrackerWrapper
 		/// The 3DOF orientation tracker which is used to support the tracker.
 		Devices::OrientationTracker3DOFRef orientationTracker3DOF_;
 
-#ifdef OCEAN_USE_DEVICES_VRS
-
-		/// Device player that is used for VRS replay
+		/// The device player which may be used to replay a recording.
 		Devices::SharedDevicePlayer devicePlayer_;
-
-#endif
 };
 
 inline FeatureTrackerWrapper::FeatureTrackerWrapper(FeatureTrackerWrapper&& featureTrackerWrapper) noexcept
@@ -152,9 +146,7 @@ inline FeatureTrackerWrapper& FeatureTrackerWrapper::operator=(FeatureTrackerWra
 {
 	if (this != &featureTrackerWrapper)
 	{
-#ifdef OCEAN_USE_DEVICES_VRS
 		devicePlayer_ = std::move(featureTrackerWrapper.devicePlayer_);
-#endif
 
 		inputMedium_ = std::move(featureTrackerWrapper.inputMedium_);
 		objectDimension_ = std::move(featureTrackerWrapper.objectDimension_);
@@ -173,5 +165,16 @@ inline FeatureTrackerWrapper& FeatureTrackerWrapper::operator=(FeatureTrackerWra
 
 	return *this;
 }
+
+#ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
+
+/**
+ * Creates a device player.
+ * @param commandArguments The command arguments to use
+ * @return The resulting device player, nullptr if the player could not be created
+ */
+Devices::SharedDevicePlayer FeatureTrackerWrapper_createExternalDevicePlayer(const CommandArguments& commandArguments);
+
+#endif // OCEAN_USE_EXTERNAL_DEVICE_PLAYER
 
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_TRACKING_FEATURETRACKER_FEATURE_TRACKER_WRAPPER_H

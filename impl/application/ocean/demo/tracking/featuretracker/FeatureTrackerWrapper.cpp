@@ -3,7 +3,6 @@
 #include "application/ocean/demo/tracking/featuretracker/FeatureTrackerWrapper.h"
 
 #include "ocean/base/Build.h"
-#include "ocean/base/CommandArguments.h"
 #include "ocean/base/PluginManager.h"
 #include "ocean/base/Processor.h"
 #include "ocean/base/WorkerPool.h"
@@ -167,53 +166,48 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 
 	// first, we get access to the frame medium that is intended to be used for the tracking
 
-	const std::vector<std::string>& namelessValues = commandArguments.namelessValues();
+#ifdef OCEAN_USE_EXTERNAL_DEVICE_PLAYER
+	devicePlayer_ = FeatureTrackerWrapper_createExternalDevicePlayer(commandArguments);
+#endif
 
-	Value inputValue;
-	if ((commandArguments.hasValue("input", &inputValue, false, 0u) && inputValue.isString()) || !namelessValues.empty())
+	if (devicePlayer_)
 	{
-		const std::string argument = inputValue.isString() ? inputValue.stringValue() : namelessValues.front();
-
-		const IO::File fileArgument(argument);
-
-		if (fileArgument.exists() && fileArgument.extension() == "vrs")
+		if (devicePlayer_->start())
 		{
-#ifdef OCEAN_USE_DEVICES_VRS
-
-			devicePlayer_ = std::make_shared<Devices::VRS::VRSDevicePlayer>();
-
-			if (!devicePlayer_->initialize(fileArgument()) || !devicePlayer_->start())
+			if (devicePlayer_->frameMediums().empty())
 			{
-				Log::error() << "Failed to load input VRS file";
+				Log::error() << "The recording does not contain frame mediums";
 			}
 			else
 			{
-				if (devicePlayer_->frameMediums().empty())
-				{
-					Log::error() << "VRS files does not contain a frame medium";
-				}
-				else
-				{
-					// Only select the first medium and ignore all others
-					inputMedium_ = devicePlayer_->frameMediums().front();
-					ocean_assert(inputMedium_);
-				}
+				// Only select the first medium and ignore all others
+				inputMedium_ = devicePlayer_->frameMediums().front();
+				ocean_assert(inputMedium_);
 			}
-
-#else // OCEAN_USE_DEVICES_VRS
-
-			Platform::Utilities::showMessageBox("Error", "This build has no VRS support.");
-			exit(0);
-
-#endif // OCEAN_USE_DEVICES_VRS
 		}
 		else
 		{
-			inputMedium_ = Media::Manager::get().newMedium(argument);
+			Log::error() << "Failed to start the recording";
+		}
+
+		if (inputMedium_.isNull())
+		{
+			Log::error() << "Invalid recording input";
+			return;
+		}
+	}
+
+	if (inputMedium_.isNull())
+	{
+		std::string input;
+		if (commandArguments.hasValue("input", input, false, 0u) && !input.empty())
+		{
+			inputMedium_ = Media::Manager::get().newMedium(input);
 
 			// if we have a finite medium (e.g., a movie) we loop it
 
 			const Media::FiniteMediumRef finiteMedium(inputMedium_);
+
 			if (finiteMedium)
 			{
 				finiteMedium->setLoop(true);
@@ -675,16 +669,12 @@ void FeatureTrackerWrapper::release()
 
 	inputMedium_.release();
 
-#ifdef OCEAN_USE_DEVICES_VRS
-
 	if (devicePlayer_ && devicePlayer_->isStarted())
 	{
 		devicePlayer_->stop();
 	}
 
 	devicePlayer_ = nullptr;
-
-#endif
 
 	visualTracker_.release();
 
