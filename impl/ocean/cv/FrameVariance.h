@@ -46,7 +46,7 @@ class OCEAN_CV_EXPORT FrameVariance
 		 * @param height The height of the given frame, in pixel, with range [1, infinity)
 		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 		 * @param deviationPaddingElements The number of padding elements at the end of each deviation row, in elements, with range [0, infinity)
-		 * @param window Size of the window must be odd, with range [1, infinity)
+		 * @param window Size of the window must be odd, with range [1, min(width, height) * 2]
 		 * @return True, if succeeded
 		 * @tparam T The data type of the frame elements, either 'int8_t' or 'uint8_t'
 		 */

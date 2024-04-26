@@ -29,6 +29,12 @@ bool FrameVariance::deviation1Channel8Bit(const T* frame, const TIntegral* integ
 
 	const unsigned int border = window / 2u;
 
+	ocean_assert(border <= std::min(width, height));
+	if (border > std::min(width, height))
+	{
+		return false;
+	}
+
 	const unsigned int integralWidth = width + window;
 	const unsigned int integralHeight = height + window;
 
@@ -97,6 +103,12 @@ bool FrameVariance::deviation1Channel8Bit(const T* frame, uint8_t* deviation, co
 	}
 
 	const unsigned int border = window / 2u;
+
+	ocean_assert(border <= std::min(width, height));
+	if (border > std::min(width, height))
+	{
+		return false;
+	}
 
 	using TIntegral = typename NextLargerTyper<T>::TypePerformance;
 	static_assert(std::is_signed<T>::value == std::is_signed<TIntegral>::value, "Invalid data type!");

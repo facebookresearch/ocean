@@ -116,6 +116,8 @@ bool TestFrameVariance::testDeviation1Channel8Bit(const unsigned int width, cons
 
 	bool allSucceeded = true;
 
+	const unsigned int window_2 = window / 2u;
+
 	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
@@ -126,8 +128,8 @@ bool TestFrameVariance::testDeviation1Channel8Bit(const unsigned int width, cons
 	{
 		for (const bool performanceIteration : {true, false})
 		{
-			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 1024u);
-			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 1024u);
+			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, window_2, 1024u);
+			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, window_2, 1024u);
 
 			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(1u), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 			Frame deviationFrame = CV::CVUtilities::randomizedFrame(FrameType(frame.frameType(), FrameType::genericPixelFormat<uint8_t>(1u)), false, &randomGenerator);
@@ -135,13 +137,18 @@ bool TestFrameVariance::testDeviation1Channel8Bit(const unsigned int width, cons
 			const Frame copyDevicationFrame(deviationFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 			performance.startIf(performanceIteration);
-				CV::FrameVariance::deviation1Channel8Bit(frame.constdata<T>(), deviationFrame.data<uint8_t>(), testWidth, testHeight, frame.paddingElements(), deviationFrame.paddingElements(), window);
+				const bool localResult = CV::FrameVariance::deviation1Channel8Bit(frame.constdata<T>(), deviationFrame.data<uint8_t>(), testWidth, testHeight, frame.paddingElements(), deviationFrame.paddingElements(), window);
 			performance.stopIf(performanceIteration);
 
 			if (!CV::CVUtilities::isPaddingMemoryIdentical(deviationFrame, copyDevicationFrame))
 			{
 				ocean_assert(false && "Invalid padding memory!");
 				return false;
+			}
+
+			if (!localResult)
+			{
+				allSucceeded = false;
 			}
 
 			if (!validateDeviation1Channel<T, uint8_t>(frame, deviationFrame, window))
@@ -268,10 +275,7 @@ bool TestFrameVariance::testFrameStatistics(const unsigned width, const unsigned
 			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, 1920u);
 
-			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<TElementType, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<TElementType, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
 
 			double mean[tChannels];
 			double variance[tChannels];
@@ -289,7 +293,7 @@ bool TestFrameVariance::testFrameStatistics(const unsigned width, const unsigned
 			double* returnStandardDeviation = RandomI::random(randomGenerator, 1u) == 0u ? standardDeviation : nullptr;
 
 			performance.startIf(benchmark);
-			CV::FrameVariance::imageStatistics<TElementType, TSummationType, TMultiplicationType, tChannels>(frame.constdata<TElementType>(), frame.width(), frame.height(), frame.paddingElements(), returnMean, returnVariance, standardDeviation);
+				CV::FrameVariance::imageStatistics<TElementType, TSummationType, TMultiplicationType, tChannels>(frame.constdata<TElementType>(), frame.width(), frame.height(), frame.paddingElements(), returnMean, returnVariance, standardDeviation);
 			performance.stopIf(benchmark);
 
 			double currentErrorMean = 0.0;
