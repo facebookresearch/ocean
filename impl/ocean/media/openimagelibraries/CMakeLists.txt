@@ -2,6 +2,8 @@
 
 cmake_minimum_required(VERSION 3.26)
 
+add_subdirectory(jni)
+
 if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_media_openimagelibraries")
