@@ -10,6 +10,7 @@ add_subdirectory(testio)
 add_subdirectory(testmath)
 add_subdirectory(testmedia)
 add_subdirectory(testplatform)
+add_subdirectory(testrendering)
 add_subdirectory(testtracking)
 
 if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
