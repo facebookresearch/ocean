@@ -8,7 +8,15 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW) # For CMake subprojects
 
 project(ocean)
 
+# Additional CMake configurations
 include(${CMAKE_CURRENT_LIST_DIR}/build/cmake/ocean_utilities.cmake)
+
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/build/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/build/cmake")
+
+if (ANDROID)
+    list(APPEND CMAKE_FIND_ROOT_PATH "${CMAKE_CURRENT_LIST_DIR}/build/cmake")
+endif()
 
 # Build options
 option(BUILD_SHARED_LIBS "Build using shared libraries" FALSE)
