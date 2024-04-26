@@ -3,7 +3,7 @@
 #ifndef META_OCEAN_DEVICES_QUEST_QUEST_GPS_TRACKER_H
 #define META_OCEAN_DEVICES_QUEST_QUEST_GPS_TRACKER_H
 
-#include "ocean/devices/quest/Quest.h"
+#include "metaonly/ocean/devices/quest/Quest.h"
 
 #include "ocean/devices/GPSTracker.h"
 

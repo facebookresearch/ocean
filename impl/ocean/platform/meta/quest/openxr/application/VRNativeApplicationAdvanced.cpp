@@ -2,7 +2,7 @@
 
 #include "ocean/platform/meta/quest/openxr/application/VRNativeApplicationAdvanced.h"
 
-#include "ocean/devices/quest/Quest.h"
+#include "metaonly/ocean/devices/quest/Quest.h"
 
 #include "ocean/io/Directory.h"
 
