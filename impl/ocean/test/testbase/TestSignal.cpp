@@ -383,7 +383,11 @@ bool TestSignal::testSingleSignalLoop()
 
 	const double error = std::fabs(actualDuration - expectedDuration);
 
+#if defined(OCEAN_USE_GTEST) && defined(OCEAN_PLATFORM_BUILD_APPLE)
+	constexpr double threshold = 1.5; // using an extremely generous threshold in case the test is not executed on a real device
+#else
 	constexpr double threshold = 0.5;
+#endif
 
 	if (error > threshold)
 	{
