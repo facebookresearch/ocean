@@ -2,15 +2,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(blob)
-add_subdirectory(mapbuilding)
-add_subdirectory(pattern)
-add_subdirectory(point)
-add_subdirectory(uvtexturemapping)
-
 if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
 
-    set(OCEAN_TARGET_NAME "ocean_tracking")
+    set(OCEAN_TARGET_NAME "ocean_tracking_mapbuilding")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -21,7 +15,11 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
 
     target_include_directories(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_IMPL_DIR}")
 
-    target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
+    target_compile_definitions(${OCEAN_TARGET_NAME}
+        PUBLIC
+            ${OCEAN_PREPROCESSOR_FLAGS}
+            "-DOCEAN_TRACKING_MAPBUILDING_DO_NOT_USE_VRS_PLAYER"  # Disable VRS functionality as ocean_devices_vrs is not yet available
+    )
 
     if (BUILD_SHARED_LIBS)
         target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_TRACKING_EXPORT)
@@ -37,10 +35,13 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_cv_advanced
             ocean_cv_detector
             ocean_cv_segmentation
+            ocean_devices
+            # ocean_devices_vrs  # Not yet available
             ocean_geometry
             ocean_io
             ocean_math
             ocean_media
+            ocean_tracking
     )
 
     # Installation
@@ -50,7 +51,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/tracking
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/tracking/mapbuilding
             COMPONENT include
     )
 
