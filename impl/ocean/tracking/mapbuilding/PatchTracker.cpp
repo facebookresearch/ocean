@@ -24,7 +24,9 @@
 
 #include "ocean/tracking/Solver3.h"
 
-#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
+#ifndef OCEAN_TRACKING_MAPBUILDING_DO_NOT_USE_VRS_PLAYER
+	#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
+#endif
 
 #ifdef _WINDOWS
 	#include "ocean/platform/win/Utilities.h"
@@ -153,6 +155,7 @@ void PatchTracker::reset(Database* database, std::shared_ptr<UnifiedDescriptorMa
 
 bool PatchTracker::trackVRSFile(const std::string& vrsFile, Database& database, SharedAnyCamera& anyCamera, std::shared_ptr<UnifiedDescriptorMap>& descriptorMap, const std::shared_ptr<UnifiedDescriptorExtractor>& unifiedDescriptorExtractor)
 {
+#ifndef OCEAN_TRACKING_MAPBUILDING_DO_NOT_USE_VRS_PLAYER
 	Devices::VRS::VRSDevicePlayer devicePlayer;
 	if (!devicePlayer.initialize(vrsFile))
 	{
@@ -298,6 +301,12 @@ bool PatchTracker::trackVRSFile(const std::string& vrsFile, Database& database, 
 	descriptorMap = std::move(patchTracker.unifiedDescriptorMap_);
 
 	return true;
+
+#else // OCEAN_TRACKING_MAPBUILDING_DO_NOT_USE_VRS_PLAYER
+
+	return false;
+
+#endif // OCEAN_TRACKING_MAPBUILDING_DO_NOT_USE_VRS_PLAYER
 }
 
 size_t PatchTracker::removeFlakyObjectPoints(Database& database, const size_t minimalNumberObservations, const Scalar mimimalBoxDiagonal, Indices32* removedObjectPointIds)
