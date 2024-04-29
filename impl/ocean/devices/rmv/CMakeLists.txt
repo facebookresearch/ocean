@@ -21,11 +21,11 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
         target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_DEVICES_RMV_EXPORT)
     endif()
 
-    target_compile_options(${OCEAN_TARGET_NAME}
-        PUBLIC
-            ${OCEAN_COMPILER_FLAGS}
-            "-fexceptions"
-    )
+    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
+
+    if (NOT WIN32)
+        target_compile_options(${OCEAN_TARGET_NAME} PRIVATE "-fexceptions")
+    endif()
 
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}

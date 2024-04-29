@@ -20,7 +20,12 @@ if (MACOS OR LINUX OR WIN32)
     target_include_directories(${OCEAN_TARGET_NAME} PRIVATE "${OCEAN_IMPL_DIR}")
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_PREPROCESSOR_FLAGS})
-    target_compile_options(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_COMPILER_FLAGS})
+
+    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
+
+    if (NOT WIN32)
+        target_compile_options(${OCEAN_TARGET_NAME} PRIVATE "-fexceptions")
+    endif()
 
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}

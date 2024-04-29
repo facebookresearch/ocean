@@ -27,14 +27,10 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
         )
     endif()
 
-    if (NOT WIN32)
-        target_compile_options(${OCEAN_TARGET_NAME}
-            PUBLIC
-                "${OCEAN_COMPILER_FLAGS}"
+    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
 
-            PRIVATE
-                "-fexceptions"
-        )
+    if (NOT WIN32)
+        target_compile_options(${OCEAN_TARGET_NAME} PRIVATE "-fexceptions")
     endif()
 
     # Dependencies

@@ -18,6 +18,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX)
     target_compile_definitions(${OCEAN_TARGET_NAME}
         PUBLIC
             ${OCEAN_PREPROCESSOR_FLAGS}
+            "-DOCEAN_TEST_CV_LIBYUV_HAS_EXTRAS"
     )
 
     if (BUILD_SHARED_LIBS)
@@ -27,7 +28,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX)
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
 
     if (NOT WIN32)
-        target_compile_options(${OCEAN_TARGET_NAME} PRIVATE "-DOCEAN_TEST_CV_LIBYUV_HAS_EXTRAS" "-fexceptions")
+        target_compile_options(${OCEAN_TARGET_NAME} PRIVATE "-fexceptions")
     endif()
 
     # Dependencies
