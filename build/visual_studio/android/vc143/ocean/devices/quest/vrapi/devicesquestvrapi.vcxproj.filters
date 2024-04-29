@@ -9,54 +9,54 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\HeadsetTracker6DOF.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\HeadsetTracker6DOF.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\OnDeviceRelocalizerTracker6DOF.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\OnDeviceRelocalizerTracker6DOF.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\Plugin.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\Plugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\VrApi.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\VrApi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\VrApiDevice.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\VrApiDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\VrApiFactory.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\VrApiFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\ControllerTracker6DOF.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\ControllerTracker6DOF.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\FloorTracker6DOF.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\FloorTracker6DOF.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\OnDeviceRelocalizerTracker6DOF.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\OnDeviceRelocalizerTracker6DOF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\Plugin.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\Plugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\VrApi.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\VrApi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\VrApiDevice.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\VrApiDevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\VrApiFactory.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\VrApiFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\ControllerTracker6DOF.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\ControllerTracker6DOF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\FloorTracker6DOF.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\FloorTracker6DOF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\HeadsetTracker6DOF.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\HeadsetTracker6DOF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

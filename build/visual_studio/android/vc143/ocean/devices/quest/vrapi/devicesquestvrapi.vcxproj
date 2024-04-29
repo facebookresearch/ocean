@@ -71,24 +71,24 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\ControllerTracker6DOF.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\FloorTracker6DOF.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\HeadsetTracker6DOF.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\OnDeviceRelocalizerTracker6DOF.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\Plugin.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\VrApi.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\VrApiDevice.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\VrApiFactory.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\ControllerTracker6DOF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\FloorTracker6DOF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\HeadsetTracker6DOF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\OnDeviceRelocalizerTracker6DOF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\Plugin.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\VrApi.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\VrApiDevice.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\VrApiFactory.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\ControllerTracker6DOF.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\FloorTracker6DOF.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\HeadsetTracker6DOF.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\OnDeviceRelocalizerTracker6DOF.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\Plugin.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\VrApi.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\VrApiDevice.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\devices\quest\vrapi\VrApiFactory.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\ControllerTracker6DOF.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\FloorTracker6DOF.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\HeadsetTracker6DOF.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\OnDeviceRelocalizerTracker6DOF.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\Plugin.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\VrApi.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\VrApiDevice.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\vrapi\VrApiFactory.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

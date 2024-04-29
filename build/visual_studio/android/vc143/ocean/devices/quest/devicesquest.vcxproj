@@ -71,16 +71,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\quest\Plugin.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\quest\Quest.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\quest\QuestFactory.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\quest\QuestGPSTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\Plugin.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\Quest.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\QuestFactory.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\QuestGPSTracker.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\quest\Plugin.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\quest\Quest.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\quest\QuestFactory.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\quest\QuestGPSTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\Plugin.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\Quest.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\QuestFactory.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\metaonly\ocean\devices\quest\QuestGPSTracker.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
