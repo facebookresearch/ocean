@@ -7,8 +7,8 @@ if (MACOS OR IOS) # Disabled ANDROID for now because of macOS-only dependencies 
     set(OCEAN_TARGET_NAME "application_ocean_demo_cv_advanced_panoramaextractor")
 
     # Source files
-    file(GLOB OCEAN_TARGET_HEADER_FILES ${CMAKE_CURRENT_LIST_DIR}/*.h)
-    file(GLOB OCEAN_TARGET_SOURCE_FILES ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
+    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
+    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
 
     # Target definition
     add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})

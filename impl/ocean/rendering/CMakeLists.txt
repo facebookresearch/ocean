@@ -18,7 +18,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_RENDERING_EXPORT)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_RENDERING_EXPORT")
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})

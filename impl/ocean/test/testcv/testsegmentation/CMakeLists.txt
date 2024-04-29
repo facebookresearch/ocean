@@ -7,8 +7,8 @@ if (MACOS OR ANDROID OR IOS OR LINUX)
     set(OCEAN_TARGET_NAME "ocean_test_testcv_testsegmentation")
 
     # Source files
-    file(GLOB OCEAN_TARGET_HEADER_FILES ${CMAKE_CURRENT_LIST_DIR}/*.h)
-    file(GLOB OCEAN_TARGET_SOURCE_FILES ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
+    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
+    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
 
     # Target definition
     add_library(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
@@ -22,7 +22,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX)
     )
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_TEST_CV_SEGMENTATION_EXPORT)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_CV_SEGMENTATION_EXPORT")
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})

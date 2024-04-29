@@ -9,8 +9,8 @@ if (MACOS OR IOS)
     find_library(IMAGEIO_LIB ImageIO)
 
     # Source files
-    file(GLOB OCEAN_TARGET_HEADER_FILES ${CMAKE_CURRENT_LIST_DIR}/*.h)
-    file(GLOB OCEAN_TARGET_SOURCE_FILES ${CMAKE_CURRENT_LIST_DIR}/*.cpp ${CMAKE_CURRENT_LIST_DIR}/*.mm)
+    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
+    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp" "${CMAKE_CURRENT_LIST_DIR}/*.mm")
 
     # Target definition
     add_library(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
@@ -19,7 +19,7 @@ if (MACOS OR IOS)
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_MEDIA_IIO_EXPORT)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_MEDIA_IIO_EXPORT")
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})

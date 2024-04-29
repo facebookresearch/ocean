@@ -7,8 +7,8 @@ if (MACOS OR ANDROID OR LINUX)
     set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv_testdetector_testqrcodes")
 
     # Source files
-    file(GLOB OCEAN_TARGET_HEADER_FILES ${CMAKE_CURRENT_LIST_DIR}/*.h)
-    file(GLOB OCEAN_TARGET_SOURCE_FILES ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
+    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
+    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
 
     # Target definition
     add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
