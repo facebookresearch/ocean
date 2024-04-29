@@ -78,7 +78,7 @@ if (ANDROID)
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/${OCEAN_LIBRARY_INSTALL_DIR}
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}
             COMPONENT lib
     )
 
