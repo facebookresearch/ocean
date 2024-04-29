@@ -24,10 +24,6 @@
 
 #include "ocean/tracking/Solver3.h"
 
-#ifndef OCEAN_TRACKING_MAPBUILDING_DO_NOT_USE_VRS_PLAYER
-	#include "metaonly/ocean/devices/vrs/VRSDevicePlayer.h"
-#endif
-
 #ifdef _WINDOWS
 	#include "ocean/platform/win/Utilities.h"
 	#include "ocean/tracking/Utilities.h"
@@ -153,19 +149,17 @@ void PatchTracker::reset(Database* database, std::shared_ptr<UnifiedDescriptorMa
 	needToUpdateFramePyramidForDescriptors_ = true;
 }
 
-bool PatchTracker::trackVRSFile(const std::string& vrsFile, Database& database, SharedAnyCamera& anyCamera, std::shared_ptr<UnifiedDescriptorMap>& descriptorMap, const std::shared_ptr<UnifiedDescriptorExtractor>& unifiedDescriptorExtractor)
+bool PatchTracker::trackRecording(Devices::DevicePlayer& devicePlayer, const std::vector<std::string>& worldTrackerNames, Database& database, SharedAnyCamera& anyCamera, std::shared_ptr<UnifiedDescriptorMap>& descriptorMap, const std::shared_ptr<UnifiedDescriptorExtractor>& unifiedDescriptorExtractor)
 {
-#ifndef OCEAN_TRACKING_MAPBUILDING_DO_NOT_USE_VRS_PLAYER
-	Devices::VRS::VRSDevicePlayer devicePlayer;
-	if (!devicePlayer.initialize(vrsFile))
+	ocean_assert(devicePlayer.isValid());
+	if (!devicePlayer.isValid())
 	{
-		Log::error() << "Input needs to be a valid VRS file";
 		return false;
 	}
 
-	if (!devicePlayer.start(0.0f))
+	if (!devicePlayer.start(Devices::DevicePlayer::SPEED_USE_STOP_MOTION))
 	{
-		Log::error() << "Input needs to be a valid VRS file";
+		Log::error() << "The recording could not be started";
 		return false;
 	}
 
@@ -173,7 +167,7 @@ bool PatchTracker::trackVRSFile(const std::string& vrsFile, Database& database, 
 
 	if (frameMediums.empty())
 	{
-		Log::error() << "The VRS file does not contain any frame mediums.";
+		Log::error() << "The recording does not contain any frame mediums.";
 		return false;
 	}
 
@@ -182,15 +176,21 @@ bool PatchTracker::trackVRSFile(const std::string& vrsFile, Database& database, 
 
 	frameMedium->start();
 
-	Devices::Tracker6DOFRef worldTracker = Devices::Manager::get().device("VRS ARKit 6DOF World Tracker");
-	if (worldTracker.isNull())
+	Devices::Tracker6DOFRef worldTracker;
+
+	for (const std::string& worldTrackerName : worldTrackerNames)
 	{
-		worldTracker = Devices::Manager::get().device("VRS ARCore 6DOF World Tracker");
+		worldTracker = Devices::Manager::get().device(worldTrackerName);
+
+		if (worldTracker)
+		{
+			break;
+		}
 	}
 
 	if (worldTracker.isNull())
 	{
-		Log::error() << "The VRS file does not contain any World Tracker.";
+		Log::error() << "The recording does not contain any World Tracker.";
 		return false;
 	}
 
@@ -301,12 +301,6 @@ bool PatchTracker::trackVRSFile(const std::string& vrsFile, Database& database, 
 	descriptorMap = std::move(patchTracker.unifiedDescriptorMap_);
 
 	return true;
-
-#else // OCEAN_TRACKING_MAPBUILDING_DO_NOT_USE_VRS_PLAYER
-
-	return false;
-
-#endif // OCEAN_TRACKING_MAPBUILDING_DO_NOT_USE_VRS_PLAYER
 }
 
 size_t PatchTracker::removeFlakyObjectPoints(Database& database, const size_t minimalNumberObservations, const Scalar mimimalBoxDiagonal, Indices32* removedObjectPointIds)

@@ -18,7 +18,6 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     target_compile_definitions(${OCEAN_TARGET_NAME}
         PUBLIC
             ${OCEAN_PREPROCESSOR_FLAGS}
-            "-DOCEAN_TRACKING_MAPBUILDING_DO_NOT_USE_VRS_PLAYER"  # Disable VRS functionality as ocean_devices_vrs is not yet available
     )
 
     if (BUILD_SHARED_LIBS)

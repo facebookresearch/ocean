@@ -14,6 +14,8 @@
 
 #include "ocean/cv/detector/HarrisCorner.h"
 
+#include "ocean/devices/DevicePlayer.h"
+
 #include "ocean/geometry/Estimator.h"
 
 #include "ocean/math/AnyCamera.h"
@@ -236,15 +238,16 @@ class OCEAN_TRACKING_MAPBUILDING_EXPORT PatchTracker : public DescriptorHandling
 		void reset(Database* database = nullptr, std::shared_ptr<UnifiedDescriptorMap>* unifiedDescriptorMap = nullptr);
 
 		/**
-		 * Applies the tracker to an entire VRS file.
-		 * @param vrsFile The VRS file to which the tracker will be applied, must be valid
+		 * Runs the tracker on a recording provided through a device player.
+		 * @param devicePlayer The device player providing the recording information, must be valid
+		 * @param worldTrackerNames The names of world tracker which may be available in the recording and which will be used, at least one
 		 * @param database The resulting database holding the topology of the tracked features
 		 * @param anyCamera The resulting camera profile for the entire sequence
 		 * @param descriptorMap The resulting map mapping object point ids to descriptors
 		 * @param unifiedDescriptorExtractor The feature extractor to be used, must be valid
 		 * @return True, if succeeded
 		 */
-		static bool trackVRSFile(const std::string& vrsFile, Database& database, SharedAnyCamera& anyCamera, std::shared_ptr<UnifiedDescriptorMap>& descriptorMap, const std::shared_ptr<UnifiedDescriptorExtractor>& unifiedDescriptorExtractor);
+		static bool trackRecording(Devices::DevicePlayer& devicePlayer, const std::vector<std::string>& worldTrackerNames, Database& database, SharedAnyCamera& anyCamera, std::shared_ptr<UnifiedDescriptorMap>& descriptorMap, const std::shared_ptr<UnifiedDescriptorExtractor>& unifiedDescriptorExtractor);
 
 		/**
 		 * Removes flaky object points from the database.
