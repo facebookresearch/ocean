@@ -96,6 +96,7 @@ add_subdirectory(impl/ocean/math)
 add_subdirectory(impl/ocean/media)
 add_subdirectory(impl/ocean/platform)
 add_subdirectory(impl/ocean/rendering)
+add_subdirectory(impl/ocean/scenedescription)
 add_subdirectory(impl/ocean/system)
 add_subdirectory(impl/ocean/tracking)
 
