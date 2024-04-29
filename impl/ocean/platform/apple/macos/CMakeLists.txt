@@ -2,20 +2,12 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(macos)
+if (MACOS)
 
-if (MACOS OR IOS)
+    set(OCEAN_TARGET_NAME "ocean_platform_apple_macos")
 
-    set(OCEAN_TARGET_NAME "ocean_platform_apple")
-
-    find_library(COREGRAPHICS_LIB CoreGraphics)
-
-    if (MACOS)
-        find_library(APPKIT_LIB AppKit)
-        find_library(CARBON_LIB Carbon)
-    elseif (IOS)
-        find_library(UIKIT_LIB UiKit)
-    endif()
+    find_library(APPKIT_LIB AppKit)
+    find_library(CARBON_LIB Carbon)
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -32,23 +24,14 @@ if (MACOS OR IOS)
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
-            ocean_base
-            ocean_cv
-            ocean_media
-            ocean_platform
+            ocean_platform_apple
     )
 
-    target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${COREGRAPHICS_LIB})
-
-    if (MACOS)
-        target_link_libraries(${OCEAN_TARGET_NAME}
-            PUBLIC
-                ${APPKIT_LIB}
-                ${CARBON_LIB}
-        )
-    elseif(IOS)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${UIKIT_LIB})
-    endif()
+    target_link_libraries(${OCEAN_TARGET_NAME}
+        PUBLIC
+            ${APPKIT_LIB}
+            ${CARBON_LIB}
+    )
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
@@ -57,7 +40,7 @@ if (MACOS OR IOS)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/platform/apple
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/platform/apple/macos
             COMPONENT include
     )
 
