@@ -20,6 +20,40 @@ namespace OpenXR
 namespace Application
 {
 
+VRControllerVisualizer::VRControllerVisualizer(const Rendering::EngineRef& engine, const Rendering::FramebufferRef framebuffer, const Device::DeviceType deviceType, const std::string& renderModelDirectoryName) :
+	Quest::Application::VRControllerVisualizer(engine, framebuffer, deviceType, renderModelDirectoryName)
+{
+	// nothing to do here
+
+	controllerAim_t_controllerModel_ = Vector3(0, 0, 0);
+
+	switch (deviceType_)
+	{
+		case Device::DT_QUEST:
+			controllerAim_t_controllerModel_ = Vector3(0, 0, Scalar(0.0525));
+			break;
+
+		case Device::DT_QUEST_2:
+		case Device::DT_QUEST_3:
+		case Device::DT_QUEST_PRO:
+			controllerAim_t_controllerModel_ = Vector3(0, 0, Scalar(0.055));
+			break;
+
+		case Device::DT_UNKNOWN:
+		case Device::DT_QUEST_END:
+			ocean_assert(false && "Unknown device type!");
+			break;
+	}
+
+#ifdef OCEAN_PLATFORM_META_QUEST_OPENXR_USE_EXTERNAL_TRANSLATION_OFFSET
+	if (deviceType_ > Device::DT_QUEST_END)
+	{
+		ocean_assert(controllerAim_t_controllerModel_.isNull());
+		controllerAim_t_controllerModel_ = VRControllerVisualizer_externalTranslationOffset(deviceType_);
+	}
+#endif
+}
+
 void VRControllerVisualizer::visualizeControllersInWorld(const TrackedController& trackedController, const Scalar controllerRayLength)
 {
 	ocean_assert(isValid());
@@ -37,35 +71,9 @@ void VRControllerVisualizer::visualizeControllersInWorld(const TrackedController
 		{
 			// we may need to apply a manual shift to align the aim space with the controller's origin
 
-			Vector3 translationOffset(0, 0, 0);
+			ocean_assert(controllerAim_t_controllerModel_.x() != Numeric::minValue());
 
-			switch (deviceType_)
-			{
-				case Device::DT_QUEST:
-					translationOffset = Vector3(0, 0, Scalar(0.0525));
-					break;
-
-				case Device::DT_QUEST_2:
-				case Device::DT_QUEST_3:
-				case Device::DT_QUEST_PRO:
-					translationOffset = Vector3(0, 0, Scalar(0.055));
-					break;
-
-				case Device::DT_UNKNOWN:
-				case Device::DT_QUEST_END:
-					ocean_assert(false && "Unknown device type!");
-					break;
-			}
-
-#ifdef OCEAN_PLATFORM_META_QUEST_OPENXR_USE_EXTERNAL_TRANSLATION_OFFSET
-			if (deviceType_ > Device::DT_QUEST_END)
-			{
-				ocean_assert(translationOffset.isNull());
-				translationOffset = VRControllerVisualizer_externalTranslationOffset(deviceType_);
-			}
-#endif
-
-			baseSpace_T_controllerAim *= HomogenousMatrix4(translationOffset);
+			baseSpace_T_controllerAim *= HomogenousMatrix4(controllerAim_t_controllerModel_);
 		}
 		else
 		{

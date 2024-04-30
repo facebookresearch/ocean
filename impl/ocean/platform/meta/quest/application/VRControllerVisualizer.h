@@ -203,8 +203,8 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRControllerVisualizer : publ
 		inline void setControllerRayLength(const Scalar length);
 
 		/**
-		 * Visualizes a contoller of an Oculus headset at a specific location in the virtual environment (defined in relation to the world).
-		 * A previous visualization can be updated by specifying the same controller again in conjuction with a new transformation.
+		 * Visualizes a controller of an Oculus headset at a specific location in the virtual environment (defined in relation to the world).
+		 * A previous visualization can be updated by specifying the same controller again in conjunction with a new transformation.
 		 * Beware: The visualizer must be created with a valid engine and framebuffer before usage.
 		 * @param controllerType The identifier of the controller that will updated
 		 * @param world_T_controller The transformation at which the controller will be displayed, transforming controller to world, invalid if the controller is currently not tracked
@@ -225,7 +225,7 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRControllerVisualizer : publ
 		inline void popState();
 
 		/**
-		 * Relases this visualizer and all associated resources.
+		 * Releases this visualizer and all associated resources.
 		 */
 		void release();
 
@@ -259,7 +259,7 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRControllerVisualizer : publ
 		bool loadModels(const Device::DeviceType deviceType, const std::string& renderModelDirectoryName);
 
 		/**
-		 * Disabled copy-assigment operator
+		 * Disabled copy-assignment operator
 		 * @return Reference to this object
 		 */
 		VRControllerVisualizer& operator=(const VRControllerVisualizer&) = delete;

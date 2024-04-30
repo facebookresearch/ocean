@@ -43,34 +43,39 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRControllerVisualizer
 
 		/**
 		 * Creates a new controller visualizer and initializes the object with a given rendering engine and associated framebuffer and load the models from the specified files
+		 * @param engine The rendering engine to be used, must be valid
+		 * @param framebuffer The framebuffer to be used, must be valid
+		 * @param leftRenderModelFilename The path to file that contains the render model of the left controller, must be valid
+		 * @param rightRenderModelFilename The path to file that contains the render model of the left controller, must be valid
+		 * @param controllerAim_t_controllerModel The translation offset between controller model and controller aim transformation, must be valid
 		 * @see Quest::Application::VRControllerVisualizer::VRControllerVisualizer().
 		 */
-		inline VRControllerVisualizer(const Rendering::EngineRef& engine, const Rendering::FramebufferRef framebuffer, const std::string& leftRenderModelFilename, const std::string& rightRenderModelFilename);
+		inline VRControllerVisualizer(const Rendering::EngineRef& engine, const Rendering::FramebufferRef framebuffer, const std::string& leftRenderModelFilename, const std::string& rightRenderModelFilename, const Vector3& controllerAim_t_controllerModel = Vector3(0, 0, 0));
 
 		/**
 		 * Creates a new controller visualizer and initializes the object with a given rendering engine and associated framebuffer and load the models from the specified files
 		 * @see Quest::Application::VRControllerVisualizer::VRControllerVisualizer().
 		 */
-		inline VRControllerVisualizer(const Rendering::EngineRef& engine, const Rendering::FramebufferRef framebuffer, const Device::DeviceType deviceType, const std::string& renderModelDirectoryName);
+		VRControllerVisualizer(const Rendering::EngineRef& engine, const Rendering::FramebufferRef framebuffer, const Device::DeviceType deviceType, const std::string& renderModelDirectoryName);
 
 		/**
-		 * Visualizes both contollers of an Oculus headset at a specific location in the virtual environment (defined in relation to the world).
-		 * A previous visualization can be updated by specifying the same controller again in conjuction with a new transformation.
+		 * Visualizes both controllers of an Oculus headset at a specific location in the virtual environment (defined in relation to the world).
+		 * A previous visualization can be updated by specifying the same controller again in conjunction with a new transformation.
 		 * Beware: The visualizer must be created with a valid engine and framebuffer before usage.
 		 * @param trackedController The instance of a tracked controller that is used to query the pose of the controllers, must be valid
 		 * @param controllerRayLength Optional explicit parameter used for the length of the controller ray, will be hidden for value 0, -1 to use the length as defined in controllerRayLength()
 		 */
 		void visualizeControllersInWorld(const TrackedController& trackedController, const Scalar controllerRayLength = -1);
+
+	protected:
+
+		/// The translation offset between controller model and controller aim transformation, must be valid
+		Vector3 controllerAim_t_controllerModel_ = Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue());
 };
 
-inline VRControllerVisualizer::VRControllerVisualizer(const Rendering::EngineRef& engine, const Rendering::FramebufferRef framebuffer, const std::string& leftRenderModelFilename, const std::string& rightRenderModelFilename) :
-	Quest::Application::VRControllerVisualizer(engine, framebuffer, leftRenderModelFilename, rightRenderModelFilename)
-{
-	// nothing to do here
-}
-
-inline VRControllerVisualizer::VRControllerVisualizer(const Rendering::EngineRef& engine, const Rendering::FramebufferRef framebuffer, const Device::DeviceType deviceType, const std::string& renderModelDirectoryName) :
-	Quest::Application::VRControllerVisualizer(engine, framebuffer, deviceType, renderModelDirectoryName)
+inline VRControllerVisualizer::VRControllerVisualizer(const Rendering::EngineRef& engine, const Rendering::FramebufferRef framebuffer, const std::string& leftRenderModelFilename, const std::string& rightRenderModelFilename, const Vector3& controllerAim_t_controllerModel) :
+	Quest::Application::VRControllerVisualizer(engine, framebuffer, leftRenderModelFilename, rightRenderModelFilename),
+	controllerAim_t_controllerModel_(controllerAim_t_controllerModel)
 {
 	// nothing to do here
 }

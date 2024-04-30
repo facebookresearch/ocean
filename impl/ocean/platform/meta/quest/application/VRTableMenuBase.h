@@ -149,7 +149,7 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTableMenuBase
 		};
 
 		/**
-		 * Definition of a vector holding meny entries.
+		 * Definition of a vector holding menu entries.
 		 */
 		typedef std::vector<MenuEntry> MenuEntries;
 
