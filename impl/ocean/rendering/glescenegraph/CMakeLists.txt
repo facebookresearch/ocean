@@ -3,6 +3,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 add_subdirectory(android)
+add_subdirectory(apple)
 
 if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
 
