@@ -56,13 +56,13 @@ bool Utilities::restrictThreadExecutionToSilverCoresQuest()
 
 bool Utilities::restrictThreadExecutionToGoldCoresQuest()
 {
-	// first let's try to set the affinity to all Gold cores, if this does not work we will try all possbile combintations again
+	// first let's try to set the affinity to all Gold cores, if this does not work we will try all possible combinations again
 	if (Platform::Android::Processor::setCurrentThreadAffinity(0b11110000u))
 	{
 		return true;
 	}
 
-	// it's quite common to be restricted to three Gold cores - so let's try every possible combintation (mask values between 16 and 240)
+	// it's quite common to be restricted to three Gold cores - so let's try every possible combination (mask values between 16 and 240)
 
 	for (uint32_t mask = 240u; mask != 0u; mask -= 16u)
 	{

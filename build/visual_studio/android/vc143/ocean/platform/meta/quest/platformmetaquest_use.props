@@ -3,9 +3,11 @@
   <PropertyGroup>
     <_PropertySheetDisplayName>Use Ocean Platform Meta Quest</_PropertySheetDisplayName>
   </PropertyGroup>
+  
   <PropertyGroup>
     <ocean_platformmetaquest_use_imported>True</ocean_platformmetaquest_use_imported>
   </PropertyGroup>
+  
   <ImportGroup Label="Dependencies">
     <Import Condition="'$(ocean_platformmetaquest_common_imported)' != 'True'" Project="platformmetaquest_common.props"/>
   </ImportGroup>

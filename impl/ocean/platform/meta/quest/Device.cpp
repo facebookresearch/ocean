@@ -2,7 +2,7 @@
 
 #include "ocean/platform/meta/quest/Device.h"
 
-#include <vros/sys/VrDeviceManager.h>
+#include "ocean/platform/android/Utilities.h"
 
 namespace Ocean
 {
@@ -18,46 +18,42 @@ namespace Quest
 
 Device::DeviceType Device::deviceType()
 {
-	std::shared_ptr<OSSDK::VrDevice::v6::IVrDeviceManager> vrDeviceManager = OSSDK::VrDevice::v6::createVrDeviceManager();
-
-	if (vrDeviceManager != nullptr)
+	std::string modelName;
+	if (!Platform::Android::Utilities::systemPropertyValue("ro.product.model", modelName))
 	{
-		const std::string vrDeviceType = String::toLower(vrDeviceManager->getDeviceType().c_str());
+		Log::error() << "Failed to read the 'ro.product.model' system property";
 
-		if (!vrDeviceType.empty())
-		{
-			if (vrDeviceType == "monterey")
-			{
-				return DT_QUEST;
-			}
-			else if (vrDeviceType == "hollywood")
-			{
-				return DT_QUEST_2;
-			}
-			else if (vrDeviceType == "seacliff")
-			{
-				return DT_QUEST_PRO;
-			}
-			else if (vrDeviceType == "eureka865" || vrDeviceType == "eureka")
-			{
-				return DT_QUEST_3;
-			}
-			else if (vrDeviceType == "panther")
-			{
-				return DT_VENTURA;
-			}
-			else
-			{
-				Log::debug() << "Received the unknown device string '" << vrDeviceType << "'";
-			}
-		}
-	}
-	else
-	{
-		Log::error() << "No access to the device manager, is permission requested via '<uses-native-library android:name=\"libossdk.oculus.so\" android:required=\"true\" />'?";
+		return DT_UNKNOWN;
 	}
 
-	Log::error() << "The type of the Oculus device could not be determined";
+	modelName = String::toLower(modelName);
+
+	if (modelName == "quest")
+	{
+		return DT_QUEST;
+	}
+
+	if (modelName == "quest 2")
+	{
+		return DT_QUEST_2;
+	}
+
+	if (modelName == "quest 3")
+	{
+		return DT_QUEST_3;
+	}
+
+	if (modelName == "quest pro")
+	{
+		return DT_QUEST_PRO;
+	}
+
+	if (modelName == "quest 3s")
+	{
+		return DT_VENTURA;
+	}
+
+	Log::error() << "The type of the Meta device could not be determined, unknown model name '" << modelName << "'";
 
 	ocean_assert(false && "This should never happen!");
 
