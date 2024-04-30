@@ -39,22 +39,22 @@ void VRControllerVisualizer::visualizeControllersInWorld(const TrackedController
 
 			Vector3 translationOffset(0, 0, 0);
 
-			if (deviceType_ == Device::DT_QUEST)
+			switch (deviceType_)
 			{
-				translationOffset = Vector3(0, 0, Scalar(0.0525));
-			}
-			else if (deviceType_ == Device::DT_QUEST_2)
-			{
-				translationOffset = Vector3(0, 0, Scalar(0.055));
-			}
-			else if (deviceType_ == Device::DT_QUEST_PRO)
-			{
-				// workaround: the offset is defined for the Quest2 controller - as we do not yet have a Quest Pro controller model
-				translationOffset = Vector3(0, 0, Scalar(0.055));
-			}
-			else if (deviceType_ == Device::DT_QUEST_3)
-			{
-				translationOffset = Vector3(0, 0, Scalar(0.055));
+				case Device::DT_QUEST:
+					translationOffset = Vector3(0, 0, Scalar(0.0525));
+					break;
+
+				case Device::DT_QUEST_2:
+				case Device::DT_QUEST_3:
+				case Device::DT_QUEST_PRO:
+				case Device::DT_VENTURA:
+					translationOffset = Vector3(0, 0, Scalar(0.055));
+					break;
+
+				case Device::DT_UNKNOWN:
+					ocean_assert(false && "Unknown device type!");
+					break;
 			}
 
 			baseSpace_T_controllerAim *= HomogenousMatrix4(translationOffset);

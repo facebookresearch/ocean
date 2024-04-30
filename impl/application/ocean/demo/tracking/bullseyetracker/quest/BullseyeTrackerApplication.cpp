@@ -228,14 +228,6 @@ void BullseyeTrackerApplication::onPreRender(const XrTime& xrPredictedDisplayTim
 
 	ocean_assert(scene_);
 
-	if (cameraFrameTypeIndex_ >= cameraFrameTypes_.size())
-	{
-		ocean_assert(false && "This should never happen!");
-		return;
-	}
-
-	const OSSDK::Sensors::v3::FrameType cameraFrameType = cameraFrameTypes_[cameraFrameTypeIndex_].first;
-
 	TemporaryScopedLock scopedResultLock(resultLock_);
 
 	const bool haveResults = haveResults_;
