@@ -2,19 +2,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(blob)
-add_subdirectory(mapbuilding)
-add_subdirectory(mesh)
-add_subdirectory(oculustags)
-add_subdirectory(offline)
-add_subdirectory(pattern)
-add_subdirectory(point)
-add_subdirectory(uvtexturemapping)
-add_subdirectory(rmv)
-
 if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
 
-    set(OCEAN_TARGET_NAME "ocean_tracking")
+    set(OCEAN_TARGET_NAME "ocean_tracking_offline")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -28,7 +18,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TRACKING_EXPORT")
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TRACKING_OFFLINE_EXPORT")
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
@@ -40,11 +30,12 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_cv
             ocean_cv_advanced
             ocean_cv_detector
-            ocean_cv_segmentation
             ocean_geometry
             ocean_io
             ocean_math
             ocean_media
+            ocean_tracking
+            ocean_tracking_blob
     )
 
     # Installation
@@ -54,7 +45,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/tracking
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/tracking/offline
             COMPONENT include
     )
 
