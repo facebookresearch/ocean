@@ -19,17 +19,6 @@
 #include "ocean/test/testtracking/testoculustags/TestOculusTagTracker.h"
 #include "ocean/test/testtracking/testoculustags/TestUtilities.h"
 
-#ifdef OCEAN_RUNTIME_STATIC
-	#if defined(__APPLE__)
-		#include "ocean/media/imageio/ImageIO.h"
-		#include "metaonly/ocean/media/vrs/VRS.h"
-	#elif defined(_ANDROID)
-			#include "ocean/media/openimagelibraries/OpenImageLibraries.h"
-	#elif defined(_WINDOWS)
-		#include "ocean/media/wic/WIC.h"
-	#endif
-#endif
-
 #ifdef _ANDROID
 	#include "ocean/platform/android/Battery.h"
 	#include "ocean/platform/android/ProcessorMonitor.h"
@@ -75,22 +64,6 @@ bool test(const double testDuration, Worker& worker, const std::string& testFunc
 	Log::info() << "The binary does not contain any SIMD instructions.";
 #endif
 
-#ifdef OCEAN_RUNTIME_STATIC
-	OCEAN_APPLY_IF_APPLE(Media::ImageIO::registerImageIOLibrary());
-	OCEAN_APPLY_IF_APPLE(Media::VRS::registerVRSLibrary());
-	OCEAN_APPLY_IF_ANDROID(Media::OpenImageLibraries::registerOpenImageLibrariesLibrary());
-	OCEAN_APPLY_IF_WINDOWS(Media::WIC::registerWICLibrary());
-#else
-	const std::string frameworkPath(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
-
-	if (PluginManager::get().collectPlugins(frameworkPath + std::string("/bin/plugins/") + Build::buildString()) == 0)
-	{
-		PluginManager::get().collectPlugins("plugins");
-	}
-
-	PluginManager::get().loadPlugins(Ocean::PluginManager::TYPE_MEDIA);
-#endif
-
 	Log::info() << "While the hardware supports the following SIMD instructions:";
 	Log::info() << Processor::translateInstructions(Processor::get().instructions());
 
@@ -130,15 +103,6 @@ bool test(const double testDuration, Worker& worker, const std::string& testFunc
 	{
 		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Ocean Tracking Oculus Tag Library test FAILED!";
 	}
-
-#ifdef OCEAN_RUNTIME_STATIC
-	OCEAN_APPLY_IF_WINDOWS(Media::WIC::unregisterWICLibrary());
-	OCEAN_APPLY_IF_ANDROID(Media::OpenImageLibraries::unregisterOpenImageLibrariesLibrary());
-	OCEAN_APPLY_IF_APPLE(Media::ImageIO::unregisterImageIOLibrary());
-	OCEAN_APPLY_IF_APPLE(Media::VRS::unregisterVRSLibrary());
-#else
-	PluginManager::get().release();
-#endif
 
 	return allSucceeded;
 }

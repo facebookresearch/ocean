@@ -51,6 +51,6 @@ class OCEAN_TEST_TRACKING_OCULUSTAGS_EXPORT TestOculusTagTracker : protected Tra
 
 } // namespace Tracking
 
-} // namespace Ocea
+} // namespace Ocean
 
 #endif // META_OCEAN_TEST_TESTTRACKING_TESTOCULUSTAG_TEST_OCULUSTAG_H

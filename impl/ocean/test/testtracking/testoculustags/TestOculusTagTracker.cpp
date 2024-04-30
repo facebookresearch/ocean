@@ -90,17 +90,8 @@ bool TestOculusTagTracker::testStressTestNegative(const double testDuration, Wor
 
 	do
 	{
-		const unsigned int cameraIndexA = RandomI::random(randomGenerator, 1u);
-		const unsigned int cameraIndexB = RandomI::random(randomGenerator, 1u);
-
-		const SharedAnyCamera anyCameraA = Test::TestGeometry::Utilities::realisticAnyCamera(AnyCameraType::FISHEYE, cameraIndexA);
-		const SharedAnyCamera anyCameraB = Test::TestGeometry::Utilities::realisticAnyCamera(AnyCameraType::FISHEYE, cameraIndexB);
-
-		const unsigned int paddingElementsFrameA = RandomI::random(randomGenerator, 0u, 100u);
-		const unsigned int paddingElementsFrameB = RandomI::random(randomGenerator, 0u, 100u);
-
-		Frame yFrameA(FrameType(anyCameraA->width(), anyCameraA->height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElementsFrameA);
-		Frame yFrameB(FrameType(anyCameraB->width(), anyCameraB->height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElementsFrameB);
+		const SharedAnyCamera anyCameraA = Test::TestGeometry::Utilities::realisticAnyCamera(AnyCameraType::FISHEYE, RandomI::random(randomGenerator, 1u));
+		const SharedAnyCamera anyCameraB = Test::TestGeometry::Utilities::realisticAnyCamera(AnyCameraType::FISHEYE, RandomI::random(randomGenerator, 1u));
 
 		OculusTagTracker oculusTagTracker;
 
@@ -108,8 +99,10 @@ bool TestOculusTagTracker::testStressTestNegative(const double testDuration, Wor
 
 		for (unsigned int n = 0u; n < frameNumbers; ++n)
 		{
-			CV::CVUtilities::randomizeFrame(yFrameA, false, &randomGenerator);
-			CV::CVUtilities::randomizeFrame(yFrameB, false, &randomGenerator);
+			const FrameType frameType(FrameType(anyCameraA->width(), anyCameraA->height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
+
+			const Frame yFrameA = CV::CVUtilities::randomizedFrame(frameType, false, &randomGenerator);
+			const Frame yFrameB = CV::CVUtilities::randomizedFrame(frameType, false, &randomGenerator);
 
 			const HomogenousMatrix4 world_T_device = HomogenousMatrix4(Random::vector3(randomGenerator, Scalar(-5), Scalar(5)), Random::quaternion(randomGenerator));
 
