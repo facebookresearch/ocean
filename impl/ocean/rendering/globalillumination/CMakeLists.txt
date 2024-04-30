@@ -2,12 +2,13 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(glescenegraph)
-add_subdirectory(globalillumination)
-
 if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
 
-    set(OCEAN_TARGET_NAME "ocean_rendering")
+    set(OCEAN_TARGET_NAME "ocean_rendering_globalillumination")
+
+    if (MACOS OR IOS)
+        find_library(FOUNDATION_LIB Foundation)
+    endif()
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -21,7 +22,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_RENDERING_EXPORT")
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_RENDERING_GI_EXPORT")
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
@@ -30,12 +31,17 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
-            ocean_cv
             ocean_math
-            ocean_media
-        PRIVATE
-            ocean_io
+            ocean_rendering
     )
+
+    if (IOS OR MACOS)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${FOUNDATION_LIB})
+    endif()
+
+    if (WIN32)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_win)
+    endif()
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
