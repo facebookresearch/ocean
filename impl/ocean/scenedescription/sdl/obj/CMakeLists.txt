@@ -2,12 +2,11 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(sdl/assimp)
-add_subdirectory(sdl/obj)
-
 if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
-    set(OCEAN_TARGET_NAME "ocean_scenedescription")
+    set(OCEAN_TARGET_NAME "ocean_scenedescription_sdl_obj")
+
+    find_package(assimp REQUIRED)
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -21,7 +20,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_SCENEDESCRIPTION_EXPORT)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_SCENEDESCRIPTION_SDL_OBJ_EXPORT)
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
@@ -34,9 +33,13 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
+            ocean_cv
             ocean_io
             ocean_math
+            ocean_media
             ocean_rendering
+            ocean_scenedescription
+            ocean_system
     )
 
     # Installation
@@ -46,7 +49,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/scenedescription
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/scenedescription/sdl/obj
             COMPONENT include
     )
 
