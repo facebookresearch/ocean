@@ -312,8 +312,8 @@ bool VRControllerVisualizer::loadModels(const Device::DeviceType deviceType, con
 			break;
 
 		case Device::DT_QUEST_2:
-			leftRenderModelFile = renderModelDirectory + IO::File("miramar_controller_left.obj");
-			rightRenderModelFile = renderModelDirectory + IO::File("miramar_controller_right.obj");
+			leftRenderModelFile = renderModelDirectory + IO::File("quest2_controller_left.obj");
+			rightRenderModelFile = renderModelDirectory + IO::File("quest2_controller_right.obj");
 			break;
 
 		case Device::DT_QUEST_PRO:
