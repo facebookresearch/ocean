@@ -149,8 +149,8 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRControllerVisualizer : publ
 		 * | Device::DT_QUEST   | CT_RIGHT        | quest_controller_right.obj   |
 		 * | Device::DT_QUEST_2 | CT_LEFT         | quest2_controller_left.obj   |
 		 * | Device::DT_QUEST_2 | CT_RIGHT        | quest2_controller_right.obj  |
-		 * | Device::DT_QUEST_3 | CT_LEFT         | crystal_controller_left.obj  |
-		 * | Device::DT_QUEST_3 | CT_RIGHT        | crystal_controller_right.obj |
+		 * | Device::DT_QUEST_3 | CT_LEFT         | quest3_controller_left.obj   |
+		 * | Device::DT_QUEST_3 | CT_RIGHT        | quest3_controller_right.obj  |
 		 * </pre>
 		 * @param engine The rendering engine to be used, must be valid
 		 * @param framebuffer The framebuffer to be used, must be valid

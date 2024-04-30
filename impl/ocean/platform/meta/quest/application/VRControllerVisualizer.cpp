@@ -318,8 +318,8 @@ bool VRControllerVisualizer::loadModels(const Device::DeviceType deviceType, con
 
 		case Device::DT_QUEST_PRO:
 		case Device::DT_QUEST_3:
-			leftRenderModelFile = renderModelDirectory + IO::File("crystal_controller_left.obj");
-			rightRenderModelFile = renderModelDirectory + IO::File("crystal_controller_right.obj");
+			leftRenderModelFile = renderModelDirectory + IO::File("quest3_controller_left.obj");
+			rightRenderModelFile = renderModelDirectory + IO::File("quest3_controller_right.obj");
 			break;
 
 		case Device::DT_UNKNOWN:
