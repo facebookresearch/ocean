@@ -38,8 +38,11 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT WxStaticBitmap : public wxStaticBitmap
 		 * Sets the bitmap of this static bitmap.
 		 * @param bitmap The bitmap to set
 		 */
+#if wxMAJOR_VERSION >= 3 && wxMINOR_VERSION >= 2 && wxRELEASE_NUMBER >= 4
+		void SetBitmap(const wxBitmapBundle& bitmap) override;
+#else
 		void SetBitmap(const wxBitmap& bitmap) override;
-
+#endif
 		/**
 		 * Returns false to not use a transparent background.
 		 * @return Always false

@@ -20,7 +20,7 @@ int Screen::primaryDisplayWidth()
 		return 0;
 	}
 
-	return wxDisplay(0).GetGeometry().width;
+	return wxDisplay(0u).GetGeometry().width;
 }
 
 int Screen::primaryDisplayHeight()
@@ -30,7 +30,7 @@ int Screen::primaryDisplayHeight()
 		return 0;
 	}
 
-	return wxDisplay(0).GetGeometry().height;
+	return wxDisplay(0u).GetGeometry().height;
 }
 
 int Screen::virtualDisplayWidth()
