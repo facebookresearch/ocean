@@ -32,6 +32,7 @@ if(BUILD_PASS_INDEX EQUAL 0)
     include(giflib.cmake)
     include(openxr.cmake)
     include(tinyxml2.cmake)
+    include(protozero.cmake)
 
     # Disabled because of build errors
     # include(curl.cmake)
@@ -44,6 +45,7 @@ elseif(BUILD_PASS_INDEX EQUAL 1)
 
     include(libpng.cmake)
     include(libtiff.cmake)
+    include(vtzero.cmake)
 
 elseif(BUILD_PASS_INDEX EQUAL 2)
 
