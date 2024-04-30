@@ -33,6 +33,7 @@ if(BUILD_PASS_INDEX EQUAL 0)
     include(openxr.cmake)
     include(tinyxml2.cmake)
     include(protozero.cmake)
+    include(libyuv.cmake)
 
     # Disabled because of build errors
     # include(curl.cmake)
