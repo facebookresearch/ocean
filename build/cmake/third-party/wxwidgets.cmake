@@ -4,10 +4,13 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
 if(BUILD_SHARED_LIBS)
   set(wxBUILD_SHARED ON CACHE BOOL "")
+  set(wxWidgets_USE_STATIC OFF)
 else()
   set(wxBUILD_SHARED OFF CACHE BOOL "")
   set(wxWidgets_USE_STATIC ON)
 endif()
+
+set(CMAKE_DEBUG_POSTFIX "")
 
 CPMAddPackage(
   NAME           wxwidgets
