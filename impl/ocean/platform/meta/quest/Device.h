@@ -40,9 +40,15 @@ class Device
 			DT_QUEST_3,
 			/// Quest Pro device.
 			DT_QUEST_PRO,
-			// Ventura or Panther
-			DT_VENTURA
+
+			/// Exclusive end of device types.
+			DT_QUEST_END
 		};
+
+	protected:
+
+		/// Definition of an invalid enum value for quest devices.
+		static constexpr uint32_t invalidQuestDeviceValue_ = 1024u;
 
 	public:
 
@@ -59,17 +65,35 @@ class Device
 		static inline std::string deviceName();
 
 		/**
-		 * Returns the name of the device.
-		 * @param type The device type
+		 * Returns the name of a device.
+		 * @param deviceType The device type for which the name will be returned
 		 * @return The device name, "Unknown" if unknown
 		 */
-		static std::string deviceName(const DeviceType type);
+		static std::string deviceName(const DeviceType deviceType);
 };
 
 inline std::string Device::deviceName()
 {
 	return deviceName(deviceType());
 }
+
+#ifdef OCEAN_PLATFORM_META_QUEST_USE_EXTERNAL_DEVICE_NAME
+
+/**
+ * Returns the type of the device.
+ * @param deviceName The name of the device for which the enum type will be returned
+ * @return The device type, DT_UNKNOWN if unknown
+ */
+uint32_t PlatformMetaDevice_externalDeviceType(const std::string& deviceName);
+
+/**
+ * Returns the name of a device which is based on external knowledge.
+ * @param deviceType The device type for which the name will be returned
+ * @return The device name, "Unknown" if unknown
+ */
+std::string PlatformMetaDevice_externalDeviceName(const uint32_t deviceType);
+
+#endif // OCEAN_PLATFORM_META_QUEST_USE_EXTERNAL_DEVICE_NAME
 
 } // Quest
 

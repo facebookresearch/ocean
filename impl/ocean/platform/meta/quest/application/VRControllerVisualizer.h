@@ -368,6 +368,19 @@ inline void VRControllerVisualizer::popState()
 	stateStack_.pop_back();
 }
 
+#ifdef OCEAN_PLATFORM_META_QUEST_OPENXR_USE_EXTERNAL_CONTROLLER_MODEL_FILE
+
+/**
+ * Returns the model file for an external controller.
+ * @param deviceType The device type associated with the external controller, must be valid
+ * @param leftModelFile The resulting model file for the left controller
+ * @param rightModelFile The resulting model file for the right controller
+ * @return True, if succeeded
+ */
+bool VRControllerVisualizer_externalControllerModelFiles(const uint32_t deviceType, std::string& leftModelFile, std::string& rightModelFile);
+
+#endif // OCEAN_PLATFORM_META_QUEST_OPENXR_USE_EXTERNAL_CONTROLLER_MODEL_FILE
+
 }
 
 }

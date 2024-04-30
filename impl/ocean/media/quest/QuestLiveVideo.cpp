@@ -7,6 +7,8 @@
 
 #include "ocean/platform/meta/quest/Device.h"
 
+#include "metaonly/ocean/platform/meta/quest/MetaonlyDevice.h"
+
 namespace Ocean
 {
 
@@ -233,7 +235,7 @@ bool QuestLiveVideo::determineCameraFrameType(const std::string& url, OSSDK::Sen
 {
 	ocean_assert(!url.empty());
 
-	switch (Platform::Meta::Quest::Device::deviceType())
+	switch (std::underlying_type<Platform::Meta::Quest::Device::DeviceType>::type(Platform::Meta::Quest::Device::deviceType()))
 	{
 		case Platform::Meta::Quest::Device::DT_QUEST:
 		case Platform::Meta::Quest::Device::DT_QUEST_2:
@@ -245,7 +247,7 @@ bool QuestLiveVideo::determineCameraFrameType(const std::string& url, OSSDK::Sen
 		case Platform::Meta::Quest::Device::DT_QUEST_3:
 			return determineCameraFrameTypeQuest3(url, cameraFrameType, cameraIndex);
 
-		case Platform::Meta::Quest::Device::DT_VENTURA:
+		case Platform::Meta::Quest::MetaonlyDevice::DT_VENTURA:
 			return determineCameraFrameTypeVentura(url, cameraFrameType, cameraIndex);
 
 		case Platform::Meta::Quest::Device::DT_UNKNOWN:

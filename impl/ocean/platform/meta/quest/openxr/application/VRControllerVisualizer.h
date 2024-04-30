@@ -75,6 +75,17 @@ inline VRControllerVisualizer::VRControllerVisualizer(const Rendering::EngineRef
 	// nothing to do here
 }
 
+#ifdef OCEAN_PLATFORM_META_QUEST_OPENXR_USE_EXTERNAL_TRANSLATION_OFFSET
+
+/**
+ * Returns the translation offset for an external controller.
+ * @param deviceType The device type associated with the external controller, must be valid
+ * @return The translation offset, Vector3(0, 0, 0) if unknown
+ */
+Vector3 VRControllerVisualizer_externalTranslationOffset(const uint32_t deviceType);
+
+#endif // OCEAN_PLATFORM_META_QUEST_OPENXR_USE_EXTERNAL_TRANSLATION_OFFSET
+
 }
 
 }

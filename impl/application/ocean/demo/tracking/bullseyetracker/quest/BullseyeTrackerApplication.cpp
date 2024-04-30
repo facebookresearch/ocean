@@ -17,6 +17,8 @@
 #include "ocean/rendering/Scene.h"
 #include "ocean/rendering/Utilities.h"
 
+#include "metaonly/ocean/platform/meta/quest/MetaonlyDevice.h"
+
 #include <vros/sys/sensors/FrameType.h>
 
 #include <algorithm>
@@ -393,7 +395,7 @@ bool BullseyeTrackerApplication::initializeCameras()
 
 	// Select the cameras based on the current device
 	CameraFrameTypes cameraFrameTypes;
-	switch (deviceType())
+	switch (std::underlying_type<Platform::Meta::Quest::Device::DeviceType>::type(deviceType()))
 	{
 		case Quest::Device::DT_QUEST:
 		case Quest::Device::DT_QUEST_2:
@@ -413,7 +415,7 @@ bool BullseyeTrackerApplication::initializeCameras()
 			break;
 
 		case Quest::Device::DT_QUEST_3:
-		case Quest::Device::DT_VENTURA:
+		case Quest::MetaonlyDevice::DT_VENTURA:
 			cameraFrameTypes = CameraFrameTypes
 			{
 				{OSSDK::Sensors::v3::FrameType::Color, Platform::Meta::Quest::Sensors::FrameProvider::CT_ALL_CAMERAS},

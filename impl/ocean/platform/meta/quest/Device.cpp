@@ -18,51 +18,65 @@ namespace Quest
 
 Device::DeviceType Device::deviceType()
 {
-	std::string modelName;
-	if (!Platform::Android::Utilities::systemPropertyValue("ro.product.model", modelName))
+	static_assert(DT_QUEST_END < invalidQuestDeviceValue_, "Invalid device type!");
+
+	std::string deviceName;
+	if (!Platform::Android::Utilities::systemPropertyValue("ro.product.model", deviceName))
 	{
 		Log::error() << "Failed to read the 'ro.product.model' system property";
 
 		return DT_UNKNOWN;
 	}
 
-	modelName = String::toLower(modelName);
+	deviceName = String::toLower(deviceName);
 
-	if (modelName == "quest")
+	if (deviceName == "quest")
 	{
 		return DT_QUEST;
 	}
 
-	if (modelName == "quest 2")
+	if (deviceName == "quest 2")
 	{
 		return DT_QUEST_2;
 	}
 
-	if (modelName == "quest 3")
+	if (deviceName == "quest 3")
 	{
 		return DT_QUEST_3;
 	}
 
-	if (modelName == "quest pro")
+	if (deviceName == "quest pro")
 	{
 		return DT_QUEST_PRO;
 	}
 
-	if (modelName == "quest 3s")
+#ifdef OCEAN_PLATFORM_META_QUEST_USE_EXTERNAL_DEVICE_NAME
+
+	const uint32_t externalDeviceType = PlatformMetaDevice_externalDeviceType(deviceName);
+
+	if (externalDeviceType == invalidQuestDeviceValue_)
 	{
-		return DT_VENTURA;
+		return DT_UNKNOWN;
 	}
 
-	Log::error() << "The type of the Meta device could not be determined, unknown model name '" << modelName << "'";
+	return Device::DeviceType(externalDeviceType);
+
+#else
+
+	Log::error() << "The type of the Meta device could not be determined, unknown model name '" << deviceName << "'";
 
 	ocean_assert(false && "This should never happen!");
 
 	return DT_UNKNOWN;
+
+#endif // OCEAN_PLATFORM_META_QUEST_USE_EXTERNAL_DEVICE_NAME
 }
 
-std::string Device::deviceName(const DeviceType type)
+std::string Device::deviceName(const DeviceType deviceType)
 {
-	switch (type)
+	static_assert(DT_QUEST_END < invalidQuestDeviceValue_, "Invalid device type!");
+
+	switch (deviceType)
 	{
 		case DT_QUEST:
 			return std::string("Quest");
@@ -76,11 +90,16 @@ std::string Device::deviceName(const DeviceType type)
 		case DT_QUEST_PRO:
 			return std::string("Quest Pro");
 
-		case DT_VENTURA:
-			return std::string("Ventura");
-
 		case DT_UNKNOWN:
 			return std::string("Unknown");
+
+		case DT_QUEST_END:
+			break;
+
+#ifdef OCEAN_PLATFORM_META_QUEST_USE_EXTERNAL_DEVICE_NAME
+		default:
+			return PlatformMetaDevice_externalDeviceName(deviceType);
+#endif
 	}
 
 	ocean_assert(false && "Invalid device type!");

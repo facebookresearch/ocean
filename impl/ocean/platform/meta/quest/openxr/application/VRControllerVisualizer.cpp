@@ -48,14 +48,22 @@ void VRControllerVisualizer::visualizeControllersInWorld(const TrackedController
 				case Device::DT_QUEST_2:
 				case Device::DT_QUEST_3:
 				case Device::DT_QUEST_PRO:
-				case Device::DT_VENTURA:
 					translationOffset = Vector3(0, 0, Scalar(0.055));
 					break;
 
 				case Device::DT_UNKNOWN:
+				case Device::DT_QUEST_END:
 					ocean_assert(false && "Unknown device type!");
 					break;
 			}
+
+#ifdef OCEAN_PLATFORM_META_QUEST_OPENXR_USE_EXTERNAL_TRANSLATION_OFFSET
+			if (deviceType_ > Device::DT_QUEST_END)
+			{
+				ocean_assert(translationOffset.isNull());
+				translationOffset = VRControllerVisualizer_externalTranslationOffset(deviceType_);
+			}
+#endif
 
 			baseSpace_T_controllerAim *= HomogenousMatrix4(translationOffset);
 		}

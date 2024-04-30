@@ -318,16 +318,37 @@ bool VRControllerVisualizer::loadModels(const Device::DeviceType deviceType, con
 
 		case Device::DT_QUEST_PRO:
 		case Device::DT_QUEST_3:
-		case Device::DT_VENTURA:
 			leftRenderModelFile = renderModelDirectory + IO::File("crystal_controller_left.obj");
 			rightRenderModelFile = renderModelDirectory + IO::File("crystal_controller_right.obj");
 			break;
 
 		case Device::DT_UNKNOWN:
+		case Device::DT_QUEST_END:
 			ocean_assert(false && "Never be here!");
 			return false;
+	}
 
-		// no default case
+#ifdef OCEAN_PLATFORM_META_QUEST_OPENXR_USE_EXTERNAL_CONTROLLER_MODEL_FILE
+
+	if (deviceType > Device::DT_QUEST_END)
+	{
+		ocean_assert(!leftRenderModelFile.isValid());
+		ocean_assert(!rightRenderModelFile.isValid());
+
+		std::string leftModelFile;
+		std::string rightModelFile;
+		if (VRControllerVisualizer_externalControllerModelFiles(deviceType, leftModelFile, rightModelFile))
+		{
+			leftRenderModelFile = renderModelDirectory + IO::File(leftModelFile);
+			rightRenderModelFile = renderModelDirectory + IO::File(rightModelFile);
+		}
+	}
+#endif // OCEAN_PLATFORM_META_QUEST_OPENXR_USE_EXTERNAL_CONTROLLER_MODEL_FILE
+
+	if (!leftRenderModelFile.isValid())
+	{
+		Log::error() << "No valid controller model for device '" << Platform::Meta::Quest::Device::deviceName(deviceType) << "'";
+		return false;
 	}
 
 	if (!leftRenderModelFile.exists())
