@@ -2,9 +2,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-include(${CMAKE_CURRENT_LIST_DIR}/../ocean_utilities.cmake)
-
 project(ocean_third_party)
+
+include(${CMAKE_CURRENT_LIST_DIR}/../ocean_utilities.cmake)
 
 set(CMAKE_CXX_STANDARD 20)
 
