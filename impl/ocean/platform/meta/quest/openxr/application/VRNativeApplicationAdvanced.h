@@ -205,6 +205,22 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRNativeApplicationAdv
 		Lock modelFilenameQueueLock_;
 };
 
+#ifdef OCEAN_PLATFORM_QUEST_OPENXR_APPLICATION_USE_EXTERNAL_RESOURCES
+
+/**
+ * Registers external resources.
+ * @ingroup platformmetaquestopenxrapplication
+ */
+void VRNativeApplicationAdvanced_registerExternalResources();
+
+/**
+ * Un-registers external resources.
+ * @ingroup platformmetaquestopenxrapplication
+ */
+void VRNativeApplicationAdvanced_unregisterExternalResources();
+
+#endif
+
 }
 
 }

@@ -2,8 +2,6 @@
 
 #include "ocean/platform/meta/quest/openxr/application/VRNativeApplicationAdvanced.h"
 
-#include "metaonly/ocean/devices/quest/Quest.h"
-
 #include "ocean/io/Directory.h"
 
 #include "ocean/media/android/Android.h"
@@ -43,11 +41,14 @@ VRNativeApplicationAdvanced::VRNativeApplicationAdvanced(struct android_app* and
 	Media::Android::registerAndroidLibrary();
 	Media::OpenImageLibraries::registerOpenImageLibrariesLibrary();
 
-	Devices::Quest::registerQuestLibrary();
-
 	SceneDescription::SDX::X3D::registerX3DLibrary();
 	SceneDescription::SDL::OBJ::registerOBJLibrary();
 	SceneDescription::SDL::Assimp::registerAssimpLibrary();
+
+#ifdef OCEAN_PLATFORM_QUEST_OPENXR_APPLICATION_USE_EXTERNAL_RESOURCES
+	VRNativeApplicationAdvanced_registerExternalResources();
+#endif
+
 }
 
 VRNativeApplicationAdvanced::~VRNativeApplicationAdvanced()
@@ -129,11 +130,13 @@ void VRNativeApplicationAdvanced::onReleaseResources()
 {
 	Log::debug() << "VRNativeApplicationAdvanced::onReleaseResources()";
 
+#ifdef OCEAN_PLATFORM_QUEST_OPENXR_APPLICATION_USE_EXTERNAL_RESOURCES
+	VRNativeApplicationAdvanced_unregisterExternalResources();
+#endif
+
 	SceneDescription::SDL::Assimp::unregisterAssimpLibrary();
 	SceneDescription::SDL::OBJ::unregisterOBJLibrary();
 	SceneDescription::SDX::X3D::unregisterX3DLibrary();
-
-	Devices::Quest::unregisterQuestLibrary();
 
 	Media::OpenImageLibraries::unregisterOpenImageLibrariesLibrary();
 	Media::Android::unregisterAndroidLibrary();
