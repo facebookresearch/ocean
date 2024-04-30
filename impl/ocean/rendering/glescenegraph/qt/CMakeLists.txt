@@ -2,23 +2,11 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(android)
-add_subdirectory(apple)
-add_subdirectory(qt)
+find_package(Qt5 COMPONENTS OpenGL Widgets)
 
-if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
+if (Qt5_FOUND AND (LINUX OR MACOS OR WIN32))
 
-    set(OCEAN_TARGET_NAME "ocean_rendering_glescenegraph")
-
-    if (MACOS OR IOS)
-        find_library(COREVIDEO_LIB CoreVideo)
-
-        if (IOS)
-            find_library(OPENGLES_LIB OpenGLES)
-        else()
-            find_library(OPENGL_LIB OpenGL)
-        endif()
-    endif()
+    set(OCEAN_TARGET_NAME "ocean_rendering_glescenegraph_qt")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -42,6 +30,10 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
 
+    if (NOT WIN32)
+        target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "-fexceptions")
+    endif()
+
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
@@ -54,19 +46,11 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_system
     )
 
-    if (MACOS OR IOS)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${COREVIDEO_LIB})
-
-        if (IOS)
-            target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${OPENGLES_LIB})
-        else()
-            target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${OPENGL_LIB})
-        endif()
-    endif()
-
-    if (ANDROID)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC "-lGLESv3")
-    endif()
+    target_link_libraries(${OCEAN_TARGET_NAME}
+        PUBLIC
+            Qt5::OpenGL
+            Qt5::Widgets
+    )
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
@@ -75,7 +59,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/rendering/glescenegraph
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/rendering/glescenegraph/qt
             COMPONENT include
     )
 
