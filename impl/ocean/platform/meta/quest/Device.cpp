@@ -20,39 +20,47 @@ Device::DeviceType Device::deviceType()
 {
 	static_assert(DT_QUEST_END < invalidQuestDeviceValue_, "Invalid device type!");
 
-	std::string deviceName;
-	if (!Platform::Android::Utilities::systemPropertyValue("ro.product.model", deviceName))
+	std::string productModel;
+	if (!Platform::Android::Utilities::systemPropertyValue("ro.product.model", productModel))
 	{
 		Log::error() << "Failed to read the 'ro.product.model' system property";
 
 		return DT_UNKNOWN;
 	}
 
-	deviceName = String::toLower(deviceName);
+	productModel = String::toLower(productModel);
 
-	if (deviceName == "quest")
+	if (productModel == "quest")
 	{
 		return DT_QUEST;
 	}
 
-	if (deviceName == "quest 2")
+	if (productModel == "quest 2")
 	{
 		return DT_QUEST_2;
 	}
 
-	if (deviceName == "quest 3")
+	if (productModel == "quest 3")
 	{
 		return DT_QUEST_3;
 	}
 
-	if (deviceName == "quest pro")
+	if (productModel == "quest pro")
 	{
 		return DT_QUEST_PRO;
 	}
 
 #ifdef OCEAN_PLATFORM_META_QUEST_USE_EXTERNAL_DEVICE_NAME
 
-	const uint32_t externalDeviceType = PlatformMetaDevice_externalDeviceType(deviceName);
+	std::string productName;
+	if (!Platform::Android::Utilities::systemPropertyValue("ro.product.name", productName))
+	{
+		Log::error() << "Failed to read the 'ro.product.name' system property";
+
+		return DT_UNKNOWN;
+	}
+
+	const uint32_t externalDeviceType = PlatformMetaDevice_externalDeviceType(productModel, productName);
 
 	if (externalDeviceType == invalidQuestDeviceValue_)
 	{
@@ -63,7 +71,7 @@ Device::DeviceType Device::deviceType()
 
 #else
 
-	Log::error() << "The type of the Meta device could not be determined, unknown model name '" << deviceName << "'";
+	Log::error() << "The type of the Meta device could not be determined, unknown model name '" << productModel << "'";
 
 	ocean_assert(false && "This should never happen!");
 

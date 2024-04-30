@@ -81,10 +81,11 @@ inline std::string Device::deviceName()
 
 /**
  * Returns the type of the device.
- * @param deviceName The name of the device for which the enum type will be returned
+ * @param productModel The product model for which the enum type will be returned
+ * @param productName The product name for which the enum type will be returned
  * @return The device type, DT_UNKNOWN if unknown
  */
-uint32_t PlatformMetaDevice_externalDeviceType(const std::string& deviceName);
+uint32_t PlatformMetaDevice_externalDeviceType(const std::string& productModel, const std::string& productName);
 
 /**
  * Returns the name of a device which is based on external knowledge.
