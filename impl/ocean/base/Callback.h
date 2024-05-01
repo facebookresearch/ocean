@@ -886,7 +886,7 @@ class MemberFunctionCaller
 		 * @param param19 20th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, PT18 param18, PT19 param19);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, PT18 param18, PT19 param19);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -914,7 +914,7 @@ class MemberFunctionCaller
 		 * @param param19 20th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, PT18 param18, PT19 param19);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, PT18 param18, PT19 param19);
 };
 
 /**
@@ -955,7 +955,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param18 19th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, PT18 param18, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, PT18 param18, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -982,7 +982,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param18 19th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, PT18 param18, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, PT18 param18, NullClass);
 };
 
 /**
@@ -1022,7 +1022,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param17 18th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1048,7 +1048,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param17 18th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, NullClass, NullClass);
 };
 
 /**
@@ -1087,7 +1087,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param16 17th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1112,7 +1112,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param16 17th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1150,7 +1150,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param15 16th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1174,7 +1174,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param15 16th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1211,7 +1211,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param14 15th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1234,7 +1234,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param14 15th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1270,7 +1270,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param13 14th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1292,7 +1292,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param13 14th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1327,7 +1327,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param12 13th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1348,7 +1348,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param12 13th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1382,7 +1382,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param11 12th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1402,7 +1402,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param11 12th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1435,7 +1435,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param10 11th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1454,7 +1454,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param10 11th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1486,7 +1486,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param9 10th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1504,7 +1504,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param9 10th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1535,7 +1535,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param8 Ninth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1552,7 +1552,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, 
 		 * @param param8 Ninth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1582,7 +1582,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, NullC
 		 * @param param7 Eighth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1598,7 +1598,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, NullC
 		 * @param param7 Eighth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1627,7 +1627,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, NullClass,
 		 * @param param6 Seventh function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1642,7 +1642,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, NullClass,
 		 * @param param6 Seventh function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1670,7 +1670,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, NullClass, Null
 		 * @param param5 Sixth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1684,7 +1684,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, NullClass, Null
 		 * @param param5 Sixth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1711,7 +1711,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, NullClass, NullClass
 		 * @param param4 Fifth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1724,7 +1724,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, PT4, NullClass, NullClass
 		 * @param param4 Fifth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1750,7 +1750,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, NullClass, NullClass, Nul
 		 * @param param3 Fourth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1762,7 +1762,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, PT3, NullClass, NullClass, Nul
 		 * @param param3 Fourth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1787,7 +1787,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, NullClass, NullClass, NullClas
 		 * @param param2 Third function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1798,7 +1798,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, PT2, NullClass, NullClass, NullClas
 		 * @param param2 Third function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, PT2 param2, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1822,7 +1822,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, NullClass, NullClass, NullClass, Nu
 		 * @param param1 Second function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1832,7 +1832,7 @@ class MemberFunctionCaller<CT, RT, PT0, PT1, NullClass, NullClass, NullClass, Nu
 		 * @param param1 Second function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, PT1 param1, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1855,7 +1855,7 @@ class MemberFunctionCaller<CT, RT, PT0, NullClass, NullClass, NullClass, NullCla
 		 * @param param0 First function parameter
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1864,7 +1864,7 @@ class MemberFunctionCaller<CT, RT, PT0, NullClass, NullClass, NullClass, NullCla
 		 * @param param0 First function parameter
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, PT0, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, PT0 param0, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -1886,7 +1886,7 @@ class MemberFunctionCaller<CT, RT, NullClass, NullClass, NullClass, NullClass, N
 		 * @param functionPointer Pointer of the member function to call
 		 * @return Return value
 		 */
-		inline static RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 
 		/**
 		 * Calls a const function defined by the function pointer the class object and the function parameters.
@@ -1894,7 +1894,7 @@ class MemberFunctionCaller<CT, RT, NullClass, NullClass, NullClass, NullClass, N
 		 * @param functionPointer Pointer of the member function to call
 		 * @return Return value
 		 */
-		inline static RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(const CT* functionClass, typename MemberFunctionPointerMaker<CT, RT, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::TypeConst functionPointer, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 template <typename CT, typename RT, typename PT0, typename PT1, typename PT2, typename PT3, typename PT4, typename PT5, typename PT6, typename PT7, typename PT8, typename PT9, typename PT10, typename PT11, typename PT12, typename PT13, typename PT14, typename PT15, typename PT16, typename PT17, typename PT18, typename PT19>
@@ -2252,7 +2252,7 @@ class StaticFunctionCaller
 		 * @param param19 20th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, PT18 param18, PT19 param19);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, PT18 param18, PT19 param19);
 };
 
 
@@ -2294,7 +2294,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9,
 		 * @param param18 19th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, PT18 param18, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, PT18 param18, NullClass);
 };
 
 /**
@@ -2334,7 +2334,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9,
 		 * @param param17 18th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, PT17 param17, NullClass, NullClass);
 };
 
 /**
@@ -2373,7 +2373,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9,
 		 * @param param16 17th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, PT16 param16, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2411,7 +2411,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9,
 		 * @param param15 16th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, PT15 param15, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2448,7 +2448,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9,
 		 * @param param14 15th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, PT14 param14, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2484,7 +2484,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9,
 		 * @param param13 14th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, PT13 param13, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2519,7 +2519,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9,
 		 * @param param12 13th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, PT12 param12, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2553,7 +2553,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9,
 		 * @param param11 12th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, PT11 param11, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2586,7 +2586,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9,
 		 * @param param10 11th function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, PT10 param10, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2618,7 +2618,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9,
 		 * @param param9 Tenth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, PT9 param9, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2647,7 +2647,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, Null
 		 * @param param8 Ninth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, PT8 param8, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 
@@ -2676,7 +2676,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, NullClass
 		 * @param param7 Eighth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, PT7 param7, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 
@@ -2704,7 +2704,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, NullClass, Nul
 		 * @param param6 Seventh function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, PT6 param6, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2730,7 +2730,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, PT5, NullClass, NullClas
 		 * @param param5 Sixth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, PT5 param5, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2755,7 +2755,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, PT4, NullClass, NullClass, Nu
 		 * @param param4 Fifth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, PT4 param4, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2779,7 +2779,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, PT3, NullClass, NullClass, NullCla
 		 * @param param3 Fourth function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, PT3 param3, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2802,7 +2802,7 @@ class StaticFunctionCaller<RT, PT0, PT1, PT2, NullClass, NullClass, NullClass, N
 		 * @param param2 Third function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, PT2 param2, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2824,7 +2824,7 @@ class StaticFunctionCaller<RT, PT0, PT1, NullClass, NullClass, NullClass, NullCl
 		 * @param param1 Second function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, PT1, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, PT1 param1, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2845,7 +2845,7 @@ class StaticFunctionCaller<RT, PT0, NullClass, NullClass, NullClass, NullClass, 
 		 * @param param0 First function parameter
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, PT0, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, PT0, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, PT0 param0, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 /**
@@ -2865,7 +2865,7 @@ class StaticFunctionCaller<RT, NullClass, NullClass, NullClass, NullClass, NullC
 		 * @param functionPointer Pointer of the member function to call
 		 * @return Return value
 		 */
-		inline static RT call(typename StaticFunctionPointerMaker<RT, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
+		static inline RT call(typename StaticFunctionPointerMaker<RT, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass>::Type functionPointer, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass, NullClass);
 };
 
 template <typename RT, typename PT0, typename PT1, typename PT2, typename PT3, typename PT4, typename PT5, typename PT6, typename PT7, typename PT8, typename PT9, typename PT10, typename PT11, typename PT12, typename PT13, typename PT14, typename PT15, typename PT16, typename PT17, typename PT18, typename PT19>

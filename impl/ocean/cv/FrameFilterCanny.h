@@ -151,7 +151,7 @@ class OCEAN_CV_EXPORT FrameFilterCanny
 		 * @tparam T The data type of the edge operator responses
 		 */
 		template <typename T>
-		inline static void extractGradientDirectionsAndMagnitudes(const T* egdeFilterResults, uint8_t* direction, T* magnitude, const T lowThreshold, const unsigned int width, const unsigned int height, Worker* worker = nullptr);
+		static inline void extractGradientDirectionsAndMagnitudes(const T* egdeFilterResults, uint8_t* direction, T* magnitude, const T lowThreshold, const unsigned int width, const unsigned int height, Worker* worker = nullptr);
 
 		/**
 		 * Calculates a subset of edge directions (quantized to 0, 90, 45, and 135 degrees) and their corresponding magnitues (based on Sobel or Scharr filter responses).

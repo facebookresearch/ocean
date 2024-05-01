@@ -71,7 +71,7 @@ class OCEAN_PLATFORM_WIN_EXPORT Mouse : Platform::Mouse
 		 * @param synchron True, to request the state synchronously with the message queue; False, to request the state in the current moment
 		 * @return True, if so
 		 */
-		inline static bool keyState(const int nVirtualKey, const bool synchron);
+		static inline bool keyState(const int nVirtualKey, const bool synchron);
 };
 
 inline bool Mouse::keyState(const int nVirtualKey, const bool synchron)

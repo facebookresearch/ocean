@@ -139,7 +139,7 @@ class HashSet
 		 * @param element Element to return the hash value for
 		 * @return Resulting hash value
 		 */
-		inline static size_t defaultHashFunction(const T& element);
+		static inline size_t defaultHashFunction(const T& element);
 
 		/**
 		 * Returns whether this hash set is still consistent.

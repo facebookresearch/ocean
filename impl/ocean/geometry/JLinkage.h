@@ -75,7 +75,7 @@ class OCEAN_GEOMETRY_EXPORT JLinkage
 		 * @param randomGenerator Random number generator. If is not nullptr, RANSAC is used for homography determination within initial minimum sample set
 		 * @return True, if successfully completed
 		 */
-		inline static bool homographyMatrices(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, const unsigned int width, const unsigned int height, SquareMatrices3& homographies, const unsigned int testCandidates, const Indices32& leftPointIndicesForInitialModels, const Scalar squarePixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography = nullptr, bool refineHomographies = true, bool approximatedNeighborSearch = true, Ocean::RandomGenerator* randomGenerator = nullptr);
+		static inline bool homographyMatrices(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, const unsigned int width, const unsigned int height, SquareMatrices3& homographies, const unsigned int testCandidates, const Indices32& leftPointIndicesForInitialModels, const Scalar squarePixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography = nullptr, bool refineHomographies = true, bool approximatedNeighborSearch = true, Ocean::RandomGenerator* randomGenerator = nullptr);
 
 		/**
 		 * Multiple line detector using J-linkage
@@ -198,7 +198,7 @@ class OCEAN_GEOMETRY_EXPORT TLinkage : JLinkage
 		 * @param vectorB second vector to compare
 		 * @return Tanimoto distance [0, 1]
 		 */
-		inline static Scalar tanimotoDistance(const Matrix& vectorA, const Matrix& vectorB);
+		static inline Scalar tanimotoDistance(const Matrix& vectorA, const Matrix& vectorB);
 };
 
 inline bool JLinkage::homographyMatrices(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, const unsigned int width, const unsigned int height, SquareMatrices3 & homographies, const unsigned int testCandidates, const Indices32& leftPointIndicesForInitialModels, const Scalar squarePixelErrorAssignmentThreshold, std::vector<IndexSet32>* usedIndicesPerHomography, bool refineHomographies, bool approximatedNeighborSearch, Ocean::RandomGenerator* randomGenerator)

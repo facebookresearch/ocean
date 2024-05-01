@@ -33,25 +33,25 @@ class NEON
 		 * Prefetches a block of temporal memory into all cache levels.
 		 * @param data Data to be prefetched
 		 */
-		inline static void prefetchT0(const void* const data);
+		static inline void prefetchT0(const void* const data);
 
 		/**
 		 * Prefetches a block of temporal memory in all cache levels except 0th cache level.
 		 * @param data Data to be prefetched
 		 */
-		inline static void prefetchT1(const void* const data);
+		static inline void prefetchT1(const void* const data);
 
 		/**
 		 * Prefetches a block of temporal memory in all cache levels, except 0th and 1st cache levels.
 		 * @param data Data to be prefetched
 		 */
-		inline static void prefetchT2(const void* const data);
+		static inline void prefetchT2(const void* const data);
 
 		/**
 		 * Prefetches a block of non-temporal memory into non-temporal cache structure.
 		 * @param data Data to be prefetched
 		 */
-		inline static void prefetchNTA(const void* const data);
+		static inline void prefetchNTA(const void* const data);
 
 		/**
 		 * Sum square differences determination for the last 9 elements of an 16 elements buffer with 8 bit precision.

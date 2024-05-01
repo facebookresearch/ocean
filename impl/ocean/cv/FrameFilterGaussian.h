@@ -184,7 +184,7 @@ class OCEAN_CV_EXPORT FrameFilterGaussian
 		 * @param targetPaddingElements Optional padding elements at the end of each target row, in elements, with range [0, infinity)
 		 * @param reusableMemory An optional object holding reusable memory which can be used during filtering, nullptr otherwise
 		 */
-		inline static void filter1Channel8Bit121NEON(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, ReusableMemory* reusableMemory);
+		static inline void filter1Channel8Bit121NEON(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, ReusableMemory* reusableMemory);
 
 #endif // OCEAN_HARDWARE_NEON_VERSION >= 10
 };

@@ -113,7 +113,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT ContourAnalyzer
 		 * @param points The points of any kind of contour which will be converted to a dense and distinct contour with sub-pixel accuracy
 		 * @return The resulting dense and distinct contour
 		 */
-		inline static PixelContour createDenseContour(const Vectors2& points);
+		static inline PixelContour createDenseContour(const Vectors2& points);
 
 		/**
 		 * Equalized a sparse contour according to the density of the locations of contour points.
@@ -129,7 +129,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT ContourAnalyzer
 		 * @param position Pixel position to determine the hash function for
 		 * @return Resulting hash function
 		 */
-		inline static size_t pixelPositionHashValueFunction(const PixelPosition& position);
+		static inline size_t pixelPositionHashValueFunction(const PixelPosition& position);
 
 		/**
 		 * Returns the pixel direction of two successive pixels in a dense contour.
@@ -137,7 +137,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT ContourAnalyzer
 		 * @param pixel1 Following pixel
 		 * @return Resulting pixel direction
 		 */
-		inline static PixelDirection determinePixelDirection(const PixelPosition& pixel0, const PixelPosition& pixel1);
+		static inline PixelDirection determinePixelDirection(const PixelPosition& pixel0, const PixelPosition& pixel1);
 };
 
 inline ContourAnalyzer::DenseObject::DenseObject(const Scalar dense, const unsigned int index) :

@@ -52,7 +52,7 @@ class OCEAN_CV_ADVANCED_EXPORT AdvancedFrameFilterSobel
 		 * @param z Depth filter position in pixel
 		 * @return Resulting filter response for the defined pixel
 		 */
-		inline static unsigned short filterHorizontalVerticalMaximum8BitPixel(const unsigned char* source, const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int x, const unsigned int y, const unsigned int z);
+		static inline unsigned short filterHorizontalVerticalMaximum8BitPixel(const unsigned char* source, const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int x, const unsigned int y, const unsigned int z);
 
 	private:
 

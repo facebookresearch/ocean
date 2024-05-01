@@ -70,7 +70,7 @@ class SuccessionSubset
 		 * Returns the dimension of each object of this container.
 		 * @return Dimensions of each object, tDimension is returned
 		 */
-		inline static size_t dimensions();
+		static inline size_t dimensions();
 
 		/**
 		 * Returns the number of objects that are managed by this container

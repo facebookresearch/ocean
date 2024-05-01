@@ -144,7 +144,7 @@ class QRCode
 		 * @param version The version number for which the number of modules per side will be computed, range: [1, 40]
 		 * @return The number of modules per side
 		 */
-		inline static unsigned int modulesPerSide(const unsigned int version);
+		static inline unsigned int modulesPerSide(const unsigned int version);
 
 		/**
 		 * Checks if another code is identical to this one.
@@ -166,21 +166,21 @@ class QRCode
 		 * @param encodingMode The encoding mode that will be converted into a string
 		 * @return The translated encoding mode
 		 */
-		inline static std::string translateEncodingMode(const EncodingMode encodingMode);
+		static inline std::string translateEncodingMode(const EncodingMode encodingMode);
 
 		/**
 		 * Translates an error correction capacity enum into a human-readable string
 		 * @param errorCorrectionCapacity The error correction capacity that will be converted into a string
 		 * @return The translated error correction capacity
 		 */
-		inline static std::string translateErrorCorrectionCapacity(const ErrorCorrectionCapacity errorCorrectionCapacity);
+		static inline std::string translateErrorCorrectionCapacity(const ErrorCorrectionCapacity errorCorrectionCapacity);
 
 		/**
 		 * Returns the integer value of an error correction capacity
 		 * @param errorCorrectionCapacity The error correction capacity that will be converted into a string
 		 * @return The value of the error correction capacity
 		 */
-		inline static unsigned int getErrorCorrectionCapacityValue(const ErrorCorrectionCapacity errorCorrectionCapacity);
+		static inline unsigned int getErrorCorrectionCapacityValue(const ErrorCorrectionCapacity errorCorrectionCapacity);
 
 	protected:
 

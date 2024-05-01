@@ -397,7 +397,7 @@ class TypeNamer
 		 * @tparam T The data type for which the name is returned
 		 */
 		template <typename T>
-		inline static const char* name();
+		static inline const char* name();
 };
 
 /**

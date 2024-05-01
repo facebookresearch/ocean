@@ -551,7 +551,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT MaskAnalyzer
 		 * @param maskValue Optional pixel value that is to be interpreted as belonging to the mask and which will not enclosed by the border pixels, range: [0, 255], default: 0
 		 * @return True, if so
 		 */
-		inline static bool isOuterContour(const uint8_t* mask, const unsigned int width, const PixelContour& contour, const uint8_t maskValue = 0u);
+		static inline bool isOuterContour(const uint8_t* mask, const unsigned int width, const PixelContour& contour, const uint8_t maskValue = 0u);
 
 		/**
 		 * Counts the number of mask pixels.

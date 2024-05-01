@@ -126,7 +126,7 @@ class OCEAN_RENDERING_GI_EXPORT Lighting
 		 * @param intensity Intensity of the light source, with range [0, 1]
 		 * @return Resulting attenuation factor
 		 */
-		inline static Scalar pointLightAttenuationFactor(const Vector3& lightAttenuation, const Scalar lightObjectDistance, const Scalar intensity);
+		static inline Scalar pointLightAttenuationFactor(const Vector3& lightAttenuation, const Scalar lightObjectDistance, const Scalar intensity);
 
 		/**
 		 * Returns the attenuation factor for a given point light.
@@ -135,7 +135,7 @@ class OCEAN_RENDERING_GI_EXPORT Lighting
 		 * @param intensity Intensity of the light source, with range [0, 1]
 		 * @return Resulting attenuation factor
 		 */
-		inline static Scalar pointLightAttenuationFactorSqr(const Vector3& lightAttenuation, const Scalar lightObjectDistanceSqr, const Scalar intensity);
+		static inline Scalar pointLightAttenuationFactorSqr(const Vector3& lightAttenuation, const Scalar lightObjectDistanceSqr, const Scalar intensity);
 
 		/**
 		 * Returns the attenuation factor for a given spot light.
@@ -148,7 +148,7 @@ class OCEAN_RENDERING_GI_EXPORT Lighting
 		 * @param spotExponent Lighting exponent of the spot light, with range [0, 128]
 		 * @return Resulting attenuation factor
 		 */
-		inline static Scalar spotLightAttenuationFactor(const Vector3& lightAttenuation, const Scalar lightObjectDistance, const Scalar intensity, const Vector3& lightDirection, const Vector3& lightObjectDirection, const Scalar coneAngleCos, const Scalar spotExponent);
+		static inline Scalar spotLightAttenuationFactor(const Vector3& lightAttenuation, const Scalar lightObjectDistance, const Scalar intensity, const Vector3& lightDirection, const Vector3& lightObjectDirection, const Scalar coneAngleCos, const Scalar spotExponent);
 };
 
 inline Scalar Lighting::pointLightAttenuationFactor(const Vector3& lightAttenuation, const Scalar lightObjectDistance, const Scalar intensity)

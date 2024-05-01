@@ -119,7 +119,7 @@ class OCEAN_GEOMETRY_EXPORT P3P : public PerspectivePose
 		 * @tparam T Data type of e.g., the vector elements to be used, either 'float' or 'double'
 		 */
 		template <typename T>
-		inline static VectorT3<T> constructClosestPointToCP(const VectorT3<T>& objectPoint0, const VectorT3<T>& objectPoint1, const T objectDistance01, const T objectDistanceToCP0, const T objectDistanceToCP1);
+		static inline VectorT3<T> constructClosestPointToCP(const VectorT3<T>& objectPoint0, const VectorT3<T>& objectPoint1, const T objectDistance01, const T objectDistanceToCP0, const T objectDistanceToCP1);
 
 		/**
 		 * Constructs the closest point to the camera's projection center lying on the object surface triangle.
@@ -133,7 +133,7 @@ class OCEAN_GEOMETRY_EXPORT P3P : public PerspectivePose
 		 * @tparam T Data type of e.g., the vector elements to be used, either 'float' or 'double'
 		 */
 		template <typename T>
-		inline static bool constructClosestPointToCPOnObjectPlane(const VectorT3<T>& objectPoint0, const VectorT3<T>& objectPoint1, const VectorT3<T>& objectPoint2, const VectorT3<T>& closestPoint01, const VectorT3<T>& closestPoint02, VectorT3<T>& point);
+		static inline bool constructClosestPointToCPOnObjectPlane(const VectorT3<T>& objectPoint0, const VectorT3<T>& objectPoint1, const VectorT3<T>& objectPoint2, const VectorT3<T>& closestPoint01, const VectorT3<T>& closestPoint02, VectorT3<T>& point);
 
 		/**
 		 * Returns the square of a value.

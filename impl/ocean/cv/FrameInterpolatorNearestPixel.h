@@ -65,7 +65,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorNearestPixel
 				 * @param worker Optional worker object to distribute the computational load
 				 * @return True, if succeeded
 				 */
-				inline static bool resize(Frame& frame, const unsigned int targetWidth, const unsigned int targetHeight, Worker* worker = nullptr);
+				static inline bool resize(Frame& frame, const unsigned int targetWidth, const unsigned int targetHeight, Worker* worker = nullptr);
 
 				/**
 				 * Applies an affine image transformation to a frame (with zipped pixel format) and renders using nearest-neighbor interpolation
@@ -431,7 +431,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorNearestPixel
 		 * @see affine8BitPerChannelSubset(), affine8BitPerChannelSubsetNEON().
 		 */
 		template <unsigned int tChannels>
-		inline static void affine8BitPerChannelSSESubset(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const unsigned int inputPaddingElements, const SquareMatrix3* affineTransform, const uint8_t* borderColor, uint8_t* output, const unsigned int outputWidth, const unsigned int outputHeight, const unsigned int outputPaddingElements, const unsigned int firstOutputRow, const unsigned int numberOutputRows);
+		static inline void affine8BitPerChannelSSESubset(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const unsigned int inputPaddingElements, const SquareMatrix3* affineTransform, const uint8_t* borderColor, uint8_t* output, const unsigned int outputWidth, const unsigned int outputHeight, const unsigned int outputPaddingElements, const unsigned int firstOutputRow, const unsigned int numberOutputRows);
 
 		/**
 		 * Copies the image content of an input image to a subset of an output image by application of a given homography transformation (using SSE).
@@ -474,7 +474,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorNearestPixel
 		 * @tparam tChannels Number of frame channels
 		 */
 		template <unsigned int tChannels>
-		inline static void affine8BitPerChannelIntegerNEONSubset(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const unsigned int inputPaddingElements, const SquareMatrix3* affineTransform, const uint8_t* borderColor, uint8_t* output, const unsigned int outputWidth, const unsigned int outputHeight, const unsigned int outputPaddingElements, const unsigned int firstOutputRow, const unsigned int numberOutputRows);
+		static inline void affine8BitPerChannelIntegerNEONSubset(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const unsigned int inputPaddingElements, const SquareMatrix3* affineTransform, const uint8_t* borderColor, uint8_t* output, const unsigned int outputWidth, const unsigned int outputHeight, const unsigned int outputPaddingElements, const unsigned int firstOutputRow, const unsigned int numberOutputRows);
 
 		/**
 		 * Copies the image content of an input image to a subset of an output image by application of a given homography transformation (using NEON).
@@ -496,7 +496,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorNearestPixel
 		 * @see homographySubset().
 		 */
 		template <typename T, unsigned int tChannels>
-		inline static void homographyNEONSubset(const T* input, const unsigned int inputWidth, const unsigned int inputHeight, const SquareMatrix3* input_H_output, const T* borderColor, T* output, const unsigned int outputWidth, const unsigned int outputHeight, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstOutputRow, const unsigned int numberOutputRows);
+		static inline void homographyNEONSubset(const T* input, const unsigned int inputWidth, const unsigned int inputHeight, const SquareMatrix3* input_H_output, const T* borderColor, T* output, const unsigned int outputWidth, const unsigned int outputHeight, const unsigned int inputPaddingElements, const unsigned int outputPaddingElements, const unsigned int firstOutputRow, const unsigned int numberOutputRows);
 
  #endif // OCEAN_HARDWARE_NEON_VERSION
 
@@ -521,7 +521,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorNearestPixel
 		 * @tparam tChannels Number of frame channels
 		 */
 		template <unsigned int tChannels>
-		inline static void homographyMask8BitPerChannelSubset(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const unsigned int inputPaddingElements, const SquareMatrix3* input_H_output, uint8_t* output, const unsigned int outputPaddingElements, uint8_t* outputMask, const unsigned int outputMaskPaddingElements, const uint8_t maskValue, const int outputOriginX, const int outputOriginY, const unsigned int outputWidth, const unsigned int outputHeight, const unsigned int firstOutputRow, const unsigned int numberOutputRows);
+		static inline void homographyMask8BitPerChannelSubset(const uint8_t* input, const unsigned int inputWidth, const unsigned int inputHeight, const unsigned int inputPaddingElements, const SquareMatrix3* input_H_output, uint8_t* output, const unsigned int outputPaddingElements, uint8_t* outputMask, const unsigned int outputMaskPaddingElements, const uint8_t maskValue, const int outputOriginX, const int outputOriginY, const unsigned int outputWidth, const unsigned int outputHeight, const unsigned int firstOutputRow, const unsigned int numberOutputRows);
 
 		/**
 		 * Transforms a subset of a given input frame (with zipped pixel format) into an output frame by application of an interpolation lookup table.

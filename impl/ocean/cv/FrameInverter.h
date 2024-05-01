@@ -49,7 +49,7 @@ class OCEAN_CV_EXPORT FrameInverter
 		 * @tparam tChannels Number of data channels of the frames
 		 */
 		template <unsigned int tChannel, unsigned int tChannels>
-		inline static void invert8BitChannel(uint8_t* frame, const unsigned int width, const unsigned int height, Worker* worker = nullptr);
+		static inline void invert8BitChannel(uint8_t* frame, const unsigned int width, const unsigned int height, Worker* worker = nullptr);
 
 		/**
 		 * Inverts one channel of an 8 bit per channel frame.
@@ -62,7 +62,7 @@ class OCEAN_CV_EXPORT FrameInverter
 		 * @tparam tChannels Number of data channels of the frames
 		 */
 		template <unsigned int tChannel, unsigned int tChannels>
-		inline static void invert8BitChannel(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, Worker* worker = nullptr);
+		static inline void invert8BitChannel(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, Worker* worker = nullptr);
 
 		/**
 		 * Inverts several channels of an 8 bit per channel frame.
@@ -75,7 +75,7 @@ class OCEAN_CV_EXPORT FrameInverter
 		 * @tparam tChannels Number of data channels of the frames
 		 */
 		template <unsigned int tChannelFirst, unsigned int tChannelLast, unsigned int tChannels>
-		inline static void invert8BitChannels(uint8_t* frame, const unsigned int width, const unsigned int height, Worker* worker = nullptr);
+		static inline void invert8BitChannels(uint8_t* frame, const unsigned int width, const unsigned int height, Worker* worker = nullptr);
 
 		/**
 		 * Inverts several channels of an 8 bit per channel frame.
@@ -89,7 +89,7 @@ class OCEAN_CV_EXPORT FrameInverter
 		 * @tparam tChannels Number of data channels of the frames
 		 */
 		template <unsigned int tChannelFirst, unsigned int tChannelLast, unsigned int tChannels>
-		inline static void invert8BitChannels(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, Worker* worker = nullptr);
+		static inline void invert8BitChannels(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, Worker* worker = nullptr);
 
 		/**
 		 * Inverts an 8 bit per channel frame.
@@ -102,7 +102,7 @@ class OCEAN_CV_EXPORT FrameInverter
 		 * @param targetPaddingElements Optional number of padding elements at the end of each target row, in elements, with range [0, infinity)
 		 * @param worker Optional worker object to distribute the computation
 		 */
-		inline static void invert8BitPerChannel(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+		static inline void invert8BitPerChannel(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 	protected:
 

@@ -31,7 +31,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT OptimizerF : virtual public Optimizer
 		 * @param height The height of the frame in pixel, with range [1, infinity)
 		 * @return Resulting search radii
 		 */
-		inline static std::vector<Scalar> calculateSearchRadii(const unsigned int radii, const unsigned int width, const unsigned int height);
+		static inline std::vector<Scalar> calculateSearchRadii(const unsigned int radii, const unsigned int width, const unsigned int height);
 
 	protected:
 

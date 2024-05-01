@@ -144,7 +144,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 				 * @param scale Optional scaling factor for the coordinates in the object space, range: (0, infinity)
 				 * @return The 4 corners in object space in the order top-left, bottom-left, bottom-right, and top-right.
 				 */
-				inline static Vectors3 computeCornersInObjectSpace(const Scalar scale = Scalar(1));
+				static inline Vectors3 computeCornersInObjectSpace(const Scalar scale = Scalar(1));
 
 				/**
 				 * Computes the locations of the centers of the 3 finder patterns for a specific QR code version in object space
@@ -245,7 +245,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * @param observation The observation of a QR codes that will be drawn, must be valid
 		 * @param code The corresponding QR code
 		 */
-		inline static void drawObservation(Frame& frame, const LegacyQRCodeDetector2D::Observation& observation, const QRCode& code);
+		static inline void drawObservation(Frame& frame, const LegacyQRCodeDetector2D::Observation& observation, const QRCode& code);
 
 		/**
 		 * Draws an observation of a QR code into a given frame.
@@ -263,7 +263,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * @param observations The observations of QR codes that will be drawn, must be valid
 		 * @param codes The corresponding QR codes, must have the same size as `observations`
 		 */
-		inline static void drawObservations(Frame& frame, const LegacyQRCodeDetector2D::Observations& observations, const QRCodes& codes);
+		static inline void drawObservations(Frame& frame, const LegacyQRCodeDetector2D::Observations& observations, const QRCodes& codes);
 
 		/**
 		 * Draws observations of QR codes into a given frame.

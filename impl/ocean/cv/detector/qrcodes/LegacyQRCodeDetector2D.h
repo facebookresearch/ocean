@@ -120,7 +120,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT LegacyQRCodeDetector2D : public QRCodeDet
 		 * @param observations If specified, will return the observations of the detected QR codes; the order matches the elements of the return value
 		 * @return An array of detected QR codes
 		 */
-		inline static QRCodes detectQRCodes(const Frame& frame, Worker* worker = nullptr, const DetectionMode detectionMode = DM_STANDARD, Observations* observations = nullptr);
+		static inline QRCodes detectQRCodes(const Frame& frame, Worker* worker = nullptr, const DetectionMode detectionMode = DM_STANDARD, Observations* observations = nullptr);
 
 		/**
 		 * Detects QR codes in a given 8 bit grayscale image.
@@ -213,7 +213,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT LegacyQRCodeDetector2D : public QRCodeDet
 		 * @param homography The resulting homography that is computed from the triplet of finder patterns. In case not all corners of the finder patterns are known, this transformation will be an affine transformation, not a full homography. The transformation maps QR code coordinates `(u, v)` to image locations, `p = (x, y)`: `p = homography * (u + 0.5, v + 0.5)`
 		 * @return True if the computation of the homography was successful, otherwise false
 		 */
-		inline static bool computeInitialHomography(const FinderPattern& topLeft, const FinderPattern& bottomLeft, const FinderPattern& topRight, const unsigned int& version, const unsigned int cornerIndexTopLeft, const unsigned int cornerIndexBottomLeft, const unsigned int cornerIndexTopRight, SquareMatrix3& homography);
+		static inline bool computeInitialHomography(const FinderPattern& topLeft, const FinderPattern& bottomLeft, const FinderPattern& topRight, const unsigned int& version, const unsigned int cornerIndexTopLeft, const unsigned int cornerIndexBottomLeft, const unsigned int cornerIndexTopRight, SquareMatrix3& homography);
 
 		/**
 		 * Computes the homography for a valid triplet finder patterns and known version of the underlying QR code

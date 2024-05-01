@@ -166,7 +166,7 @@ class HashMap
 		 * @param key Key to return the hash value for
 		 * @return Resulting hash value
 		 */
-		inline static size_t defaultHashFunction(const TKey& key);
+		static inline size_t defaultHashFunction(const TKey& key);
 
 		/**
 		 * Returns whether this hash map is still consistent.

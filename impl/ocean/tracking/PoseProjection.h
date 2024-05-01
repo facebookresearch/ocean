@@ -104,7 +104,7 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		 * @param element Element to be converted
 		 * @return Converted object point
 		 */
-		inline static const Vector3& objectPoint2objectPoint(const Geometry::ObjectPoint& element);
+		static inline const Vector3& objectPoint2objectPoint(const Geometry::ObjectPoint& element);
 
 	private:
 

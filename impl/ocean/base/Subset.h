@@ -35,7 +35,7 @@ class Subset
 				 * @tparam T Data type of the objects
 				 */
 				template <typename T>
-				inline static std::vector<T> subset(const std::vector<T>& objects, const std::vector<TIndex>& indices);
+				static inline std::vector<T> subset(const std::vector<T>& objects, const std::vector<TIndex>& indices);
 
 				/**
 				 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be used.
@@ -46,7 +46,7 @@ class Subset
 				 * @tparam T Data type of the objects
 				 */
 				template <typename T>
-				inline static std::vector<T> subset(const std::vector<T>& objects, const std::set<TIndex>& indices);
+				static inline std::vector<T> subset(const std::vector<T>& objects, const std::set<TIndex>& indices);
 
 				/**
 				 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be not used.
@@ -57,7 +57,7 @@ class Subset
 				 * @tparam T Data type of the objects
 				 */
 				template <typename T>
-				inline static std::vector<T> invertedSubset(const std::vector<T>& objects, const std::unordered_set<TIndex>& indices);
+				static inline std::vector<T> invertedSubset(const std::vector<T>& objects, const std::unordered_set<TIndex>& indices);
 
 				/**
 				 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be not used.
@@ -68,7 +68,7 @@ class Subset
 				 * @tparam T Data type of the objects
 				 */
 				template <typename T>
-				inline static std::vector<T> invertedSubset(const std::vector<T>& objects, const std::set<TIndex>& indices);
+				static inline std::vector<T> invertedSubset(const std::vector<T>& objects, const std::set<TIndex>& indices);
 
 				/**
 				 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be used.
@@ -82,7 +82,7 @@ class Subset
 				 * @tparam T Data type of the objects
 				 */
 				template <typename T>
-				inline static std::vector<T> subset(const T* objects, const size_t numberObjects, const TIndex* indices, const size_t numberIndices);
+				static inline std::vector<T> subset(const T* objects, const size_t numberObjects, const TIndex* indices, const size_t numberIndices);
 
 				/**
 				 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be used.
@@ -95,7 +95,7 @@ class Subset
 				 * @tparam T Data type of the objects
 				 */
 				template <typename T>
-				inline static std::vector<T> subset(const T* objects, const size_t numberObjects, const std::vector<TIndex>& indices);
+				static inline std::vector<T> subset(const T* objects, const size_t numberObjects, const std::vector<TIndex>& indices);
 
 				/**
 				 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be used.
@@ -107,7 +107,7 @@ class Subset
 				 * @tparam T Data type of the objects
 				 */
 				template <typename T>
-				inline static std::vector<T> subset(const T* objects, const size_t numberObjects, const std::set<TIndex>& indices);
+				static inline std::vector<T> subset(const T* objects, const size_t numberObjects, const std::set<TIndex>& indices);
 
 				/**
 				 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be not used.
@@ -119,7 +119,7 @@ class Subset
 				 * @tparam T Data type of the objects
 				 */
 				template <typename T>
-				inline static std::vector<T> invertedSubset(const T* objects, const size_t numberObjects, const std::unordered_set<TIndex>& indices);
+				static inline std::vector<T> invertedSubset(const T* objects, const size_t numberObjects, const std::unordered_set<TIndex>& indices);
 
 				/**
 				 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be not used.
@@ -131,7 +131,7 @@ class Subset
 				 * @tparam T Data type of the objects
 				 */
 				template <typename T>
-				inline static std::vector<T> invertedSubset(const T* objects, const size_t numberObjects, const std::set<TIndex>& indices);
+				static inline std::vector<T> invertedSubset(const T* objects, const size_t numberObjects, const std::set<TIndex>& indices);
 
 				/**
 				 * Converts object indices to an unsigned char vector holding statements for each object.
@@ -141,7 +141,7 @@ class Subset
 				 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
 				 */
 				template <unsigned char tValue>
-				inline static std::vector<unsigned char> indices2statements(const std::vector<TIndex>& indices, const size_t numberObjects);
+				static inline std::vector<unsigned char> indices2statements(const std::vector<TIndex>& indices, const size_t numberObjects);
 
 				/**
 				 * Converts object indices to an unsigned char vector holding statements for each object.
@@ -151,7 +151,7 @@ class Subset
 				 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
 				 */
 				template <unsigned char tValue>
-				inline static std::vector<unsigned char> indices2statements(const std::set<TIndex>& indices, const size_t numberObjects);
+				static inline std::vector<unsigned char> indices2statements(const std::set<TIndex>& indices, const size_t numberObjects);
 
 				/**
 				 * Converts object indices to an unsigned char vector holding statements for each object.
@@ -162,7 +162,7 @@ class Subset
 				 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
 				 */
 				template <unsigned char tValue>
-				inline static std::vector<unsigned char> indices2statements(const TIndex* indices, const size_t numberIndices, const size_t numberObjects);
+				static inline std::vector<unsigned char> indices2statements(const TIndex* indices, const size_t numberIndices, const size_t numberObjects);
 
 				/**
 				 * Converts an unsigned char vector holding statements for each object into object indices.
@@ -171,7 +171,7 @@ class Subset
 				 * @tparam tValue Value for objects that will be defined in the indices
 				 */
 				template <unsigned char tValue>
-				inline static std::vector<TIndex> statements2indices(const std::vector<unsigned char>& statements);
+				static inline std::vector<TIndex> statements2indices(const std::vector<unsigned char>& statements);
 
 				/**
 				 * Converts an unsigned char vector holding statements for each object into object indices.
@@ -181,7 +181,7 @@ class Subset
 				 * @tparam tValue Value for objects that will be defined in the indices
 				 */
 				template <unsigned char tValue>
-				inline static std::vector<TIndex> statements2indices(const unsigned char* statements, const size_t numberStatements);
+				static inline std::vector<TIndex> statements2indices(const unsigned char* statements, const size_t numberStatements);
 			};
 
 	public:
@@ -197,7 +197,7 @@ class Subset
 		 * @tparam T Data type of the objects
 		 */
 		template <typename TIndex, typename T>
-		inline static std::vector<T> subset(const std::vector<T>& objects, const std::vector<TIndex>& indices);
+		static inline std::vector<T> subset(const std::vector<T>& objects, const std::vector<TIndex>& indices);
 
 		/**
 		 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be used.
@@ -209,7 +209,7 @@ class Subset
 		 * @tparam T Data type of the objects
 		 */
 		template <typename TIndex, typename T>
-		inline static std::vector<T> subset(const std::vector<T>& objects, const std::set<TIndex>& indices);
+		static inline std::vector<T> subset(const std::vector<T>& objects, const std::set<TIndex>& indices);
 
 		/**
 		 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be not used.
@@ -221,7 +221,7 @@ class Subset
 		 * @tparam T Data type of the objects
 		 */
 		template <typename TIndex, typename T>
-		inline static std::vector<T> invertedSubset(const std::vector<T>& objects, const std::unordered_set<TIndex>& indices);
+		static inline std::vector<T> invertedSubset(const std::vector<T>& objects, const std::unordered_set<TIndex>& indices);
 
 		/**
 		 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be not used.
@@ -233,7 +233,7 @@ class Subset
 		 * @tparam T Data type of the objects
 		 */
 		template <typename TIndex, typename T>
-		inline static std::vector<T> invertedSubset(const std::vector<T>& objects, const std::set<TIndex>& indices);
+		static inline std::vector<T> invertedSubset(const std::vector<T>& objects, const std::set<TIndex>& indices);
 
 		/**
 		 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be used.
@@ -248,7 +248,7 @@ class Subset
 		 * @tparam T Data type of the objects
 		 */
 		template <typename TIndex, typename T>
-		inline static std::vector<T> subset(const T* objects, const size_t numberObjects, const TIndex* indices, const size_t numberIndices);
+		static inline std::vector<T> subset(const T* objects, const size_t numberObjects, const TIndex* indices, const size_t numberIndices);
 
 		/**
 		 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be used.
@@ -262,7 +262,7 @@ class Subset
 		 * @tparam T Data type of the objects
 		 */
 		template <typename TIndex, typename T>
-		inline static std::vector<T> subset(const T* objects, const size_t numberObjects, const std::vector<TIndex>& indices);
+		static inline std::vector<T> subset(const T* objects, const size_t numberObjects, const std::vector<TIndex>& indices);
 
 		/**
 		 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be used.
@@ -275,7 +275,7 @@ class Subset
 		 * @tparam T Data type of the objects
 		 */
 		template <typename TIndex, typename T>
-		inline static std::vector<T> subset(const T* objects, const size_t numberObjects, const std::set<TIndex>& indices);
+		static inline std::vector<T> subset(const T* objects, const size_t numberObjects, const std::set<TIndex>& indices);
 
 		/**
 		 * Extracts the indices that are not given within a set indices.
@@ -315,7 +315,7 @@ class Subset
 		 * @tparam T Data type of the objects
 		 */
 		template <typename TIndex, typename T>
-		inline static std::vector<T> invertedSubset(const T* objects, const size_t numberObjects, const std::unordered_set<TIndex>& indices);
+		static inline std::vector<T> invertedSubset(const T* objects, const size_t numberObjects, const std::unordered_set<TIndex>& indices);
 
 		/**
 		 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be not used.
@@ -328,7 +328,7 @@ class Subset
 		 * @tparam T Data type of the objects
 		 */
 		template <typename TIndex, typename T>
-		inline static std::vector<T> invertedSubset(const T* objects, const size_t numberObjects, const std::set<TIndex>& indices);
+		static inline std::vector<T> invertedSubset(const T* objects, const size_t numberObjects, const std::set<TIndex>& indices);
 
 		/**
 		 * Converts object indices to an unsigned char vector holding statements for each object.
@@ -339,7 +339,7 @@ class Subset
 		 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
 		 */
 		template <typename TIndex, unsigned char tValue>
-		inline static std::vector<unsigned char> indices2statements(const std::vector<TIndex>& indices, const size_t numberObjects);
+		static inline std::vector<unsigned char> indices2statements(const std::vector<TIndex>& indices, const size_t numberObjects);
 
 		/**
 		 * Converts object indices to an unsigned char vector holding statements for each object.
@@ -350,7 +350,7 @@ class Subset
 		 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
 		 */
 		template <typename TIndex, unsigned char tValue>
-		inline static std::vector<unsigned char> indices2statements(const std::set<TIndex>& indices, const size_t numberObjects);
+		static inline std::vector<unsigned char> indices2statements(const std::set<TIndex>& indices, const size_t numberObjects);
 
 		/**
 		 * Converts object indices to an unsigned char vector holding statements for each object.
@@ -362,7 +362,7 @@ class Subset
 		 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
 		 */
 		template <typename TIndex, unsigned char tValue>
-		inline static std::vector<unsigned char> indices2statements(const TIndex* indices, const size_t numberIndices, const size_t numberObjects);
+		static inline std::vector<unsigned char> indices2statements(const TIndex* indices, const size_t numberIndices, const size_t numberObjects);
 
 		/**
 		 * Converts an unsigned char vector holding statements for each object into object indices.
@@ -372,7 +372,7 @@ class Subset
 		 * @tparam tValue Value for objects that will be defined in the indices
 		 */
 		template <typename TIndex, unsigned char tValue>
-		inline static std::vector<TIndex> statements2indices(const std::vector<unsigned char>& statements);
+		static inline std::vector<TIndex> statements2indices(const std::vector<unsigned char>& statements);
 
 		/**
 		 * Converts an unsigned char vector holding statements for each object into object indices.
@@ -383,7 +383,7 @@ class Subset
 		 * @tparam tValue Value for objects that will be defined in the indices
 		 */
 		template <typename TIndex, unsigned char tValue>
-		inline static std::vector<TIndex> statements2indices(const unsigned char* statements, const size_t numberStatements);
+		static inline std::vector<TIndex> statements2indices(const unsigned char* statements, const size_t numberStatements);
 
 		/**
 		 * Determines corresponding element pairs from two sets of element maps.

@@ -110,7 +110,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT Screen
 		 * @param window The window for which the transformed/scaled pixel value is determined, nullptr to determine the pixel value for the default screen
 		 * @return The converted pixel value for the (native/pyhsical) screen coordinate system, with range (-infinity, infinity)
 		 */
-		inline static int scalePixel(const int pixel, const wxWindow* window);
+		static inline int scalePixel(const int pixel, const wxWindow* window);
 
 		/**
 		 * Converts a given size value defined in the (virtual) display coordinate system to the size value defined in the (native/physical) screen coordinate system.
@@ -119,7 +119,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT Screen
 		 * @param window The window for which the transformed/scaled size value is determined, nullptr to determine the size value for the default screen
 		 * @return The converted size value for the (native/pyhsical) screen coordinate system, with range (-infinity, infinity)x(-infinity, infinity)
 		 */
-		inline static wxSize scaleSize(const wxSize& size, const wxWindow* window);
+		static inline wxSize scaleSize(const wxSize& size, const wxWindow* window);
 
 		/**
 		 * Converts a given point value defined in the (virtual) display coordinate system to the point value defined in the (native/physical) screen coordinate system.
@@ -128,7 +128,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT Screen
 		 * @param window The window for which the transformed/scaled point value is determined, nullptr to determine the point value for the default screen
 		 * @return The converted point value for the (native/pyhsical) screen coordinate system, with range (-infinity, infinity)x(-infinity, infinity)
 		 */
-		inline static wxPoint scalePoint(const wxPoint& point, const wxWindow* window);
+		static inline wxPoint scalePoint(const wxPoint& point, const wxWindow* window);
 
 		/**
 		 * Converts a given pixel value by a given scale factor.
@@ -137,7 +137,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT Screen
 		 * @param scaleFactor The scale factor to be applied, with range (-infinity, infinity)
 		 * @return The resulting converted pixel value (-infinity, infinity)
 		 */
-		inline static int scalePixelByFactor(const int pixel, const double scaleFactor);
+		static inline int scalePixelByFactor(const int pixel, const double scaleFactor);
 
 		/**
 		 * Converts a given size value by a given scale factor.
@@ -146,7 +146,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT Screen
 		 * @param scaleFactor The scale factor to be applied, with range (-infinity, infinity)
 		 * @return The converted size value, with range (-infinity, infinity)x(-infinity, infinity)
 		 */
-		inline static wxSize scaleSizeByFactor(const wxSize& size, const double scaleFactor);
+		static inline wxSize scaleSizeByFactor(const wxSize& size, const double scaleFactor);
 
 		/**
 		 * Converts a given point value by a given scale factor.
@@ -155,7 +155,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT Screen
 		 * @param scaleFactor The scale factor to be applied, with range (-infinity, infinity)
 		 * @return The converted point value , with range (-infinity, infinity)x(-infinity, infinity)
 		 */
-		inline static wxPoint scalePointByFactor(const wxPoint& point, const double scaleFactor);
+		static inline wxPoint scalePointByFactor(const wxPoint& point, const double scaleFactor);
 };
 
 inline int Screen::scalePixel(const int pixel, const wxWindow* window)

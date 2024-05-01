@@ -26,7 +26,7 @@ class Median
 		 * @tparam T Data type of the data elements
 		 */
 		template <typename T>
-		inline static T median2(const T& v0, const T& v1);
+		static inline T median2(const T& v0, const T& v1);
 
 		/**
 		 * Returns the median of three given values.
@@ -38,7 +38,7 @@ class Median
 		 * @tparam T Data type of the data elements
 		 */
 		template <typename T>
-		inline static T median3(const T& v0, const T& v1, const T& v2);
+		static inline T median3(const T& v0, const T& v1, const T& v2);
 
 		/**
 		 * Returns the median of four given values (the second smallest value).
@@ -51,7 +51,7 @@ class Median
 		 * @tparam T Data type of the data elements
 		 */
 		template <typename T>
-		inline static T median4(const T& v0, const T& v1, const T& v2, const T& v3);
+		static inline T median4(const T& v0, const T& v1, const T& v2, const T& v3);
 
 		/**
 		 * Returns the median of five given values.
@@ -65,7 +65,7 @@ class Median
 		 * @tparam T Data type of the data elements
 		 */
 		template <typename T>
-		inline static T median5(const T& v0, const T& v1, const T& v2, const T& v3, const T& v4);
+		static inline T median5(const T& v0, const T& v1, const T& v2, const T& v3, const T& v4);
 
 		/**
 		 * Returns the median value in a given data array.

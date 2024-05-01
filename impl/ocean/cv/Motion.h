@@ -145,7 +145,7 @@ class Motion
 		 * @tparam tPatchSize The size of the square patch (the edge length) in pixel, with range [3, infinity), must be odd, recommended is 5, 7, 15, 31, or 63
 		 */
 		template <unsigned int tPatchSize>
-		inline static PixelPosition pointMotionInFrameMirroredBorder(const uint8_t* const frame0, const uint8_t* const frame1, const unsigned int channels, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const PixelPosition& position0, const unsigned int radiusX, const unsigned int radiusY, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const PixelPosition& rough1 = PixelPosition(), uint32_t* const metricResult = nullptr, uint32_t* const metricIdentityResult = nullptr);
+		static inline PixelPosition pointMotionInFrameMirroredBorder(const uint8_t* const frame0, const uint8_t* const frame1, const unsigned int channels, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const PixelPosition& position0, const unsigned int radiusX, const unsigned int radiusY, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const PixelPosition& rough1 = PixelPosition(), uint32_t* const metricResult = nullptr, uint32_t* const metricIdentityResult = nullptr);
 
 	protected:
 

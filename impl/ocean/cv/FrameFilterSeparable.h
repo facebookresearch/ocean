@@ -620,7 +620,7 @@ class OCEAN_CV_EXPORT FrameFilterSeparable
 		 * @return Mirrored value
 		 * @ingroup base
 		 */
-		inline static unsigned int mirroredBorderLocationLeft(const int value);
+		static inline unsigned int mirroredBorderLocationLeft(const int value);
 
 		/**
 		 * Mirrors a given value at the right border if necessary.
@@ -635,7 +635,7 @@ class OCEAN_CV_EXPORT FrameFilterSeparable
 		 * @return Mirrored value
 		 * @ingroup base
 		 */
-		inline static unsigned int mirroredBorderLocationRight(const unsigned int value, const unsigned int size);
+		static inline unsigned int mirroredBorderLocationRight(const unsigned int value, const unsigned int size);
 };
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 10

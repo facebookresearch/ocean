@@ -42,7 +42,7 @@ class Interpolation
 				 * @tparam TFactor Data type of the interpolation value
 				 */
 				template <typename TFactor>
-				inline static T interpolate(const T& v0, const T& v1, const TFactor& t);
+				static inline T interpolate(const T& v0, const T& v1, const TFactor& t);
 		};
 
 	public:
@@ -57,7 +57,7 @@ class Interpolation
 		 * @tparam TFactor Data type of the interpolation value
 		 */
 		template <typename T, typename TFactor>
-		inline static T linear(const T& v0, const T& v1, const TFactor& t);
+		static inline T linear(const T& v0, const T& v1, const TFactor& t);
 
 		/**
 		 * Performs a bi-linear interpolation between four values within a 2x2 neighborhood.
@@ -77,7 +77,7 @@ class Interpolation
 		 * @tparam TFactor Data type of the interpolation value
 		 */
 		template <typename T, typename TFactor>
-		inline static T bilinear(const T& v00, const T& v01, const T& v10, const T& v11, const TFactor& tx, const TFactor& ty);
+		static inline T bilinear(const T& v00, const T& v01, const T& v10, const T& v11, const TFactor& tx, const TFactor& ty);
 
 		/**
 		 * Performs a bi-linear interpolation between at most four values within a 2x2 neighborhood.
@@ -104,7 +104,7 @@ class Interpolation
 		 * @tparam TFactor Data type of the interpolation value
 		 */
 		template <typename T, typename TFactor>
-		inline static T bilinear(const T& v00, const T& v01, const T& v10, const T& v11, const bool valid00, const bool valid01, const bool valid10, const bool valid11, const TFactor& tx, const TFactor& ty);
+		static inline T bilinear(const T& v00, const T& v01, const T& v10, const T& v11, const bool valid00, const bool valid01, const bool valid10, const bool valid11, const TFactor& tx, const TFactor& ty);
 
 		/**
 		 * Performs a cubic (Catmull-Rom) interpolation between mainly two values while two further supporting points are requested.
@@ -118,7 +118,7 @@ class Interpolation
 		 * @tparam TFactor Data type of the interpolation value
 		 */
 		template <typename T, typename TFactor>
-		inline static T cubic(const T& v0, const T& v1, const T& v2, const T& v3, const TFactor& t);
+		static inline T cubic(const T& v0, const T& v1, const T& v2, const T& v3, const TFactor& t);
 
 		/**
 		 * Performs a Lagrange interpolation for a polynomial with degree 2.

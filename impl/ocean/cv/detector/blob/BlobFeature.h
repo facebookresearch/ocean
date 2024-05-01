@@ -201,14 +201,14 @@ class OCEAN_CV_DETECTOR_BLOB_EXPORT BlobFeature : public OrientedPointFeature
 		 * @param feature Blob feature to convert
 		 * @return Resulting image point
 		 */
-		inline static Geometry::ImagePoint feature2imagePoint(const BlobFeature& feature);
+		static inline Geometry::ImagePoint feature2imagePoint(const BlobFeature& feature);
 
 		/**
 		 * Converts Blob features to simple 2D image positions.
 		 * @param features Blob features to convert
 		 * @return Resulting image points
 		 */
-		inline static Geometry::ImagePoints features2imagePoints(const BlobFeatures& features);
+		static inline Geometry::ImagePoints features2imagePoints(const BlobFeatures& features);
 
 		/**
 		 * Converts Blob features to simple 2D image positions.
@@ -216,14 +216,14 @@ class OCEAN_CV_DETECTOR_BLOB_EXPORT BlobFeature : public OrientedPointFeature
 		 * @param number Number of features to be converted
 		 * @return Resulting image points
 		 */
-		inline static Geometry::ImagePoints features2imagePoints(const BlobFeatures& features, const unsigned int number);
+		static inline Geometry::ImagePoints features2imagePoints(const BlobFeatures& features, const unsigned int number);
 
 		/**
 		 * Converts Blob features to simple 3D objects positions.
 		 * @param features Blob features to convert
 		 * @return Resulting object points
 		 */
-		inline static Geometry::ObjectPoints features2objectPoints(const BlobFeatures& features);
+		static inline Geometry::ObjectPoints features2objectPoints(const BlobFeatures& features);
 
 		/**
 		 * Converts Blob features to simple 3D object positions.
@@ -231,14 +231,14 @@ class OCEAN_CV_DETECTOR_BLOB_EXPORT BlobFeature : public OrientedPointFeature
 		 * @param number Number of features to be converted
 		 * @return Resulting object points
 		 */
-		inline static Geometry::ObjectPoints features2objectPoints(const BlobFeatures& features, const unsigned int number);
+		static inline Geometry::ObjectPoints features2objectPoints(const BlobFeatures& features, const unsigned int number);
 
 		/**
 		 * Converts Blob features to point features.
 		 * @param features Blob features to convert
 		 * @return Resulting point features
 		 */
-		inline static PointFeatures features2pointFeatures(const BlobFeatures& features);
+		static inline PointFeatures features2pointFeatures(const BlobFeatures& features);
 
 		/**
 		 * Converts Blob features to point features.
@@ -246,7 +246,7 @@ class OCEAN_CV_DETECTOR_BLOB_EXPORT BlobFeature : public OrientedPointFeature
 		 * @param number Number of features to be converted
 		 * @return Resulting point features
 		 */
-		inline static PointFeatures features2pointFeatures(const BlobFeatures& features, const unsigned int number);
+		static inline PointFeatures features2pointFeatures(const BlobFeatures& features, const unsigned int number);
 
 	protected:
 

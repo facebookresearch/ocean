@@ -70,13 +70,13 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeDetector3D : public QRCodeDetector
 		 * Returns an invalid size for QR codes
 		 * @return The invalid size value
 		 */
-		inline static Scalar getInvalidCodeSize();
+		static inline Scalar getInvalidCodeSize();
 
 		/**
 		 * Returns an invalid 6-DOF pose for a QR codes
 		 * @return The invalid size value
 		 */
-		inline static const HomogenousMatrix4& getInvalidWorld_T_code();
+		static inline const HomogenousMatrix4& getInvalidWorld_T_code();
 
 	protected:
 

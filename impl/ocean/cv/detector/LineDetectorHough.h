@@ -606,7 +606,7 @@ class OCEAN_CV_DETECTOR_EXPORT LineDetectorHough
 		 * @param similarAngle Maximal angle in radian for two lines to count as similar for filtering, 0 for non filtering
 		 * @return True, if succeeded
 		 */
-		inline static bool detectLines(const Frame& frame, const FilterType filterType, const FilterResponse filterResponse, InfiniteLines& infiniteLines, FiniteLines2* finiteLines = nullptr, const bool optimizeLines = true, const unsigned int accumulatorThreshold = 100u, const unsigned int voteThreshold = 16u, const unsigned int angleNeigbors = 2u, const bool determineExactPeakMaximum = true, Worker* worker = nullptr, const unsigned int anglePrecision = 360u, const unsigned int distancePrecision = (unsigned int)(-1), const bool halfOrientationPrecision = true, const Scalar similarDistance = Scalar(10), const Scalar similarAngle = Numeric::deg2rad(5));
+		static inline bool detectLines(const Frame& frame, const FilterType filterType, const FilterResponse filterResponse, InfiniteLines& infiniteLines, FiniteLines2* finiteLines = nullptr, const bool optimizeLines = true, const unsigned int accumulatorThreshold = 100u, const unsigned int voteThreshold = 16u, const unsigned int angleNeigbors = 2u, const bool determineExactPeakMaximum = true, Worker* worker = nullptr, const unsigned int anglePrecision = 360u, const unsigned int distancePrecision = (unsigned int)(-1), const bool halfOrientationPrecision = true, const Scalar similarDistance = Scalar(10), const Scalar similarAngle = Numeric::deg2rad(5));
 
 		/**
 		 * Detects lines inside a given frame using an adaptive threshold in combination with a surrounding window.
@@ -631,7 +631,7 @@ class OCEAN_CV_DETECTOR_EXPORT LineDetectorHough
 		 * @param similarAngle Maximal angle in radian for two lines to count as similar for filtering, 0 for non filtering
 		 * @return True, if succeeded
 		 */
-		inline static bool detectLinesWithAdaptiveThreshold(const Frame& frame, const FilterType filterType, const FilterResponse filterResponse, InfiniteLines& infiniteLines, FiniteLines2* finiteLines = nullptr, const bool optimizeLines = true, const Scalar adaptiveVoteThresholdFactor = Scalar(8), const unsigned int thresholdWindow = 61u, const unsigned int voteThreshold = 16, const unsigned int angleNeigbors = 2u, const bool determineExactPeakMaximum = true, Worker* worker = nullptr, const unsigned int anglePrecision = 360u, const unsigned int distancePrecision = (unsigned int)(-1), const bool halfOrientationPrecision = true, const Scalar similarDistance = Scalar(10), const Scalar similarAngle = Numeric::deg2rad(5));
+		static inline bool detectLinesWithAdaptiveThreshold(const Frame& frame, const FilterType filterType, const FilterResponse filterResponse, InfiniteLines& infiniteLines, FiniteLines2* finiteLines = nullptr, const bool optimizeLines = true, const Scalar adaptiveVoteThresholdFactor = Scalar(8), const unsigned int thresholdWindow = 61u, const unsigned int voteThreshold = 16, const unsigned int angleNeigbors = 2u, const bool determineExactPeakMaximum = true, Worker* worker = nullptr, const unsigned int anglePrecision = 360u, const unsigned int distancePrecision = (unsigned int)(-1), const bool halfOrientationPrecision = true, const Scalar similarDistance = Scalar(10), const Scalar similarAngle = Numeric::deg2rad(5));
 
 		/**
 		 * Filters a set of similar detected lines so that the strongest and unique lines are returned only.
@@ -667,7 +667,7 @@ class OCEAN_CV_DETECTOR_EXPORT LineDetectorHough
 		 * Sorts lines according to their distance values.
 		 * @param lines The lines to be sorted
 		 */
-		inline static void sortLinesAccordingDistance(InfiniteLines& lines);
+		static inline void sortLinesAccordingDistance(InfiniteLines& lines);
 
 		/**
 		 * Sorts groups of elements (of e.g., infinite lines) according to their number of elements in descending order.
@@ -675,7 +675,7 @@ class OCEAN_CV_DETECTOR_EXPORT LineDetectorHough
 		 * @tparam T The data type of the elements
 		 */
 		template <typename T>
-		inline static void sortGroupsDescendingAccordingElements(std::vector<std::vector<T>>& groups);
+		static inline void sortGroupsDescendingAccordingElements(std::vector<std::vector<T>>& groups);
 
 	private:
 

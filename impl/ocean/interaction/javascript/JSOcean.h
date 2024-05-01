@@ -130,7 +130,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSOcean : public JSBase
 		 * Returns the object template for this object.
 		 * @return The object template
 		 */
-		inline static v8::Local<v8::ObjectTemplate> objectTemplate();
+		static inline v8::Local<v8::ObjectTemplate> objectTemplate();
 
 		/**
 		 * Releases the function and object template for this object.

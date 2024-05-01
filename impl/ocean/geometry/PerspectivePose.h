@@ -50,7 +50,7 @@ class OCEAN_GEOMETRY_EXPORT PerspectivePose
 		 * @tparam T The data type of the scalar
 		 */
 		template <typename T>
-		inline static T calculateCosineResults(const T x1, const T x1_2, const T x2, const T x2_2, const T cos12, const T d12_2);
+		static inline T calculateCosineResults(const T x1, const T x1_2, const T x2, const T x2_2, const T cos12, const T d12_2);
 };
 
 template <typename T>

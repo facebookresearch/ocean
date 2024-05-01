@@ -71,7 +71,7 @@ class OCEAN_MATH_EXPORT Approximation
 		 * @tparam tHigherAccuracy True, to approximate exp with higher accuracy; False, to get the lower accuracy
 		 */
 		template <typename T, bool tHigherAccuracy>
-		inline static T exp(T x);
+		static inline T exp(T x);
 
 	protected:
 

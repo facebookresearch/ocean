@@ -31,7 +31,7 @@ class OCEAN_CV_EXPORT FrequencyAnalysis
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if succeeded
 		 */
-		inline static bool image2frequencies(const Frame& frame, Complexes& frequencies, Worker* worker = nullptr);
+		static inline bool image2frequencies(const Frame& frame, Complexes& frequencies, Worker* worker = nullptr);
 
 		/**
 		 * Applies a Fourier transformation for a given frame.

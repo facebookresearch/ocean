@@ -72,7 +72,7 @@ class OCEAN_CV_ADVANCED_EXPORT WhitePointDetector
 		 * @param u Resulting U channel value
 		 * @param v Resulting V channel value
 		 */
-		inline static void rgb2yuv(const float r, const float g, const float b, float& y, float& u, float& v);
+		static inline void rgb2yuv(const float r, const float g, const float b, float& y, float& u, float& v);
 
 		/**
 		 * Converts from YUV to RGB color space
@@ -83,7 +83,7 @@ class OCEAN_CV_ADVANCED_EXPORT WhitePointDetector
 		 * @param g Resulting green channel value
 		 * @param b Resulting blue channel value
 		 */
-		inline static void yuv2rgb(const float y, const float u, const float v, float& r, float& g, float& b);
+		static inline void yuv2rgb(const float y, const float u, const float v, float& r, float& g, float& b);
 };
 
 inline void WhitePointDetector::rgb2yuv(const float r, const float g, const float b, float& y, float& u, float& v)

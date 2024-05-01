@@ -76,7 +76,7 @@ class OCEAN_NETWORK_EXPORT Address4 : public Data
 		 * Returns the local host address.
 		 * @return Local host address
 		 */
-		inline static Address4 localHost();
+		static inline Address4 localHost();
 
 		/**
 		 * Returns whether two address objects are identical.

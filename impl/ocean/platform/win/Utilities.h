@@ -99,7 +99,7 @@ class OCEAN_PLATFORM_WIN_EXPORT Utilities
 		 * @param scale The scale that is applied to the frame, a factor of 2 will increase the painted frame by two, with range [1, infinity)
 		 * @param frame The frame to be printed
 		 */
-		inline static void desktopFrameOutput(const int x, const int y, const unsigned int scale, const Frame& frame);
+		static inline void desktopFrameOutput(const int x, const int y, const unsigned int scale, const Frame& frame);
 
 		/**
 		 * Prints a given frame on the Windows' main desktop at a specified location.
@@ -131,7 +131,7 @@ class OCEAN_PLATFORM_WIN_EXPORT Utilities
 		 * @param scale Scale of the output bitmap
 		 * @param bitmap Bitmap to be printed
 		 */
-		inline static void desktopBitmapOutput(const int x, const int y, const unsigned int scale, const Bitmap& bitmap);
+		static inline void desktopBitmapOutput(const int x, const int y, const unsigned int scale, const Bitmap& bitmap);
 
 		/**
 		 * Prints a bitmap on the given device context.

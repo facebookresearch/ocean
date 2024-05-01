@@ -37,13 +37,13 @@ class JSObject : public JSBase
 		 * Returns the function template for this object.
 		 * @return The function template
 		 */
-		inline static v8::Local<v8::FunctionTemplate> functionTemplate();
+		static inline v8::Local<v8::FunctionTemplate> functionTemplate();
 
 		/**
 		 * Returns the object template for this object.
 		 * @return The object template
 		 */
-		inline static v8::Local<v8::ObjectTemplate> objectTemplate();
+		static inline v8::Local<v8::ObjectTemplate> objectTemplate();
 
 		/**
 		 * Creates an new wrapped object.

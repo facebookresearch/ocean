@@ -80,7 +80,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorTrilinear
 		 * @see homographyWithCamera8BitPerChannel().
 		 */
 		template <unsigned int tChannels>
-		inline static void homography8BitPerChannel(const FramePyramid& sourcePyramid, const unsigned int width, const unsigned int height, const SquareMatrix3& homography, const uint8_t* borderColor, uint8_t* target, Worker* worker = nullptr);
+		static inline void homography8BitPerChannel(const FramePyramid& sourcePyramid, const unsigned int width, const unsigned int height, const SquareMatrix3& homography, const uint8_t* borderColor, uint8_t* target, Worker* worker = nullptr);
 
 		/**
 		 * Calculates a 3D position usable for tri-linear interpolation. The specified image coordinates define the center and four corner positions of quad.
@@ -94,7 +94,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorTrilinear
 		 * @param cornerPosition4 Fourth quad corner coordinates in pixels of the finest pyramid layer, used for interpolation between pyramid layers
 		 * @return The image coordinates (x, y) and layer (z) within the range [0, framePyramid.finestLayerWidth()]x[0, framePyramid.finestLayerWidth()]x[0, layerCount - 1u]
 		 */
-		inline static Vector3 interpolatePosition(const unsigned int layerCount, const Vector2& centerPosition, const Vector2& cornerPosition1, const Vector2& cornerPosition2, const Vector2& cornerPosition3, const Vector2& cornerPosition4);
+		static inline Vector3 interpolatePosition(const unsigned int layerCount, const Vector2& centerPosition, const Vector2& cornerPosition1, const Vector2& cornerPosition2, const Vector2& cornerPosition3, const Vector2& cornerPosition4);
 
 		/**
 		 * Performs a pixel lookup in the frame pyramid using tri-linear interpolation.<br>
@@ -106,7 +106,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorTrilinear
 		 * @tparam tChannels Defines the number of channels the frame holds
 		 */
 		template <unsigned int tChannels>
-		inline static void interpolateFullBorder8BitPerChannel(const FramePyramid& framePyramid, const Vector3& position, uint8_t* result);
+		static inline void interpolateFullBorder8BitPerChannel(const FramePyramid& framePyramid, const Vector3& position, uint8_t* result);
 
 		/**
 		 * Performs a pixel lookup in the frame pyramid using tri-linear interpolation with infinite transparent frame border.<br>
@@ -120,7 +120,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorTrilinear
 		 * @tparam tTransparentIs0xFF True, if 0xFF is interpreted as fully transparent
 		 */
 		template <unsigned int tChannels, bool tAlphaAtFront, bool tTransparentIs0xFF>
-		inline static void interpolateInfiniteBorder8BitPerChannelAlpha(const FramePyramid& framePyramid, const Vector3& position, uint8_t* result);
+		static inline void interpolateInfiniteBorder8BitPerChannelAlpha(const FramePyramid& framePyramid, const Vector3& position, uint8_t* result);
 
 		/**
 		 * Renders the passed source frame pyramid into the target frame using tri-linear interpolation.
@@ -150,7 +150,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorTrilinear
 		 * @see FrameInterpolatorBilinear::interpolatePixel8BitPerChannel(), FrameInterpolatorBilinear::interpolateFullAlphaBorder8BitPerChannel().
 		 */
 		template <unsigned int tChannels, void tBilinearInterpolationFunction(const uint8_t*, const unsigned int, const unsigned int, const unsigned int, const Vector2&, uint8_t*), void tLinearInterpolationFunction(const uint8_t*, const unsigned int, const uint8_t*, uint8_t*)>
-		inline static void interpolate8BitPerChannel(const FramePyramid& framePyramid, const Vector3& position, uint8_t* result);
+		static inline void interpolate8BitPerChannel(const FramePyramid& framePyramid, const Vector3& position, uint8_t* result);
 
 		/**
 		 * This function determines the linear interpolation result for to given layer pixels.
@@ -161,7 +161,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorTrilinear
 		 * @tparam tChannels Defines the number of channels the frame holds
 		 */
 		template <unsigned int tChannels>
-		inline static void interpolateTwoPixels8BitPerChannel(const uint8_t* first, const unsigned int firstFactor, const uint8_t* second, uint8_t* result);
+		static inline void interpolateTwoPixels8BitPerChannel(const uint8_t* first, const unsigned int firstFactor, const uint8_t* second, uint8_t* result);
 
 		/**
 		 * This function determines the linear interpolation result for to given layer pixels while the interpolation result respects the alpha values of both pixels.
@@ -174,7 +174,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorTrilinear
 		 * @tparam tTransparentIs0xFF True, if 0xFF is interpreted as fully transparent
 		 */
 		template <unsigned int tChannels, bool tAlphaAtFront, bool tTransparentIs0xFF>
-		inline static void interpolateTwoPixels8BitPerChannelAlpha(const uint8_t* first, const unsigned int firstFactor, const uint8_t* second, uint8_t* result);
+		static inline void interpolateTwoPixels8BitPerChannelAlpha(const uint8_t* first, const unsigned int firstFactor, const uint8_t* second, uint8_t* result);
 
 		/**
 		 * Renders the passed source frame pyramid into the target frame using tri-linear interpolation.

@@ -240,7 +240,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		 * @tparam T The data type of the scalar to be used, 'float' or 'double'
 		 */
 		template <typename T>
-		inline static bool checkAccuracy(const VectorT2<T>& original, const VectorT2<T>& offset, const T eps, const T derivativeX, const T derivativeY);
+		static inline bool checkAccuracy(const VectorT2<T>& original, const VectorT2<T>& offset, const T eps, const T derivativeX, const T derivativeY);
 
 		/**
 		 * Determines the derivative for a given 3D position and compares the accuracy with the precise derivatives.
@@ -254,7 +254,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		 * @tparam T The data type of the scalar to be used, 'float' or 'double'
 		 */
 		template <typename T>
-		inline static bool checkAccuracy(const VectorT3<T>& original, const VectorT3<T>& offset, const T eps, const T derivativeX, const T derivativeY, const T derivativeZ);
+		static inline bool checkAccuracy(const VectorT3<T>& original, const VectorT3<T>& offset, const T eps, const T derivativeX, const T derivativeY, const T derivativeZ);
 
 		/**
 		 * Calculates the two Jacobian rows for a given pose and dynamic object point.

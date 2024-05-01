@@ -349,7 +349,7 @@ class PixelPositionT
 		 * @param pixel1 Following pixel
 		 * @return Resulting pixel direction
 		 */
-		inline static PixelDirection direction(const PixelPositionT<T>& pixel0, const PixelPositionT<T>& pixel1);
+		static inline PixelDirection direction(const PixelPositionT<T>& pixel0, const PixelPositionT<T>& pixel1);
 
 		/**
 		 * Returns the rough pixel direction of two successive pixels in a dense contour.
@@ -357,21 +357,21 @@ class PixelPositionT
 		 * @param pixel1 Following pixel
 		 * @return Resulting rough pixel direction
 		 */
-		inline static RoughPixelDirection roughDirection(const PixelPositionT<T>& pixel0, const PixelPositionT<T>& pixel1);
+		static inline RoughPixelDirection roughDirection(const PixelPositionT<T>& pixel0, const PixelPositionT<T>& pixel1);
 
 		/**
 		 * Converts a pixel position into a 2D vector.
 		 * @param pixelPosition Pixel position to be converted
 		 * @return Resulting 2D vector
 		 */
-		inline static Vector2 pixelPosition2vector(const PixelPositionT<T>& pixelPosition);
+		static inline Vector2 pixelPosition2vector(const PixelPositionT<T>& pixelPosition);
 
 		/**
 		 * Converts several pixel positions to 2D vectors.
 		 * @param pixelPositions Pixel positions to be converted
 		 * @return Resulting 2D vectors
 		 */
-		inline static Vectors2 pixelPositions2vectors(const std::vector<PixelPositionT<T>>& pixelPositions);
+		static inline Vectors2 pixelPositions2vectors(const std::vector<PixelPositionT<T>>& pixelPositions);
 
 		/**
 		 * Converts a 2D vector into a pixel position.
@@ -379,7 +379,7 @@ class PixelPositionT
 		 * @param value The value to be converted, with range [0, infinity)x[0, infinity)
 		 * @return Resulting pixel position
 		 */
-		inline static PixelPositionT<T> vector2pixelPosition(const Vector2& value);
+		static inline PixelPositionT<T> vector2pixelPosition(const Vector2& value);
 
 		/**
 		 * Converts several 2D vectors into pixel positions.
@@ -387,7 +387,7 @@ class PixelPositionT
 		 * @param values The values to be converted, with range [0, infinity)x[0, infinity)
 		 * @return Resulting pixel positions
 		 */
-		inline static std::vector<PixelPositionT<T>> vectors2pixelPositions(const Vectors2& values);
+		static inline std::vector<PixelPositionT<T>> vectors2pixelPositions(const Vectors2& values);
 
 		/**
 		 * Converts several 2D vectors into pixel positions.
@@ -397,7 +397,7 @@ class PixelPositionT
 		 * @param height The height of the clipping area, in pixel
 		 * @return Resulting pixel positions
 		 */
-		inline static std::vector<PixelPositionT<T>> vectors2pixelPositions(const Vectors2& values, const unsigned int width, const unsigned int height);
+		static inline std::vector<PixelPositionT<T>> vectors2pixelPositions(const Vectors2& values, const unsigned int width, const unsigned int height);
 
 		/**
 		 * Converts pixels positions with a data type T to pixel positions with another data type.
@@ -407,7 +407,7 @@ class PixelPositionT
 		 * @tparam TTarget Data type of the target pixel positions
 		 */
 		template <typename TTarget>
-		inline static std::vector<PixelPositionT<TTarget>> pixelPositions2pixelPositions(const std::vector<PixelPositionT<T>>& pixelPositions);
+		static inline std::vector<PixelPositionT<TTarget>> pixelPositions2pixelPositions(const std::vector<PixelPositionT<T>>& pixelPositions);
 
 	protected:
 

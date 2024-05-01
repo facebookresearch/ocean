@@ -233,7 +233,7 @@ class TriangleT2 : public TriangleT<T>
 		 * @param point The point to be checked
 		 * @return True, if so
 		 */
-		inline static bool isInside(const std::vector<TriangleT2<T>>& triangles, const VectorT2<T>& point);
+		static inline bool isInside(const std::vector<TriangleT2<T>>& triangles, const VectorT2<T>& point);
 
 		/**
 		 * Returns whether this triangles is defined in a counter clockwise manner.

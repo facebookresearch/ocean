@@ -52,14 +52,14 @@ class OCEAN_TRACKING_RMV_EXPORT RMVFeatureDetector
 		 * @param detectorType Type of the detector to check for
 		 * @return True, if so
 		 */
-		inline static bool needSmoothedFrame(const DetectorType detectorType);
+		static inline bool needSmoothedFrame(const DetectorType detectorType);
 
 		/**
 		 * Returns whether the specified detector prefers a pyramid initialization.
 		 * @param detectorType Type fo the detector to check for
 		 * @return True, if so
 		 */
-		inline static bool needPyramidInitialization(const DetectorType detectorType);
+		static inline bool needPyramidInitialization(const DetectorType detectorType);
 
 		/**
 		 * Detects features in a given frame and sort them according to their strength.

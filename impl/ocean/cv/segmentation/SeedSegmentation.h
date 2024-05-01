@@ -207,7 +207,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT SeedSegmentation
 		 * @tparam tChannels The number of data channel the information has, with range [1, infinity)
 		 */
 		template <typename T, unsigned int tChannels>
-		inline static bool ssdBelowThreshold(const T* image0, const T* image1, const typename SquareValueTyper<T>::Type sqrThreshold);
+		static inline bool ssdBelowThreshold(const T* image0, const T* image1, const typename SquareValueTyper<T>::Type sqrThreshold);
 
 		/**
 		 * Tests whether the SSD between two areas is below a given threshold.
@@ -221,7 +221,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT SeedSegmentation
 		 * @tparam tChannels The number of data channel the information has, with range [1, infinity)
 		 */
 		template <unsigned int tChannels>
-		inline static bool ssdBelowThreshold8BitPerChannel(const unsigned int* borderedIntegral0, const unsigned int* borderedIntegral1, const unsigned int integralWidth, const unsigned int size, const unsigned int sqrThreshold);
+		static inline bool ssdBelowThreshold8BitPerChannel(const unsigned int* borderedIntegral0, const unsigned int* borderedIntegral1, const unsigned int integralWidth, const unsigned int size, const unsigned int sqrThreshold);
 };
 
 inline SeedSegmentation::PixelCandidate::PixelCandidate(const unsigned int x, const unsigned int y, const unsigned int reference) :

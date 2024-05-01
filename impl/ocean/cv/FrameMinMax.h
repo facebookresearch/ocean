@@ -101,7 +101,7 @@ class OCEAN_CV_EXPORT FrameMinMax
 		 * @tparam tIgnoreInfinity True, to ignore +/- infinity and NaN float values; False, to consider +/- infinity float as minimum and maximum values as well, beahvior with NaN values is undefined
 		 */
 		template <typename T, unsigned int tChannels, bool tIgnoreInfinity = false>
-		inline static void determineMinMaxValues(const T* frame, const unsigned int width, const unsigned int height, const unsigned int framePaddingElements, T* minimalValues, T* maximalValues, Worker* worker = nullptr);
+		static inline void determineMinMaxValues(const T* frame, const unsigned int width, const unsigned int height, const unsigned int framePaddingElements, T* minimalValues, T* maximalValues, Worker* worker = nullptr);
 
 		/**
 		 * Counts frame elements in a 1-channel frame that are outside a specified range of values

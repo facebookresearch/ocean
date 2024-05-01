@@ -83,7 +83,7 @@ class CameraT
 		 * @return The resulting normalized image point
 		 * @see objectPoints2normalizedImagePoints().
 		 */
-		inline static VectorT2<T> objectPoint2normalizedImagePoint(const HomogenousMatrixT4<T>& extrinsic, const VectorT3<T>& objectPoint);
+		static inline VectorT2<T> objectPoint2normalizedImagePoint(const HomogenousMatrixT4<T>& extrinsic, const VectorT3<T>& objectPoint);
 
 		/**
 		 * Calculates the normalized image point (the normalized projected object point) for a given object point with corresponding inverse and flipped extrinsic camera matrix.
@@ -95,7 +95,7 @@ class CameraT
 		 * @return The resulting normalized image point
 		 * @see objectPoint2normalizedImagePoint().
 		 */
-		inline static VectorT2<T> objectPoint2normalizedImagePointIF(const HomogenousMatrixT4<T>& iFlippedExtrinsic, const VectorT3<T>& objectPoint);
+		static inline VectorT2<T> objectPoint2normalizedImagePointIF(const HomogenousMatrixT4<T>& iFlippedExtrinsic, const VectorT3<T>& objectPoint);
 
 		/**
 		 * Calculates the normalized image points (the normalized projected object points) for a set of given object points with corresponding extrinsic camera matrix.
@@ -108,7 +108,7 @@ class CameraT
 		 * @param normalizedImagePoints The resulting normalized image points, make sure that enough memory is provided
 		 * @see objectPoint2normalizedImagePoint(), objectPoints2normalizedImagePointsIF().
 		 */
-		inline static void objectPoints2normalizedImagePoints(const HomogenousMatrixT4<T>& extrinsic, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, VectorT2<T>* normalizedImagePoints);
+		static inline void objectPoints2normalizedImagePoints(const HomogenousMatrixT4<T>& extrinsic, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, VectorT2<T>* normalizedImagePoints);
 
 		/**
 		 * Calculates the normalized image points (the normalized projected object points) for a set of given object points with corresponding inverse and flipped extrinsic camera matrix.
@@ -131,7 +131,7 @@ class CameraT
 		 * @see flipMatrix4(), flipQuaternion().
 		 */
 		template <typename U = T>
-		inline static SquareMatrixT3<U> flipMatrix3();
+		static inline SquareMatrixT3<U> flipMatrix3();
 
 		/**
 		 * Returns the 4x4 transformation matrix flipping a transformation around the x-axis by 180 deg.
@@ -141,7 +141,7 @@ class CameraT
 		 * @see flipMatrix3(), flipQuaternion().
 		 */
 		template <typename U = T>
-		inline static HomogenousMatrixT4<U> flipMatrix4();
+		static inline HomogenousMatrixT4<U> flipMatrix4();
 
 		/**
 		 * Returns the quaternion flipping a rotation around the x-axis by 180 deg.
@@ -151,7 +151,7 @@ class CameraT
 		 * @see flipMatrix3(), flipMatrix4().
 		 */
 		template <typename U = T>
-		inline static QuaternionT<U> flipQuaternion();
+		static inline QuaternionT<U> flipQuaternion();
 
 		/**
 		 * Flips a transformation matrix around the x-axis by 180 degree.
@@ -161,7 +161,7 @@ class CameraT
 		 * @tparam U The data type of the elements of the matrix
 		 */
 		template <typename U>
-		inline static HomogenousMatrixT4<U> flippedTransformationLeftSide(const HomogenousMatrixT4<U>& left_T_right);
+		static inline HomogenousMatrixT4<U> flippedTransformationLeftSide(const HomogenousMatrixT4<U>& left_T_right);
 
 		/**
 		 * Flips a transformation matrix around the x-axis by 180 degree.
@@ -171,7 +171,7 @@ class CameraT
 		 * @tparam U The data type of the elements of the matrix
 		 */
 		template <typename U>
-		inline static HomogenousMatrixT4<U> flippedTransformationRightSide(const HomogenousMatrixT4<U>& left_T_right);
+		static inline HomogenousMatrixT4<U> flippedTransformationRightSide(const HomogenousMatrixT4<U>& left_T_right);
 
 		/**
 		 * Flips a transformation matrix around the x-axis by 180 degree.
@@ -181,7 +181,7 @@ class CameraT
 		 * @tparam U The data type of the elements of the matrix
 		 */
 		template <typename U>
-		inline static HomogenousMatrixT4<U> flippedTransformationLeftAndRightSide(const HomogenousMatrixT4<U>& left_T_right);
+		static inline HomogenousMatrixT4<U> flippedTransformationLeftAndRightSide(const HomogenousMatrixT4<U>& left_T_right);
 
 		/**
 		 * Flips a 3x3 rotation matrix around the x-axis by 180 degree.
@@ -191,7 +191,7 @@ class CameraT
 		 * @tparam U The data type of the elements of the rotation
 		 */
 		template <typename U>
-		inline static SquareMatrixT3<U> flippedTransformationLeftSide(const SquareMatrixT3<U>& left_R_right);
+		static inline SquareMatrixT3<U> flippedTransformationLeftSide(const SquareMatrixT3<U>& left_R_right);
 
 		/**
 		 * Flips a 3x3 rotation matrix around the x-axis by 180 degree.
@@ -201,7 +201,7 @@ class CameraT
 		 * @tparam U The data type of the elements of the rotation
 		 */
 		template <typename U>
-		inline static SquareMatrixT3<U> flippedTransformationRightSide(const SquareMatrixT3<U>& left_R_right);
+		static inline SquareMatrixT3<U> flippedTransformationRightSide(const SquareMatrixT3<U>& left_R_right);
 
 		/**
 		 * Flips a 3x3 rotation matrix around the x-axis by 180 degree.
@@ -211,7 +211,7 @@ class CameraT
 		 * @tparam U The data type of the elements of the rotation
 		 */
 		template <typename U>
-		inline static SquareMatrixT3<U> flippedTransformationLeftAndRightSide(const SquareMatrixT3<U>& left_R_right);
+		static inline SquareMatrixT3<U> flippedTransformationLeftAndRightSide(const SquareMatrixT3<U>& left_R_right);
 
 		/**
 		 * Flips a quaternion around the x-axis by 180 degree.
@@ -221,7 +221,7 @@ class CameraT
 		 * @tparam U The data type of the elements of the quaternion
 		 */
 		template <typename U>
-		inline static QuaternionT<U> flippedTransformationLeftSide(const QuaternionT<U>& left_Q_right);
+		static inline QuaternionT<U> flippedTransformationLeftSide(const QuaternionT<U>& left_Q_right);
 
 		/**
 		 * Flips a quaternion around the x-axis by 180 degree.
@@ -231,7 +231,7 @@ class CameraT
 		 * @tparam U The data type of the elements of the quaternion
 		 */
 		template <typename U>
-		inline static QuaternionT<U> flippedTransformationRightSide(const QuaternionT<U>& left_Q_right);
+		static inline QuaternionT<U> flippedTransformationRightSide(const QuaternionT<U>& left_Q_right);
 
 		/**
 		 * Flips a quaternion around the x-axis by 180 degree.
@@ -241,7 +241,7 @@ class CameraT
 		 * @tparam U The data type of the elements of the quaternion
 		 */
 		template <typename U>
-		inline static QuaternionT<U> flippedTransformationLeftAndRightSide(const QuaternionT<U>& left_Q_right);
+		static inline QuaternionT<U> flippedTransformationLeftAndRightSide(const QuaternionT<U>& left_Q_right);
 
 		/**
 		 * Transforms a standard homogenous 4x4 viewing (extrinsic camera) matrix into an inverted and flipped camera pose.
@@ -266,7 +266,7 @@ class CameraT
 		 * @see invertedFlipped2Standard().
 		 */
 		template <typename U>
-		inline static HomogenousMatricesT4<U> standard2InvertedFlipped(const HomogenousMatrixT4<U>* world_T_cameras, const size_t number);
+		static inline HomogenousMatricesT4<U> standard2InvertedFlipped(const HomogenousMatrixT4<U>* world_T_cameras, const size_t number);
 
 		/**
 		 * Transforms standard homogenous 4x4 viewing (extrinsic camera) matrices into an inverted and flipped camera matrices.
@@ -279,7 +279,7 @@ class CameraT
 		 * @see invertedFlipped2Standard().
 		 */
 		template <typename U>
-		inline static void standard2InvertedFlipped(const HomogenousMatrixT4<U>* world_T_cameras, HomogenousMatrixT4<U>* flippedCameras_T_world, const size_t number);
+		static inline void standard2InvertedFlipped(const HomogenousMatrixT4<U>* world_T_cameras, HomogenousMatrixT4<U>* flippedCameras_T_world, const size_t number);
 
 		/**
 		 * Transforms standard homogenous 4x4 viewing (extrinsic camera) matrices into an inverted and flipped camera matrices.
@@ -291,7 +291,7 @@ class CameraT
 		 * @see invertedFlipped2Standard().
 		 */
 		template <typename U>
-		inline static HomogenousMatricesT4<U> standard2InvertedFlipped(const HomogenousMatricesT4<U>& world_T_cameras);
+		static inline HomogenousMatricesT4<U> standard2InvertedFlipped(const HomogenousMatricesT4<U>& world_T_cameras);
 
 		/**
 		 * Transforms a standard 3x3 rotation matrix into an inverted and flipped rotation matrix.
@@ -325,7 +325,7 @@ class CameraT
 		 * @see standard2InvertedFlipped().
 		 */
 		template <typename U>
-		inline static HomogenousMatrixT4<U> invertedFlipped2Standard(const HomogenousMatrixT4<U>& flippedCamera_T_world);
+		static inline HomogenousMatrixT4<U> invertedFlipped2Standard(const HomogenousMatrixT4<U>& flippedCamera_T_world);
 
 		/**
 		 * Transforms inverted and flipped camera matrices into standard viewing (extrinsic camera) matrices.
@@ -336,7 +336,7 @@ class CameraT
 		 * @see standard2InvertedFlipped().
 		 */
 		template <typename U>
-		inline static HomogenousMatricesT4<U> invertedFlipped2Standard(const HomogenousMatrixT4<U>* flippedCameras_T_world, const size_t number);
+		static inline HomogenousMatricesT4<U> invertedFlipped2Standard(const HomogenousMatrixT4<U>* flippedCameras_T_world, const size_t number);
 
 		/**
 		 * Transforms inverted and flipped camera matrices into standard viewing (extrinsic camera) matrices.
@@ -347,7 +347,7 @@ class CameraT
 		 * @see standard2InvertedFlipped().
 		 */
 		template <typename U>
-		inline static void invertedFlipped2Standard(const HomogenousMatrixT4<U>* flippedCameras_T_world, HomogenousMatrixT4<U>* world_T_cameras, const size_t number);
+		static inline void invertedFlipped2Standard(const HomogenousMatrixT4<U>* flippedCameras_T_world, HomogenousMatrixT4<U>* world_T_cameras, const size_t number);
 
 		/**
 		 * Transforms inverted and flipped camera matrices into standard viewing (extrinsic camera) matrices.
@@ -357,7 +357,7 @@ class CameraT
 		 * @see standard2InvertedFlipped().
 		 */
 		template <typename U>
-		inline static HomogenousMatricesT4<U> invertedFlipped2Standard(const HomogenousMatricesT4<U>& flippedCameras_T_world);
+		static inline HomogenousMatricesT4<U> invertedFlipped2Standard(const HomogenousMatricesT4<U>& flippedCameras_T_world);
 
 		/**
 		 * Transforms an inverted and flipped rotation matrix into a standard viewing rotation matrix.
@@ -367,7 +367,7 @@ class CameraT
 		 * @see standard2InvertedFlipped().
 		 */
 		template <typename U>
-		inline static SquareMatrixT3<U> invertedFlipped2Standard(const SquareMatrixT3<U>& flippedCamera_R_world);
+		static inline SquareMatrixT3<U> invertedFlipped2Standard(const SquareMatrixT3<U>& flippedCamera_R_world);
 
 		/**
 		 * Transforms an inverted and flipped rotation quaternion into a standard viewing rotation quaternion.
@@ -377,7 +377,7 @@ class CameraT
 		 * @see standard2InvertedFlipped().
 		 */
 		template <typename U>
-		inline static QuaternionT<U> invertedFlipped2Standard(const QuaternionT<U>& flippedCamera_Q_world);
+		static inline QuaternionT<U> invertedFlipped2Standard(const QuaternionT<U>& flippedCamera_Q_world);
 
 		/**
 		 * Determines whether a given 3D object point lies in front of a camera while the location of the camera is defined by a 6-DOF pose.
@@ -387,7 +387,7 @@ class CameraT
 		 * @param epsilon The minimal distance between camera and object point on the z-axis so that the object point counts as lying in front, with range [0, infinity)
 		 * @return True, if so
 		 */
-		inline static bool isObjectPointInFrontIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, const T epsilon = NumericT<T>::eps());
+		static inline bool isObjectPointInFrontIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, const T epsilon = NumericT<T>::eps());
 
 		/**
 		 * Determines whether a given 3D object point lies in front of a camera while the location of the camera is defined by a 3-DOF orientation.
@@ -397,7 +397,7 @@ class CameraT
 		 * @param epsilon The minimal distance between camera and object point on the z-axis so that the object point counts as lying in front, with range [0, infinity)
 		 * @return True, if so
 		 */
-		inline static bool isObjectPointInFrontIF(const SquareMatrixT3<T>& flippedCamera_R_world, const VectorT3<T>& objectPoint, const T epsilon = NumericT<T>::eps());
+		static inline bool isObjectPointInFrontIF(const SquareMatrixT3<T>& flippedCamera_R_world, const VectorT3<T>& objectPoint, const T epsilon = NumericT<T>::eps());
 };
 
 template <typename T>

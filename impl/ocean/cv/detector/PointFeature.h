@@ -125,7 +125,7 @@ class OCEAN_CV_DETECTOR_EXPORT PointFeature : public Feature
 		 * @param feature Blob feature to convert
 		 * @return Resulting image point
 		 */
-		inline static const Geometry::ImagePoint& feature2imagePoint(const PointFeature& feature);
+		static inline const Geometry::ImagePoint& feature2imagePoint(const PointFeature& feature);
 
 		/**
 		 * Returns whether two feature objects are equal.

@@ -272,7 +272,7 @@ class Clustering
 				 * @param first The first segmentation object
 				 * @param second the second segmentation object
 				 */
-				inline static bool compareMaximalClusterSize(const Segmentation& first, const Segmentation& second);
+				static inline bool compareMaximalClusterSize(const Segmentation& first, const Segmentation& second);
 
 				/**
 				 * Move operator

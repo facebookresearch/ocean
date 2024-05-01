@@ -127,14 +127,14 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT TransitionDetector
 		 * @param yFramePixel Pointer to a pixel in an 8-bit grayscale image, must be value
 		 * @param threshold The threshold that is used for the comparison, range: [0, 256)
 		 */
-		inline static bool isLessOrEqual(const uint8_t* yFramePixel, unsigned int threshold);
+		static inline bool isLessOrEqual(const uint8_t* yFramePixel, unsigned int threshold);
 
 		/**
 		 * Returns true if the pixel is larger than a threshold
 		 * @param yFramePixel Pointer to a pixel in an 8-bit grayscale image, must be value
 		 * @param threshold The threshold that is used for the comparison, range: [0, 256)
 		 */
-		inline static bool isGreater(const uint8_t* yFramePixel, unsigned int threshold);
+		static inline bool isGreater(const uint8_t* yFramePixel, unsigned int threshold);
 };
 
 inline bool TransitionDetector::isLessOrEqual(const uint8_t* yFramePixel, unsigned int threshold)

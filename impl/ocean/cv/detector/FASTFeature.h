@@ -51,7 +51,7 @@ class OCEAN_CV_DETECTOR_EXPORT FASTFeature : public PointFeature
 		 * @param features FAST features to convert
 		 * @return Resulting image points
 		 */
-		inline static Geometry::ImagePoints features2imagePoints(const FASTFeatures& features);
+		static inline Geometry::ImagePoints features2imagePoints(const FASTFeatures& features);
 
 		/**
 		 * Converts FAST features to simple 2D image positions.
@@ -60,14 +60,14 @@ class OCEAN_CV_DETECTOR_EXPORT FASTFeature : public PointFeature
 		 * @param number Number of features to be converted
 		 * @return Resulting image points
 		 */
-		inline static Geometry::ImagePoints features2imagePoints(const FASTFeatures& features, const unsigned int number);
+		static inline Geometry::ImagePoints features2imagePoints(const FASTFeatures& features, const unsigned int number);
 
 		/**
 		 * Converts FAST features to point features.
 		 * @param features FAST features to convert
 		 * @return Resulting point features
 		 */
-		inline static PointFeatures features2pointFeatures(const FASTFeatures& features);
+		static inline PointFeatures features2pointFeatures(const FASTFeatures& features);
 
 		/**
 		 * Converts FAST features to point features.
@@ -75,7 +75,7 @@ class OCEAN_CV_DETECTOR_EXPORT FASTFeature : public PointFeature
 		 * @param number Number of features to be converted
 		 * @return Resulting point features
 		 */
-		inline static PointFeatures features2pointFeatures(const FASTFeatures& features, const unsigned int number);
+		static inline PointFeatures features2pointFeatures(const FASTFeatures& features, const unsigned int number);
 };
 
 inline FASTFeature::FASTFeature() :

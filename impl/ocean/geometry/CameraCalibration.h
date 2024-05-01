@@ -111,7 +111,7 @@ class OCEAN_GEOMETRY_EXPORT CameraCalibration
 				 * @param second Second pair to compare
 				 * @return True, if the first element of the first pair is lesser than the first element of the second pair
 				 */
-				template <typename TF, typename TS> inline static bool compareFirst(const std::pair<TF, TS>& first, const std::pair<TF, TS>& second);
+				template <typename TF, typename TS> static inline bool compareFirst(const std::pair<TF, TS>& first, const std::pair<TF, TS>& second);
 
 			private:
 

@@ -237,7 +237,7 @@ class OCEAN_IO_EXPORT Tag
 				 * @param tag The tag value that will be registered
 				 * @return True, if the tag value hasn't been registered before
 				 */
-				inline static bool registerTag(const unsigned long long tag);
+				static inline bool registerTag(const unsigned long long tag);
 
 			protected:
 

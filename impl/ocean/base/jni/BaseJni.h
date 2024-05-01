@@ -134,7 +134,7 @@ class OCEAN_BASE_JNI_EXPORT BaseJni
 		 * @param outputFile Message output file or device
 		 * @return True, if succeeded
 		 */
-		inline static bool initialize(const std::string& outputFile);
+		static inline bool initialize(const std::string& outputFile);
 
 		/**
 		 * Initializes the Ocean framework.
@@ -142,45 +142,45 @@ class OCEAN_BASE_JNI_EXPORT BaseJni
  		 * @param outputFile The explicit filename of the file to which the messages will be written, relevant if messageOutput contains OUTPUT_FILE
 		 * @return True, if succeeded
 		 */
-		inline static bool initialize(const Messenger::MessageOutput messageOutput, const std::string& outputFile);
+		static inline bool initialize(const Messenger::MessageOutput messageOutput, const std::string& outputFile);
 
 		/**
 		 * Forces a specific number of processor cores.
 		 * @param cores CPU cores to be forced during initialization
 		 * @return True, if succeeded
 		 */
-		inline static bool forceProcessorCoreNumber(const unsigned int cores);
+		static inline bool forceProcessorCoreNumber(const unsigned int cores);
 
 		/**
 		 * Sets or changes the maximal capacity of the worker pool.
 		 * @param capacity The maximal number of worker objects the worker pool may provide
 		 * @return True, if succeeded
 		 */
-		inline static bool setWorkerPoolCapacity(const unsigned int capacity);
+		static inline bool setWorkerPoolCapacity(const unsigned int capacity);
 
 		/**
 		 * Java native interface function to forward an information message to the framework.
 		 * @param message The information message to forward
 		 */
-		inline static void information(const std::string& message);
+		static inline void information(const std::string& message);
 
 		/**
 		 * Java native interface function to forward a warning message to the framework.
 		 * @param message The warning message to forward
 		 */
-		inline static void warning(const std::string& message);
+		static inline void warning(const std::string& message);
 
 		/**
 		 * Java native interface function to forward an error message to the framework.
 		 * @param message The error message to forward
 		 */
-		inline static void error(const std::string& message);
+		static inline void error(const std::string& message);
 
 		/**
 		 * Pops all messages that a currently waiting in the message queue.
 		 * @return The messages that have been popped.
 		 */
-		inline static std::string popMessages();
+		static inline std::string popMessages();
 };
 
 inline bool BaseJni::initialize(const std::string& outputFile)

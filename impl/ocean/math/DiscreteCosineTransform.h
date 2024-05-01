@@ -24,7 +24,7 @@ class OCEAN_MATH_EXPORT DiscreteCosineTransform
 		 * @param yElements Number of vertical data elements, with range [1, infinity)
 		 * @param coefficients Resulting number of coefficients, an array with xElements * yElements values must be provided
 		 */
-		inline static void transform2(const Scalar* data, const unsigned int xElements, const unsigned int yElements, Scalar* coefficients);
+		static inline void transform2(const Scalar* data, const unsigned int xElements, const unsigned int yElements, Scalar* coefficients);
 
 		/**
 		 * Applies a 2D discrete cosine transform for a given 2D data block that might be larger than the actual DCT data block.
@@ -44,7 +44,7 @@ class OCEAN_MATH_EXPORT DiscreteCosineTransform
 		 * @param yElements Number of vertical data elements, with range [1, infinity)
 		 * @param data Resulting data block, an array with xElements * yElements values must be provided
 		 */
-		inline static void iTransform2(const Scalar* coefficients, const unsigned int xElements, const unsigned int yElements, Scalar* data);
+		static inline void iTransform2(const Scalar* coefficients, const unsigned int xElements, const unsigned int yElements, Scalar* data);
 
 		/**
 		 * Applies a inverse 2D discrete cosine transform for a given set of DCT coefficients.

@@ -97,7 +97,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeDetector2D : public QRCodeDetector
 		 * @param anyCamera The optionally returned camera profile that has been assumed internally
 		 * @return The list of detected QR codes
 		 */
-		inline static QRCodes detectQRCodes(const Frame& yFrame, Observations* observations = nullptr, Worker* worker = nullptr, SharedAnyCamera* anyCamera = nullptr);
+		static inline QRCodes detectQRCodes(const Frame& yFrame, Observations* observations = nullptr, Worker* worker = nullptr, SharedAnyCamera* anyCamera = nullptr);
 
 		/**
 		 * Detects QR codes in an 8-bit grayscale image with lens distortions
@@ -108,7 +108,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeDetector2D : public QRCodeDetector
 		 * @param worker Optional worker instance for parallelization
 		 * @return The list of detected QR codes
 		 */
-		inline static QRCodes detectQRCodes(const AnyCamera& anyCamera, const Frame& yFrame, Observations* observations = nullptr, Worker* worker = nullptr);
+		static inline QRCodes detectQRCodes(const AnyCamera& anyCamera, const Frame& yFrame, Observations* observations = nullptr, Worker* worker = nullptr);
 
 		/**
 		 * Detects QR codes in an 8-bit grayscale image

@@ -439,7 +439,7 @@ class OCEAN_CV_EXPORT Histogram
 		 * @tparam tChannels Number of channels of the frame, with range [1, infinity)
 		 */
 		template <unsigned int tChannels>
-		inline static bool equalization(uint8_t* frame, const unsigned int width, const unsigned int height, const Scalar factor, const unsigned int framePaddingElements, Worker* worker = nullptr);
+		static inline bool equalization(uint8_t* frame, const unsigned int width, const unsigned int height, const Scalar factor, const unsigned int framePaddingElements, Worker* worker = nullptr);
 
 		/**
 		 * Applies a histogram equalization for a given frame.
@@ -456,7 +456,7 @@ class OCEAN_CV_EXPORT Histogram
 		 * @tparam tChannels Number of channels of the source and target frame, with range [1, infinity)
 		 */
 		template <unsigned int tChannels>
-		inline static bool equalization(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const Scalar factor, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+		static inline bool equalization(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const Scalar factor, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
 		 * Applies a histogram equalization for a given frame.
@@ -472,7 +472,7 @@ class OCEAN_CV_EXPORT Histogram
 		 * @tparam tChannels Number of channels of the frame, with range [1, infinity)
 		 */
 		template <unsigned int tChannels>
-		inline static bool equalization(uint8_t* frame, const unsigned int width, const unsigned int height, const IntegralHistogram8BitPerChannel<tChannels>& normalizedIntegral, const Scalar factor, const unsigned int framePaddingElements, Worker* worker = nullptr);
+		static inline bool equalization(uint8_t* frame, const unsigned int width, const unsigned int height, const IntegralHistogram8BitPerChannel<tChannels>& normalizedIntegral, const Scalar factor, const unsigned int framePaddingElements, Worker* worker = nullptr);
 
 		/**
 		 * Applies a histogram equalization in a sub region of a given frame.
@@ -510,7 +510,7 @@ class OCEAN_CV_EXPORT Histogram
 		 * @tparam tChannels Number of channels of the source and target frame, with range [1, infinity)
 		 */
 		template <unsigned int tChannels>
-		inline static bool equalization(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const IntegralHistogram8BitPerChannel<tChannels>& normalizedIntegral, const Scalar factor, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+		static inline bool equalization(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const IntegralHistogram8BitPerChannel<tChannels>& normalizedIntegral, const Scalar factor, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
 		 * Applies a histogram equalization for a given frame.
@@ -586,7 +586,7 @@ class OCEAN_CV_EXPORT Histogram
 		 * @tparam tChannels Number of channels of the frame, with range [1, infinity)
 		 */
 		template <unsigned int tChannels>
-		inline static bool adjustColorToReference(uint8_t* frame, const unsigned int width, const unsigned int height, const IntegralHistogram8BitPerChannel<tChannels>& invertedNormalizedReferenceIntegral, const unsigned int framePaddingElements, Worker* worker = nullptr);
+		static inline bool adjustColorToReference(uint8_t* frame, const unsigned int width, const unsigned int height, const IntegralHistogram8BitPerChannel<tChannels>& invertedNormalizedReferenceIntegral, const unsigned int framePaddingElements, Worker* worker = nullptr);
 
 		/**
 		 * Adjusts the color of a frame according to a given reference frame.
@@ -623,7 +623,7 @@ class OCEAN_CV_EXPORT Histogram
 		 * @tparam tChannels Number of channels of the frame, with range [1, infinity)
 		 */
 		template <unsigned int tChannels>
-		inline static bool adjustColorToReference(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const IntegralHistogram8BitPerChannel<tChannels>& invertedNormalizedReferenceIntegral, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+		static inline bool adjustColorToReference(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const IntegralHistogram8BitPerChannel<tChannels>& invertedNormalizedReferenceIntegral, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
 		 * Adjusts the color of a frame according to a given reference frame.

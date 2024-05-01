@@ -224,7 +224,7 @@ class FrameFilterTemplate
 		 * @tparam tDirection Filter direction that is applied
 		 */
 		template <typename TData, typename TResponse, typename TNormalization, TNormalization tNormalization, TNormalization tNormalizationBias, unsigned int tChannels, PixelDirection tDirection>
-		inline static void filter(const TData* frame, TResponse* target, const unsigned int width, const unsigned int height, const unsigned int framePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+		static inline void filter(const TData* frame, TResponse* target, const unsigned int width, const unsigned int height, const unsigned int framePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
 		 * Applies the filter for a given frame with several zipped data channels and normalizes the filter response by a multiplication factor (not a denominator but a nominator) defined as function parameter.
@@ -281,7 +281,7 @@ class FrameFilterTemplate
 		 * @tparam tDirection Filter direction that is applied
 		 */
 		template <typename TData, typename TResponse, typename TNormalizationFactor, unsigned int tChannels, PixelDirection tDirection>
-		inline static void filterWithFactor(const TData* frame, TResponse* target, const unsigned int width, const unsigned int height, const TNormalizationFactor factor, const unsigned int framePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+		static inline void filterWithFactor(const TData* frame, TResponse* target, const unsigned int width, const unsigned int height, const TNormalizationFactor factor, const unsigned int framePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
 		 * This functions fills an array with the filter factors of this template class.
@@ -338,7 +338,7 @@ class FrameFilterTemplate
 		 * @tparam tDirection Filter direction for that the filter factor is requested
 		 */
 		template <PixelDirection tDirection>
-		inline static TFactor factor00();
+		static inline TFactor factor00();
 
 		/**
 		 * Returns the filter factor of filter element (1, 0).
@@ -346,7 +346,7 @@ class FrameFilterTemplate
 		 * @tparam tDirection Filter direction for that the filter factor is requested
 		 */
 		template <PixelDirection tDirection>
-		inline static TFactor factor10();
+		static inline TFactor factor10();
 
 		/**
 		 * Returns the filter factor of filter element (2, 0).
@@ -354,7 +354,7 @@ class FrameFilterTemplate
 		 * @tparam tDirection Filter direction for that the filter factor is requested
 		 */
 		template <PixelDirection tDirection>
-		inline static TFactor factor20();
+		static inline TFactor factor20();
 
 		/**
 		 * Returns the filter factor of filter element (0, 1).
@@ -362,7 +362,7 @@ class FrameFilterTemplate
 		 * @tparam tDirection Filter direction for that the filter factor is requested
 		 */
 		template <PixelDirection tDirection>
-		inline static TFactor factor01();
+		static inline TFactor factor01();
 
 		/**
 		 * Returns the filter factor of filter element (1, 1).
@@ -370,7 +370,7 @@ class FrameFilterTemplate
 		 * @tparam tDirection Filter direction for that the filter factor is requested
 		 */
 		template <PixelDirection tDirection>
-		inline static TFactor factor11();
+		static inline TFactor factor11();
 
 		/**
 		 * Returns the filter factor of filter element (2, 1).
@@ -378,7 +378,7 @@ class FrameFilterTemplate
 		 * @tparam tDirection Filter direction for that the filter factor is requested
 		 */
 		template <PixelDirection tDirection>
-		inline static TFactor factor21();
+		static inline TFactor factor21();
 
 		/**
 		 * Returns the filter factor of filter element (0, 2).
@@ -386,7 +386,7 @@ class FrameFilterTemplate
 		 * @tparam tDirection Filter direction for that the filter factor is requested
 		 */
 		template <PixelDirection tDirection>
-		inline static TFactor factor02();
+		static inline TFactor factor02();
 
 		/**
 		 * Returns the filter factor of filter element (1, 2).
@@ -394,7 +394,7 @@ class FrameFilterTemplate
 		 * @tparam tDirection Filter direction for that the filter factor is requested
 		 */
 		template <PixelDirection tDirection>
-		inline static TFactor factor12();
+		static inline TFactor factor12();
 
 		/**
 		 * Returns the filter factor of filter element (2, 2).
@@ -402,7 +402,7 @@ class FrameFilterTemplate
 		 * @tparam tDirection Filter direction for that the filter factor is requested
 		 */
 		template <PixelDirection tDirection>
-		inline static TFactor factor22();
+		static inline TFactor factor22();
 };
 
 /**
@@ -430,7 +430,7 @@ class FrameFilterFactorProvider
 		 * @return Resulting filter factor depending on the filter direction
 		 */
 		template <typename TFactor, TFactor tFactor00, TFactor tFactor10, TFactor tFactor20, TFactor tFactor01, TFactor tFactor11, TFactor tFactor21, TFactor tFactor02, TFactor tFactor12, TFactor tFactor22>
-		inline static TFactor factor00();
+		static inline TFactor factor00();
 
 		/**
 		 * Returns the filter factor of the filter element (1, 0)
@@ -447,7 +447,7 @@ class FrameFilterFactorProvider
 		 * @return Resulting filter factor depending on the filter direction
 		 */
 		template <typename TFactor, TFactor tFactor00, TFactor tFactor10, TFactor tFactor20, TFactor tFactor01, TFactor tFactor11, TFactor tFactor21, TFactor tFactor02, TFactor tFactor12, TFactor tFactor22>
-		inline static TFactor factor10();
+		static inline TFactor factor10();
 
 		/**
 		 * Returns the filter factor of the filter element (2, 0)
@@ -464,7 +464,7 @@ class FrameFilterFactorProvider
 		 * @return Resulting filter factor depending on the filter direction
 		 */
 		template <typename TFactor, TFactor tFactor00, TFactor tFactor10, TFactor tFactor20, TFactor tFactor01, TFactor tFactor11, TFactor tFactor21, TFactor tFactor02, TFactor tFactor12, TFactor tFactor22>
-		inline static TFactor factor20();
+		static inline TFactor factor20();
 
 		/**
 		 * Returns the filter factor of the filter element (0, 1)
@@ -481,7 +481,7 @@ class FrameFilterFactorProvider
 		 * @return Resulting filter factor depending on the filter direction
 		 */
 		template <typename TFactor, TFactor tFactor00, TFactor tFactor10, TFactor tFactor20, TFactor tFactor01, TFactor tFactor11, TFactor tFactor21, TFactor tFactor02, TFactor tFactor12, TFactor tFactor22>
-		inline static TFactor factor01();
+		static inline TFactor factor01();
 
 		/**
 		 * Returns the filter factor of the filter element (1, 1)
@@ -498,7 +498,7 @@ class FrameFilterFactorProvider
 		 * @return Resulting filter factor depending on the filter direction
 		 */
 		template <typename TFactor, TFactor tFactor00, TFactor tFactor10, TFactor tFactor20, TFactor tFactor01, TFactor tFactor11, TFactor tFactor21, TFactor tFactor02, TFactor tFactor12, TFactor tFactor22>
-		inline static TFactor factor11();
+		static inline TFactor factor11();
 
 		/**
 		 * Returns the filter factor of the filter element (2, 1)
@@ -515,7 +515,7 @@ class FrameFilterFactorProvider
 		 * @return Resulting filter factor depending on the filter direction
 		 */
 		template <typename TFactor, TFactor tFactor00, TFactor tFactor10, TFactor tFactor20, TFactor tFactor01, TFactor tFactor11, TFactor tFactor21, TFactor tFactor02, TFactor tFactor12, TFactor tFactor22>
-		inline static TFactor factor21();
+		static inline TFactor factor21();
 
 		/**
 		 * Returns the filter factor of the filter element (0, 2)
@@ -532,7 +532,7 @@ class FrameFilterFactorProvider
 		 * @return Resulting filter factor depending on the filter direction
 		 */
 		template <typename TFactor, TFactor tFactor00, TFactor tFactor10, TFactor tFactor20, TFactor tFactor01, TFactor tFactor11, TFactor tFactor21, TFactor tFactor02, TFactor tFactor12, TFactor tFactor22>
-		inline static TFactor factor02();
+		static inline TFactor factor02();
 
 		/**
 		 * Returns the filter factor of the filter element (1, 2)
@@ -549,7 +549,7 @@ class FrameFilterFactorProvider
 		 * @return Resulting filter factor depending on the filter direction
 		 */
 		template <typename TFactor, TFactor tFactor00, TFactor tFactor10, TFactor tFactor20, TFactor tFactor01, TFactor tFactor11, TFactor tFactor21, TFactor tFactor02, TFactor tFactor12, TFactor tFactor22>
-		inline static TFactor factor12();
+		static inline TFactor factor12();
 
 		/**
 		 * Returns the filter factor of the filter element (2, 2)
@@ -566,7 +566,7 @@ class FrameFilterFactorProvider
 		 * @return Resulting filter factor depending on the filter direction
 		 */
 		template <typename TFactor, TFactor tFactor00, TFactor tFactor10, TFactor tFactor20, TFactor tFactor01, TFactor tFactor11, TFactor tFactor21, TFactor tFactor02, TFactor tFactor12, TFactor tFactor22>
-		inline static TFactor factor22();
+		static inline TFactor factor22();
 };
 
 template <typename TFactor, TFactor tFactor00, TFactor tFactor10, TFactor tFactor20, TFactor tFactor01, TFactor tFactor11, TFactor tFactor21, TFactor tFactor02, TFactor tFactor12, TFactor tFactor22>

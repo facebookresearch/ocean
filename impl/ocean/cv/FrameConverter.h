@@ -964,7 +964,7 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * @tparam T The data type of the elements of the source frame and the target buffer, e.g., 'uint8_t', or 'float'
 		 */
 		template <typename T>
-		inline static void patchFrame(const T* source, T* buffer, const unsigned int width, const unsigned int channels, const unsigned int x, const unsigned int y, const unsigned int patchSize, const unsigned int sourcePaddingElements, const unsigned int bufferPaddingElements);
+		static inline void patchFrame(const T* source, T* buffer, const unsigned int width, const unsigned int channels, const unsigned int x, const unsigned int y, const unsigned int patchSize, const unsigned int sourcePaddingElements, const unsigned int bufferPaddingElements);
 
 		/**
 		 * Copies a small patch area of a frame into a buffer holding only the entire patch.

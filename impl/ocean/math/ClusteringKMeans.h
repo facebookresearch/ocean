@@ -573,14 +573,14 @@ class ClusteringKMeans : public Clustering<tUseIndices>
 		 * @param data The observation data in which the smallest observation is determined, must be valid
 		 * @return The index of the smallest observation
 		 */
-		inline static DataIndex smallestObservation(const Data& data);
+		static inline DataIndex smallestObservation(const Data& data);
 
 		/**
 		 * Returns the square distance between an observation and the origin.
 		 * @param observation The observation for that the square distance is determined
 		 * @return Resulting square distance
 		 */
-		inline static TSquareDistance sqrDistance(const Observation& observation);
+		static inline TSquareDistance sqrDistance(const Observation& observation);
 
 	protected:
 

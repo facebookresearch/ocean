@@ -249,7 +249,7 @@ class ObjectRef
 		 * This function is used to get access to the protected delete operator of the internal encapsulated object.
 		 * @param object the object to destroy
 		 */
-		inline static void destroyObject(T* object);
+		static inline void destroyObject(T* object);
 
 	protected:
 

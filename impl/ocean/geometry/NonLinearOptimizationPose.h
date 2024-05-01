@@ -75,7 +75,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		 * @return True, if the optimization succeeded
 		 * @see optimizePoseIF().
 		 */
-		inline static bool optimizePose(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, const bool distortImagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
+		static inline bool optimizePose(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, const bool distortImagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
 
 		/**
 		 * Minimizes the projection error of a given 6DOF pose holding orientation and translation parameters for any camera.
@@ -94,7 +94,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		 * @return True, if the optimization succeeded
 		 * @see optimizePoseIF().
 		 */
-		inline static bool optimizePose(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
+		static inline bool optimizePose(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
 
 		/**
 		 * Minimizes the projection error of a given 6DOF pose holding orientation and translation parameters.
@@ -117,7 +117,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		 * @return True, if the optimization succeeded
 		 * @see optimizePoseIF().
 		 */
-		inline static bool optimizePose(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, const bool distortImagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances);
+		static inline bool optimizePose(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, const bool distortImagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances);
 
 		/**
 		 * Minimizes the projection error of a given 6DOF pose holding orientation and translation parameters together with a flexible zoom.
@@ -140,7 +140,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		 * @return True, if the optimization succeeded
 		 * @see optimizePoseIF().
 		 */
-		inline static bool optimizePoseZoom(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Scalar zoom, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, const bool distortImagePoints, HomogenousMatrix4& world_T_optimizedCamera, Scalar& optimizedZoom, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr);
+		static inline bool optimizePoseZoom(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Scalar zoom, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, const bool distortImagePoints, HomogenousMatrix4& world_T_optimizedCamera, Scalar& optimizedZoom, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr);
 
 		/**
 		 * Deprecated.

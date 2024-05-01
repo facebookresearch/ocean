@@ -50,7 +50,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCorner : public PointFeature
 		 * @param corner Harris corner to be converted
 		 * @return Resulting image point
 		 */
-		inline static Geometry::ImagePoint corner2imagePoint(const HarrisCorner& corner);
+		static inline Geometry::ImagePoint corner2imagePoint(const HarrisCorner& corner);
 
 		/**
 		 * Converts Harris corners to simple 2D image positions.
@@ -58,7 +58,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCorner : public PointFeature
 		 * @param corners Harris corners to convert
 		 * @return Resulting image points
 		 */
-		inline static Geometry::ImagePoints corners2imagePoints(const HarrisCorners& corners);
+		static inline Geometry::ImagePoints corners2imagePoints(const HarrisCorners& corners);
 
 		/**
 		 * Converts Harris corners to simple 2D image positions.
@@ -67,14 +67,14 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCorner : public PointFeature
 		 * @param number Number of corners to be converted, with range [0, corners.size()]
 		 * @return Resulting image points
 		 */
-		inline static Geometry::ImagePoints corners2imagePoints(const HarrisCorners& corners, const size_t number);
+		static inline Geometry::ImagePoints corners2imagePoints(const HarrisCorners& corners, const size_t number);
 
 		/**
 		 * Converts Harris corners to point features.
 		 * @param corners Harris corners to convert
 		 * @return Resulting point features
 		 */
-		inline static PointFeatures corners2pointFeatures(const HarrisCorners& corners);
+		static inline PointFeatures corners2pointFeatures(const HarrisCorners& corners);
 
 		/**
 		 * Converts Harris corners to point features.
@@ -82,7 +82,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCorner : public PointFeature
 		 * @param number Number of corners to be converted, with range [0, corners.size()]
 		 * @return Resulting point features
 		 */
-		inline static PointFeatures corners2pointFeatures(const HarrisCorners& corners, const size_t number);
+		static inline PointFeatures corners2pointFeatures(const HarrisCorners& corners, const size_t number);
 };
 
 inline HarrisCorner::HarrisCorner() :

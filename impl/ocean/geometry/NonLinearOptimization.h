@@ -459,7 +459,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimization
 		 * @tparam T Data type of the optimization provider
 		 */
 		template <typename T>
-		inline static bool denseOptimization(T& provider, const unsigned int iterations = 5u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr, Scalars* intermediateErrors = nullptr);
+		static inline bool denseOptimization(T& provider, const unsigned int iterations = 5u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Invokes the optimization of a dense (matrix) optimization problem.

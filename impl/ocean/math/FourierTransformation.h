@@ -208,7 +208,7 @@ class OCEAN_MATH_EXPORT FourierTransformation
 		 * @tparam TComplex Data type of the complex signal
 		 */
 		template <typename TScalar, typename TComplex>
-		inline static void scalarToComplex(const TScalar* source, std::complex<TComplex>* target, const size_t number);
+		static inline void scalarToComplex(const TScalar* source, std::complex<TComplex>* target, const size_t number);
 
 		/**
 		 * Converts the real components of complex values to scalar values.
@@ -219,7 +219,7 @@ class OCEAN_MATH_EXPORT FourierTransformation
 		 * @tparam TScalar Data type of the real signal
 		 */
 		template <typename TComplex, typename TScalar>
-		inline static void realToScalar(const std::complex<TComplex>* source, TScalar* target, const size_t number);
+		static inline void realToScalar(const std::complex<TComplex>* source, TScalar* target, const size_t number);
 
 		/**
 		 * Converts the imaginary components of complex values to scalar values.
@@ -230,7 +230,7 @@ class OCEAN_MATH_EXPORT FourierTransformation
 		 * @tparam TScalar Data type of the real signal
 		 */
 		template <typename TComplex, typename TScalar>
-		inline static void imaginaryToScalar(const std::complex<TComplex>* source, TScalar* target, const size_t number);
+		static inline void imaginaryToScalar(const std::complex<TComplex>* source, TScalar* target, const size_t number);
 
 		/**
 		 * Converts complex values to magnitude (or absolute) values.
@@ -242,7 +242,7 @@ class OCEAN_MATH_EXPORT FourierTransformation
 		 * @tparam TScalar Data type of the real signal
 		 */
 		template <typename TComplex, typename TScalar>
-		inline static void complexToMagnitude(const std::complex<TComplex>* source, TScalar* target, const size_t number);
+		static inline void complexToMagnitude(const std::complex<TComplex>* source, TScalar* target, const size_t number);
 
 		/**
 		 * Shifts a given signal by half of the width and the height.
@@ -270,7 +270,7 @@ class OCEAN_MATH_EXPORT FourierTransformation
 		 * @param size Size of the signal in bins, with range (0, infinity)
 		 * @return Corresponding center position of the first bin
 		 */
-		inline static unsigned int shiftCenter(const unsigned int size);
+		static inline unsigned int shiftCenter(const unsigned int size);
 
 		/**
 		 * Elementwise multiplication of two 2D complex Fourier spectrums (one channel spectrums).

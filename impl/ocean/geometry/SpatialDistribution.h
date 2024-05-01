@@ -612,7 +612,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 				 * @param right The right element to compare
 				 * @return True, if the left element has a smaller distance value than the right one
 				 */
-				inline static bool compareLeftSmaller(const DistanceElement& left, const DistanceElement& right);
+				static inline bool compareLeftSmaller(const DistanceElement& left, const DistanceElement& right);
 
 				/**
 				 * Compares two distance elements.
@@ -620,7 +620,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 				 * @param right The right element to compare
 				 * @return True, if the left element has a higher distance value than the right one
 				 */
-				inline static bool compareLeftHigher(const DistanceElement& left, const DistanceElement& right);
+				static inline bool compareLeftHigher(const DistanceElement& left, const DistanceElement& right);
 
 				/**
 				 * Returns whether the left element holds a higher distance than the right one.
@@ -693,7 +693,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @param verticalBins Resulting vertical bins, with range [1, infinity)
 		 * @return Resulting array holding the indices of the distributed image points, will be cleared before usage
 		 */
-		inline static DistributionArray distributeToArray(const ImagePoint* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int averagePointsPerBin, const unsigned int maxHorizontalBins, const unsigned int maxVerticalBins, unsigned int& horizontalBins, unsigned int& verticalBins);
+		static inline DistributionArray distributeToArray(const ImagePoint* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const unsigned int averagePointsPerBin, const unsigned int maxHorizontalBins, const unsigned int maxVerticalBins, unsigned int& horizontalBins, unsigned int& verticalBins);
 
 		/**
 		 * Distributes a set of given 2D image points into a spatial array.
@@ -743,7 +743,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		 * @tparam tMaximalBins Number of maximal bins in each direction (horizontal and vertical), width range [1, infinity)
 		 */
 		template <unsigned int tMaximalBins>
-		inline static DistributionArray distributeToArray(const ImagePoint* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const Scalar searchDistance);
+		static inline DistributionArray distributeToArray(const ImagePoint* imagePoints, const size_t number, const Scalar left, const Scalar top, const Scalar width, const Scalar height, const Scalar searchDistance);
 
 		/**
 		 * Distributes the given 2D image points into a spatial array.

@@ -96,7 +96,7 @@ class OCEAN_TEST_CV_ADVANCED_EXPORT TestAdvancedFrameFilterSobel
 		 * @param z Depth pixel position
 		 * @return Pixel value
 		 */
-		inline static unsigned char pixel(const unsigned char* const frame, const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int x, const unsigned int y, const unsigned int z);
+		static inline unsigned char pixel(const unsigned char* const frame, const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int x, const unsigned int y, const unsigned int z);
 
 		/**
 		 * Returns the index of the 3D pixel for a given 3D point.
@@ -108,7 +108,7 @@ class OCEAN_TEST_CV_ADVANCED_EXPORT TestAdvancedFrameFilterSobel
 		 * @param z Depth pixel position
 		 * @return Corresponding pixel index
 		 */
-		inline static unsigned int index(const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int x, const unsigned int y, const unsigned int z);
+		static inline unsigned int index(const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int x, const unsigned int y, const unsigned int z);
 };
 
 inline unsigned char TestAdvancedFrameFilterSobel::pixel(const unsigned char* const frame, const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int x, const unsigned int y, const unsigned int z)

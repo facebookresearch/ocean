@@ -96,7 +96,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPlane : protected NonLinearOpti
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator
 		 * @return Result of the optimization
 		 */
-		inline static bool optimizeOnePoseOnePlane(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_cameraFirst, const HomogenousMatrix4& world_T_cameraSecond, const Plane3& plane, const ConstIndexedAccessor<Vector2>& imagePointsFirst, const ConstIndexedAccessor<Vector2>& imagePointsSecond, const bool distortImagePoints, HomogenousMatrix4& world_T_optimizedCameraSecond, Plane3& optimizedPlane, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
+		static inline bool optimizeOnePoseOnePlane(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_cameraFirst, const HomogenousMatrix4& world_T_cameraSecond, const Plane3& plane, const ConstIndexedAccessor<Vector2>& imagePointsFirst, const ConstIndexedAccessor<Vector2>& imagePointsSecond, const bool distortImagePoints, HomogenousMatrix4& world_T_optimizedCameraSecond, Plane3& optimizedPlane, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
 
 		/**
 		 * Optimizes the orientation of a plane in 3D spaces and the pose of one camera pose.
@@ -130,7 +130,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPlane : protected NonLinearOpti
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator
 		 * @return True, if succeeded
 		 */
-		inline static bool optimizePosesPlane(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vectors2& imagePointsFirst, const HomogenousMatrices4& world_T_cameras, const Plane3& plane, const ImagePointGroups& imagePointGroups, const bool distortImagePoints, HomogenousMatrices4& world_T_optimizedCameras, Plane3& optimizedPlane, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
+		static inline bool optimizePosesPlane(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Vectors2& imagePointsFirst, const HomogenousMatrices4& world_T_cameras, const Plane3& plane, const ImagePointGroups& imagePointGroups, const bool distortImagePoints, HomogenousMatrices4& world_T_optimizedCameras, Plane3& optimizedPlane, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
 
 		/**
 		 * Optimizes the orientation of a plane in 3D spaces and several (inverted and flipped) camera poses concurrently.
@@ -163,7 +163,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPlane : protected NonLinearOpti
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator
 		 * @return True, if succeeded
 		 */
-		inline static bool optimizePosesPlane(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const HomogenousMatrices4& world_T_cameras, const ImagePointsPairs& imagePointPairGroups, const Plane3& plane, const bool distortImagePoints, HomogenousMatrices4& world_T_optimizedCameras, Plane3& optimizedPlane, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
+		static inline bool optimizePosesPlane(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const HomogenousMatrices4& world_T_cameras, const ImagePointsPairs& imagePointPairGroups, const Plane3& plane, const bool distortImagePoints, HomogenousMatrices4& world_T_optimizedCameras, Plane3& optimizedPlane, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
 
 		/**
 		 * Optimizes the orientation of a plane in 3D spaces and several (inverted and flipped) camera poses concurrently.

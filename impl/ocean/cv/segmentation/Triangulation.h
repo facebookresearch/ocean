@@ -108,7 +108,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT Triangulation
 		 * @tparam T The data type of the pixel coordinates, can be "int" or "unsigned int"
 		 */
 		template <typename T>
-		inline static std::vector<Advanced::PixelTriangleT<T>> triangulation2triangles(const std::vector<PixelPositionT<T>>& coordinates, const IndexTriangles& triangulation);
+		static inline std::vector<Advanced::PixelTriangleT<T>> triangulation2triangles(const std::vector<PixelPositionT<T>>& coordinates, const IndexTriangles& triangulation);
 };
 
 inline Triangulation::IndexTriangle::IndexTriangle()

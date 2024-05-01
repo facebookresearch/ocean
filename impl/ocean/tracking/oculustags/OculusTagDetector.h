@@ -89,7 +89,7 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT OculusTagDetector
 		 * @param tagSizeMap Optional mapping of tag IDs to specific tag sizes, range of tag IDs (key): [0, 1024), range of tag sizes (value): (0, infinity)
 		 * @return A vector of detected Oculus tags
 		 */
-		inline static OculusTags detectOculusTags(const FisheyeCamera& fisheyeCamera, const Frame& yFrame, const HomogenousMatrix4& world_T_device, const HomogenousMatrix4& device_T_camera, const Scalar defaultTagSize, const TagSizeMap& tagSizeMap = TagSizeMap());
+		static inline OculusTags detectOculusTags(const FisheyeCamera& fisheyeCamera, const Frame& yFrame, const HomogenousMatrix4& world_T_device, const HomogenousMatrix4& device_T_camera, const Scalar defaultTagSize, const TagSizeMap& tagSizeMap = TagSizeMap());
 
 		/**
 		 * Deprecated.
@@ -106,7 +106,7 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT OculusTagDetector
 		 * @param tagSizeMap Optional mapping of tag IDs to specific tag sizes, range of tag IDs (key): [0, 1024), range of tag sizes (value): (0, infinity)
 		 * @return A vector of detected Oculus tags
 		 */
-		inline static OculusTags detectOculusTags(const FisheyeCamera& fisheyeCameraA, const FisheyeCamera& fisheyeCameraB, const Frame& yFrameA, const Frame& yFrameB, const HomogenousMatrix4& world_T_device, const HomogenousMatrix4& device_T_cameraA, const HomogenousMatrix4& device_T_cameraB, const Scalar defaultTagSize, const TagSizeMap& tagSizeMap = TagSizeMap());
+		static inline OculusTags detectOculusTags(const FisheyeCamera& fisheyeCameraA, const FisheyeCamera& fisheyeCameraB, const Frame& yFrameA, const Frame& yFrameB, const HomogenousMatrix4& world_T_device, const HomogenousMatrix4& device_T_cameraA, const HomogenousMatrix4& device_T_cameraB, const Scalar defaultTagSize, const TagSizeMap& tagSizeMap = TagSizeMap());
 
 		/**
 		 * Checks if the locations of tag can be confirmed in an image by comparing the tag ID that is read from an image

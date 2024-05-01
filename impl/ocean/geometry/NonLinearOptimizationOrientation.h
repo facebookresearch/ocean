@@ -56,7 +56,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationOrientation : protected NonLine
 		 * @return True, if the optimization succeeded
 		 * @see optimizeOrientationIF().
 		 */
-		inline static bool optimizeOrientation(const PinholeCamera& pinholeCamera, const SquareMatrix3& world_R_camera, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const bool distortImagePoints, SquareMatrix3& world_R_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr, Scalars* intermediateErrors = nullptr);
+		static inline bool optimizeOrientation(const PinholeCamera& pinholeCamera, const SquareMatrix3& world_R_camera, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const bool distortImagePoints, SquareMatrix3& world_R_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Minimizes the projection error of a given inverted and flipped 3DOF orientation.
@@ -101,7 +101,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationOrientation : protected NonLine
 		 * @return True, if the optimization succeeded
 		 * @see optimizeOrientationIF().
 		 */
-		inline static bool optimizeCameraOrientation(const PinholeCamera& pinholeCamera, const SquareMatrix3& world_R_camera, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const bool distortImagePoints, SquareMatrix3& world_R_optimizedCamera, PinholeCamera& optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr, Scalars* intermediateErrors = nullptr);
+		static inline bool optimizeCameraOrientation(const PinholeCamera& pinholeCamera, const SquareMatrix3& world_R_camera, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const bool distortImagePoints, SquareMatrix3& world_R_optimizedCamera, PinholeCamera& optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Minimizes the projection error of a given inverted and flipped 3DOF orientation and the entire camera parameters (intrinsic and distortion).

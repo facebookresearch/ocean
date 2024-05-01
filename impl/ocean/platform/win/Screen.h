@@ -119,7 +119,7 @@ class OCEAN_PLATFORM_WIN_EXPORT Screen
 		 * @param dc The device context, nullptr to determine the scale factor of the default screen
 		 * @return The converted pixel value for the (native/pyhsical) screen coordinate system, with range (-infinity, infinity)
 		 */
-		inline static int scalePixel(const int pixel, const HDC dc);
+		static inline int scalePixel(const int pixel, const HDC dc);
 
 		/**
 		 * Converts a given pixel value by a given scale factor.
@@ -127,7 +127,7 @@ class OCEAN_PLATFORM_WIN_EXPORT Screen
 		 * @param scaleFactor The scale factor to be applied, with range (-infinity, infinity)
 		 * @return The resulting converted pixel value (-infinity, infinity)
 		 */
-		inline static int scalePixelByFactor(const int pixel, const double scaleFactor);
+		static inline int scalePixelByFactor(const int pixel, const double scaleFactor);
 };
 
 inline int Screen::scalePixel(const int pixel, const HDC dc)

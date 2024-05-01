@@ -778,7 +778,7 @@ class NumericT
 		 * @param sigma The sigma parameter defining the standard deviation of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		inline static T gaussianDistribution(const T x, const T sigma);
+		static inline T gaussianDistribution(const T x, const T sigma);
 
 		/**
 		 * Returns a value of the univariate Gaussian distribution centered around a given position x0.
@@ -787,7 +787,7 @@ class NumericT
 		 * @param sigma The sigma parameter defining the standard deviation of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		inline static T gaussianDistribution(const T x, const T x0, const T sigma);
+		static inline T gaussianDistribution(const T x, const T x0, const T sigma);
 
 		/**
 		 * Returns a value of the normalized univariate Gaussian distribution centered around the origin.
@@ -796,7 +796,7 @@ class NumericT
 		 * @param sigma The sigma parameter defining the standard deviation of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		inline static T normalizedGaussianDistribution(const T x, const T sigma);
+		static inline T normalizedGaussianDistribution(const T x, const T sigma);
 
 		/**
 		 * Returns a value of the normalized univariate Gaussian distribution around a given position x0.
@@ -806,7 +806,7 @@ class NumericT
 		 * @param sigma The sigma parameter defining the standard deviation of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		inline static T normalizedGaussianDistribution(const T x, const T x0, const T sigma);
+		static inline T normalizedGaussianDistribution(const T x, const T x0, const T sigma);
 
 		/**
 		 * Returns a value of the bivariate Gaussian distribution centered around the origin.
@@ -816,7 +816,7 @@ class NumericT
 		 * @param sigmaY Sigma parameter defining the standard deviation for the y-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		inline static T gaussianDistribution2(const T x, const T y, const T sigmaX, const T sigmaY);
+		static inline T gaussianDistribution2(const T x, const T y, const T sigmaX, const T sigmaY);
 
 		/**
 		 * Returns a value of the bivariate Gaussian distribution centered around a given position (x0, y0).
@@ -828,7 +828,7 @@ class NumericT
 		 * @param sigmaY Sigma parameter defining the standard deviation for the y-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		inline static T gaussianDistribution2(const T x, const T y, const T x0, const T y0, const T sigmaX, const T sigmaY);
+		static inline T gaussianDistribution2(const T x, const T y, const T x0, const T y0, const T sigmaX, const T sigmaY);
 
 		/**
 		 * Returns a value of the normalized bivariate Gaussian distribution centered around the origin.
@@ -839,7 +839,7 @@ class NumericT
 		 * @param sigmaY Sigma parameter defining the standard deviation for the y-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		inline static T normalizedGaussianDistribution2(const T x, const T y, const T sigmaX, const T sigmaY);
+		static inline T normalizedGaussianDistribution2(const T x, const T y, const T sigmaX, const T sigmaY);
 
 		/**
 		 * Returns a value of the normalized bivariate Gaussian distribution centered around a given position (x0, y0).
@@ -852,7 +852,7 @@ class NumericT
 		 * @param sigmaY Sigma parameter defining the standard deviation for the y-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		inline static T normalizedGaussianDistribution2(const T x, const T y, const T x0, const T y0, const T sigmaX, const T sigmaY);
+		static inline T normalizedGaussianDistribution2(const T x, const T y, const T x0, const T y0, const T sigmaX, const T sigmaY);
 
 		/**
 		 * Returns a value of the trivariate Gaussian distribution centered around the origin.
@@ -864,7 +864,7 @@ class NumericT
 		 * @param sigmaZ Sigma parameter defining the standard deviation for the z-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		inline static T gaussianDistribution3(const T x, const T y, const T z, const T sigmaX, const T sigmaY, const T sigmaZ);
+		static inline T gaussianDistribution3(const T x, const T y, const T z, const T sigmaX, const T sigmaY, const T sigmaZ);
 
 		/**
 		 * Returns a value of the trivariate Gaussian distribution centered around a given position (x0, y0, z0).
@@ -879,7 +879,7 @@ class NumericT
 		 * @param sigmaZ Sigma parameter defining the standard deviation for the z-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		inline static T gaussianDistribution3(const T x, const T y, const T z, const T x0, const T y0, const T z0, const T sigmaX, const T sigmaY, const T sigmaZ);
+		static inline T gaussianDistribution3(const T x, const T y, const T z, const T x0, const T y0, const T z0, const T sigmaX, const T sigmaY, const T sigmaZ);
 
 		/**
 		 * Returns a value of the normalized trivariate Gaussian distribution centered around the origin.
@@ -892,7 +892,7 @@ class NumericT
 		 * @param sigmaZ Sigma parameter defining the standard deviation for the z-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		inline static T normalizedGaussianDistribution3(const T x, const T y, const T z, const T sigmaX, const T sigmaY, const T sigmaZ);
+		static inline T normalizedGaussianDistribution3(const T x, const T y, const T z, const T sigmaX, const T sigmaY, const T sigmaZ);
 
 		/**
 		 * Returns a value of the normalized trivariate Gaussian distribution centered around a given position (x0, y0, z0).
@@ -908,7 +908,7 @@ class NumericT
 		 * @param sigmaZ Sigma parameter defining the standard deviation for the z-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		inline static T normalizedGaussianDistribution3(const T x, const T y, const T z, const T x0, const T y0, const T z0, const T sigmaX, const T sigmaY, const T sigmaZ);
+		static inline T normalizedGaussianDistribution3(const T x, const T y, const T z, const T x0, const T y0, const T z0, const T sigmaX, const T sigmaY, const T sigmaZ);
 };
 
 template <typename T>

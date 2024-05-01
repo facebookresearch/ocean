@@ -70,7 +70,7 @@ class ClusteringSpectral
 		 * @return first eigenvalue is greater than eigenvalue of second element
 		 */
 		template <typename T>
-		inline static bool pairSortDescending(const std::pair<T, MatrixT<T>>& firstElem, const std::pair<T, MatrixT<T>>& secondElem);
+		static inline bool pairSortDescending(const std::pair<T, MatrixT<T>>& firstElem, const std::pair<T, MatrixT<T>>& secondElem);
 
 	protected:
 

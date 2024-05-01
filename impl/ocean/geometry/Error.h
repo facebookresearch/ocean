@@ -264,7 +264,7 @@ class OCEAN_GEOMETRY_EXPORT Error
 		 * @param imagePoint The 2D image point corresponding to the object point, defined in the camera pixel domain
 		 * @return The resulting error value
 		 */
-		inline static Vector2 determinePoseError(const HomogenousMatrix4& world_T_camera, const AnyCamera& camera, const Vector3& objectPoint, const Vector2& imagePoint);
+		static inline Vector2 determinePoseError(const HomogenousMatrix4& world_T_camera, const AnyCamera& camera, const Vector3& objectPoint, const Vector2& imagePoint);
 
 		/**
 		 * Determines the accuracy of the camera pose based on 2D/3D correspondences.
@@ -275,7 +275,7 @@ class OCEAN_GEOMETRY_EXPORT Error
 		 * @param imagePoint The 2D image point corresponding to the object point, defined in the camera pixel domain
 		 * @return The resulting error value
 		 */
-		inline static Vector2 determinePoseErrorIF(const HomogenousMatrix4& flippedCamera_T_world, const AnyCamera& camera, const Vector3& objectPoint, const Vector2& imagePoint);
+		static inline Vector2 determinePoseErrorIF(const HomogenousMatrix4& flippedCamera_T_world, const AnyCamera& camera, const Vector3& objectPoint, const Vector2& imagePoint);
 
 		/**
 		 * Deprecated.
@@ -289,7 +289,7 @@ class OCEAN_GEOMETRY_EXPORT Error
 		 * @param useDistortionParameters True, to respect the distortion parameters of the given camera during object point projection
 		 * @return Resulting error value
 		 */
-		inline static Vector2 determinePoseError(const HomogenousMatrix4& world_T_camera, const PinholeCamera& pinholeCamera, const Vector3& objectPoint, const Vector2& imagePoint, const bool useDistortionParameters);
+		static inline Vector2 determinePoseError(const HomogenousMatrix4& world_T_camera, const PinholeCamera& pinholeCamera, const Vector3& objectPoint, const Vector2& imagePoint, const bool useDistortionParameters);
 
 		/**
 		 * Deprecated.
@@ -303,7 +303,7 @@ class OCEAN_GEOMETRY_EXPORT Error
 		 * @param useDistortionParameters True, to respect the distortion parameters of the given camera during object point projection
 		 * @return Resulting error value
 		 */
-		inline static Vector2 determinePoseErrorIF(const HomogenousMatrix4& flippedCamera_T_world, const PinholeCamera& pinholeCamera, const Vector3& objectPoint, const Vector2& imagePoint, const bool useDistortionParameters);
+		static inline Vector2 determinePoseErrorIF(const HomogenousMatrix4& flippedCamera_T_world, const PinholeCamera& pinholeCamera, const Vector3& objectPoint, const Vector2& imagePoint, const bool useDistortionParameters);
 
 		/**
 		 * Determines the accuracy of the camera pose based on 2D/3D correspondences.
@@ -613,7 +613,7 @@ class OCEAN_GEOMETRY_EXPORT Error
 		 * @param explicitWeights Optional additional weight values individual for each error to be applied to the resulting average robust error only
 		 * @return Averaged robust error
 		 */
-		inline static Scalar averagedRobustError(const Scalar* sqrErrors, const size_t number, const Estimator::EstimatorType estimator, const Scalar* explicitWeights = nullptr);
+		static inline Scalar averagedRobustError(const Scalar* sqrErrors, const size_t number, const Estimator::EstimatorType estimator, const Scalar* explicitWeights = nullptr);
 
 		/**
 		 * Returns the averaged robust error for a given set of error values using a defined estimator.
@@ -638,7 +638,7 @@ class OCEAN_GEOMETRY_EXPORT Error
 		 * @param explicitWeights Optional additional weight values individual for each error to be applied to the resulting average robust error only
 		 * @return Averaged robust error
 		 */
-		inline static Scalar averagedRobustError(const Scalar* sqrErrors, const unsigned int* indices, const size_t numberIndices, const Estimator::EstimatorType estimator, const Scalar* explicitWeights = nullptr);
+		static inline Scalar averagedRobustError(const Scalar* sqrErrors, const unsigned int* indices, const size_t numberIndices, const Estimator::EstimatorType estimator, const Scalar* explicitWeights = nullptr);
 };
 
 inline Error::ErrorElement::ErrorElement(const unsigned int imageIndex, const unsigned int candidateIndex, const Scalar error) :

@@ -71,20 +71,20 @@ class StaticMatrix
 		 * @return Matrix rows
 		 * @see columns().
 		 */
-		inline static size_t rows();
+		static inline size_t rows();
 
 		/**
 		 * Returns the number of columsn this matrix holds.
 		 * @return Matrix columns
 		 * @see rows().
 		 */
-		inline static size_t columns();
+		static inline size_t columns();
 
 		/**
 		 * Returns the number of elements this matrix stores.
 		 * @return Number of matrix elements
 		 */
-		inline static size_t elements();
+		static inline size_t elements();
 
 		/**
 		 * Returns a pointer to a specified row.

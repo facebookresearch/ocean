@@ -98,7 +98,7 @@ class OCEAN_TRACKING_EXPORT HomographyTracker
 		 * @param transformation The transformation to be used, must be valid
 		 * @return Resulting transformed points
 		 */
-		inline static Vectors2 transformPoints(const Vectors2& points, const SquareMatrix3& transformation);
+		static inline Vectors2 transformPoints(const Vectors2& points, const SquareMatrix3& transformation);
 
 	private:
 

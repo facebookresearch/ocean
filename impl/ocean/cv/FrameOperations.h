@@ -87,7 +87,7 @@ class OCEAN_CV_EXPORT FrameOperations
 			 * @tparam TTarget Type of the target
 			 */
 			template <typename TSource0, typename TSource1, typename TTarget>
-			inline static void subtractPixel(const TSource0* source0, const TSource1* source1, TTarget* target);
+			static inline void subtractPixel(const TSource0* source0, const TSource1* source1, TTarget* target);
 		};
 };
 

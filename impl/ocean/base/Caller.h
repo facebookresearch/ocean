@@ -50,7 +50,7 @@ class ParameterCounter
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 
@@ -67,7 +67,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT1
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -83,7 +83,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT1
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -99,7 +99,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT1
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -115,7 +115,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT1
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -131,7 +131,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT1
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -147,7 +147,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT1
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -163,7 +163,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT1
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -179,7 +179,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT1
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -195,7 +195,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT1
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -211,7 +211,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, Nul
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -227,7 +227,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, NullClas
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -243,7 +243,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, NullClass, Nu
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -259,7 +259,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, NullClass, NullCla
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -275,7 +275,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, PT5, NullClass, NullClass, N
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -291,7 +291,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, PT4, NullClass, NullClass, NullCl
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -307,7 +307,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, PT3, NullClass, NullClass, NullClass, 
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -323,7 +323,7 @@ class ParameterCounter<RT, PT0, PT1, PT2, NullClass, NullClass, NullClass, NullC
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -339,7 +339,7 @@ class ParameterCounter<RT, PT0, PT1, NullClass, NullClass, NullClass, NullClass,
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -355,7 +355,7 @@ class ParameterCounter<RT, PT0, NullClass, NullClass, NullClass, NullClass, Null
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 /**
@@ -371,7 +371,7 @@ class ParameterCounter<RT, NullClass, NullClass, NullClass, NullClass, NullClass
 		 * Returns the number of parameters for a given function type.
 		 * @return Parameter number
 		 */
-		inline static unsigned int parameters();
+		static inline unsigned int parameters();
 };
 
 template <typename RT, typename PT0, typename PT1, typename PT2, typename PT3, typename PT4, typename PT5, typename PT6, typename PT7, typename PT8, typename PT9, typename PT10, typename PT11, typename PT12, typename PT13, typename PT14, typename PT15, typename PT16, typename PT17, typename PT18, typename PT19>
@@ -518,7 +518,7 @@ class FunctionParameterAccessor
 		 * @tparam T The data type of the source and target parameter
 		 */
 		template <typename T>
-		inline static void assign(typename std::add_lvalue_reference<T>::type target, const void* source);
+		static inline void assign(typename std::add_lvalue_reference<T>::type target, const void* source);
 
 		/**
 		 * Receives the address of a specified parameter.
@@ -528,7 +528,7 @@ class FunctionParameterAccessor
 		 * @tparam T The data type of the source and target parameter
 		 */
 		template <typename T>
-		inline static void* address(typename std::add_lvalue_reference<T>::type parameter);
+		static inline void* address(typename std::add_lvalue_reference<T>::type parameter);
 };
 
 template <bool tTargetIsReference>

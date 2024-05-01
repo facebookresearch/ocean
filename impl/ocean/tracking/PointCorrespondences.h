@@ -171,7 +171,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @return Number of valid correspondences
 		 * @see determineValidCorrespondencesIF().
 		 */
-		inline static unsigned int determineValidCorrespondences(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, const Geometry::ObjectPoint* objectPoints, const Geometry::ImagePoint* imagePoints, const size_t correspondences, const bool distortImagePoints, const Scalar sqrPixelError = Scalar(1.5 * 1.5), Indices32* validCorrespondences = nullptr);
+		static inline unsigned int determineValidCorrespondences(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, const Geometry::ObjectPoint* objectPoints, const Geometry::ImagePoint* imagePoints, const size_t correspondences, const bool distortImagePoints, const Scalar sqrPixelError = Scalar(1.5 * 1.5), Indices32* validCorrespondences = nullptr);
 
 		/**
 		 * Determines valid correspondences for a set of given object and corresponding image points combined with an extrinsic and intrinsic camera matrix.
@@ -198,7 +198,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @param distortImagePoints True, to force the distortion of the image points using the distortion parameters of this camera object
 		 * @param sqrPixelError Maximal allowed squared pixel error for a correspondence to count as valid
 		 */
-		inline static void removeInvalidCorrespondences(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, Geometry::ObjectPoints& objectPoints, Geometry::ImagePoints& imagePoints, const bool distortImagePoints, const Scalar sqrPixelError = Scalar(1.5 * 1.5));
+		static inline void removeInvalidCorrespondences(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, Geometry::ObjectPoints& objectPoints, Geometry::ImagePoints& imagePoints, const bool distortImagePoints, const Scalar sqrPixelError = Scalar(1.5 * 1.5));
 
 		/**
 		 * Determines valid correspondences in a set of given object and corresponding image points.
@@ -253,7 +253,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		 * @param candidateUseCounter Optional used-counter of the candidate points
 		 * @return Resulting redundant correspondences
 		 */
-		inline static RedundantCorrespondences determineNearestCandidates(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ObjectPoint* candidatePoints, const size_t numberCandidatePoints, const bool distortImagePoints, const Scalar searchWindowRadius, Indices32* candidateUseCounter = nullptr);
+		static inline RedundantCorrespondences determineNearestCandidates(const HomogenousMatrix4& extrinsic, const PinholeCamera& pinholeCamera, const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const Geometry::ObjectPoint* candidatePoints, const size_t numberCandidatePoints, const bool distortImagePoints, const Scalar searchWindowRadius, Indices32* candidateUseCounter = nullptr);
 
 		/**
 		 * Determines the nearest candidates for all given image points from a set of candidate object points.<br>
