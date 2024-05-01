@@ -347,7 +347,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT XMLParser
 		tinyxml2::XMLDocument xmlDocument_;
 
 		/// XML file opening result.
-		tinyxml2::XMLError xmlOpenResult_ = tinyxml2::XML_NO_ERROR;
+		tinyxml2::XMLError xmlOpenResult_ = tinyxml2::XML_SUCCESS;
 
 		/// X3D scene holding the parsed scene.
 		X3DScene* scene_ = nullptr;

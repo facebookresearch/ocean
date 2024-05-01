@@ -35,31 +35,31 @@ XMLParser::XMLParser(const std::string& filename, float* /*progress*/, bool* /*c
 
 SDXSceneRef XMLParser::parse(const Library& library, const Rendering::EngineRef& engine, const Timestamp timestamp)
 {
-	if (engine.isNull() || xmlOpenResult_ != tinyxml2::XML_NO_ERROR)
+	if (engine.isNull() || xmlOpenResult_ != tinyxml2::XML_SUCCESS)
 	{
-		std::string errorStr0, errorStr1;
+#if TINYXML2_MAJOR_VERSION >= 6 || TIXML2_MAJOR_VERSION >= 6
+		const char* const errorName = xmlDocument_.ErrorName();
+		const char* const errorDescription = xmlDocument_.ErrorStr();
+#else
+		const char* const errorName = xmlDocument_.GetErrorStr1();
+		const char* const errorDescription = xmlDocument_.GetErrorStr2();
+#endif
 
-		if (xmlDocument_.GetErrorStr1())
-		{
-			errorStr0 = std::string(xmlDocument_.GetErrorStr1());
-		}
-		if (xmlDocument_.GetErrorStr2())
-		{
-			errorStr1 = std::string(xmlDocument_.GetErrorStr2());
-		}
+		const std::string errorNameStr(errorName ? errorName : "");
+		const std::string errorDescriptionStr(errorDescription ? errorDescription : "");
 
-		if (!errorStr0.empty())
+		if (!errorNameStr.empty())
 		{
-			Log::error() << "Failed to open the X3D file \"" << sceneFilename_ << "\": " << errorStr0;
+			Log::error() << "Failed to open the X3D file \"" << sceneFilename_ << "\": " << errorNameStr;
 
-			if (!errorStr1.empty())
+			if (!errorDescriptionStr.empty())
 			{
-				Log::error() << "Detailed problem: " << errorStr1;
+				Log::error() << "Detailed problem: " << errorDescriptionStr;
 			}
 		}
 		else
 		{
-			ocean_assert(errorStr1.empty());
+			ocean_assert(errorDescriptionStr.empty());
 		}
 
 		return SDXSceneRef();
