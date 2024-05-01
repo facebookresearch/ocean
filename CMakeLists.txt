@@ -107,6 +107,7 @@ if (OCEAN_BUILD_DEMOS)
     add_subdirectory(impl/application/ocean/demo/base/sharedmemory/client)
     add_subdirectory(impl/application/ocean/demo/base/sharedmemory/server)
     add_subdirectory(impl/application/ocean/demo/cv/advanced/panoramaextractor)
+    add_subdirectory(impl/application/ocean/demo/misc/imageannotator)
 endif()
 
 if (OCEAN_BUILD_TESTS)
