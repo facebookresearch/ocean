@@ -16,11 +16,11 @@
 #include "ocean/media/Manager.h"
 
 #ifndef OCEAN_DO_NOT_TEST_VRS
+	#include "ocean/math/AnyCameraPerception.h"
+
 	#include "metaonly/ocean/media/vrs/VRS.h"
 
-	#include "ocean/io/vrs/FlexibleRecorder.h"
-
-	#include "ocean/math/AnyCameraPerception.h"
+	#include "metaonly/ocean/io/vrs/FlexibleRecorder.h"
 
 	#include <perception/camera/CameraModelFactory.h>
 	#include <perception/camera/CameraModelInterface.h>
