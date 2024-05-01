@@ -46,7 +46,13 @@ bool TestFramePyramid::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testCreationFramePyramid(testDuration, worker) && allSucceeded;
+	allSucceeded = testCreationFramePyramidWithConstructor(testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testCreationFramePyramidWithReplace(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -136,29 +142,55 @@ TEST(TestFramePyramid, CalculateMemorySize)
 }
 
 
-TEST(TestFramePyramid, CreationFramePyramid_1920x1080_1Channels_5Layers)
+TEST(TestFramePyramid, CreationFramePyramidWithConstructor_1920x1080_1Channels_5Layers)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramid(1920u, 1080u, 1u, 5u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramidWithConstructor(1920u, 1080u, 1u, 5u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFramePyramid, CreationFramePyramid_1920x1080_2Channels_5Layers)
+TEST(TestFramePyramid, CreationFramePyramidWithConstructor_1920x1080_2Channels_5Layers)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramid(1920u, 1080u, 2u, 5u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramidWithConstructor(1920u, 1080u, 2u, 5u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFramePyramid, CreationFramePyramid_1920x1080_3Channels_5Layers)
+TEST(TestFramePyramid, CreationFramePyramidWithConstructor_1920x1080_3Channels_5Layers)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramid(1920u, 1080u, 3u, 5u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramidWithConstructor(1920u, 1080u, 3u, 5u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFramePyramid, CreationFramePyramid_1920x1080_4Channels_5Layers)
+TEST(TestFramePyramid, CreationFramePyramidWithConstructor_1920x1080_4Channels_5Layers)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramid(1920u, 1080u, 4u, 5u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramidWithConstructor(1920u, 1080u, 4u, 5u, GTEST_TEST_DURATION, worker));
 }
+
+
+TEST(TestFramePyramid, CreationFramePyramidWithReplace_1920x1080_1Channels_5Layers)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramidWithReplace(1920u, 1080u, 1u, 5u, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFramePyramid, CreationFramePyramidWithReplace_1920x1080_2Channels_5Layers)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramidWithReplace(1920u, 1080u, 2u, 5u, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFramePyramid, CreationFramePyramidWithReplace_1920x1080_3Channels_5Layers)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramidWithReplace(1920u, 1080u, 3u, 5u, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFramePyramid, CreationFramePyramidWithReplace_1920x1080_4Channels_5Layers)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramidWithReplace(1920u, 1080u, 4u, 5u, GTEST_TEST_DURATION, worker));
+}
+
 
 TEST(TestFramePyramid, CreateFramePyramidExtreme)
 {
@@ -784,13 +816,13 @@ bool TestFramePyramid::testCalculateMemorySize(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestFramePyramid::testCreationFramePyramid(const double testDuration, Worker& worker)
+bool TestFramePyramid::testCreationFramePyramidWithConstructor(const double testDuration, Worker& worker)
 {
 	ocean_assert(testDuration > 0.0);
 
 	constexpr unsigned int layers = 5u;
 
-	Log::info() << "Testing creation of " << layers << " pyramid layers:";
+	Log::info() << "Testing creation of " << layers << " pyramid layers with constructor:";
 	Log::info() << " ";
 
 	bool allSucceeded = true;
@@ -808,7 +840,7 @@ bool TestFramePyramid::testCreationFramePyramid(const double testDuration, Worke
 
 		for (unsigned int channel = 1u; channel <= 4u; ++channel)
 		{
-			allSucceeded = testCreationFramePyramid(width, height, channel, layers, testDuration, worker) && allSucceeded;
+			allSucceeded = testCreationFramePyramidWithConstructor(width, height, channel, layers, testDuration, worker) && allSucceeded;
 			Log::info() << " ";
 		}
 	}
@@ -816,78 +848,7 @@ bool TestFramePyramid::testCreationFramePyramid(const double testDuration, Worke
 	return allSucceeded;
 }
 
-bool TestFramePyramid::testCreateFramePyramidExtreme()
-{
-	Log::info() << "Testing creation with extreme parameters";
-
-	bool allSucceeded = true;
-
-	RandomGenerator randomGenerator;
-
-	const Indices32 widths =  {640u, 641u, 640u, 641u, 800u, 1280u, 1920u, 3840u, 3840u};
-	const Indices32 heights = {480u, 480u, 481u, 481u, 640u,  720u, 1080u, 2048u, 2160u};
-
-	const FrameType::PixelFormats pixelFormats =
-	{
-		FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32,
-		FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::genericPixelFormat<uint8_t, 4u>()
-	};
-
-	for (const unsigned int threads : {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u, 12u, 32u, 33u, 48u, 64u})
-	{
-		Worker extremeWorker(threads, Worker::TYPE_CUSTOM);
-
-		for (unsigned int n = 0u; n < widths.size(); ++n)
-		{
-			ocean_assert(widths.size() == heights.size());
-
-			const unsigned int width = widths[n];
-			const unsigned int height = heights[n];
-
-			for (const FrameType::PixelFormat pixelFormat : pixelFormats)
-			{
-				for (const CV::FramePyramid::DownsamplingMode downsamplingMode : {CV::FramePyramid::DM_FILTER_11, CV::FramePyramid::DM_FILTER_14641})
-				{
-					const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
-
-					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
-
-					const bool copyFirstLayer = RandomI::boolean(randomGenerator);
-
-					const unsigned int layers = CV::FramePyramid::idealLayers(width, height, 0u, 0u);
-
-					for (unsigned int layerIndex = 1u; layerIndex <= layers; ++layerIndex)
-					{
-						const CV::FramePyramid framePyramid(frame, downsamplingMode, layerIndex, copyFirstLayer, &extremeWorker);
-
-						if (!validateFramePyramid(frame, framePyramid, downsamplingMode, layerIndex))
-						{
-							allSucceeded = false;
-						}
-
-						if (framePyramid.coarsestLayer().width() >= 2u && framePyramid.coarsestLayer().height() >= 2u)
-						{
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
-}
-
-bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int layers, const double testDuration, Worker& worker)
+bool TestFramePyramid::testCreationFramePyramidWithConstructor(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int layers, const double testDuration, Worker& worker)
 {
 	ocean_assert(width >= 1u && height >= 1u && channels >= 1u);
 	ocean_assert(layers >= 1u);
@@ -951,7 +912,6 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 						const unsigned int testLayers = benchmarkIteration ? layers : RandomI::random(1u, 0xFFFFFFFFu);
 
-						const bool useConstructor = RandomI::boolean(randomGenerator);
 						const bool useDownsamplingFunction = RandomI::boolean(randomGenerator);
 
 						const CV::FramePyramid::DownsamplingFunction downsamplingFunction = useDownsamplingFunction ? CV::FramePyramid::downsamplingFunction(downsamplingMode, frame.pixelFormat()) : nullptr;
@@ -973,122 +933,284 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 						performance.start();
 
-							if (useConstructor)
+							if (useDownsamplingFunction)
 							{
-								if (useDownsamplingFunction)
+								if (copyFirstLayer)
 								{
-									if (copyFirstLayer)
-									{
-										framePyramid = CV::FramePyramid(frame, downsamplingFunction, testLayers, true /*copyFirstLayer*/, useWorker);
-
-										expectedOwnerLayers.emplace(0u);
-									}
-									else
-									{
-										// we can either move the frame, or we can only use the memory
-
-										if (RandomI::boolean(randomGenerator))
-										{
-											if (frame.isOwner())
-											{
-												expectedOwnerLayers.emplace(0u);
-											}
-
-											framePyramid = CV::FramePyramid(downsamplingFunction, std::move(frame), testLayers, useWorker);
-										}
-										else
-										{
-											framePyramid = CV::FramePyramid(frame, downsamplingFunction, testLayers, false /*copyFirstLayer*/, useWorker);
-										}
-
-										expectedOutsideMemoryBlockLayers.emplace(0u);
-									}
-								}
-								else
-								{
-									if (copyFirstLayer)
-									{
-										framePyramid = CV::FramePyramid(frame, downsamplingMode, testLayers, true /*copyFirstLayer*/, useWorker);
-									}
-									else
-									{
-										framePyramid = CV::FramePyramid(downsamplingMode, std::move(frame), testLayers, useWorker);
-
-										expectedOutsideMemoryBlockLayers.emplace(0u);
-									}
+									framePyramid = CV::FramePyramid(frame, downsamplingFunction, testLayers, true /*copyFirstLayer*/, useWorker);
 
 									expectedOwnerLayers.emplace(0u);
 								}
+								else
+								{
+									// we can either move the frame, or we can only use the memory
 
-								localResult = framePyramid.isValid();
+									if (RandomI::boolean(randomGenerator))
+									{
+										if (frame.isOwner())
+										{
+											expectedOwnerLayers.emplace(0u);
+										}
+
+										framePyramid = CV::FramePyramid(downsamplingFunction, std::move(frame), testLayers, useWorker);
+									}
+									else
+									{
+										framePyramid = CV::FramePyramid(frame, downsamplingFunction, testLayers, false /*copyFirstLayer*/, useWorker);
+									}
+
+									expectedOutsideMemoryBlockLayers.emplace(0u);
+								}
 							}
 							else
 							{
-								if (useDownsamplingFunction)
+								if (copyFirstLayer)
 								{
-									if (copyFirstLayer)
-									{
-										localResult = framePyramid.replace(frame, downsamplingFunction, testLayers, true /*copyFirstLayer*/, useWorker);
-
-										expectedOwnerLayers.emplace(0u);
-									}
-									else
-									{
-										// we can either move the frame, or we can only use the memory
-
-										if (RandomI::boolean(randomGenerator))
-										{
-											if (frame.isOwner())
-											{
-												expectedOwnerLayers.emplace(0u);
-											}
-
-											localResult = framePyramid.replace(downsamplingFunction, std::move(frame), testLayers, useWorker);
-										}
-										else
-										{
-											localResult = framePyramid.replace(frame, downsamplingFunction, testLayers, false /*copyFirstLayer*/, useWorker);
-										}
-
-										expectedOutsideMemoryBlockLayers.emplace(0u);
-									}
+									framePyramid = CV::FramePyramid(frame, downsamplingMode, testLayers, true /*copyFirstLayer*/, useWorker);
 								}
 								else
 								{
-									if (copyFirstLayer)
-									{
-										localResult = framePyramid.replace(frame, downsamplingMode, testLayers, true /*copyFirstLayer*/, useWorker);
+									framePyramid = CV::FramePyramid(downsamplingMode, std::move(frame), testLayers, useWorker);
 
-										expectedOwnerLayers.emplace(0u);
+									expectedOutsideMemoryBlockLayers.emplace(0u);
+								}
+
+								expectedOwnerLayers.emplace(0u);
+							}
+
+							localResult = framePyramid.isValid();
+
+						performance.stop();
+
+						if (!localResult)
+						{
+							allSucceeded = false;
+						}
+
+						const size_t expectedMemorySize = CV::FramePyramid::calculateMemorySize(testWidth, testHeight, pixelFormat, expectedLayers, copyFirstLayer);
+
+						if (framePyramid.memory().size() != expectedMemorySize)
+						{
+							allSucceeded = false;
+						}
+
+						ocean_assert(framePyramid.layers() == expectedLayers);
+
+						if (!validateConstructFromFrame(framePyramid, downsamplingMode, copyFrame, expectedLayers, expectedReadOnlyLayers, expectedOwnerLayers, expectedOutsideMemoryBlockLayers))
+						{
+							allSucceeded = false;
+						}
+					}
+				}
+				while (startTimestamp + testDuration > Timestamp(true));
+			}
+
+			Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceSinglecore.firstMseconds(), 2u) << "ms";
+
+			if (performanceMulticore.measurements() != 0u)
+			{
+				Log::info() << "Multicore performance: Best: " << String::toAString(performanceMulticore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceMulticore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceMulticore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceMulticore.firstMseconds(), 2u) << "ms";
+
+				Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
+			}
+		}
+
+		Log::info() << " ";
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestFramePyramid::testCreationFramePyramidWithReplace(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	constexpr unsigned int layers = 5u;
+
+	Log::info() << "Testing creation of " << layers << " pyramid layers with replace:";
+	Log::info() << " ";
+
+	bool allSucceeded = true;
+
+	const Indices32 widths =  {640u, 800u, 1280u, 1920u, 3840u};
+	const Indices32 heights = {480u, 640u,  720u, 1080u, 2160u};
+
+	for (unsigned int n = 0u; n < widths.size(); ++n)
+	{
+		Log::info().newLine(n != 0u);
+
+		ocean_assert(widths.size() == heights.size());
+		const unsigned int width = widths[n];
+		const unsigned int height = heights[n];
+
+		for (unsigned int channel = 1u; channel <= 4u; ++channel)
+		{
+			allSucceeded = testCreationFramePyramidWithReplace(width, height, channel, layers, testDuration, worker) && allSucceeded;
+			Log::info() << " ";
+		}
+	}
+
+	return allSucceeded;
+}
+
+bool TestFramePyramid::testCreationFramePyramidWithReplace(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int layers, const double testDuration, Worker& worker)
+{
+	ocean_assert(width >= 1u && height >= 1u && channels >= 1u);
+	ocean_assert(layers >= 1u);
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "... for a " << width << "x" << height << " frame with " << channels << " channels:";
+	Log::info() << " ";
+
+	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
+
+	for (const CV::FramePyramid::DownsamplingMode downsamplingMode : {CV::FramePyramid::DM_FILTER_11, CV::FramePyramid::DM_FILTER_14641})
+	{
+		if (downsamplingMode == CV::FramePyramid::DM_FILTER_11)
+		{
+			Log::info() << "With 1-1 filter:";
+		}
+		else
+		{
+			Log::info() << "With 1-4-6-4-1 filter:";
+		}
+
+		for (const bool copyFirstLayer : {true, false})
+		{
+			if (copyFirstLayer)
+			{
+				Log::info() << "Copying first layer:";
+			}
+			else
+			{
+				Log::info() << "Using first layer:";
+			}
+
+			HighPerformanceStatistic performanceSinglecore;
+			HighPerformanceStatistic performanceMulticore;
+
+			for (unsigned int workerIteration = 0u; workerIteration < maxWorkerIterations; ++workerIteration)
+			{
+				Worker* useWorker = (workerIteration == 0u) ? nullptr : &worker;
+				HighPerformanceStatistic& performance = useWorker ? performanceMulticore : performanceSinglecore;
+
+				const Timestamp startTimestamp(true);
+
+				do
+				{
+					for (const bool benchmarkIteration : {true, false})
+					{
+						const unsigned int testWidth = benchmarkIteration ? width : RandomI::random(randomGenerator, 1u, width);
+						const unsigned int testHeight = benchmarkIteration ? height : RandomI::random(randomGenerator, 1u, height);
+
+						const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+						Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, pixelFormat, pixelOrigin), false, &randomGenerator);
+
+						const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+						const unsigned int testLayers = benchmarkIteration ? layers : RandomI::random(1u, 0xFFFFFFFFu);
+
+						const bool useDownsamplingFunction = RandomI::boolean(randomGenerator);
+
+						const CV::FramePyramid::DownsamplingFunction downsamplingFunction = useDownsamplingFunction ? CV::FramePyramid::downsamplingFunction(downsamplingMode, frame.pixelFormat()) : nullptr;
+
+						const unsigned int expectedLayers = std::min(testLayers, determineMaxLayerCount(testWidth, testHeight));
+
+						UnorderedIndexSet32 expectedReadOnlyLayers;
+						UnorderedIndexSet32 expectedOwnerLayers;
+						UnorderedIndexSet32 expectedOutsideMemoryBlockLayers;
+
+						for (unsigned int layerIndex = 1u; layerIndex < expectedLayers; ++layerIndex)
+						{
+							expectedOwnerLayers.emplace(layerIndex);
+						}
+
+						CV::FramePyramid framePyramid;
+
+						bool localResult = false;
+
+						performance.start();
+
+							if (useDownsamplingFunction)
+							{
+								if (copyFirstLayer)
+								{
+									localResult = framePyramid.replace(frame, downsamplingFunction, testLayers, true /*copyFirstLayer*/, useWorker);
+
+									expectedOwnerLayers.emplace(0u);
+								}
+								else
+								{
+									// we can either move the frame, or we can only use the memory
+
+									if (RandomI::boolean(randomGenerator))
+									{
+										if (frame.isOwner())
+										{
+											expectedOwnerLayers.emplace(0u);
+										}
+
+										localResult = framePyramid.replace(downsamplingFunction, std::move(frame), testLayers, useWorker);
 									}
 									else
 									{
-										if (RandomI::boolean(randomGenerator))
-										{
-											if (frame.isReadOnly())
-											{
-												expectedReadOnlyLayers.emplace(0u);
-											}
-
-											if (frame.isOwner())
-											{
-												expectedOwnerLayers.emplace(0u);
-											}
-
-											localResult = framePyramid.replace(downsamplingMode, std::move(frame), testLayers, useWorker);
-										}
-										else
-										{
-											if (frame.isReadOnly() || (downsamplingMode == CV::FramePyramid::DM_FILTER_11 && !frame.hasAlphaChannel()))
-											{
-												expectedReadOnlyLayers.emplace(0u);
-											}
-
-											localResult = framePyramid.replace(frame, downsamplingMode, testLayers, false /*copyFirstLayer*/, useWorker);
-										}
-
-										expectedOutsideMemoryBlockLayers.emplace(0u);
+										localResult = framePyramid.replace(frame, downsamplingFunction, testLayers, false /*copyFirstLayer*/, useWorker);
 									}
+
+									expectedOutsideMemoryBlockLayers.emplace(0u);
+								}
+							}
+							else
+							{
+								if (copyFirstLayer)
+								{
+									localResult = framePyramid.replace(frame, downsamplingMode, testLayers, true /*copyFirstLayer*/, useWorker);
+
+									expectedOwnerLayers.emplace(0u);
+								}
+								else
+								{
+									if (RandomI::boolean(randomGenerator))
+									{
+										if (frame.isReadOnly())
+										{
+											expectedReadOnlyLayers.emplace(0u);
+										}
+
+										if (frame.isOwner())
+										{
+											expectedOwnerLayers.emplace(0u);
+										}
+
+										localResult = framePyramid.replace(downsamplingMode, std::move(frame), testLayers, useWorker);
+									}
+									else
+									{
+										if (frame.isReadOnly() || (downsamplingMode == CV::FramePyramid::DM_FILTER_11 && !frame.hasAlphaChannel()))
+										{
+											expectedReadOnlyLayers.emplace(0u);
+										}
+
+										localResult = framePyramid.replace(frame, downsamplingMode, testLayers, false /*copyFirstLayer*/, useWorker);
+									}
+
+									expectedOutsideMemoryBlockLayers.emplace(0u);
 								}
 							}
 
@@ -1128,6 +1250,77 @@ bool TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 		}
 
 		Log::info() << " ";
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestFramePyramid::testCreateFramePyramidExtreme()
+{
+	Log::info() << "Testing creation with extreme parameters";
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	const Indices32 widths =  {640u, 641u, 640u, 641u, 800u, 1280u, 1920u, 3840u, 3840u};
+	const Indices32 heights = {480u, 480u, 481u, 481u, 640u,  720u, 1080u, 2048u, 2160u};
+
+	const FrameType::PixelFormats pixelFormats =
+	{
+		FrameType::FORMAT_Y8, FrameType::FORMAT_YA16, FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32,
+		FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::genericPixelFormat<uint8_t, 4u>()
+	};
+
+	for (const unsigned int threads : {1u, 2u, 3u, 4u, 5u, 6u, 7u, 8u, 12u, 32u, 33u, 48u, 64u})
+	{
+		Worker extremeWorker(threads, Worker::TYPE_CUSTOM);
+
+		for (unsigned int n = 0u; n < widths.size(); ++n)
+		{
+			ocean_assert(widths.size() == heights.size());
+
+			const unsigned int width = widths[n];
+			const unsigned int height = heights[n];
+
+			for (const FrameType::PixelFormat pixelFormat : pixelFormats)
+			{
+				for (const CV::FramePyramid::DownsamplingMode downsamplingMode : {CV::FramePyramid::DM_FILTER_11, CV::FramePyramid::DM_FILTER_14641})
+				{
+					const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
+
+					const bool copyFirstLayer = RandomI::boolean(randomGenerator);
+
+					const unsigned int layers = CV::FramePyramid::idealLayers(width, height, 0u, 0u);
+
+					for (unsigned int layerIndex = 1u; layerIndex <= layers; ++layerIndex)
+					{
+						const CV::FramePyramid framePyramid(frame, downsamplingMode, layerIndex, copyFirstLayer, &extremeWorker);
+
+						if (!validateFramePyramid(frame, framePyramid, downsamplingMode, layerIndex))
+						{
+							allSucceeded = false;
+						}
+
+						if (framePyramid.coarsestLayer().width() >= 2u && framePyramid.coarsestLayer().height() >= 2u)
+						{
+							break;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	if (allSucceeded)
