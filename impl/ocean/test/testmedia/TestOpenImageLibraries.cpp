@@ -858,13 +858,9 @@ bool TestOpenImageLibraries::testAnyImageEncodeDecode(const double testDuration)
 
 	do
 	{
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false);
 
-		Frame sourceFrame(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
-		ocean_assert(sourceFrame);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
-		CV::FrameFilterGaussian::filter(sourceFrame, 7u, sourceFrame.pixels() >= 50u * 50u ? WorkerPool::get().scopedWorker()() : nullptr);
+		CV::FrameFilterGaussian::filter(sourceFrame, 7u, WorkerPool::get().conditionalScopedWorker(sourceFrame.pixels() >= 50u * 50u)());
 
 		for (size_t n = 0; n < encoderTypes.size(); ++n)
 		{
@@ -960,12 +956,7 @@ bool TestOpenImageLibraries::testJpgImageEncodeDecode(const unsigned int width, 
 	{
 		buffer.clear();
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
-		ocean_assert(sourceFrame);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
 
 		// we have to blur the random image to create realistic test data for JPEG images
 		CV::FrameFilterGaussian::filter(sourceFrame, 7u, sourceFrame.pixels() >= 50u * 50u ? WorkerPool::get().scopedWorker()() : nullptr);
@@ -1144,12 +1135,7 @@ bool TestOpenImageLibraries::testPngImageEncodeDecode(const unsigned int width, 
 	{
 		buffer.clear();
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
-		ocean_assert(sourceFrame);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
 
 		unsigned int correctRows = 0u;
 
@@ -1310,12 +1296,7 @@ bool TestOpenImageLibraries::testTifImageEncodeDecode(const unsigned int width, 
 	{
 		buffer.clear();
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
-		ocean_assert(sourceFrame);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
 
 		unsigned int correctRows = 0u;
 
@@ -1537,12 +1518,7 @@ bool TestOpenImageLibraries::testWebpImageEncodeDecode(const unsigned int width,
 	{
 		buffer.clear();
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame sourceFrame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElements);
-		ocean_assert(sourceFrame);
-
-		CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
 
 		unsigned int correctRows = 0u;
 
@@ -1691,12 +1667,11 @@ bool TestOpenImageLibraries::testBufferImageRecorder(const FrameType& frameType,
 		return false;
 	}
 
-	Frame sourceFrame(frameType);
-	CV::CVUtilities::randomizeFrame(sourceFrame);
+	Frame sourceFrame = CV::CVUtilities::randomizedFrame(frameType, false);
 
 	if (maximalAverageDifference > 0.0)
 	{
-		CV::FrameFilterGaussian::filter(sourceFrame, 7u, sourceFrame.pixels() >= 50u * 50u ? WorkerPool::get().scopedWorker()() : nullptr);
+		CV::FrameFilterGaussian::filter(sourceFrame, 7u, WorkerPool::get().conditionalScopedWorker(sourceFrame.pixels() >= 50u * 50u)());
 	}
 
 	std::vector<uint8_t> buffer;
