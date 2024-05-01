@@ -2,6 +2,11 @@
 message(CHECK_START "curl")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
+set(CURL_USE_MBEDTLS ON)
+set(ENABLE_CURL_MANUAL OFF)
+set(BUILD_LIBCURL_DOCS OFF)
+set(BUILD_MISC_DOCS OFF)
+
 CPMAddPackage(
   NAME                curl
   GIT_REPOSITORY      https://github.com/curl/curl.git
