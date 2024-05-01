@@ -6,7 +6,7 @@
 
 #include "ocean/math/Random.h"
 
-#include "ocean/math/AnyCameraPerception.h"
+#include "metaonly/ocean/math/AnyCameraPerception.h"
 
 #include <perception/camera/CameraModelFactory.h>
 #include <perception/camera/CameraModelInterface.h>
