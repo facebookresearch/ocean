@@ -6,6 +6,7 @@ add_subdirectory(android)
 add_subdirectory(apple)
 add_subdirectory(linux)
 add_subdirectory(win)
+add_subdirectory(wxwidgets)
 
 if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
