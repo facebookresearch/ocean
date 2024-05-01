@@ -805,6 +805,37 @@ std::vector<TIndex> Subset::invertedIndices(const std::vector<TIndex>& indices, 
 }
 
 template <typename TIndex>
+std::unordered_set<TIndex> Subset::invertedIndices(const std::unordered_set<TIndex>& indices, const size_t numberElements)
+{
+	ocean_assert(indices.size() <= TIndex(numberElements));
+
+	if (indices.size() == numberElements)
+	{
+#ifdef OCEAN_DEBUG
+		for (size_t n = 0; n < numberElements; ++n)
+		{
+			ocean_assert(indices.find(TIndex(n)) != indices.end());
+		}
+#endif
+
+		return std::unordered_set<TIndex>();
+	}
+
+	std::unordered_set<TIndex> result;
+	result.reserve(numberElements - indices.size());
+
+	for (TIndex i = TIndex(0); i < TIndex(numberElements); ++i)
+	{
+		if (indices.find(i) == indices.cend())
+		{
+			result.emplace(i);
+		}
+	}
+
+	return result;
+}
+
+template <typename TIndex>
 std::set<TIndex> Subset::invertedIndices(const std::set<TIndex>& indices, const size_t numberElements)
 {
 	ocean_assert(indices.size() <= TIndex(numberElements));
@@ -825,7 +856,7 @@ std::set<TIndex> Subset::invertedIndices(const std::set<TIndex>& indices, const 
 
 	for (TIndex i = TIndex(0); i < TIndex(numberElements); ++i)
 	{
-		if (indices.find(i) == indices.end())
+		if (indices.find(i) == indices.cend())
 		{
 			result.insert(i);
 		}
