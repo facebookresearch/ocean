@@ -65,14 +65,6 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		static bool testCalculateMemorySize(const double testDuration);
 
 		/**
-		 * Tests the creation of a frame pyramid (the deprecated workflow).
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param worker The worker object to distribute the computation
-		 * @return True, if succeeded
-		 */
-		static bool testCreationFramePyramidDeprecated(const double testDuration, Worker& worker);
-
-		/**
 		 * Tests the creation of a frame pyramid.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation
@@ -85,18 +77,6 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		 * @return True, if the test succeeded; otherwise, false is returned.
 		 */
 		static bool testCreateFramePyramidExtreme();
-
-		/**
-		 * Tests the creation of a frame pyramid for a specific frame with specific number of resulting layers (the deprecated workflow).
-		 * @param width The width of the test frame in pixel, width range [1, infinity)
-		 * @param height The width of the test frame in pixel, height range [1, infinity)
-		 * @param channels The width of the test frame in pixel, channels range [1, infinity)
-		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param worker The worker object to distribute the computation
-		 * @return True, if succeeded
-		 */
-		static bool testCreationFramePyramidDeprecated(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int layers, const double testDuration, Worker& worker);
 
 		/**
 		 * Tests the creation of a frame pyramid for a specific frame with specific number of resulting layers.

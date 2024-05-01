@@ -46,12 +46,6 @@ bool TestFramePyramid::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testCreationFramePyramidDeprecated(testDuration, worker) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
 	allSucceeded = testCreationFramePyramid(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
@@ -139,31 +133,6 @@ TEST(TestFramePyramid, IsOwner)
 TEST(TestFramePyramid, CalculateMemorySize)
 {
 	EXPECT_TRUE(TestFramePyramid::testCalculateMemorySize(GTEST_TEST_DURATION));
-}
-
-
-TEST(TestFramePyramid, CreationFramePyramidDeprecated_1920x1080_1Channels_5Layers)
-{
-	Worker worker;
-	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramidDeprecated(1920u, 1080u, 1u, 5u, GTEST_TEST_DURATION, worker));
-}
-
-TEST(TestFramePyramid, CreationFramePyramidDeprecated_1920x1080_2Channels_5Layers)
-{
-	Worker worker;
-	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramidDeprecated(1920u, 1080u, 2u, 5u, GTEST_TEST_DURATION, worker));
-}
-
-TEST(TestFramePyramid, CreationFramePyramidDeprecated_1920x1080_3Channels_5Layers)
-{
-	Worker worker;
-	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramidDeprecated(1920u, 1080u, 3u, 5u, GTEST_TEST_DURATION, worker));
-}
-
-TEST(TestFramePyramid, CreationFramePyramidDeprecated_1920x1080_4Channels_5Layers)
-{
-	Worker worker;
-	EXPECT_TRUE(TestFramePyramid::testCreationFramePyramidDeprecated(1920u, 1080u, 4u, 5u, GTEST_TEST_DURATION, worker));
 }
 
 
@@ -815,38 +784,6 @@ bool TestFramePyramid::testCalculateMemorySize(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestFramePyramid::testCreationFramePyramidDeprecated(const double testDuration, Worker& worker)
-{
-	ocean_assert(testDuration > 0.0);
-
-	const unsigned int layers = 5u;
-
-	Log::info() << "Testing creation of " << layers << " pyramid layers (deprecated):";
-	Log::info() << " ";
-
-	bool allSucceeded = true;
-
-	const Indices32 widths =  {640u, 800u, 1280u, 1920u, 3840u};
-	const Indices32 heights = {480u, 640u,  720u, 1080u, 2160u};
-
-	for (unsigned int n = 0u; n < widths.size(); ++n)
-	{
-		Log::info().newLine(n != 0u);
-
-		ocean_assert(widths.size() == heights.size());
-		const unsigned int width = widths[n];
-		const unsigned int height = heights[n];
-
-		for (unsigned int channel = 1u; channel <= 4u; ++channel)
-		{
-			allSucceeded = testCreationFramePyramidDeprecated(width, height, channel, layers, testDuration, worker) && allSucceeded;
-			Log::info() << " ";
-		}
-	}
-
-	return allSucceeded;
-}
-
 bool TestFramePyramid::testCreationFramePyramid(const double testDuration, Worker& worker)
 {
 	ocean_assert(testDuration > 0.0);
@@ -935,92 +872,6 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 					}
 				}
 			}
-		}
-	}
-
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
-}
-
-bool TestFramePyramid::testCreationFramePyramidDeprecated(const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int layers, const double testDuration, Worker& worker)
-{
-	ocean_assert(width >= 1u && height >= 1u && channels >= 1u);
-	ocean_assert(layers >= 1u);
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "... for a " << width << "x" << height << " frame with " << channels << " channels:";
-
-	bool allSucceeded = true;
-
-	RandomGenerator randomGenerator;
-
-	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
-
-	for (const CV::FramePyramid::DownsamplingMode downsamplingMode : {CV::FramePyramid::DM_FILTER_11, CV::FramePyramid::DM_FILTER_14641})
-	{
-		if (downsamplingMode == CV::FramePyramid::DM_FILTER_11)
-		{
-			Log::info() << "With 1-1 filter:";
-		}
-		else
-		{
-			Log::info() << "With 1-4-6-4-1 filter:";
-		}
-
-		HighPerformanceStatistic performanceSinglecore;
-		HighPerformanceStatistic performanceMulticore;
-
-		for (unsigned int workerIteration = 0u; workerIteration < maxWorkerIterations; ++workerIteration)
-		{
-			Worker* useWorker = (workerIteration == 0u) ? nullptr : &worker;
-			HighPerformanceStatistic& performance = useWorker ? performanceMulticore : performanceSinglecore;
-
-			const Timestamp startTimestamp(true);
-
-			do
-			{
-				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-
-				CV::FramePyramid framePyramid;
-
-				performance.start();
-
-					if (RandomI::boolean(randomGenerator))
-					{
-						framePyramid = CV::FramePyramid(frame, downsamplingMode, layers, true /*copyFirstLayer*/, useWorker);
-					}
-					else
-					{
-						framePyramid.replace(frame, downsamplingMode, layers, true /*copyFirstLayer*/, useWorker);
-					}
-
-				performance.stop();
-
-				ocean_assert(framePyramid.layers() == layers);
-
-				if (!validateFramePyramid(frame, framePyramid, downsamplingMode, layers))
-				{
-					allSucceeded = false;
-				}
-			}
-			while (startTimestamp + testDuration > Timestamp(true));
-		}
-
-		Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceSinglecore.firstMseconds(), 2u) << "ms";
-
-		if (performanceMulticore.measurements() != 0u)
-		{
-			Log::info() << "Multicore performance: Best: " << String::toAString(performanceMulticore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceMulticore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceMulticore.averageMseconds(), 2u) << "ms, first: " << String::toAString(performanceMulticore.firstMseconds(), 2u) << "ms";
-
-			Log::info() << "Multicore boost: Best: " << String::toAString(performanceSinglecore.best() / performanceMulticore.best(), 1u) << "x, worst: " << String::toAString(performanceSinglecore.worst() / performanceMulticore.worst(), 1u) << "x, average: " << String::toAString(performanceSinglecore.average() / performanceMulticore.average(), 1u) << "x";
 		}
 	}
 
