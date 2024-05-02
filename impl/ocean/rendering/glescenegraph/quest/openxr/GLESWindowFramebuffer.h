@@ -62,7 +62,18 @@ class OCEAN_RENDERING_GLES_EXPORT GLESWindowFramebuffer :
 		 */
 		void render() override;
 
+		/**
+		 * Returns the width of an individual framebuffer.
+		 * @param eyeIndex The index of the eye for which the width will be returned, with range [0, numberEyes_ - 1]
+		 * @return The width of the framebuffer, in pixel, with range [0, infinity)
+		 */
 		inline unsigned int width(const size_t eyeIndex) const;
+
+		/**
+		 * Returns the height of an individual framebuffer.
+		 * @param eyeIndex The index of the eye for which the height will be returned, with range [0, numberEyes_ - 1]
+		 * @return The height of the framebuffer, in pixel, with range [0, infinity)
+		 */
 		inline unsigned int height(const size_t eyeIndex) const;
 
 		/**
