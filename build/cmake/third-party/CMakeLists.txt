@@ -36,8 +36,11 @@ if(BUILD_PASS_INDEX EQUAL 0)
     include(tinyxml2.cmake)
     include(protozero.cmake)
     include(libyuv.cmake)
-    include(mbedtls.cmake)
     include(harfbuzz.cmake)
+
+    if (ANDROID OR LINUX)
+        include(mbedtls.cmake)
+    endif()
 
     if (ANDROID)
         add_subdirectory(arcore-android-sdk)
@@ -48,7 +51,10 @@ elseif(BUILD_PASS_INDEX EQUAL 1)
     include(libpng.cmake)
     include(libtiff.cmake)
     include(vtzero.cmake)
-    include(curl.cmake)
+
+    if (ANDROID OR LINUX)
+        include(curl.cmake)
+    endif()
 
 elseif(BUILD_PASS_INDEX EQUAL 2)
 
