@@ -23,6 +23,8 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 set(CPM_SOURCE_CACHE "${CMAKE_BINARY_DIR}/../third-party_cache")
 include(CPM.cmake)
 
+set(CMAKE_PLATFORM_NO_VERSIONED_SONAME TRUE)
+
 # Do not change the order of these.
 if(BUILD_PASS_INDEX EQUAL 0)
     include(libjpeg.cmake)
@@ -35,6 +37,7 @@ if(BUILD_PASS_INDEX EQUAL 0)
     include(protozero.cmake)
     include(libyuv.cmake)
     include(mbedtls.cmake)
+    include(harfbuzz.cmake)
 
     if (ANDROID)
         add_subdirectory(arcore-android-sdk)
