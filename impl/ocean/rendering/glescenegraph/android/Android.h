@@ -17,7 +17,7 @@ namespace GLESceneGraph
 namespace Android
 {
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 /**
  * Registers this rendering engine at the global engine manager.

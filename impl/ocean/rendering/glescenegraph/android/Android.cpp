@@ -15,7 +15,7 @@ namespace GLESceneGraph
 namespace Android
 {
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 void registerGLESceneGraphEngine()
 {

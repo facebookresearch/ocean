@@ -59,7 +59,7 @@ namespace GLESceneGraph
  */
 OCEAN_RENDERING_GLES_EXPORT const std::string& nameGLESceneGraphEngine();
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 /**
  * Unregisters this rendering engine at the global engine manager.
