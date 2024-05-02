@@ -1102,7 +1102,6 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquare(const unsigned
 			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, tPatchSize + 1u, 1080u);
 
 			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
-			Frame buffer(FrameType(frame, tPatchSize * tPatchSize, locations), 10u);
 
 			const Scalar offset = tPixelCenter == CV::PC_TOP_LEFT ? Scalar(0) : Scalar(0.5);
 
@@ -1119,14 +1118,13 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquare(const unsigned
 
 			const uint8_t* const frameData = frame.constdata<uint8_t>();
 
-			const unsigned int bufferStrideElements = buffer.strideElements();
-
 			for (const ImplementationType implementationType : {IT_NAIVE, IT_TEMPLATE, IT_SSE, IT_NEON, IT_DEFAULT})
 			{
-				CV::CVUtilities::randomizeFrame(buffer, false, &randomGenerator);
+				Frame buffer = CV::CVUtilities::randomizedFrame(FrameType(frame, tPatchSize * tPatchSize, locations), &randomGenerator);
 
 				const Frame copyBuffer(buffer, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
+				const unsigned int bufferStrideElements = buffer.strideElements();
 				uint8_t* const bufferData = buffer.data<uint8_t>();
 
 				switch (implementationType)
@@ -1333,12 +1331,6 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePatchWithMask(const u
 
 			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-			const unsigned int patchBufferPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-			const unsigned int patchMaskBufferPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame patchBuffer(FrameType(frame, tPatchSize, locations * tPatchSize), patchBufferPaddingElements);
-			Frame patchMaskBuffer(FrameType(patchBuffer, FrameType::FORMAT_Y8), patchMaskBufferPaddingElements);
-
 			constexpr uint8_t validMaskValue = 0xFFu;
 
 			const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
@@ -1353,13 +1345,16 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePatchWithMask(const u
 			const uint8_t* const frameData = frame.constdata<uint8_t>();
 			const uint8_t* const maskData = mask.constdata<uint8_t>();
 
-			const unsigned int patchBufferStrideElements = patchBuffer.strideElements();
-			const unsigned int patchMaskBufferStrideElements = patchMaskBuffer.strideElements();
-
 			for (const ImplementationType implementationType : {IT_NAIVE, /*IT_TEMPLATE, IT_SSE, IT_NEON,*/ IT_DEFAULT})
 			{
-				CV::CVUtilities::randomizeFrame(patchBuffer, false, &randomGenerator);
-				CV::CVUtilities::randomizeFrame(patchMaskBuffer, false, &randomGenerator);
+				Frame patchBuffer = CV::CVUtilities::randomizedFrame(FrameType(frame, tPatchSize, locations * tPatchSize), &randomGenerator);
+				Frame patchMaskBuffer = CV::CVUtilities::randomizedFrame(FrameType(patchBuffer, FrameType::FORMAT_Y8), &randomGenerator);
+
+				const unsigned int patchBufferPaddingElements = patchBuffer.paddingElements();
+				const unsigned int patchMaskBufferPaddingElements = patchMaskBuffer.paddingElements();
+
+				const unsigned int patchBufferStrideElements = patchBuffer.strideElements();
+				const unsigned int patchMaskBufferStrideElements = patchMaskBuffer.strideElements();
 
 				const Frame copyPatchBuffer(patchBuffer, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 				const Frame copyPatchMaskBuffer(patchMaskBuffer, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -1605,12 +1600,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquareMirroredBorder(
 			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, tPatchSize + 2u, 1920u);
 			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, tPatchSize + 2u, 1080u);
 
-			const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-			Frame buffer(FrameType(frame, tPatchSize * tPatchSize, locations), 10u);
-
-			CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			for (Vector2& position : positions)
 			{
@@ -1619,16 +1609,16 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquareMirroredBorder(
 			}
 
 			const uint8_t* const frameData = frame.constdata<uint8_t>();
-
-			const unsigned int bufferStrideElements = buffer.strideElements();
+			const unsigned int framePaddingElements = frame.paddingElements();
 
 			for (const ImplementationType implementationType : {IT_NAIVE, IT_TEMPLATE, IT_DEFAULT})
 			{
-				CV::CVUtilities::randomizeFrame(buffer, false, &randomGenerator);
+				Frame buffer = CV::CVUtilities::randomizedFrame(FrameType(frame, tPatchSize * tPatchSize, locations), &randomGenerator);
 
 				const Frame copyBuffer(buffer, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				uint8_t* const bufferData = buffer.data<uint8_t>();
+				const unsigned int bufferStrideElements = buffer.strideElements();
 
 				switch (implementationType)
 				{
@@ -2059,19 +2049,13 @@ bool TestAdvancedFrameInterpolatorBilinear::testHomographyFilterMask(const unsig
 				allSucceeded = false;
 			}
 
-			const unsigned int sourceFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame sourceFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), sourceFramePaddingElements);
-			CV::CVUtilities::randomizeFrame(sourceFrame, false, &randomGenerator);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			ocean_assert(sourceFrame.width() > 10u);
 			const unsigned int targetWidth = RandomI::random(randomGenerator, sourceFrame.width() - 10u, sourceFrame.width() + 10u);
 			const unsigned int targetHeight = RandomI::random(randomGenerator, sourceFrame.height() - 10u, sourceFrame.height() + 10u);
 
-			const unsigned int targetFramePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			Frame targetFrame(FrameType(sourceFrame, targetWidth, targetHeight), targetFramePaddingElements);
-			CV::CVUtilities::randomizeFrame(targetFrame, false, &randomGenerator);
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), &randomGenerator);
 
 			const unsigned int targetFilterMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 

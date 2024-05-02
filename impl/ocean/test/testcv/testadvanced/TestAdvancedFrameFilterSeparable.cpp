@@ -291,14 +291,8 @@ bool TestAdvancedFrameFilterSeparable::testFilter(const unsigned int width, cons
 						verticalFilters[verticalFilterSize - n - 1] = value;
 					}
 
-					const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-					Frame target(source.frameType(), targetPaddingElements);
-
-					CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
-					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
+					const Frame source = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+					Frame target = CV::CVUtilities::randomizedFrame(source.frameType(), &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -462,10 +456,7 @@ bool TestAdvancedFrameFilterSeparable::testFilterInPlace(const unsigned int widt
 						verticalFilters[verticalFilterSize - n - 1] = value;
 					}
 
-					const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-					Frame frame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-
-					CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 					const Frame frameCopy(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

@@ -38,8 +38,7 @@ void DiscreteCosineTransformMainWindow::onInitialized()
 
 	if (windowMediaFile_.empty())
 	{
-		yFrame.set(FrameType(800u, 800u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false /*forceOwner*/, true /*forceWritable*/);
-		CV::CVUtilities::randomizeFrame(yFrame);
+		yFrame = CV::CVUtilities::randomizedFrame(FrameType(800u, 800u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 	}
 	else
 	{

@@ -163,14 +163,8 @@ bool TestAdvancedFrameFilterGaussian::testFilter(const unsigned int width, const
 					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, filterSize_2 + 1u, width);
 					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, filterSize_2 + 1u, height);
 
-					const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-					const unsigned int targetPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					Frame source(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
-					Frame target(source.frameType(), targetPaddingElements);
-
-					CV::CVUtilities::randomizeFrame(source, false, &randomGenerator);
-					CV::CVUtilities::randomizeFrame(target, false, &randomGenerator);
+					const Frame source = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+					Frame target = CV::CVUtilities::randomizedFrame(source.frameType(), &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
