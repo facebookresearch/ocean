@@ -2563,7 +2563,6 @@ bool SLAMTracker::extendStableObjectPointsFullRotational(const PinholeCamera& pi
 	 * between the steps we apply successive optimizations of object points and camera poses (not as bundle adjustment)
 	 */
 
-	const unsigned int minimalObservationPercents[] = {100u, 80u, 60u, 40u};
 	const unsigned int allFrames = upperFrame - lowerFrame + 1u;
 
 	Vectors3 newObjectPoints;
@@ -2572,18 +2571,23 @@ bool SLAMTracker::extendStableObjectPointsFullRotational(const PinholeCamera& pi
 	Vectors3 optimizedObjectPoints;
 	Indices32 optimizedObjectPointIds;
 
-	for (unsigned int n = 0u; (!abort || !*abort) && n < sizeof(minimalObservationPercents) / sizeof(minimalObservationPercents[0]); ++n)
+	for (const unsigned int minimalObservationPercent : {100u, 80u, 60u, 40u})
 	{
-		newObjectPoints.clear();
-		newObjectPointIds.clear();
-
-		// check whether we can stop here
-		if (allFrames * minimalObservationPercents[n] / 100u < 2u)
+		if (abort != nullptr && *abort)
 		{
 			break;
 		}
 
-		if (Solver3::determineUnknownObjectPoints(database, pinholeCamera, Solver3::CM_ROTATIONAL, newObjectPoints, newObjectPointIds, randomGenerator, nullptr, Scalar(-1), allFrames * minimalObservationPercents[n] / 100u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)
+		newObjectPoints.clear();
+		newObjectPointIds.clear();
+
+		// check whether we can stop here
+		if (allFrames * minimalObservationPercent / 100u < 2u)
+		{
+			break;
+		}
+
+		if (Solver3::determineUnknownObjectPoints(database, pinholeCamera, Solver3::CM_ROTATIONAL, newObjectPoints, newObjectPointIds, randomGenerator, nullptr, Scalar(-1), allFrames * minimalObservationPercent / 100u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)
 				&& !newObjectPoints.empty())
 		{
 			// we do not need to measure the accuracy of the new object points as the accuracy has been measured by the determination function already
@@ -2597,7 +2601,7 @@ bool SLAMTracker::extendStableObjectPointsFullRotational(const PinholeCamera& pi
 #endif
 			database.setObjectPoints<false>(newObjectPointIds.data(), newObjectPoints.data(), newObjectPointIds.size());
 
-			Log::info() << "Added " << newObjectPointIds.size() << " stable and " << minimalObservationPercents[n] << "% visible new object points";
+			Log::info() << "Added " << newObjectPointIds.size() << " stable and " << minimalObservationPercent << "% visible new object points";
 
 			Indices32 allObjectPointIds = database.objectPointIds<false, false>(Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()));
 
@@ -2641,7 +2645,7 @@ bool SLAMTracker::extendStableObjectPointsFullTranslational(const PinholeCamera&
 	 * the precision of the depth values are determined by the observation angles (observation directions)
 	 */
 
-	const ReliabilityPair reliabilityThresholds[] =
+	const std::vector<ReliabilityPair> reliabilityThresholds =
 	{
 		ReliabilityPair(Numeric::cos(Numeric::deg2rad(Scalar(5.0))), Scalar(0.8)),
 		ReliabilityPair(Numeric::cos(Numeric::deg2rad(Scalar(2.0))), Scalar(0.6)),
@@ -2650,8 +2654,6 @@ bool SLAMTracker::extendStableObjectPointsFullTranslational(const PinholeCamera&
 		ReliabilityPair(Numeric::cos(Numeric::deg2rad(Scalar(0.5))), Scalar(0.3)),
 		ReliabilityPair(Numeric::cos(Numeric::deg2rad(Scalar(0.2))), Scalar(0.2))
 	};
-
-	const unsigned int iterations = sizeof(reliabilityThresholds) / sizeof(reliabilityThresholds[0]);
 
 	const unsigned int allFrames = upperFrame - lowerFrame + 1u;
 
@@ -2663,10 +2665,10 @@ bool SLAMTracker::extendStableObjectPointsFullTranslational(const PinholeCamera&
 
 	size_t totalNewObjectPoints = 0;
 
-	for (unsigned int iteration = 0u; (!abort || !*abort) && iteration < iterations; ++iteration)
+	for (size_t iteration = 0; (abort == nullptr || !*abort) && iteration < reliabilityThresholds.size(); ++iteration)
 	{
 		// check whether we can/should skip the last iterations (as the last iteration is very generous
-		if (iteration + 1u == iterations && totalNewObjectPoints >= 50)
+		if (iteration + 1 == reliabilityThresholds.size() && totalNewObjectPoints >= 50)
 		{
 			break;
 		}
@@ -2747,15 +2749,15 @@ bool SLAMTracker::extendStableObjectPointsFullTranslational(const PinholeCamera&
 			}
 		}
 
-		if (progress)
+		if (progress != nullptr)
 		{
-			*progress = Scalar(iteration + 1u) / Scalar(iterations + 1u);
+			*progress = Scalar(iteration + 1u) / Scalar(reliabilityThresholds.size() + 1);
 		}
 	}
 
-	if (progress)
+	if (progress != nullptr)
 	{
-		*progress = Scalar(iterations) / Scalar(iterations + 1u);
+		*progress = Scalar(reliabilityThresholds.size()) / Scalar(reliabilityThresholds.size() + 1);
 	}
 
 	// **TODO**
@@ -3086,7 +3088,7 @@ bool SLAMTracker::stabilizeStableObjectPointsPartiallyTranslational(const Pinhol
 	 * hopefully we finally end with camera poses for the entire frame range, if not we will have to handle the borders explicitly afterwards
 	 */
 
-	const Scalar maximalCosines[] =
+	const std::array<Scalar, 5> maximalCosines =
 	{
 		Numeric::cos(Numeric::deg2rad(5)),
 		Numeric::cos(Numeric::deg2rad(3.5)),
@@ -3094,8 +3096,6 @@ bool SLAMTracker::stabilizeStableObjectPointsPartiallyTranslational(const Pinhol
 		Numeric::cos(Numeric::deg2rad(1.5)),
 		Numeric::cos(Numeric::deg2rad(1))
 	};
-
-	const unsigned int iterations = sizeof(maximalCosines) / sizeof(maximalCosines[0]);
 
 	Vectors3 newObjectPointCandidates;
 	Indices32 newObjectPointCandidateIds;
@@ -3133,7 +3133,7 @@ bool SLAMTracker::stabilizeStableObjectPointsPartiallyTranslational(const Pinhol
 
 	Log::info() << "After initial pose update: [" << validLowerFrame << ", " << validUpperFrame << "]";
 
-	for (unsigned int iteration = 0u; (!abort || !*abort) && iteration < iterations; ++iteration)
+	for (size_t iteration = 0; (abort == nullptr || !*abort) && iteration < maximalCosines.size(); ++iteration)
 	{
 		newObjectPointCandidates.clear();
 		newObjectPointCandidateIds.clear();
@@ -3176,7 +3176,7 @@ bool SLAMTracker::stabilizeStableObjectPointsPartiallyTranslational(const Pinhol
 					break;
 				}
 			}
-			while ((!abort || !*abort) && ++iteration < iterations);
+			while ((!abort || !*abort) && ++iteration < maximalCosines.size());
 
 			if (!newObjectPoints.empty())
 			{
