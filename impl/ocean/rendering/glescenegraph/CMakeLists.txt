@@ -65,6 +65,10 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
         endif()
     endif()
 
+    if (WIN32)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC OpenGL32)
+    endif()
+
     if (ANDROID)
         target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC "-lGLESv3")
     endif()
