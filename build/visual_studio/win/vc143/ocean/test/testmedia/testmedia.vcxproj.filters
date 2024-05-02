@@ -20,9 +20,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestWIC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestVRS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestSpecial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -38,9 +35,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestWIC.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestVRS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestSpecial.cpp">

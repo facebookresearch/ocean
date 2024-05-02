@@ -55,7 +55,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestMovie.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestOpenImageLibraries.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestSpecial.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestVRS.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestWIC.h" />
   </ItemGroup>
   <ItemGroup>
@@ -63,7 +62,6 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestMovie.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestOpenImageLibraries.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestSpecial.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestVRS.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmedia\TestWIC.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
