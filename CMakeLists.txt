@@ -110,6 +110,7 @@ if (OCEAN_BUILD_DEMOS)
     add_subdirectory(impl/application/ocean/demo/cv/advanced/panoramaextractor)
     add_subdirectory(impl/application/ocean/demo/misc/imageannotator)
     add_subdirectory(impl/application/ocean/demo/cv/detector/qrcodes/detector2d)
+    add_subdirectory(impl/application/ocean/demo/cv/detector/qrcodes/qrcodegenerator)
 endif()
 
 if (OCEAN_BUILD_TESTS)
