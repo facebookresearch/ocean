@@ -50,7 +50,7 @@ namespace OBJ
  */
 OCEAN_SCENEDESCRIPTION_SDL_OBJ_EXPORT std::string nameOBJLibrary();
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 /**
  * Registers this scenedescription library at the global scenedescription manager.
