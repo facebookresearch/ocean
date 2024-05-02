@@ -574,14 +574,13 @@ bool TestSSE::testBinaryAveraging1Channel8Bit2x2(const double testDuration)
 
 	bool allSucceeded = true;
 
-	const unsigned int thresholds[] = {400u, 640u, 766u}; /// two, three, four pixel in 2x2 are 0xFF
-
-	for (unsigned int i = 0u; i <= 2u; i++)
+	for (const unsigned int elements : {8u, 16u, 32u})
 	{
-		for (unsigned int t = 0u; t < sizeof(thresholds) / sizeof(thresholds[0]); t++)
+		for (const unsigned int threshold : {400u, 640u, 766u}) // two, three, four pixel in 2x2 are 0xFF
 		{
 			Log::info() << " ";
-			allSucceeded = testAverageElementsBinary1Channel8Bit2x2(testDuration, 8 << i, thresholds[t]) && allSucceeded;
+
+			allSucceeded = testAverageElementsBinary1Channel8Bit2x2(testDuration, elements, threshold) && allSucceeded;
 		}
 	}
 

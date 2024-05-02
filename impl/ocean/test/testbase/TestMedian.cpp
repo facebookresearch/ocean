@@ -314,13 +314,11 @@ bool TestMedian::testMedian(const double testDuration)
 	Log::info() << "Median test with \"" << TypeNamer::name<T>() << "\":";
 	Log::info() << " ";
 
-	const unsigned int numbers[] = {1u, 10u, 101u, 1000u, 10001u, 100000u};
-
 	bool allSucceeded = true;
 
-	for (unsigned int n = 0u; n < sizeof(numbers) / sizeof(numbers[0]); ++n)
+	for (const unsigned number : {1u, 10u, 101u, 1000u, 10001u, 100000u})
 	{
-		allSucceeded = testMedian<T>(numbers[n], testDuration) && allSucceeded;
+		allSucceeded = testMedian<T>(number, testDuration) && allSucceeded;
 	}
 
 	Log::info() << " ";
