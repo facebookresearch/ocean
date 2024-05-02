@@ -191,12 +191,17 @@ class OCEAN_TRACKING_OFFLINE_EXPORT PointPaths
 		/**
 		 * Definition of a pair combining a tracker configuration and a ratio value.
 		 */
-		typedef std::pair<TrackingConfiguration, unsigned int> TrackingConfigurationPair;
+		using TrackingConfigurationPair = std::pair<TrackingConfiguration, unsigned int>;
+
+		/**
+		 * Definition of a vector holding TrackingConfigurationPair objects.
+		 */
+		using TrackingConfigurationPairs = std::vector<TrackingConfigurationPair>;
 
 		/**
 		 * Definition of a vector holding strength parameters.
 		 */
-		typedef	std::vector<int> Strengths;
+		using Strengths = std::vector<int>;
 
 	public:
 

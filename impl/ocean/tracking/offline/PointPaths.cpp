@@ -1426,7 +1426,7 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 		// however, there may be very homogeneous image regions which do not provide strong feature points or which may not provide even one 'realistic' feature point
 		// thus, we have to weaken our expectations of the minimal feature strengths iteratively
 
-		const TrackingConfigurationPair candidateConfigurations[] =
+		const TrackingConfigurationPairs candidateConfigurationPairs =
 		{
 			TrackingConfigurationPair(TrackingConfiguration(TM_FIXED_PATCH_SIZE_7, frame.width(), frame.height(), 20u, 60u, lowCoarsestLayerRadius, lowPyramidLayers), 70u),
 			TrackingConfigurationPair(TrackingConfiguration(TM_FIXED_PATCH_SIZE_7, frame.width(), frame.height(), 20u, 55u, lowCoarsestLayerRadius, lowPyramidLayers), 65u),
@@ -1453,10 +1453,10 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 			TrackingConfigurationPair(TrackingConfiguration(TM_FIXED_PATCH_SIZE_15, 5u, 5u, 5u, highCoarsestLayerRadius, highPyramidLayers), 5u)
 		};
 
-		for (unsigned int n = 0u; n < sizeof(candidateConfigurations) / sizeof(candidateConfigurations[0]); ++n)
+		for (const TrackingConfigurationPair& trackingConfigurationPair : candidateConfigurationPairs)
 		{
-			const TrackingConfiguration& candidateConfiguration = candidateConfigurations[n].first;
-			const unsigned int minimalValidBinsPercent = candidateConfigurations[n].second;
+			const TrackingConfiguration& candidateConfiguration = trackingConfigurationPair.first;
+			const unsigned int minimalValidBinsPercent = trackingConfigurationPair.second;
 
 			// **TODO** **HACK** the threshold must be normalized in the Harris corner detector
 			const int harrisThreshold = int((candidateConfiguration.strength() * candidateConfiguration.strength() / 8u) * (candidateConfiguration.strength() * candidateConfiguration.strength() / 8u));
@@ -1513,7 +1513,7 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 		// or the region of interest is the a region with high priority than the remaining image content so that we can also use feature points in the remaining image
 		// thus, the conditions for the region of interest must be stronger (we need more feature points) if the area is the sole tracking area
 
-		const TrackingConfigurationPair weakCandidateConfigurations[] =
+		const TrackingConfigurationPairs weakCandidateConfigurationPairs =
 		{
 			// (applied tracking technique, horizontal bin size, vertical bin size, minimal feature strength), minimal percent of bins with strong feature point in relation to bins with any feature points
 
@@ -1530,7 +1530,7 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 			TrackingConfigurationPair(TrackingConfiguration(TM_FIXED_PATCH_SIZE_15, 5u, 5u, 5u, highCoarsestLayerRadius, highPyramidLayers), 5u)
 		};
 
-		const TrackingConfigurationPair strongCandidateConfigurations[] =
+		const TrackingConfigurationPairs strongCandidateConfigurationPairs =
 		{
 			// (applied tracking technique, horizontal bin size, vertical bin size, minimal feature strength), minimal percent of bins with strong feature point in relation to bins with any feature points
 
@@ -1585,8 +1585,7 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 			*regionOfInterestTrackingConfiguration = TrackingConfiguration(TM_FIXED_PATCH_SIZE_15, 5u, 5u, 5u, highCoarsestLayerRadius, highPyramidLayers);
 		}
 
-		const TrackingConfigurationPair* candidateConfigurations = frameTrackingConfiguration ? weakCandidateConfigurations : strongCandidateConfigurations;
-		const unsigned int numberCandidateConfigurations = frameTrackingConfiguration ? (sizeof(weakCandidateConfigurations) / sizeof(weakCandidateConfigurations[0])) : (sizeof(strongCandidateConfigurations) / sizeof(strongCandidateConfigurations[0]));
+		const TrackingConfigurationPairs& candidateConfigurationPairs = frameTrackingConfiguration ? weakCandidateConfigurationPairs : strongCandidateConfigurationPairs;
 
 		const Box2& boundingBox = regionOfInterest.boundingBox();
 		ocean_assert(boundingBox.isValid());
@@ -1594,10 +1593,15 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 		const unsigned int subRegionWidth = (unsigned int)Numeric::ceil(boundingBox.width());
 		const unsigned int subRegionHeight = (unsigned int)Numeric::ceil(boundingBox.height());
 
-		for (unsigned int n = 0u; !regionOfInterestTrackingConfiguration->isValid() && n < numberCandidateConfigurations; ++n)
+		for (const TrackingConfigurationPair& candidateConfigurationPair : candidateConfigurationPairs)
 		{
-			const TrackingConfiguration& candidateConfiguration = candidateConfigurations[n].first;
-			const unsigned int minimalValidBinsPercent = candidateConfigurations[n].second;
+			if (regionOfInterestTrackingConfiguration->isValid())
+			{
+				break;
+			}
+
+			const TrackingConfiguration& candidateConfiguration = candidateConfigurationPair.first;
+			const unsigned int minimalValidBinsPercent = candidateConfigurationPair.second;
 
 			// **TODO** **HACK** the threshold must be normalized in the Harris corner detector
 			const int harrisThreshold = int((candidateConfiguration.strength() * candidateConfiguration.strength() / 8u) * (candidateConfiguration.strength() * candidateConfiguration.strength() / 8u));
@@ -1713,7 +1717,7 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 	unsigned int highPyramidLayers = 0u;
 	idealPyramidParameters(frameWidth, frameHeight, motionSpeed, highCoarsestLayerRadius, highPyramidLayers, 26u, (unsigned int)(-1));
 
-	const TrackingConfigurationPair candidateConfigurations[] =
+	const TrackingConfigurationPairs candidateConfigurationPairs =
 	{
 		TrackingConfigurationPair(TrackingConfiguration(TM_FIXED_PATCH_SIZE_15, 50u, 50u, 60u, lowCoarsestLayerRadius, lowPyramidLayers), 70u),
 		TrackingConfigurationPair(TrackingConfiguration(TM_FIXED_PATCH_SIZE_15, 50u, 50u, 55u, lowCoarsestLayerRadius, lowPyramidLayers), 65u),
@@ -1732,10 +1736,10 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 		TrackingConfigurationPair(TrackingConfiguration(TM_FIXED_PATCH_SIZE_15, 5u, 5u, 5u, highCoarsestLayerRadius, highPyramidLayers), 5u)
 	};
 
-	for (unsigned int n = 0u; n < sizeof(candidateConfigurations) / sizeof(candidateConfigurations[0]); ++n)
+	for (const TrackingConfigurationPair& candidateConfigurationPair : candidateConfigurationPairs)
 	{
-		const TrackingConfiguration& candidateConfiguration = candidateConfigurations[n].first;
-		const unsigned int minimalValidBinsPercent = candidateConfigurations[n].second;
+		const TrackingConfiguration& candidateConfiguration = candidateConfigurationPair.first;
+		const unsigned int minimalValidBinsPercent = candidateConfigurationPair.second;
 
 		// **TODO** **HACK** the threshold must be normalized in the Harris corner detector
 		const int harrisThreshold = int((candidateConfiguration.strength() * candidateConfiguration.strength() / 8u) * (candidateConfiguration.strength() * candidateConfiguration.strength() / 8u));
