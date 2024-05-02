@@ -2,11 +2,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(jni)
-
 if (ANDROID)
 
-    set(OCEAN_TARGET_NAME "ocean_platform_android_application")
+    set(OCEAN_TARGET_NAME "ocean_platform_android_application_jni")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -21,21 +19,14 @@ if (ANDROID)
 
     target_compile_options(${OCEAN_TARGET_NAME}
         PUBLIC
-            ${OCEAN_COMPILER_FLAGS}
-            "-fexceptions"
+                ${OCEAN_COMPILER_FLAGS}
+                "-fexceptions"
     )
 
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
-            ocean_base
-            ocean_io
-            ocean_media
-            ocean_platform
-            ocean_platform_android
-            ocean_platform_linux
-            ocean_rendering
-            ocean_rendering_glescenegraph
+            ocean_platform_android_application
             "-landroid"
     )
 
@@ -46,7 +37,7 @@ if (ANDROID)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/platform/android/application
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/platform/android/application/jni
             COMPONENT include
     )
 
