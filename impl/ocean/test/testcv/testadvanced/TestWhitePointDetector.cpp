@@ -12,7 +12,7 @@
 #include "ocean/math/Numeric.h"
 #include "ocean/math/Random.h"
 
-#include <vector>
+#include <array>
 
 namespace Ocean
 {
@@ -31,10 +31,10 @@ namespace
 
 Scalar delinearizeCIELab(const Scalar t)
 {
-	const Scalar threshold = Scalar(216) / Scalar(24389);
-	const Scalar factor = Scalar(841) / Scalar(108);
-	const Scalar offset = Scalar(4) / Scalar(29);
-	const Scalar exponent = Scalar(1) / Scalar(3);
+	constexpr Scalar threshold = Scalar(216) / Scalar(24389);
+	constexpr Scalar factor = Scalar(841) / Scalar(108);
+	constexpr Scalar offset = Scalar(4) / Scalar(29);
+	constexpr Scalar exponent = Scalar(1) / Scalar(3);
 
 	return t > threshold ? Numeric::pow(t, exponent) : factor * t + offset;
 }
@@ -46,9 +46,9 @@ void sRGBToCIELab(const Scalar& red, const Scalar& green, const Scalar& blue, Sc
 	const Scalar z = Scalar(0.0193) * red + Scalar(0.1192) * green + Scalar(0.9505) * blue;
 
 	//D65 white point:
-	const Scalar xn = Scalar(0.95047);
-	const Scalar yn = Scalar(1.0);
-	const Scalar zn = Scalar(1.08883);
+	constexpr Scalar xn = Scalar(0.95047);
+	constexpr Scalar yn = Scalar(1.0);
+	constexpr Scalar zn = Scalar(1.08883);
 
 	const Scalar xt = delinearizeCIELab(x / xn);
 	const Scalar yt = delinearizeCIELab(y / yn);
@@ -89,11 +89,11 @@ bool TestWhitePointDetector::test(const unsigned int width, const unsigned int h
 	Scalar l, a, b;
 	sRGBToCIELab(1.0, 1.0, 1.0, l, a, b);
 
-	const float whitePointsR[] = {1.0f, 0.9f, 0.9f, 1.0f};
-	const float whitePointsG[] = {1.0f, 0.9f, 0.9f, 0.9f};
-	const float whitePointsB[] = {1.0f, 0.9f, 1.0f, 0.9f};
+	const std::array<float, 4> whitePointsR = {1.0f, 0.9f, 0.9f, 1.0f};
+	const std::array<float, 4> whitePointsG = {1.0f, 0.9f, 0.9f, 0.9f};
+	const std::array<float, 4> whitePointsB = {1.0f, 0.9f, 1.0f, 0.9f};
 
-	for (unsigned int i = 0u; i < sizeof(whitePointsR) / sizeof(whitePointsR[0]); i++)
+	for (size_t i = 0; i < whitePointsR.size(); ++i)
 	{
 		Log::info().newLine(i != 0u);
 		Log::info().newLine(i != 0u);
