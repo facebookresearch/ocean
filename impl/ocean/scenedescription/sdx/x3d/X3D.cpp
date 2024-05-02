@@ -20,7 +20,7 @@ std::string nameX3DLibrary()
 	return std::string("SDX X3D");
 }
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 void registerX3DLibrary()
 {

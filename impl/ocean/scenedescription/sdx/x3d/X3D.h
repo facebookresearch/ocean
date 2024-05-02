@@ -50,7 +50,7 @@ namespace X3D
  */
 OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT std::string nameX3DLibrary();
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 /**
  * Registers this scenedescription library at the global scenedescription manager.
