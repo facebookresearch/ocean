@@ -104,6 +104,9 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\CommandArguments.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\DataType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\ApplicationInterface.h">

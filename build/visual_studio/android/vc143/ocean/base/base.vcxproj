@@ -75,6 +75,7 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\Base.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\Build.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\Config.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\DataType.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\DateTime.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\Event.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\Exception.cpp" />

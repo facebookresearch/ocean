@@ -189,6 +189,7 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\Build.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\CommandArguments.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\Config.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\DataType.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\DateTime.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\DebugElements.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\base\Event.cpp" />

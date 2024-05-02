@@ -359,6 +359,10 @@
 		9336134A27671D750068E556 /* ScopedSubscription.h in Headers */ = {isa = PBXBuildFile; fileRef = 9336134827671D750068E556 /* ScopedSubscription.h */; };
 		9336134B27671D750068E556 /* ScopedSubscription.h in Headers */ = {isa = PBXBuildFile; fileRef = 9336134827671D750068E556 /* ScopedSubscription.h */; };
 		9336134C27671D750068E556 /* ScopedSubscription.h in Headers */ = {isa = PBXBuildFile; fileRef = 9336134827671D750068E556 /* ScopedSubscription.h */; };
+		934D207A2BE31E2E00AEFA1E /* DataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 934D20792BE31E2E00AEFA1E /* DataType.cpp */; };
+		934D207B2BE31E2E00AEFA1E /* DataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 934D20792BE31E2E00AEFA1E /* DataType.cpp */; };
+		934D207C2BE31E2E00AEFA1E /* DataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 934D20792BE31E2E00AEFA1E /* DataType.cpp */; };
+		934D207D2BE31E2E00AEFA1E /* DataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 934D20792BE31E2E00AEFA1E /* DataType.cpp */; };
 		9359D69A296DF6EB005285B3 /* ScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9359D699296DF6EB005285B3 /* ScopedFunction.h */; };
 		9359D69B296DF6EB005285B3 /* ScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9359D699296DF6EB005285B3 /* ScopedFunction.h */; };
 		9359D69C296DF6EB005285B3 /* ScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9359D699296DF6EB005285B3 /* ScopedFunction.h */; };
@@ -470,6 +474,7 @@
 		93152E0F2441ACAF009F76E0 /* CommandArguments.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CommandArguments.cpp; path = ../../../../../impl/ocean/base/CommandArguments.cpp; sourceTree = "<group>"; };
 		933387942152F2710002B6D6 /* SegmentUnion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SegmentUnion.h; path = ../../../../../impl/ocean/base/SegmentUnion.h; sourceTree = "<group>"; };
 		9336134827671D750068E556 /* ScopedSubscription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScopedSubscription.h; path = ../../../../../impl/ocean/base/ScopedSubscription.h; sourceTree = "<group>"; };
+		934D20792BE31E2E00AEFA1E /* DataType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataType.cpp; path = ../../../../../impl/ocean/base/DataType.cpp; sourceTree = "<group>"; };
 		9359D699296DF6EB005285B3 /* ScopedFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScopedFunction.h; path = ../../../../../impl/ocean/base/ScopedFunction.h; sourceTree = "<group>"; };
 		936BA65923E8F166001E200F /* DebugElements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DebugElements.cpp; path = ../../../../../impl/ocean/base/DebugElements.cpp; sourceTree = "<group>"; };
 		936BA65E23E8F173001E200F /* DebugElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DebugElements.h; path = ../../../../../impl/ocean/base/DebugElements.h; sourceTree = "<group>"; };
@@ -600,6 +605,7 @@
 				5DFD7AB81B90FD5E00ABF245 /* Build.cpp */,
 				93152E0F2441ACAF009F76E0 /* CommandArguments.cpp */,
 				5DFD7AB91B90FD5E00ABF245 /* Config.cpp */,
+				934D20792BE31E2E00AEFA1E /* DataType.cpp */,
 				5DFD7ABB1B90FD5E00ABF245 /* DateTime.cpp */,
 				936BA65923E8F166001E200F /* DebugElements.cpp */,
 				5DFD7ABC1B90FD5E00ABF245 /* Event.cpp */,
@@ -1067,6 +1073,7 @@
 				5DFD7AE31B90FD5E00ABF245 /* SharedLock.cpp in Sources */,
 				5063B4DD1FA09EF600424003 /* PluginManager.mm in Sources */,
 				5DFD7ADA1B90FD5E00ABF245 /* Frame.cpp in Sources */,
+				934D207A2BE31E2E00AEFA1E /* DataType.cpp in Sources */,
 				5DFD7AD31B90FD5E00ABF245 /* Base.cpp in Sources */,
 				5DFD7ADD1B90FD5E00ABF245 /* Messenger.cpp in Sources */,
 				5DFD7AD91B90FD5E00ABF245 /* Exception.cpp in Sources */,
@@ -1110,6 +1117,7 @@
 				5D2229D11BB1684300298788 /* SharedLock.cpp in Sources */,
 				5D2229D21BB1684300298788 /* Frame.cpp in Sources */,
 				5D2229D41BB1684300298788 /* Base.cpp in Sources */,
+				934D207B2BE31E2E00AEFA1E /* DataType.cpp in Sources */,
 				5D2229D51BB1684300298788 /* Messenger.cpp in Sources */,
 				5D2229D61BB1684300298788 /* Exception.cpp in Sources */,
 				5D2229D71BB1684300298788 /* String.cpp in Sources */,
@@ -1153,6 +1161,7 @@
 				5D8380C21D8F366700939AD7 /* SharedLock.cpp in Sources */,
 				5D8380C31D8F366700939AD7 /* Frame.cpp in Sources */,
 				5D8380C51D8F366700939AD7 /* Base.cpp in Sources */,
+				934D207D2BE31E2E00AEFA1E /* DataType.cpp in Sources */,
 				5D8380C61D8F366700939AD7 /* Messenger.cpp in Sources */,
 				5D8380C71D8F366700939AD7 /* Exception.cpp in Sources */,
 				5D8380C81D8F366700939AD7 /* String.cpp in Sources */,
@@ -1196,6 +1205,7 @@
 				5D9CA2AB1D8B23140020FD83 /* SharedLock.cpp in Sources */,
 				5D9CA2AC1D8B23140020FD83 /* Frame.cpp in Sources */,
 				5D9CA2AE1D8B23140020FD83 /* Base.cpp in Sources */,
+				934D207C2BE31E2E00AEFA1E /* DataType.cpp in Sources */,
 				5D9CA2AF1D8B23140020FD83 /* Messenger.cpp in Sources */,
 				5D9CA2B01D8B23140020FD83 /* Exception.cpp in Sources */,
 				5D9CA2B11D8B23140020FD83 /* String.cpp in Sources */,
