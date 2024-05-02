@@ -45,7 +45,7 @@ namespace MapBuilding
  */
 	OCEAN_DEVICES_MAPBUILDING_EXPORT std::string nameMapBuildingLibrary();
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 /**
  * Registers this MapBuilding device library at the global device manager.

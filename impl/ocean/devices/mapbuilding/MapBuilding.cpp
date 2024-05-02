@@ -17,7 +17,7 @@ std::string nameMapBuildingLibrary()
 	return std::string("MapBuilding Tracker library");
 }
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 void registerMapBuildingLibrary()
 {
