@@ -20,7 +20,7 @@ std::string nameAssimpLibrary()
 	return std::string("SDL Assimp");
 }
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 void registerAssimpLibrary()
 {

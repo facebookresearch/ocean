@@ -50,7 +50,7 @@ namespace Assimp
  */
 OCEAN_SCENEDESCRIPTION_SDL_ASSIMP_EXPORT std::string nameAssimpLibrary();
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 /**
  * Registers this scenedescription library at the global scenedescription manager.
