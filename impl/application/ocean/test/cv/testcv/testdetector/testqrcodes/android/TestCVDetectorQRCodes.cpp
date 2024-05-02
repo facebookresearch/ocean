@@ -4,7 +4,7 @@
 
 #include "ocean/platform/android/Utilities.h"
 
-#include "ocean/test/testcv/testdetector/testqrcodes/TestCVDetectorQRcodes.h"
+#include "ocean/test/testcv/testdetector/testqrcodes/TestCVDetectorQRCodes.h"
 
 using namespace Ocean;
 
