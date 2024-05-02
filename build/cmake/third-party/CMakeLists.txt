@@ -35,7 +35,6 @@ if(BUILD_PASS_INDEX EQUAL 0)
     include(openxr.cmake)
     include(tinyxml2.cmake)
     include(protozero.cmake)
-    include(libyuv.cmake)
     include(harfbuzz.cmake)
 
     if (ANDROID OR LINUX)
@@ -51,10 +50,10 @@ elseif(BUILD_PASS_INDEX EQUAL 1)
     include(libpng.cmake)
     include(libtiff.cmake)
     include(vtzero.cmake)
-
     if (ANDROID OR LINUX)
         include(curl.cmake)
     endif()
+    include(libyuv.cmake)
 
 elseif(BUILD_PASS_INDEX EQUAL 2)
 
