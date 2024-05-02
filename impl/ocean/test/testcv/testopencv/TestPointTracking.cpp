@@ -34,22 +34,28 @@ bool TestPointTracking::testPointTracking(const double testDuration)
 
 	bool allSucceeded = true;
 
-	const unsigned int widths[] = {640u, 800u, 1280u, 1920u};
-	const unsigned int heights[] = {480u, 640u,  720u, 1080u};
-	const unsigned int windows[] = {7u, 15u, 31u};
-	for (unsigned int w = 0u; w < sizeof(windows) / sizeof(windows[0]); ++w)
+	const Indices32 widths = {640u, 800u, 1280u, 1920u};
+	const Indices32 heights = {480u, 640u, 720u, 1080u};
+	ocean_assert(widths.size() == heights.size());
+
+	for (const unsigned int window : {7u, 15u, 31u})
 	{
-		for (unsigned int n = 0u; n < sizeof(widths) / sizeof(widths[0]); ++n)
+		for (unsigned int n = 0u; n < widths.size(); ++n)
 		{
-			allSucceeded = testSparseOpticalFlow(widths[n], heights[n], windows[w], testDuration) && allSucceeded;
+			allSucceeded = testSparseOpticalFlow(widths[n], heights[n], window, testDuration) && allSucceeded;
+
 			Log::info() << " ";
 		}
 	}
 
 	if (allSucceeded)
+	{
 		Log::info() << "Point tracking test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Point tracking test FAILED!";
+	}
 
 	return allSucceeded;
 
@@ -64,17 +70,21 @@ bool TestPointTracking::testPointTracking(const cv::Mat & frame, const double te
 
 	bool allSucceeded = true;
 
-	const unsigned int windows[] = { 7u, 15u, 31u };
-	for (unsigned int w = 0u; w < sizeof(windows) / sizeof(windows[0]); ++w)
+	for (const unsigned int window : { 7u, 15u, 31u })
 	{
-		allSucceeded = testSparseOpticalFlow(frame, windows[w], testDuration) && allSucceeded;
+		allSucceeded = testSparseOpticalFlow(frame, window, testDuration) && allSucceeded;
+
 		Log::info() << " ";
 	}
 
 	if (allSucceeded)
+	{
 		Log::info() << "Point tracking test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Point tracking test FAILED!";
+	}
 
 	return allSucceeded;
 }
