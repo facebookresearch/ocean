@@ -60,7 +60,7 @@ bool TestMultipleViewGeometry::testMultipleViewGeometry(const double testDuratio
 	Log::info() << " ";
 
 	for (unsigned int iView = 4; iView < 11; iView += 2)
-	{		
+	{
 		allSucceeded = testProjectiveReconstruction(iView, false, testDuration) && allSucceeded;
 
 		Log::info() << " ";
@@ -75,9 +75,13 @@ bool TestMultipleViewGeometry::testMultipleViewGeometry(const double testDuratio
 	}
 
 	if (allSucceeded)
+	{
 		Log::info() << "Multiple view geometry test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Multiple view geometry test FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -87,21 +91,24 @@ bool TestMultipleViewGeometry::testTrifocalTensorMatrix(bool addGaussianNoise, c
 	ocean_assert(testDuration > 0.0);
 
 	if (addGaussianNoise)
+	{
 		Log::info() << "Testing trifocal tensor determination with Gaussian noise from three views (is expected to fail):";
+	}
 	else
+	{
 		Log::info() << "Testing trifocal tensor with perfect image points from three views:";
+	}
 
 	bool allSucceeded = true;
-	const unsigned int points[] = {7u, 35u, 350u};
 
 	const Scalar sigma = addGaussianNoise ? Scalar(1) : Scalar(0);
 
-	for (size_t n = 0; n < sizeof(points) / sizeof(points[0]); ++n)
+	for (const unsigned int points : {7u, 35u, 350u})
 	{
-		Log::info() << "... with " << points[n] << " points:";
+		Log::info() << "... with " << points << " points:";
 
-		unsigned long long failedMetric = 0ull;
-		unsigned long long validIterations = 0ull;
+		uint64_t failedMetric = 0ull;
+		uint64_t validIterations = 0ull;
 
 		const Timestamp startTimestamp(true);
 		HighPerformanceStatistic performance;
@@ -109,21 +116,24 @@ bool TestMultipleViewGeometry::testTrifocalTensorMatrix(bool addGaussianNoise, c
 
 		do
 		{
-			std::vector<Geometry::ImagePoints> imagePointsPerPose;
+			std::vector<Vectors2> imagePointsPerPose;
 			imagePointsPerPose.reserve(3);
-			Geometry::ObjectPoints centerObjectPoints;
-			centerObjectPoints.reserve(points[n]);
+
+			Vectors3 centerObjectPoints;
+			centerObjectPoints.reserve(points);
 
 			const PinholeCamera pinholeCamera(Random::random(600, 800), Random::random(600, 800), Numeric::deg2rad(Random::scalar(30, 70)));
 
-			if (!generatedImagePointGroups(pinholeCamera, points[n], 3u, imagePointsPerPose, sigma, &centerObjectPoints))
+			if (!generatedImagePointGroups(pinholeCamera, points, 3u, imagePointsPerPose, sigma, &centerObjectPoints))
+			{
 				continue;
+			}
 
 			Geometry::MultipleViewGeometry::TrifocalTensor trifocal;
 			HomogenousMatrix4 projectiveMatrix0, projectiveMatrix1, projectiveMatrix2;
 
 			performance.start();
-			const bool success = Geometry::MultipleViewGeometry::trifocalTensorIF(imagePointsPerPose[0].data(), imagePointsPerPose[1].data(), imagePointsPerPose[2].data(), points[n], projectiveMatrix0, projectiveMatrix1, projectiveMatrix2, &trifocal);
+			const bool success = Geometry::MultipleViewGeometry::trifocalTensorIF(imagePointsPerPose[0].data(), imagePointsPerPose[1].data(), imagePointsPerPose[2].data(), points, projectiveMatrix0, projectiveMatrix1, projectiveMatrix2, &trifocal);
 			performance.stop();
 
 			if (success)
@@ -159,7 +169,9 @@ bool TestMultipleViewGeometry::testTrifocalTensorMatrix(bool addGaussianNoise, c
 				SquareMatrix3 intrinsic;
 				HomogenousMatrices4 posesIF(3);
 				if (!Geometry::MultipleViewGeometry::calibrateFromProjectionsMatricesIF(ConstArrayAccessor<HomogenousMatrix4>(transformationIFs), pinholeCamera.width(), pinholeCamera.height(), intrinsic, posesIF.data()))
+				{
 					continue;
+				}
 
 				++validIterations;
 
@@ -169,7 +181,9 @@ bool TestMultipleViewGeometry::testTrifocalTensorMatrix(bool addGaussianNoise, c
 				maxProjectionErrorsMetric.push_back(Numeric::sqrt(maxSquaredMetricError));
 
 				if (maxSquaredMetricError > (addGaussianNoise ? (2.5 * 2.5) : (1.5 * 1.5)))
+				{
 					++failedMetric;
+				}
 			}
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
@@ -179,7 +193,7 @@ bool TestMultipleViewGeometry::testTrifocalTensorMatrix(bool addGaussianNoise, c
 		if (validIterations < 1)
 		{
 			allSucceeded = false;
-			Log::info() << "No succeeded executions";		
+			Log::info() << "No succeeded executions";
 		}
 		else
 		{
@@ -208,8 +222,8 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 
 	const Scalar sigma = addGaussianNoise ? Scalar(1) : Scalar(0);
 
-	unsigned long long failedMetric = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t failedMetric = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 	HighPerformanceStatistic performance;
@@ -240,7 +254,7 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 		}
 		if (success)
 		{
-		
+
 			HomogenousMatrices4 transformationIFs(3);
 			transformationIFs[0] = projectiveMatrix0;
 			transformationIFs[1] = projectiveMatrix1;
@@ -276,7 +290,7 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 		const Scalar medianMetric = maxProjectionErrorsMetric.size() > 0 ? Median::median(maxProjectionErrorsMetric.data(), maxProjectionErrorsMetric.size()) : 0;
 
 		Log::info() << "Validation: " << String::toAString(percentage * 100.00, 1u) << "% succeeded. Median maximal re-projection error: " << String::toAString(medianMetric, 1u) << " pixel";
-		
+
 		return addGaussianNoise? percentage > 0.25 : percentage > 0.5;
 	}
 }
@@ -295,8 +309,8 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 
 	const Scalar sigma = addGaussianNoise ? Scalar(1) : Scalar(0);
 
-	unsigned long long failedMetric = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t failedMetric = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 	HighPerformanceStatistic performance;
@@ -367,23 +381,19 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 
 	Log::info() << "Projective reconstruction with faulty point correspondences from " << views << " views:";
 
-	const unsigned int pointsSet[] = {15u, 50u, 500u};
-
 	bool allSucceeded = true;
 
-	for (size_t n = 0; n < sizeof(pointsSet) / sizeof(pointsSet[0]); ++n)
+	for (const unsigned int points : {15u, 50u, 500u})
 	{
-		const unsigned int points = pointsSet[n];
-
 		Log::info() << "... with " << points << " points:";
 
-		unsigned long long failedMetric = 0ull;
-		unsigned long long validIterations = 0ull;
+		uint64_t failedMetric = 0ull;
+		uint64_t validIterations = 0ull;
 
 		const Timestamp startTimestamp(true);
 		HighPerformanceStatistic performance;
 		Scalars maxProjectionErrorsMetric;
-	
+
 		do
 		{
 			std::vector<Geometry::ImagePoints> imagePointsPerPose;
@@ -408,7 +418,7 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 			unsigned int numberInvalidFeatures = points * 2u / 10u;
 			ocean_assert(numberInvalidFeatures < points);
 
-			while (indexSetDisturbPoints.size() < numberInvalidFeatures)	
+			while (indexSetDisturbPoints.size() < numberInvalidFeatures)
 			{
 				indexSetDisturbPoints.insert(Random::random(points - 1));
 			}
@@ -461,7 +471,7 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 		{
 			allSucceeded = false;
 			Log::info() << "No succeeded executions";
-			
+
 		}
 		else
 		{
@@ -485,7 +495,7 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 
 #ifdef OCEAN_OBJ_FIRST
 
-	/*NOTE: results in lower performance */ 
+	/*NOTE: results in lower performance */
 	const Box3 objectPointsArea(Vector3(-1, -1, -1), Vector3(1, 1, 1));
 
 	const Quaternion orientation0(Random::quaternion());
@@ -548,7 +558,7 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 		const Vector3 translation(Random::vector3(Scalar(-0.1), Scalar(0.1)));
 		const Euler euler(Random::scalar(Numeric::deg2rad(-10), Numeric::deg2rad(10)), Random::scalar(Numeric::deg2rad(-10), Numeric::deg2rad(10)), Random::scalar(Numeric::deg2rad(-10), Numeric::deg2rad(10)));
 		const Quaternion quaternion(euler);
-		
+
 		poses.push_back(HomogenousMatrix4(translation, quaternion));
 	}
 
@@ -564,7 +574,7 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 			Geometry::ImagePoint imagePointView(pinholeCamera.projectToImage<false>(poses[iView], objectPoint, false));
 
 			if (gaussSigma > 0)
-			{ 
+			{
 				imagePointView.x() += Random::gaussianNoise(gaussSigma);
 				imagePointView.y() += Random::gaussianNoise(gaussSigma);
 			}
@@ -574,7 +584,7 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 
 		centerObjectPoints.push_back(objectPoint);
 		imagePointsPerPose[0].push_back(imagePoint);
-			
+
 		for (size_t iView = 0; iView < views - 1; iView++)
 		{
 			imagePointsPerPose[iView + 1].push_back(candidates[iView]);
@@ -602,7 +612,7 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 		SquareMatrices3 matK;
 		NonconstArrayAccessor<SquareMatrix3> camAccessor(matK, views - 1);
 		Geometry::SelfCalibration::getIntrinsicsFromAbsoluteDualQuadric(symmetricQ, ConstArrayAccessor<HomogenousMatrix4>(projectionsIF), camAccessor.pointer());
-	
+
 		SquareMatrix3 camMat;
 		Geometry::SelfCalibration::findCommonIntrinsicsFromProjectionMatrices(ConstArrayAccessor<HomogenousMatrix4>(projectionsIF), camMat, &symmetricQ);
 	}
