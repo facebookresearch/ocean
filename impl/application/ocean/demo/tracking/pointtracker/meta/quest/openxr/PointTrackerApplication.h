@@ -8,7 +8,6 @@
 #include "ocean/base/Thread.h"
 
 #include "ocean/platform/meta/quest/openxr/application/VRNativeApplicationAdvanced.h"
-#include "ocean/platform/meta/quest/sensors/FrameProvider.h"
 
 #include "ocean/media/PixelImage.h"
 
@@ -16,6 +15,8 @@
 #include "ocean/rendering/Transform.h"
 
 #include "ocean/tracking/point/PointTracker.h"
+
+#include "metaonly/ocean/platform/meta/quest/sensors/FrameProvider.h"
 
 #include <android_native_app_glue.h>
 
