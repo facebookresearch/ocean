@@ -22,15 +22,6 @@ namespace Ocean
 {
 
 template <typename T>
-MatrixT<T>::MatrixT() :
-	rows_(0),
-	columns_(0),
-	values_(nullptr)
-{
-	// nothing to do here
-}
-
-template <typename T>
 MatrixT<T>::MatrixT(MatrixT<T>&& matrix) noexcept :
 	rows_(matrix.rows_),
 	columns_(matrix.columns_),

@@ -79,7 +79,7 @@ class MatrixT
 		/**
 		 * Creates a new matrix with no size.
 		 */
-		MatrixT();
+		MatrixT() = default;
 
 		/**
 		 * Creates a new matrix with defined rows and columns.
@@ -474,7 +474,7 @@ class MatrixT
 
 		/**
 		 * Returns whether this matrix is symmetric (and whether this matrix is a square matrix).
-		 * Beware: An empty matrix (without any rows or colums) is symmetric.
+		 * Beware: An empty matrix (without any rows or columns) is symmetric.
 		 * @param eps The epsilon threshold to be used, with range [0, infinity)
 		 * @return True, if so
 		 */
@@ -557,7 +557,7 @@ class MatrixT
 
 		/**
 		 * Multiplies the matrix with a scalar.
-		 * @param scalar Scalar to multiply
+		 * @param scalar The scalar to multiply
 		 * @return Resulting matrix
 		 */
 		MatrixT<T> operator*(const T scalar) const;
@@ -571,7 +571,7 @@ class MatrixT
 
 		/**
 		 * Multiplies this matrix by a scalar.
-		 * @param scalar Scalar to multiply
+		 * @param scalar The scalar to multiply
 		 * @return Reference to this matrix
 		 */
 		MatrixT<T>& operator*=(const T scalar);
@@ -592,30 +592,30 @@ class MatrixT
 
 		/**
 		 * Element operator allowing to access a specific elements of this matrix.
-		 * @param row Row of the element to return, with range [0, rows())
-		 * @param column Column of the element to return, with range [0, columns())
+		 * @param row The row of the element to return, with range [0, rows())
+		 * @param column The column of the element to return, with range [0, columns())
 		 * @return Specified element
 		 */
 		inline T operator()(const size_t row, const size_t column) const;
 
 		/**
 		 * Element operator allowing to access a specific elements of this matrix.
-		 * @param row Row of the element to return, with range [0, rows())
-		 * @param column Column of the element to return, with range [0, columns())
+		 * @param row The row of the element to return, with range [0, rows())
+		 * @param column The column of the element to return, with range [0, columns())
 		 * @return Specified element
 		 */
 		inline T& operator()(const size_t row, const size_t column);
 
 		/**
 		 * Element operator for the row aligned elements.
-		 * @param index Index of the element to return, with range [0, elements())
+		 * @param index The index of the element to return, with range [0, elements())
 		 * @return Specified element
 		 */
 		inline T operator()(const size_t index) const;
 
 		/**
 		 * Element operator for the row aligned elements.
-		 * @param index Index of the element to return, with range [0, elements())
+		 * @param index The index of the element to return, with range [0, elements())
 		 * @return Specified element
 		 */
 		inline T& operator()(const size_t index);
@@ -655,7 +655,7 @@ class MatrixT
 		 * Adds a multiple of a row to another one.
 		 * @param targetRow The index of the target row to which the multiple of the source row will be added, with range [0, rows())
 		 * @param sourceRow The index of the source row, with range [0, rows())
-		 * @param scalar Scalar to multiply the source elements with
+		 * @param scalar The scalar to multiply the source elements with
 		 */
 		void addRows(const size_t targetRow, const size_t sourceRow, const T scalar);
 
@@ -674,13 +674,13 @@ class MatrixT
 	protected:
 
 		/// Number of rows.
-		size_t rows_;
+		size_t rows_ = 0;
 
 		/// Number of columns.
-		size_t columns_;
+		size_t columns_ = 0;
 
 		/// Elements of the matrix.
-		T* values_;
+		T* values_ = nullptr;
 };
 
 template <typename T>
@@ -769,7 +769,9 @@ inline T MatrixT<T>::norm() const
 	T result = T(0.0);
 
 	for (size_t n = 0u; n < elements(); ++n)
+	{
 		result += NumericT<T>::abs(values_[n]);
+	}
 
 	return result;
 }
@@ -780,7 +782,9 @@ inline T MatrixT<T>::sum() const
 	T result = T(0.0);
 
 	for (size_t n = 0u; n < elements(); ++n)
+	{
 		result += values_[n];
+	}
 
 	return result;
 }

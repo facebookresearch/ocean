@@ -91,9 +91,13 @@ bool TestMatrix::test(const double testDuration)
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Matrix test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Matrix test FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -176,7 +180,9 @@ bool TestMatrix::testElementConstructor(const double testDuration)
 		Scalars values(rows * columns);
 
 		for (size_t i = 0; i < values.size(); ++i)
+		{
 			values[i] = Random::scalar(randomGenerator, -100, 100);
+		}
 
 		const Matrix matrixA(rows, columns, values.data());
 		const Matrix matrixB(rows, columns, values.data(), true);
@@ -186,31 +192,49 @@ bool TestMatrix::testElementConstructor(const double testDuration)
 
 		size_t index = 0;
 		for (size_t r = 0; r < rows; ++r)
+		{
 			for (size_t c = 0; c < columns; ++c)
+			{
 				test(r, c) = values[index++];
+			}
+		}
 
 		ocean_assert(index == rows * columns);
 
 		index = 0;
 		for (size_t c = 0; c < columns; ++c)
+		{
 			for (size_t r = 0; r < rows; ++r)
+			{
 				testTransposed(r, c) = values[index++];
+			}
+		}
 
 		ocean_assert(index == rows * columns);
 
 		if (!matrixA.isEqual(test))
+		{
 			allSucceeded = false;
+		}
 		if (!matrixB.isEqual(test))
+		{
 			allSucceeded = false;
+		}
 		if (!matrixBTransposed.isEqual(testTransposed))
+		{
 			allSucceeded = false;
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -297,8 +321,8 @@ bool TestMatrix::testSelfSquareMatrix(const double testDuration)
 
 	Log::info() << "Testing self-square matrix, matrix * matrix.transposed():";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Scalar valueRange = std::is_same<float, Scalar>::value ? 10 : 100;
 
@@ -311,18 +335,22 @@ bool TestMatrix::testSelfSquareMatrix(const double testDuration)
 		Matrix matrix(RandomI::random(1u, 32u), RandomI::random(1u, 32u));
 
 		for (unsigned int n = 0u; n < matrix.elements(); ++n)
+		{
 			matrix(n) = Random::scalar(-valueRange, valueRange);
+		}
 
 		performance.start();
-		const Matrix squareMatrix = matrix.selfSquareMatrix();
+			const Matrix squareMatrix = matrix.selfSquareMatrix();
 		performance.stop();
 
 		performanceNaive.start();
-		const Matrix naiveMatrix = matrix * matrix.transposed();
+			const Matrix naiveMatrix = matrix * matrix.transposed();
 		performanceNaive.stop();
 
 		if (squareMatrix.isEqual(naiveMatrix, Numeric::eps() * 500))
+		{
 			validIterations++;
+		}
 
 		iterations++;
 	}
@@ -344,13 +372,14 @@ bool TestMatrix::testSelfTransposedSquareMatrixExistingResult(const double testD
 
 	Log::info() << "Testing self-transposed square matrix with existing result, matrix.transposed() * matrix:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Scalar valueRange = std::is_same<float, Scalar>::value ? 10 : 100;
 
 	HighPerformanceStatistic performance;
 	HighPerformanceStatistic performanceNaive;
+
 	const Timestamp startTimestamp(true);
 
 	Matrix result;
@@ -360,20 +389,24 @@ bool TestMatrix::testSelfTransposedSquareMatrixExistingResult(const double testD
 		Matrix matrix(RandomI::random(1u, 32u), RandomI::random(1u, 32u));
 
 		for (unsigned int n = 0u; n < matrix.elements(); ++n)
+		{
 			matrix(n) = Random::scalar(-valueRange, valueRange);
+		}
 
 		result.resize(matrix.columns(), matrix.columns());
 
 		performance.start();
-		matrix.selfTransposedSquareMatrix(result);
+			matrix.selfTransposedSquareMatrix(result);
 		performance.stop();
 
 		performanceNaive.start();
-		const Matrix naiveMatrix = matrix.transposed() * matrix;
+			const Matrix naiveMatrix = matrix.transposed() * matrix;
 		performanceNaive.stop();
 
 		if (result.isEqual(naiveMatrix, Numeric::eps() * 500))
+		{
 			validIterations++;
+		}
 
 		iterations++;
 	}
@@ -395,13 +428,14 @@ bool TestMatrix::testSelfTransposedSquareMatrix(const double testDuration)
 
 	Log::info() << "Testing self-transposed square matrix, matrix.transposed() * matrix:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Scalar valueRange = std::is_same<float, Scalar>::value ? 10 : 100;
 
 	HighPerformanceStatistic performance;
 	HighPerformanceStatistic performanceNaive;
+
 	const Timestamp startTimestamp(true);
 
 	do
@@ -412,15 +446,17 @@ bool TestMatrix::testSelfTransposedSquareMatrix(const double testDuration)
 			matrix(n) = Random::scalar(-valueRange, valueRange);
 
 		performance.start();
-		const Matrix squareMatrix = matrix.selfTransposedSquareMatrix();
+			const Matrix squareMatrix = matrix.selfTransposedSquareMatrix();
 		performance.stop();
 
 		performanceNaive.start();
-		const Matrix naiveMatrix = matrix.transposed() * matrix;
+			const Matrix naiveMatrix = matrix.transposed() * matrix;
 		performanceNaive.stop();
 
 		if (squareMatrix.isEqual(naiveMatrix, Numeric::eps() * 500))
+		{
 			validIterations++;
+		}
 
 		iterations++;
 	}
@@ -442,13 +478,14 @@ bool TestMatrix::testWeightedSelfTransposedSquareMatrixExistingResult(const doub
 
 	Log::info() << "Testing self-transposed weighted square matrix with existing result, matrix.transposed() * diag(weights) * matrix:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Scalar valueRange = std::is_same<float, Scalar>::value ? 10 : 100;
 
 	HighPerformanceStatistic performance;
 	HighPerformanceStatistic performanceNaive;
+
 	const Timestamp startTimestamp(true);
 
 	Matrix result;
@@ -458,7 +495,9 @@ bool TestMatrix::testWeightedSelfTransposedSquareMatrixExistingResult(const doub
 		Matrix matrix(RandomI::random(1u, 32u), RandomI::random(1u, 32u));
 
 		for (unsigned int n = 0u; n < matrix.elements(); ++n)
+		{
 			matrix(n) = Random::scalar(-valueRange, valueRange);
+		}
 
 		Scalars weights(matrix.rows());
 		Matrix weightMatrix(matrix.rows(), matrix.rows(), false);
@@ -473,15 +512,17 @@ bool TestMatrix::testWeightedSelfTransposedSquareMatrixExistingResult(const doub
 		result.resize(matrix.columns(), matrix.columns());
 
 		performance.start();
-		matrix.weightedSelfTransposedSquareMatrix(Matrix(matrix.rows(), 1, weights.data()), result);
+			matrix.weightedSelfTransposedSquareMatrix(Matrix(matrix.rows(), 1, weights.data()), result);
 		performance.stop();
 
 		performanceNaive.start();
-		const Matrix naiveMatrix = matrix.transposed() * weightMatrix * matrix;
+			const Matrix naiveMatrix = matrix.transposed() * weightMatrix * matrix;
 		performanceNaive.stop();
 
 		if (result.isEqual(naiveMatrix, Numeric::eps() * 500))
+		{
 			validIterations++;
+		}
 
 		iterations++;
 	}
@@ -505,8 +546,8 @@ bool TestMatrix::testInvert(const double testDuration)
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.001) : Numeric::weakEps();
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -519,8 +560,12 @@ bool TestMatrix::testInvert(const double testDuration)
 
 			Matrix matrix(3, 3);
 			for (unsigned int r = 0u; r < 3u; ++r)
+			{
 				for (unsigned int c = 0u; c < 3u; ++c)
+				{
 					matrix(r, c) = matrix3(r, c);
+				}
+			}
 
 			const Matrix copy(matrix);
 			const Matrix identity(3, 3, true);
@@ -529,21 +574,31 @@ bool TestMatrix::testInvert(const double testDuration)
 			{
 				SquareMatrix3 inverted3;
 				for (unsigned int r = 0u; r < 3u; ++r)
+				{
 					for (unsigned int c = 0u; c < 3u; ++c)
+					{
 						inverted3(r, c) = matrix(r, c);
+					}
+				}
 
 				if (inverted3 != matrix3.inverted())
+				{
 					localSucceeded = false;
+				}
 				else
 				{
 					const Matrix inverted(copy.inverted());
 
 					if (inverted * copy != identity)
+					{
 						localSucceeded = false;
+					}
 				}
 			}
 			else
+			{
 				localSucceeded = false;
+			}
 		}
 
 		{
@@ -552,7 +607,9 @@ bool TestMatrix::testInvert(const double testDuration)
 			Matrix matrix(size, size);
 
 			for (unsigned int n = 0u; n < matrix.rows() * matrix.columns(); ++n)
+			{
 				matrix(n) = Random::scalar(-100, 100);
+			}
 
 			const Matrix copy(matrix);
 			const Matrix identity(size, size, true);
@@ -560,13 +617,17 @@ bool TestMatrix::testInvert(const double testDuration)
 			if (matrix.invert())
 			{
 				if (!(matrix * copy).isEqual(identity, epsilon))
+				{
 					localSucceeded = false;
+				}
 				else
 				{
 					const Matrix inverted(copy.inverted());
 
 					if (!(inverted * copy).isEqual(identity, epsilon))
+					{
 						localSucceeded = false;
+					}
 				}
 			}
 		}
@@ -577,7 +638,9 @@ bool TestMatrix::testInvert(const double testDuration)
 			Matrix vector(size, 1);
 
 			for (unsigned int n = 0u; n < size; ++n)
+			{
 				vector(n) = Random::scalar(-1, 1) * ((std::is_same<Scalar, float>::value) ? Scalar(10) : Scalar(100));
+			}
 
 			// each row/column is a linear combination of one row/column thus this matrix is singular and cannot be inverted
 			Matrix matrix = vector * vector.transposed();
@@ -586,11 +649,15 @@ bool TestMatrix::testInvert(const double testDuration)
 			const Matrix identity(size, size, true);
 
 			if (matrix.invert())
+			{
 				localSucceeded = false;
+			}
 		}
 
 		if (localSucceeded)
+		{
 			validIterations++;
+		}
 
 		iterations++;
 	}
@@ -628,16 +695,19 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 		Log::info() << "... with dimension " << dimension << "x" << dimension;
 
 		HighPerformanceStatistic performance;
+
 		const Timestamp startTimestamp(true);
 
 		do
 		{
 			Matrix matrix(dimension, dimension);
 			for (size_t n = 0; n < matrix.elements(); ++n)
+			{
 				matrix(n) = Random::scalar(-valueRange, valueRange);
+			}
 
 			performance.start();
-			matrix.pseudoInverted(tolerance);
+				matrix.pseudoInverted(tolerance);
 			performance.stop();
 
 		}
@@ -648,8 +718,8 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 
 	Log::info() << " ";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -666,7 +736,9 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 			do
 			{
 				for (size_t i = 0; i < matrix.elements(); ++i)
+				{
 					matrix(i) = Random::scalar(-valueRange, valueRange);
+				}
 
 				matrixInverted = matrix;
 			}
@@ -674,12 +746,16 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 			const Matrix matrixPseudoInverted = matrix.pseudoInverted();
 
 			if (!matrixInverted.isEqual(matrixPseudoInverted, tolerance))
+			{
 				localSucceeded = false;
+			}
 		}
 
 		Matrix matrixA(RandomI::random(3u, 8u), RandomI::random(3u, 8u));
 		for (size_t i = 0; i < matrixA.elements(); ++i)
+		{
 			matrixA(i) = Random::scalar(-valueRange, valueRange);
+		}
 
 		const Matrix pseudoinverseA = matrixA.pseudoInverted(tolerance);
 
@@ -688,7 +764,9 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 		{
 			const Matrix resultA = matrixA * pseudoinverseA * matrixA;
 			if (!resultA.isEqual(matrixA, tolerance))
+			{
 				localSucceeded = false;
+			}
 		}
 
 		// 3. test criteria: A*AA* = A*
@@ -696,14 +774,18 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 		{
 			const Matrix resultA = pseudoinverseA * matrixA * pseudoinverseA;
 			if (!resultA.isEqual(pseudoinverseA, tolerance))
+			{
 				localSucceeded = false;
+			}
 		}
 
 		// 4. test criteria: (A*)* = A
 		{
 			const Matrix resultA = pseudoinverseA.pseudoInverted();
 			if (!resultA.isEqual(matrixA, tolerance))
+			{
 				localSucceeded = false;
+			}
 		}
 
 		// 5. test criteria: (AA*)^ = AA*
@@ -712,7 +794,9 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 			const Matrix matrixLeft = (matrixA * pseudoinverseA).transposed();
 			const Matrix matrixRight = matrixA * pseudoinverseA;
 			if (!matrixLeft.isEqual(matrixRight, tolerance))
+			{
 				localSucceeded = false;
+			}
 		}
 
 		// 6. test criteria: (A*A)^ = A*A
@@ -721,11 +805,15 @@ bool TestMatrix::testPseudoInverted(const double testDuration)
 			const Matrix matrixLeft = (pseudoinverseA * matrixA).transposed();
 			const Matrix matrixRight = pseudoinverseA * matrixA;
 			if (!matrixLeft.isEqual(matrixRight, tolerance))
+			{
 				localSucceeded = false;
+			}
 		}
 
 		if (localSucceeded)
+		{
 			validIterations++;
+		}
 
 		iterations++;
 	}
@@ -745,9 +833,10 @@ bool TestMatrix::testRank(const double testDuration)
 {
 	Log::info() << "Rank test:";
 
-	const unsigned int size = 100;
+	constexpr unsigned int size = 100;
 
 	Timestamp startTimestamp(true);
+
 	HighPerformanceStatistic performance;
 
 	do
@@ -755,10 +844,12 @@ bool TestMatrix::testRank(const double testDuration)
 		Matrix matrix(size, size);
 
 		for (unsigned int n = 0u; n < matrix.elements(); ++n)
+		{
 			matrix(n) = Random::scalar(-100, 100);
+		}
 
 		performance.start();
-		matrix.rank();
+			matrix.rank();
 		performance.stop();
 
 	}
@@ -770,56 +861,78 @@ bool TestMatrix::testRank(const double testDuration)
 	{
 		const Matrix zeroMatrix1(1, 1, false);
 		if (zeroMatrix1.rank() != 0)
+		{
 			allSucceeded = false;
+		}
 
 		const Matrix zeroMatrix3(3, 3, false);
 		if (zeroMatrix3.rank() != 0)
+		{
 			allSucceeded = false;
+		}
 
 		const Matrix zeroMatrix7(7, 7, false);
 		if (zeroMatrix7.rank() != 0)
+		{
 			allSucceeded = false;
+		}
 	}
 
 	{
 		const Matrix identityMatrix1(1, 1, true);
 		if (identityMatrix1.rank() != 1)
+		{
 			allSucceeded = false;
+		}
 
 		const Matrix identityMatrix3(3, 3, true);
 		if (identityMatrix3.rank() != 3)
+		{
 			allSucceeded = false;
+		}
 
 		const Matrix identityMatrix7(7, 7, true);
 		if (identityMatrix7.rank() != 7)
+		{
 			allSucceeded = false;
+		}
 	}
 
 	{
 		const Scalar data[9] = {1, 2, 3, 0, 5, 4, 0, 10, 2};
 		const Matrix matrix(3, 3, data);
 		if (matrix.rank() != 3)
+		{
 			allSucceeded = false;
+		}
 	}
 
 	{
 		const Scalar data[9] = {1, 2, 3, 0, 6, 4, 0, 3, 2};
 		const Matrix matrix(3, 3, data);
 		if (matrix.rank() != 2)
+		{
 			allSucceeded = false;
+		}
 	}
 
 	{
 		const Scalar data[6] = {2, 3, 0, 1, 4, -1};
 		const Matrix matrix(3, 2, data);
 		if (matrix.rank() != 2)
+		{
 			allSucceeded = false;
+		}
 	}
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -852,8 +965,8 @@ bool TestMatrix::testNonNegativeMatrixFactorization(const double testDuration, c
 	{
 		Scalar sumError = 0;
 
-		unsigned long long iterations = 0ull;
-		unsigned long long validIterations = 0ull;
+		uint64_t iterations = 0ull;
+		uint64_t validIterations = 0ull;
 
 		HighPerformanceStatistic performance;
 		Timestamp startTimestamp(true);
@@ -863,7 +976,7 @@ bool TestMatrix::testNonNegativeMatrixFactorization(const double testDuration, c
 			Matrix s, w;
 
 			performance.start();
-			const bool success = matrix.nonNegativeMatrixFactorization(s, w, components, 100u);
+				const bool success = matrix.nonNegativeMatrixFactorization(s, w, components, 100u);
 			performance.stop();
 
 			if (success)
@@ -894,9 +1007,13 @@ bool TestMatrix::testNonNegativeMatrixFactorization(const double testDuration, c
 	}
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -908,17 +1025,17 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 	Log::info() << "Matrix multiplication test:\n";
 
 #ifdef OCEAN_USE_GTEST
-	const unsigned int sizes[] = {10u, 20u, 50u, 97u, 203u};
+	const Indices32 sizes = {10u, 20u, 50u, 97u, 203u};
 #else
-	const unsigned int sizes[] = {10u, 20u, 50u, 100u, 200u, 500u, 1000u, 2000u};
+	const Indices32 sizes = {10u, 20u, 50u, 100u, 200u, 500u, 1000u, 2000u};
 #endif
 
 	Log::info() << "Performance test for matrix multiplication";
-	for (unsigned int s = 0; s < sizeof(sizes) / sizeof(sizes[0]); s++)
-	{
-		unsigned int size = sizes[s];
 
+	for (const unsigned int size : sizes)
+	{
 		const Timestamp startTimestamp(true);
+
 		HighPerformanceStatistic performance;
 
 		do
@@ -928,13 +1045,17 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 			Matrix c(size, size);
 
 			for (unsigned int n = 0u; n < a.elements(); ++n)
+			{
 				a(n) = Random::scalar(-100, 100);
+			}
 
 			for (unsigned int n = 0u; n < b.elements(); ++n)
+			{
 				b(n) = Random::scalar(-100, 100);
+			}
 
 			performance.start();
-			c = a * b;
+				c = a * b;
 			performance.stop();
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
@@ -946,11 +1067,10 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 
 	Log::info() << "Performance test for matrix multiplication and assignment";
 
-	for (unsigned int s = 0; s < sizeof(sizes) / sizeof(sizes[0]); s++)
+	for (const unsigned int size : sizes)
 	{
-		unsigned int size = sizes[s];
-
 		const Timestamp startTimestamp(true);
+
 		HighPerformanceStatistic performance;
 
 		do
@@ -959,13 +1079,17 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 			Matrix b(size, size);
 
 			for (unsigned int n = 0u; n < a.elements(); ++n)
+			{
 				a(n) = Random::scalar(-100, 100);
+			}
 
 			for (unsigned int n = 0u; n < b.elements(); ++n)
+			{
 				b(n) = Random::scalar(-100, 100);
+			}
 
 			performance.start();
-			a *= b;
+				a *= b;
 			performance.stop();
 
 		}
@@ -976,9 +1100,10 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 
 	Log::info() << " ";
 
-	const unsigned int size = 100u;
+	constexpr unsigned int size = 100u;
 
 	bool allSucceeded = true;
+
 	Timestamp startTimestamp(true);
 
 	do
@@ -987,10 +1112,14 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 		Matrix b(size, size);
 
 		for (unsigned int n = 0u; n < a.elements(); ++n)
+		{
 			a(n) = Random::scalar(-1, 1);
+		}
 
 		for (unsigned int n = 0u; n < b.elements(); ++n)
+		{
 			b(n) = Random::scalar(-1, 1);
+		}
 
 		Matrix c(size, size);
 		c = a * b;
@@ -1001,9 +1130,13 @@ bool TestMatrix::testMatrixMultiplication(const double testDuration)
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -1015,15 +1148,19 @@ bool TestMatrix::validateMatrixMultiplication(const Matrix& left, const Matrix& 
 	Matrix check(left.rows(), right.columns());
 
 	for (size_t r = 0; r < result.rows(); r++)
+	{
 		for (size_t c = 0; c < result.columns(); c++)
 		{
 			Scalar element = 0;
 
 			for (size_t i = 0; i < left.columns(); i++)
+			{
 				element += left(r, i) * right(i, c);
+			}
 
 			check(r, c) = element;
 		}
+	}
 
 	return check.isEqual(result, eps);
 }

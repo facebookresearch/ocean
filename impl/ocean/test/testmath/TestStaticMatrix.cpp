@@ -99,60 +99,72 @@ bool TestStaticMatrix::test(const double testDuration)
 	Log::info() << " ";
 
 	if (allSucceeded)
-		Log::info() << "Static Matrix test suceeded.";
+		Log::info() << "Static Matrix test succeeded.";
 	else
 		Log::info() << "Static Matrix test FAILED!";
 
 	return allSucceeded;
 }
-	
+
 #ifdef OCEAN_USE_GTEST
-	
-TEST(TestStaticMatrix, ConstructorIdentity) {
+
+TEST(TestStaticMatrix, ConstructorIdentity)
+{
 	EXPECT_TRUE(TestStaticMatrix::testConstructorIdentity());
 }
 
-TEST(TestStaticMatrix, ConstructorData) {
+TEST(TestStaticMatrix, ConstructorData)
+{
 	EXPECT_TRUE(TestStaticMatrix::testConstructorData());
 }
 
-TEST(TestStaticMatrix, Transpose) {
+TEST(TestStaticMatrix, Transpose)
+{
 	EXPECT_TRUE(TestStaticMatrix::testTranspose(GTEST_TEST_DURATION));
 }
 
-TEST(TestStaticMatrix, MatrixAdd) {
+TEST(TestStaticMatrix, MatrixAdd)
+{
 	EXPECT_TRUE(TestStaticMatrix::testMatrixAdd(GTEST_TEST_DURATION));
 }
 
-TEST(TestStaticMatrix, MatrixAddTransposed) {
+TEST(TestStaticMatrix, MatrixAddTransposed)
+{
 	EXPECT_TRUE(TestStaticMatrix::testMatrixAddTransposed(GTEST_TEST_DURATION));
 }
 
-TEST(TestStaticMatrix, ScalarMultiplication) {
+TEST(TestStaticMatrix, ScalarMultiplication)
+{
 	EXPECT_TRUE(TestStaticMatrix::testScalarMultiplication(GTEST_TEST_DURATION));
 }
 
-TEST(TestStaticMatrix, VectorMultiplication32) {
+TEST(TestStaticMatrix, VectorMultiplication32)
+{
 	EXPECT_TRUE(TestStaticMatrix::testVectorMultiplication<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestStaticMatrix, VectorMultiplication64) {
+TEST(TestStaticMatrix, VectorMultiplication64)
+{
 	EXPECT_TRUE(TestStaticMatrix::testVectorMultiplication<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestStaticMatrix, MatrixMultiplication) {
+TEST(TestStaticMatrix, MatrixMultiplication)
+{
 	EXPECT_TRUE(TestStaticMatrix::testMatrixMultiplication(GTEST_TEST_DURATION));
 }
 
-TEST(TestStaticMatrix, MatrixMultiplicationTransposedLeft) {
+TEST(TestStaticMatrix, MatrixMultiplicationTransposedLeft)
+{
 	EXPECT_TRUE(TestStaticMatrix::testMatrixMultiplicationTransposedLeft(GTEST_TEST_DURATION));
 }
 
-TEST(TestStaticMatrix, MatrixMultiplicationTransposedRight) {
+TEST(TestStaticMatrix, MatrixMultiplicationTransposedRight)
+{
 	EXPECT_TRUE(TestStaticMatrix::testMatrixMultiplicationTransposedRight(GTEST_TEST_DURATION));
 }
 
-TEST(TestStaticMatrix, SolveCholesky) {
+TEST(TestStaticMatrix, SolveCholesky)
+{
 	EXPECT_TRUE(TestStaticMatrix::testSolveCholesky(GTEST_TEST_DURATION));
 }
 
@@ -252,9 +264,13 @@ bool TestStaticMatrix::testConstructorIdentity()
 	allSucceeded = isNullMatrix(StaticMatrix<double, 7, 22>(false), 7, 22) && allSucceeded;
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -277,9 +293,13 @@ bool TestStaticMatrix::testConstructorData()
 	allSucceeded = testConstructorData<31, 31>() && allSucceeded;
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -287,10 +307,14 @@ bool TestStaticMatrix::testConstructorData()
 template <size_t tRows, size_t tColumns>
 bool TestStaticMatrix::testConstructorData()
 {
-	float data32[tRows * tColumns];
-	double data64[tRows * tColumns];
+	constexpr size_t tElements = tRows * tColumns;
 
-	for (size_t n = 0; n < sizeof(data32) / sizeof(float); ++n)
+	static_assert(tElements >= 1, "Invalid matrix size");
+
+	float data32[tElements];
+	double data64[tElements];
+
+	for (size_t n = 0; n < tElements; ++n)
 	{
 		data32[n] = RandomF::scalar(-1000.0f, 1000.0f);
 		data64[n] = RandomF::scalar(-1000.0, 1000.0);
@@ -305,40 +329,56 @@ bool TestStaticMatrix::testConstructorData()
 	StaticMatrix<double, tRows, tColumns> matrixNotAligned64(data64, false);
 
 	for (size_t r = 0; r < tRows; ++r)
+	{
 		for (size_t c = 0; c < tColumns; ++c)
 		{
 			const size_t index = r * tColumns + c;
 
 			if (matrix32.data()[index] != data32[index] || matrix32(r, c) != data32[index])
+			{
 				return false;
+			}
 
 			if (matrixAligned32.data()[index] != data32[index] || matrixAligned32(r, c) != data32[index])
+			{
 				return false;
+			}
 
 			if (matrix64.data()[index] != data64[index] || matrix64(r, c) != data64[index])
+			{
 				return false;
+			}
 
 			if (matrixAligned64.data()[index] != data64[index] || matrixAligned64(r, c) != data64[index])
+			{
 				return false;
+			}
 		}
+	}
 
 	const float* pointer32 = data32;
 	const double* pointer64 = data64;
 
 	for (size_t c = 0; c < tColumns; ++c)
+	{
 		for (size_t r = 0; r < tRows; ++r)
 		{
 			const size_t index = r * tColumns + c;
 
 			if (matrixNotAligned32.data()[index] != *pointer32 || matrixNotAligned32(r, c) != *pointer32)
+			{
 				return false;
+			}
 
 			if (matrixNotAligned64.data()[index] != *pointer64 || matrixNotAligned64(r, c) != *pointer64)
+			{
 				return false;
+			}
 
 			pointer32++;
 			pointer64++;
 		}
+	}
 
 	return true;
 }
@@ -370,9 +410,13 @@ bool TestStaticMatrix::testTranspose(const double testDuration)
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -383,7 +427,9 @@ bool TestStaticMatrix::testTranspose()
 	StaticMatrix<Scalar, tRows, tColumns> matrix;
 
 	for (size_t n = 0; n < matrix.elements(); ++n)
+	{
 		matrix.data()[n] = Random::scalar(-1000, 1000);
+	}
 
 	StaticMatrix<Scalar, tColumns, tRows> transposed = matrix.transposed();
 
@@ -391,14 +437,20 @@ bool TestStaticMatrix::testTranspose()
 	matrix.transposed(transposedParameter);
 
 	for (size_t r = 0; r < tRows; ++r)
+	{
 		for (size_t c = 0; c < tColumns; ++c)
 		{
 			if (matrix.data()[r * tColumns + c] != transposed.data()[c * tRows + r] || matrix(r, c) != transposed(c, r))
+			{
 				return false;
+			}
 
 			if (matrix.data()[r * tColumns + c] != transposedParameter.data()[c * tRows + r] || matrix(r, c) != transposedParameter(c, r))
+			{
 				return false;
+			}
 		}
+	}
 
 	return true;
 }
@@ -407,8 +459,8 @@ bool TestStaticMatrix::testMatrixAdd(const double testDuration)
 {
 	Log::info() << "Add operator test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -484,7 +536,9 @@ bool TestStaticMatrix::testMatrixAdd()
 	StaticMatrix<Scalar, tRows, tColumns> matrix;
 
 	for (size_t n = 0; n < matrix.elements(); ++n)
+	{
 		matrix.data()[n] = Random::scalar(-1000, 1000);
+	}
 
 	StaticMatrix<Scalar, tRows, tColumns> test0(false);
 	matrix.add(test0);
@@ -497,9 +551,15 @@ bool TestStaticMatrix::testMatrixAdd()
 	test2 += matrix;
 
 	for (size_t r = 0; r < tRows; ++r)
+	{
 		for (size_t c = 0; c < tColumns; ++c)
+		{
 			if (Numeric::isNotEqual(test0(r, c) * Scalar(0.5), matrix(r, c)) || Numeric::isNotEqual(test0(r, c), test1(r, c)) || Numeric::isNotEqual(test0(r, c), test2(r, c)))
+			{
 				return false;
+			}
+		}
+	}
 
 	return true;
 }
@@ -508,8 +568,8 @@ bool TestStaticMatrix::testMatrixAddTransposed(const double testDuration)
 {
 	Log::info() << "Transposed add test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -589,7 +649,9 @@ bool TestStaticMatrix::testMatrixAddTransposed()
 	StaticMatrix<Scalar, tRows, tColumns> matrix;
 
 	for (size_t n = 0; n < matrix.elements(); ++n)
+	{
 		matrix.data()[n] = Random::scalar(-1000, 1000);
+	}
 
 	StaticMatrix<Scalar, tColumns, tRows> test0(false);
 	matrix.addTransposed(test0);
@@ -598,9 +660,15 @@ bool TestStaticMatrix::testMatrixAddTransposed()
 	StaticMatrix<Scalar, tColumns, tRows> test1(matrix.transposed() + matrix.transposed());
 
 	for (size_t r = 0; r < tColumns; ++r)
+	{
 		for (size_t c = 0; c < tRows; ++c)
+		{
 			if (Numeric::isNotEqual(test0(r, c) * Scalar(0.5), matrix(c, r)) || Numeric::isNotEqual(test0(r, c), test1(r, c)))
+			{
 				return false;
+			}
+		}
+	}
 
 	return true;
 }
@@ -609,8 +677,8 @@ bool TestStaticMatrix::testScalarMultiplication(const double testDuration)
 {
 	Log::info() << "Scalar multiplication test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -675,7 +743,9 @@ bool TestStaticMatrix::testScalarMultiplication()
 	StaticMatrix<Scalar, tRows, tColumns> matrix;
 
 	for (size_t n = 0; n < matrix.elements(); ++n)
+	{
 		matrix.data()[n] = Random::scalar(-1000, 1000);
+	}
 
 	const StaticMatrix<Scalar, tRows, tColumns> copy(matrix);
 
@@ -685,14 +755,20 @@ bool TestStaticMatrix::testScalarMultiplication()
 	matrix *= scalar;
 
 	for (size_t r = 0; r < tRows; ++r)
+	{
 		for (size_t c = 0; c < tColumns; ++c)
 		{
 			if (matrix.data()[r * tColumns + c] != copy.data()[r * tColumns + c] * scalar || matrix(r, c) != copy(r, c) * scalar)
+			{
 				return false;
+			}
 
 			if (matrix2.data()[r * tColumns + c] != copy.data()[r * tColumns + c] * scalar || matrix2(r, c) != copy(r, c) * scalar)
+			{
 				return false;
+			}
 		}
+	}
 
 	return true;
 }
@@ -718,8 +794,8 @@ bool TestStaticMatrix::testVectorMultiplication(const double testDuration)
 {
 	Log::info() << "... with " << tSize << "x" << tSize << " matrix:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const unsigned int constNumber = 100000u;
 
@@ -739,17 +815,25 @@ bool TestStaticMatrix::testVectorMultiplication(const double testDuration)
 		const T range = std::is_same<T, double>::value ? T(100) : T(10);
 
 		for (size_t n = 0; n < matrix.elements(); ++n)
+		{
 			matrix[n] = RandomT<T>::scalar(randomGenerator, -range, range);
+		}
 
 		for (size_t n = 0; n < vectors.size(); ++n)
+		{
 			for (size_t i = 0; i < tSize; ++i)
+			{
 				vectors[n][i] = RandomT<T>::scalar(randomGenerator, -range, range);
+			}
+		}
 
 		{
 			const HighPerformanceStatistic::ScopedStatistic scopedPerformance(performance);
 
 			for (unsigned int n = 0u; n < constNumber; ++n)
+			{
 				results[n] = matrix * vectors[n];
+			}
 		}
 
 		const MatrixT<T> testMatrix(tSize, tSize, matrix.data());
@@ -761,11 +845,17 @@ bool TestStaticMatrix::testVectorMultiplication(const double testDuration)
 			bool localSucceeded = true;
 
 			for (size_t i = 0; i < tSize; ++i)
+			{
 				if (NumericT<T>::isNotEqual(results[n][i], result(i), NumericT<T>::eps() * (std::is_same<T, double>::value ? T(10) : T(100))))
+				{
 					localSucceeded = false;
+				}
+			}
 
 			if (localSucceeded)
+			{
 				validIterations++;
+			}
 
 			iterations++;
 		}
@@ -785,8 +875,8 @@ bool TestStaticMatrix::testMatrixMultiplication(const double testDuration)
 {
 	Log::info() << "Matrix multiplication test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -857,10 +947,14 @@ bool TestStaticMatrix::testMatrixMultiplication()
 	StaticMatrix<Scalar, tColumns, tColumns2> right;
 
 	for (size_t n = 0; n < left.elements(); ++n)
+	{
 		left.data()[n] = Random::scalar(-10, 10);
+	}
 
 	for (size_t n = 0; n < right.elements(); ++n)
+	{
 		right.data()[n] = Random::scalar(-10, 10);
+	}
 
 	StaticMatrix<Scalar, tRows, tColumns2> result0 = left * right;
 	StaticMatrix<Scalar, tRows, tColumns2> result1(left * right);
@@ -873,6 +967,7 @@ bool TestStaticMatrix::testMatrixMultiplication()
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Numeric::eps() * 100 : Numeric::eps();
 
 	for (size_t r = 0; r < tRows; ++r)
+	{
 		for (size_t c = 0; c < tColumns2; ++c)
 		{
 			Scalar value = 0;
@@ -895,6 +990,7 @@ bool TestStaticMatrix::testMatrixMultiplication()
 			if (Numeric::isNotEqual(value, result4(r, c), epsilon))
 				return false;
 		}
+	}
 
 	return true;
 }
@@ -903,8 +999,8 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedLeft(const double testD
 {
 	Log::info() << "Left transposed matrix multiplication test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -984,7 +1080,9 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedLeft()
 	StaticMatrix<Scalar, tRows, tColumns> matrix;
 
 	for (size_t n = 0; n < matrix.elements(); ++n)
+	{
 		matrix.data()[n] = Random::scalar(-10, 10);
+	}
 
 	const StaticMatrix<Scalar, tColumns, tRows> transposed(matrix.transposed());
 	const StaticMatrix<Scalar, tColumns, tColumns> result = transposed * matrix;
@@ -1001,14 +1099,20 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedLeft()
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Numeric::eps() * 50 : Numeric::eps();
 
 	for (size_t r = 0; r < tColumns; ++r)
+	{
 		for (size_t c = 0; c < tColumns; ++c)
 		{
 			if (Numeric::isNotEqual(test0(r, c), result(r, c), epsilon) || Numeric::isNotEqual(test1(r, c), result(r, c), epsilon))
+			{
 				return false;
+			}
 
 			if (Numeric::isNotEqual(test2(r, c) * Scalar(0.5), result(r, c), epsilon))
+			{
 				return false;
+			}
 		}
+	}
 
 	return true;
 }
@@ -1017,8 +1121,8 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedRight(const double test
 {
 	Log::info() << "Right transposed matrix multiplication test:";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	const Timestamp startTimestamp(true);
 
@@ -1098,7 +1202,9 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedRight()
 	StaticMatrix<Scalar, tRows, tColumns> matrix;
 
 	for (size_t n = 0; n < matrix.elements(); ++n)
+	{
 		matrix.data()[n] = Random::scalar(-10, 10);
+	}
 
 	const StaticMatrix<Scalar, tColumns, tRows> transposed(matrix.transposed());
 	const StaticMatrix<Scalar, tRows, tRows> result = matrix * transposed;
@@ -1115,14 +1221,20 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedRight()
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Numeric::eps() * 50 : Numeric::eps();
 
 	for (size_t r = 0; r < tRows; ++r)
+	{
 		for (size_t c = 0; c < tRows; ++c)
 		{
 			if (Numeric::isNotEqual(test0(r, c), result(r, c), epsilon) || Numeric::isNotEqual(test1(r, c), result(r, c), epsilon))
+			{
 				return false;
+			}
 
 			if (Numeric::isNotEqual(test2(r, c) * Scalar(0.5), result(r, c), epsilon))
+			{
 				return false;
+			}
 		}
+	}
 
 	return true;
 }
@@ -1133,6 +1245,7 @@ bool TestStaticMatrix::isIdentityMatrix(const T& matrix, const size_t rows, cons
 	ocean_assert(rows <= matrix.rows() && columns <= matrix.columns());
 
 	for (size_t r = 0; r < rows; ++r)
+	{
 		for (size_t c = 0; c < columns; ++c)
 		{
 			const typename T::Type element = matrix.data()[r * matrix.columns() + c];
@@ -1142,7 +1255,9 @@ bool TestStaticMatrix::isIdentityMatrix(const T& matrix, const size_t rows, cons
 				if (NumericT<typename T::Type>::isNotEqual(element, 1))
 				{
 					if (matrix.isIdentity())
+					{
 						return true;
+					}
 
 					return false;
 				}
@@ -1152,15 +1267,20 @@ bool TestStaticMatrix::isIdentityMatrix(const T& matrix, const size_t rows, cons
 				if (NumericT<typename T::Type>::isNotEqual(element, 0))
 				{
 					if (matrix.isIdentity())
+					{
 						return true;
+					}
 
 					return false;
 				}
 			}
 		}
+	}
 
 	if (!matrix.isIdentity())
+	{
 		return false; // we return the wrong result so that we receive an error
+	}
 
 	return true;
 }
@@ -1171,6 +1291,7 @@ bool TestStaticMatrix::isNullMatrix(const T& matrix, const size_t rows, const si
 	ocean_assert(rows <= matrix.rows() && columns <= matrix.columns());
 
 	for (size_t r = 0; r < rows; ++r)
+	{
 		for (size_t c = 0; c < columns; ++c)
 		{
 			const typename T::Type element = matrix.data()[r * matrix.columns() + c];
@@ -1178,14 +1299,19 @@ bool TestStaticMatrix::isNullMatrix(const T& matrix, const size_t rows, const si
 			if (NumericT<typename T::Type>::isNotEqual(element, 0))
 			{
 				if (matrix.isNull())
+				{
 					return true;
+				}
 
 				return false;
 			}
 		}
+	}
 
 	if (!matrix.isNull())
+	{
 		return false; // we return the wrong result so that we receive an error
+	}
 
 	return true;
 }
@@ -1236,8 +1362,8 @@ bool TestStaticMatrix::testSolveCholeskyMatrix(double testDuration)
 
 	const Scalar epsilon = Numeric::eps() * 100;
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	uint64_t iterations = 0ull;
+	uint64_t validIterations = 0ull;
 
 	HighPerformanceStatistic performance;
 	const Timestamp startTimestamp(true);
@@ -1245,14 +1371,18 @@ bool TestStaticMatrix::testSolveCholeskyMatrix(double testDuration)
 	do
 	{
 		for (size_t n = 0; n < matrix.elements(); ++n)
+		{
 			matrix.data()[n] =  Random::scalar(randomGenerator, -10, 10);
+		}
 
 		Matrix symmetricMatrix = matrix.transposedMultiply(matrix);
 
 		// generate groundtruth
 
 		for (size_t n = 0; n < vectorX.elements(); ++n)
+		{
 			vectorX.data()[n] = Random::scalar(randomGenerator, -10, 10);
+		}
 
 		Matrix vectorY = symmetricMatrix * vectorX;
 
@@ -1270,7 +1400,9 @@ bool TestStaticMatrix::testSolveCholeskyMatrix(double testDuration)
 			performance.stop();
 
 			if (success && staticMatrixX.isEqual(staticMatrixSolve, epsilon))
+			{
 				++validIterations;
+			}
 		}
 
 		++iterations;
