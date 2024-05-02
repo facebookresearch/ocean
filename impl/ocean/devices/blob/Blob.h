@@ -47,7 +47,7 @@ namespace Blob
  */
 OCEAN_DEVICES_BLOB_EXPORT std::string nameBlobLibrary();
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 /**
  * Registers this Blob device library at the global device manager.
