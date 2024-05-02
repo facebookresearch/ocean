@@ -657,7 +657,7 @@ class NumericT
 		 * Returns a value which is not a number (nan).
 		 * @return The nan value
 		 */
-		static constexpr inline T nan();
+		static constexpr T nan();
 
 		/**
 		 * Returns whether a given value is not a number.
@@ -672,6 +672,12 @@ class NumericT
 		 * @return True, if so
 		 */
 		static inline bool isNan(const std::complex<T>& value);
+
+		/**
+		 * Returns a value which is positive infinity.
+		 * @return Positive infinity
+		 */
+		static constexpr T inf();
 
 		/**
 		 * Returns whether a given value is positive or negative infinity.
@@ -2939,6 +2945,8 @@ constexpr inline T NumericT<T>::nan()
 
 	if constexpr (std::is_same<T, float>::value)
 	{
+		static_assert(sizeof(float) == sizeof(uint32_t), "Invalid data type!");
+
 		constexpr uint32_t integerValue = 0x7FC00000u;
 
 		float floatValue = 0.0f;
@@ -2948,7 +2956,8 @@ constexpr inline T NumericT<T>::nan()
 	}
 	else
 	{
-		ocean_assert((std::is_same<T, double>::value));
+		static_assert(std::is_same<T, double>::value, "Invalid data type!");
+		static_assert(sizeof(double) == sizeof(uint64_t), "Invalid data type!");
 
 		constexpr uint64_t integerValue = 0x7FF8000000000000ull;
 
@@ -3017,6 +3026,36 @@ template <typename T>
 inline bool NumericT<T>::isNan(const std::complex<T>& value)
 {
 	return NumericT<T>::isNan(value.real()) || NumericT<T>::isNan(value.imag());
+}
+
+template <typename T>
+constexpr inline T NumericT<T>::inf()
+{
+	static_assert(std::is_floating_point<T>::value, "Data type must be a floating point data type");
+
+	if constexpr (std::is_same<T, float>::value)
+	{
+		static_assert(sizeof(float) == sizeof(uint32_t), "Invalid data type!");
+
+		constexpr uint32_t integerValue = 0x7F800000u;
+
+		float floatValue = 0.0f;
+		memcpy(&floatValue, &integerValue, sizeof(integerValue));
+
+		return T(floatValue);
+	}
+	else
+	{
+		static_assert(std::is_same<T, double>::value, "Invalid data type!");
+		static_assert(sizeof(double) == sizeof(uint64_t), "Invalid data type!");
+
+		constexpr uint64_t integerValue = 0x7FF0000000000000ull;
+
+		double doubleValue = 0.0;
+		memcpy(&doubleValue, &integerValue, sizeof(integerValue));
+
+		return T(doubleValue);
+	}
 }
 
 template <>

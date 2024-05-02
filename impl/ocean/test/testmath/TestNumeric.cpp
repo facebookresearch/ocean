@@ -1925,7 +1925,25 @@ bool TestNumeric::testIsInf(const double testDuration)
 			allSucceeded = false;
 		}
 
+		if (!NumericT<T>::isInf(NumericT<T>::inf()))
+		{
+			allSucceeded = false;
+		}
+
 		if (!NumericT<T>::isInf(-std::numeric_limits<T>::infinity()))
+		{
+			allSucceeded = false;
+		}
+
+		if (!NumericT<T>::isInf(-NumericT<T>::inf()))
+		{
+			allSucceeded = false;
+		}
+
+		const T stdValue = std::numeric_limits<T>::infinity();
+		const T numericValue = NumericT<T>::inf();
+
+		if (memcmp(&stdValue, &numericValue, sizeof(T)) != 0)
 		{
 			allSucceeded = false;
 		}
