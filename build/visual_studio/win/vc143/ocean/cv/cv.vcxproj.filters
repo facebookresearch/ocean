@@ -367,9 +367,6 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameMinMax.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\PerceptionUtilities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SumSquareDifferencesBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>

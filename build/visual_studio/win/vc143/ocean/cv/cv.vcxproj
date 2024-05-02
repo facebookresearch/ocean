@@ -323,7 +323,6 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\NEON.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\OpenCVUtilities.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\NonMaximumSuppression.h" />
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\PerceptionUtilities.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\PixelBoundingBox.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\PixelPosition.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SSE.h" />

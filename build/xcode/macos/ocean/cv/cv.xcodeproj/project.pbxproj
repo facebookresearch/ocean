@@ -504,10 +504,6 @@
 		9368560A253A17E100AE73D6 /* SumAbsoluteDifferencesBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93685608253A17E100AE73D6 /* SumAbsoluteDifferencesBase.cpp */; };
 		9368560B253A17E100AE73D6 /* SumAbsoluteDifferencesBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93685608253A17E100AE73D6 /* SumAbsoluteDifferencesBase.cpp */; };
 		9368560C253A17E100AE73D6 /* SumAbsoluteDifferencesBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93685608253A17E100AE73D6 /* SumAbsoluteDifferencesBase.cpp */; };
-		93712517251D5AEE0007559D /* PerceptionUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93712516251D5AED0007559D /* PerceptionUtilities.h */; };
-		93712518251D5AEE0007559D /* PerceptionUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93712516251D5AED0007559D /* PerceptionUtilities.h */; };
-		93712519251D5AEE0007559D /* PerceptionUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93712516251D5AED0007559D /* PerceptionUtilities.h */; };
-		9371251A251D5AEE0007559D /* PerceptionUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93712516251D5AED0007559D /* PerceptionUtilities.h */; };
 		937F98FF2092D3E500A97B1E /* FrameFilterSeparable.h in Headers */ = {isa = PBXBuildFile; fileRef = 937F98FE2092D3E500A97B1E /* FrameFilterSeparable.h */; };
 		937F99002092D3E500A97B1E /* FrameFilterSeparable.h in Headers */ = {isa = PBXBuildFile; fileRef = 937F98FE2092D3E500A97B1E /* FrameFilterSeparable.h */; };
 		937F99012092D3E500A97B1E /* FrameFilterSeparable.h in Headers */ = {isa = PBXBuildFile; fileRef = 937F98FE2092D3E500A97B1E /* FrameFilterSeparable.h */; };
@@ -769,7 +765,6 @@
 		93596E4425393D5D00AF9095 /* SumAbsoluteDifferencesNEON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SumAbsoluteDifferencesNEON.h; path = ../../../../../impl/ocean/cv/SumAbsoluteDifferencesNEON.h; sourceTree = "<group>"; };
 		93596E4925393D8E00AF9095 /* ZeroMeanSumSquareDifferencesNEON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZeroMeanSumSquareDifferencesNEON.h; path = ../../../../../impl/ocean/cv/ZeroMeanSumSquareDifferencesNEON.h; sourceTree = "<group>"; };
 		93685608253A17E100AE73D6 /* SumAbsoluteDifferencesBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SumAbsoluteDifferencesBase.cpp; path = ../../../../../impl/ocean/cv/SumAbsoluteDifferencesBase.cpp; sourceTree = "<group>"; };
-		93712516251D5AED0007559D /* PerceptionUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PerceptionUtilities.h; path = ../../../../../impl/ocean/cv/PerceptionUtilities.h; sourceTree = "<group>"; };
 		937F98FE2092D3E500A97B1E /* FrameFilterSeparable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameFilterSeparable.h; path = ../../../../../impl/ocean/cv/FrameFilterSeparable.h; sourceTree = "<group>"; };
 		937F99032092D41C00A97B1E /* FrameFilterSeparable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameFilterSeparable.cpp; path = ../../../../../impl/ocean/cv/FrameFilterSeparable.cpp; sourceTree = "<group>"; };
 		9381DC7728D528C20005409A /* FrameConverterUYVY16.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameConverterUYVY16.h; path = ../../../../../impl/ocean/cv/FrameConverterUYVY16.h; sourceTree = "<group>"; };
@@ -1010,7 +1005,6 @@
 				5D188DC31B90CA4200FA7DD7 /* NEON.h */,
 				5D188DC41B90CA4200FA7DD7 /* NonMaximumSuppression.h */,
 				93E34744217E326800B23A11 /* OpenCVUtilities.h */,
-				93712516251D5AED0007559D /* PerceptionUtilities.h */,
 				5D188DC61B90CA4200FA7DD7 /* PixelBoundingBox.h */,
 				5D188DC71B90CA4200FA7DD7 /* PixelPosition.h */,
 				5D188DC81B90CA4200FA7DD7 /* SSE.h */,
@@ -1138,7 +1132,6 @@
 				5D188E251B90CA4200FA7DD7 /* FramePyramid.h in Headers */,
 				9381DC7828D528C60005409A /* FrameConverterUYVY16.h in Headers */,
 				5D188E301B90CA4300FA7DD7 /* NonMaximumSuppression.h in Headers */,
-				93712517251D5AEE0007559D /* PerceptionUtilities.h in Headers */,
 				5D188E111B90CA4200FA7DD7 /* FrameFilterLaplace.h in Headers */,
 				5D188E171B90CA4200FA7DD7 /* FrameFilterScharr.h in Headers */,
 			);
@@ -1207,7 +1200,6 @@
 				5D222BBF1BB1878100298788 /* Bresenham.h in Headers */,
 				5D222BC01BB1878100298788 /* FrameVariance.h in Headers */,
 				5D222BC21BB1878100298788 /* FrameConverterY_U_V12.h in Headers */,
-				93712518251D5AEE0007559D /* PerceptionUtilities.h in Headers */,
 				934BD29B20AF9AF00073F3A6 /* FrameMinMax.h in Headers */,
 				5D222BC31BB1878100298788 /* SubRegion.h in Headers */,
 				5D222BC51BB1878100298788 /* FrameConverter.h in Headers */,
@@ -1315,7 +1307,6 @@
 				5D491C8D1D8F548F00C4099B /* Bresenham.h in Headers */,
 				5D491C8E1D8F548F00C4099B /* FrameVariance.h in Headers */,
 				5D491C901D8F548F00C4099B /* FrameConverterY_U_V12.h in Headers */,
-				9371251A251D5AEE0007559D /* PerceptionUtilities.h in Headers */,
 				934BD29D20AF9AF00073F3A6 /* FrameMinMax.h in Headers */,
 				5D491C911D8F548F00C4099B /* SubRegion.h in Headers */,
 				5D491C931D8F548F00C4099B /* FrameConverter.h in Headers */,
@@ -1423,7 +1414,6 @@
 				5D9860671D8B4DFB00DEDB00 /* Bresenham.h in Headers */,
 				5D9860681D8B4DFB00DEDB00 /* FrameVariance.h in Headers */,
 				5D98606A1D8B4DFB00DEDB00 /* FrameConverterY_U_V12.h in Headers */,
-				93712519251D5AEE0007559D /* PerceptionUtilities.h in Headers */,
 				934BD29C20AF9AF00073F3A6 /* FrameMinMax.h in Headers */,
 				5D98606B1D8B4DFB00DEDB00 /* SubRegion.h in Headers */,
 				5D98606D1D8B4DFB00DEDB00 /* FrameConverter.h in Headers */,

@@ -189,9 +189,6 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameMinMax.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\PerceptionUtilities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\OpenCVUtilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
