@@ -171,28 +171,24 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 	const PinholeCamera pinholeCamera(1280u, 720u, Numeric::deg2rad(60));
 
-	const unsigned int numberPoses[] = {2u, 5u, 10u, 20u, 100u};
-	const unsigned int numberCorrespondences[] = {10u, 20u, 50u, 100u};
+	const Indices32 numberPoses = {2u, 5u, 10u, 20u, 100u};
+	const Indices32 numberCorrespondences = {10u, 20u, 50u, 100u};
 
-	for (unsigned int nPoses = 0u; nPoses < sizeof(numberPoses) / sizeof(numberPoses[0]); ++nPoses)
+	for (const unsigned int poses : numberPoses)
 	{
-		if (nPoses != 0u)
+		if (poses != 2u)
 		{
 			Log::info() << " ";
 			Log::info() << " ";
 		}
 
-		const unsigned int poses = numberPoses[nPoses];
-
-		for (unsigned int nCorrespondences = 0u; nCorrespondences < sizeof(numberCorrespondences) / sizeof(numberCorrespondences[0]); ++nCorrespondences)
+		for (const unsigned int correspondences : numberCorrespondences)
 		{
-			if (nCorrespondences != 0u)
+			if (correspondences != 10u)
 			{
 				Log::info() << " ";
 				Log::info() << " ";
 			}
-
-			const unsigned int correspondences = numberCorrespondences[nCorrespondences];
 
 			Log::info() << "Testing " << poses << " poses and " << correspondences << " correspondences:";
 
@@ -310,28 +306,24 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 	const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(1u));
 
-	const unsigned int numberPoses[] = {2u, 5u, 10u, 20u, 100u};
-	const unsigned int numberCorrespondences[] = {10u, 20u, 50u, 100u};
+	const Indices32 numberPoses = {2u, 5u, 10u, 20u, 100u};
+	const Indices32 numberCorrespondences = {10u, 20u, 50u, 100u};
 
-	for (unsigned int nPoses = 0u; nPoses < sizeof(numberPoses) / sizeof(numberPoses[0]); ++nPoses)
+	for (const unsigned int poses : numberPoses)
 	{
-		if (nPoses != 0u)
+		if (poses != 2u)
 		{
 			Log::info() << " ";
 			Log::info() << " ";
 		}
 
-		const unsigned int poses = numberPoses[nPoses];
-
-		for (unsigned int nCorrespondences = 0u; nCorrespondences < sizeof(numberCorrespondences) / sizeof(numberCorrespondences[0]); ++nCorrespondences)
+		for (const unsigned int correspondences : numberCorrespondences)
 		{
-			if (nCorrespondences != 0u)
+			if (correspondences != 10u)
 			{
 				Log::info() << " ";
 				Log::info() << " ";
 			}
-
-			const unsigned int correspondences = numberCorrespondences[nCorrespondences];
 
 			Log::info() << "Testing " << poses << " poses and " << correspondences << " correspondences:";
 
@@ -435,28 +427,24 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 	const FisheyeCamera fisheyeCameraA = Utilities::realisticFisheyeCamera(0u);
 	const FisheyeCamera fisheyeCameraB = Utilities::realisticFisheyeCamera(1u);
 
-	const unsigned int numberPoses[] = {2u, 5u, 10u, 20u, 100u};
-	const unsigned int numberCorrespondences[] = {10u, 20u, 50u, 100u};
+	const Indices32 numberPoses = {2u, 5u, 10u, 20u, 100u};
+	const Indices32 numberCorrespondences = {10u, 20u, 50u, 100u};
 
-	for (unsigned int nPoses = 0u; nPoses < sizeof(numberPoses) / sizeof(numberPoses[0]); ++nPoses)
+	for (const unsigned int poses : numberPoses)
 	{
-		if (nPoses != 0u)
+		if (poses != 2u)
 		{
 			Log::info() << " ";
 			Log::info() << " ";
 		}
 
-		const unsigned int poses = numberPoses[nPoses];
-
-		for (unsigned int nCorrespondences = 0u; nCorrespondences < sizeof(numberCorrespondences) / sizeof(numberCorrespondences[0]); ++nCorrespondences)
+		for (const unsigned int correspondences : numberCorrespondences)
 		{
-			if (nCorrespondences != 0u)
+			if (correspondences != 10u)
 			{
 				Log::info() << " ";
 				Log::info() << " ";
 			}
-
-			const unsigned int correspondences = numberCorrespondences[nCorrespondences];
 
 			Log::info() << "Testing " << poses << " poses and " << correspondences << " correspondences:";
 
