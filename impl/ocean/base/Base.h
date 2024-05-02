@@ -4,6 +4,7 @@
 #define META_OCEAN_BASE_BASE_H
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <cstdint>
 #include <cstdlib>
