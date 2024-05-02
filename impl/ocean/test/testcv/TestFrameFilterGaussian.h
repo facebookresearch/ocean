@@ -39,6 +39,12 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilterGaussian
 		static bool testFilterSizeSigmaConversion();
 
 		/**
+		 * Tests the calculation of filter factors..
+		 * @return True, if succeeded
+		 */
+		static bool testFilterFactors();
+
+		/**
 		 * Tests extreme (small) frame dimensions.
 		 * @param worker The worker object
 		 * @return True, if succeeded

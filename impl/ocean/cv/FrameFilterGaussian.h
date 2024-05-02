@@ -295,7 +295,7 @@ inline void FrameFilterGaussian::determineFilterFactors<unsigned int>(const unsi
 
 	if (filterSize <= 7u)
 	{
-		const static unsigned int predefinedFilters[]
+		static constexpr std::array<unsigned int, 16> predefinedFilters =
 		{
 			1u,
 			1u, 2u, 1u,
@@ -303,7 +303,7 @@ inline void FrameFilterGaussian::determineFilterFactors<unsigned int>(const unsi
 			1u, 4u, 7u, 9u, 7u, 4u, 1u
 		};
 
-		const static unsigned int predefinedDenominators[]
+		static constexpr std::array<unsigned int, 4> predefinedDenominators =
 		{
 			1u,
 			4u,
@@ -311,7 +311,7 @@ inline void FrameFilterGaussian::determineFilterFactors<unsigned int>(const unsi
 			33u
 		};
 
-		const static unsigned int offsets[]
+		static constexpr std::array<unsigned int, 4> offsets =
 		{
 			0u,
 			1u,
@@ -319,13 +319,19 @@ inline void FrameFilterGaussian::determineFilterFactors<unsigned int>(const unsi
 			9u
 		};
 
-		ocean_assert((filterSize / 2u) < (sizeof(offsets) / sizeof(offsets[0])));
-		const unsigned int* const pointer = predefinedFilters + offsets[filterSize / 2u];
+		ocean_assert(filterSize / 2u < offsets.size());
+		const unsigned int filterOffset = offsets[filterSize / 2u];
 
-		memcpy(filter, pointer, sizeof(unsigned int) * filterSize);
-
-		if (denominator)
+		for (unsigned int n = 0u; n < filterSize; ++n)
 		{
+			ocean_assert(filterOffset + n < predefinedFilters.size());
+			filter[n] = predefinedFilters[filterOffset + n];
+		}
+
+
+		if (denominator != nullptr)
+		{
+			ocean_assert(filterSize / 2u < predefinedDenominators.size());
 			*denominator = predefinedDenominators[filterSize / 2u];
 		}
 
@@ -345,7 +351,7 @@ void FrameFilterGaussian::determineFilterFactors(const unsigned int filterSize, 
 
 	if (filterSize <= 7u)
 	{
-		const static float predefinedFilters[]
+		static constexpr std::array<float, 16> predefinedFilters =
 		{
 			1.0f,
 			0.25f, 0.5f, 0.25f,
@@ -354,7 +360,7 @@ void FrameFilterGaussian::determineFilterFactors(const unsigned int filterSize, 
 
 		};
 
-		const static unsigned int offsets[]
+		static constexpr std::array<unsigned int, 4> offsets =
 		{
 			0u,
 			1u,
@@ -362,14 +368,16 @@ void FrameFilterGaussian::determineFilterFactors(const unsigned int filterSize, 
 			9u
 		};
 
-		const float* const pointer = predefinedFilters + offsets[filterSize / 2u];
+		ocean_assert(filterSize / 2u < offsets.size());
+		const unsigned int filterOffset = offsets[filterSize / 2u];
 
 		for (unsigned int n = 0u; n < filterSize; ++n)
 		{
-			filter[n] = T(pointer[n]);
+			ocean_assert(filterOffset + n < predefinedFilters.size());
+			filter[n] = T(predefinedFilters[filterOffset + n]);
 		}
 
-		if (denominator)
+		if (denominator != nullptr)
 		{
 			*denominator = T(1);
 		}

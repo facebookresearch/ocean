@@ -32,6 +32,12 @@ bool TestFrameFilterGaussian::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testFilterFactors() && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testExtremeDimensions(worker) && allSucceeded;
 
 	Log::info() << " ";
@@ -83,6 +89,11 @@ bool TestFrameFilterGaussian::test(const double testDuration, Worker& worker)
 TEST(TestFrameFilterGaussian, FilterSizeSigmaConversion)
 {
 	EXPECT_TRUE(TestFrameFilterGaussian::testFilterSizeSigmaConversion());
+}
+
+TEST(TestFrameFilterGaussian, FilterFactors)
+{
+	EXPECT_TRUE(TestFrameFilterGaussian::testFilterFactors());
 }
 
 TEST(TestFrameFilterGaussian, ExtremeDimensions)
@@ -232,7 +243,7 @@ bool TestFrameFilterGaussian::testFilterSizeSigmaConversion()
 
 	bool allSucceeded = true;
 
-	for (unsigned int n = 1u; n <= 4321; n += 2u)
+	for (unsigned int n = 1u; n <= 4321u; n += 2u)
 	{
 		const Scalar sigma = CV::FrameFilterGaussian::filterSize2sigma<Scalar>(n);
 
@@ -244,34 +255,150 @@ bool TestFrameFilterGaussian::testFilterSizeSigmaConversion()
 		}
 	}
 
-	Indices32 integerFilter3(3);
-	unsigned int normalization3 = 0u;
-	CV::FrameFilterGaussian::determineFilterFactors(3u, integerFilter3.data(), &normalization3);
-
-	if (integerFilter3[0] != 1u || integerFilter3[1] != 2u || integerFilter3[2] != 1u || normalization3 != 4u)
+	if (allSucceeded)
 	{
-		allSucceeded = false;
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
 	}
 
-	Indices32 integerFilter5(5);
-	unsigned int normalization5 = 0u;
-	CV::FrameFilterGaussian::determineFilterFactors(5u, integerFilter5.data(), &normalization5);
+	return allSucceeded;
+}
 
-	if (integerFilter5[0] != 1u || integerFilter5[1] != 4u || integerFilter5[2] != 6u
-			|| integerFilter5[3] != 4u || integerFilter5[4] != 1u || normalization5 != 16u)
+bool TestFrameFilterGaussian::testFilterFactors()
+{
+	Log::info() << "Testing filter factors:";
+
+	bool allSucceeded = true;
+
+	const IndexGroups32 expectedFilterFactorGroups =
 	{
-		allSucceeded = false;
-	}
+		{},
+		{1u},
+		{},
+		{1, 2u, 1u},
+		{},
+		{1u, 4u, 6u, 4u, 1u},
+		{},
+		{1u, 4u, 7u, 9u, 7u, 4u, 1u}
+	};
 
-	Indices32 integerFilter7(7);
-	unsigned int normalization7 = 0u;
-	CV::FrameFilterGaussian::determineFilterFactors(7u, integerFilter7.data(), &normalization7);
-
-	if (integerFilter7[0] != 1u || integerFilter7[1] != 4u || integerFilter7[2] != 7u
-		|| integerFilter7[3] != 9u || integerFilter7[4] != 7u || integerFilter7[5] != 4u
-		|| integerFilter7[6] != 1u || normalization7 != 33u)
+	for (unsigned int filterSize = 1u; filterSize < 101u; filterSize += 2u)
 	{
-		allSucceeded = false;
+		{
+			Indices32 integerFilter(filterSize + 1u);
+
+			integerFilter.back() = RandomI::random32();
+			const unsigned int lastElement = integerFilter.back();
+
+			unsigned int normalization = RandomI::random32();
+			CV::FrameFilterGaussian::determineFilterFactors(filterSize, integerFilter.data(), &normalization);
+
+			if (lastElement != integerFilter.back())
+			{
+				ocean_assert(false && "Invalid padding elements!");
+				return false;
+			}
+
+			unsigned int sumExpectedFilterFactors = 0u;
+
+			for (unsigned int n = 0u; n < filterSize; ++n)
+			{
+				sumExpectedFilterFactors += integerFilter[n];
+			}
+
+			if (sumExpectedFilterFactors != normalization)
+			{
+				allSucceeded = false;
+			}
+
+			if (filterSize < expectedFilterFactorGroups.size())
+			{
+				const Indices32& expectedFilterFactors = expectedFilterFactorGroups[filterSize];
+
+				if (expectedFilterFactors.size() == filterSize)
+				{
+					for (unsigned int n = 0u; n < filterSize; ++n)
+					{
+						if (expectedFilterFactors[n] != integerFilter[n])
+						{
+							allSucceeded = false;
+						}
+					}
+				}
+				else
+				{
+					allSucceeded = false;
+				}
+			}
+			else
+			{
+				// just checking for a symmetric filter
+
+				for (unsigned int n = 0u; n < filterSize / 2u; ++n)
+				{
+					if (integerFilter[n] != integerFilter[filterSize - n - 1u])
+					{
+						allSucceeded = false;
+					}
+
+					if (n >= 1u && integerFilter[n - 1u] > integerFilter[n])
+					{
+						allSucceeded = false;
+					}
+				}
+			}
+		}
+
+		{
+			std::vector<float> floatFilter(filterSize + 1u);
+
+			floatFilter.back() = RandomF::scalar(-1000.0f, 1000.0f);
+			const float lastElement = floatFilter.back();
+
+			float normalization = RandomF::scalar(-1000.0f, 1000.0f);
+			CV::FrameFilterGaussian::determineFilterFactors(filterSize, floatFilter.data(), &normalization);
+
+			if (lastElement != floatFilter.back())
+			{
+				ocean_assert(false && "Invalid padding elements!");
+				return false;
+			}
+
+			if (normalization != 1.0f)
+			{
+				allSucceeded = false;
+			}
+
+			float sumFilterFactors = 0.0;
+
+			for (unsigned int n = 0u; n < filterSize; ++n)
+			{
+				sumFilterFactors += floatFilter[n];
+			}
+
+			if (NumericF::isNotEqual(sumFilterFactors, 1.0f))
+			{
+				allSucceeded = false;
+			}
+
+			// just checking for a symmetric filter
+
+			for (unsigned int n = 0u; n < filterSize / 2u; ++n)
+			{
+				if (floatFilter[n] != floatFilter[filterSize - n - 1u])
+				{
+					allSucceeded = false;
+				}
+
+				if (n >= 1u && floatFilter[n - 1u] >= floatFilter[n])
+				{
+					allSucceeded = false;
+				}
+			}
+		}
 	}
 
 	if (allSucceeded)
@@ -383,14 +510,15 @@ bool TestFrameFilterGaussian::testNormalDimensions(const double testDuration, Wo
 	Log::info() << "Testing normal frame dimensions:";
 	Log::info() << " ";
 
-	const unsigned int widths[] =  {640u, 800u, 1280u, 1281u, 1920u, 3840u};
-	const unsigned int heights[] = {480u, 640u,  720u,  723u, 1080u, 2160u};
+	const Indices32 widths =  {640u, 800u, 1280u, 1281u, 1920u, 3840u};
+	const Indices32 heights = {480u, 640u,  720u,  723u, 1080u, 2160u};
+	ocean_assert(widths.size() == heights.size());
 
 	bool allSucceeded = true;
 
-	for (unsigned int n = 0u; n < sizeof(widths) / sizeof(widths[0]); ++n)
+	for (unsigned int n = 0u; n < widths.size(); ++n)
 	{
-		if (n != 0u)
+		if (n != 0)
 		{
 			Log::info() << " ";
 			Log::info() << "-";
@@ -442,11 +570,11 @@ bool TestFrameFilterGaussian::testFilter(const unsigned int width, const unsigne
 	ocean_assert(testDuration > 0.0);
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
-	const double averageErrorThreshold = std::is_same<TFilter, float>::value ? 0.1 : 2.0;
-	const double maximalErrorThreshold = std::is_same<TFilter, float>::value ? 0.1 : 6.0;
+	constexpr double averageErrorThreshold = std::is_same<TFilter, float>::value ? 0.1 : 2.0;
+	constexpr double maximalErrorThreshold = std::is_same<TFilter, float>::value ? 0.1 : 6.0;
 #else
-	const double averageErrorThreshold = std::is_same<TFilter, float>::value ? 0.1 : 2.0;
-	const double maximalErrorThreshold = std::is_same<TFilter, float>::value ? 0.1 : 6.0;
+	constexpr double averageErrorThreshold = std::is_same<TFilter, float>::value ? 0.1 : 2.0;
+	constexpr double maximalErrorThreshold = std::is_same<TFilter, float>::value ? 0.1 : 6.0;
 #endif
 
 	const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<T>(channels);
