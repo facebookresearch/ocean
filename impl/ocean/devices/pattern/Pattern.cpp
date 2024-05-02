@@ -17,7 +17,7 @@ std::string namePatternLibrary()
 	return std::string("Pattern Tracker library");
 }
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 void registerPatternLibrary()
 {

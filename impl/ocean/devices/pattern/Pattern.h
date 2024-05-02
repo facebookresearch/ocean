@@ -47,7 +47,7 @@ namespace Pattern
  */
 OCEAN_DEVICES_PATTERN_EXPORT std::string namePatternLibrary();
 
-#if defined(OCEAN_RUNTIME_STATIC) || defined(_ANDROID)
+#if defined(OCEAN_RUNTIME_STATIC)
 
 /**
  * Registers this Pattern device library at the global device manager.
