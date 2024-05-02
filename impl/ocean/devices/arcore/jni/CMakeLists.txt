@@ -2,13 +2,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(jni)
-
 if (ANDROID)
 
-    set(OCEAN_TARGET_NAME "ocean_devices_arcore")
-
-    find_package(ARCore REQUIRED)
+    set(OCEAN_TARGET_NAME "ocean_devices_arcore_jni")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -21,23 +17,13 @@ if (ANDROID)
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
 
-    target_compile_options(${OCEAN_TARGET_NAME}
-        PUBLIC
-        ${OCEAN_COMPILER_FLAGS}
-        -fexceptions
-    )
+    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
 
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
-            ocean_base
-            ocean_cv
-            ocean_cv_segmentation
-            ocean_devices
-            ocean_math
-            ocean_media_android
+            ocean_devices_arcore
             ocean_platform_android
-            ARCore::ARCore
     )
 
     # Installation
@@ -47,7 +33,7 @@ if (ANDROID)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/devices/arcore
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/devices/arcore/jni
             COMPONENT include
     )
 
