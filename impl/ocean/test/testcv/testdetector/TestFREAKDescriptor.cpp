@@ -138,7 +138,7 @@ bool TestFREAKDescriptorT<tSize>::testComputeDescriptor(const double testDuratio
 	{
 		// Generate a pyramid from a random image
 
-		Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(imageWidth, imageHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(imageWidth, imageHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 		CV::FrameFilterGaussian::filter(yFrame, 5u, &worker);
 
 		const CV::FramePyramid yFramePyramid(yFrame, /* FRL default number of layers */ 6u, false /*copyFirstLayer*/, &worker);
@@ -265,7 +265,7 @@ bool TestFREAKDescriptorT<tSize>::testComputeDescriptors(const double testDurati
 	{
 		// Generate a pyramid from a random image
 
-		Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(imageWidth, imageHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(imageWidth, imageHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		CV::FrameFilterGaussian::filter(yFrame, 5u, &worker);
 
@@ -432,7 +432,7 @@ bool TestFREAKDescriptorT<tSize>::testCreateBlurredFramePyramid(const double tes
 
 		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, pixelOrigin), false, &randomGenerator);
+		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, pixelOrigin), &randomGenerator);
 
 		const unsigned int kernelWidth = RandomI::random(randomGenerator, 1u, 15u) | 0x01u; // ensuring that the kernel is odd
 		const unsigned int kernelHeight = RandomI::random(randomGenerator, 1u, 15u) | 0x01u;

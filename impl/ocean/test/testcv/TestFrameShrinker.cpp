@@ -388,8 +388,8 @@ bool TestFrameShrinker::testRowDownsamplingByTwoThreeRows8Bit121(const double te
 
 		const unsigned int channels = RandomI::random(1u, 5u);
 
-		const Frame sourceRows = CV::CVUtilities::randomizedFrame(FrameType(width, 3u, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false);
-		Frame targetRow = CV::CVUtilities::randomizedFrame(FrameType(width_2, 1u, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false);
+		const Frame sourceRows = CV::CVUtilities::randomizedFrame(FrameType(width, 3u, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT));
+		Frame targetRow = CV::CVUtilities::randomizedFrame(FrameType(width_2, 1u, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT));
 
 		const Frame copyTargetRow(targetRow, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -802,8 +802,8 @@ bool TestFrameShrinker::testPyramidByTwo11(const double testDuration, Worker& wo
 					ocean_assert(layers >= 1u);
 					ocean_assert(pyramidPixels <= width * height * 134u / 100u); // should not exceed 133%
 
-					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-					Frame pyramidMemory = CV::CVUtilities::randomizedFrame(FrameType(frame, pyramidPixels, 1u), false, &randomGenerator);
+					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+					Frame pyramidMemory = CV::CVUtilities::randomizedFrame(FrameType(frame, pyramidPixels, 1u), &randomGenerator);
 
 					const Frame pyramidMemoryCopy(pyramidMemory, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -990,8 +990,8 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit11(const unsigned int sour
 
 		do
 		{
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), false);
-			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), false);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT));
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight));
 
 			const Frame targetFrameCopy(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1075,8 +1075,8 @@ bool TestFrameShrinker::testDownsampleBinayMaskByTwo11(const unsigned int source
 
 		do
 		{
-			Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), false, &randomGenerator);
+			Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), &randomGenerator);
 
 			const Frame targetFrameCopy(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1162,8 +1162,8 @@ bool TestFrameShrinker::testFrameDownsamplingByTwo8Bit14641(const unsigned int s
 
 		do
 		{
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), false);
-			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), false);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT));
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight));
 
 			const Frame targetFrameCopy(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

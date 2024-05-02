@@ -507,9 +507,9 @@ bool TestFrameFilterGradient::testHorizontalVerticalSubFrame(const unsigned int 
 
 	do
 	{
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<TSource>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<TSource>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height,  FrameType::genericPixelFormat<TTarget>(channels * 2u), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height,  FrameType::genericPixelFormat<TTarget>(channels * 2u), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		switch (channels)
 		{
@@ -544,7 +544,7 @@ bool TestFrameFilterGradient::testHorizontalVerticalSubFrame(const unsigned int 
 		{
 			Worker* useWorker = (workerIteration == 0u) ? nullptr : &worker;
 
-			Frame targetSubFrame = CV::CVUtilities::randomizedFrame(FrameType(targetFrame, subFrameWidth, subFrameHeight), false, &randomGenerator);
+			Frame targetSubFrame = CV::CVUtilities::randomizedFrame(FrameType(targetFrame, subFrameWidth, subFrameHeight), &randomGenerator);
 
 			switch (channels)
 			{

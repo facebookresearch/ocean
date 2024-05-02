@@ -342,8 +342,8 @@ bool TestFrameInterpolator::testResize(const unsigned int sourceWidth, const uns
 					useTargetHeight = RandomI::random(randomGenerator, 2u / heightMultiple, useTargetHeight / heightMultiple) * heightMultiple;
 				}
 
-				const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(useSourceWidth, useSourceHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-				Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(useTargetWidth, useTargetHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(useSourceWidth, useSourceHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+				Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(useTargetWidth, useTargetHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -488,7 +488,7 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration, const u
 			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
 			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, pixelFormat, pixelOrigin), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, pixelFormat, pixelOrigin), &randomGenerator);
 
 			const int width = int(frame.width());
 			const int height = int(frame.height());
@@ -546,7 +546,7 @@ bool TestFrameInterpolator::testResizeUseCase(const double testDuration, const u
 
 			const FrameType resizedFrameType(frame.frameType(), (unsigned int)(targetWidth), (unsigned int)(targetHeight));
 
-			Frame resizedFrame = CV::CVUtilities::randomizedFrame(resizedFrameType, false, &randomGenerator);
+			Frame resizedFrame = CV::CVUtilities::randomizedFrame(resizedFrameType, &randomGenerator);
 
 			const Frame copyResizedFrame(resizedFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

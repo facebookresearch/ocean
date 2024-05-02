@@ -597,7 +597,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePixelWithMask8BitPerC
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
 
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const uint8_t invalidPixelValue = uint8_t(RandomI::random(randomGenerator, 255u));
 		const uint8_t validPixelValue = 0xFFu - invalidPixelValue;
@@ -1101,7 +1101,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolateSquare(const unsigned
 			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, tPatchSize + 1u, 1920u);
 			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, tPatchSize + 1u, 1080u);
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 			Frame buffer(FrameType(frame, tPatchSize * tPatchSize, locations), 10u);
 
 			const Scalar offset = tPixelCenter == CV::PC_TOP_LEFT ? Scalar(0) : Scalar(0.5);
@@ -1331,7 +1331,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePatchWithMask(const u
 			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 1080u);
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const unsigned int patchBufferPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 			const unsigned int patchMaskBufferPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);

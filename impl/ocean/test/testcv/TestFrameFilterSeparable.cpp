@@ -467,8 +467,8 @@ bool TestFrameFilterSeparable::testExtremeDimensions(const double testDuration, 
 			{
 				const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<T>(channels);
 
-				const Frame source = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-				Frame target = CV::CVUtilities::randomizedFrame(source.frameType(), false, &randomGenerator);
+				const Frame source = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+				Frame target = CV::CVUtilities::randomizedFrame(source.frameType(), &randomGenerator);
 
 				const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -606,8 +606,8 @@ bool TestFrameFilterSeparable::testReusableMemory(const double testDuration)
 
 		do
 		{
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T, 3u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator, true);
-			Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator, true);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T, 3u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator, true);
+			Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator, true);
 
 			const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -694,8 +694,8 @@ bool TestFrameFilterSeparable::testReusableMemoryComfort(const double testDurati
 
 		do
 		{
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T, 3u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator, true);
-			Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator, true);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T, 3u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator, true);
+			Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator, true);
 
 			const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -778,8 +778,8 @@ bool TestFrameFilterSeparable::testFilter8BitPerChannel(const unsigned int width
 
 		do
 		{
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator, true);
-			Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator, true);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator, true);
+			Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator, true);
 
 			const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -905,8 +905,8 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversalExtremeResolutions(co
 
 		for (unsigned int channels = 1u; channels <= 5u; ++channels)
 		{
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator, true);
-			Frame targetFrame = CV::CVUtilities::randomizedFrame(sourceFrame.frameType(), false, &randomGenerator, true);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator, true);
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(sourceFrame.frameType(), &randomGenerator, true);
 
 			Worker* useWorker = (iterations % 2ull == 0ull) ? nullptr : &worker;
 
@@ -1023,8 +1023,8 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const unsigned int w
 
 		do
 		{
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator, true);
-			Frame targetFrame = CV::CVUtilities::randomizedFrame(sourceFrame.frameType(), false, &randomGenerator, true);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator, true);
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(sourceFrame.frameType(), &randomGenerator, true);
 
 			std::vector<float> horizontalFilter(horizontalFilterSize);
 			std::vector<float> verticalFilter(verticalFilterSize);

@@ -716,7 +716,7 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 
 		const FrameType sourceFrameType(width, height, sourcePixelFormat, sourcePixelOrigin);
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, &randomGenerator);
 
 		const bool forceCopy = RandomI::boolean(randomGenerator);
 
@@ -911,7 +911,7 @@ bool TestFrameConverter::testComfortConvertAndCopy(const double testDuration)
 			expectSuccess = false;
 		}
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, &randomGenerator);
 
 		Frame targetFrame;
 
@@ -1098,7 +1098,7 @@ bool TestFrameConverter::testComfortChange(const double testDuration)
 
 		const FrameType sourceFrameType(width, height, sourcePixelFormat, sourcePixelOrigin);
 
-		Frame frame = CV::CVUtilities::randomizedFrame(sourceFrameType, false, &randomGenerator);
+		Frame frame = CV::CVUtilities::randomizedFrame(sourceFrameType, &randomGenerator);
 
 		const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1373,8 +1373,8 @@ bool TestFrameConverter::testSubFrameMask(const double testDuration)
 
 		const unsigned int channels = measurePerformance ? 4u : RandomI::random(randomGenerator, 1u, 5u);
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(dataType, channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(targetWidth, targetHeight, FrameType::genericPixelFormat(dataType, channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(dataType, channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(targetWidth, targetHeight, FrameType::genericPixelFormat(dataType, channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const Frame targetFrameCopy(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -2475,9 +2475,9 @@ bool TestFrameConverter::testConvertTwoRows_1Plane3Channels_To_1Plane1ChannelAnd
 		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
 		constexpr unsigned int height = 2u;
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y_UV12, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y_UV12, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -2624,9 +2624,9 @@ bool TestFrameConverter::testConvertTwoRows_1Plane3Channels_To_1Plane1ChannelAnd
 		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
 		constexpr unsigned int height = 2u;
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y_U_V12, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y_U_V12, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -2775,11 +2775,11 @@ bool TestFrameConverter::testMapOneRow_3Plane1Channel_To_1Plane3Channels_8BitPer
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 		constexpr unsigned int height = 1u;
 
-		const Frame sourceFrame0 = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		const Frame sourceFrame1 = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		const Frame sourceFrame2 = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame sourceFrame0 = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		const Frame sourceFrame1 = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		const Frame sourceFrame2 = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -2864,8 +2864,8 @@ bool TestFrameConverter::testMapOneRow_1Plane3ChannelsWith2ChannelsDownsampled2x
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * 2u;
 		constexpr unsigned int height = 1u;
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -2952,8 +2952,8 @@ bool TestFrameConverter::testMapOneRow_1Plane3ChannelsWith2ChannelsDownsampled2x
 		const unsigned int width = RandomI::random(1u, 1920u) * 2u;
 		constexpr unsigned int height = 1u;
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 2u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 3u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -5451,8 +5451,8 @@ bool TestFrameConverter::testFrameConversion(const FrameType::PixelFormat& sourc
 				const unsigned int testHeight = benchmarkIteration ? height : RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
 #endif
 
-				const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-				Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetPixelFormat), false, &randomGenerator);
+				const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+				Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetPixelFormat), &randomGenerator);
 
 				const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -5998,8 +5998,8 @@ bool TestFrameConverter::testSubFrame(const double testDuration)
 
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), &randomGenerator);
 
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -6029,9 +6029,9 @@ bool TestFrameConverter::testCast(const unsigned int width, const unsigned int h
 {
 	ocean_assert(width >= 1u && height >= 1u && channels >= 1u);
 
-	const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), false);
+	const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT));
 
-	Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, FrameType::genericPixelFormat<T>(channels)), false);
+	Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, FrameType::genericPixelFormat<T>(channels)));
 
 	const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -6062,7 +6062,7 @@ bool TestFrameConverter::testCast(const unsigned int width, const unsigned int h
 
 	// now we check whether the back-casted result is identical with the input frame
 
-	Frame backFrame = CV::CVUtilities::randomizedFrame(sourceFrame.frameType(), false);
+	Frame backFrame = CV::CVUtilities::randomizedFrame(sourceFrame.frameType());
 
 	const Frame copyBackFrame(backFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -6090,9 +6090,9 @@ bool TestFrameConverter::testNormalizedCast(const unsigned int width, const unsi
 {
 	ocean_assert(width >= 1u && height >= 1u);
 
-	const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false);
+	const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT));
 
-	Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false);
+	Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT));
 
 	const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -6147,9 +6147,9 @@ bool TestFrameConverter::testPatchFrame(const double testDuration)
 			const unsigned int width = RandomI::random(randomGenerator, patchSize, 1000u);
 			const unsigned int height = RandomI::random(randomGenerator, patchSize, 1000u);
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-			Frame patch = CV::CVUtilities::randomizedFrame(FrameType(frame, patchSize, patchSize), false, &randomGenerator);
+			Frame patch = CV::CVUtilities::randomizedFrame(FrameType(frame, patchSize, patchSize), &randomGenerator);
 
 			const Frame patchCopy(patch, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -6201,7 +6201,7 @@ bool TestFrameConverter::testPatchFrameMirroredBorder(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1920u);
 
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T, tChannels>(), Frame::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T, tChannels>(), Frame::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		for (unsigned int iteration = 0u; iteration < 10u; ++iteration)
 		{
@@ -6212,7 +6212,7 @@ bool TestFrameConverter::testPatchFrameMirroredBorder(const double testDuration)
 			const unsigned int x = RandomI::random(randomGenerator, frame.width() - 1u);
 			const unsigned int y = RandomI::random(randomGenerator, 0u, frame.height() - 1u);
 
-			Frame patch = CV::CVUtilities::randomizedFrame(FrameType(frame, patchSize, patchSize), false, &randomGenerator);
+			Frame patch = CV::CVUtilities::randomizedFrame(FrameType(frame, patchSize, patchSize), &randomGenerator);
 
 			const Frame copyPatch(patch, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

@@ -101,8 +101,8 @@ bool TestOculusTagTracker::testStressTestNegative(const double testDuration, Wor
 		{
 			const FrameType frameType(FrameType(anyCameraA->width(), anyCameraA->height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 
-			const Frame yFrameA = CV::CVUtilities::randomizedFrame(frameType, false, &randomGenerator);
-			const Frame yFrameB = CV::CVUtilities::randomizedFrame(frameType, false, &randomGenerator);
+			const Frame yFrameA = CV::CVUtilities::randomizedFrame(frameType, &randomGenerator);
+			const Frame yFrameB = CV::CVUtilities::randomizedFrame(frameType, &randomGenerator);
 
 			const HomogenousMatrix4 world_T_device = HomogenousMatrix4(Random::vector3(randomGenerator, Scalar(-5), Scalar(5)), Random::quaternion(randomGenerator));
 

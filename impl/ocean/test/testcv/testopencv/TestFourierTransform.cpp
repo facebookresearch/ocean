@@ -140,8 +140,8 @@ bool TestFourierTransform::testFFT(const double testDuration)
 		const uint32_t sourceWidth = measurePerformance ? width : RandomI::random(randomGenerator, 2u, width);
 		const uint32_t sourceHeight = measurePerformance ? height : RandomI::random(randomGenerator, 2u, height);
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(dataType, 1u), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		Frame frequencyFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, FrameType::genericPixelFormat(dataType, 2u)), false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(dataType, 1u), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		Frame frequencyFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, FrameType::genericPixelFormat(dataType, 2u)), &randomGenerator);
 
 		const Frame copyFrequencyFrame(frequencyFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -249,8 +249,8 @@ bool TestFourierTransform::testFFTPadding(const double testDuration)
 		const uint32_t sourceWidth = measurePerformance ? width : RandomI::random(randomGenerator, 2u, width);
 		const uint32_t sourceHeight = measurePerformance ? height : RandomI::random(randomGenerator, 2u, height);
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(dataType, 1u), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		Frame frequencyFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, FrameType::genericPixelFormat(dataType, 2u)), false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat(dataType, 1u), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		Frame frequencyFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, FrameType::genericPixelFormat(dataType, 2u)), &randomGenerator);
 
 		const Frame copyFrequencyFrame(frequencyFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

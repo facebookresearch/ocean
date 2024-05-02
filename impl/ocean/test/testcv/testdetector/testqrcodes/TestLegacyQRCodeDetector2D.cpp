@@ -185,7 +185,7 @@ bool TestLegacyQRCodeDetector2D::testStressTest(const double testDuration, Worke
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1920u);
 
-			const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const QRCodes qrCodes = LegacyQRCodeDetector2D::detectQRCodes(yFrame, useWorker ? &worker : nullptr);
 

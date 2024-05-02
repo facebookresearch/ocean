@@ -92,7 +92,7 @@ void TestFramePyramid::testCreationFramePyramid(const unsigned int width, const 
 
 	do
 	{
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::findPixelFormat(channels * 8u), FrameType::ORIGIN_UPPER_LEFT), false);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::findPixelFormat(channels * 8u), FrameType::ORIGIN_UPPER_LEFT));
 
 		CV::FramePyramid framePyramid(CV::FramePyramid::AS_MANY_LAYERS_AS_POSSIBLE, frame.frameType());
 

@@ -188,7 +188,7 @@ bool TestCreatorI1::testInpaintingContent(const unsigned int width, const unsign
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -331,7 +331,7 @@ bool TestCreatorI1::testInformationSpatialCost(const unsigned int width, const u
 					const unsigned int testWidth = RandomI::random(randomGenerator, 3u, width);
 					const unsigned int testHeight = RandomI::random(randomGenerator, 3u, height);
 
-					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 					frame.setValue(0xFFu);
 
 					const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -630,7 +630,7 @@ bool TestCreatorI1::testInformationCost4Neighborhood(const unsigned int width, c
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 5u, width);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 5u, height);
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

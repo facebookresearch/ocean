@@ -735,13 +735,13 @@ bool TestHarrisDetector::testHarrisVotePixel(const double testDuration, Worker& 
 		Frame yFrame = Utilities::createRandomFrameWithFeatures(width, height, 2u, &randomGenerator);
 		ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 
-		Frame sobelResponses = CV::CVUtilities::randomizedFrame(FrameType(yFrame, FrameType::genericPixelFormat<int8_t, 2u>()), false, &randomGenerator);
+		Frame sobelResponses = CV::CVUtilities::randomizedFrame(FrameType(yFrame, FrameType::genericPixelFormat<int8_t, 2u>()), &randomGenerator);
 
 		const Frame copySobelResponses(sobelResponses, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 		CV::FrameFilterSobel::filterHorizontalVertical8BitPerChannel<int8_t, 1u>(yFrame.constdata<uint8_t>(), sobelResponses.data<int8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), sobelResponses.paddingElements(), &worker);
 
-		Frame squaredSobelResponse = CV::CVUtilities::randomizedFrame(FrameType(3u, 3u, FrameType::genericPixelFormat<int32_t, 3u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame squaredSobelResponse = CV::CVUtilities::randomizedFrame(FrameType(3u, 3u, FrameType::genericPixelFormat<int32_t, 3u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const Frame copySquaredSobelResponse(squaredSobelResponse, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -855,7 +855,7 @@ bool TestHarrisDetector::testHarrisVoteFrame(const double testDuration, Worker& 
 			{
 				Worker* useWorker = (workerIteration == 0u) ? nullptr : &worker;
 
-				Frame votesFrame = CV::CVUtilities::randomizedFrame(FrameType(yFrame, FrameType::genericPixelFormat<int32_t, 1u>()), false);
+				Frame votesFrame = CV::CVUtilities::randomizedFrame(FrameType(yFrame, FrameType::genericPixelFormat<int32_t, 1u>()));
 
 				const Frame copyVotesFrame(votesFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

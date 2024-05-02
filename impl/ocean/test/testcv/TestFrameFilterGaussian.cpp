@@ -346,8 +346,8 @@ bool TestFrameFilterGaussian::testExtremeDimensions(const unsigned int channels,
 		{
 			for (const bool useWorker : {false, true})
 			{
-				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(filterSize + x, filterSize + y, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-				Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
+				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(filterSize + x, filterSize + y, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+				Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
 
 				const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -476,8 +476,8 @@ bool TestFrameFilterGaussian::testFilter(const unsigned int width, const unsigne
 
 		do
 		{
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
 
 			const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -569,8 +569,8 @@ bool TestFrameFilterGaussian::testReusableMemory(const double testDuration)
 
 				do
 				{
-					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-					Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
+					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+					Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -660,8 +660,8 @@ bool TestFrameFilterGaussian::testReusableMemoryComfort(const double testDuratio
 
 				do
 				{
-					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-					Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
+					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+					Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
 
 					const Frame targetCopy(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -733,12 +733,12 @@ bool TestFrameFilterGaussian::testInplace(const double testDuration, Worker& wor
 
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 4u);
 
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		Frame inplaceFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 		Frame copyInplaceFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-		Frame targetFrame = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
 		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 		Worker* useWorkerA = Random::boolean(randomGenerator) ? &worker : nullptr;

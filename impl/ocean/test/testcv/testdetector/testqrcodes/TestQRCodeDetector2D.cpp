@@ -154,7 +154,7 @@ bool TestQRCodeDetector2D::testStressTest(const double testDuration, Worker& wor
 			const SharedAnyCamera anyCamera = std::make_shared<AnyCameraPinhole>(PinholeCamera(width, height, Numeric::deg2rad(Scalar(60))));
 			ocean_assert(anyCamera != nullptr && anyCamera->isValid());
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), /* skipPaddingArea */ false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			QRCodeDetector2D::Observations observations;
 			const QRCodes codes = QRCodeDetector2D::detectQRCodes(*anyCamera, frame, &observations, workerToUse);
@@ -269,7 +269,7 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 		const unsigned int frameWidth = 2u * frameWithCode.width();
 		const unsigned int frameHeight = 2u * frameWithCode.height();
 
-		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 		frame.setValue(backgroundValue);
 
 		const Vector2 frameCenterOffset(Scalar(frameWidth) * Scalar(0.5), Scalar(frameHeight) * Scalar(0.5));

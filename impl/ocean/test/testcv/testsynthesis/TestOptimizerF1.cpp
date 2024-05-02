@@ -178,7 +178,7 @@ bool TestOptimizerF1::testHighPerformance4Neighborhood(const unsigned int width,
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -389,9 +389,9 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-				Frame referenceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame referenceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

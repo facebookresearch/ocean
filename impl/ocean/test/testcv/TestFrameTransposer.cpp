@@ -253,8 +253,8 @@ bool TestFrameTransposer::testTransposer(const unsigned int width, const unsigne
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 2000u);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 2000u);
 
-				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-				Frame transposed = CV::CVUtilities::randomizedFrame(FrameType(frame.frameType(), testHeight, testWidth), false, &randomGenerator);
+				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+				Frame transposed = CV::CVUtilities::randomizedFrame(FrameType(frame.frameType(), testHeight, testWidth), &randomGenerator);
 
 				const Frame copyTransposed(transposed, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -366,7 +366,7 @@ bool TestFrameTransposer::testRotate90(const double testDuration, Worker& worker
 
 		const FrameType sourceFrameType(width, height, sourcePixelFormat, sourcePixelOrigin);
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, &randomGenerator);
 
 		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
 
@@ -377,7 +377,7 @@ bool TestFrameTransposer::testRotate90(const double testDuration, Worker& worker
 
 		if (RandomI::random(randomGenerator, 1u) == 0u)
 		{
-			targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrameType, height, width), false, &randomGenerator);
+			targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrameType, height, width), &randomGenerator);
 
 			copyTargetFrame = Frame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 		}
@@ -468,7 +468,7 @@ bool TestFrameTransposer::testRotate180(const double testDuration, Worker& worke
 
 		const FrameType sourceFrameType(width, height, sourcePixelFormat, sourcePixelOrigin);
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, &randomGenerator);
 
 		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
 
@@ -477,7 +477,7 @@ bool TestFrameTransposer::testRotate180(const double testDuration, Worker& worke
 
 		if (RandomI::random(randomGenerator, 1u) == 0u)
 		{
-			targetFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, false, &randomGenerator);
+			targetFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, &randomGenerator);
 
 			copyTargetFrame = Frame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 		}
@@ -580,7 +580,7 @@ bool TestFrameTransposer::testRotate(const double testDuration, Worker& worker)
 				const FrameType::PixelOrigin sourcePixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
 				const FrameType sourceFrameType(width, height, sourcePixelFormat, sourcePixelOrigin);
-				const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, false, &randomGenerator);
+				const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, &randomGenerator);
 
 				Frame targetFrame;
 				Frame copyTargetFrame;
@@ -594,7 +594,7 @@ bool TestFrameTransposer::testRotate(const double testDuration, Worker& worker)
 						targetFrameType = FrameType(targetFrameType, targetFrameType.height(), targetFrameType.width());
 					}
 
-					targetFrame = CV::CVUtilities::randomizedFrame(targetFrameType, false, &randomGenerator);
+					targetFrame = CV::CVUtilities::randomizedFrame(targetFrameType, &randomGenerator);
 
 					copyTargetFrame = Frame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 				}
@@ -623,12 +623,12 @@ bool TestFrameTransposer::testRotate(const double testDuration, Worker& worker)
 				constexpr FrameType::PixelOrigin sourcePixelOrigin = FrameType::ORIGIN_UPPER_LEFT;
 
 				const FrameType sourceFrameType(width, height, sourcePixelFormat, sourcePixelOrigin);
-				const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, false, &randomGenerator);
+				const Frame sourceFrame = CV::CVUtilities::randomizedFrame(sourceFrameType, &randomGenerator);
 
 				const unsigned int targetWidth = NumericT<int>::abs(angle % 360) == 90 || NumericT<int>::abs(angle % 360) == 270 ? height : width;
 				const unsigned int targetHeight = NumericT<int>::abs(angle % 360) == 90 || NumericT<int>::abs(angle % 360) == 270 ? width : height;
 
-				Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), false, &randomGenerator);
+				Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), &randomGenerator);
 				const Frame copyTargetFrame (targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				if (!rotate(sourceFrame, targetFrame, angle, useWorker))

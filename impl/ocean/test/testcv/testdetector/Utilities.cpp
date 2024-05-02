@@ -26,7 +26,7 @@ Frame Utilities::createRandomFrameWithFeatures(const unsigned int width, const u
 
 	RandomGenerator localRandomGenerator(randomGenerator);
 
-	Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &localRandomGenerator);
+	Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &localRandomGenerator);
 
 	// we apply a strong blur filter
 	CV::FrameFilterGaussian::filter(yFrame, 11u);

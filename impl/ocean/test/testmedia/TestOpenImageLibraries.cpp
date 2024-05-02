@@ -858,7 +858,7 @@ bool TestOpenImageLibraries::testAnyImageEncodeDecode(const double testDuration)
 
 	do
 	{
-		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT));
 
 		CV::FrameFilterGaussian::filter(sourceFrame, 7u, WorkerPool::get().conditionalScopedWorker(sourceFrame.pixels() >= 50u * 50u)());
 
@@ -956,7 +956,7 @@ bool TestOpenImageLibraries::testJpgImageEncodeDecode(const unsigned int width, 
 	{
 		buffer.clear();
 
-		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin));
 
 		// we have to blur the random image to create realistic test data for JPEG images
 		CV::FrameFilterGaussian::filter(sourceFrame, 7u, sourceFrame.pixels() >= 50u * 50u ? WorkerPool::get().scopedWorker()() : nullptr);
@@ -1135,7 +1135,7 @@ bool TestOpenImageLibraries::testPngImageEncodeDecode(const unsigned int width, 
 	{
 		buffer.clear();
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin));
 
 		unsigned int correctRows = 0u;
 
@@ -1296,7 +1296,7 @@ bool TestOpenImageLibraries::testTifImageEncodeDecode(const unsigned int width, 
 	{
 		buffer.clear();
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin));
 
 		unsigned int correctRows = 0u;
 
@@ -1518,7 +1518,7 @@ bool TestOpenImageLibraries::testWebpImageEncodeDecode(const unsigned int width,
 	{
 		buffer.clear();
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), &randomGenerator);
 
 		unsigned int correctRows = 0u;
 
@@ -1667,7 +1667,7 @@ bool TestOpenImageLibraries::testBufferImageRecorder(const FrameType& frameType,
 		return false;
 	}
 
-	Frame sourceFrame = CV::CVUtilities::randomizedFrame(frameType, false);
+	Frame sourceFrame = CV::CVUtilities::randomizedFrame(frameType);
 
 	if (maximalAverageDifference > 0.0)
 	{

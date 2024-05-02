@@ -164,12 +164,11 @@ class OCEAN_CV_EXPORT CVUtilities
 		 * Integer pixel formats as well as float pixel formats will receive values in the range [0, 255] or [-128, 127] for each pixel and channel if 'limitedValueRange == true'<br>
 		 * The timestamp will be randomized as well.
 		 * @param frameType The frame type for which the randomized frame will be created, may be invalid
-		 * @param skipPaddingArea True, to leave elements within the padding area untouched; False, to randomize the entire memory
 		 * @param randomGenerator Optional explicit random generator to be used, nullptr to use any
 		 * @param limitedValueRange True, to use a value range of [0, 255] and [-128, 127] independently of the actual element data type; False, to use the full value range
 		 * @return The randomized frame, invalid if frameType is invalid
 		 */
-		static Frame randomizedFrame(const FrameType& frameType, const bool skipPaddingArea = true, RandomGenerator* randomGenerator = nullptr, const bool limitedValueRange = false);
+		static Frame randomizedFrame(const FrameType& frameType, RandomGenerator* randomGenerator = nullptr, const bool limitedValueRange = false);
 
 		/**
 		 * Creates an 8 bit frame with a random binary mask, the optional padding area will be filled with random (not binary) noise.

@@ -906,7 +906,7 @@ bool TestFramePyramid::testCreationFramePyramidWithConstructor(const unsigned in
 
 						const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-						Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, pixelFormat, pixelOrigin), false, &randomGenerator);
+						Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, pixelFormat, pixelOrigin), &randomGenerator);
 
 						const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1120,7 +1120,7 @@ bool TestFramePyramid::testCreationFramePyramidWithReplace(const unsigned int wi
 
 						const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-						Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, pixelFormat, pixelOrigin), false, &randomGenerator);
+						Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, pixelFormat, pixelOrigin), &randomGenerator);
 
 						const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1298,7 +1298,7 @@ bool TestFramePyramid::testCreateFramePyramidExtreme()
 				{
 					const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
+					const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), &randomGenerator);
 
 					const bool copyFirstLayer = RandomI::boolean(randomGenerator);
 
@@ -1414,7 +1414,7 @@ bool TestFramePyramid::testConstructFromFrameMultiLayer(const unsigned int width
 
 			do
 			{
-				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const CV::FramePyramid::DownsamplingMode dowsamplingMode = RandomI::random(randomGenerator, {CV::FramePyramid::DM_FILTER_11, CV::FramePyramid::DM_FILTER_14641});
 
@@ -1525,7 +1525,7 @@ bool TestFramePyramid::testConstructFromPyramid(const double testDuration, Worke
 		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
 		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), &randomGenerator);
 
 		const CV::FramePyramid::DownsamplingMode downsamplingMode = RandomI::random(randomGenerator, {CV::FramePyramid::DM_FILTER_11, CV::FramePyramid::DM_FILTER_14641});
 
@@ -1677,7 +1677,7 @@ bool TestFramePyramid::testConstructFromPyramidDeprecated(const CV::FramePyramid
 		const unsigned int width = sizes[i].first;
 		const unsigned int height = sizes[i].second;
 
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		CV::FramePyramid framePyramid = CV::FramePyramid(frame, downsamplingMode, 2u, true /*copyFirstLayer*/, nullptr);
 		allSucceeded = testConstructFromPyramidDeprecated(framePyramid, true,  0u, ALL_LAYERS, testDuration, worker) && allSucceeded;
@@ -2007,7 +2007,7 @@ bool TestFramePyramid::testReplaceWithFrame(const double testDuration, Worker& w
 				}
 			}
 
-			Frame frame = CV::CVUtilities::randomizedFrame(newFrameType, false, &randomGenerator);
+			Frame frame = CV::CVUtilities::randomizedFrame(newFrameType, &randomGenerator);
 
 			const Frame copyFrame(frame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
@@ -2211,7 +2211,7 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 		{
 			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), &randomGenerator);
 
 			Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
@@ -2288,7 +2288,7 @@ bool TestFramePyramid::testReplace11(const double testDuration, Worker& worker)
 
 		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(newWidth, newHeight, pixelFormat, pixelOrigin), false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(newWidth, newHeight, pixelFormat, pixelOrigin), &randomGenerator);
 
 		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
@@ -2384,7 +2384,7 @@ bool TestFramePyramid::testConstructor11(const double testDuration, Worker& work
 
 		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), &randomGenerator);
 
 		Worker* useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 
@@ -2437,7 +2437,7 @@ bool TestFramePyramid::testConstructor11(const double testDuration, Worker& work
 
 			// now, re replace the pyramid
 
-			frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false, &randomGenerator);
+			frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), &randomGenerator);
 
 			useWorker = RandomI::boolean(randomGenerator) ? &worker : nullptr;
 

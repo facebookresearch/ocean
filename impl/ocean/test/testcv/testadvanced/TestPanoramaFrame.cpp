@@ -242,9 +242,9 @@ bool TestPanoramaFrame::testCameraFrame2cameraFrame(const unsigned int performan
 				const unsigned int width = performanceIteration ? performanceWidth : RandomI::random(randomGenerator, 128u, 2048u);
 				const unsigned int height = performanceIteration ? performanceHeight : RandomI::random(randomGenerator, 128u, 2048u);
 
-				const Frame source = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(numberChannels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-				Frame target = CV::CVUtilities::randomizedFrame(source.frameType(), false, &randomGenerator);
-				Frame targetMask = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				const Frame source = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(numberChannels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+				Frame target = CV::CVUtilities::randomizedFrame(source.frameType(), &randomGenerator);
+				Frame targetMask = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const Frame clonedTarget(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 				const Frame clonedTargetMask(targetMask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);

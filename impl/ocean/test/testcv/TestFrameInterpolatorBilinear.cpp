@@ -800,7 +800,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel8BitPerChannel(const CV:
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 8u);
 
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		std::vector<uint8_t> interpolationResult(channels + 1u);
 
@@ -910,7 +910,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 
 		constexpr unsigned int channels = 3u;
 
-		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(2u, 2u, FrameType::genericPixelFormat<TSource, channels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(2u, 2u, FrameType::genericPixelFormat<TSource, channels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const TSource sourceTopLeft[channels] = {0, 0, 0};
 		const TSource sourceTopRight[channels] = {255, 0, 0};
@@ -924,7 +924,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 
 		const unsigned int dimension = pixelCenter == CV::PC_TOP_LEFT ? 256u : 512u;
 
-		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(dimension, dimension, FrameType::genericPixelFormat<TTarget, channels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(dimension, dimension, FrameType::genericPixelFormat<TTarget, channels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		if (pixelCenter == CV::PC_TOP_LEFT)
 		{
@@ -1099,7 +1099,7 @@ bool TestFrameInterpolatorBilinear::testInterpolatePixel(const CV::PixelCenter p
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 8u);
 
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<TSource>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<TSource>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		std::vector<TTarget> interpolationResult(channels + 1u);
 
@@ -2521,8 +2521,8 @@ bool TestFrameInterpolatorBilinear::testLookup(const unsigned int width, const u
 				backgroundColor[n] = T(RandomI::random(randomGenerator, 255u));
 			}
 
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame targetFrame = CV::CVUtilities::randomizedFrame(sourceFrame.frameType(), false, &randomGenerator);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(sourceFrame.frameType(), &randomGenerator);
 
 			const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -2645,7 +2645,7 @@ bool TestFrameInterpolatorBilinear::testResampleCameraImage(const double testDur
 
 			const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<T>(channels);
 
-			Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			if (!CV::FrameFilterGaussian::filter(sourceFrame, 7u, &worker))
 			{
@@ -2653,7 +2653,7 @@ bool TestFrameInterpolatorBilinear::testResampleCameraImage(const double testDur
 				allSucceeded = false;
 			}
 
-			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Scalar fovX = Numeric::deg2rad(70);
 
@@ -3095,7 +3095,7 @@ bool TestFrameInterpolatorBilinear::testPatchIntensitySum1Channel(const unsigned
 	{
 		for (const CV::PixelCenter pixelCenter : {CV::PC_TOP_LEFT, CV::PC_CENTER})
 		{
-			const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame linedIntegralImage = CV::IntegralImage::Comfort::createLinedImage(yFrame);
 			ocean_assert(linedIntegralImage.dataType() == FrameType::DT_UNSIGNED_INTEGER_32);

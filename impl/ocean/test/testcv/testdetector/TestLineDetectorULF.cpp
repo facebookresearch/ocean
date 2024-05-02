@@ -413,7 +413,7 @@ bool TestLineDetectorULF::testRMSBarEdgeDetector(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 50u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 50u, 1920u);
 
-		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		// we run the floating-point based implementation (almost original implementation)
 
@@ -571,7 +571,7 @@ bool TestLineDetectorULF::testRMSBarLineDetector(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 50u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 50u, 1920u);
 
-		Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const bool darkBackground = RandomI::random(randomGenerator, 1u) == 0u;
 
@@ -711,7 +711,7 @@ bool TestLineDetectorULF::testRMSStepEdgeDetector(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 50u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 50u, 1920u);
 
-		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		// we run the floating-point based implementation (almost original implementation)
 
@@ -873,7 +873,7 @@ bool TestLineDetectorULF::testRMSStepLineDetector(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 50u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 50u, 1920u);
 
-		Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const bool darkStart = RandomI::random(randomGenerator, 1u) == 0u;
 
@@ -1013,7 +1013,7 @@ bool TestLineDetectorULF::testSDStepEdgeDetector(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 50u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 50u, 1920u);
 
-		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		Frame responseFrameI(FrameType(width, height, FrameType::genericPixelFormat<int16_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT));
 		CV::CVUtilities::randomizeFrame(responseFrameI, false, &randomGenerator);
@@ -1097,7 +1097,7 @@ bool TestLineDetectorULF::testHorizontalEdgeDetector(const EdgeDetector& edgeDet
 		const unsigned int width = performanceIteration ? 1280u : RandomI::random(randomGenerator, 50u, 1920u);
 		const unsigned int height = performanceIteration ? 720u : RandomI::random(randomGenerator, 50u, 1920u);
 
-		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		ocean_assert(yFrame.isValid());
 		ocean_assert(edgeDetector.hasInvokeHorizontal(yFrame.width(), yFrame.height()));

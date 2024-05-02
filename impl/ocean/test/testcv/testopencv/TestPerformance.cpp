@@ -76,8 +76,8 @@ bool TestPerformance::performancePerspectiveWarp(const unsigned int width, const
 
 	do
 	{
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false);
-		Frame outputFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT));
+		Frame outputFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT));
 
 		cv::Mat cvFrame(height, width, CV_MAKETYPE(CV_8U, channels));
 		cv::Mat cvOutputFrame(height, width, CV_MAKETYPE(CV_8U, channels));

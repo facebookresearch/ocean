@@ -178,7 +178,7 @@ void CVUtilities::randomizeFrame(Frame& frame, const bool skipPaddingArea, Rando
 	}
 }
 
-Frame CVUtilities::randomizedFrame(const FrameType& frameType, const bool skipPaddingArea, RandomGenerator* randomGenerator, const bool limitedValueRange)
+Frame CVUtilities::randomizedFrame(const FrameType& frameType, RandomGenerator* randomGenerator, const bool limitedValueRange)
 {
 	if (!frameType.isValid())
 	{
@@ -206,7 +206,7 @@ Frame CVUtilities::randomizedFrame(const FrameType& frameType, const bool skipPa
 
 	Frame frame(frameType, paddingElementsPerPlane);
 
-	randomizeFrame(frame, skipPaddingArea, &localRandomGenerator, limitedValueRange);
+	randomizeFrame(frame, false /*skipPaddingArea*/, &localRandomGenerator, limitedValueRange);
 
 	frame.setTimestamp(Timestamp(RandomD::scalar(localRandomGenerator, -1000, 1000)));
 	frame.setRelativeTimestamp(Timestamp(RandomD::scalar(localRandomGenerator, -1000, 1000)));

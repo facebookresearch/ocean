@@ -155,7 +155,7 @@ bool TestLineDetectorHough::testLineDetectorRandomFrame(const double testDuratio
 
 		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
 
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const CV::Detector::LineDetectorHough::FilterType filterType = RandomI::random(1u) == 0u ? CV::Detector::LineDetectorHough::FT_SOBEL : CV::Detector::LineDetectorHough::FT_SCHARR;
 		CV::Detector::LineDetectorHough::FilterResponse filterResponse = CV::Detector::LineDetectorHough::FR_INVALID;
@@ -232,7 +232,7 @@ bool TestLineDetectorHough::testLineDetectorArtificialFrame(const unsigned int w
 
 	do
 	{
-		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 		frame.setValue(0xFF);
 
 		const unsigned int horizontalTop = RandomI::random(randomGenerator, 6u, width - 7u);

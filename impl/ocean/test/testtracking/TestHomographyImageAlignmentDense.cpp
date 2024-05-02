@@ -584,7 +584,7 @@ bool TestHomographyImageAlignmentDense::createRandomData(const FrameType& frameT
 	ocean_assert(frameType.numberPlanes() == 1u && frameType.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 	ocean_assert(maximalHomographyRadius >= 0);
 
-	templateFrame = CV::CVUtilities::randomizedFrame(frameType, false, &randomGenerator);
+	templateFrame = CV::CVUtilities::randomizedFrame(frameType, &randomGenerator);
 
 	const unsigned int channels = templateFrame.channels();
 

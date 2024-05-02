@@ -213,7 +213,7 @@ bool TestFrameFilterLaplace::testVariance1Channel(const unsigned int width, cons
 				testHeight = RandomI::random(randomGenerator, 3u, maxHeight);
 			}
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			performance.startIf(performanceIteration);
 				const double variance = CV::FrameFilterLaplace::variance1Channel8Bit(frame.constdata<uint8_t>(), frame.width(), frame.height(), frame.paddingElements());

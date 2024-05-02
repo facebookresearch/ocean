@@ -406,7 +406,7 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
 
-		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const Frame frameCopy(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -604,7 +604,7 @@ bool TestCanvas::testPointNoFraction(const double testDuration)
 				{
 					// testing point with perfect center, partially visible in the frame
 
-					Frame subFrame = CV::CVUtilities::randomizedFrame(FrameType(pointSize + 2u, pointSize + 2u, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+					Frame subFrame = CV::CVUtilities::randomizedFrame(FrameType(pointSize + 2u, pointSize + 2u, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 					subFrame.setValue(backgroundColor.data(), backgroundColor.size());
 
 					const Frame copySubFrame(subFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -690,14 +690,14 @@ bool TestCanvas::testPointWithFraction(const double testDuration)
 
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat<uint8_t>(channels);
 
-		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		// for verification, we render the point in four different frames and interpolate the results
 
-		Frame frameTopLeft = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
-		Frame frameTopRight = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
-		Frame frameBottomLeft = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
-		Frame frameBottomRight = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
+		Frame frameTopLeft = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
+		Frame frameTopRight = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
+		Frame frameBottomLeft = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
+		Frame frameBottomRight = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
 
 		for (const CV::PixelCenter pixelCenter : {CV::PC_TOP_LEFT, CV::PC_CENTER})
 		{

@@ -707,7 +707,7 @@ bool TestImageIO::testAnyImageEncodeDecode(const double testDuration)
 
 	do
 	{
-		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT));
 		ocean_assert(sourceFrame);
 
 		CV::FrameFilterGaussian::filter(sourceFrame, 7u, WorkerPool::get().conditionalScopedWorker(sourceFrame.pixels() >= 50u * 50u)());
@@ -833,7 +833,7 @@ bool TestImageIO::testInterchangeability(const double testDuration)
 		{
 			for (const FrameType::PixelOrigin& pixelOrigin : pixelOrigins)
 			{
-				Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
+				Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin));
 				ocean_assert(sourceFrame);
 
 				for (const std::string& imageType : imageTypes)
@@ -960,7 +960,7 @@ bool TestImageIO::testBmpImageEncodeDecode(const unsigned int width, const unsig
 	{
 		std::vector<uint8_t> buffer;
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin));
 		ocean_assert(sourceFrame);
 
 		unsigned int correctRows = 0u;
@@ -1061,7 +1061,7 @@ bool TestImageIO::testJpgImageEncodeDecode(const unsigned int width, const unsig
 	{
 		std::vector<uint8_t> buffer;
 
-		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin));
 		ocean_assert(sourceFrame);
 
 		unsigned int correctRows = 0u;
@@ -1181,7 +1181,7 @@ bool TestImageIO::testHeicImageEncodeDecode(const unsigned int width, const unsi
 	{
 		std::vector<uint8_t> buffer;
 
-		Frame sourceFrame =	CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
+		Frame sourceFrame =	CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin));
 		ocean_assert(sourceFrame);
 
 		unsigned int correctRows = 0u;
@@ -1301,7 +1301,7 @@ bool TestImageIO::testPngImageEncodeDecode(const unsigned int width, const unsig
 	{
 		std::vector<uint8_t> buffer;
 
-		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin));
 		ocean_assert(sourceFrame);
 
 		unsigned int correctRows = 0u;
@@ -1473,7 +1473,7 @@ bool TestImageIO::testTifImageEncodeDecode(const unsigned int width, const unsig
 	{
 		std::vector<uint8_t> buffer;
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin), false);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, pixelOrigin));
 		ocean_assert(sourceFrame);
 
 		unsigned int correctRows = 0u;
@@ -1571,7 +1571,7 @@ bool TestImageIO::testBufferImageRecorder(const FrameType& frameType, const std:
 		return false;
 	}
 
-	Frame sourceFrame = CV::CVUtilities::randomizedFrame(frameType, false);
+	Frame sourceFrame = CV::CVUtilities::randomizedFrame(frameType);
 
 	if (maximalAverageDifference > 0.0 && sourceFrame.width() >= 7u && sourceFrame.height() >= 7u)
 	{
@@ -1655,7 +1655,7 @@ bool TestImageIO::testQualityProperty(const std::string& imageType, const double
 	const Timestamp startTimestamp(true);
 	do
 	{
-		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT));
 
 		CV::FrameFilterGaussian::filter(frame, 7u, WorkerPool::get().conditionalScopedWorker(frame.pixels() >= 50u * 50u)());
 
@@ -1741,7 +1741,7 @@ bool TestImageIO::testColorProfileNameProperty(const std::string& imageType, con
 			const unsigned int width = RandomI::random(minSize, 1280u);
 			const unsigned int height = RandomI::random(minSize, 720u);
 
-			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false);
+			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT));
 
 			Media::Image::Properties encodedProperties;
 			encodedProperties.colorProfileName_ = colorProfileName;

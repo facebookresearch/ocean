@@ -1065,7 +1065,7 @@ bool TestFrameNormalizer::testValueRangeNormalizerToUint8(const double testDurat
 	{
 		Worker* useWorker = RandomI::random(randomGenerator, 1u) == 0u ? &worker : nullptr;
 
-		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<TFloat, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<TFloat, 1u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1125,7 +1125,7 @@ bool TestFrameNormalizer::testValueRangeNormalizerToUint8(const double testDurat
 			}
 		}
 
-		Frame normalized = CV::CVUtilities::randomizedFrame(FrameType(frame, FrameType::genericPixelFormat<uint8_t, 1u>()), false, &randomGenerator);
+		Frame normalized = CV::CVUtilities::randomizedFrame(FrameType(frame, FrameType::genericPixelFormat<uint8_t, 1u>()), &randomGenerator);
 
 		const Frame copyNormalized(normalized, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

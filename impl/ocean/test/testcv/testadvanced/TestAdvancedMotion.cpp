@@ -2102,8 +2102,8 @@ bool TestAdvancedMotion::stressTestTrackPointsBidirectionalSubPixelMirroredBorde
 		const unsigned int targetWidth = RandomI::random(tPatchSize * 2u, 2000u);
 		const unsigned int targetHeight = RandomI::random(tPatchSize * 2u, 2000u);
 
-		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		const Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(targetWidth, targetHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceWidth, sourceHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		const Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(targetWidth, targetHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		Indices32 indices;
 		Indices32* useIndices = RandomI::random(randomGenerator, 1u) == 0u ? &indices : nullptr;
@@ -2135,7 +2135,7 @@ Frame TestAdvancedMotion::createRandomTrackableFrame(const FrameType& frameType,
 {
 	ocean_assert(frameType.isValid() && frameType.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 
-	Frame frame = CV::CVUtilities::randomizedFrame(frameType, false, &randomGenerator);
+	Frame frame = CV::CVUtilities::randomizedFrame(frameType, &randomGenerator);
 
 	const unsigned int minDimension = std::min(frameType.width(), frameType.height());
 

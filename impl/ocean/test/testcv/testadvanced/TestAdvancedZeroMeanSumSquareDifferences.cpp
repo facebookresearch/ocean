@@ -1710,8 +1710,8 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testTwoPixelPatchWithMask8BitPerC
 		const unsigned int width1 = RandomI::random(randomGenerator, width - 1u, width + 1u);
 		const unsigned int height1 = RandomI::random(randomGenerator, height - 1u, height + 1u);
 
-		Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		Frame frame1 = CV::CVUtilities::randomizedFrame(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		Frame frame1 = CV::CVUtilities::randomizedFrame(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		frame0.makeContinuous(); // not yet supported
 		frame1.makeContinuous();

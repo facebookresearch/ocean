@@ -455,9 +455,9 @@ bool TestFrameFilter::testMagnitude(RandomGenerator& randomGenerator, Worker& wo
 	const FrameType::PixelFormat framePixelFormat = FrameType::genericPixelFormat<T>(channels);
 	const FrameType::PixelFormat magnitudePixelFormat = FrameType::genericPixelFormat<TMagnitude, 1u>();
 
-	const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, framePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator, true /*limitedValueRange*/);
+	const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, framePixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator, true /*limitedValueRange*/);
 
-	Frame magnitude = CV::CVUtilities::randomizedFrame(FrameType(frame, magnitudePixelFormat), false, &randomGenerator);
+	Frame magnitude = CV::CVUtilities::randomizedFrame(FrameType(frame, magnitudePixelFormat), &randomGenerator);
 
 	const Frame copyMagnitude(magnitude, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

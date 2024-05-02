@@ -45,7 +45,7 @@ bool TestFASTDetector::test(const Frame& frame, const double testDuration, Worke
 	}
 	else
 	{
-		yFrame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false);
+		yFrame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 	}
 
 	allSucceeded = testStandardStrength(yFrame, testDuration, worker) && allSucceeded;
@@ -74,7 +74,7 @@ bool TestFASTDetector::test(const Frame& frame, const double testDuration, Worke
 
 TEST(TestFASTDetector, StandardStrength)
 {
-	const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false);
+	const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 
 	Worker worker;
 	EXPECT_TRUE(TestFASTDetector::testStandardStrength(yFrame, GTEST_TEST_DURATION, worker));
@@ -82,7 +82,7 @@ TEST(TestFASTDetector, StandardStrength)
 
 TEST(TestFASTDetector, PreciseStrength)
 {
-	const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false);
+	const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(1280u, 720u, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 
 	Worker worker;
 	EXPECT_TRUE(TestFASTDetector::testPreciseStrength(yFrame, GTEST_TEST_DURATION, worker));
@@ -135,7 +135,7 @@ bool TestFASTDetector::testStandardStrength(const Frame& yFrame, const double te
 						const unsigned int testWidth = RandomI::random(9u, 1280u);
 						const unsigned int testHeight = RandomI::random(9u, 720u);
 
-						testFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false);
+						testFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 					}
 
 					CV::Detector::FASTFeatures features;
@@ -238,7 +238,7 @@ bool TestFASTDetector::testPreciseStrength(const Frame& yFrame, const double tes
 						const unsigned int testWidth = RandomI::random(9u, 1280u);
 						const unsigned int testHeight = RandomI::random(9u, 720u);
 
-						testFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false);
+						testFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 					}
 
 					CV::Detector::FASTFeatures features;

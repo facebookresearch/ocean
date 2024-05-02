@@ -1578,8 +1578,8 @@ bool TestSumSquareDifferences::testPatchAtBorder8BitPerChannel(const unsigned in
 		const unsigned int width1 = RandomI::random(randomGenerator, width - 1u, width + 1u);
 		const unsigned int height1 = RandomI::random(randomGenerator, height - 1u, height + 1u);
 
-		const Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		const Frame frame1 = CV::CVUtilities::randomizedFrame(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		const Frame frame1 = CV::CVUtilities::randomizedFrame(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const unsigned int paddingElements0 = frame0.paddingElements();
 		const unsigned int paddingElements1 = frame1.paddingElements();

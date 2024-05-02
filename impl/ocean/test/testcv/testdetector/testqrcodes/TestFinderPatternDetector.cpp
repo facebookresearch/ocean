@@ -186,7 +186,7 @@ bool TestFinderPatternDetector::testDetectFinderPatternSyntheticData(const unsig
 			}
 		}
 
-		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 		frame.setValue(backgroundColor);
 
 		for (const GroundtruthFinderPattern& groundtruthFinderPattern : groundtruthFinderPatterns)

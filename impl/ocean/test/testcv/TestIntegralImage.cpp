@@ -649,8 +649,8 @@ bool TestIntegralImage::testIntegralImage(const unsigned int width, const unsign
 			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
 			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, integralPixelFormat), false, &randomGenerator);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, integralPixelFormat), &randomGenerator);
 
 			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -739,7 +739,7 @@ bool TestIntegralImage::testLinedIntegralImageComfort(const double testDuration)
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1024u);
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame integralFrame = CV::IntegralImage::Comfort::createLinedImage(frame);
 
@@ -763,7 +763,7 @@ bool TestIntegralImage::testLinedIntegralImageComfort(const double testDuration)
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1024u);
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<int8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<int8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame integralFrame = CV::IntegralImage::Comfort::createLinedImage(frame);
 
@@ -787,7 +787,7 @@ bool TestIntegralImage::testLinedIntegralImageComfort(const double testDuration)
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1024u);
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<double>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<double>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame integralFrame = CV::IntegralImage::Comfort::createLinedImage(frame);
 
@@ -845,8 +845,8 @@ bool TestIntegralImage::testLinedIntegralImage(const unsigned int width, const u
 			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
 			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + 1u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + 1u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -941,8 +941,8 @@ bool TestIntegralImage::testLinedIntegralImageSquared(const unsigned int width, 
 			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
 			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + 1u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + 1u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1050,8 +1050,8 @@ bool TestIntegralImage::testLinedIntegralImageAndSquaredJoined(const unsigned in
 			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
 			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame integralAndSquaredFrame = CV::CVUtilities::randomizedFrame(FrameType((testWidth + 1u) * 2u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame integralAndSquaredFrame = CV::CVUtilities::randomizedFrame(FrameType((testWidth + 1u) * 2u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame copyIntegralAndSquaredFrame(integralAndSquaredFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1158,9 +1158,9 @@ bool TestIntegralImage::testLinedIntegralImageAndSquaredSeparate(const unsigned 
 			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, width);
 			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + 1u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame integralSquaredFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + 1u, testHeight + 1u, integralSquaredPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + 1u, testHeight + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame integralSquaredFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + 1u, testHeight + 1u, integralSquaredPixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 			const Frame copyIntegralSquaredFrame(integralSquaredFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -1258,7 +1258,7 @@ bool TestIntegralImage::testBorderedIntegralImageComfort(const double testDurati
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1024u);
 
-			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const unsigned int border = RandomI::random(randomGenerator, 1u, 100u);
 
@@ -1283,7 +1283,7 @@ bool TestIntegralImage::testBorderedIntegralImageComfort(const double testDurati
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1024u);
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<int8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<int8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const unsigned int border = RandomI::random(randomGenerator, 1u, 100u);
 
@@ -1308,7 +1308,7 @@ bool TestIntegralImage::testBorderedIntegralImageComfort(const double testDurati
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1024u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1024u);
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<double>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<double>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const unsigned int border = RandomI::random(randomGenerator, 1u, 100u);
 
@@ -1368,8 +1368,8 @@ bool TestIntegralImage::testBorderedIntegralImage(const unsigned int width, cons
 			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 			const unsigned int testBorder = benchmark ? 10u : RandomI::random(randomGenerator, 1u, 50u);
 
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1464,8 +1464,8 @@ bool TestIntegralImage::testBorderedIntegralImageSquared(const unsigned int widt
 			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 			const unsigned int testBorder = benchmark ? 10u : RandomI::random(randomGenerator, 1u, 50u);
 
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1560,8 +1560,8 @@ bool TestIntegralImage::testBorderedIntegralImageMirror(const unsigned int width
 			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 			const unsigned int testBorder = benchmark ? 10u : RandomI::random(randomGenerator, 1u, std::min(50u, std::min(testWidth, testHeight)));
 
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1656,8 +1656,8 @@ bool TestIntegralImage::testBorderedIntegralImageSquaredMirror(const unsigned in
 			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, height);
 			const unsigned int testBorder = benchmark ? 10u : RandomI::random(randomGenerator, 1u, std::min(50u, std::min(testWidth, testHeight)));
 
-			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, sourcePixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame integralFrame = CV::CVUtilities::randomizedFrame(FrameType(testWidth + testBorder * 2u + 1u, testHeight + testBorder * 2u + 1u, integralPixelFormat, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame copyIntegralFrame(integralFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1740,9 +1740,9 @@ bool TestIntegralImage::testVarianceCalculation(const double testDuration)
 	const unsigned int frameWidth = RandomI::random(randomGenerator, 1u, 1920u);
 	const unsigned int frameHeight = RandomI::random(randomGenerator, 1u, 1080u);
 
-	const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth, frameHeight, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-	Frame linedIntegralFrame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegral, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-	Frame linedIntegralSquaredFrame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegralSquared, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+	const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth, frameHeight, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+	Frame linedIntegralFrame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegral, 1u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+	Frame linedIntegralSquaredFrame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegralSquared, 1u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 	CV::IntegralImage::createLinedImage<T, TIntegral, 1u>(frame.constdata<T>(), linedIntegralFrame.data<TIntegral>(), frameWidth, frameHeight, frame.paddingElements(), linedIntegralFrame.paddingElements());
 	CV::IntegralImage::createLinedImageSquared<T, TIntegralSquared, 1u>(frame.constdata<T>(), linedIntegralSquaredFrame.data<TIntegralSquared>(), frameWidth, frameHeight, frame.paddingElements(), linedIntegralSquaredFrame.paddingElements());
@@ -1847,9 +1847,9 @@ bool TestIntegralImage::testVarianceCalculationTwoRegions(const double testDurat
 	const unsigned int frameWidth = RandomI::random(randomGenerator, 1u, 1920u);
 	const unsigned int frameHeight = RandomI::random(randomGenerator, 1u, 1080u);
 
-	const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth, frameHeight, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-	Frame linedIntegralFrame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegral, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-	Frame linedIntegralSquaredFrame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegralSquared, 1u>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+	const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth, frameHeight, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+	Frame linedIntegralFrame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegral, 1u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+	Frame linedIntegralSquaredFrame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth + 1u, frameHeight + 1u, FrameType::genericPixelFormat<TIntegralSquared, 1u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 	CV::IntegralImage::createLinedImage<T, TIntegral, 1u>(frame.constdata<T>(), linedIntegralFrame.data<TIntegral>(), frameWidth, frameHeight, frame.paddingElements(), linedIntegralFrame.paddingElements());
 	CV::IntegralImage::createLinedImageSquared<T, TIntegralSquared, 1u>(frame.constdata<T>(), linedIntegralSquaredFrame.data<TIntegralSquared>(), frameWidth, frameHeight, frame.paddingElements(), linedIntegralSquaredFrame.paddingElements());

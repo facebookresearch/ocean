@@ -3394,8 +3394,8 @@ bool TestFrameChannels::testTransformGeneric(const unsigned int width, const uns
 
 					const FrameType frameType(testWidth, testHeight, FrameType::genericPixelFormat<TElementType, tChannels>(), FrameType::ORIGIN_UPPER_LEFT);
 
-					const Frame sourceFrame = CV::CVUtilities::randomizedFrame(frameType, false, &randomGenerator);
-					Frame targetFrame = CV::CVUtilities::randomizedFrame(frameType, false, &randomGenerator);
+					const Frame sourceFrame = CV::CVUtilities::randomizedFrame(frameType, &randomGenerator);
+					Frame targetFrame = CV::CVUtilities::randomizedFrame(frameType, &randomGenerator);
 
 					const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -3554,8 +3554,8 @@ bool TestFrameChannels::testReverseChannelOrder(const unsigned int width, const 
 
 					const FrameType frameType(testWidth, testHeight, FrameType::genericPixelFormat<T, tChannels>(), FrameType::ORIGIN_UPPER_LEFT);
 
-					const Frame sourceFrame = CV::CVUtilities::randomizedFrame(frameType, false, &randomGenerator);
-					Frame targetFrame = CV::CVUtilities::randomizedFrame(frameType, false, &randomGenerator);
+					const Frame sourceFrame = CV::CVUtilities::randomizedFrame(frameType, &randomGenerator);
+					Frame targetFrame = CV::CVUtilities::randomizedFrame(frameType, &randomGenerator);
 
 					const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

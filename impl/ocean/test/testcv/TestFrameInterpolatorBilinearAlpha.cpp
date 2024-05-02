@@ -154,7 +154,7 @@ bool TestFrameInterpolatorBilinearAlpha::testInterpolatePixel8BitPerChannel(cons
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 		const unsigned int channels = RandomI::random(randomGenerator, 1u, 8u);
 
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const TScalar xMax = pixelCenter == CV::PC_TOP_LEFT ? TScalar(width - 1u) : TScalar(width);
 		const TScalar yMax = pixelCenter == CV::PC_TOP_LEFT ? TScalar(height - 1u) : TScalar(height);

@@ -136,8 +136,8 @@ void TestFramePyramid::testFrameDownsampling(const unsigned int width, const uns
 
 	do
 	{
-		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, width / 2u, height / 2u), false, &randomGenerator);
+		Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, width / 2u, height / 2u), &randomGenerator);
 
 		cv::Mat cvSourceFrame;
 		cv::Mat cvTargetFrame;
@@ -261,7 +261,7 @@ void TestFramePyramid::testFramePyramid(const unsigned int width, const unsigned
 
 	do
 	{
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat(FrameType::DT_UNSIGNED_INTEGER_8, channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 		cv::Mat cvFrame;
 
 		if (iteration % 3u == 0u)

@@ -318,8 +318,8 @@ bool TestFrameFilterMax::testMax(const unsigned int width, const unsigned int he
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, filterSize, 1024u);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, filterSize, 1024u);
 
-				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-				Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
+				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+				Frame target = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
 
 				const Frame copyTarget(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

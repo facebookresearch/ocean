@@ -156,14 +156,14 @@ bool TestFrameColorAdjustment::testAdjustmentNoMask(const unsigned int width, co
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 1920u);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 1080u);
 
-				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const unsigned int modificationHorizontalBins = std::min(3u, frame.width());
 				const unsigned int modificationHerticalBins = std::min(3u, frame.height());
 
 				const ObjectLookupCenter2<tChannels> modification(modificationTable<tChannels>(frame.width(), frame.height(), modificationHorizontalBins, modificationHerticalBins, -30, 30, randomGenerator));
 
-				Frame modifiedFrame = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
+				Frame modifiedFrame = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
 
 				const Frame copyModifiedFrame(modifiedFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -261,14 +261,14 @@ bool TestFrameColorAdjustment::testAdjustmentWithMask(const unsigned int width, 
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 1920u);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 1080u);
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const unsigned int modificationHorizontalBins = std::min(3u, frame.width());
 				const unsigned int modificationHerticalBins = std::min(3u, frame.height());
 
 				const ObjectLookupCenter2<tChannels> modification(modificationTable<tChannels>(frame.width(), frame.height(), modificationHorizontalBins, modificationHerticalBins, -30, 30, randomGenerator));
 
-				Frame modifiedFrame = CV::CVUtilities::randomizedFrame(frame.frameType(), false, &randomGenerator);
+				Frame modifiedFrame = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
 
 				const Frame copyModifiedFrame(modifiedFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

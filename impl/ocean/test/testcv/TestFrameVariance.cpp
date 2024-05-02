@@ -131,8 +131,8 @@ bool TestFrameVariance::testDeviation1Channel8Bit(const unsigned int width, cons
 			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, window_2, 1024u);
 			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, window_2, 1024u);
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(1u), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			Frame deviationFrame = CV::CVUtilities::randomizedFrame(FrameType(frame.frameType(), FrameType::genericPixelFormat<uint8_t>(1u)), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<T>(1u), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			Frame deviationFrame = CV::CVUtilities::randomizedFrame(FrameType(frame.frameType(), FrameType::genericPixelFormat<uint8_t>(1u)), &randomGenerator);
 
 			const Frame copyDevicationFrame(deviationFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -275,7 +275,7 @@ bool TestFrameVariance::testFrameStatistics(const unsigned width, const unsigned
 			const unsigned int testWidth = benchmark ? width : RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int testHeight = benchmark ? height : RandomI::random(randomGenerator, 1u, 1920u);
 
-			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<TElementType, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<TElementType, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			double mean[tChannels];
 			double variance[tChannels];

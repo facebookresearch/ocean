@@ -592,7 +592,7 @@ bool TestInitializerI1::testAppearanceMappingAreaConstrained(const unsigned int 
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 100u, width);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 100u, height);
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);;
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);;
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -791,7 +791,7 @@ bool TestInitializerI1::testAppearanceMapping(const unsigned int width, const un
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 100u, width);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 100u, height);
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -988,7 +988,7 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1011,7 +1011,7 @@ bool TestInitializerI1::testCoarserMappingAdaption(const unsigned int width, con
 				const unsigned int coarserTestWidth = testWidth / factor;
 				const unsigned int coarserTestHeight = testHeight / factor;
 
-				Frame coarserFrame = CV::CVUtilities::randomizedFrame(FrameType(frame, coarserTestWidth, coarserTestHeight), false, &randomGenerator);
+				Frame coarserFrame = CV::CVUtilities::randomizedFrame(FrameType(frame, coarserTestWidth, coarserTestHeight), &randomGenerator);
 
 				const Frame coarserMask = Utilities::randomizedInpaintingMask(coarserTestWidth, coarserTestHeight, 0x00u, randomGenerator);
 
@@ -1215,7 +1215,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1238,7 +1238,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionAreaConstrained(const unsigned
 				const unsigned int coarserTestWidth = testWidth / factor;
 				const unsigned int coarserTestHeight = testHeight / factor;
 
-				Frame coarserFrame = CV::CVUtilities::randomizedFrame(FrameType(frame, coarserTestWidth, coarserTestHeight), false, &randomGenerator);
+				Frame coarserFrame = CV::CVUtilities::randomizedFrame(FrameType(frame, coarserTestWidth, coarserTestHeight), &randomGenerator);
 
 				const Frame coarserMask = Utilities::randomizedInpaintingMask(coarserTestWidth, coarserTestHeight, 0x00u, randomGenerator);
 
@@ -1446,7 +1446,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -1469,7 +1469,7 @@ bool TestInitializerI1::testCoarserMappingAdaptionSpatialCostMask(const unsigned
 				const unsigned int coarserTestWidth = testWidth / factor;
 				const unsigned int coarserTestHeight = testHeight / factor;
 
-				Frame coarserFrame = CV::CVUtilities::randomizedFrame(FrameType(frame, coarserTestWidth, coarserTestHeight), false, &randomGenerator);
+				Frame coarserFrame = CV::CVUtilities::randomizedFrame(FrameType(frame, coarserTestWidth, coarserTestHeight), &randomGenerator);
 
 				const Frame coarserMask = Utilities::randomizedInpaintingMask(coarserTestWidth, coarserTestHeight, 0x00u, randomGenerator);
 
@@ -1736,7 +1736,7 @@ bool TestInitializerI1::testRandomMapping(const double testDuration, Worker& wor
 
 			const unsigned int channels = RandomI::random(randomGenerator, 1u, 4u);
 
-			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
@@ -1818,7 +1818,7 @@ bool TestInitializerI1::testRandomMappingAreaConstrained(const double testDurati
 
 			const unsigned int channels = RandomI::random(randomGenerator, 1u, 4u);
 
-			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+			Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 			Frame mask;
 			Frame filter;
@@ -1972,7 +1972,7 @@ bool TestInitializerI1::testShrinkingErosion(const unsigned int width, const uns
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -2132,7 +2132,7 @@ bool TestInitializerI1::testShrinkingErosionRandomized(const unsigned int width,
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
@@ -2294,7 +2294,7 @@ bool TestInitializerI1::testShrinkingPatchMatching(const unsigned int width, con
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 10u, width / 2u);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 10u, height / 2u);
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

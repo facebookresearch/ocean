@@ -2015,8 +2015,8 @@ bool TestAdvancedSumSquareDifferences::testTwoPixelPatchWithMask8BitPerChannel(c
 		const unsigned int width1 = RandomI::random(randomGenerator, width - 1u, width + 1u);
 		const unsigned int height1 = RandomI::random(randomGenerator, height - 1u, height + 1u);
 
-		const Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		const Frame frame1 = CV::CVUtilities::randomizedFrame(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		const Frame frame1 = CV::CVUtilities::randomizedFrame(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const unsigned int framePaddingElements0 = frame0.paddingElements();
 		const unsigned int framePaddingElements1 = frame1.paddingElements();
@@ -2229,8 +2229,8 @@ bool TestAdvancedSumSquareDifferences::testTwoSubPixelPatchWithMask8BitPerChanne
 		const unsigned int width1 = RandomI::random(randomGenerator, width - 1u, width + 1u);
 		const unsigned int height1 = RandomI::random(randomGenerator, height - 1u, height + 1u);
 
-		const Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-		const Frame frame1 = CV::CVUtilities::randomizedFrame(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		const Frame frame1 = CV::CVUtilities::randomizedFrame(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const unsigned int framePaddingElements0 = frame0.paddingElements();
 		const unsigned int framePaddingElements1 = frame1.paddingElements();

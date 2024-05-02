@@ -261,7 +261,7 @@ bool TestMappingI1::testApplyMapping(const unsigned int width, const unsigned in
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
 				CV::Synthesis::MappingI1 mapping(frame.width(), frame.height());
@@ -408,8 +408,8 @@ bool TestMappingI1::testSumSquaredDifference5x5MaskNoCenter(const unsigned int w
 			const unsigned int testWidth = performanceIteration ? width : RandomI::random(5u, width);
 			const unsigned int testHeight = performanceIteration ? height : RandomI::random(5u, height);
 
-			const Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
-			const Frame frame1 = CV::CVUtilities::randomizedFrame(frame0.frameType(), false, &randomGenerator);
+			const Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			const Frame frame1 = CV::CVUtilities::randomizedFrame(frame0.frameType(), &randomGenerator);
 
 			const Frame mask0 = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
@@ -551,7 +551,7 @@ bool TestMappingI1::testAppearanceCost5x5(const unsigned int width, const unsign
 		const unsigned int testWidth = RandomI::random(randomGenerator, 5u, width);
 		const unsigned int testHeight = RandomI::random(randomGenerator, 5u, height);
 
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), false, &randomGenerator);
+		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
