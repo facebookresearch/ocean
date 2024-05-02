@@ -4,8 +4,6 @@
 
 #include "ocean/base/String.h"
 
-#include <map>
-
 #include <mfreadwrite.h>
 #include <mferror.h>
 #include <uuids.h>
@@ -251,9 +249,9 @@ bool Utilities::enumerateTransforms(std::string& result)
 	IMFActivate** activates = nullptr;
 	UINT32 numberActivates = 0;
 
-	typedef std::pair<GUID, std::string> CategoryPair;
+	using CategoryPair = std::pair<GUID, std::string>;
 
-	const static CategoryPair categories[] =
+	static std::vector<CategoryPair> categories =
 	{
 		CategoryPair(MFT_CATEGORY_AUDIO_DECODER, "Audio decoders"),
 		CategoryPair(MFT_CATEGORY_AUDIO_EFFECT, "Audio effects"),
@@ -267,18 +265,22 @@ bool Utilities::enumerateTransforms(std::string& result)
 		CategoryPair(MFT_CATEGORY_VIDEO_PROCESSOR, "Video processors")
 	};
 
-	for (unsigned int c = 0u; c < sizeof(categories) / sizeof(CategoryPair); ++c)
+	bool first = true;
+
+	for (const CategoryPair& categoryPair : categories)
 	{
-		if (c > 0)
+		if (!first)
 		{
 			result += "\n\n";
 		}
 
+		first = false;
+
 		result += "Transform category: ";
-		result += categories[c].second;
+		result += categoryPair.second;
 		result += ":\n";
 
-		const HRESULT enumResult = MFTEnumEx(categories[c].first, MFT_ENUM_FLAG_ALL, nullptr, nullptr, &activates, &numberActivates);
+		const HRESULT enumResult = MFTEnumEx(categoryPair.first, MFT_ENUM_FLAG_ALL, nullptr, nullptr, &activates, &numberActivates);
 		ocean_assert_and_suppress_unused(enumResult == S_OK, enumResult);
 
 		for (size_t n = 0; n < numberActivates; ++n)
