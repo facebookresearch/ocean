@@ -3,7 +3,7 @@
 #ifndef FACEBOOK_APPLICATION_OCEAN_DEMO_PLATFORM_OSXOBJC_OSX_WRAPPER_H
 #define FACEBOOK_APPLICATION_OCEAN_DEMO_PLATFORM_OSXOBJC_OSX_WRAPPER_H
 
-#include <application/ocean/demo/platform/ApplicationDemoPlatform.h>
+#include "application/ocean/demo/platform/ApplicationDemoPlatform.h"
 
 /**
  * @ingroup applicationdemoplatform
