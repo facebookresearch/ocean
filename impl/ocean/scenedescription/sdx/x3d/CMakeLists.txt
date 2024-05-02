@@ -2,6 +2,8 @@
 
 cmake_minimum_required(VERSION 3.26)
 
+add_subdirectory(jni)
+
 if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_scenedescription_sdx_x3d")
@@ -53,13 +55,13 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
-            DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-            COMPONENT lib
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        COMPONENT lib
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/scenedescription/sdx/x3d
-            COMPONENT include
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/scenedescription/sdx/x3d
+        COMPONENT include
     )
 
 endif()
