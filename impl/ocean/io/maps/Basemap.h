@@ -714,7 +714,7 @@ class OCEAN_IO_MAPS_EXPORT Basemap
 		/**
 		 * This class stores the information belonging to one map tile.
 		 */
-		class Tile
+		class OCEAN_IO_MAPS_EXPORT Tile
 		{
 			public:
 

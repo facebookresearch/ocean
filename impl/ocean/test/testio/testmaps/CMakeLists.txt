@@ -2,11 +2,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(testmaps)
+if (MACOS OR IOS OR LINUX OR WIN32)
 
-if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
-
-    set(OCEAN_TARGET_NAME "ocean_test_testio")
+    set(OCEAN_TARGET_NAME "ocean_test_testio_testmaps")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -23,7 +21,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_IO_EXPORT")
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_IO_MAPS_EXPORT")
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
@@ -37,8 +35,13 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
         PUBLIC
             ocean_base
             ocean_io
+            ocean_io_maps
             ocean_math
+            ocean_network
+            ocean_platform
+            ocean_system
             ocean_test
+            ocean_test_testio
     )
 
     # Installation
@@ -48,7 +51,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/test/testio
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/test/testio/testmaps
             COMPONENT include
     )
 

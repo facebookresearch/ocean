@@ -2,6 +2,8 @@
 
 cmake_minimum_required(VERSION 3.26)
 
+add_subdirectory(testmaps)
+
 if (MACOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_io_testio")
