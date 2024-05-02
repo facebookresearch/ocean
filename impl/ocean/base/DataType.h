@@ -1542,12 +1542,19 @@ inline Float16::operator float() const
 	}
 	else if (data_.ieee_.exponent_ == 31u)
 	{
+		static_assert(sizeof(uint32_t) == sizeof(float), "Invalid data type!");
+
+		constexpr uint32_t integerValue = 0x7F800000u; // see NumericF::infinity()
+
+		float floatValueInfinity;
+		memcpy(&floatValueInfinity, &integerValue, sizeof(integerValue));
+
 		if (data_.ieee_.sign_)
 		{
-			return -std::numeric_limits<float>::infinity();
+			return -floatValueInfinity;
 		}
 
-		return std::numeric_limits<float>::infinity();
+		return floatValueInfinity;
 	}
 	else
 	{
