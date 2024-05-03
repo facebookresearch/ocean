@@ -1122,6 +1122,9 @@ std::string ALiveVideo::androidFormatToString(const int32_t androidFormat)
 
 		case AIMAGE_FORMAT_PRIVATE:
 			return "AIMAGE_FORMAT_PRIVATE";
+
+		case AIMAGE_FORMAT_YCBCR_P010:
+			return "AIMAGE_FORMAT_YCBCR_P010";
 	}
 
 	ocean_assert(false && "Unknown Android format");

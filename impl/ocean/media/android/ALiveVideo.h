@@ -36,6 +36,19 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 	friend class ALibrary;
 	friend class ALiveVideoManager;
 
+	private:
+
+		/**
+		 * Definition of Android image formats that are missing from the NDK
+		 * These values are used but they are missing from the NDK header, media/NdkImage.h.
+		 * @see https://developer.android.com/reference/kotlin/android/graphics/ImageFormat
+		 */
+		enum AIMAGE_FORMATS_MISSING_FROM_NDK : int32_t
+		{
+			// Android YUV P010 format.
+			AIMAGE_FORMAT_YCBCR_P010 = 54,
+		};
+
 	public:
 
 		/**
