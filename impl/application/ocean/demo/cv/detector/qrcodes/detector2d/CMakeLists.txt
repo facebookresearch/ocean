@@ -63,12 +63,14 @@ if (MACOS)
     # Target definition
     add_executable(${OCEAN_TARGET_NAME} MACOSX_BUNDLE ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
 
+    set(MACOSX_DEPLOYMENT_TARGET "10.12")
+    set(PRODUCT_BUNDLE_IDENTIFIER "com.meta.ocean.application.demo.cv.detector.qrcodes.detector.osx")
+    set(EXECUTABLE_NAME ${OCEAN_TARGET_NAME})
+    set(PRODUCT_NAME ${OCEAN_TARGET_NAME})
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/osx/Info.plist ${CMAKE_CURRENT_BINARY_DIR})
     set_target_properties(${OCEAN_TARGET_NAME} PROPERTIES
         BUNDLE True
-        MACOSX_BUNDLE_BUNDLE_NAME ${OCEAN_TARGET_NAME}
-        MACOSX_BUNDLE_BUNDLE_VERSION ${CMAKE_PROJECT_VERSION}
-        MACOSX_BUNDLE_GUI_IDENTIFIER com.meta.ocean.application.demo.cv.detector.qrcodes.detector.osx
-        MACOSX_BUNDLE_SHORT_VERSION_STRING ${CMAKE_PROJECT_VERSION}
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_BINARY_DIR}/Info.plist"
     )
 
     target_include_directories(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_IMPL_DIR})
