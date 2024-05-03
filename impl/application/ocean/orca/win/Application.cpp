@@ -169,7 +169,7 @@ BOOL Application::InitInstance()
 
 	if (!config_)
 	{
-		config_ = std::make_unique<Platform::Win::RegistryConfig>("Software\\fayteq\\Orca\\0.9");
+		config_ = std::make_unique<Platform::Win::RegistryConfig>("Software\\Ocean\\Orca\\0.9");
 	}
 
 	ocean_assert(config_);
