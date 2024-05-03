@@ -82,7 +82,7 @@ if (ANDROID)
             ocean_media
             ocean_media_openimagelibraries
             ocean_system
-            # ocean_platform_android
+            ocean_platform_android
             ocean_test_testcv_testdetector
             ocean_tracking
     )
