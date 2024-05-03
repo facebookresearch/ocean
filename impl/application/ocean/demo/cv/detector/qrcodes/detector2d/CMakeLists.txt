@@ -34,15 +34,22 @@ if (ANDROID OR IOS OR MACOS)
         )
     endif()
 
+    if (ANDROID)
+        target_link_libraries(${OCEAN_TARGET_NAME}
+            PUBLIC
+                ocean_media_openimagelibraries
+        )
+    endif()
+
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
-            DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            COMPONENT lib
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        COMPONENT lib
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/application/ocean/demo/cv/detector/qrcodes/detector2d
-            COMPONENT include
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/application/ocean/demo/cv/detector/qrcodes/detector2d
+        COMPONENT include
     )
 
 endif()
@@ -105,5 +112,56 @@ if (MACOS)
 
     # Install Application.nib
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Resources DESTINATION bin/${OCEAN_TARGET_NAME}.app/Contents)
+
+endif()
+
+if (ANDROID)
+
+    set(OCEAN_TARGET_NAME "application_ocean_demo_cv_detector_qrcodes_detector2d_android_native")
+
+    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/android/*.h")
+    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/android/*.cpp")
+
+    add_library(${OCEAN_TARGET_NAME} SHARED ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
+
+    target_include_directories(${OCEAN_TARGET_NAME} PRIVATE "${OCEAN_IMPL_DIR}")
+
+    target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_PREPROCESSOR_FLAGS} "-DOCEAN_RUNTIME_SHARED")
+    target_compile_options(${OCEAN_TARGET_NAME}
+        PUBLIC
+            ${OCEAN_COMPILER_FLAGS}
+
+        PRIVATE
+            "-fexceptions"
+    )
+
+    # The output name of this target must match the one used in `android/Detector2DActivity.java`
+    set_target_properties(${OCEAN_TARGET_NAME} PROPERTIES OUTPUT_NAME OceanDemoCVDetectorQRCodes)
+
+    target_link_libraries(${OCEAN_TARGET_NAME}
+        PUBLIC
+            application_ocean_demo_cv_detector_qrcodes_detector2d
+            ocean_devices_android
+            ocean_media_android
+            ocean_platform_android_application
+            "-Wl,--whole-archive"
+            ocean_base_jni
+            ocean_devices_android_jni
+            ocean_media_android_jni
+            ocean_platform_android_application_jni
+            ocean_rendering_glescenegraph_jni
+            "-Wl,--no-whole-archive"
+    )
+
+    # Installation
+    install(TARGETS ${OCEAN_TARGET_NAME}
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        COMPONENT lib
+    )
+
+    install(FILES ${OCEAN_TARGET_HEADER_FILES}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/application/ocean/demo/cv/detector/qrcodes/detector2d/android
+        COMPONENT include
+    )
 
 endif()
