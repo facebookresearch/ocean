@@ -35,14 +35,6 @@ std::string System::environmentVariable(const std::string& variable, const bool 
 
 	if (!wxGetEnv(String::toWString(variable), &wxValue))
 	{
-#ifdef __APPLE__
-		// **TODO** **HACK** this is a workaround for macOS 10.10 and up do not support environment variables anymore
-		if (variable == "OCEAN_DEVELOPMENT_PATH")
-		{
-			return std::string("/fayteq/trunk");
-		}
-#endif
-
 		return std::string();
 	}
 
