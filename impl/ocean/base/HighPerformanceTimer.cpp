@@ -13,11 +13,7 @@
 	#pragma clang diagnostic push
 	#pragma clang diagnostic ignored "-Wimport-preprocessor-directive-pedantic"
 	#include <TargetConditionals.h>
-	#if defined(OCEAN_PLATFORM_BUILD_APPLE_IOS) && !defined(OCEAN_HIGHPERFORMANCETIMER_DISABLE_METAMONOTONICTIME)
-		#include <METAMonotonicTime/METAMonotonicTime.h>
-	#else
-		#include <mach/mach_time.h>
-	#endif
+	#include <mach/mach_time.h>
 	#pragma clang diagnostic pop
 #else
 #include <ctime>
@@ -76,32 +72,43 @@ HighPerformanceTimer::Ticks HighPerformanceTimer::precision()
 
 HighPerformanceTimer::Ticks HighPerformanceTimer::ticks()
 {
-	Ticks value = Ticks(-1);
+#ifdef OCEAN_USE_EXTERNAL_PRIVACY_CONFIRM_TICKS
 
-#ifdef _WINDOWS
+	return Ticks(HighPerformanceTimer_externalPrivacyConfirmTicks());
 
-	ocean_assert(sizeof(Ticks) == sizeof(LARGE_INTEGER));
-	const BOOL result = QueryPerformanceCounter((LARGE_INTEGER*)&value);
-	ocean_assert_and_suppress_unused(result == TRUE, result);
+#else // OCEAN_USE_EXTERNAL_PRIVACY_CONFIRM_TICKS
 
-#elif defined(__APPLE__)
+	#ifdef _WINDOWS
 
-#if defined(OCEAN_PLATFORM_BUILD_APPLE_IOS) && !defined(OCEAN_HIGHPERFORMANCETIMER_DISABLE_METAMONOTONICTIME)
-	value = METAMonotonicDeviceTimeGetMachTime();
-#else
-	value = mach_absolute_time();
-#endif
+		ocean_assert(sizeof(Ticks) == sizeof(LARGE_INTEGER));
 
-#else
+		LARGE_INTEGER largeInteger;
+		const BOOL result = QueryPerformanceCounter(&largeInteger);
+		ocean_assert_and_suppress_unused(result == TRUE, result);
 
-	struct timespec time;
-	clock_gettime(CLOCK_REALTIME, &time);
+		Ticks value;
+		memcpy(&value, &largeInteger, sizeof(value));
 
-	value = Ticks(time.tv_sec) * Ticks(1000000000) + Ticks(time.tv_nsec);
+		return value;
 
-#endif
+	#elif defined(__APPLE__)
 
-	return value;
+		#if defined(OCEAN_BUILD_WITH_BUCK) && defined(OCEAN_PLATFORM_BUILD_APPLE_IOS)
+			#error HighPerformanceTimer: The privacy confirm ticks function must be used when building in this configuration
+		#endif
+
+		return Ticks(mach_absolute_time());
+
+	#else
+
+		struct timespec time;
+		clock_gettime(CLOCK_REALTIME, &time);
+
+		return Ticks(time.tv_sec) * Ticks(1000000000) + Ticks(time.tv_nsec);
+
+	#endif
+
+#endif // OCEAN_USE_EXTERNAL_PRIVACY_CONFIRM_TICKS
 }
 
 HighPerformanceTimer::Ticks HighPerformanceTimer::ticksPerSecond()
@@ -952,4 +959,5 @@ void HighPerformanceBenchmark::addMeasurement(const std::string& name, const dou
 		i->second.emplace_back(measurement);
 	}
 }
+
 }

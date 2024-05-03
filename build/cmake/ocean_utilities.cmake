@@ -73,10 +73,6 @@ function(get_ocean_preprocessor_flags ocean_preprocessor_flags)
         list(APPEND local_preprocessor_flags "-D_CRT_SECURE_NO_DEPRECATE")
     endif()
 
-    if (IOS)
-        list(APPEND local_preprocessor_flags "-DOCEAN_HIGHPERFORMANCETIMER_DISABLE_METAMONOTONICTIME")
-    endif()
-
     set(${ocean_preprocessor_flags} ${local_preprocessor_flags} PARENT_SCOPE)
 endfunction()
 

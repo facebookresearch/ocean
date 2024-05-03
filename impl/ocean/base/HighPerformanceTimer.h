@@ -9,7 +9,6 @@
 
 #include <cfloat>
 #include <numeric>
-#include <unordered_map>
 
 namespace Ocean
 {
@@ -99,6 +98,16 @@ class OCEAN_BASE_EXPORT HighPerformanceTimer
 		/// The number of CPU ticks when starting the timer.
 		Ticks ticksStart_ = Ticks(0);
 };
+
+#ifdef OCEAN_USE_EXTERNAL_PRIVACY_CONFIRM_TICKS
+
+/**
+ * Returns the recent CPU ticks which will contain a random offset which is constant through the execution of the process.
+ * @return Recent CPU ticks with random offset
+ */
+uint64_t HighPerformanceTimer_externalPrivacyConfirmTicks();
+
+#endif // OCEAN_USE_EXTERNAL_PRIVACY_CONFIRM_TICKS
 
 /**
  * This class implements a simple module gathering high performance timer statistics.
