@@ -25,6 +25,8 @@ include(CPM.cmake)
 
 set(CMAKE_PLATFORM_NO_VERSIONED_SONAME TRUE)
 
+set(CMAKE_STAGING_PREFIX ${CMAKE_INSTALL_PREFIX})
+
 # Do not change the order of these.
 if(BUILD_PASS_INDEX EQUAL 0)
     include(libjpeg.cmake)

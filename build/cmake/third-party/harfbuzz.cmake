@@ -3,7 +3,7 @@ message(CHECK_START "harfbuzz")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
 CPMAddPackage(
-  NAME           harbfuzz
+  NAME           harfbuzz
   GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
   GIT_TAG        8.4.0
 )

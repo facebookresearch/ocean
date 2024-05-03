@@ -4,6 +4,8 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
 if(BUILD_SHARED_LIBS)
   set(DYNAMIC_LOADER ON)
+else()
+  set(DYNAMIC_LOADER OFF)
 endif()
 
 CPMAddPackage(
