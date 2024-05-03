@@ -14,10 +14,6 @@
 	#include "ocean/test/testmedia/TestWIC.h"
 #endif
 
-#ifndef OCEAN_DO_NOT_TEST_VRS
-	#include "ocean/test/testmedia/TestVRS.h"
-#endif
-
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Processor.h"
