@@ -1,0 +1,55 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b975d49..40a6b0b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,3 +1,5 @@
++# Meta: modified by replacing all occurences of CMAKE_SOURCE_DIR with CMAKE_CURRENT_LIST_DIR
++#
+ #-----------------------------------------------------------------------------
+ #
+ #  CMake config
+@@ -38,7 +40,7 @@ else()
+     endif()
+ endif()
+ 
+-include_directories("${CMAKE_SOURCE_DIR}/include")
++include_directories("${CMAKE_CURRENT_LIST_DIR}/include")
+ 
+ set(PROTOZERO_DATA_VIEW "" CACHE STRING "Type used for protozero::data_view")
+ if(NOT PROTOZERO_DATA_VIEW STREQUAL "")
+@@ -68,11 +70,11 @@ if(CLANG_TIDY AND PROTOBUF_FOUND)
+     add_custom_target(clang-tidy
+         ${CLANG_TIDY}
+         -p ${CMAKE_BINARY_DIR}
+-        ${CMAKE_SOURCE_DIR}/test/*.cpp
+-        ${CMAKE_SOURCE_DIR}/test/t/*/reader_test_cases.cpp
+-        ${CMAKE_SOURCE_DIR}/test/t/*/writer_test_cases.cpp
+-        ${CMAKE_SOURCE_DIR}/test/unit/*.cpp
+-        ${CMAKE_SOURCE_DIR}/tools/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/test/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/test/t/*/reader_test_cases.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/test/t/*/writer_test_cases.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/test/unit/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/tools/*.cpp
+     )
+     add_dependencies(clang-tidy writer_tests)
+ else()
+@@ -94,12 +96,12 @@ if(CPPCHECK)
+     add_custom_target(cppcheck
+         ${CPPCHECK}
+         -Uassert --std=c++11 --enable=all
+-        ${CMAKE_SOURCE_DIR}/include/protozero/*.hpp
+-        ${CMAKE_SOURCE_DIR}/test/*.cpp
+-        ${CMAKE_SOURCE_DIR}/test/include/*.hpp
+-        ${CMAKE_SOURCE_DIR}/test/t/*/*.cpp
+-        ${CMAKE_SOURCE_DIR}/test/unit/*.cpp
+-        ${CMAKE_SOURCE_DIR}/tools/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/include/protozero/*.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/test/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/test/include/*.hpp
++        ${CMAKE_CURRENT_LIST_DIR}/test/t/*/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/test/unit/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/tools/*.cpp
+     )
+ else()
+     message(STATUS "Looking for cppcheck - not found")

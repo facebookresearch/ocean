@@ -7,11 +7,13 @@ set(tiff-tools OFF CACHE BOOL "")
 set(tiff-tests OFF CACHE BOOL "")
 set(tiff-contrib OFF CACHE BOOL "")
 
+find_package(Git REQUIRED)
+
 CPMAddPackage(
   NAME           libtiff
   GIT_REPOSITORY https://github.com/libsdl-org/libtiff.git
   GIT_TAG        v4.6.0
-  PATCH_COMMAND  ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/libtiff/libtiff/CMakeLists.txt" ./libtiff
+  PATCH_COMMAND  ${GIT_EXECUTABLE} apply "${CMAKE_CURRENT_SOURCE_DIR}/libtiff/libtiff.patch"
 )
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)

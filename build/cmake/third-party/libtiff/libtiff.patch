@@ -1,0 +1,19 @@
+diff --git a/libtiff/CMakeLists.txt b/libtiff/CMakeLists.txt
+index 9c8024e..c47573c 100755
+--- a/libtiff/CMakeLists.txt
++++ b/libtiff/CMakeLists.txt
+@@ -165,10 +165,10 @@ if(WEBP_SUPPORT)
+   target_link_libraries(tiff PRIVATE WebP::webp)
+   string(APPEND tiff_requires_private " libwebp")
+ endif()
+-if(CMath_LIBRARY)
+-  target_link_libraries(tiff PRIVATE CMath::CMath)
+-  list(APPEND tiff_libs_private_list "${CMath_LIBRARY}")
+-endif()
++# if(CMath_LIBRARY)
++#   target_link_libraries(tiff PRIVATE CMath::CMath)
++#   list(APPEND tiff_libs_private_list "${CMath_LIBRARY}")
++# endif()
+ 
+ set(tiff_libs_private_list "${tiff_libs_private_list}" PARENT_SCOPE)
+ set(tiff_requires_private "${tiff_requires_private}" PARENT_SCOPE)
