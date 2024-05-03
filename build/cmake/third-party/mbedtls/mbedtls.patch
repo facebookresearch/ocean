@@ -1,0 +1,13 @@
+diff --git a/include/mbedtls/mbedtls_config.h b/include/mbedtls/mbedtls_config.h
+index e1456b9a..f90a6f5a 100644
+--- a/include/mbedtls/mbedtls_config.h
++++ b/include/mbedtls/mbedtls_config.h
+@@ -2233,7 +2233,7 @@
+  *
+  * This modules adds support for the AES-NI instructions on x86.
+  */
+-#define MBEDTLS_AESNI_C
++//#define MBEDTLS_AESNI_C
+ 
+ /**
+  * \def MBEDTLS_AESCE_C
