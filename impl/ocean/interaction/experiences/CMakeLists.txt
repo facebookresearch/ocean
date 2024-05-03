@@ -2,20 +2,13 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(experiences)
-
 if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
 
-    set(OCEAN_TARGET_NAME "ocean_interaction")
+    set(OCEAN_TARGET_NAME "ocean_interaction_experiences")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
-
-    if (MACOS OR IOS)
-        file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp" "${CMAKE_CURRENT_LIST_DIR}/*.mm")
-    else()
-        file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
-    endif()
+    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
 
     # Target definition
     add_library(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
@@ -25,7 +18,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_INTERACTION_EXPORT")
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_INTERACTION_EXPERIENCES_EXPORT"  "-DUSE_OCEAN_INTERACTION_EXPORT")
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
@@ -37,11 +30,11 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
-            ocean_base
-            ocean_io
-            ocean_math
-            ocean_rendering
-    )
+        ocean_devices
+        ocean_interaction
+        ocean_rendering
+        ocean_scenedescription
+)
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
@@ -50,7 +43,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/interaction
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/interaction/experiences
             COMPONENT include
     )
 
