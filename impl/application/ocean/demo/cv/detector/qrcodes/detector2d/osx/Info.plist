@@ -25,7 +25,7 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2016 fayteq AG. All rights reserved.</string>
+	<string>(c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.</string>
 	<key>NSMainNibFile</key>
 	<string>Application</string>
 	<key>NSPrincipalClass</key>

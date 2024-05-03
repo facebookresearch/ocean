@@ -243,11 +243,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "fayteq AG"
+            VALUE "CompanyName", "Meta Platforms, Inc."
             VALUE "FileDescription", "Orca is the VR/AR viewer of the ocean framework and developed for desktop devices"
             VALUE "FileVersion", "0.1.0.0"
             VALUE "InternalName", "orca.exe"
-            VALUE "LegalCopyright", "Ocean: (c) fayteq AG.  All rights reserved."
+            VALUE "LegalCopyright", "(c) Meta Platforms, Inc. and affiliates."
             VALUE "OriginalFilename", "orca.exe"
             VALUE "ProductName", "Orca VR/AR viewer"
             VALUE "ProductVersion", "1.0.0.1"

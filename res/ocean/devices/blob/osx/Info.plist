@@ -13,7 +13,7 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2016 fayteq AG</string>
+	<string>(c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.</string>
 	<key>OceanPluginDependences</key>
 	<string>MEDIA</string>
 	<key>OceanPluginDescription</key>

@@ -1,6 +1,6 @@
 #OX3D V3.0 utf8
 
-# This node is not part of the standard X3D specification, this node is an extension by fayteq allowing for easy realization of Augmented Reality applications
+# This node is not part of the standard X3D specification, this node is an extension by Ocean allowing for easy realization of Augmented Reality applications
 TrackerTransform
 {
 	# specifies the tracker to be used: use the Pattern 6DOF tracker here

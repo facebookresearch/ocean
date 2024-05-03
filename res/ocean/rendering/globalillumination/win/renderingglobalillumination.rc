@@ -1,11 +1,4 @@
-/************************************************************************
- * This file is part of the Ocean framework.
- *
- * Copyright (c) 2010-2017 fayteq AG.
- * All rights reserved.
- *
- * Author: Jan Herling
- ************************************************************************/
+// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
 #include <winver.h>
 
@@ -26,11 +19,11 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "fayteq AG"
+            VALUE "CompanyName", "Meta Platforms, Inc."
             VALUE "FileDescription", "Rendering Global Illumination Dynamic Link Library"
             VALUE "FileVersion", "0, 1, 0, 0"
-            VALUE "InternalName", "fayteq AG"
-            VALUE "LegalCopyright", "Copyright (C) 2010 - 2017"
+            VALUE "InternalName", "Meta Platforms, Inc."
+            VALUE "LegalCopyright", "(c) Meta Platforms, Inc. and affiliates."
             VALUE "OriginalFilename", "OceanRenderingGlobalIllumination.opf"
             VALUE "ProductName", "Rendering Global Illumination Dynamic Link Library"
             VALUE "ProductVersion", "0, 1, 0, 0"

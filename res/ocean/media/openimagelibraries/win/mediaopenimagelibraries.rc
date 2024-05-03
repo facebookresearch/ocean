@@ -23,7 +23,7 @@ BEGIN
             VALUE "FileDescription", "Media OpenImageLibraries Dynamic Link Library"
             VALUE "FileVersion", "0, 1, 0, 0"
             VALUE "InternalName", "Facebook"
-            VALUE "LegalCopyright", "Copyright (C) 2004-present"
+            VALUE "LegalCopyright", "(c) Meta Platforms, Inc. and affiliates."
             VALUE "OriginalFilename", "OceanMediaOpenImageLibraries.dll"
             VALUE "ProductName", "Media Libraries Dynamic Link Library"
             VALUE "ProductVersion", "0, 1, 0, 0"

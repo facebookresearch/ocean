@@ -105,7 +105,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1200;
-				ORGANIZATIONNAME = fayteq;
+				ORGANIZATIONNAME = Meta Platforms, Inc.;
 				TargetAttributes = {
 					5DCC56C01BB2E02200661170 = {
 						CreatedOnToolsVersion = 6.4;

@@ -21,7 +21,7 @@ BEGIN
             VALUE "FileDescription", "Ocean Interaction Experiences Dynamic Link Library"
             VALUE "FileVersion", "0, 1, 0, 0"
             VALUE "InternalName", "facebook Inc."
-            VALUE "LegalCopyright", "Copyright (C) facebook Inc.k"
+            VALUE "LegalCopyright", "(c) Meta Platforms, Inc. and affiliates."
             VALUE "OriginalFilename", "OceanInteractionExperiences.opf"
             VALUE "ProductName", "Ocean Interaction Experiences Dynamic Link Library"
             VALUE "ProductVersion", "0, 1, 0, 0"
