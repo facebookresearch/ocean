@@ -16,6 +16,7 @@ endif()
 
 set(PNG_TOOLS OFF CACHE BOOL "")
 set(PNG_FRAMEWORK OFF)
+set(PNG_DEBUG_POSTFIX "")
 
 CPMAddPackage(
   NAME           libpng
