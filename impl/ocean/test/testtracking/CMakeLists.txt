@@ -48,7 +48,12 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     if (ANDROID)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_android)
+        target_link_libraries(${OCEAN_TARGET_NAME}
+            PUBLIC
+                ocean_media_android
+                ocean_platform_android
+                ocean_media_openimagelibraries
+        )
     endif()
 
     # Installation
