@@ -500,7 +500,7 @@ class MapTyper<false>
  * Definition of a 16-bit float type.
  * @ingroup base
  */
-class Float16
+class OCEAN_BASE_EXPORT Float16
 {
 	public:
 
