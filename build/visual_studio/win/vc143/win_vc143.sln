@@ -2087,7 +2087,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvdetectorlinedetectorh
 		{FEA50A96-F160-4C9D-8313-7479649D0B2D} = {FEA50A96-F160-4C9D-8313-7479649D0B2D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvdetectorfbmessengercode", "application\ocean\demo\cv\detector\fbmessengercode\win\democvdetectorfbmessengercode.vcxproj", "{0F24ECB3-360A-4224-B840-95D112D8E0DA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvdetectomessengercode", "application\ocean\demo\cv\detector\messengercode\win\democvdetectormessengercode.vcxproj", "{0F24ECB3-360A-4224-B840-95D112D8E0DA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1E355C9E-F8E4-496A-8EF8-EF20E2945E76} = {1E355C9E-F8E4-496A-8EF8-EF20E2945E76}
 		{29326726-1FF7-40D3-B2F2-C2717AC43465} = {29326726-1FF7-40D3-B2F2-C2717AC43465}

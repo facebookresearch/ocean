@@ -27,7 +27,7 @@ namespace Detector
 {
 
 /**
- * This class implements a detector for Facebook's Messenger Codes.
+ * This class implements a detector for circular Messenger Codes.
  * @ingroup cvdetector
  */
 class OCEAN_CV_DETECTOR_EXPORT MessengerCodeDetector
