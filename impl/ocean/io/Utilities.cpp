@@ -2,6 +2,8 @@
 
 #include "ocean/io/Utilities.h"
 
+#include "ocean/math/Numeric.h"
+
 namespace Ocean
 {
 
@@ -25,14 +27,29 @@ bool Utilities::readFile(const std::string& filename, Buffer& buffer)
 	}
 
 	stream.seekg(0, std::ios_base::end);
-		const std::istream::pos_type fileSize = stream.tellg();
+		const std::istream::pos_type position = stream.tellg();
 	stream.seekg(0, std::ios_base::beg);
+
+	const std::streamoff fileSize = position;
 
 	buffer.clear();
 
 	if (fileSize != 0)
 	{
-		buffer.resize(fileSize);
+		if (!NumericT<size_t>::isInsideValueRange(fileSize))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
+
+		const size_t bufferSize = size_t(fileSize);
+
+		buffer.resize(bufferSize);
+
+		if (buffer.size() != bufferSize)
+		{
+			return false;
+		}
 
 		stream.read((char*)(buffer.data()), buffer.size());
 
