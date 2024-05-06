@@ -159,7 +159,7 @@ class OCEAN_CV_EXPORT CVUtilities
 		static void randomizeFrame(Frame& frame, const T minValue, const T maxValue, const bool skipPaddingArea = true, RandomGenerator* randomGenerator = nullptr);
 
 		/**
-		 * Returns a randomized frame for a given frame type.
+		 * Returns a randomized frame for a given frame type, the optional padding area will be filled with random (not binary) noise.
 		 * The resulting frame may contain random padding elements.<br>
 		 * Integer pixel formats as well as float pixel formats will receive values in the range [0, 255] or [-128, 127] for each pixel and channel if 'limitedValueRange == true'<br>
 		 * The timestamp will be randomized as well.
@@ -172,14 +172,14 @@ class OCEAN_CV_EXPORT CVUtilities
 
 		/**
 		 * Creates an 8 bit frame with a random binary mask, the optional padding area will be filled with random (not binary) noise.
+		 * The resulting mask may contain random padding elements.<br>
 		 * The timestamp will be randomized as well.
 		 * @param width The width of the resulting frame in pixel, with range [1, infinity)
 		 * @param height The height of the resulting frame in pixel, with range [1, infinity)
 		 * @param maskValue The value of mask pixels, 0xFF - maskValue will be the value of non-mask pixels, with range [0x00, 0xFF]
-		 * @param paddingElements Optional number of padding elements at the end of each mask row, in elements, with range [0, infinity)
 		 * @param randomGenerator Random generator object to be used
 		 */
-		static Frame randomizedBinaryMask(const unsigned int width, const unsigned int height, const uint8_t maskValue, const unsigned int paddingElements = 0u, RandomGenerator* randomGenerator = nullptr);
+		static Frame randomizedBinaryMask(const unsigned int width, const unsigned int height, const uint8_t maskValue, RandomGenerator* randomGenerator = nullptr);
 
 		/**
 		 * Returns whether all border pixels of an image are set to zero.

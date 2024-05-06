@@ -109,7 +109,7 @@ bool TestFeatureDetector::testDetermineHarrisPoints(const Frame& testFrame, cons
 			}
 			else
 			{
-				Frame yMask = CV::CVUtilities::randomizedBinaryMask(yFrame.width(), yFrame.height(), 0x00, RandomI::random(randomGenerator, 100u) * RandomI::random(randomGenerator, 1u), &randomGenerator);
+				Frame yMask = CV::CVUtilities::randomizedBinaryMask(yFrame.width(), yFrame.height(), 0x00u, &randomGenerator);
 
 				subRegion = CV::SubRegion(std::move(yMask));
 			}

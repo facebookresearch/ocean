@@ -1799,8 +1799,6 @@ bool TestMaskAnalyzer::testComputeDistanceTransform8Bit(const uint32_t width, co
 		const uint32_t testWidth = measurePerformance ? width : RandomI::random(randomGenerator, 1u, 3072u);
 		const uint32_t testHeight = measurePerformance ? height : RandomI::random(randomGenerator, 1u, 3072u);
 
-		const uint32_t sourcePaddingElements = RandomI::random(randomGenerator, 0u, 100u);
-
 		const uint8_t referenceValue = uint8_t(RandomI::random(randomGenerator, 255u));
 
 		Memory buffer;
@@ -1813,7 +1811,15 @@ bool TestMaskAnalyzer::testComputeDistanceTransform8Bit(const uint32_t width, co
 		ocean_assert(useExternalBuffer != buffer.isNull());
 
 		const bool createDataWithoutReferenceValue = RandomI::random(randomGenerator, 19u) == 0u; // ~5% chance
-		const Frame sourceFrame = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, (createDataWithoutReferenceValue ? referenceValue + uint8_t(RandomI::random(randomGenerator, 1u, 254u)) /* <- intentional overflow! */ : referenceValue), sourcePaddingElements, &randomGenerator);
+
+		uint8_t maskValue = referenceValue;
+
+		if (createDataWithoutReferenceValue)
+		{
+			maskValue = referenceValue + uint8_t(RandomI::random(randomGenerator, 1u, 254u)); // intentional overflow!
+		}
+
+		const Frame sourceFrame = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, &randomGenerator);
 		ocean_assert(sourceFrame == FrameType(testWidth, testHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 
 		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, FrameType::genericPixelFormat<TDistanceType, 1u>()), &randomGenerator);

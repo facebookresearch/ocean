@@ -1379,8 +1379,7 @@ bool TestFrameConverter::testSubFrameMask(const double testDuration)
 		const Frame targetFrameCopy(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 		const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
-		const uint32_t sourceMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const Frame mask = CV::CVUtilities::randomizedBinaryMask(subFrameWidth, subFrameHeight, maskValue, sourceMaskPaddingElements, &randomGenerator);
+		const Frame mask = CV::CVUtilities::randomizedBinaryMask(subFrameWidth, subFrameHeight, maskValue, &randomGenerator);
 
 		performance.startIf(measurePerformance);
 		if (dataType == FrameType::DT_UNSIGNED_INTEGER_8)

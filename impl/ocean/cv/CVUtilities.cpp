@@ -189,11 +189,11 @@ Frame CVUtilities::randomizedFrame(const FrameType& frameType, RandomGenerator* 
 
 	Indices32 paddingElementsPerPlane;
 
-	if (RandomI::random(localRandomGenerator, 1u) == 0u)
+	if (RandomI::boolean(localRandomGenerator))
 	{
 		for (unsigned int n = 0u; n < frameType.numberPlanes(); ++n)
 		{
-			if (RandomI::random(localRandomGenerator, 1u) == 0u)
+			if (RandomI::boolean(localRandomGenerator))
 			{
 				paddingElementsPerPlane.emplace_back(RandomI::random(localRandomGenerator, 1u, 100u));
 			}
@@ -214,13 +214,20 @@ Frame CVUtilities::randomizedFrame(const FrameType& frameType, RandomGenerator* 
 	return frame;
 }
 
-Frame CVUtilities::randomizedBinaryMask(const unsigned int width, const unsigned int height, const uint8_t maskValue, const unsigned int paddingElements, RandomGenerator* randomGenerator)
+Frame CVUtilities::randomizedBinaryMask(const unsigned int width, const unsigned int height, const uint8_t maskValue, RandomGenerator* randomGenerator)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 
 	RandomGenerator localRandomGenerator(randomGenerator);
 
 	const uint8_t nonMaskValue = 0xFFu - maskValue;
+
+	unsigned int paddingElements = 0u;
+
+	if (RandomI::boolean(localRandomGenerator))
+	{
+		paddingElements = RandomI::random(localRandomGenerator, 1u, 100u);
+	}
 
 	Frame mask(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
 	mask.setValue(nonMaskValue);

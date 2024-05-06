@@ -602,8 +602,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePixelWithMask8BitPerC
 		const uint8_t invalidPixelValue = uint8_t(RandomI::random(randomGenerator, 255u));
 		const uint8_t validPixelValue = 0xFFu - invalidPixelValue;
 
-		const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const Frame mask = CV::CVUtilities::randomizedBinaryMask(width, height, invalidPixelValue, maskPaddingElements, &randomGenerator);
+		const Frame mask = CV::CVUtilities::randomizedBinaryMask(width, height, invalidPixelValue, &randomGenerator);
 
 		std::vector<uint8_t> interpolationResult(channels + 1u);
 		uint8_t maskResult;
@@ -1333,9 +1332,7 @@ bool TestAdvancedFrameInterpolatorBilinear::testInterpolatePatchWithMask(const u
 
 			constexpr uint8_t validMaskValue = 0xFFu;
 
-			const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			const Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0xFFu - validMaskValue, maskPaddingElements, &randomGenerator);
+			const Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, 0xFFu - validMaskValue, &randomGenerator);
 
 			for (Vector2& position : positions)
 			{
@@ -2057,11 +2054,9 @@ bool TestAdvancedFrameInterpolatorBilinear::testHomographyFilterMask(const unsig
 
 			Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(sourceFrame, targetWidth, targetHeight), &randomGenerator);
 
-			const unsigned int targetFilterMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
 			constexpr uint8_t maskValue = 0xFF;
 
-			const Frame targetFilterMask = CV::CVUtilities::randomizedBinaryMask(targetWidth, targetHeight, maskValue, targetFilterMaskPaddingElements, &randomGenerator);
+			const Frame targetFilterMask = CV::CVUtilities::randomizedBinaryMask(targetWidth, targetHeight, maskValue, &randomGenerator);
 
 			const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 

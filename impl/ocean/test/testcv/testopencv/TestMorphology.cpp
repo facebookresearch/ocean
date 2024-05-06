@@ -157,14 +157,14 @@ bool TestMorphology::testFrameFilterErosion3x3(const double testDuration)
 		Frame ocnMask = CV::CVUtilities::randomizedBinaryMask(width, height, 0x00, 0u);
 		cv::Mat cvMask = CV::OpenCVUtilities::toCvMat(ocnMask, true);
 
-		CV::FrameFilterErosion::filter1Channel8Bit<CV::FrameFilterErosion::MF_SQUARE_3>(ocnMask.data<uint8_t>(), ocnMask.width(), ocnMask.height(), 1u, 0xFF);
+		CV::FrameFilterErosion::filter1Channel8Bit<CV::FrameFilterErosion::MF_SQUARE_3>(ocnMask.data<uint8_t>(), ocnMask.width(), ocnMask.height(), 1u, 0xFF, ocnMask.paddingElements());
 
 		cv::Mat cvFilterKernel = cv::getStructuringElement(cv::MORPH_RECT, {3, 3});
 		cv::erode(cvMask, cvMask, cvFilterKernel);
 
 		for (unsigned int y = 0u; y < height; ++y)
 		{
-			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.width()) != 0)
+			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.planeWidthBytes(0u)) != 0)
 			{
 				allSucceeded = false;
 			}
@@ -202,14 +202,14 @@ bool TestMorphology::testFrameFilterErosion5x5(const double testDuration)
 		Frame ocnMask = CV::CVUtilities::randomizedBinaryMask(width, height, 0x00, 0u);
 		cv::Mat cvMask = CV::OpenCVUtilities::toCvMat(ocnMask, true);
 
-		CV::FrameFilterErosion::filter1Channel8Bit<CV::FrameFilterErosion::MF_SQUARE_5>(ocnMask.data<uint8_t>(), ocnMask.width(), ocnMask.height(), 1u, 0xFF);
+		CV::FrameFilterErosion::filter1Channel8Bit<CV::FrameFilterErosion::MF_SQUARE_5>(ocnMask.data<uint8_t>(), ocnMask.width(), ocnMask.height(), 1u, 0xFF, ocnMask.paddingElements());
 
 		cv::Mat cvFilterKernel = cv::getStructuringElement(cv::MORPH_RECT, {5, 5});
 		cv::erode(cvMask, cvMask, cvFilterKernel);
 
 		for (unsigned int y = 0u; y < height; ++y)
 		{
-			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.width()) != 0)
+			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.planeWidthBytes(0u)) != 0)
 			{
 				allSucceeded = false;
 			}
@@ -247,14 +247,14 @@ bool TestMorphology::testFrameFilterDilation3x3(const double testDuration)
 		Frame ocnMask = CV::CVUtilities::randomizedBinaryMask(width, height, 0x00, 0u);
 		cv::Mat cvMask = CV::OpenCVUtilities::toCvMat(ocnMask, true);
 
-		CV::FrameFilterDilation::filter1Channel8Bit<CV::FrameFilterErosion::MF_SQUARE_3>(ocnMask.data<uint8_t>(), ocnMask.width(), ocnMask.height(), 1u, 0xFF);
+		CV::FrameFilterDilation::filter1Channel8Bit<CV::FrameFilterErosion::MF_SQUARE_3>(ocnMask.data<uint8_t>(), ocnMask.width(), ocnMask.height(), 1u, 0xFF, ocnMask.paddingElements());
 
 		cv::Mat cvFilterKernel = cv::getStructuringElement(cv::MORPH_RECT, {3, 3});
 		cv::dilate(cvMask, cvMask, cvFilterKernel);
 
 		for (unsigned int y = 0u; y < height; ++y)
 		{
-			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.width()) != 0)
+			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.planeWidthBytes(0u)) != 0)
 			{
 				allSucceeded = false;
 			}
@@ -292,14 +292,14 @@ bool TestMorphology::testFrameFilterDilation5x5(const double testDuration)
 		Frame ocnMask = CV::CVUtilities::randomizedBinaryMask(width, height, 0x00, 0u);
 		cv::Mat cvMask = CV::OpenCVUtilities::toCvMat(ocnMask, true);
 
-		CV::FrameFilterDilation::filter1Channel8Bit<CV::FrameFilterErosion::MF_SQUARE_5>(ocnMask.data<uint8_t>(), ocnMask.width(), ocnMask.height(), 1u, 0xFF);
+		CV::FrameFilterDilation::filter1Channel8Bit<CV::FrameFilterErosion::MF_SQUARE_5>(ocnMask.data<uint8_t>(), ocnMask.width(), ocnMask.height(), 1u, 0xFF, ocnMask.paddingElements());
 
 		cv::Mat cvFilterKernel = cv::getStructuringElement(cv::MORPH_RECT, {5, 5});
 		cv::dilate(cvMask, cvMask, cvFilterKernel);
 
 		for (unsigned int y = 0u; y < height; ++y)
 		{
-			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.width()) != 0)
+			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.planeWidthBytes(0u)) != 0)
 			{
 				allSucceeded = false;
 			}
@@ -334,9 +334,7 @@ bool TestMorphology::testFrameFilterOpen3x3(const double testDuration)
 		const unsigned int width = RandomI::random(4u, 1920u);
 		const unsigned int height = RandomI::random(4u, 1080u);
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame ocnMask = CV::CVUtilities::randomizedBinaryMask(width, height, 0x00u, paddingElements);
+		Frame ocnMask = CV::CVUtilities::randomizedBinaryMask(width, height, 0x00u);
 		cv::Mat cvMask = CV::OpenCVUtilities::toCvMat(ocnMask, true);
 
 		CV::FrameFilterMorphology::openMask<CV::FrameFilterMorphology::MF_SQUARE_3>(ocnMask.data<uint8_t>(), ocnMask.width(), ocnMask.height(), ocnMask.paddingElements(), 0xFFu);
@@ -346,7 +344,7 @@ bool TestMorphology::testFrameFilterOpen3x3(const double testDuration)
 
 		for (unsigned int y = 0u; y < height; ++y)
 		{
-			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.width()) != 0)
+			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.planeWidthBytes(0u)) != 0)
 			{
 				allSucceeded = false;
 			}
@@ -381,9 +379,7 @@ bool TestMorphology::testFrameFilterOpen5x5(const double testDuration)
 		const unsigned int width = RandomI::random(4u, 1920u);
 		const unsigned int height = RandomI::random(4u, 1080u);
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame ocnMask = CV::CVUtilities::randomizedBinaryMask(width, height, 0x00u, paddingElements);
+		Frame ocnMask = CV::CVUtilities::randomizedBinaryMask(width, height, 0x00u);
 		cv::Mat cvMask = CV::OpenCVUtilities::toCvMat(ocnMask, true);
 
 		CV::FrameFilterMorphology::openMask<CV::FrameFilterMorphology::MF_SQUARE_5>(ocnMask.data<uint8_t>(), ocnMask.width(), ocnMask.height(), ocnMask.paddingElements(), 0xFFu);
@@ -393,7 +389,7 @@ bool TestMorphology::testFrameFilterOpen5x5(const double testDuration)
 
 		for (unsigned int y = 0u; y < height; ++y)
 		{
-			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.width()) != 0)
+			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.planeWidthBytes(0u)) != 0)
 			{
 				allSucceeded = false;
 			}
@@ -428,9 +424,7 @@ bool TestMorphology::testFrameFilterClose3x3(const double testDuration)
 		const unsigned int width = RandomI::random(4u, 1920u);
 		const unsigned int height = RandomI::random(4u, 1080u);
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame ocnMask = CV::CVUtilities::randomizedBinaryMask(width, height, 0x00u, paddingElements);
+		Frame ocnMask = CV::CVUtilities::randomizedBinaryMask(width, height, 0x00u);
 		cv::Mat cvMask = CV::OpenCVUtilities::toCvMat(ocnMask, true);
 
 		CV::FrameFilterMorphology::closeMask<CV::FrameFilterMorphology::MF_SQUARE_3>(ocnMask.data<uint8_t>(), ocnMask.width(), ocnMask.height(), ocnMask.paddingElements(), 0xFFu);
@@ -440,7 +434,7 @@ bool TestMorphology::testFrameFilterClose3x3(const double testDuration)
 
 		for (unsigned int y = 0u; y < height; ++y)
 		{
-			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.width()) != 0)
+			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.planeWidthBytes(0u)) != 0)
 			{
 				allSucceeded = false;
 			}
@@ -475,9 +469,7 @@ bool TestMorphology::testFrameFilterClose5x5(const double testDuration)
 		const unsigned int width = RandomI::random(4u, 1920u);
 		const unsigned int height = RandomI::random(4u, 1080u);
 
-		const unsigned int paddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-
-		Frame ocnMask = CV::CVUtilities::randomizedBinaryMask(width, height, 0x00u, paddingElements);
+		Frame ocnMask = CV::CVUtilities::randomizedBinaryMask(width, height, 0x00u);
 		cv::Mat cvMask = CV::OpenCVUtilities::toCvMat(ocnMask, true);
 
 		CV::FrameFilterMorphology::closeMask<CV::FrameFilterMorphology::MF_SQUARE_5>(ocnMask.data<uint8_t>(), ocnMask.width(), ocnMask.height(), ocnMask.paddingElements(), 0xFFu);
@@ -487,7 +479,7 @@ bool TestMorphology::testFrameFilterClose5x5(const double testDuration)
 
 		for (unsigned int y = 0u; y < height; ++y)
 		{
-			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.width()) != 0)
+			if (memcmp(ocnMask.constrow<void>(y), cvMask.ptr(y), ocnMask.planeWidthBytes(0u)) != 0)
 			{
 				allSucceeded = false;
 			}

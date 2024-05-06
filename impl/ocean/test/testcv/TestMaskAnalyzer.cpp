@@ -396,11 +396,9 @@ bool TestMaskAnalyzer::testHasValue(const unsigned int width, const unsigned int
 			const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 1u, 1080u);
 
-			const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
 			const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
 
-			Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, maskPaddingElements, &randomGenerator);
+			Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, &randomGenerator);
 
 			uint8_t randomValue = uint8_t(RandomI::random(randomGenerator, 255u));
 			while (randomValue == maskValue || randomValue == 255u - maskValue)

@@ -255,9 +255,7 @@ bool TestPanoramaFrame::testCameraFrame2cameraFrame(const unsigned int performan
 
 				if (useSourceMask)
 				{
-					const unsigned int sourceMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-					sourceMask = CV::CVUtilities::randomizedBinaryMask(width, height, maskValue, sourceMaskPaddingElements, &randomGenerator);
+					sourceMask = CV::CVUtilities::randomizedBinaryMask(width, height, maskValue, &randomGenerator);
 				}
 
 				const PinholeCamera pinholeCamera(width, height, Random::scalar(randomGenerator, Numeric::deg2rad(Scalar(50)), Numeric::deg2rad(Scalar(70))));

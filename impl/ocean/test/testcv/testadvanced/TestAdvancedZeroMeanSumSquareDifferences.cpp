@@ -1716,13 +1716,13 @@ bool TestAdvancedZeroMeanSumSquareDifferences::testTwoPixelPatchWithMask8BitPerC
 		frame0.makeContinuous(); // not yet supported
 		frame1.makeContinuous();
 
-		constexpr unsigned int maskPaddingElements0 = 0u; // not yet supported
-		constexpr unsigned int maskPaddingElements1 = 0u;
-
 		constexpr uint8_t maskValue = 0u; // not yet supported
 
-		const Frame mask0 = CV::CVUtilities::randomizedBinaryMask(width0, height0, maskValue, maskPaddingElements0, &randomGenerator);
-		const Frame mask1 = CV::CVUtilities::randomizedBinaryMask(width1, height1, maskValue, maskPaddingElements1, &randomGenerator);
+		Frame mask0 = CV::CVUtilities::randomizedBinaryMask(width0, height0, maskValue, &randomGenerator);
+		Frame mask1 = CV::CVUtilities::randomizedBinaryMask(width1, height1, maskValue, &randomGenerator);
+
+		mask0.makeContinuous(); // not yet supported
+		mask1.makeContinuous();
 
 		for (unsigned int n = 0u; n < locations; ++n)
 		{

@@ -23,14 +23,7 @@ Frame Utilities::randomizedInpaintingMask(const unsigned int width, const unsign
 
 	while (true)
 	{
-		unsigned int maskPaddingElements = 0u;
-
-		if (RandomI::random(randomGenerator, 1u) == 0u)
-		{
-			maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u);
-		}
-
-		Frame mask = CV::CVUtilities::randomizedBinaryMask(width, height, maskValue, maskPaddingElements, &randomGenerator);
+		Frame mask = CV::CVUtilities::randomizedBinaryMask(width, height, maskValue, &randomGenerator);
 
 		const unsigned int numberRectangles = RandomI::random(randomGenerator, 2u);
 		const unsigned int numberEllipses = RandomI::random(randomGenerator, 2u);

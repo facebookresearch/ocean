@@ -217,15 +217,10 @@ bool TestFrameFilterErosion::testShrinkMask4Neighbor(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 2u, 320u);
 		const unsigned int height = RandomI::random(randomGenerator, 2u, 240u);
 
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-		Frame frame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-		CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
-
-		const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		constexpr uint8_t maskValue = 0x00u;
-		Frame mask = CV::CVUtilities::randomizedBinaryMask(width, height, maskValue, maskPaddingElements, &randomGenerator);
+		Frame mask = CV::CVUtilities::randomizedBinaryMask(width, height, maskValue, &randomGenerator);
 
 		Frame frameCopy(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 		Frame maskCopy(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -311,15 +306,10 @@ bool TestFrameFilterErosion::testShrinkMask8Neighbor(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 2u, 320u);
 		const unsigned int height = RandomI::random(randomGenerator, 2u, 240u);
 
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-		Frame frame(FrameType(width, height, FrameType::FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-		CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
-
-		const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		constexpr uint8_t maskValue = 0x00u;
-		Frame mask = CV::CVUtilities::randomizedBinaryMask(width, height, maskValue, maskPaddingElements, &randomGenerator);
+		Frame mask = CV::CVUtilities::randomizedBinaryMask(width, height, maskValue, &randomGenerator);
 
 		Frame frameCopy(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 		Frame maskCopy(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -405,15 +395,10 @@ bool TestFrameFilterErosion::testShrinkMaskRandom8Neighbor(const double testDura
 		const unsigned int width = RandomI::random(randomGenerator, 2u, 320u);
 		const unsigned int height = RandomI::random(randomGenerator, 2u, 240u);
 
-		const unsigned int framePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-		Frame frame(FrameType(width, height, FrameType::FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-		CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
-
-		const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		constexpr uint8_t maskValue = 0x00u;
-		Frame mask = CV::CVUtilities::randomizedBinaryMask(width, height, maskValue, maskPaddingElements, &randomGenerator);
+		Frame mask = CV::CVUtilities::randomizedBinaryMask(width, height, maskValue, &randomGenerator);
 
 		Frame frameCopy(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 		Frame maskCopy(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -490,13 +475,9 @@ bool TestFrameFilterErosion::test8Bit4Neighbor(const unsigned int width, const u
 
 				const uint8_t maskValue = uint8_t(RandomI::random(0u, 255u));
 
-				const unsigned int maskPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-				const Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, maskPaddingElements);
+				const Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue);
 
-				const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-				Frame target(mask.frameType(), targetPaddingElements);
-
-				CV::CVUtilities::randomizeFrame(target, false);
+				Frame target = CV::CVUtilities::randomizedFrame(mask.frameType());
 
 				const Frame copyMask(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 				const Frame copyTarget(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -570,13 +551,9 @@ bool TestFrameFilterErosion::test8Bit8Neighbor(const unsigned int width, const u
 
 				const uint8_t maskValue = uint8_t(RandomI::random(0u, 255u));
 
-				const unsigned int maskPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-				const Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, maskPaddingElements);
+				const Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue);
 
-				const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-				Frame target(mask.frameType(), targetPaddingElements);
-
-				CV::CVUtilities::randomizeFrame(target, false);
+				Frame target = CV::CVUtilities::randomizedFrame(mask.frameType());
 
 				const Frame copyMask(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 				const Frame copyTarget(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -650,13 +627,9 @@ bool TestFrameFilterErosion::test8Bit24Neighbor(const unsigned int width, const 
 
 				const uint8_t maskValue = uint8_t(RandomI::random(0u, 255u));
 
-				const unsigned int maskPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-				const Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, maskPaddingElements);
+				const Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue);
 
-				const unsigned int targetPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
-				Frame target(mask.frameType(), targetPaddingElements);
-
-				CV::CVUtilities::randomizeFrame(target, false);
+				Frame target = CV::CVUtilities::randomizedFrame(mask.frameType());
 
 				const Frame copyMask(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 				const Frame copyTarget(target, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
@@ -723,11 +696,10 @@ bool TestFrameFilterErosion::test8Bit(const unsigned int width, const unsigned i
 
 				const unsigned int randomWidth = RandomI::random(4u, width);
 				const unsigned int randomHeight = RandomI::random(4u, height);
-				const unsigned int maskPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
 
 				const uint8_t maskValue = uint8_t(RandomI::random(0u, 255u));
 
-				Frame mask = CV::CVUtilities::randomizedBinaryMask(randomWidth, randomHeight, maskValue, maskPaddingElements);
+				Frame mask = CV::CVUtilities::randomizedBinaryMask(randomWidth, randomHeight, maskValue);
 				const Frame copyMask(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				const unsigned int iterations = RandomI::random(1u, 6u);
@@ -763,11 +735,10 @@ bool TestFrameFilterErosion::test8Bit(const unsigned int width, const unsigned i
 
 				const unsigned int randomWidth = RandomI::random(4u, width);
 				const unsigned int randomHeight = RandomI::random(4u, height);
-				const unsigned int maskPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
 
 				const uint8_t maskValue = uint8_t(RandomI::random(0u, 255u));
 
-				Frame mask = CV::CVUtilities::randomizedBinaryMask(randomWidth, randomHeight, maskValue, maskPaddingElements);
+				Frame mask = CV::CVUtilities::randomizedBinaryMask(randomWidth, randomHeight, maskValue);
 				const Frame copyMask(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				const unsigned int iterations = RandomI::random(1u, 6u);
@@ -803,11 +774,10 @@ bool TestFrameFilterErosion::test8Bit(const unsigned int width, const unsigned i
 
 				const unsigned int randomWidth = RandomI::random(4u, width);
 				const unsigned int randomHeight = RandomI::random(4u, height);
-				const unsigned int maskPaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
 
 				const uint8_t maskValue = uint8_t(RandomI::random(0u, 255u));
 
-				Frame mask = CV::CVUtilities::randomizedBinaryMask(randomWidth, randomHeight, maskValue, maskPaddingElements);
+				Frame mask = CV::CVUtilities::randomizedBinaryMask(randomWidth, randomHeight, maskValue);
 				const Frame copyMask(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				const unsigned int iterations = RandomI::random(1u, 6u);

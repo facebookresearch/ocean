@@ -170,8 +170,7 @@ bool TestAdvancedFrameFilterGaussian::testFilter(const unsigned int width, const
 
 					const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
 
-					const unsigned int sourceMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-					const Frame sourceMask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, sourceMaskPaddingElements, &randomGenerator);
+					const Frame sourceMask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, &randomGenerator);
 
 					const unsigned int targetMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 					Frame targetMask(sourceMask.frameType(), targetMaskPaddingElements);

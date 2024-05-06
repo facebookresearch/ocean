@@ -2021,13 +2021,13 @@ bool TestAdvancedSumSquareDifferences::testTwoPixelPatchWithMask8BitPerChannel(c
 		const unsigned int framePaddingElements0 = frame0.paddingElements();
 		const unsigned int framePaddingElements1 = frame1.paddingElements();
 
-		const unsigned int maskPaddingElements0 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int maskPaddingElements1 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
 		const uint8_t maskValue = uint8_t(Random::random(randomGenerator, 255u));
 
-		const Frame mask0 = CV::CVUtilities::randomizedBinaryMask(width0, height0, maskValue, maskPaddingElements0, &randomGenerator);
-		const Frame mask1 = CV::CVUtilities::randomizedBinaryMask(width1, height1, maskValue, maskPaddingElements1, &randomGenerator);
+		const Frame mask0 = CV::CVUtilities::randomizedBinaryMask(width0, height0, maskValue, &randomGenerator);
+		const Frame mask1 = CV::CVUtilities::randomizedBinaryMask(width1, height1, maskValue, &randomGenerator);
+
+		const unsigned int maskPaddingElements0 = mask0.paddingElements();
+		const unsigned int maskPaddingElements1 = mask1.paddingElements();
 
 		for (unsigned int n = 0u; n < locations; ++n)
 		{
@@ -2235,14 +2235,14 @@ bool TestAdvancedSumSquareDifferences::testTwoSubPixelPatchWithMask8BitPerChanne
 		const unsigned int framePaddingElements0 = frame0.paddingElements();
 		const unsigned int framePaddingElements1 = frame1.paddingElements();
 
-		const unsigned int maskPaddingElements0 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int maskPaddingElements1 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
 		constexpr uint8_t validMaskValue = 0xFFu;
 		constexpr uint8_t invalidMaskValue = 0xFFu - validMaskValue;
 
-		const Frame mask0 = CV::CVUtilities::randomizedBinaryMask(width0, height0, invalidMaskValue, maskPaddingElements0, &randomGenerator);
-		const Frame mask1 = CV::CVUtilities::randomizedBinaryMask(width1, height1, invalidMaskValue, maskPaddingElements1, &randomGenerator);
+		const Frame mask0 = CV::CVUtilities::randomizedBinaryMask(width0, height0, invalidMaskValue, &randomGenerator);
+		const Frame mask1 = CV::CVUtilities::randomizedBinaryMask(width1, height1, invalidMaskValue, &randomGenerator);
+
+		const unsigned int maskPaddingElements0 = mask0.paddingElements();
+		const unsigned int maskPaddingElements1 = mask1.paddingElements();
 
 		for (unsigned int n = 0u; n < locations; ++n)
 		{
@@ -2443,22 +2443,19 @@ bool TestAdvancedSumSquareDifferences::testTwoPixelPatchWithRejectingMask8BitPer
 		const unsigned int width1 = RandomI::random(randomGenerator, width - 1u, width + 1u);
 		const unsigned int height1 = RandomI::random(randomGenerator, height - 1u, height + 1u);
 
-		const unsigned int framePaddingElements0 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int framePaddingElements1 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const Frame frame0 = CV::CVUtilities::randomizedFrame(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		const Frame frame1 = CV::CVUtilities::randomizedFrame(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-		Frame frame0(FrameType(width0, height0, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements0);
-		Frame frame1(FrameType(width1, height1, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements1);
-
-		CV::CVUtilities::randomizeFrame(frame0, false, &randomGenerator);
-		CV::CVUtilities::randomizeFrame(frame1, false, &randomGenerator);
-
-		const unsigned int maskPaddingElements0 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		const unsigned int maskPaddingElements1 = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+		const unsigned int framePaddingElements0 = frame0.paddingElements();
+		const unsigned int framePaddingElements1 = frame1.paddingElements();
 
 		const uint8_t maskValue = uint8_t(Random::random(randomGenerator, 255u));
 
-		const Frame mask0 = CV::CVUtilities::randomizedBinaryMask(width0, height0, maskValue, maskPaddingElements0, &randomGenerator);
-		const Frame mask1 = CV::CVUtilities::randomizedBinaryMask(width1, height1, maskValue, maskPaddingElements1, &randomGenerator);
+		const Frame mask0 = CV::CVUtilities::randomizedBinaryMask(width0, height0, maskValue, &randomGenerator);
+		const Frame mask1 = CV::CVUtilities::randomizedBinaryMask(width1, height1, maskValue, &randomGenerator);
+
+		const unsigned int maskPaddingElements0 = mask0.paddingElements();
+		const unsigned int maskPaddingElements1 = mask1.paddingElements();
 
 		for (unsigned int n = 0u; n < locations; ++n)
 		{

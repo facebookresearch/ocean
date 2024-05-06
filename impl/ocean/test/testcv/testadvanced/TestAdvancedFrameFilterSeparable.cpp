@@ -298,8 +298,7 @@ bool TestAdvancedFrameFilterSeparable::testFilter(const unsigned int width, cons
 
 					const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
 
-					const unsigned int sourceMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-					const Frame sourceMask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, sourceMaskPaddingElements, &randomGenerator);
+					const Frame sourceMask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, &randomGenerator);
 
 					const unsigned int targetMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 					Frame targetMask(sourceMask.frameType(), targetMaskPaddingElements);
@@ -462,8 +461,7 @@ bool TestAdvancedFrameFilterSeparable::testFilterInPlace(const unsigned int widt
 
 					const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
 
-					const unsigned int sourceMaskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-					Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, sourceMaskPaddingElements, &randomGenerator);
+					Frame mask = CV::CVUtilities::randomizedBinaryMask(testWidth, testHeight, maskValue, &randomGenerator);
 
 					const Frame maskCopy(mask, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
