@@ -85,8 +85,8 @@ if (ANDROID)
             "-fexceptions"
     )
 
-    # The output name of this target must match the one used in `android/Detector2DActivity.java`
-    set_target_properties(${OCEAN_TARGET_NAME} PROPERTIES OUTPUT_NAME OceanDemoCVDetectorQRCodes)
+    # The output name of this target must match the one used in `android/LineDetectorActivity.java`
+    set_target_properties(${OCEAN_TARGET_NAME} PROPERTIES OUTPUT_NAME OceanDemoCVDetectorLineDetector)
 
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
@@ -117,7 +117,7 @@ if (ANDROID)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/application/ocean/demo/cv/detector/qrcodes/detector2d/android
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/application/ocean/demo/cv/detector/linedetector/android
         COMPONENT include
     )
 
