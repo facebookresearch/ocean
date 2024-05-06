@@ -121,6 +121,7 @@ if (OCEAN_BUILD_DEMOS)
     add_subdirectory(impl/application/ocean/demo/tracking/homographytracker)
     add_subdirectory(impl/application/ocean/demo/tracking/pointtracker)
     add_subdirectory(impl/application/ocean/demo/tracking/similaritytracker)
+    add_subdirectory(impl/application/ocean/demo/tracking/uvtexturemapping)
 endif()
 
 if (OCEAN_BUILD_TESTS)
