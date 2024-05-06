@@ -115,6 +115,7 @@ if (OCEAN_BUILD_DEMOS)
     add_subdirectory(impl/application/ocean/demo/media/imageextractor)
     add_subdirectory(impl/application/ocean/demo/media/videopreview)
     add_subdirectory(impl/application/ocean/demo/misc/imageannotator)
+    add_subdirectory(impl/application/ocean/demo/platform/android/pixelformats)
 endif()
 
 if (OCEAN_BUILD_TESTS)
