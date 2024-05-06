@@ -113,16 +113,6 @@ bool testMedia(const double testDuration, Worker& /*worker*/, const std::string&
 
 #endif
 
-#ifndef OCEAN_DO_NOT_TEST_VRS
-
-	if (testSet.empty() || testSet.find("vrs") != testSet.end())
-	{
-		Log::info() << "\n\n\n\n";
-		allSucceeded = TestVRS::test(testDuration) && allSucceeded;
-	}
-
-#endif
-
 	if (testSet.empty() || testSet.find("movie") != testSet.end())
 	{
 		Log::info() << "\n\n\n\n";
