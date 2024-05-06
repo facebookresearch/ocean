@@ -52,6 +52,7 @@ if (ANDROID OR IOS OR MACOS OR WINDOWS)
         target_link_libraries(${OCEAN_TARGET_NAME}
             PUBLIC
                 ocean_devices_android
+                ocean_media_openimagelibraries
         )
     endif()
 
