@@ -119,6 +119,7 @@ if (OCEAN_BUILD_DEMOS)
     add_subdirectory(impl/application/ocean/demo/tracking/featuretracker)
     add_subdirectory(impl/application/ocean/demo/tracking/homographyimagealigner)
     add_subdirectory(impl/application/ocean/demo/tracking/homographytracker)
+    add_subdirectory(impl/application/ocean/demo/tracking/pointtracker)
 endif()
 
 if (OCEAN_BUILD_TESTS)
