@@ -7,6 +7,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     set(OCEAN_TARGET_NAME "ocean_cv_fonts")
 
     find_package(Freetype REQUIRED)
+    find_package(HarfBuzz REQUIRED)
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h" "${CMAKE_CURRENT_LIST_DIR}/freetype/*.h")
@@ -28,12 +29,15 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
-            Freetype::Freetype
             ocean_base
             ocean_cv
             ocean_io
             ocean_math
+            Freetype::Freetype
+            ${HarfBuzz_LIBRARY}
     )
+
+    target_include_directories(${OCEAN_TARGET_NAME} PRIVATE ${HarfBuzz_INCLUDE_DIRS})
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
