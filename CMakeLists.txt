@@ -118,6 +118,7 @@ if (OCEAN_BUILD_DEMOS)
     add_subdirectory(impl/application/ocean/demo/platform/android/pixelformats)
     add_subdirectory(impl/application/ocean/demo/tracking/featuretracker)
     add_subdirectory(impl/application/ocean/demo/tracking/homographyimagealigner)
+    add_subdirectory(impl/application/ocean/demo/tracking/homographytracker)
 endif()
 
 if (OCEAN_BUILD_TESTS)
