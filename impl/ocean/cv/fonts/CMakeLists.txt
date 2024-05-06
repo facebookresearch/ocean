@@ -8,6 +8,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     find_package(Freetype REQUIRED)
     find_package(HarfBuzz REQUIRED)
+    find_package(PNG REQUIRED)
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h" "${CMAKE_CURRENT_LIST_DIR}/freetype/*.h")
@@ -35,6 +36,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_math
             Freetype::Freetype
             ${HarfBuzz_LIBRARY}
+            PNG::PNG
     )
 
     target_include_directories(${OCEAN_TARGET_NAME} PRIVATE ${HarfBuzz_INCLUDE_DIRS})
