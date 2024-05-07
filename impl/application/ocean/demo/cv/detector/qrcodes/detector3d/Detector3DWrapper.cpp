@@ -1,5 +1,5 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
-// 
+//
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
@@ -388,7 +388,7 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 	for (const FrameRef& frameRef : frameRefs)
 	{
 		// All frames must use the same pixel format.
-		ocean_assert(frameRef->pixelFormat() == frameRefs.front()->pixelFormat());
+		ocean_assert_and_suppress_unused(frameRef->pixelFormat() == frameRefs.front()->pixelFormat(), frameRef);
 	}
 
 	Frames yFrames;
