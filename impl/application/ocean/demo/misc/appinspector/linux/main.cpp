@@ -4,16 +4,13 @@
 #include "ocean/base/Messenger.h"
 #include "ocean/io/JSONConfig.h"
 
-#include <folly/Subprocess.h>
-#include <folly/system/Shell.h>
-
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <string>
 
 using namespace std;
 using namespace Ocean;
-using namespace folly::literals::shell_literals;
 
 const std::string KEY_FIRST_ID = "1st Id";
 const std::string KEY_FIRST_SIZE = "1st Size";
@@ -27,7 +24,7 @@ const std::string KEY_RESULT = "Result";
 
 bool prepareResultFile(const std::string& filename)
 {
-	folly::Subprocess("> {}"_shellify(filename)).wait();
+	std::ofstream file(filename, std::ios_base::trunc);
 
 	return true;
 }
@@ -272,7 +269,7 @@ int main(int argc, char* argv[])
 		Log::info() << "Parameter 1: [Binary file to be analyzed, e.g., \"Facebook.app/Facebook.txt\"] ";
 		Log::info() << "Parameter 2: [Directory to save the result, e.g., \"your/path/to/save/\"] ";
 		Log::info() << "Parameter 3: [File of the objdump tool. For ios builds, you need to install & input the jackalope's objdump tool ";
-		Log::info() << "				e.g., \"/opt/iosbuild/xcode_9.4.1/Developer/Toolchains/osmeta-stable.xctoolchain/usr/bin/objdump\"] ";
+		Log::info() << "				e.g., \"/usr/bin/objdump\" or \"/opt/iosbuild/xcode_9.4.1/Developer/Toolchains/osmeta-stable.xctoolchain/usr/bin/objdump\"] ";
 		Log::info() << "Parameter 4 (Optional): [Binary file to be compared, e.g., \"Facebook.app/Facebook.txt\"] ";
 
 		return 1;
