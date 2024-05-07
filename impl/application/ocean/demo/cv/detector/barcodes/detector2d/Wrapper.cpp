@@ -95,6 +95,7 @@ Wrapper::Wrapper(const std::vector<std::wstring>& separatedCommandArguments)
 	#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
 		PluginManager::get().collectPlugins(StringOSX::toUTF8([[NSBundle mainBundle] resourcePath]));
 	#else
+		const std::string frameworkPath(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
 		PluginManager::get().collectPlugins(frameworkPath + std::string("/bin/plugins/") + Build::buildString());
 	#endif
 
