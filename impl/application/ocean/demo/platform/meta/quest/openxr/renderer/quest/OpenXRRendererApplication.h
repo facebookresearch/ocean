@@ -1,4 +1,7 @@
-// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+// Copyright (c) Meta Platforms, Inc. and affiliates.
+// 
+// This source code is licensed under the MIT license found in the
+// LICENSE file in the root directory of this source tree.
 
 #ifndef OCEAN_META_APPLICATION_DEMO_PLATFORM_META_QUEST_OPENXR_RENDERER_OPEN_XR_RENDERER_APPLICATION_H
 #define OCEAN_META_APPLICATION_DEMO_PLATFORM_META_QUEST_OPENXR_RENDERER_OPEN_XR_RENDERER_APPLICATION_H
