@@ -2,11 +2,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(testoculustags)
+if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
 
-if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
-
-    set(OCEAN_TARGET_NAME "ocean_test_testtracking")
+    set(OCEAN_TARGET_NAME "ocean_test_testtracking_testoculustags")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -23,7 +21,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_TRACKING_EXPORT")
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_TRACKING_OCULUSTAGS_EXPORT")
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
@@ -36,25 +34,20 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
+            ocean_test_testtracking
+            ocean_tracking_oculustags
+        PRIVATE
             ocean_cv
-            ocean_cv_detector
-            ocean_cv_detector_blob
-            ocean_geometry
             ocean_math
+            ocean_platform
             ocean_system
-            ocean_test
-            ocean_tracking
-            ocean_tracking_blob
-            ocean_tracking_pattern
-            ocean_tracking_point
+            ocean_test_testgeometry
     )
 
     if (ANDROID)
         target_link_libraries(${OCEAN_TARGET_NAME}
-            PUBLIC
-                ocean_media_android
+            PRIVATE
                 ocean_platform_android
-                ocean_media_openimagelibraries
         )
     endif()
 
@@ -65,7 +58,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/test/testtracking
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/test/testtracking/testoculustags
             COMPONENT include
     )
 
