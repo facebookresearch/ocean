@@ -206,8 +206,17 @@ bool TestNonMaximumSuppression::testSuppressionInFrame(const unsigned int width,
 				nonMaximumSuppression.addCandidates(yFrame.constdata<uint8_t>(), yFrame.paddingElements(), subFrameExtraBorderLeft, subFrameExtraBorderRight - subFrameExtraBorderLeft, subFrameExtraBorderTop, subFrameExtraBorderBottom - subFrameExtraBorderTop, minimalThreshold, useWorker);
 			performanceCreation.stop();
 
+			StrengthPositions locations;
+
 			performanceDetermination.start();
-				const StrengthPositions locations(nonMaximumSuppression.suppressNonMaximum<int, uint8_t>(subFrameLeft, subFrameWidth, subFrameTop, subFrameHeight, useWorker, nullptr, strictMaximum));
+				if (strictMaximum)
+				{
+					locations = nonMaximumSuppression.suppressNonMaximum<int, uint8_t, true>(subFrameLeft, subFrameWidth, subFrameTop, subFrameHeight, useWorker, nullptr);
+				}
+				else
+				{
+					locations = nonMaximumSuppression.suppressNonMaximum<int, uint8_t, false>(subFrameLeft, subFrameWidth, subFrameTop, subFrameHeight, useWorker, nullptr);
+				}
 			performanceDetermination.stop();
 
 			performanceDeterminationNaive.start();
@@ -321,10 +330,19 @@ bool TestNonMaximumSuppression::testSuppressionInStrengthPositions(const double 
 
 		const TCoordinate sqrRadius = radius * radius;
 
-		const bool strictMaximum = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool strictMaximum = RandomI::boolean(randomGenerator);
 
 		Indices32 validIndices;
-		const CV::NonMaximumSuppression<double>::StrengthPositions<TCoordinate, TStrength> remainingStrengthPositions = CV::NonMaximumSuppression<double>::suppressNonMaximum(width, height, strengthPositions, radius, strictMaximum, &validIndices);
+		CV::NonMaximumSuppression<double>::StrengthPositions<TCoordinate, TStrength> remainingStrengthPositions;
+
+		if (strictMaximum)
+		{
+			remainingStrengthPositions = CV::NonMaximumSuppression<double>::suppressNonMaximum<TCoordinate, TStrength, true>(width, height, strengthPositions, radius, &validIndices);
+		}
+		else
+		{
+			remainingStrengthPositions = CV::NonMaximumSuppression<double>::suppressNonMaximum<TCoordinate, TStrength, false>(width, height, strengthPositions, radius, &validIndices);
+		}
 
 		const UnorderedIndexSet32 debugValidIndexSet(validIndices.cbegin(), validIndices.cend());
 		ocean_assert_and_suppress_unused(debugValidIndexSet.size() == validIndices.size(), debugValidIndexSet);

@@ -183,7 +183,7 @@ void ShapeDetector::PatternDetectorGradientBased::detectShapes(const uint8_t* co
 		}
 
 		NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double>(1u, width - 2u, 1u, height - 2u, nullptr);
-		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double>(width, height, shapes, nonMaximumSupressionRadius, true);
+		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(width, height, shapes, nonMaximumSupressionRadius);
 
 		tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -252,7 +252,7 @@ void ShapeDetector::PatternDetectorGradientBased::detectShapes(const uint8_t* co
 		}
 
 		NonMaximumSuppression<double>::StrengthPositions<unsigned int, double> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, double>(1u, width - 2u, 1u, height - 2u, nullptr);
-		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double>(width, height, shapes, nonMaximumSupressionRadius, true);
+		shapes = CV::NonMaximumSuppression<double>::suppressNonMaximum<unsigned int, double, true>(width, height, shapes, nonMaximumSupressionRadius);
 
 		tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -526,8 +526,8 @@ void ShapeDetector::PatternDetectorVarianceBased::detectShapes(const uint8_t* co
 			}
 		}
 
-		CV::NonMaximumSuppression<float>::StrengthPositions<unsigned int, float> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, float>(1u, width - 2u, 1u, height - 2u, nullptr, nullptr, false /*strictMaximum*/);
-		shapes = CV::NonMaximumSuppression<float>::suppressNonMaximum<unsigned int, float>(width, height, shapes, nonMaximumSupressionRadius, true);
+		CV::NonMaximumSuppression<float>::StrengthPositions<unsigned int, float> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, float, false /*tStrictMaximum*/>(1u, width - 2u, 1u, height - 2u, nullptr, nullptr);
+		shapes = CV::NonMaximumSuppression<float>::suppressNonMaximum<unsigned int, float, true>(width, height, shapes, nonMaximumSupressionRadius);
 
 		tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -593,7 +593,7 @@ void ShapeDetector::PatternDetectorVarianceBased::detectShapes(const uint8_t* co
 		}
 
 		CV::NonMaximumSuppression<float>::StrengthPositions<unsigned int, float> shapes = nonMaximumSuppressionAlignedTShape.suppressNonMaximum<unsigned int, float>(1u, width - 2u, 1u, height - 2u, nullptr, nullptr);
-		shapes = CV::NonMaximumSuppression<float>::suppressNonMaximum<unsigned int, float>(width, height, shapes, nonMaximumSupressionRadius, true);
+		shapes = CV::NonMaximumSuppression<float>::suppressNonMaximum<unsigned int, float, true>(width, height, shapes, nonMaximumSupressionRadius);
 
 		tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -823,8 +823,8 @@ void ShapeDetector::PatternDetectorGradientVarianceBased::detectShapesF(const ui
 	constexpr unsigned int nonMaximumBorderTopDownTop = frameY_T_topDownResponseY() + 1u;
 	constexpr unsigned int nonMaximumBorderTopDownBottom = shapeHeight_ - shapeStepSize_2_ + 1u;
 
-	CV::NonMaximumSuppression<float>::StrengthPositions<unsigned int, float> shapes = nonMaximumSuppression.suppressNonMaximum<unsigned int, float>(nonMaximumBorderTopDownLeft, width - nonMaximumBorderTopDownLeft - nonMaximumBorderTopDownRight, nonMaximumBorderTopDownTop, height - nonMaximumBorderTopDownTop - nonMaximumBorderTopDownBottom, nullptr, nullptr, false /*strictMaximum*/);
-	shapes = CV::NonMaximumSuppression<float>::suppressNonMaximum<unsigned int, float>(width, height, shapes, nonMaximumSupressionRadius, true);
+	CV::NonMaximumSuppression<float>::StrengthPositions<unsigned int, float> shapes = nonMaximumSuppression.suppressNonMaximum<unsigned int, float, false /*tStrictMaximum*/>(nonMaximumBorderTopDownLeft, width - nonMaximumBorderTopDownLeft - nonMaximumBorderTopDownRight, nonMaximumBorderTopDownTop, height - nonMaximumBorderTopDownTop - nonMaximumBorderTopDownBottom, nullptr, nullptr);
+	shapes = CV::NonMaximumSuppression<float>::suppressNonMaximum<unsigned int, float, true>(width, height, shapes, nonMaximumSupressionRadius);
 
 	tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -892,8 +892,8 @@ void ShapeDetector::PatternDetectorGradientVarianceBased::detectShapesF(const ui
 	constexpr unsigned int nonMaximumBorderBottomUpTop = frameY_T_bottomUpResponseY() + 1u;
 	constexpr unsigned int nonMaximumBorderBottomUpBottom = shapeBandSize_ + shapeStepSize_2_ + 1u;
 
-	shapes = nonMaximumSuppression.suppressNonMaximum<unsigned int, float>(nonMaximumBorderBottomUpLeft, width - nonMaximumBorderBottomUpLeft - nonMaximumBorderBottomUpRight, nonMaximumBorderBottomUpTop, height - nonMaximumBorderBottomUpTop - nonMaximumBorderBottomUpBottom, nullptr, nullptr, false /*strictMaximum*/);
-	shapes = CV::NonMaximumSuppression<float>::suppressNonMaximum<unsigned int, float>(width, height, shapes, nonMaximumSupressionRadius, true);
+	shapes = nonMaximumSuppression.suppressNonMaximum<unsigned int, float, false /*tStrictMaximum*/>(nonMaximumBorderBottomUpLeft, width - nonMaximumBorderBottomUpLeft - nonMaximumBorderBottomUpRight, nonMaximumBorderBottomUpTop, height - nonMaximumBorderBottomUpTop - nonMaximumBorderBottomUpBottom, nullptr, nullptr);
+	shapes = CV::NonMaximumSuppression<float>::suppressNonMaximum<unsigned int, float, true>(width, height, shapes, nonMaximumSupressionRadius);
 
 	tShapes.reserve(tShapes.size() + shapes.size());
 
@@ -1009,8 +1009,8 @@ void ShapeDetector::PatternDetectorGradientVarianceBased::detectShapesI(const ui
 	constexpr unsigned int nonMaximumBorderTopDownTop = frameY_T_topDownResponseY() + 1u;
 	constexpr unsigned int nonMaximumBorderTopDownBottom = shapeHeight_ - shapeStepSize_2_ + 1u;
 
-	CV::NonMaximumSuppression<uint32_t>::StrengthPositions<unsigned int, uint32_t> shapes = nonMaximumSuppressionTopDown.suppressNonMaximum<unsigned int, uint32_t>(nonMaximumBorderTopDownLeft, width - nonMaximumBorderTopDownLeft - nonMaximumBorderTopDownRight, nonMaximumBorderTopDownTop, height - nonMaximumBorderTopDownTop - nonMaximumBorderTopDownBottom, nullptr, nullptr, false /*strictMaximum*/);
-	shapes = CV::NonMaximumSuppression<uint32_t>::suppressNonMaximum<unsigned int, uint32_t>(width, height, shapes, nonMaximumSupressionRadius, true);
+	CV::NonMaximumSuppression<uint32_t>::StrengthPositions<unsigned int, uint32_t> shapes = nonMaximumSuppressionTopDown.suppressNonMaximum<unsigned int, uint32_t, false /*tStrictMaximum*/>(nonMaximumBorderTopDownLeft, width - nonMaximumBorderTopDownLeft - nonMaximumBorderTopDownRight, nonMaximumBorderTopDownTop, height - nonMaximumBorderTopDownTop - nonMaximumBorderTopDownBottom, nullptr, nullptr);
+	shapes = CV::NonMaximumSuppression<uint32_t>::suppressNonMaximum<unsigned int, uint32_t, true>(width, height, shapes, nonMaximumSupressionRadius);
 
 	tShapes.reserve(tShapes.size() + shapes.size());
 	for (size_t n = 0; n < shapes.size(); ++n)
@@ -1062,8 +1062,8 @@ void ShapeDetector::PatternDetectorGradientVarianceBased::detectShapesI(const ui
 	constexpr unsigned int nonMaximumBorderBottomUpTop = frameY_T_bottomUpResponseY() + 1u;
 	constexpr unsigned int nonMaximumBorderBottomUpBottom = shapeBandSize_ + shapeStepSize_2_ + 1u;
 
-	shapes = nonMaximumSuppressionBottomUp.suppressNonMaximum<unsigned int, uint32_t>(nonMaximumBorderBottomUpLeft, width - nonMaximumBorderBottomUpLeft - nonMaximumBorderBottomUpRight, nonMaximumBorderBottomUpTop, height - nonMaximumBorderBottomUpTop - nonMaximumBorderBottomUpBottom, nullptr, nullptr, false /*strictMaximum*/);
-	shapes = CV::NonMaximumSuppression<uint32_t>::suppressNonMaximum<unsigned int, uint32_t>(width, height, shapes, nonMaximumSupressionRadius, true);
+	shapes = nonMaximumSuppressionBottomUp.suppressNonMaximum<unsigned int, uint32_t, false /*tStrictMaximum*/>(nonMaximumBorderBottomUpLeft, width - nonMaximumBorderBottomUpLeft - nonMaximumBorderBottomUpRight, nonMaximumBorderBottomUpTop, height - nonMaximumBorderBottomUpTop - nonMaximumBorderBottomUpBottom, nullptr, nullptr);
+	shapes = CV::NonMaximumSuppression<uint32_t>::suppressNonMaximum<unsigned int, uint32_t, true>(width, height, shapes, nonMaximumSupressionRadius);
 
 	tShapes.reserve(tShapes.size() + shapes.size());
 	for (size_t n = 0; n < shapes.size(); ++n)

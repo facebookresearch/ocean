@@ -208,7 +208,7 @@ bool HarrisCornerDetector::detectCorners(const uint8_t* yFrame, const unsigned i
 		PreciseCornerPosition precisePositionObject(yFrame, width, height, yFramePaddingElements);
 
 		const NonMaximumSuppressionVote::PositionCallback<Scalar, int32_t> callbackFunction(NonMaximumSuppressionVote::PositionCallback<Scalar, int32_t>::create(precisePositionObject, &PreciseCornerPosition::precisePosition));
-		const NonMaximumSuppressionVote::StrengthPositions<Scalar, int32_t> strengthPositions(nonMaximumSuppression.suppressNonMaximum<Scalar, int32_t>(subFrameLeft + 3u, subFrameWidth - 6u, subFrameTop + 3u, subFrameHeight - 6u, useWorker, &callbackFunction, false));
+		const NonMaximumSuppressionVote::StrengthPositions<Scalar, int32_t> strengthPositions(nonMaximumSuppression.suppressNonMaximum<Scalar, int32_t, false /*tStrictMaximum*/>(subFrameLeft + 3u, subFrameWidth - 6u, subFrameTop + 3u, subFrameHeight - 6u, useWorker, &callbackFunction));
 
 		corners.reserve(strengthPositions.size());
 		for (NonMaximumSuppressionVote::StrengthPositions<Scalar, int32_t>::const_iterator i = strengthPositions.begin(); i != strengthPositions.end(); ++i)
@@ -218,7 +218,7 @@ bool HarrisCornerDetector::detectCorners(const uint8_t* yFrame, const unsigned i
 	}
 	else
 	{
-		const NonMaximumSuppressionVote::StrengthPositions<unsigned int, int32_t> strengthPositions(nonMaximumSuppression.suppressNonMaximum<unsigned int, int32_t>(subFrameLeft + 3u, subFrameWidth - 6u, subFrameTop + 3u, subFrameHeight - 6u, useWorker, nullptr, false));
+		const NonMaximumSuppressionVote::StrengthPositions<unsigned int, int32_t> strengthPositions(nonMaximumSuppression.suppressNonMaximum<unsigned int, int32_t, false /*tStrictMaximum*/>(subFrameLeft + 3u, subFrameWidth - 6u, subFrameTop + 3u, subFrameHeight - 6u, useWorker, nullptr));
 
 		corners.reserve(strengthPositions.size());
 		for (NonMaximumSuppressionVote::StrengthPositions<unsigned int, int32_t>::const_iterator i = strengthPositions.begin(); i != strengthPositions.end(); ++i)

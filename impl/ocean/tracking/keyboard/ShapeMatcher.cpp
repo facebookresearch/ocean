@@ -741,8 +741,8 @@ IndexGroups32 ShapeMatcher::determineShapesAlongLines(const unsigned int width, 
 
 	constexpr unsigned int suppressionRadius = 6u;
 
-	CV::NonMaximumSuppression<uint32_t>::StrengthPositions<unsigned int, uint32_t> peaks(nonMaximumSuppression.suppressNonMaximum<unsigned int, uint32_t>(0u, binFrame.width(), 0u, binFrame.height(), nullptr, nullptr, false));
-	peaks = CV::NonMaximumSuppression<uint32_t>::suppressNonMaximum<unsigned int, uint32_t>(binFrame.width(), binFrame.height(), peaks, suppressionRadius, false);
+	CV::NonMaximumSuppression<uint32_t>::StrengthPositions<unsigned int, uint32_t> peaks(nonMaximumSuppression.suppressNonMaximum<unsigned int, uint32_t, false>(0u, binFrame.width(), 0u, binFrame.height(), nullptr, nullptr));
+	peaks = CV::NonMaximumSuppression<uint32_t>::suppressNonMaximum<unsigned int, uint32_t, false>(binFrame.width(), binFrame.height(), peaks, suppressionRadius);
 	std::sort(peaks.begin(), peaks.end(), CV::NonMaximumSuppression<uint32_t>::StrengthPosition<unsigned int, uint32_t>::compareStrength<true>);
 
 	Lines2 internalLines;
