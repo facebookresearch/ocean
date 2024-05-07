@@ -46,7 +46,6 @@
 		5D222C2D1BB1894100298788 /* BlackPointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A11BA9D2C300D38120 /* BlackPointDetector.h */; };
 		5D222C2E1BB1894100298788 /* Advanced.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92861BA9D2C300D38120 /* Advanced.h */; };
 		5D222C2F1BB1894100298788 /* AdvancedFrameShrinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928F1BA9D2C300D38120 /* AdvancedFrameShrinker.h */; };
-		5D222C321BB1894100298788 /* OcclusionAnalysis.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AA1BA9D2C300D38120 /* OcclusionAnalysis.h */; };
 		5D222C351BB1894100298788 /* AdvancedFrameConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92871BA9D2C300D38120 /* AdvancedFrameConverter.h */; };
 		5D222C3B1BB1894100298788 /* FrameRectification.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A71BA9D2C300D38120 /* FrameRectification.h */; };
 		5D7D92761BA9D2AB00D38120 /* AdvancedFrameConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92661BA9D2AB00D38120 /* AdvancedFrameConverter.cpp */; };
@@ -76,7 +75,6 @@
 		5D7D92DE1BA9D2C300D38120 /* ColorChannelMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A31BA9D2C300D38120 /* ColorChannelMapper.h */; };
 		5D7D92E01BA9D2C300D38120 /* FrameColorAdjustment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A51BA9D2C300D38120 /* FrameColorAdjustment.h */; };
 		5D7D92E21BA9D2C300D38120 /* FrameRectification.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A71BA9D2C300D38120 /* FrameRectification.h */; };
-		5D7D92E51BA9D2C300D38120 /* OcclusionAnalysis.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AA1BA9D2C300D38120 /* OcclusionAnalysis.h */; };
 		5D7D92E61BA9D2C300D38120 /* PanoramaFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AB1BA9D2C300D38120 /* PanoramaFrame.h */; };
 		5D7D92E71BA9D2C300D38120 /* PixelLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AC1BA9D2C300D38120 /* PixelLine.h */; };
 		5D7D92E81BA9D2C300D38120 /* PixelTriangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AD1BA9D2C300D38120 /* PixelTriangle.h */; };
@@ -114,7 +112,6 @@
 		5D9860D51D8B523000DEDB00 /* BlackPointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A11BA9D2C300D38120 /* BlackPointDetector.h */; };
 		5D9860D61D8B523000DEDB00 /* Advanced.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92861BA9D2C300D38120 /* Advanced.h */; };
 		5D9860D71D8B523000DEDB00 /* AdvancedFrameShrinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928F1BA9D2C300D38120 /* AdvancedFrameShrinker.h */; };
-		5D9860DA1D8B523000DEDB00 /* OcclusionAnalysis.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AA1BA9D2C300D38120 /* OcclusionAnalysis.h */; };
 		5D9860DD1D8B523000DEDB00 /* AdvancedFrameConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92871BA9D2C300D38120 /* AdvancedFrameConverter.h */; };
 		5D9860E31D8B523000DEDB00 /* FrameRectification.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A71BA9D2C300D38120 /* FrameRectification.h */; };
 		5DD535371D9C27B600125D88 /* PoissonBlending.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD535361D9C27B600125D88 /* PoissonBlending.h */; };
@@ -188,7 +185,6 @@
 		C041EAD21DABD45300BF5D76 /* BlackPointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A11BA9D2C300D38120 /* BlackPointDetector.h */; };
 		C041EAD31DABD45300BF5D76 /* Advanced.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92861BA9D2C300D38120 /* Advanced.h */; };
 		C041EAD41DABD45300BF5D76 /* AdvancedFrameShrinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928F1BA9D2C300D38120 /* AdvancedFrameShrinker.h */; };
-		C041EAD71DABD45300BF5D76 /* OcclusionAnalysis.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AA1BA9D2C300D38120 /* OcclusionAnalysis.h */; };
 		C041EADA1DABD45300BF5D76 /* AdvancedFrameConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92871BA9D2C300D38120 /* AdvancedFrameConverter.h */; };
 		C041EAE01DABD45300BF5D76 /* FrameRectification.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A71BA9D2C300D38120 /* FrameRectification.h */; };
 /* End PBXBuildFile section */
@@ -225,7 +221,6 @@
 		5D7D92A31BA9D2C300D38120 /* ColorChannelMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColorChannelMapper.h; path = ../../../../../../impl/ocean/cv/advanced/ColorChannelMapper.h; sourceTree = "<group>"; };
 		5D7D92A51BA9D2C300D38120 /* FrameColorAdjustment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameColorAdjustment.h; path = ../../../../../../impl/ocean/cv/advanced/FrameColorAdjustment.h; sourceTree = "<group>"; };
 		5D7D92A71BA9D2C300D38120 /* FrameRectification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameRectification.h; path = ../../../../../../impl/ocean/cv/advanced/FrameRectification.h; sourceTree = "<group>"; };
-		5D7D92AA1BA9D2C300D38120 /* OcclusionAnalysis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OcclusionAnalysis.h; path = ../../../../../../impl/ocean/cv/advanced/OcclusionAnalysis.h; sourceTree = "<group>"; };
 		5D7D92AB1BA9D2C300D38120 /* PanoramaFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PanoramaFrame.h; path = ../../../../../../impl/ocean/cv/advanced/PanoramaFrame.h; sourceTree = "<group>"; };
 		5D7D92AC1BA9D2C300D38120 /* PixelLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelLine.h; path = ../../../../../../impl/ocean/cv/advanced/PixelLine.h; sourceTree = "<group>"; };
 		5D7D92AD1BA9D2C300D38120 /* PixelTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelTriangle.h; path = ../../../../../../impl/ocean/cv/advanced/PixelTriangle.h; sourceTree = "<group>"; };
@@ -303,7 +298,6 @@
 				5D7D92A31BA9D2C300D38120 /* ColorChannelMapper.h */,
 				5D7D92A51BA9D2C300D38120 /* FrameColorAdjustment.h */,
 				5D7D92A71BA9D2C300D38120 /* FrameRectification.h */,
-				5D7D92AA1BA9D2C300D38120 /* OcclusionAnalysis.h */,
 				5D7D92AB1BA9D2C300D38120 /* PanoramaFrame.h */,
 				5D7D92AC1BA9D2C300D38120 /* PixelLine.h */,
 				5D7D92AD1BA9D2C300D38120 /* PixelTriangle.h */,
@@ -394,7 +388,6 @@
 				5D222C2E1BB1894100298788 /* Advanced.h in Headers */,
 				939B41882A0AC1430071598D /* AdvancedSumSquareDifferencesSSE.h in Headers */,
 				5D222C2F1BB1894100298788 /* AdvancedFrameShrinker.h in Headers */,
-				5D222C321BB1894100298788 /* OcclusionAnalysis.h in Headers */,
 				5D222C351BB1894100298788 /* AdvancedFrameConverter.h in Headers */,
 				5D222C3B1BB1894100298788 /* FrameRectification.h in Headers */,
 			);
@@ -433,7 +426,6 @@
 				5D7D92C11BA9D2C300D38120 /* Advanced.h in Headers */,
 				939B41872A0AC1430071598D /* AdvancedSumSquareDifferencesSSE.h in Headers */,
 				5D7D92CA1BA9D2C300D38120 /* AdvancedFrameShrinker.h in Headers */,
-				5D7D92E51BA9D2C300D38120 /* OcclusionAnalysis.h in Headers */,
 				5D7D92C21BA9D2C300D38120 /* AdvancedFrameConverter.h in Headers */,
 				5D7D92E21BA9D2C300D38120 /* FrameRectification.h in Headers */,
 			);
@@ -472,7 +464,6 @@
 				5D9860D61D8B523000DEDB00 /* Advanced.h in Headers */,
 				939B41892A0AC1430071598D /* AdvancedSumSquareDifferencesSSE.h in Headers */,
 				5D9860D71D8B523000DEDB00 /* AdvancedFrameShrinker.h in Headers */,
-				5D9860DA1D8B523000DEDB00 /* OcclusionAnalysis.h in Headers */,
 				5D9860DD1D8B523000DEDB00 /* AdvancedFrameConverter.h in Headers */,
 				5D9860E31D8B523000DEDB00 /* FrameRectification.h in Headers */,
 			);
@@ -511,7 +502,6 @@
 				C041EAD31DABD45300BF5D76 /* Advanced.h in Headers */,
 				939B418A2A0AC1430071598D /* AdvancedSumSquareDifferencesSSE.h in Headers */,
 				C041EAD41DABD45300BF5D76 /* AdvancedFrameShrinker.h in Headers */,
-				C041EAD71DABD45300BF5D76 /* OcclusionAnalysis.h in Headers */,
 				C041EADA1DABD45300BF5D76 /* AdvancedFrameConverter.h in Headers */,
 				C041EAE01DABD45300BF5D76 /* FrameRectification.h in Headers */,
 			);

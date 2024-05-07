@@ -42,9 +42,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\FrameRectification.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\OcclusionAnalysis.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\PanoramaFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>

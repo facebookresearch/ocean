@@ -93,7 +93,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\ColorChannelMapper.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\FrameColorAdjustment.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\FrameRectification.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\OcclusionAnalysis.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\PanoramaFrame.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\PixelLine.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\PixelTriangle.h" />
