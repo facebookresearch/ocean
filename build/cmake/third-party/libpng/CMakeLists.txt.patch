@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ad3f2427d..fb3b723d2 100644
+index ad3f2427d..9edb0b792 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -23,7 +23,8 @@ set(PNGLIB_REVISION 43)
@@ -12,6 +12,15 @@ index ad3f2427d..fb3b723d2 100644
  set(PNGLIB_SHARED_VERSION ${PNGLIB_ABI_VERSION}.${PNGLIB_REVISION}.${PNGLIB_SUBREVISION})
  
  project(libpng
+@@ -684,7 +685,7 @@ else()
+   # We also need to use a custom suffix, in order to distinguish between the
+   # shared import library name and the static library name.
+   set(PNG_SHARED_OUTPUT_NAME "libpng${PNGLIB_ABI_VERSION}")
+-  set(PNG_STATIC_OUTPUT_NAME "libpng${PNGLIB_ABI_VERSION}_static")
++  set(PNG_STATIC_OUTPUT_NAME "libpng${PNGLIB_ABI_VERSION}")
+ endif()
+ 
+ if(PNG_SHARED)
 @@ -991,7 +992,7 @@ function(create_symlink DEST_FILE)
                        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
      else()
