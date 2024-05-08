@@ -6446,11 +6446,37 @@ bool TestFrame::validatePlaneInitializer(const FrameType& frameType, RandomGener
 			}
 		}
 
+		unsigned int planeWidth0 = 0u;
+		unsigned int planeHeight0 = 0u;
+		unsigned int planeChannels0 = 0u;
+
+		unsigned int planeWidth1 = 0u;
+		unsigned int planeHeight1 = 0u;
+		unsigned int planeChannels1 = 0u;
+
+		if (!FrameType::planeLayout(frameType, 0u, planeWidth0, planeHeight0, planeChannels0))
+		{
+			return false;
+		}
+
+		if (!FrameType::planeLayout(frameType, 1u, planeWidth1, planeHeight1, planeChannels1))
+		{
+			return false;
+		}
+
+		const size_t planeSize0 = size_t((planeWidth0 * planeChannels0 + paddingElements0) * planeHeight0);
+		const size_t planeSize1 = size_t((planeWidth1 * planeChannels1 + paddingElements1) * planeHeight1);
+
 		{
 			// plane with const memory pointer
 
-			const Memory sourcePlane0((frameType.width() * frameType.channels() + paddingElements0) * frameType.bytesPerDataType() * frameType.height()); // just enough memory
-			const Memory sourcePlane1(sourcePlane0.size());
+			const Memory sourcePlane0(planeSize0);
+			const Memory sourcePlane1(planeSize1);
+
+			if (sourcePlane0.isNull() || sourcePlane1.isNull())
+			{
+				return false;
+			}
 
 			const Frame::CopyMode copyMode = copyModes[RandomI::random(randomGenerator, (unsigned int)(copyModes.size() - 1))];
 
@@ -6492,8 +6518,8 @@ bool TestFrame::validatePlaneInitializer(const FrameType& frameType, RandomGener
 		{
 			// plane with non-const memory pointer
 
-			Memory sourcePlane0((frameType.width() * frameType.channels() + paddingElements0) * frameType.bytesPerDataType() * frameType.height()); // just enough memory
-			Memory sourcePlane1(sourcePlane0.size());
+			Memory sourcePlane0(planeSize0);
+			Memory sourcePlane1(planeSize1);
 
 			const Frame::CopyMode copyMode = copyModes[RandomI::random(randomGenerator, (unsigned int)(copyModes.size() - 1))];
 
@@ -6544,7 +6570,7 @@ bool TestFrame::validatePlaneInitializer(const FrameType& frameType, RandomGener
 
 		for (unsigned int nPlane = 0u; nPlane < numberPlanes; ++nPlane)
 		{
-			unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
 			paddingElementPerPlane.push_back(paddingElements);
 
