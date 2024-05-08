@@ -78,7 +78,7 @@ void GLMainView::threadRun()
 
 }
 
-jboolean Java_com_facebook_ocean_app_demo_cv_detector_linedetector_android_LineDetectorActivity_initializeLineDetector(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution)
+jboolean Java_com_meta_ocean_app_demo_cv_detector_linedetector_android_LineDetectorActivity_initializeLineDetector(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution)
 {
 	const std::string inputMediumValue(Platform::Android::Utilities::toAString(env, inputMedium));
 	const std::string resolutionValue(Platform::Android::Utilities::toAString(env, resolution));

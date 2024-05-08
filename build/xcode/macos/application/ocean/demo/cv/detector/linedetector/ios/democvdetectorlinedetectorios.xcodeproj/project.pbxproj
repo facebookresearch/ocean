@@ -368,7 +368,7 @@
 					"-framework",
 					CoreGraphics,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.cv.detector.linedetector.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.cv.detector.linedetector.ios;
 				PRODUCT_MODULE_NAME = democvdetectorlinedetectorios;
 				PRODUCT_NAME = democvdetectorlinedetectorios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
@@ -467,7 +467,7 @@
 					"-framework",
 					CoreGraphics,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.cv.detector.linedetector.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.cv.detector.linedetector.ios;
 				PRODUCT_MODULE_NAME = democvdetectorlinedetectorios;
 				PRODUCT_NAME = democvdetectorlinedetectorios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";

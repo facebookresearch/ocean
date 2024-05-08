@@ -15,7 +15,7 @@
  * @return True, if succeeded
  * @ingroup scenedescriptionsdxx3djni
  */
-extern "C" jboolean Java_com_facebook_ocean_scenedescription_sdx_x3d_SceneDescriptionSDXX3DJni_registerLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_scenedescription_sdx_x3d_SceneDescriptionSDXX3DJni_registerLibrary(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function to unregister the SceneDescription SDXX3D adapter component.
@@ -24,6 +24,6 @@ extern "C" jboolean Java_com_facebook_ocean_scenedescription_sdx_x3d_SceneDescri
  * @return True, if succeeded
  * @ingroup scenedescriptionsdxx3djni
  */
-extern "C" jboolean Java_com_facebook_ocean_scenedescription_sdx_x3d_SceneDescriptionSDXX3DJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_scenedescription_sdx_x3d_SceneDescriptionSDXX3DJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
 
 #endif // META_OCEAN_SCENEDESCRIPTION_SDX_X3D_JNI_SCENEDESCRIPTIONSDXX3DJNI_H

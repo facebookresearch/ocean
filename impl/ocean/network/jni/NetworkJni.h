@@ -16,6 +16,6 @@
  * @return True, if succeeded
  * @ingroup platformandroid
  */
-extern "C" jboolean Java_com_facebook_ocean_network_NetworkJni_setCurrentLocalIPAddress(JNIEnv* env, jobject javaThis, jint localIPAddress);
+extern "C" jboolean Java_com_meta_ocean_network_NetworkJni_setCurrentLocalIPAddress(JNIEnv* env, jobject javaThis, jint localIPAddress);
 
 #endif // META_OCEAN_NETWORK_JNI_NETWORKJNI_H

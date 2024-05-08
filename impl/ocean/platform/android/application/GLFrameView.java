@@ -3,7 +3,7 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-package com.facebook.ocean.platform.android.application;
+package com.meta.ocean.platform.android.application;
 
 import android.content.Context;
 import android.graphics.PixelFormat;

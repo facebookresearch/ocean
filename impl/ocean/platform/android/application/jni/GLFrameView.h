@@ -18,7 +18,7 @@
  * @return True, if succeeded
  * @ingroup platformandroidapplicationjni
  */
-extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLFrameView_setFovX(JNIEnv* env, jobject javaThis, jdouble angle);
+extern "C" jboolean Java_com_meta_ocean_platform_android_application_GLFrameView_setFovX(JNIEnv* env, jobject javaThis, jdouble angle);
 
 /**
  * Java native interface function to set or change the view's background color.
@@ -30,7 +30,7 @@ extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLFrame
  * @return True, if succeeded
  * @ingroup platformandroidapplicationjni
  */
-extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLFrameView_setBackgroundColor(JNIEnv* env, jobject javaThis, jdouble red, jdouble green, jdouble blue);
+extern "C" jboolean Java_com_meta_ocean_platform_android_application_GLFrameView_setBackgroundColor(JNIEnv* env, jobject javaThis, jdouble red, jdouble green, jdouble blue);
 
 /**
  * Java native interface function to set or change the view's background media object.
@@ -44,7 +44,7 @@ extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLFrame
  * @return True, if succeeded
  * @ingroup platformandroidapplicationjni
  */
-extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLFrameView_setFrameMedium(JNIEnv* env, jobject javaThis, jstring url, jstring type, jint preferredWidth, jint preferredHeight, jboolean adjustFov);
+extern "C" jboolean Java_com_meta_ocean_platform_android_application_GLFrameView_setFrameMedium(JNIEnv* env, jobject javaThis, jstring url, jstring type, jint preferredWidth, jint preferredHeight, jboolean adjustFov);
 
 /**
  * Java native interface function to register the instance function for the corresponding native C++ class.
@@ -52,6 +52,6 @@ extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLFrame
  * @param javaThis JNI object
  * @ingroup platformandroidapplicationjni
  */
-extern "C" void Java_com_facebook_ocean_platform_android_application_GLFrameView_registerInstance(JNIEnv* env, jobject javaThis);
+extern "C" void Java_com_meta_ocean_platform_android_application_GLFrameView_registerInstance(JNIEnv* env, jobject javaThis);
 
 #endif // META_OCEAN_PLATFORM_ANDROID_APPLICATION_JNI_GL_FRAME_VIEW_H

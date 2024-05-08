@@ -5,8 +5,8 @@
 
 package com.meta.ocean.app.test.network.testnetwork.android;
 
-import com.facebook.ocean.base.BaseJni;
-import com.facebook.ocean.platform.android.application.TextActivity;
+import com.meta.ocean.base.BaseJni;
+import com.meta.ocean.platform.android.application.TextActivity;
 
 import android.view.WindowManager;
 

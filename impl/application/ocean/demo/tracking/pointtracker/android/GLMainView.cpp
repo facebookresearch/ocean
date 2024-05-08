@@ -79,7 +79,7 @@ void GLMainView::threadRun()
 
 }
 
-jboolean Java_com_facebook_ocean_app_demo_tracking_pointtracker_android_PointTrackerActivity_initializePointTracker(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution)
+jboolean Java_com_meta_ocean_app_demo_tracking_pointtracker_android_PointTrackerActivity_initializePointTracker(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution)
 {
 	const std::string inputMediumValue(Platform::Android::Utilities::toAString(env, inputMedium));
 	const std::string resolutionValue(Platform::Android::Utilities::toAString(env, resolution));

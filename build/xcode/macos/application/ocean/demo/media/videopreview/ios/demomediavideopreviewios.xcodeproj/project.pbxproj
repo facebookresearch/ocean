@@ -358,7 +358,7 @@
 					"-framework",
 					CoreGraphics,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.media.videopreview.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.media.videopreview.ios;
 				PRODUCT_MODULE_NAME = demomediavideopreviewios;
 				PRODUCT_NAME = demomediavideopreviewios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
@@ -450,7 +450,7 @@
 					"-framework",
 					CoreGraphics,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.media.videopreview.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.media.videopreview.ios;
 				PRODUCT_MODULE_NAME = demomediavideopreviewios;
 				PRODUCT_NAME = demomediavideopreviewios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";

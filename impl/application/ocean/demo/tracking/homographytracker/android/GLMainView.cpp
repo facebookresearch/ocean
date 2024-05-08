@@ -92,7 +92,7 @@ void GLMainView::onTouchDown(const float x, const float y)
 	}
 }
 
-jboolean Java_com_facebook_ocean_app_demo_tracking_homographytracker_android_HomographyTrackerActivity_initializeHomographyTracker(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution)
+jboolean Java_com_meta_ocean_app_demo_tracking_homographytracker_android_HomographyTrackerActivity_initializeHomographyTracker(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution)
 {
 	const std::string inputMediumValue(Platform::Android::Utilities::toAString(env, inputMedium));
 	const std::string resolutionValue(Platform::Android::Utilities::toAString(env, resolution));

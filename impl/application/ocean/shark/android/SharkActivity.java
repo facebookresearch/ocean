@@ -3,15 +3,15 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-package com.facebook.ocean.app.shark.android;
+package com.meta.ocean.app.shark.android;
 
-import com.facebook.ocean.devices.android.DevicesAndroidJni;
-import com.facebook.ocean.devices.pattern.DevicesPatternJni;
-import com.facebook.ocean.media.openimagelibraries.MediaOpenImageLibrariesJni;
-import com.facebook.ocean.platform.android.*;
-import com.facebook.ocean.platform.android.application.*;
-import com.facebook.ocean.scenedescription.sdl.obj.SceneDescriptionSDLOBJJni;
-import com.facebook.ocean.scenedescription.sdx.x3d.SceneDescriptionSDXX3DJni;
+import com.meta.ocean.devices.android.DevicesAndroidJni;
+import com.meta.ocean.devices.pattern.DevicesPatternJni;
+import com.meta.ocean.media.openimagelibraries.MediaOpenImageLibrariesJni;
+import com.meta.ocean.platform.android.*;
+import com.meta.ocean.platform.android.application.*;
+import com.meta.ocean.scenedescription.sdl.obj.SceneDescriptionSDLOBJJni;
+import com.meta.ocean.scenedescription.sdx.x3d.SceneDescriptionSDXX3DJni;
 import android.os.Bundle;
 
 /**

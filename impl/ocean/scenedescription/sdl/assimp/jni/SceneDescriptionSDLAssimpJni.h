@@ -15,7 +15,7 @@
  * @return True, if succeeded
  * @ingroup scenedescriptionsdlassimpjni
  */
-extern "C" jboolean Java_com_facebook_ocean_scenedescription_sdl_assimp_SceneDescriptionSDLAssimpJni_registerLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_scenedescription_sdl_assimp_SceneDescriptionSDLAssimpJni_registerLibrary(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function to unregister the SceneDescription SDLAssimp adapter component.
@@ -24,6 +24,6 @@ extern "C" jboolean Java_com_facebook_ocean_scenedescription_sdl_assimp_SceneDes
  * @return True, if succeeded
  * @ingroup scenedescriptionsdlassimpjni
  */
-extern "C" jboolean Java_com_facebook_ocean_scenedescription_sdl_assimp_SceneDescriptionSDLAssimpJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_scenedescription_sdl_assimp_SceneDescriptionSDLAssimpJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
 
 #endif // META_OCEAN_SCENEDESCRIPTION_SDL_ASSIMP_JNI_SCENEDESCRIPTIONSDLASSIMPJNI_H

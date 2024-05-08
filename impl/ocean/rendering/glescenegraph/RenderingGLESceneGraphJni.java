@@ -3,7 +3,7 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-package com.facebook.ocean.rendering.glescenegraph;
+package com.meta.ocean.rendering.glescenegraph;
 
 /**
  * This class defines the native interface to the GLESceneGraph library of the rendering branch of the Ocean framework.

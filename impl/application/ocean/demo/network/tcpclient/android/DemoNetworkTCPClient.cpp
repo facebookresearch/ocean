@@ -10,7 +10,7 @@
 
 using namespace Ocean;
 
-jboolean Java_com_facebook_ocean_demo_network_tcpclient_DemoNetworkTCPClientActivity_invokeConnectClient(JNIEnv* env, jobject javaThis, jstring hostAddress, jint hostPort)
+jboolean Java_com_meta_ocean_demo_network_tcpclient_DemoNetworkTCPClientActivity_invokeConnectClient(JNIEnv* env, jobject javaThis, jstring hostAddress, jint hostPort)
 {
 	const std::string stringHostAddress = Platform::Android::Utilities::toAString(env, hostAddress);
 

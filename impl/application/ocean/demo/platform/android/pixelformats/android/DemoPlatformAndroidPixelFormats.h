@@ -28,6 +28,6 @@
  * @param value The value to be set
  * @ingroup applicationtestcvtestcvandroid
  */
-extern "C" bool Java_com_facebook_ocean_app_demo_platform_android_pixelformats_android_DemoPlatformAndroidPixelFormatsActivity_setChannelToValue(JNIEnv* env, jobject javaThis, jobject bitmap, jint channel, jint value);
+extern "C" bool Java_com_meta_ocean_app_demo_platform_android_pixelformats_android_DemoPlatformAndroidPixelFormatsActivity_setChannelToValue(JNIEnv* env, jobject javaThis, jobject bitmap, jint channel, jint value);
 
 #endif // NDK_APPLICATION_DEMO_PLATFORM_ANDOIRD_DEMO_PLATFORM_ANDROID_PIXEL_FORMATS_H

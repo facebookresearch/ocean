@@ -369,7 +369,7 @@
 					"-framework",
 					CoreGraphics,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.tracking.homographyimagealigner.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.homographyimagealigner.ios;
 				PRODUCT_MODULE_NAME = demotrackinghomographyimagealignerios;
 				PRODUCT_NAME = demotrackinghomographyimagealignerios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
@@ -468,7 +468,7 @@
 					"-framework",
 					CoreGraphics,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.tracking.featuretracker.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.featuretracker.ios;
 				PRODUCT_MODULE_NAME = demotrackinghomographyimagealignerios;
 				PRODUCT_NAME = demotrackinghomographyimagealignerios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";

@@ -1535,7 +1535,7 @@ std::string ALiveVideo::translateCameraStatus(const camera_status_t cameraStatus
 
 #else // __ANDROID_API__ >= 24
 
-jboolean Java_com_facebook_ocean_media_android_MediaAndroidJni_onNewCameraFrame(JNIEnv* env, jobject javaThis, jint cameraId, jbyteArray imageBuffer, jint width, jint height, jint format, jfloat fovX, jint bufferSize, jdouble timestamp)
+jboolean Java_com_meta_ocean_media_android_MediaAndroidJni_onNewCameraFrame(JNIEnv* env, jobject javaThis, jint cameraId, jbyteArray imageBuffer, jint width, jint height, jint format, jfloat fovX, jint bufferSize, jdouble timestamp)
 {
 	FrameType::PixelFormat frameFormat(FrameType::FORMAT_UNDEFINED);
 	FrameType::PixelOrigin frameOrigin(FrameType::ORIGIN_INVALID);

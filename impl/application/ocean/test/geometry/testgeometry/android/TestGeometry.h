@@ -27,6 +27,6 @@
  * @param testFunctions Test functions to be invoked
  * @ingroup applicationtestgeometrytestgeometryandroid
  */
-extern "C" void Java_com_facebook_ocean_app_test_geometry_testgeometry_android_TestGeometryActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testFunctions);
+extern "C" void Java_com_meta_ocean_app_test_geometry_testgeometry_android_TestGeometryActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testFunctions);
 
 #endif // FACEBOOK_APPLICATION_OCEAN_TEST_GEOMETRY_TESTGEOMETRY_ANDROID_TEST_GEOMETRY_H

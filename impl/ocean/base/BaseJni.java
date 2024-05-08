@@ -1,6 +1,6 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-package com.facebook.ocean.base;
+package com.meta.ocean.base;
 
 /**
  * This class defines the native interface to the Base library of the Ocean framework.

@@ -1,6 +1,6 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-package com.facebook.ocean.network;
+package com.meta.ocean.network;
 
 /**
  * This class defines the native interface to the Network library of the Ocean framework.

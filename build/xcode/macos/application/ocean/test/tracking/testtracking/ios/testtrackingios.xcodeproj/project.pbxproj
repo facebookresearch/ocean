@@ -343,7 +343,7 @@
 					"-lOceanTestTrackingD",
 				);
 				OTHER_LIBTOOLFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.test.testtracking.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testtracking.ios;
 				PRODUCT_MODULE_NAME = testtracking;
 				PRODUCT_NAME = testtrackingios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
@@ -408,7 +408,7 @@
 					"-lOceanTestTracking",
 				);
 				OTHER_LIBTOOLFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.test.testtracking.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testtracking.ios;
 				PRODUCT_MODULE_NAME = testtracking;
 				PRODUCT_NAME = testtrackingios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";

@@ -3,7 +3,7 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-package com.facebook.ocean.platform.android.application;
+package com.meta.ocean.platform.android.application;
 
 import android.content.pm.PackageManager;
 
@@ -21,8 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Set;
 import java.util.HashSet;
 
-import com.facebook.ocean.base.BaseJni;
-import com.facebook.ocean.platform.android.*;
+import com.meta.ocean.base.BaseJni;
+import com.meta.ocean.platform.android.*;
 
 /**
  * This class implements the base class for all Ocean activities based on AppCompatActivity.

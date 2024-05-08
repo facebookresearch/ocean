@@ -15,7 +15,7 @@
  * @return True, if succeeded
  * @ingroup devicesarcorejni
  */
-extern "C" jboolean Java_com_facebook_ocean_devices_arcore_DevicesARCoreJni_registerLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_devices_arcore_DevicesARCoreJni_registerLibrary(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function to unregister the Devices::ARCore component.
@@ -24,6 +24,6 @@ extern "C" jboolean Java_com_facebook_ocean_devices_arcore_DevicesARCoreJni_regi
  * @return True, if succeeded
  * @ingroup devicesarcorejni
  */
-extern "C" jboolean Java_com_facebook_ocean_devices_arcore_DevicesARCoreJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_devices_arcore_DevicesARCoreJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
 
 #endif // META_OCEAN_DEVICES_ARCORE_DEVICESARCOREJNI_H

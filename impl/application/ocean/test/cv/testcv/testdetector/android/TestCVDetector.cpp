@@ -11,7 +11,7 @@
 
 using namespace Ocean;
 
-void Java_com_facebook_ocean_app_test_cv_testcv_testdetector_android_TestCVDetectorActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testImageFilename, jstring testFunctions)
+void Java_com_meta_ocean_app_test_cv_testcv_testdetector_android_TestCVDetectorActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testImageFilename, jstring testFunctions)
 {
 	ocean_assert(testDuration > 0.0);
 

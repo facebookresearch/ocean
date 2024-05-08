@@ -3,7 +3,7 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-package com.facebook.ocean.platform.android.application;
+package com.meta.ocean.platform.android.application;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -13,8 +13,8 @@ import android.content.Context;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.facebook.ocean.base.BaseJni;
-import com.facebook.ocean.platform.android.*;
+import com.meta.ocean.base.BaseJni;
+import com.meta.ocean.platform.android.*;
 
 /**
  * This class implements a simple scroll view synchronously receiving text lines from the messaging system of Ocean.

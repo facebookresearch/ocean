@@ -15,7 +15,7 @@
  * @return True, if succeeded
  * @ingroup mediaopenimagelibrariesjni
  */
-extern "C" jboolean Java_com_facebook_ocean_media_openimagelibraries_MediaOpenImageLibrariesJni_registerLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_media_openimagelibraries_MediaOpenImageLibrariesJni_registerLibrary(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function to unregister the media Open Image Libraries component.
@@ -24,6 +24,6 @@ extern "C" jboolean Java_com_facebook_ocean_media_openimagelibraries_MediaOpenIm
  * @return True, if succeeded
  * @ingroup mediaopenimagelibrariesjni
  */
-extern "C" jboolean Java_com_facebook_ocean_media_openimagelibraries_MediaOpenImageLibrariesJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_media_openimagelibraries_MediaOpenImageLibrariesJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
 
 #endif // META_OCEAN_MEDIA_OPENIMAGELIBRARIES_JNI_OPENIMAGELIBRARIESJNI_H

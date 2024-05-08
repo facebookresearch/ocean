@@ -1,6 +1,6 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-package com.facebook.ocean.scenedescription.sdl.assimp;
+package com.meta.ocean.scenedescription.sdl.assimp;
 
 /**
  * This class defines the native interface to the (SDL) Assimp library of the SceneDescription branch of the Ocean framework.

@@ -85,6 +85,6 @@ inline Ocean::Platform::Android::Application::GLView* GLMainView::createInstance
  * @return True, if succeeded
  * @ingroup platformandroid
  */
-extern "C" jboolean Java_com_facebook_ocean_app_demo_cv_detector_linedetector_android_LineDetectorActivity_initializeLineDetector(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution);
+extern "C" jboolean Java_com_meta_ocean_app_demo_cv_detector_linedetector_android_LineDetectorActivity_initializeLineDetector(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution);
 
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_CV_DETECTOR_LINEDETECTOR_ANDROID_MAIN_VIEW_H

@@ -7,7 +7,7 @@
 
 using namespace Ocean;
 
-jboolean Java_com_facebook_ocean_devices_mapbuilding_DevicesMapBuildingJni_registerLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_devices_mapbuilding_DevicesMapBuildingJni_registerLibrary(JNIEnv* env, jobject javaThis)
 {
 #if defined(OCEAN_RUNTIME_STATIC)
 	Devices::MapBuilding::registerMapBuildingLibrary();
@@ -16,7 +16,7 @@ jboolean Java_com_facebook_ocean_devices_mapbuilding_DevicesMapBuildingJni_regis
 	return true;
 }
 
-jboolean Java_com_facebook_ocean_devices_mapbuilding_DevicesMapBuildingJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_devices_mapbuilding_DevicesMapBuildingJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
 {
 #if defined(OCEAN_RUNTIME_STATIC)
 	Devices::MapBuilding::unregisterMapBuildingLibrary();

@@ -29,6 +29,6 @@
  * @param testFunctions Test functions to be invoked
  * @ingroup applicationtestcvtestcvandroid
  */
-extern "C" void Java_com_facebook_ocean_app_test_cv_testcv_android_TestCVActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jint testWidth, jint testHeight, jstring testFunctions);
+extern "C" void Java_com_meta_ocean_app_test_cv_testcv_android_TestCVActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jint testWidth, jint testHeight, jstring testFunctions);
 
 #endif // NDK_APPLICATION_TEST_TESTCV_ANDROID_MAIN_H

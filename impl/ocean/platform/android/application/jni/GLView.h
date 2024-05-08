@@ -17,7 +17,7 @@
  * @return True, if succeeded
  * @ingroup platformandroidapplicationjni
  */
-extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLView_initialize(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_platform_android_application_GLView_initialize(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function to release the application view.
@@ -26,7 +26,7 @@ extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLView_
  * @return True, if succeeded
  * @ingroup platformandroidapplicationjni
  */
-extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLView_release(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_platform_android_application_GLView_release(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function resizing the framebuffer.
@@ -36,7 +36,7 @@ extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLView_
  * @param height Vertical window size in pixel
  * @ingroup platformandroidapplicationjni
  */
-extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLView_resize(JNIEnv* env, jobject javaThis, jint width, jint height);
+extern "C" jboolean Java_com_meta_ocean_platform_android_application_GLView_resize(JNIEnv* env, jobject javaThis, jint width, jint height);
 
 /**
  * Java native interface function rendering the next frame.
@@ -45,7 +45,7 @@ extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLView_
  * @return True, if succeeded
  * @ingroup platformandroidapplicationjni
  */
-extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLView_render(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_platform_android_application_GLView_render(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function for touch down events.
@@ -55,7 +55,7 @@ extern "C" jboolean Java_com_facebook_ocean_platform_android_application_GLView_
  * @param y Vertical touch position in pixel
  * @ingroup platformandroidapplicationjni
  */
-extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onTouchDown(JNIEnv* env, jobject javaThis, jfloat x, jfloat y);
+extern "C" void Java_com_meta_ocean_platform_android_application_GLView_onTouchDown(JNIEnv* env, jobject javaThis, jfloat x, jfloat y);
 
 /**
  * Java native interface function for (touch) move events.
@@ -65,7 +65,7 @@ extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onTo
  * @param y Vertical (touch) move position in pixel
  * @ingroup platformandroidapplicationjni
  */
-extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onTouchMove(JNIEnv* env, jobject javaThis, jfloat x, jfloat y);
+extern "C" void Java_com_meta_ocean_platform_android_application_GLView_onTouchMove(JNIEnv* env, jobject javaThis, jfloat x, jfloat y);
 
 /**
  * Java native interface function for touch up events.
@@ -75,7 +75,7 @@ extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onTo
  * @param y Vertical touch position in pixel
  * @ingroup platformandroidapplicationjni
  */
-extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onTouchUp(JNIEnv* env, jobject javaThis, jfloat x, jfloat y);
+extern "C" void Java_com_meta_ocean_platform_android_application_GLView_onTouchUp(JNIEnv* env, jobject javaThis, jfloat x, jfloat y);
 
 /**
  * Java native interface function for resume events.
@@ -83,7 +83,7 @@ extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onTo
  * @param javaThis JNI object
  * @ingroup platformandroidapplicationjni
  */
-extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onActivityResume(JNIEnv* env, jobject javaThis);
+extern "C" void Java_com_meta_ocean_platform_android_application_GLView_onActivityResume(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function for pause events.
@@ -91,7 +91,7 @@ extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onAc
  * @param javaThis JNI object
  * @ingroup platformandroidapplicationjni
  */
-extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onActivityPause(JNIEnv* env, jobject javaThis);
+extern "C" void Java_com_meta_ocean_platform_android_application_GLView_onActivityPause(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function for stop events.
@@ -99,7 +99,7 @@ extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onAc
  * @param javaThis JNI object
  * @ingroup platformandroidapplicationjni
  */
-extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onActivityStop(JNIEnv* env, jobject javaThis);
+extern "C" void Java_com_meta_ocean_platform_android_application_GLView_onActivityStop(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function for destroy events.
@@ -107,7 +107,7 @@ extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onAc
  * @param javaThis JNI object
  * @ingroup platformandroidapplicationjni
  */
-extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onActivityDestroy(JNIEnv* env, jobject javaThis);
+extern "C" void Java_com_meta_ocean_platform_android_application_GLView_onActivityDestroy(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function for permission granted events.
@@ -116,7 +116,7 @@ extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onAc
  * @param permission The permission which has been granted
  * @ingroup platformandroidapplicationjni
  */
-extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onPermissionGranted(JNIEnv* env, jobject javaThis, jstring permission);
+extern "C" void Java_com_meta_ocean_platform_android_application_GLView_onPermissionGranted(JNIEnv* env, jobject javaThis, jstring permission);
 
 /**
  * Java native interface function to register the instance function for the corresponding native C++ class.
@@ -124,6 +124,6 @@ extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_onPe
  * @param javaThis JNI object
  * @ingroup platformandroidapplicationjni
  */
-extern "C" void Java_com_facebook_ocean_platform_android_application_GLView_registerInstance(JNIEnv* env, jobject javaThis);
+extern "C" void Java_com_meta_ocean_platform_android_application_GLView_registerInstance(JNIEnv* env, jobject javaThis);
 
 #endif // META_OCEAN_PLATFORM_ANDROID_APPLICATION_JNI_GL_VIEW_H

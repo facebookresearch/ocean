@@ -26,7 +26,7 @@ namespace Android
  * @return True, if succeeded
  * @ingroup sharkandroid
  */
-extern "C" jboolean Java_com_facebook_ocean_app_shark_android_NativeInterfaceShark_loadScene(JNIEnv* env, jobject javaThis, jstring filename, jboolean replace);
+extern "C" jboolean Java_com_meta_ocean_app_shark_android_NativeInterfaceShark_loadScene(JNIEnv* env, jobject javaThis, jstring filename, jboolean replace);
 
 }
 

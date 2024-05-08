@@ -3,7 +3,7 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-package com.facebook.ocean.devices.arcore;
+package com.meta.ocean.devices.arcore;
 
 /**
  * This class defines the native interface to the Devices::ARCore library.

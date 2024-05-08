@@ -388,7 +388,7 @@
 					"-framework",
 					CoreLocation,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.tracking.featuretracker.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.featuretracker.ios;
 				PRODUCT_MODULE_NAME = demotrackingfeaturetrackerios;
 				PRODUCT_NAME = demotrackingfeaturetrackerios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
@@ -498,7 +498,7 @@
 					"-framework",
 					CoreLocation,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.tracking.featuretracker.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.featuretracker.ios;
 				PRODUCT_MODULE_NAME = demotrackingfeaturetrackerios;
 				PRODUCT_NAME = demotrackingfeaturetrackerios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";

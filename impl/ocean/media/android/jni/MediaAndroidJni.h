@@ -15,7 +15,7 @@
  * @return True, if succeeded
  * @ingroup mediaandroidjni
  */
-extern "C" jboolean Java_com_facebook_ocean_media_android_MediaAndroidJni_registerLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_media_android_MediaAndroidJni_registerLibrary(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function to unregister the media android component.
@@ -24,6 +24,6 @@ extern "C" jboolean Java_com_facebook_ocean_media_android_MediaAndroidJni_regist
  * @return True, if succeeded
  * @ingroup mediaandroidjni
  */
-extern "C" jboolean Java_com_facebook_ocean_media_android_MediaAndroidJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_media_android_MediaAndroidJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
 
 #endif // META_OCEAN_MEDIA_ANDROID_JNI_MEDIANDROIDJNI_H

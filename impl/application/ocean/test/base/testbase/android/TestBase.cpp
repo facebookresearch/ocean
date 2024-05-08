@@ -11,7 +11,7 @@
 
 using namespace Ocean;
 
-void Java_com_facebook_ocean_test_base_testbase_TestBaseActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testFunctions)
+void Java_com_meta_ocean_test_base_testbase_TestBaseActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testFunctions)
 {
 	ocean_assert(testDuration > 0.0);
 

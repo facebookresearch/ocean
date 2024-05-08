@@ -15,7 +15,7 @@
  * @return True, if succeeded
  * @ingroup devicesandroid
  */
-extern "C" jboolean Java_com_facebook_ocean_devices_android_DevicesAndroidJni_registerLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_devices_android_DevicesAndroidJni_registerLibrary(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function to unregister the Devices::Android component.
@@ -24,7 +24,7 @@ extern "C" jboolean Java_com_facebook_ocean_devices_android_DevicesAndroidJni_re
  * @return True, if succeeded
  * @ingroup devicesandroid
  */
-extern "C" jboolean Java_com_facebook_ocean_devices_android_DevicesAndroidJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_devices_android_DevicesAndroidJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function to send a new GPS location to the native side.
@@ -43,6 +43,6 @@ extern "C" jboolean Java_com_facebook_ocean_devices_android_DevicesAndroidJni_un
  * @return True, if succeeded
  * @ingroup devicesandroid
  */
-extern "C" jboolean Java_com_facebook_ocean_devices_android_DevicesAndroidJni_newGPSLocation(JNIEnv* env, jobject javaThis, jdouble latitude, jdouble longitude, jfloat altitude, jfloat direction, jfloat speed, jfloat accuracy, jfloat altitudeAccuracy, jfloat directionAccuracy, jfloat speedAccuracy, jdouble timestamp);
+extern "C" jboolean Java_com_meta_ocean_devices_android_DevicesAndroidJni_newGPSLocation(JNIEnv* env, jobject javaThis, jdouble latitude, jdouble longitude, jfloat altitude, jfloat direction, jfloat speed, jfloat accuracy, jfloat altitudeAccuracy, jfloat directionAccuracy, jfloat speedAccuracy, jdouble timestamp);
 
 #endif // META_OCEAN_DEVICES_ANDROID_JNI_DEVICESANDROIDJNI_H

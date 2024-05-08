@@ -353,7 +353,7 @@
 					"-framework",
 					CoreGraphics,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.cv.detector.qrcodes.detector.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.cv.detector.qrcodes.detector.ios;
 				PRODUCT_MODULE_NAME = democvdetectorqrcodesdetector2dios;
 				PRODUCT_NAME = democvdetectorqrcodesdetector2dios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
@@ -438,7 +438,7 @@
 					"-framework",
 					CoreGraphics,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.cv.detector.qrcodes.detector.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.cv.detector.qrcodes.detector.ios;
 				PRODUCT_MODULE_NAME = democvdetectorqrcodesdetector2dios;
 				PRODUCT_NAME = democvdetectorqrcodesdetector2dios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";

@@ -3,7 +3,7 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-package com.facebook.ocean.platform.android.application;
+package com.meta.ocean.platform.android.application;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -17,8 +17,8 @@ import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.facebook.ocean.media.android.MediaAndroidJni;
-import com.facebook.ocean.platform.android.*;
+import com.meta.ocean.media.android.MediaAndroidJni;
+import com.meta.ocean.platform.android.*;
 
 /**
  * This class implements an OpenGLES surface view.

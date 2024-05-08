@@ -9,7 +9,7 @@
 
 using namespace Ocean;
 
-jboolean Java_com_facebook_ocean_rendering_glescenegraph_RenderingGLESceneGraphJni_registerLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_rendering_glescenegraph_RenderingGLESceneGraphJni_registerLibrary(JNIEnv* env, jobject javaThis)
 {
 #ifdef OCEAN_RUNTIME_STATIC
 	Rendering::GLESceneGraph::Android::registerGLESceneGraphEngine();
@@ -18,7 +18,7 @@ jboolean Java_com_facebook_ocean_rendering_glescenegraph_RenderingGLESceneGraphJ
 	return true;
 }
 
-jboolean Java_com_facebook_ocean_rendering_glescenegraph_RenderingGLESceneGraphJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_rendering_glescenegraph_RenderingGLESceneGraphJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
 {
 #ifdef OCEAN_RUNTIME_STATIC
 	Rendering::GLESceneGraph::unregisterGLESceneGraphEngine();

@@ -13,7 +13,7 @@ using namespace Ocean;
 using namespace Ocean::Platform::Android;
 using namespace Ocean::Platform::Android::Application;
 
-jboolean Java_com_facebook_ocean_platform_android_application_GLFrameView_setFovX(JNIEnv* env, jobject javaThis, jdouble angle)
+jboolean Java_com_meta_ocean_platform_android_application_GLFrameView_setFovX(JNIEnv* env, jobject javaThis, jdouble angle)
 {
 	try
 	{
@@ -35,12 +35,12 @@ jboolean Java_com_facebook_ocean_platform_android_application_GLFrameView_setFov
 	return true;
 }
 
-jboolean Java_com_facebook_ocean_platform_android_application_GLFrameView_setBackgroundColor(JNIEnv* env, jobject javaThis, jdouble red, jdouble green, jdouble blue)
+jboolean Java_com_meta_ocean_platform_android_application_GLFrameView_setBackgroundColor(JNIEnv* env, jobject javaThis, jdouble red, jdouble green, jdouble blue)
 {
 	return GLView::get<GLFrameView>().setBackgroundColor(RGBAColor(float(red), float(green), float(blue)));
 }
 
-jboolean Java_com_facebook_ocean_platform_android_application_GLFrameView_setFrameMedium(JNIEnv* env, jobject javaThis, jstring url, jstring type, jint preferredWidth, jint preferredHeight, jboolean adjustFov)
+jboolean Java_com_meta_ocean_platform_android_application_GLFrameView_setFrameMedium(JNIEnv* env, jobject javaThis, jstring url, jstring type, jint preferredWidth, jint preferredHeight, jboolean adjustFov)
 {
 	const std::string urlValue(Platform::Android::Utilities::toAString(env, url));
 	const std::string typeValue(String::toUpper(Platform::Android::Utilities::toAString(env, type)));
@@ -48,7 +48,7 @@ jboolean Java_com_facebook_ocean_platform_android_application_GLFrameView_setFra
 	return GLView::get<GLFrameView>().setBackgroundMedium(urlValue, typeValue, preferredWidth, preferredHeight, adjustFov);
 }
 
-void Java_com_facebook_ocean_platform_android_application_GLFrameView_registerInstance(JNIEnv* env, jobject javaThis)
+void Java_com_meta_ocean_platform_android_application_GLFrameView_registerInstance(JNIEnv* env, jobject javaThis)
 {
 	GLView::registerInstanceFunction(GLFrameView::createInstance, true /*isBaseClass*/);
 }

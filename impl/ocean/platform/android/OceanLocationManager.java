@@ -3,9 +3,9 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-package com.facebook.ocean.platform.android;
+package com.meta.ocean.platform.android;
 
-import com.facebook.ocean.devices.android.DevicesAndroidJni;
+import com.meta.ocean.devices.android.DevicesAndroidJni;
 
 import android.Manifest;
 

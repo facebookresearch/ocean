@@ -378,7 +378,7 @@
 					UIKit,
 				);
 				OTHER_LIBTOOLFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.test.testcv.testopencv;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testcv.testopencv;
 				PRODUCT_MODULE_NAME = testopencv;
 				PRODUCT_NAME = testopencv;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
@@ -479,7 +479,7 @@
 					UIKit,
 				);
 				OTHER_LIBTOOLFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.test.testcv.testopencv;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testcv.testopencv;
 				PRODUCT_MODULE_NAME = testopencv;
 				PRODUCT_NAME = testopencv;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";

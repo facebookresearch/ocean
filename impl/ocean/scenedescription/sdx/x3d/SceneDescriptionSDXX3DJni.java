@@ -1,6 +1,6 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-package com.facebook.ocean.scenedescription.sdx.x3d;
+package com.meta.ocean.scenedescription.sdx.x3d;
 
 /**
  * This class defines the native interface to the (SDX) X3D library of the SceneDescription branch of the Ocean framework.

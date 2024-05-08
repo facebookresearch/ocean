@@ -27,6 +27,6 @@
  * @param hostPort Port of the TCP server
  * @ingroup applicationdemomnetworktcpclientandroid
  */
-extern "C" jboolean Java_com_facebook_ocean_demo_network_tcpclient_DemoNetworkTCPClientActivity_invokeConnectClient(JNIEnv* env, jobject javaThis, jstring hostAddress, jint hostPort);
+extern "C" jboolean Java_com_meta_ocean_demo_network_tcpclient_DemoNetworkTCPClientActivity_invokeConnectClient(JNIEnv* env, jobject javaThis, jstring hostAddress, jint hostPort);
 
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_NETWORK_TCP_CLIENT_ANDROID_DEMO_NETWORK_TCP_CLIENT_H

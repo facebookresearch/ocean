@@ -5,8 +5,8 @@
 
 package com.meta.ocean.app.demo.cv.detector.qrcodes.detector2d.android;
 
-import com.facebook.ocean.platform.android.*;
-import com.facebook.ocean.platform.android.application.*;
+import com.meta.ocean.platform.android.*;
+import com.meta.ocean.platform.android.application.*;
 
 import android.os.Bundle;
 

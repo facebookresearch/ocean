@@ -11,7 +11,7 @@
 
 using namespace Ocean;
 
-bool Java_com_facebook_ocean_app_demo_platform_android_pixelformats_android_DemoPlatformAndroidPixelFormatsActivity_setChannelToValue(JNIEnv* env, jobject javaThis, jobject bitmap, jint channel, jint value)
+bool Java_com_meta_ocean_app_demo_platform_android_pixelformats_android_DemoPlatformAndroidPixelFormatsActivity_setChannelToValue(JNIEnv* env, jobject javaThis, jobject bitmap, jint channel, jint value)
 {
 	ocean_assert(channel >= 0 && channel <= 4);
 	ocean_assert(value >= 0 && value <= 255);

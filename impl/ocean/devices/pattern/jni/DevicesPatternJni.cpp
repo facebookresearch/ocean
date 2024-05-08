@@ -7,7 +7,7 @@
 
 using namespace Ocean;
 
-jboolean Java_com_facebook_ocean_devices_pattern_DevicesPatternJni_registerLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_devices_pattern_DevicesPatternJni_registerLibrary(JNIEnv* env, jobject javaThis)
 {
 #if defined(OCEAN_RUNTIME_STATIC)
 	Devices::Pattern::registerPatternLibrary();
@@ -16,7 +16,7 @@ jboolean Java_com_facebook_ocean_devices_pattern_DevicesPatternJni_registerLibra
 	return true;
 }
 
-jboolean Java_com_facebook_ocean_devices_pattern_DevicesPatternJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_devices_pattern_DevicesPatternJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
 {
 #if defined(OCEAN_RUNTIME_STATIC)
 	Devices::Pattern::unregisterPatternLibrary();

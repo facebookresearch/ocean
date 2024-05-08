@@ -9,7 +9,7 @@
 
 using namespace Ocean;
 
-jboolean Java_com_facebook_ocean_network_NetworkJni_setCurrentLocalIPAddress(JNIEnv* env, jobject javaThis, jint localIPAddress)
+jboolean Java_com_meta_ocean_network_NetworkJni_setCurrentLocalIPAddress(JNIEnv* env, jobject javaThis, jint localIPAddress)
 {
 	ocean_assert(env != nullptr);
 

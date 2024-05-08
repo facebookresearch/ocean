@@ -81,6 +81,6 @@ inline Ocean::Platform::Android::Application::GLView* GLMainView::createInstance
  * @return True, if succeeded
  * @ingroup platformandroid
  */
-extern "C" jboolean Java_com_facebook_ocean_app_demo_tracking_pointtracker_android_PointTrackerActivity_initializePointTracker(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution);
+extern "C" jboolean Java_com_meta_ocean_app_demo_tracking_pointtracker_android_PointTrackerActivity_initializePointTracker(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution);
 
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_TRACKING_POINTTRACKER_ANDROID_GL_MAIN_VIEW_H

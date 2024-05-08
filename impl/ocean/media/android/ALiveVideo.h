@@ -552,7 +552,7 @@ inline void ALiveVideo::feedNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera)
  * @return True, if succeeded
  * @ingroup mediaandroid
  */
-extern "C" jboolean Java_com_facebook_ocean_media_android_MediaAndroidJni_onNewCameraFrame(JNIEnv* env, jobject javaThis, jint objectId, jbyteArray imageBuffer, jint width, jint height, jint format, jfloat fovX, jint bufferSize, jdouble timestamp);
+extern "C" jboolean Java_com_meta_ocean_media_android_MediaAndroidJni_onNewCameraFrame(JNIEnv* env, jobject javaThis, jint objectId, jbyteArray imageBuffer, jint width, jint height, jint format, jfloat fovX, jint bufferSize, jdouble timestamp);
 
 /**
  * This class implements an live video class for Android.

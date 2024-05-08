@@ -11,7 +11,7 @@
 
 using namespace Ocean;
 
-void Java_com_facebook_ocean_app_test_geometry_testgeometry_android_TestGeometryActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testFunctions)
+void Java_com_meta_ocean_app_test_geometry_testgeometry_android_TestGeometryActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testFunctions)
 {
 	ocean_assert(testDuration > 0.0);
 

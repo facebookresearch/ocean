@@ -26,7 +26,7 @@
  * @return True, if succeeded
  * @ingroup basejni
  */
-extern "C" jboolean Java_com_facebook_ocean_base_BaseJni_initialize(JNIEnv* env, jobject javaThis, jstring messageOutputFile);
+extern "C" jboolean Java_com_meta_ocean_base_BaseJni_initialize(JNIEnv* env, jobject javaThis, jstring messageOutputFile);
 
 /**
  * Java native interface function to initialize the Ocean Framework.
@@ -37,7 +37,7 @@ extern "C" jboolean Java_com_facebook_ocean_base_BaseJni_initialize(JNIEnv* env,
  * @return True, if succeeded
  * @ingroup basejni
  */
-extern "C" jboolean Java_com_facebook_ocean_base_BaseJni_initializeWithMessageOutput(JNIEnv* env, jobject javaThis, jint messageOutput, jstring messageOutputFile);
+extern "C" jboolean Java_com_meta_ocean_base_BaseJni_initializeWithMessageOutput(JNIEnv* env, jobject javaThis, jint messageOutput, jstring messageOutputFile);
 
 /**
  * Java native interface function to set the current activity.
@@ -47,7 +47,7 @@ extern "C" jboolean Java_com_facebook_ocean_base_BaseJni_initializeWithMessageOu
  * @return True, if succeeded
  * @ingroup basejni
  */
-extern "C" jboolean Java_com_facebook_ocean_base_BaseJni_setCurrentActivity(JNIEnv* env, jobject javaThis, jobject activity);
+extern "C" jboolean Java_com_meta_ocean_base_BaseJni_setCurrentActivity(JNIEnv* env, jobject javaThis, jobject activity);
 
 /**
  * Forces a specific number of processor cores.
@@ -57,7 +57,7 @@ extern "C" jboolean Java_com_facebook_ocean_base_BaseJni_setCurrentActivity(JNIE
  * @return True, if succeeded
  * @ingroup basejni
  */
-extern "C" jboolean Java_com_facebook_ocean_base_BaseJni_forceProcessorCoreNumber(JNIEnv* env, jobject javaThis, jint cores);
+extern "C" jboolean Java_com_meta_ocean_base_BaseJni_forceProcessorCoreNumber(JNIEnv* env, jobject javaThis, jint cores);
 
 /**
  * Sets or changes the maximal capacity of the worker pool.
@@ -67,7 +67,7 @@ extern "C" jboolean Java_com_facebook_ocean_base_BaseJni_forceProcessorCoreNumbe
  * @return True, if succeeded
  * @ingroup basejni
  */
-extern "C" jboolean Java_com_facebook_ocean_base_BaseJni_setWorkerPoolCapacity(JNIEnv* env, jobject javaThis, jint capacity);
+extern "C" jboolean Java_com_meta_ocean_base_BaseJni_setWorkerPoolCapacity(JNIEnv* env, jobject javaThis, jint capacity);
 
 /**
  * Java native interface function to forward an information message to the framework.
@@ -75,9 +75,9 @@ extern "C" jboolean Java_com_facebook_ocean_base_BaseJni_setWorkerPoolCapacity(J
  * @param javaThis The JNI object
  * @param message The information message to forward
  * @ingroup basejni
- * @see Java_com_facebook_ocean_NativeInterface_warning(), Java_com_facebook_ocean_NativeInterface_error().
+ * @see Java_com_meta_ocean_NativeInterface_warning(), Java_com_meta_ocean_NativeInterface_error().
  */
-extern "C" void Java_com_facebook_ocean_base_BaseJni_information(JNIEnv* env, jobject javaThis, jstring message);
+extern "C" void Java_com_meta_ocean_base_BaseJni_information(JNIEnv* env, jobject javaThis, jstring message);
 
 /**
  * Java native interface function to forward an information message to the framework.
@@ -85,9 +85,9 @@ extern "C" void Java_com_facebook_ocean_base_BaseJni_information(JNIEnv* env, jo
  * @param javaThis The JNI object
  * @param message The warning message to forward
  * @ingroup basejni
- * @see Java_com_facebook_ocean_NativeInterface_information(), Java_com_facebook_ocean_NativeInterface_error().
+ * @see Java_com_meta_ocean_NativeInterface_information(), Java_com_meta_ocean_NativeInterface_error().
  */
-extern "C" void Java_com_facebook_ocean_base_BaseJni_warning(JNIEnv* env, jobject javaThis, jstring message);
+extern "C" void Java_com_meta_ocean_base_BaseJni_warning(JNIEnv* env, jobject javaThis, jstring message);
 
 /**
  * Java native interface function to forward an information message to the framework.
@@ -95,9 +95,9 @@ extern "C" void Java_com_facebook_ocean_base_BaseJni_warning(JNIEnv* env, jobjec
  * @param javaThis The JNI object
  * @param message The error message to forward
  * @ingroup basejni
- * @see Java_com_facebook_ocean_NativeInterface_information(), Java_com_facebook_ocean_NativeInterface_warning().
+ * @see Java_com_meta_ocean_NativeInterface_information(), Java_com_meta_ocean_NativeInterface_warning().
  */
-extern "C" void Java_com_facebook_ocean_base_BaseJni_error(JNIEnv* env, jobject javaThis, jstring message);
+extern "C" void Java_com_meta_ocean_base_BaseJni_error(JNIEnv* env, jobject javaThis, jstring message);
 
 /**
  * Pops all messages that a currently waiting in the message queue.
@@ -106,7 +106,7 @@ extern "C" void Java_com_facebook_ocean_base_BaseJni_error(JNIEnv* env, jobject 
  * @return The messages that have been popped.
  * @ingroup basejni
  */
-extern "C" jstring Java_com_facebook_ocean_base_BaseJni_popMessages(JNIEnv* env, jobject javaThis);
+extern "C" jstring Java_com_meta_ocean_base_BaseJni_popMessages(JNIEnv* env, jobject javaThis);
 
 /**
  * Exits the application by invoking the exit() command.
@@ -116,7 +116,7 @@ extern "C" jstring Java_com_facebook_ocean_base_BaseJni_popMessages(JNIEnv* env,
  * @param exitValue The exit value to be used
  * @ingroup basejni
  */
-extern "C" void Java_com_facebook_ocean_base_BaseJni_exit(JNIEnv* env, jobject javaThis, jint exitValue);
+extern "C" void Java_com_meta_ocean_base_BaseJni_exit(JNIEnv* env, jobject javaThis, jint exitValue);
 
 namespace Ocean
 {

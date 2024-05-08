@@ -15,7 +15,7 @@
  * @return True, if succeeded
  * @ingroup renderingglescenegraphjni
  */
-extern "C" jboolean Java_com_facebook_ocean_rendering_glescenegraph_RenderingGLESceneGraphJni_registerLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_rendering_glescenegraph_RenderingGLESceneGraphJni_registerLibrary(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function to unregister the Rendering GLESceneGraph component.
@@ -24,6 +24,6 @@ extern "C" jboolean Java_com_facebook_ocean_rendering_glescenegraph_RenderingGLE
  * @return True, if succeeded
  * @ingroup renderingglescenegraphjni
  */
-extern "C" jboolean Java_com_facebook_ocean_rendering_glescenegraph_RenderingGLESceneGraphJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_rendering_glescenegraph_RenderingGLESceneGraphJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
 
 #endif // META_OCEAN_RENDERING_GLESCENEGRAPH_JNI_RENDERINGGLESCENEGRAPHJNI_H

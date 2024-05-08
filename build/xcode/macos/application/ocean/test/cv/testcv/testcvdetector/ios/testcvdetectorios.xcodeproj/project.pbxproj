@@ -357,7 +357,7 @@
 					UIKit,
 				);
 				OTHER_LIBTOOLFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.test.testcvdetector.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testcvdetector.ios;
 				PRODUCT_MODULE_NAME = testcvdetectorios;
 				PRODUCT_NAME = testcvdetectorios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
@@ -432,7 +432,7 @@
 					UIKit,
 				);
 				OTHER_LIBTOOLFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.test.testcvdetector.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testcvdetector.ios;
 				PRODUCT_MODULE_NAME = testcvdetectorios;
 				PRODUCT_NAME = testcvdetectorios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";

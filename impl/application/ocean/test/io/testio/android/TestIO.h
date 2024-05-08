@@ -27,6 +27,6 @@
  * @param testDuration Duration of each test in seconds
  * @ingroup applicationtestiotestioandroid
  */
-extern "C" jstring Java_com_facebook_ocean_app_test_io_testio_android_TestIOActivity_invokeTest(JNIEnv* env, jobject javaThis, jstring outputFilename, jdouble testDuration);
+extern "C" jstring Java_com_meta_ocean_app_test_io_testio_android_TestIOActivity_invokeTest(JNIEnv* env, jobject javaThis, jstring outputFilename, jdouble testDuration);
 
 #endif // FACEBOOK_APPLICATION_OCEAN_TEST_TESTIO_ANDROID_TEST_IO_H

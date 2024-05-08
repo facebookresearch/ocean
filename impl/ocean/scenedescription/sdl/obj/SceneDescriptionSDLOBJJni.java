@@ -1,6 +1,6 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-package com.facebook.ocean.scenedescription.sdl.obj;
+package com.meta.ocean.scenedescription.sdl.obj;
 
 /**
  * This class defines the native interface to the (SDL) OBJ library of the SceneDescription branch of the Ocean framework.

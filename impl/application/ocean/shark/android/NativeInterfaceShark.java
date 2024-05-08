@@ -3,7 +3,7 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-package com.facebook.ocean.app.shark.android;
+package com.meta.ocean.app.shark.android;
 
 /**
  * This class implements the native interface for Shark specific functions.

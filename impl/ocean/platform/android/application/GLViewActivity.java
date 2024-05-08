@@ -3,7 +3,7 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-package com.facebook.ocean.platform.android.application;
+package com.meta.ocean.platform.android.application;
 
 import android.app.Activity;
 
@@ -21,9 +21,9 @@ import android.view.WindowManager;
 import java.util.Set;
 import java.util.HashSet;
 
-import com.facebook.ocean.media.android.MediaAndroidJni;
-import com.facebook.ocean.platform.android.*;
-import com.facebook.ocean.rendering.glescenegraph.RenderingGLESceneGraphJni;
+import com.meta.ocean.media.android.MediaAndroidJni;
+import com.meta.ocean.platform.android.*;
+import com.meta.ocean.rendering.glescenegraph.RenderingGLESceneGraphJni;
 
 /**
  * This class implements the an Activity with live video background based on a basic Activity.

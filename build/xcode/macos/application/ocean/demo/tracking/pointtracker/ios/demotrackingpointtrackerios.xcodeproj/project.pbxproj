@@ -370,7 +370,7 @@
 					"-framework",
 					CoreGraphics,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.tracking.pointtracker.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.pointtracker.ios;
 				PRODUCT_MODULE_NAME = demotrackingpointtrackerios;
 				PRODUCT_NAME = demotrackingpointtrackerios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
@@ -470,7 +470,7 @@
 					"-framework",
 					CoreGraphics,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.tracking.pointtracker.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.pointtracker.ios;
 				PRODUCT_MODULE_NAME = demotrackingpointtrackerios;
 				PRODUCT_NAME = demotrackingpointtrackerios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";

@@ -340,7 +340,7 @@
 					UIKit,
 				);
 				OTHER_LIBTOOLFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.test.testgeometry.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testgeometry.ios;
 				PRODUCT_MODULE_NAME = testgeometry;
 				PRODUCT_NAME = testgeometryios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
@@ -402,7 +402,7 @@
 					UIKit,
 				);
 				OTHER_LIBTOOLFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.test.testgeometry.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testgeometry.ios;
 				PRODUCT_MODULE_NAME = testgeometry;
 				PRODUCT_NAME = testgeometryios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";

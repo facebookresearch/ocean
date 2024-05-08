@@ -28,6 +28,6 @@
  * @param testFunctions Test functions to be invoked
  * @ingroup applicationtestmathtestmathandroid
  */
-extern "C" void Java_com_facebook_ocean_app_test_cv_testcv_testopencv_android_TestCVOpenCVActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testImageFilename, jstring testFunctions);
+extern "C" void Java_com_meta_ocean_app_test_cv_testcv_testopencv_android_TestCVOpenCVActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testImageFilename, jstring testFunctions);
 
 #endif // FACEBOOK_APPLICATION_OCEAN_TEST_TESTCV_TESTOPENCV_ANDROID_TEST_OPEN_CV_H

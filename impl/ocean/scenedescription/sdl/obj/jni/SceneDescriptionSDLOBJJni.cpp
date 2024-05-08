@@ -7,7 +7,7 @@
 
 using namespace Ocean;
 
-jboolean Java_com_facebook_ocean_scenedescription_sdl_obj_SceneDescriptionSDLOBJJni_registerLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_scenedescription_sdl_obj_SceneDescriptionSDLOBJJni_registerLibrary(JNIEnv* env, jobject javaThis)
 {
 #ifdef OCEAN_RUNTIME_STATIC
 	SceneDescription::SDL::OBJ::registerOBJLibrary();
@@ -16,7 +16,7 @@ jboolean Java_com_facebook_ocean_scenedescription_sdl_obj_SceneDescriptionSDLOBJ
 	return true;
 }
 
-jboolean Java_com_facebook_ocean_scenedescription_sdl_obj_SceneDescriptionSDLOBJJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
+jboolean Java_com_meta_ocean_scenedescription_sdl_obj_SceneDescriptionSDLOBJJni_unregisterLibrary(JNIEnv* env, jobject javaThis)
 {
 #ifdef OCEAN_RUNTIME_STATIC
 	SceneDescription::SDL::OBJ::unregisterOBJLibrary();

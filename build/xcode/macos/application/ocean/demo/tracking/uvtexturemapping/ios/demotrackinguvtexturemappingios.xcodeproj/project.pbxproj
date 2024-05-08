@@ -386,7 +386,7 @@
 					"-framework",
 					CoreMotion,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.tracking.uvtexturemapping.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.uvtexturemapping.ios;
 				PRODUCT_MODULE_NAME = demotrackinguvtexturemappingios;
 				PRODUCT_NAME = demotrackinguvtexturemappingios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
@@ -494,7 +494,7 @@
 					"-framework",
 					CoreMotion,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.ocean.app.demo.tracking.uvtexturemapping.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.uvtexturemapping.ios;
 				PRODUCT_MODULE_NAME = demotrackinguvtexturemappingios;
 				PRODUCT_NAME = demotrackinguvtexturemappingios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";

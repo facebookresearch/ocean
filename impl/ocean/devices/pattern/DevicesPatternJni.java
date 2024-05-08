@@ -3,7 +3,7 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-package com.facebook.ocean.devices.pattern;
+package com.meta.ocean.devices.pattern;
 
 /**
  * This class defines the native interface to the Devices pattern library.

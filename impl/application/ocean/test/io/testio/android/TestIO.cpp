@@ -24,7 +24,7 @@
 
 using namespace Ocean;
 
-jstring Java_com_facebook_ocean_app_test_io_testio_android_TestIOActivity_invokeTest(JNIEnv* env, jobject javaThis, jstring outputFilename, jdouble testDuration)
+jstring Java_com_meta_ocean_app_test_io_testio_android_TestIOActivity_invokeTest(JNIEnv* env, jobject javaThis, jstring outputFilename, jdouble testDuration)
 {
 	std::ostringstream stream;
 

@@ -11,7 +11,7 @@
 
 using namespace Ocean;
 
-void Java_com_facebook_ocean_app_test_cv_testcv_testsegmentation_android_TestCVSegmentationActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jint testWidth, jint testHeight, jstring testFunctions)
+void Java_com_meta_ocean_app_test_cv_testcv_testsegmentation_android_TestCVSegmentationActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jint testWidth, jint testHeight, jstring testFunctions)
 {
 	ocean_assert(testDuration > 0.0);
 

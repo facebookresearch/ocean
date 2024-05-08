@@ -27,6 +27,6 @@
  * @param testFunctions Test functions to be invoked
  * @ingroup applicationtestmathtestmathandroid
  */
-extern "C" void Java_com_facebook_ocean_app_test_math_testmath_android_TestMathActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testFunctions);
+extern "C" void Java_com_meta_ocean_app_test_math_testmath_android_TestMathActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testFunctions);
 
 #endif // FACEBOOK_APPLICATION_OCEAN_TEST_TESTMATH_ANDROID_TEST_MATH_H

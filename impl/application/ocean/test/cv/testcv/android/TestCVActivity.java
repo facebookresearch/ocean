@@ -3,10 +3,10 @@
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
-package com.facebook.ocean.app.test.cv.testcv.android;
+package com.meta.ocean.app.test.cv.testcv.android;
 
-import com.facebook.ocean.base.BaseJni;
-import com.facebook.ocean.platform.android.application.TextActivity;
+import com.meta.ocean.base.BaseJni;
+import com.meta.ocean.platform.android.application.TextActivity;
 
 import android.view.WindowManager;
 

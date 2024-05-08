@@ -15,7 +15,7 @@
  * @return True, if succeeded
  * @ingroup scenedescriptionsdlobjjni
  */
-extern "C" jboolean Java_com_facebook_ocean_scenedescription_sdl_obj_SceneDescriptionSDLOBJJni_registerLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_scenedescription_sdl_obj_SceneDescriptionSDLOBJJni_registerLibrary(JNIEnv* env, jobject javaThis);
 
 /**
  * Java native interface function to unregister the SceneDescription SDLOBJ adapter component.
@@ -24,6 +24,6 @@ extern "C" jboolean Java_com_facebook_ocean_scenedescription_sdl_obj_SceneDescri
  * @return True, if succeeded
  * @ingroup scenedescriptionsdlobjjni
  */
-extern "C" jboolean Java_com_facebook_ocean_scenedescription_sdl_obj_SceneDescriptionSDLOBJJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
+extern "C" jboolean Java_com_meta_ocean_scenedescription_sdl_obj_SceneDescriptionSDLOBJJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
 
 #endif // META_OCEAN_SCENEDESCRIPTION_SDL_OBJ_JNI_SCENEDESCRIPTIONSDLOBJJNI_H
