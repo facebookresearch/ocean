@@ -1,7 +1,9 @@
-// Copyright (c) Meta Platforms, Inc. and affiliates.
-//
-// This source code is licensed under the MIT license found in the
-// LICENSE file in the root directory of this source tree.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 #ifndef META_OCEAN_DEVICES_ARKIT_ROOMPLAN_NATIVE_AK_ROOM_PLAN_TRACKER_6_DOF_OWNER_CONTAINER_H
 #define META_OCEAN_DEVICES_ARKIT_ROOMPLAN_NATIVE_AK_ROOM_PLAN_TRACKER_6_DOF_OWNER_CONTAINER_H
