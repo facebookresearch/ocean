@@ -1,5 +1,5 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
-// 
+//
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
@@ -37,10 +37,7 @@ public class DemoConsoleActivity extends TextActivity
 		// ensuring that the screenn does not turn off during execution
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-		// stream output to file with timestamp suffix
-		// String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		// final String testOutput = getExternalFilesDir(null) + "/testCV-" + timeStamp + ".txt";
-		final String applicationOutput = "";
+		final String applicationOutput = ""; // use e.g., "STANDARD" to show th log output in 'adb logcat -s "Ocean"'
 
 		BaseJni.initialize(applicationOutput);
 
