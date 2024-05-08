@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef FACEBOOK_APPLICATION_OCEAN_DEMO_CONSOLE_ANDROID_DEMO_CONSOLE_H
-#define FACEBOOK_APPLICATION_OCEAN_DEMO_CONSOLE_ANDROID_DEMO_CONSOLE_H
+#ifndef META_OCEAN_APPLICATION_OCEAN_DEMO_CONSOLE_ANDROID_DEMO_CONSOLE_H
+#define META_OCEAN_APPLICATION_OCEAN_DEMO_CONSOLE_ANDROID_DEMO_CONSOLE_H
 
 #include "application/ocean/demo/base/ApplicationDemoBase.h"
 
@@ -28,4 +28,4 @@
  */
 extern "C" void Java_com_meta_ocean_app_demo_base_console_android_DemoConsoleActivity_invokeApplication(JNIEnv* env, jobject javaThis);
 
-#endif // FACEBOOK_APPLICATION_OCEAN_DEMO_CONSOLE_ANDROID_DEMO_CONSOLE_H
+#endif // META_OCEAN_APPLICATION_OCEAN_DEMO_CONSOLE_ANDROID_DEMO_CONSOLE_H

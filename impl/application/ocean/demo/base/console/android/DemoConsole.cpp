@@ -23,6 +23,7 @@ void Java_com_meta_ocean_app_demo_base_console_android_DemoConsoleActivity_invok
 	try
 	{
 		Log::info() << "Console demo application";
+		Log::info() << " ";
 
 		Log::info() << "Platform: " << Build::buildString();
 		Log::info() << "Build: " << Build::buildString();
