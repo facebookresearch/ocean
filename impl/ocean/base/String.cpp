@@ -1,5 +1,5 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
-// 
+//
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
@@ -1166,6 +1166,16 @@ std::wstring String::trim(const std::wstring& value, const wchar_t character)
 	return trimBack(trimFront(value, character), character);
 }
 
+std::string String::trimWhitespace(const std::string& text)
+{
+	return trimWhitespaceString<char>(text);
+}
+
+std::wstring String::trimWhitespace(const std::wstring& text)
+{
+	return trimWhitespaceString<wchar_t>(text);
+}
+
 std::wstring String::replaceCharacters(const std::wstring& value, const wchar_t oldCharacter, const wchar_t newCharacter)
 {
 	std::wstring result(value);
@@ -1215,5 +1225,76 @@ std::wstring String::removeCharacters(const std::wstring& value, const wchar_t c
 
 	return result;
 }
+
+template <typename TChar>
+std::basic_string<TChar> String::trimWhitespaceString(const std::basic_string<TChar>& text)
+{
+	if (text.empty())
+	{
+		return std::basic_string<TChar>();
+	}
+
+	ocean_assert(text[text.size()] == TChar(0));
+
+	// let's determine the first non-white character
+
+	size_t indexFirst = 0;
+
+	while (indexFirst < text.size())
+	{
+		if (!iswspace(text[indexFirst]) && text[indexFirst] != TChar(0))
+		{
+			break;
+		}
+
+		++indexFirst;
+	}
+
+	// let's determine the last non-white character
+
+	size_t indexLast = text.size() - 1;
+
+	while (indexFirst < indexLast)
+	{
+		if (!iswspace(text[indexLast]) && text[indexLast] != TChar(0))
+		{
+			break;
+		}
+
+		ocean_assert(indexLast >= 1);
+		--indexLast;
+	}
+
+	if (indexLast < indexFirst)
+	{
+		return std::basic_string<TChar>();
+	}
+
+	// let's ensure that the string does not contain any null terminator (besides the intended terminator at the very end of the string
+
+	for (size_t index = indexFirst; index <= indexLast; ++index)
+	{
+		if (text[index] == TChar(0))
+		{
+			if (index == indexFirst)
+			{
+				return std::basic_string<TChar>();
+			}
+
+			indexLast = index - 1;
+
+			break;
+		}
+	}
+
+	ocean_assert(indexFirst <= indexLast);
+	ocean_assert(indexLast < text.size());
+
+	std::basic_string<TChar> result = text.substr(indexFirst, indexLast - indexFirst + 1);
+	ocean_assert(result[result.size()] == TChar(0));
+
+	return result;
+}
+
 
 }

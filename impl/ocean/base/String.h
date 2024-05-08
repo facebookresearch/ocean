@@ -605,26 +605,32 @@ class OCEAN_BASE_EXPORT String
 		 *     - '\\v' (0x0b) vertical tab (VT)
 		 *     - '\\f' (0x0c) feed (FF)
 		 *     - '\\r' (0x0d) carriage return (CR)
+		 *     - '\0'  (0x00) the null terminator (NUL), for every null-terminator character at position '< std::string::size()'
+		 * Further, the string trimmed string will not contain a null-terminator character in the middle of the string at position '< std::string::size()',<br>
+		 * the only null terminator character will be at the end of the string at position 'std::string::size()'.
 		 * @param text The text string to be trimmed
 		 * @return Trimmed text string
 		 * @see trimWhitespaceString
 		 */
-		static inline std::string trimWhitespace(const std::string& text);
+		static std::string trimWhitespace(const std::string& text);
 
 		/**
 		 * Returns the specified text with all whitespace characters removed from the left and right side.
-		 * Characters considered whitespace are:
+		 ** Characters considered whitespace are:
 		 *     - ' '  (0x20) space (SPC)
 		 *     - '\\t' (0x09) horizontal tab (TAB)
 		 *     - '\\n' (0x0a) newline (LF)
 		 *     - '\\v' (0x0b) vertical tab (VT)
 		 *     - '\\f' (0x0c) feed (FF)
 		 *     - '\\r' (0x0d) carriage return (CR)
+		 *     - '\0'  (0x00) the null terminator (NUL), for every null-terminator character at position '< std::string::size()'
+		 * Further, the string trimmed string will not contain a null-terminator character in the middle of the string at position '< std::string::size()',<br>
+		 * the only null terminator character will be at the end of the string at position 'std::string::size()'.
 		 * @param text The text string to be trimmed
 		 * @return Trimmed text string
 		 * @see trimWhitespaceString
 		 */
-		static inline std::wstring trimWhitespace(const std::wstring& text);
+		static std::wstring trimWhitespace(const std::wstring& text);
 
 		/**
 		 * Replaces characters with a specified value by a new character.
@@ -676,6 +682,9 @@ class OCEAN_BASE_EXPORT String
 		 *     - '\\v' (0x0b) vertical tab (VT)
 		 *     - '\\f' (0x0c) feed (FF)
 		 *     - '\\r' (0x0d) carriage return (CR)
+		 *     - '\0'  (0x00) the null terminator (NUL), for every null-terminator character at position '< std::string::size()'
+		 * Further, the string trimmed string will not contain a null-terminator character in the middle of the string at position '< std::string::size()',<br>
+		 * the only null terminator character will be at the end of the string at position 'std::string::size()'.
 		 * @param text The text string to be trimmed
 		 * @tparam TChar Character data type of specified string, either use char or wchar_t
 		 * @return Trimmed text string
@@ -734,55 +743,6 @@ std::basic_string<TChar> String::toString(const T& value)
 	stream << value;
 
 	return stream.str();
-}
-
-template <typename TChar>
-std::basic_string<TChar> String::trimWhitespaceString(const std::basic_string<TChar>& text)
-{
-	if (text.empty())
-	{
-		return std::basic_string<TChar>();
-	}
-
-	size_t indexFirst;
-	size_t indexLast;
-
-	for (indexFirst = 0; indexFirst < text.size(); ++indexFirst)
-	{
-		if (!iswspace(text[indexFirst]))
-		{
-			break;
-		}
-	}
-
-	for (indexLast = text.size() - 1; indexLast > indexFirst; --indexLast)
-	{
-		if (!iswspace(text[indexLast]))
-		{
-			break;
-		}
-
-		ocean_assert(indexLast != 0);
-	}
-
-	if (indexLast >= indexFirst)
-	{
-		return text.substr(indexFirst, indexLast - indexFirst + 1);
-	}
-	else
-	{
-		return std::basic_string<TChar>();
-	}
-}
-
-inline std::string String::trimWhitespace(const std::string& text)
-{
-	return trimWhitespaceString<char>(text);
-}
-
-inline std::wstring String::trimWhitespace(const std::wstring& text)
-{
-	return trimWhitespaceString<wchar_t>(text);
 }
 
 }

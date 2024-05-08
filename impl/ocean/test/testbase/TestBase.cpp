@@ -1,5 +1,5 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
-// 
+//
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
@@ -167,7 +167,7 @@ bool testBase(const double testDuration, Worker& worker, const std::string& test
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestString::test() && allSucceeded;
+		allSucceeded = TestString::test(testDuration) && allSucceeded;
 	}
 
 	if (testSet.empty() || testSet.find("timestamp") != testSet.end())

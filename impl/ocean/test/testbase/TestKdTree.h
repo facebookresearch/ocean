@@ -1,5 +1,5 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
-// 
+//
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
@@ -31,7 +31,7 @@ class OCEAN_TEST_BASE_EXPORT TestKdTree
 		 * @return True, if succeeded
 		 */
 		static bool test(const double testDuration);
-	
+
 		/**
 		 * Tests the nearest neighbor search function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)

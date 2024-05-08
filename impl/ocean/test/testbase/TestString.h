@@ -43,9 +43,10 @@ class OCEAN_TEST_BASE_EXPORT TestString
 
 		/**
 		 * Tests the string functionalities.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool test();
+		static bool test(const double testDuration);
 
 		/**
 		 * Tests the toAString() function.
@@ -91,9 +92,10 @@ class OCEAN_TEST_BASE_EXPORT TestString
 
 		/**
 		 * Tests the trim functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testTrim();
+		static bool testTrim(const double testDuration);
 
 		/**
 		 * Tests the replace functions.

@@ -7,6 +7,8 @@
 
 #include "ocean/base/RandomI.h"
 #include "ocean/base/String.h"
+#include "ocean/base/Timestamp.h"
+#include "ocean/base/Utilities.h"
 
 #include <cstddef>
 #include <cmath>
@@ -20,8 +22,10 @@ namespace Test
 namespace TestBase
 {
 
-bool TestString::test()
+bool TestString::test(const double testDuration)
 {
+	ocean_assert(testDuration > 0.0);
+
 	Log::info() << "---   String test:   --";
 	Log::info() << " ";
 
@@ -39,7 +43,7 @@ bool TestString::test()
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testTrim() && allSucceeded;
+	allSucceeded = testTrim(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -117,7 +121,7 @@ TEST(TestString, ToWString)
 
 TEST(TestString, Trim)
 {
-	EXPECT_TRUE(TestString::testTrim());
+	EXPECT_TRUE(TestString::testTrim(GTEST_TEST_DURATION));
 }
 
 TEST(TestString, IsBoolean)
@@ -1187,8 +1191,10 @@ bool TestString::testIsNumber()
 	return allSucceeded;
 }
 
-bool TestString::testTrim()
+bool TestString::testTrim(const double testDuration)
 {
+	ocean_assert(testDuration > 0.0);
+
 	Log::info() << "trimWhitespace(), trimFront(), trimBack() and trim():";
 
 	bool allSucceeded = true;
@@ -1206,6 +1212,7 @@ bool TestString::testTrim()
 			{"   Test123", "Test123"},
 			{"\t   T2 \v   ", "T2"},
 			{"   T    ", "T"},
+			{"   T    \t", "T"},
 		};
 
 		for (const StringPair<char>& stringPair : stringPairs)
@@ -1230,6 +1237,7 @@ bool TestString::testTrim()
 			{L"   Test123", L"Test123"},
 			{L"\t   T2 \v   ", L"T2"},
 			{L"   T    ", L"T"},
+			{L"   T    \t", L"T"},
 		};
 
 		for (const StringPair<wchar_t>& stringPair : stringPairs)
@@ -1241,7 +1249,9 @@ bool TestString::testTrim()
 		}
 	}
 
-	for (unsigned int n = 0u; n < 10000u; ++n)
+	const Timestamp startTimestamp(true);
+
+	do
 	{
 		std::string valueNonWhite;
 		const unsigned int nonWhite = RandomI::random(10u);
@@ -1267,45 +1277,171 @@ bool TestString::testTrim()
 			valueBack += ' ';
 		}
 
-		const std::string value(valueFront + valueNonWhite + valueBack);
-
-		const std::string front(String::trimFront(value, ' '));
-		const std::string back(String::trimBack(value, ' '));
-		const std::string both(String::trim(value, ' '));
-
-		if (valueNonWhite.empty())
 		{
-			// everything must be empty
+			// testing standard function
 
-			if (!front.empty())
+			const std::string value = valueFront + valueNonWhite + valueBack;
+
+			const std::string front = String::trimFront(value, ' ');
+			const std::string back = String::trimBack(value, ' ');
+			const std::string both = String::trim(value, ' ');
+
+			if (valueNonWhite.empty())
 			{
-				allSucceeded = false;
+				// everything must be empty
+
+				if (!front.empty())
+				{
+					allSucceeded = false;
+				}
+				if (!back.empty())
+				{
+					allSucceeded = false;
+				}
+				if (!both.empty())
+				{
+					allSucceeded = false;
+				}
 			}
-			if (!back.empty())
+			else
 			{
-				allSucceeded = false;
-			}
-			if (!both.empty())
-			{
-				allSucceeded = false;
+				if (front != valueNonWhite + valueBack)
+				{
+					allSucceeded = false;
+				}
+				if (back != valueFront + valueNonWhite)
+				{
+					allSucceeded = false;
+				}
+				if (both != valueNonWhite)
+				{
+					allSucceeded = false;
+				}
 			}
 		}
-		else
+
 		{
-			if (front != valueNonWhite + valueBack)
+			// testing white function
+
+			const std::vector<char> whiteCharacters =
 			{
-				allSucceeded = false;
+				' ',
+				'\f',
+				'\n',
+				'\r',
+				'\t',
+				'\v',
+				'\0'
+			};
+
+			for (char& character : valueFront)
+			{
+				character = RandomI::random(whiteCharacters);
 			}
-			if (back != valueFront + valueNonWhite)
+
+			for (char& character : valueBack)
 			{
-				allSucceeded = false;
+				character = RandomI::random(whiteCharacters);
 			}
-			if (both != valueNonWhite)
+
+			size_t firstNullTerminatorIndex = size_t(-1);
+
+			std::string valueNonWhiteButWithNull = valueNonWhite;
+
+			if (!valueNonWhiteButWithNull.empty() && RandomI::boolean())
 			{
-				allSucceeded = false;
+				for (unsigned int n = 0u; n < 2u; ++n)
+				{
+					const size_t nullTerminatorIndex = size_t(RandomI::random((unsigned int)(valueNonWhiteButWithNull.size() - 1)));
+
+					valueNonWhiteButWithNull[nullTerminatorIndex] = '\0';
+
+					firstNullTerminatorIndex = std::min(nullTerminatorIndex, firstNullTerminatorIndex);
+				}
+			}
+
+			const std::string value = valueFront + valueNonWhiteButWithNull + valueBack;
+
+			const std::string whiteBoth = String::trimWhitespace(value);
+
+			if (valueNonWhiteButWithNull.empty())
+			{
+				if (!whiteBoth.empty())
+				{
+					allSucceeded = false;
+				}
+			}
+			else
+			{
+				for (const char& character : whiteBoth)
+				{
+					if (Ocean::hasElement(whiteCharacters, character))
+					{
+						allSucceeded = false;
+					}
+				}
+
+				if (firstNullTerminatorIndex == size_t(-1))
+				{
+					if (whiteBoth != valueNonWhiteButWithNull)
+					{
+						allSucceeded = false;
+					}
+				}
+				else
+				{
+					ocean_assert(!valueNonWhiteButWithNull.empty());
+
+					size_t startIndex = 0;
+					while (startIndex < valueNonWhiteButWithNull.size())
+					{
+						if (valueNonWhiteButWithNull[startIndex] != '\0')
+						{
+							break;
+						}
+
+						++startIndex;
+					}
+
+					if (startIndex == valueNonWhiteButWithNull.size())
+					{
+						if (!whiteBoth.empty())
+						{
+							allSucceeded = false;
+						}
+					}
+					else
+					{
+						size_t endIndex = startIndex + 1;
+						while (endIndex < valueNonWhiteButWithNull.size())
+						{
+							if (valueNonWhiteButWithNull[endIndex] == '\0')
+							{
+								break;
+							}
+
+							++endIndex;
+						}
+
+						const std::string testValue = valueNonWhiteButWithNull.substr(startIndex, endIndex - startIndex);
+
+						if (whiteBoth.size() != testValue.size())
+						{
+							allSucceeded = false;
+						}
+						else
+						{
+							if (whiteBoth != testValue)
+							{
+								allSucceeded = false;
+							}
+						}
+					}
+				}
 			}
 		}
 	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
 	{
