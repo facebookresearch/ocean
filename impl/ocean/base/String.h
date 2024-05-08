@@ -1,5 +1,5 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
-// 
+//
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
@@ -740,26 +740,39 @@ template <typename TChar>
 std::basic_string<TChar> String::trimWhitespaceString(const std::basic_string<TChar>& text)
 {
 	if (text.empty())
+	{
 		return std::basic_string<TChar>();
+	}
 
-	size_t indexFirst, indexLast;
+	size_t indexFirst;
+	size_t indexLast;
 
-	for (indexFirst = 0; indexFirst < text.size(); indexFirst++)
+	for (indexFirst = 0; indexFirst < text.size(); ++indexFirst)
+	{
 		if (!iswspace(text[indexFirst]))
+		{
 			break;
+		}
+	}
 
-	for (indexLast = text.size() - 1; indexLast > indexFirst; indexLast--)
+	for (indexLast = text.size() - 1; indexLast > indexFirst; --indexLast)
 	{
 		if (!iswspace(text[indexLast]))
+		{
 			break;
+		}
 
 		ocean_assert(indexLast != 0);
 	}
 
 	if (indexLast >= indexFirst)
+	{
 		return text.substr(indexFirst, indexLast - indexFirst + 1);
+	}
 	else
+	{
 		return std::basic_string<TChar>();
+	}
 }
 
 inline std::string String::trimWhitespace(const std::string& text)

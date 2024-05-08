@@ -1,5 +1,5 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
-// 
+//
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
@@ -23,6 +23,22 @@ namespace TestBase
  */
 class OCEAN_TEST_BASE_EXPORT TestString
 {
+	protected:
+
+		/**
+		 * Definition of a pair combining two strings.
+		 * @tparam The data type of the character to be used
+		 */
+		template <typename T>
+		using StringPair = std::pair<std::basic_string<T>, std::basic_string<T>>;
+
+		/**
+		 * Definition of a vector holding string pairs.
+		 * @tparam The data type of the character to be used
+		 */
+		template <typename T>
+		using StringPairs = std::vector<StringPair<T>>;
+
 	public:
 
 		/**

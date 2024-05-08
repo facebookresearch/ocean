@@ -1,5 +1,5 @@
 // Copyright (c) Meta Platforms, Inc. and affiliates.
-// 
+//
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
 
@@ -1193,27 +1193,53 @@ bool TestString::testTrim()
 
 	bool allSucceeded = true;
 
-	allSucceeded &= String::trimWhitespace(L"") == L"";
-	allSucceeded &= String::trimWhitespace(L" ") == L"";
-	allSucceeded &= String::trimWhitespace(L"\t\f\nXY\v\f\r ") == L"XY";
-	allSucceeded &= String::trimWhitespace(L"Test123") == L"Test123";
-	allSucceeded &= String::trimWhitespace(L" Test123 ") == L"Test123";
-	allSucceeded &= String::trimWhitespace(L" \n Test123 \r ") == L"Test123";
-	allSucceeded &= String::trimWhitespace(L"Test123  \r ") == L"Test123";
-	allSucceeded &= String::trimWhitespace(L"   Test123") == L"Test123";
-	allSucceeded &= String::trimWhitespace(L"\t   T2 \v   ") == L"T2";
-	allSucceeded &= String::trimWhitespace(L"   T    ") == L"T";
+	{
+		const StringPairs<char> stringPairs =
+		{
+			{"", ""},
+			{" ", ""},
+			{"\t\f\nXY\v\f\r ", "XY"},
+			{"Test123", "Test123"},
+			{" Test123 ", "Test123"},
+			{" \n Test123 \r ", "Test123"},
+			{"Test123  \r ", "Test123"},
+			{"   Test123", "Test123"},
+			{"\t   T2 \v   ", "T2"},
+			{"   T    ", "T"},
+		};
 
-	allSucceeded &= String::trimWhitespace("") == "";
-	allSucceeded &= String::trimWhitespace(" ") == "";
-	allSucceeded &= String::trimWhitespace("\t\f\nXY\v\f\r ") == "XY";
-	allSucceeded &= String::trimWhitespace("Test123") == "Test123";
-	allSucceeded &= String::trimWhitespace(" Test123 ") == "Test123";
-	allSucceeded &= String::trimWhitespace(" \n Test123 \r ") == "Test123";
-	allSucceeded &= String::trimWhitespace("Test123  \r ") == "Test123";
-	allSucceeded &= String::trimWhitespace("   Test123") == "Test123";
-	allSucceeded &= String::trimWhitespace("\t   T2 \v   ") == "T2";
-	allSucceeded &= String::trimWhitespace("   T    ") == "T";
+		for (const StringPair<char>& stringPair : stringPairs)
+		{
+			if (String::trimWhitespace(stringPair.first) != stringPair.second)
+			{
+				allSucceeded = false;
+			}
+		}
+	}
+
+	{
+		const StringPairs<wchar_t> stringPairs =
+		{
+			{L"", L""},
+			{L" ", L""},
+			{L"\t\f\nXY\v\f\r ", L"XY"},
+			{L"Test123", L"Test123"},
+			{L" Test123 ", L"Test123"},
+			{L" \n Test123 \r ", L"Test123"},
+			{L"Test123  \r ", L"Test123"},
+			{L"   Test123", L"Test123"},
+			{L"\t   T2 \v   ", L"T2"},
+			{L"   T    ", L"T"},
+		};
+
+		for (const StringPair<wchar_t>& stringPair : stringPairs)
+		{
+			if (String::trimWhitespace(stringPair.first) != stringPair.second)
+			{
+				allSucceeded = false;
+			}
+		}
+	}
 
 	for (unsigned int n = 0u; n < 10000u; ++n)
 	{
@@ -1221,19 +1247,25 @@ bool TestString::testTrim()
 		const unsigned int nonWhite = RandomI::random(10u);
 
 		for (unsigned int i = 0u; i < nonWhite; ++i)
+		{
 			valueNonWhite += char('a' + RandomI::random(25u));
+		}
 
 		std::string valueFront;
 		const unsigned int frontWhite = RandomI::random(5u);
 
 		for (unsigned int i = 0u; i < frontWhite; ++i)
+		{
 			valueFront += ' ';
+		}
 
 		std::string valueBack;
 		const unsigned int backWhite = RandomI::random(5u);
 
 		for (unsigned int i = 0u; i < backWhite; ++i)
+		{
 			valueBack += ' ';
+		}
 
 		const std::string value(valueFront + valueNonWhite + valueBack);
 
@@ -1246,20 +1278,32 @@ bool TestString::testTrim()
 			// everything must be empty
 
 			if (!front.empty())
+			{
 				allSucceeded = false;
+			}
 			if (!back.empty())
+			{
 				allSucceeded = false;
+			}
 			if (!both.empty())
+			{
 				allSucceeded = false;
+			}
 		}
 		else
 		{
 			if (front != valueNonWhite + valueBack)
+			{
 				allSucceeded = false;
+			}
 			if (back != valueFront + valueNonWhite)
+			{
 				allSucceeded = false;
+			}
 			if (both != valueNonWhite)
+			{
 				allSucceeded = false;
+			}
 		}
 	}
 
