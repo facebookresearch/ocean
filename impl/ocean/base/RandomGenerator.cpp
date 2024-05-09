@@ -12,29 +12,37 @@ namespace Ocean
 {
 
 RandomGenerator::RandomGenerator() :
-	seed_(RandomI::random32())
+	initialSeed_(RandomI::random32())
 {
-	// nothing to do here
+	seed_ = initialSeed_;
 }
 
 RandomGenerator::RandomGenerator(RandomGenerator* optionalGenerator)
 {
-	if (optionalGenerator)
+	if (optionalGenerator != nullptr)
 	{
-		seed_ = ((unsigned int)(optionalGenerator->lockedRand()) & 0xFFFFu) | (((unsigned int)(optionalGenerator->lockedRand()) & 0xFFFFu) << 16);
+		const unsigned int seedLow = optionalGenerator->lockedRand() & 0xFFFFu;
+		const unsigned int seedHigh = (optionalGenerator->lockedRand() & 0xFFFFu) << 16u;
+
+		initialSeed_ = seedLow | seedHigh;
 	}
 	else
 	{
-		seed_ = RandomI::random32();
+		initialSeed_ = RandomI::random32();
 	}
+
+	seed_ = initialSeed_;
 }
 
 RandomGenerator& RandomGenerator::operator=(RandomGenerator&& randomGenerator)
 {
 	if (this != &randomGenerator)
 	{
+		initialSeed_ = randomGenerator.initialSeed_;
 		seed_ = randomGenerator.seed_;
-		randomGenerator.seed_ = RandomI::random32();
+
+		randomGenerator.initialSeed_ = RandomI::random32();
+		randomGenerator.seed_ = randomGenerator.initialSeed_;
 	}
 
 	return *this;

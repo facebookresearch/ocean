@@ -76,7 +76,7 @@ class OCEAN_BASE_EXPORT RandomGenerator
 		/**
 		 * Returns the next random number.
 		 * Beware: This function is not thread safe.
-		 * @return Random number with range [0, 32.767]
+		 * @return Random number with range [0, 32767]
 		 * @see lockedRand().
 		 */
 		inline unsigned int rand();
@@ -84,16 +84,24 @@ class OCEAN_BASE_EXPORT RandomGenerator
 		/**
 		 * Returns the next random number.
 		 * This function is thread safe.
-		 * @return Random number with range [0, 32.767]
+		 * @return Random number with range [0, 32767]
 		 * @see rand().
 		 */
 		inline unsigned int lockedRand();
 
 		/**
 		 * Returns the current seed value of this object.
+		 * This seed value changes whenever a new random number is generated.
 		 * @return Current seed value
 		 */
 		inline unsigned int seed() const;
+
+		/**
+		 * Returns the initial seed value which was used to initialize this random generator.
+		 * The initial seed value will not change during the lifetime of the generator.
+		 * @return The random generator's initial seed value
+		 */
+		inline unsigned int initialSeed() const;
 
 		/**
 		 * Move operator.
@@ -110,24 +118,31 @@ class OCEAN_BASE_EXPORT RandomGenerator
 
 	private:
 
-		/// Internal seed parameter used for random number generation.
+		/// The seed value which was used to initialize this random generator.
+		unsigned int initialSeed_ = (unsigned int)(-1);
+
+		/// Internal seed parameter used for random number generation, changes whenever a new random number is generated.
 		unsigned int seed_ = (unsigned int)(-1);
 
 		/// Generator lock.
 		Lock lock_;
 };
 
-inline RandomGenerator::RandomGenerator(RandomGenerator& generator) :
-	seed_(((unsigned int)(generator.lockedRand()) & 0xFFFFu) | (((unsigned int)(generator.lockedRand()) & 0xFFFFu) << 16))
+inline RandomGenerator::RandomGenerator(RandomGenerator& generator)
 {
+	const unsigned int seedLow = generator.lockedRand() & 0xFFFFu;
+	const unsigned int seedHigh = (generator.lockedRand() & 0xFFFFu) << 16u;
+
+	initialSeed_ = seedLow | seedHigh;
+
 	// doing first randomization step
-	seed_ = seed_ * 214013L + 2531011L;
+	seed_ = initialSeed_ * 214013L + 2531011L;
 }
 
 inline RandomGenerator::RandomGenerator(const unsigned int seed) :
-	seed_(seed)
+	initialSeed_(seed)
 {
-	// nothing to do here
+	seed_ = initialSeed_;
 }
 
 inline RandomGenerator::RandomGenerator(RandomGenerator&& randomGenerator)
@@ -143,12 +158,18 @@ inline unsigned int RandomGenerator::rand()
 inline unsigned int RandomGenerator::lockedRand()
 {
 	const ScopedLock scopedLock(lock_);
+
 	return (unsigned int)(((seed_ = seed_ * 214013L + 2531011L) >> 16) & 0x7fff);
 }
 
 inline unsigned int RandomGenerator::seed() const
 {
 	return seed_;
+}
+
+inline unsigned int RandomGenerator::initialSeed() const
+{
+	return initialSeed_;
 }
 
 constexpr unsigned int RandomGenerator::randMax()

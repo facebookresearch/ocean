@@ -35,6 +35,13 @@ bool TestRandomI::test(const double testDuration)
 
 	RandomGenerator randomGenerator;
 
+	const unsigned int initialSeed = randomGenerator.initialSeed();
+
+	if (initialSeed != randomGenerator.seed())
+	{
+		allSucceeded = false;
+	}
+
 	allSucceeded = testDistribution32(randomGenerator, testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -117,6 +124,21 @@ bool TestRandomI::test(const double testDuration)
 
 	Log::info() << " ";
 
+	{
+		Log::info() << "Initial seed test:";
+
+		if (initialSeed == randomGenerator.initialSeed())
+		{
+			Log::info() << "Validation: succeeded.";
+		}
+		else
+		{
+			Log::info() << "Validation: FAILED!";
+
+			allSucceeded = false;
+		}
+	}
+
 	return allSucceeded;
 }
 
@@ -162,7 +184,11 @@ TEST_F(TestRandomI, Initialize)
 
 TEST_F(TestRandomI, Distribution32)
 {
+	const unsigned int initialSeed = randomGenerator_.initialSeed();
+
 	EXPECT_TRUE(TestBase::TestRandomI::testDistribution32(randomGenerator_, GTEST_TEST_DURATION));
+
+	EXPECT_TRUE(initialSeed == randomGenerator_.initialSeed());
 }
 
 TEST_F(TestRandomI, Distribution64)
