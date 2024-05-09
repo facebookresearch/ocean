@@ -14,6 +14,15 @@ project(ocean)
 # Additional CMake configurations
 include(${CMAKE_CURRENT_LIST_DIR}/build/cmake/ocean_utilities.cmake)
 
+if (IOS OR MACOS)
+    enable_language(OBJC OBJCXX)
+
+    # Enable Automatic Reference Counting (-fobjc-arc).  Disabling will result in memory leaks in some builds.
+    # ARC adds to exception handling code by default for Objective-C++.  Disabling here (-fno-objc-arc-exceptions) to reduce binary size.  Use "-fobjc-arc-exceptions" to override.
+    string(APPEND CMAKE_OBJC_FLAGS " -fobjc-arc")
+    string(APPEND CMAKE_OBJCXX_FLAGS " -fobjc-arc -fno-objc-arc-exceptions")
+endif()
+
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/build/cmake")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/build/cmake")
 
