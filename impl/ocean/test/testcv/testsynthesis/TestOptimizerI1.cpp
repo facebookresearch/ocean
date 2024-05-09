@@ -21,6 +21,8 @@
 #include "ocean/cv/synthesis/Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h"
 #include "ocean/cv/synthesis/Optimizer4NeighborhoodStructuralConstrainedI1.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -252,9 +254,9 @@ bool TestOptimizerI1::testAreaConstrained4Neighborhood(const unsigned int width,
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -353,19 +355,19 @@ bool TestOptimizerI1::testAreaConstrained4Neighborhood(const unsigned int width,
 							{
 								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 
 							if (memcmp(mapping.row(y), copyMapping.row(y), sizeof(CV::PixelPosition) * mapping.width()) != 0)
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
 					else
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -383,16 +385,9 @@ bool TestOptimizerI1::testAreaConstrained4Neighborhood(const unsigned int width,
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestOptimizerI1::testHighPerformance4Neighborhood(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -436,9 +431,9 @@ bool TestOptimizerI1::testHighPerformance4Neighborhood(const unsigned int width,
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -535,19 +530,19 @@ bool TestOptimizerI1::testHighPerformance4Neighborhood(const unsigned int width,
 							{
 								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 
 							if (memcmp(mapping.row(y), copyMapping.row(y), sizeof(CV::PixelPosition) * mapping.width()) != 0)
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
 					else
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -565,16 +560,9 @@ bool TestOptimizerI1::testHighPerformance4Neighborhood(const unsigned int width,
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestOptimizerI1::testHighPerformance4NeighborhoodSkipping(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -618,9 +606,9 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkipping(const unsigned in
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -717,19 +705,19 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkipping(const unsigned in
 							{
 								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 
 							if (memcmp(mapping.row(y), copyMapping.row(y), sizeof(CV::PixelPosition) * mapping.width()) != 0)
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
 					else
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -747,16 +735,9 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkipping(const unsigned in
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestOptimizerI1::testHighPerformance4NeighborhoodSkippingByCostMask(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -800,9 +781,9 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkippingByCostMask(const u
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -901,19 +882,19 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkippingByCostMask(const u
 							{
 								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 
 							if (memcmp(mapping.row(y), copyMapping.row(y), sizeof(CV::PixelPosition) * mapping.width()) != 0)
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
 					else
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -931,16 +912,9 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkippingByCostMask(const u
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestOptimizerI1::testStructuralConstrained4Neighborhood(const unsigned int width, const unsigned int height, const double testDuration, Worker& worker)
@@ -984,9 +958,9 @@ bool TestOptimizerI1::testStructuralConstrained4Neighborhood(const unsigned int 
 
 	Log::info() << "... for " << channels << " channels:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
@@ -1099,19 +1073,19 @@ bool TestOptimizerI1::testStructuralConstrained4Neighborhood(const unsigned int 
 							{
 								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
 								{
-									allSucceeded = false;
+									OCEAN_SET_FAILED(validation);
 								}
 							}
 
 							if (memcmp(mapping.row(y), copyMapping.row(y), sizeof(CV::PixelPosition) * mapping.width()) != 0)
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
 					else
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
@@ -1129,16 +1103,9 @@ bool TestOptimizerI1::testStructuralConstrained4Neighborhood(const unsigned int 
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tBorderFactor>
