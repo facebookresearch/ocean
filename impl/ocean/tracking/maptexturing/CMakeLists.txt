@@ -5,22 +5,9 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(blob)
-add_subdirectory(mapbuilding)
-add_subdirectory(maptexturing)
-add_subdirectory(mesh)
-add_subdirectory(oculustags)
-add_subdirectory(offline)
-add_subdirectory(orb)
-add_subdirectory(pattern)
-add_subdirectory(point)
-add_subdirectory(qrcodes)
-add_subdirectory(rmv)
-add_subdirectory(uvtexturemapping)
+if (APPLE OR ANDROID OR IOS)
 
-if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
-
-    set(OCEAN_TARGET_NAME "ocean_tracking")
+    set(OCEAN_TARGET_NAME "ocean_tracking_maptexturing")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -31,10 +18,16 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
 
     target_include_directories(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_IMPL_DIR}")
 
-    target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
+    target_compile_definitions(${OCEAN_TARGET_NAME}
+        PUBLIC
+            ${OCEAN_PREPROCESSOR_FLAGS}
+
+        PRIVATE
+            "-DGL_SILENCE_DEPRECATION"
+    )
 
     if (BUILD_SHARED_LIBS)
-        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TRACKING_EXPORT")
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TRACKING_MAPTEXTURING_EXPORT")
     endif()
 
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
@@ -44,13 +37,16 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
         PUBLIC
             ocean_base
             ocean_cv
-            ocean_cv_advanced
-            ocean_cv_detector
-            ocean_cv_segmentation
+            ocean_devices
             ocean_geometry
             ocean_io
             ocean_math
             ocean_media
+            ocean_rendering
+            ocean_rendering_glescenegraph
+            ocean_scenedescription
+            ocean_scenedescription_sdx_x3d
+            ocean_tracking
     )
 
     # Installation
@@ -60,7 +56,7 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/tracking
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/tracking/maptexturing
             COMPONENT include
     )
 
