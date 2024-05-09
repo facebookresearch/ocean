@@ -1,4 +1,7 @@
-# (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
 
 cmake_minimum_required(VERSION 3.26)
 
@@ -120,6 +123,7 @@ if (OCEAN_BUILD_DEMOS)
     add_subdirectory(impl/application/ocean/demo/tracking/featuretracker)
     add_subdirectory(impl/application/ocean/demo/tracking/homographyimagealigner)
     add_subdirectory(impl/application/ocean/demo/tracking/homographytracker)
+    add_subdirectory(impl/application/ocean/demo/tracking/oculustags/oculustaggenerator)
     add_subdirectory(impl/application/ocean/demo/tracking/pointtracker)
     add_subdirectory(impl/application/ocean/demo/tracking/similaritytracker)
     add_subdirectory(impl/application/ocean/demo/tracking/uvtexturemapping)
