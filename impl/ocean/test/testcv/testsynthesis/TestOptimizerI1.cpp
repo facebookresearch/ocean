@@ -351,17 +351,19 @@ bool TestOptimizerI1::testAreaConstrained4Neighborhood(const unsigned int width,
 					{
 						for (unsigned int y = 0u; y < frame.height(); ++y)
 						{
+							const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
 							for (unsigned int x = 0u; x < frame.width(); ++x)
 							{
 								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
 								{
 									OCEAN_SET_FAILED(validation);
 								}
-							}
 
-							if (memcmp(mapping.row(y), copyMapping.row(y), sizeof(CV::PixelPosition) * mapping.width()) != 0)
-							{
-								OCEAN_SET_FAILED(validation);
+								if (maskRow[x] != 0xFFu)
+								{
+									OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+								}
 							}
 						}
 					}
@@ -526,17 +528,19 @@ bool TestOptimizerI1::testHighPerformance4Neighborhood(const unsigned int width,
 					{
 						for (unsigned int y = 0u; y < frame.height(); ++y)
 						{
+							const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
 							for (unsigned int x = 0u; x < frame.width(); ++x)
 							{
 								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
 								{
 									OCEAN_SET_FAILED(validation);
 								}
-							}
 
-							if (memcmp(mapping.row(y), copyMapping.row(y), sizeof(CV::PixelPosition) * mapping.width()) != 0)
-							{
-								OCEAN_SET_FAILED(validation);
+								if (maskRow[x] != 0xFFu)
+								{
+									OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+								}
 							}
 						}
 					}
@@ -701,17 +705,19 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkipping(const unsigned in
 					{
 						for (unsigned int y = 0u; y < frame.height(); ++y)
 						{
+							const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
 							for (unsigned int x = 0u; x < frame.width(); ++x)
 							{
 								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
 								{
 									OCEAN_SET_FAILED(validation);
 								}
-							}
 
-							if (memcmp(mapping.row(y), copyMapping.row(y), sizeof(CV::PixelPosition) * mapping.width()) != 0)
-							{
-								OCEAN_SET_FAILED(validation);
+								if (maskRow[x] != 0xFFu)
+								{
+									OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+								}
 							}
 						}
 					}
@@ -878,17 +884,19 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkippingByCostMask(const u
 					{
 						for (unsigned int y = 0u; y < frame.height(); ++y)
 						{
+							const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
 							for (unsigned int x = 0u; x < frame.width(); ++x)
 							{
 								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
 								{
 									OCEAN_SET_FAILED(validation);
 								}
-							}
 
-							if (memcmp(mapping.row(y), copyMapping.row(y), sizeof(CV::PixelPosition) * mapping.width()) != 0)
-							{
-								OCEAN_SET_FAILED(validation);
+								if (maskRow[x] != 0xFFu)
+								{
+									OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+								}
 							}
 						}
 					}
@@ -1071,15 +1079,17 @@ bool TestOptimizerI1::testStructuralConstrained4Neighborhood(const unsigned int 
 						{
 							for (unsigned int x = 0u; x < frame.width(); ++x)
 							{
+								const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
 								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
 								{
 									OCEAN_SET_FAILED(validation);
 								}
-							}
 
-							if (memcmp(mapping.row(y), copyMapping.row(y), sizeof(CV::PixelPosition) * mapping.width()) != 0)
-							{
-								OCEAN_SET_FAILED(validation);
+								if (maskRow[x] != 0xFFu)
+								{
+									OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+								}
 							}
 						}
 					}
