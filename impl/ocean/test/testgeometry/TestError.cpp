@@ -14,6 +14,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -102,12 +104,9 @@ bool TestError::testDeterminePoseErrorSeparatePinhole(const double testDuration)
 
 	RandomGenerator randomGenerator;
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	ValidationPrecision validation(randomGenerator);
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Scalar(0.001);
-
-	bool allSucceeded = true;
 
 	const PinholeCamera patternCamera(1280u, 720u, Numeric::deg2rad(45));
 
@@ -115,86 +114,82 @@ bool TestError::testDeterminePoseErrorSeparatePinhole(const double testDuration)
 
 	do
 	{
-		const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, iterations % 3ull == 1ull || iterations % 3ull == 2ull, iterations % 3ull == 2ull));
-
-		const Vectors3 objectPoints = Utilities::objectPoints(Box3(Vector3(-10, -10, -10), Vector3(10, 10, 10)), 100u, &randomGenerator);
-		const HomogenousMatrix4 world_T_camera(Utilities::viewPosition(pinholeCamera, objectPoints, false, &randomGenerator));
-
-		Vectors2 perfectImagePoints;
-		Vectors2 distortedImagePoints;
-		Vectors2 noisedImagePoints;
-
-		perfectImagePoints.reserve(objectPoints.size());
-		distortedImagePoints.reserve(objectPoints.size());
-		noisedImagePoints.reserve(objectPoints.size());
-
-		for (const Vector3& objectPoint : objectPoints)
+		for (unsigned int distortionIteration = 0u; distortionIteration < 4u; ++distortionIteration)
 		{
-			perfectImagePoints.push_back(pinholeCamera.projectToImage<true>(world_T_camera, objectPoint, false));
-			distortedImagePoints.push_back(pinholeCamera.projectToImage<true>(world_T_camera, objectPoint, true));
+			constexpr bool principalPointDistortion = true;
 
-			noisedImagePoints.push_back(distortedImagePoints.back() + Vector2(Random::gaussianNoise(5), Random::gaussianNoise(5)));
-		}
+			const bool radialDistortion = distortionIteration == 1u || distortionIteration == 3u;
+			const bool tangentialDistortion = distortionIteration == 2u || distortionIteration == 3u;
 
-		for (const bool distortImagePoints : {false, true})
-		{
-			for (const Vectors2& imagePoints : {perfectImagePoints, distortedImagePoints, noisedImagePoints})
+			const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, principalPointDistortion, radialDistortion, tangentialDistortion));
+
+			const Vectors3 objectPoints = Utilities::objectPoints(Box3(Vector3(-10, -10, -10), Vector3(10, 10, 10)), 100u, &randomGenerator);
+			const HomogenousMatrix4 world_T_camera(Utilities::viewPosition(pinholeCamera, objectPoints, false, &randomGenerator));
+
+			Vectors2 perfectImagePoints;
+			Vectors2 distortedImagePoints;
+			Vectors2 noisedImagePoints;
+
+			perfectImagePoints.reserve(objectPoints.size());
+			distortedImagePoints.reserve(objectPoints.size());
+			noisedImagePoints.reserve(objectPoints.size());
+
+			for (const Vector3& objectPoint : objectPoints)
 			{
-				Vectors2 errors(objectPoints.size());
-				Scalars sqrErrors(objectPoints.size());
-				const Scalar averageSqrError = Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, true, true>(world_T_camera, pinholeCamera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints), distortImagePoints, 1, errors.data(), sqrErrors.data());
+				perfectImagePoints.emplace_back(pinholeCamera.projectToImage<true>(world_T_camera, objectPoint, false));
+				distortedImagePoints.emplace_back(pinholeCamera.projectToImage<true>(world_T_camera, objectPoint, true));
 
-				Scalar testAverageSqrError = 0;
+				noisedImagePoints.emplace_back(distortedImagePoints.back() + Vector2(Random::gaussianNoise(5), Random::gaussianNoise(5)));
+			}
 
-				for (size_t n = 0; n < objectPoints.size(); ++n)
+			for (const bool distortImagePoints : {false, true})
+			{
+				for (const Vectors2& imagePoints : {perfectImagePoints, distortedImagePoints, noisedImagePoints})
 				{
-					const Vector2 testProjectedImagePoint = pinholeCamera.projectToImage<true>(world_T_camera, objectPoints[n], distortImagePoints);
-					const Vector2 testError = testProjectedImagePoint - imagePoints[n];
+					Vectors2 errors(objectPoints.size());
+					Scalars sqrErrors(objectPoints.size());
+					const Scalar averageSqrError = Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, true, true>(world_T_camera, pinholeCamera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints), distortImagePoints, 1, errors.data(), sqrErrors.data());
 
-					const Scalar testSqrError = testError.sqr();
+					Scalar testAverageSqrError = 0;
 
-					if (testError.isEqual(errors[n], epsilon))
+					for (size_t n = 0; n < objectPoints.size(); ++n)
 					{
-						validIterations++;
+						ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+						const Vector2 testProjectedImagePoint = pinholeCamera.projectToImage<true>(world_T_camera, objectPoints[n], distortImagePoints);
+						const Vector2 testError = testProjectedImagePoint - imagePoints[n];
+
+						const Scalar testSqrError = testError.sqr();
+
+						if (!testError.isEqual(errors[n], epsilon))
+						{
+							scopedIteration.setInaccurate();
+						}
+
+						if (!Numeric::isEqual(testSqrError, sqrErrors[n], epsilon))
+						{
+							scopedIteration.setInaccurate();
+						}
+
+						testAverageSqrError += testSqrError;
 					}
 
-					iterations++;
+					ocean_assert(objectPoints.size() != 0);
+					testAverageSqrError /= Scalar(objectPoints.size());
 
-					if (Numeric::isEqual(testSqrError, sqrErrors[n], epsilon))
+					if (Numeric::isNotEqual(testAverageSqrError, averageSqrError, epsilon))
 					{
-						validIterations++;
+						OCEAN_SET_FAILED(validation);
 					}
-
-					iterations++;
-
-					testAverageSqrError += testSqrError;
-				}
-
-				ocean_assert(objectPoints.size() != 0);
-				testAverageSqrError /= Scalar(objectPoints.size());
-
-				if (Numeric::isNotEqual(testAverageSqrError, averageSqrError, epsilon))
-				{
-					allSucceeded = false;
 				}
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded && percent >= 0.999;
+	return validation.succeeded(0.999);
 }
 
 bool TestError::testDeterminePoseErrorSeparateAnyCamera(const double testDuration)
@@ -207,12 +202,9 @@ bool TestError::testDeterminePoseErrorSeparateAnyCamera(const double testDuratio
 
 	uint64_t distortionIteration = 0ull;
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	ValidationPrecision validation;
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Scalar(0.001);
-
-	bool allSucceeded = true;
 
 	const PinholeCamera patternCamera(1280u, 720u, Numeric::deg2rad(45));
 
@@ -226,7 +218,7 @@ bool TestError::testDeterminePoseErrorSeparateAnyCamera(const double testDuratio
 		{
 			if (cameraName == AnyCameraPinhole::WrappedCamera::name())
 			{
-				PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, iterations % 3ull == 1ull || iterations % 3ull == 2ull, iterations % 3ull == 2ull));
+				PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, distortionIteration % 3ull == 1ull || distortionIteration % 3ull == 2ull, distortionIteration % 3ull == 2ull));
 
 				anyCamera = std::make_shared<AnyCameraPinhole>(std::move(pinholeCamera));
 			}
@@ -264,24 +256,22 @@ bool TestError::testDeterminePoseErrorSeparateAnyCamera(const double testDuratio
 
 				for (size_t n = 0; n < objectPoints.size(); ++n)
 				{
+					ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 					const Vector2 testProjectedImagePoint = anyCamera->projectToImage(world_T_camera, objectPoints[n]);
 					const Vector2 testError = testProjectedImagePoint - currentImagePoints[n];
 
 					const Scalar testSqrError = testError.sqr();
 
-					if (testError.isEqual(errors[n], epsilon))
+					if (!testError.isEqual(errors[n], epsilon))
 					{
-						validIterations++;
+						scopedIteration.setInaccurate();
 					}
 
-					iterations++;
-
-					if (Numeric::isEqual(testSqrError, sqrErrors[n], epsilon))
+					if (!Numeric::isEqual(testSqrError, sqrErrors[n], epsilon))
 					{
-						validIterations++;
+						scopedIteration.setInaccurate();
 					}
-
-					iterations++;
 
 					testAverageSqrError += testSqrError;
 				}
@@ -291,28 +281,18 @@ bool TestError::testDeterminePoseErrorSeparateAnyCamera(const double testDuratio
 
 				if (Numeric::isNotEqual(testAverageSqrError, averageSqrError, epsilon))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
-			distortionIteration++;
+			++distortionIteration;
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded && percent >= 0.999;
+	return validation.succeeded(0.999);
 }
 
 bool TestError::testDeterminePoseErrorCombinedPinhole(const double testDuration)
@@ -323,105 +303,96 @@ bool TestError::testDeterminePoseErrorCombinedPinhole(const double testDuration)
 
 	RandomGenerator randomGenerator;
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	ValidationPrecision validation;
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Scalar(0.001);
-
-	bool allSucceeded = true;
 
 	const PinholeCamera patternCamera(1280u, 720u, Numeric::deg2rad(45));
 
 	const Timestamp startTimestamp(true);
+
 	do
 	{
-		// create a distorted camera
-		const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, iterations % 3ull == 1ull || iterations % 3ull == 2ull, iterations % 3ull == 2ull));
-
-		const Vectors3 objectPoints = Utilities::objectPoints(Box3(Vector3(-10, -10, -10), Vector3(10, 10, 10)), 100u, &randomGenerator);
-		const HomogenousMatrix4 pose(Utilities::viewPosition(pinholeCamera, objectPoints, false, &randomGenerator));
-
-		Vectors2 perfectImagePoints;
-		Vectors2 distortedImagePoints;
-		Vectors2 noisedImagePoints;
-
-		perfectImagePoints.reserve(objectPoints.size());
-		distortedImagePoints.reserve(objectPoints.size());
-		noisedImagePoints.reserve(objectPoints.size());
-
-		for (const Vector3& objectPoint : objectPoints)
+		for (unsigned int distortionIteration = 0u; distortionIteration < 4u; ++distortionIteration)
 		{
-			perfectImagePoints.push_back(pinholeCamera.projectToImage<true>(pose, objectPoint, false));
-			distortedImagePoints.push_back(pinholeCamera.projectToImage<true>(pose, objectPoint, true));
+			constexpr bool principalPointDistortion = true;
 
-			noisedImagePoints.push_back(distortedImagePoints.back() + Vector2(Random::gaussianNoise(5), Random::gaussianNoise(5)));
-		}
+			const bool radialDistortion = distortionIteration == 1u || distortionIteration == 3u;
+			const bool tangentialDistortion = distortionIteration == 2u || distortionIteration == 3u;
 
-		for (const bool distortImagePoints : {false, true})
-		{
-			for (const Vectors2& imagePoints : {perfectImagePoints, distortedImagePoints, noisedImagePoints})
+			const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, principalPointDistortion, radialDistortion, tangentialDistortion));
+
+			const Vectors3 objectPoints = Utilities::objectPoints(Box3(Vector3(-10, -10, -10), Vector3(10, 10, 10)), 100u, &randomGenerator);
+			const HomogenousMatrix4 pose(Utilities::viewPosition(pinholeCamera, objectPoints, false, &randomGenerator));
+
+			Vectors2 perfectImagePoints;
+			Vectors2 distortedImagePoints;
+			Vectors2 noisedImagePoints;
+
+			perfectImagePoints.reserve(objectPoints.size());
+			distortedImagePoints.reserve(objectPoints.size());
+			noisedImagePoints.reserve(objectPoints.size());
+
+			for (const Vector3& objectPoint : objectPoints)
 			{
-				Scalar averageSqrError = Numeric::minValue();
-				Scalar minimalSqrError = Numeric::minValue();
-				Scalar maximalSqrError = Numeric::minValue();
-				Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(pose, pinholeCamera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints), distortImagePoints, averageSqrError, minimalSqrError, maximalSqrError, Scalar(1));
+				perfectImagePoints.push_back(pinholeCamera.projectToImage<true>(pose, objectPoint, false));
+				distortedImagePoints.push_back(pinholeCamera.projectToImage<true>(pose, objectPoint, true));
 
-				Scalar testAverageSqrError = 0;
-				Scalar testMinimalSqrError = Numeric::maxValue();
-				Scalar testMaximalSqrError = Numeric::minValue();
+				noisedImagePoints.push_back(distortedImagePoints.back() + Vector2(Random::gaussianNoise(5), Random::gaussianNoise(5)));
+			}
 
-				for (size_t n = 0; n < objectPoints.size(); ++n)
+			for (const bool distortImagePoints : {false, true})
+			{
+				for (const Vectors2& imagePoints : {perfectImagePoints, distortedImagePoints, noisedImagePoints})
 				{
-					const Vector2 testProjectedImagePoint = pinholeCamera.projectToImage<true>(pose, objectPoints[n], distortImagePoints);
-					const Vector2 testError = testProjectedImagePoint - imagePoints[n];
-					const Scalar testSqrError = testError.sqr();
+					ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-					testMinimalSqrError = min(testMinimalSqrError, testSqrError);
-					testMaximalSqrError = max(testMaximalSqrError, testSqrError);
-					testAverageSqrError += testSqrError;
+					Scalar averageSqrError = Numeric::minValue();
+					Scalar minimalSqrError = Numeric::minValue();
+					Scalar maximalSqrError = Numeric::minValue();
+					Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(pose, pinholeCamera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints), distortImagePoints, averageSqrError, minimalSqrError, maximalSqrError, Scalar(1));
+
+					Scalar testAverageSqrError = 0;
+					Scalar testMinimalSqrError = Numeric::maxValue();
+					Scalar testMaximalSqrError = Numeric::minValue();
+
+					for (size_t n = 0; n < objectPoints.size(); ++n)
+					{
+						const Vector2 testProjectedImagePoint = pinholeCamera.projectToImage<true>(pose, objectPoints[n], distortImagePoints);
+						const Vector2 testError = testProjectedImagePoint - imagePoints[n];
+						const Scalar testSqrError = testError.sqr();
+
+						testMinimalSqrError = min(testMinimalSqrError, testSqrError);
+						testMaximalSqrError = max(testMaximalSqrError, testSqrError);
+						testAverageSqrError += testSqrError;
+					}
+
+					ocean_assert(objectPoints.size() != 0);
+					testAverageSqrError /= Scalar(objectPoints.size());
+
+					if (!Numeric::isEqual(testMinimalSqrError, minimalSqrError, epsilon))
+					{
+						scopedIteration.setInaccurate();
+					}
+
+					if (!Numeric::isEqual(testMaximalSqrError, maximalSqrError, epsilon))
+					{
+						scopedIteration.setInaccurate();
+					}
+
+					if (!Numeric::isEqual(testAverageSqrError, averageSqrError, epsilon))
+					{
+						scopedIteration.setInaccurate();
+					}
 				}
-
-				ocean_assert(objectPoints.size() != 0);
-				testAverageSqrError /= Scalar(objectPoints.size());
-
-				if (Numeric::isEqual(testMinimalSqrError, minimalSqrError, epsilon))
-				{
-					validIterations++;
-				}
-
-				iterations++;
-
-				if (Numeric::isEqual(testMaximalSqrError, maximalSqrError, epsilon))
-				{
-					validIterations++;
-				}
-
-				iterations++;
-
-				if (Numeric::isEqual(testAverageSqrError, averageSqrError, epsilon))
-				{
-					validIterations++;
-				}
-
-				iterations++;
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded && percent >= 0.999;
+	return validation.succeeded(0.999);
 }
 
 bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuration)
@@ -432,12 +403,9 @@ bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuratio
 
 	RandomGenerator randomGenerator;
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
-
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Scalar(0.001);
 
-	bool allSucceeded = true;
+	ValidationPrecision validation;
 
 	const Timestamp startTimestamp(true);
 
@@ -511,12 +479,14 @@ bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuratio
 			{
 				if (poseErrorResult != !placeObjectPointsBehindCamera)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
 			if (poseErrorResult)
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				Scalar testAverageSqrError = 0;
 				Scalar testMinimalSqrError = Numeric::maxValue();
 				Scalar testMaximalSqrError = Numeric::minValue();
@@ -535,44 +505,28 @@ bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuratio
 				ocean_assert(objectPoints.size() != 0);
 				testAverageSqrError /= Scalar(objectPoints.size());
 
-				if (Numeric::isEqual(testMinimalSqrError, minimalSqrError, epsilon))
+				if (!Numeric::isEqual(testMinimalSqrError, minimalSqrError, epsilon))
 				{
-					validIterations++;
+					scopedIteration.setInaccurate();
 				}
 
-				iterations++;
-
-				if (Numeric::isEqual(testMaximalSqrError, maximalSqrError, epsilon))
+				if (!Numeric::isEqual(testMaximalSqrError, maximalSqrError, epsilon))
 				{
-					validIterations++;
+					scopedIteration.setInaccurate();
 				}
 
-				iterations++;
-
-				if (Numeric::isEqual(testAverageSqrError, averageSqrError, epsilon))
+				if (!Numeric::isEqual(testAverageSqrError, averageSqrError, epsilon))
 				{
-					validIterations++;
+					scopedIteration.setInaccurate();
 				}
-
-				iterations++;
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded && percent >= 0.999;
+	return validation.succeeded(0.999);
 }
 
 bool TestError::testDetermineHomographyErrorSeparate(const double testDuration)
@@ -583,14 +537,13 @@ bool TestError::testDetermineHomographyErrorSeparate(const double testDuration)
 
 	RandomGenerator randomGenerator;
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	ValidationPrecision validation;
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int size = RandomI::random(randomGenerator, 1000u);
+		const unsigned int size = RandomI::random(randomGenerator, 1u, 1000u);
 
 		Vectors2 points0;
 		Vectors2 points1;
@@ -664,38 +617,29 @@ bool TestError::testDetermineHomographyErrorSeparate(const double testDuration)
 
 				const Scalar averageSqrError = Geometry::Error::determineHomographyError<Accessor, true, true>(homography, Accessor(points0), Accessor(points1), errors.data(), sqrErrors.data());
 
-				if (Numeric::isEqual<-6>(averageSqrError, testAverageSqrError, Numeric::weakEps()))
+				if (!Numeric::isEqual<-6>(averageSqrError, testAverageSqrError, Numeric::weakEps()))
 				{
-					validIterations++;
+					OCEAN_SET_FAILED(validation);
 				}
-
-				iterations++;
 
 				for (unsigned int n = 0u; n < size; ++n)
 				{
-					bool localSucceeded = true;
+					ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 					if (!Numeric::isEqual<-6>(errors[n].x(), testErrors[n].x(), Numeric::weakEps()))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 
 					if (!Numeric::isEqual<-6>(errors[n].y(), testErrors[n].y(), Numeric::weakEps()))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 
 					if (!Numeric::isEqual<-6>(sqrErrors[n], testSqrErrors[n], Numeric::weakEps()))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
-
-					if (localSucceeded)
-					{
-						validIterations++;
-					}
-
-					iterations++;
 				}
 			}
 
@@ -709,50 +653,38 @@ bool TestError::testDetermineHomographyErrorSeparate(const double testDuration)
 
 				const Scalar averageSqrError = Geometry::Error::determineHomographyError<Accessor, true, true>(homography, Accessor(points0), Accessor(points1), errors.data(), sqrErrors.data());
 
-				if (Numeric::isEqual<-6>(averageSqrError, testAverageSqrError, Numeric::weakEps()))
+				if (!Numeric::isEqual<-6>(averageSqrError, testAverageSqrError, Numeric::weakEps()))
 				{
-					validIterations++;
+					OCEAN_SET_FAILED(validation);
 				}
-
-				iterations++;
 
 				for (unsigned int n = 0u; n < size; ++n)
 				{
-					bool localSucceeded = true;
+					ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 					if (Numeric::isNotWeakEqual(errors[n].x(), testErrors[n].x()))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 
 					if (Numeric::isNotWeakEqual(errors[n].y(), testErrors[n].y()))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 
 					if (!Numeric::isEqual<-6>(sqrErrors[n], testSqrErrors[n], Numeric::weakEps()))
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
-
-					if (localSucceeded)
-					{
-						validIterations++;
-					}
-
-					iterations++;
 				}
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.999;
+	return validation.succeeded(0.999);
 }
 
 }
