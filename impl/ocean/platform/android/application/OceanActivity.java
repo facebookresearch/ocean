@@ -66,11 +66,12 @@ public class OceanActivity extends Activity
 		{
 			Log.i("Ocean", "Requested permission: " + permission);
 
-			pendingPermissionRequests_.add(permission);
-
-			if (pendingPermissionRequests_.size() == 1)
+			if (pendingPermissionRequests_.add(permission))
 			{
-				requestPermissions(new String[]{permission}, OCEAN_ACTIVITY_PERMISSION_CODE);
+				if (pendingPermissionRequests_.size() == 1)
+				{
+					requestPermissions(new String[]{permission}, OCEAN_ACTIVITY_PERMISSION_CODE);
+				}
 			}
 		}
 	}
@@ -82,6 +83,13 @@ public class OceanActivity extends Activity
 
 		if (requestCode != OCEAN_ACTIVITY_PERMISSION_CODE)
 		{
+			return;
+		}
+
+		if (grantResults.length == 0)
+		{
+			// Empty permissions and results arrays should be treated as a cancellation.
+			Log.w("Ocean", "A permission request was interrupted/canceled.");
 			return;
 		}
 
