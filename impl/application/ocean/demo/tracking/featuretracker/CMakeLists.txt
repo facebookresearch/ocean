@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (ANDROID OR IOS OR MACOS OR WINDOWS)
+if (ANDROID OR IOS OR MACOS)
 
     set(OCEAN_TARGET_NAME "application_ocean_demo_tracking_featuretracker")
 
@@ -60,7 +60,7 @@ if (ANDROID OR IOS OR MACOS OR WINDOWS)
         )
     endif()
 
-    if (WINDOWS)
+    if (WIN32)
         target_link_libraries(${OCEAN_TARGET_NAME}
             PUBLIC
                 ocean_media_directshow
@@ -76,7 +76,7 @@ if (ANDROID OR IOS OR MACOS OR WINDOWS)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/application/ocean/demo/cv/detector/linedetector
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/application/ocean/demo/tracking/featuretracker
         COMPONENT include
     )
 
@@ -128,8 +128,93 @@ if (ANDROID)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/application/ocean/demo/cv/detector/qrcodes/detector2d/android
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/application/ocean/demo/tracking/featuretracker/android
         COMPONENT include
     )
 
 endif()
+
+if (MACOS)
+
+    set(OCEAN_TARGET_NAME "application_ocean_demo_tracking_featuretracker_osx")
+
+    # Source files
+    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/osx/*.h")
+    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/osx/*.mm")
+
+    # Target definition
+    add_executable(${OCEAN_TARGET_NAME} MACOSX_BUNDLE ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
+
+    set(MACOSX_DEPLOYMENT_TARGET "10.12")
+    set(PRODUCT_BUNDLE_IDENTIFIER "com.meta.ocean.application.demo.tracking.featuretracker.osx")
+    set(EXECUTABLE_NAME ${OCEAN_TARGET_NAME})
+    set(PRODUCT_NAME ${OCEAN_TARGET_NAME})
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/osx/Info.plist ${CMAKE_CURRENT_BINARY_DIR})
+    set_target_properties(${OCEAN_TARGET_NAME} PROPERTIES
+        BUNDLE True
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_BINARY_DIR}/Info.plist"
+    )
+
+    target_include_directories(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_IMPL_DIR})
+
+    target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_PREPROCESSOR_FLAGS})
+    target_compile_options(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_COMPILER_FLAGS})
+
+    # Dependencies
+    target_link_libraries(${OCEAN_TARGET_NAME}
+        PRIVATE
+            application_ocean_demo_tracking_featuretracker
+            ocean_base
+            ocean_platform_apple_macos
+    )
+
+    # Custom command to compile Application.xib to Application.nib
+    set(APPLICATION_XIB "${OCEAN_IMPL_DIR}/../res/application/ocean/demo/tracking/featuretracker/osx/Application.xib")
+    add_custom_command(TARGET ${OCEAN_TARGET_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/Resources
+        COMMAND ${CMAKE_COMMAND} -E env "IBTOOL=${CMAKE_PROGRAM_PATH}" "${CMAKE_COMMAND}" -E remove ${CMAKE_CURRENT_BINARY_DIR}/Resources/Application.nib
+        COMMAND ${CMAKE_COMMAND} -E env "IBTOOL=${CMAKE_PROGRAM_PATH}" "${CMAKE_COMMAND}" -E echo "Compiling XIB file..."
+        COMMAND ${CMAKE_COMMAND} -E env "IBTOOL=${CMAKE_PROGRAM_PATH}" ibtool --warnings --notices --errors --output-format human-readable-text --compile ${CMAKE_CURRENT_BINARY_DIR}/Resources/Application.nib "${APPLICATION_XIB}"
+        COMMENT "Compiling XIB file..."
+        VERBATIM
+    )
+
+    # Installation
+    install(TARGETS ${OCEAN_TARGET_NAME} DESTINATION bin)
+
+    # Install Application.nib
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Resources DESTINATION bin/${OCEAN_TARGET_NAME}.app/Contents)
+
+endif()
+
+# TODO: enable WIN32 configuration when "ocean_media_directshow" becomes available
+#
+#if (WIN32)
+#
+#    set(OCEAN_TARGET_NAME "application_ocean_demo_tracking_featuretracker_win")
+#
+#    # Source files
+#    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/win/*.h")
+#    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/win/*.cpp")
+#
+#    # Target definition
+#    add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
+#
+#    target_include_directories(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_IMPL_DIR})
+#
+#    target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS} -DUSE_OCEAN_DEVICES_VRS)
+#    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
+#
+#    # Dependencies
+#    target_link_libraries(${OCEAN_TARGET_NAME}
+#        PUBLIC
+#            application_ocean_demo_tracking_featuretracker
+#            ocean_base
+#            ocean_platform
+#            ocean_platform_win
+#    )
+#
+#    # Installation
+#    install(TARGETS ${OCEAN_TARGET_NAME} DESTINATION bin)
+#
+#endif()
