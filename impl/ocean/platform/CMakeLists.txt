@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 3.26)
 
 add_subdirectory(android)
 add_subdirectory(apple)
+add_subdirectory(gles)
 add_subdirectory(linux)
 add_subdirectory(win)
 add_subdirectory(wxwidgets)
