@@ -774,19 +774,52 @@ class OCEAN_BASE_EXPORT Log
 	public:
 
 		/**
-		 * Definition of a default messenger object, only active if `Messenger::isActive() == true`.
+		 * Definition of a default message object, only active if `Messenger::isActive() == true`.
 		 */
 		typedef Ocean::MessageObject<Messenger::isActive()> MessageObject;
 
 		/**
-		 * Definition of a debug messenger object, only active on debug builds and if `Messenger::isActive() == true`.
+		 * Definition of a debug message object, only active on debug builds and if `Messenger::isActive() == true`.
 		 */
 		typedef Ocean::MessageObject<Messenger::isActive() && Messenger::isDebugBuild()> DebugMessageObject;
+
+	protected:
+
+		/**
+		 * Helper class allowing to specify a specific message object or stream type.
+		 * @tparam TStream The data type of the message object (or stream) to be checked
+		 */
+		template <typename TStream>
+		struct StreamHelper
+		{
+			/**
+			 * Helper class to check whether a message object or a stream provides a shift operator for an object with specific data type.
+			 * @tparam TObject The data type to check
+			 */
+			template <typename TObject, typename = void>
+			struct ShiftOperatorChecker
+			{
+				/// False, if the message object or stream does not provide a shift operator for the data type 'TObject'.
+				static constexpr bool value = false;
+			};
+
+			/**
+			 * Helper class to check whether a message object or a stream provides a shift operator for an object with specific data type.
+			 * Specialization of ShiftOperatorChecker.
+			 * @tparam TObject The data type to check
+			 */
+			template <typename TObject>
+			struct ShiftOperatorChecker<TObject, std::void_t<decltype( std::declval<TStream&>() << std::declval<TObject>())>>
+			{
+				/// True, if the message object or stream does provides a shift operator for the data type 'TObject'.
+				static constexpr bool value = true;
+			};
+		};
 
 	public:
 
 		/**
-		 * Returns the messenger for debug messages.
+		 * Returns the message for debug messages.
 		 * Debug messages do not show up on release builds.<br>
 		 * The debug log is intended to simplify code like this:
 		 * @code
@@ -794,27 +827,53 @@ class OCEAN_BASE_EXPORT Log
 		 *     info() << "<debug> This message shows up on debug builds only."
 		 * #endif
 		 * @endcode
-		 * @return The messenger object that will be stripped away on release builds
+		 * @return The message object that will be stripped away on release builds
 		 */
 		static inline DebugMessageObject debug();
 
 		/**
-		 * Returns the messenger for information messages.
-		 * @return The messenger object
+		 * Returns the message for information messages.
+		 * @return The message object
 		 */
 		static inline MessageObject info();
 
 		/**
-		 * Returns the messenger for warning messages.
-		 * @return The messenger object
+		 * Returns the message for warning messages.
+		 * @return The message object
 		 */
 		static inline MessageObject warning();
 
 		/**
-		 * Returns the messenger for error messages.
-		 * @return The messenger object
+		 * Returns the message for error messages.
+		 * @return The message object
 		 */
 		static inline MessageObject error();
+
+		/**
+		 * Returns whether a specific data type can be written to a message object (or an arbitrary stream).
+		 * The function returns whether the shift operator of MessageObject (or of an arbitrary stream) supports the specified data type.
+		 * Usage:
+		 * @code
+		 * void function()
+		 * {
+		 *     int value = 9;
+		 *
+		 *     if constexpr (Log::isSupported<int>())
+		 *     {
+		 *         Log::info() << "Value is: " << value;
+		 *     }
+		 *     else
+		 *     {
+		 *         Log::info() << "Value cannot be written to log.";
+		 *     }
+		 * }
+		 * @endcode
+		 * @return True, if so
+		 * @tparam T The data type to be checked
+		 * @tparam TStream The data type of the message object (or stream) to be checked
+		 */
+		template <typename T, typename TStream = MessageObject>
+		static constexpr bool isSupported();
 };
 
 inline Messenger::MessageOutput Messenger::outputType() const
@@ -1017,6 +1076,12 @@ inline Log::MessageObject Log::warning()
 inline Log::MessageObject Log::error()
 {
 	return MessageObject(Messenger::TYPE_ERROR);
+}
+
+template <typename T, typename TStream>
+constexpr bool Log::isSupported()
+{
+	return StreamHelper<TStream>::template ShiftOperatorChecker<T>::value;
 }
 
 }
