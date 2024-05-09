@@ -40,6 +40,8 @@
 {
 	// first we create a new feature tracker object, configurated by the command arguments
 
+	Messenger::get().setOutputType(Messenger::OUTPUT_STANDARD);
+
 	oculusTagTrackerWrapper_ = OculusTagTrackerWrapper(Platform::Apple::MacOS::Utilities::commandArguments());
 
 	// we create the view that can display frame medium object on its own
