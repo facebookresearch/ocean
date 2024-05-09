@@ -55,10 +55,12 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\TestData.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\TestDataManager.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\TestDataCollection.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\ValidationPrecision.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\test\TestData.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\test\TestDataManager.cpp" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\test\Validation.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{76633F53-CD8D-47EC-B1BA-32C82C740AA8}</ProjectGuid>
