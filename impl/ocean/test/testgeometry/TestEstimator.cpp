@@ -14,6 +14,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -107,86 +109,57 @@ bool TestEstimator::testNeedSigma()
 {
 	Log::info() << "Need sigma test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
-	if (Estimator::needSigma<Estimator::ET_SQUARE>() || Estimator::needSigma(Estimator::ET_SQUARE))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, Estimator::needSigma<Estimator::ET_SQUARE>() || Estimator::needSigma(Estimator::ET_SQUARE));
 
-	if (Estimator::needSigma<Estimator::ET_LINEAR>() || Estimator::needSigma(Estimator::ET_LINEAR))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_FALSE(validation, Estimator::needSigma<Estimator::ET_LINEAR>() || Estimator::needSigma(Estimator::ET_LINEAR));
 
-	if (!Estimator::needSigma<Estimator::ET_HUBER>() || !Estimator::needSigma(Estimator::ET_HUBER))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Estimator::needSigma<Estimator::ET_HUBER>() && Estimator::needSigma(Estimator::ET_HUBER));
 
-	if (!Estimator::needSigma<Estimator::ET_TUKEY>() || !Estimator::needSigma(Estimator::ET_TUKEY))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Estimator::needSigma<Estimator::ET_TUKEY>() && Estimator::needSigma(Estimator::ET_TUKEY));
 
-	if (!Estimator::needSigma<Estimator::ET_CAUCHY>() || !Estimator::needSigma(Estimator::ET_CAUCHY))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Estimator::needSigma<Estimator::ET_CAUCHY>() && Estimator::needSigma(Estimator::ET_CAUCHY));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestEstimator::testIsStandardEstimator()
 {
 	Log::info() << "Is standard estimator test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	if (!Estimator::isStandardEstimator<Estimator::ET_SQUARE>() || !Estimator::isStandardEstimator(Estimator::ET_SQUARE))
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	if (Estimator::isStandardEstimator<Estimator::ET_LINEAR>() || Estimator::isStandardEstimator(Estimator::ET_LINEAR))
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	if (Estimator::isStandardEstimator<Estimator::ET_HUBER>() || Estimator::isStandardEstimator(Estimator::ET_HUBER))
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	if (Estimator::isStandardEstimator<Estimator::ET_TUKEY>() || Estimator::isStandardEstimator(Estimator::ET_TUKEY))
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	if (Estimator::isStandardEstimator<Estimator::ET_CAUCHY>() || Estimator::isStandardEstimator(Estimator::ET_CAUCHY))
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestEstimator::testRobustError(const double testDuration)
@@ -195,7 +168,7 @@ bool TestEstimator::testRobustError(const double testDuration)
 
 	Log::info() << "Testing robust error function:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	RandomGenerator randomGenerator;
 
@@ -226,16 +199,13 @@ bool TestEstimator::testRobustError(const double testDuration)
 			{
 				const Scalar robustError = Estimator::robustError(value, sigma, estimatorType);
 
-				if (robustError < previousRobustError)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_GREATER_EQUAL(validation, robustError, previousRobustError);
 
 				previousRobustError = robustError;
 
 				if (Numeric::isNotWeakEqual(robustError, Estimator::robustErrorSquare(value * value, sigma * sigma, estimatorType)))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				switch (estimatorType)
@@ -244,7 +214,7 @@ bool TestEstimator::testRobustError(const double testDuration)
 					{
 						if (Numeric::isNotEqual(robustError, value * value / Scalar(2)))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						break;
@@ -254,7 +224,7 @@ bool TestEstimator::testRobustError(const double testDuration)
 					{
 						if (Numeric::isNotEqual(robustError, Numeric::abs(value)))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						break;
@@ -277,7 +247,7 @@ bool TestEstimator::testRobustError(const double testDuration)
 
 						if (Numeric::isNotEqual(robustError, huberValue))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						break;
@@ -300,7 +270,7 @@ bool TestEstimator::testRobustError(const double testDuration)
 
 						if (Numeric::isNotWeakEqual(robustError, tukeyValue))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						break;
@@ -314,7 +284,7 @@ bool TestEstimator::testRobustError(const double testDuration)
 
 						if (Numeric::isNotEqual(robustError, cauchyValue))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						break;
@@ -322,7 +292,7 @@ bool TestEstimator::testRobustError(const double testDuration)
 
 					case Estimator::ET_INVALID:
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 				}
 			}
@@ -330,16 +300,9 @@ bool TestEstimator::testRobustError(const double testDuration)
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestEstimator::testRobustWeight(const double testDuration)
@@ -348,9 +311,9 @@ bool TestEstimator::testRobustWeight(const double testDuration)
 
 	Log::info() << "Testing robust weight function:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -378,16 +341,13 @@ bool TestEstimator::testRobustWeight(const double testDuration)
 			{
 				const Scalar robustWeight = Estimator::robustWeight(value, sigma, estimatorType);
 
-				if (robustWeight > previousRobustWeight)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_LESS_EQUAL(validation, robustWeight, previousRobustWeight);
 
 				previousRobustWeight = robustWeight;
 
 				if (Numeric::isNotWeakEqual(robustWeight, Estimator::robustWeightSquare(value * value, sigma * sigma, estimatorType)))
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				switch (estimatorType)
@@ -396,7 +356,7 @@ bool TestEstimator::testRobustWeight(const double testDuration)
 					{
 						if (Numeric::isNotEqual(robustWeight, Scalar(1)))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						break;
@@ -413,7 +373,7 @@ bool TestEstimator::testRobustWeight(const double testDuration)
 
 						if (Numeric::isNotEqual(robustWeight, linearWeight))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						break;
@@ -441,7 +401,7 @@ bool TestEstimator::testRobustWeight(const double testDuration)
 
 						if (Numeric::isNotEqual(robustWeight, huberWeight))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						break;
@@ -470,7 +430,7 @@ bool TestEstimator::testRobustWeight(const double testDuration)
 
 						if (Numeric::isNotEqual(robustWeight, tukeyWeight))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						break;
@@ -491,7 +451,7 @@ bool TestEstimator::testRobustWeight(const double testDuration)
 
 						if (Numeric::isNotEqual(robustWeight, cauchyWeight))
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 
 						break;
@@ -499,7 +459,7 @@ bool TestEstimator::testRobustWeight(const double testDuration)
 
 					case Estimator::ET_INVALID:
 						ocean_assert(false && "This should never happen!");
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 						break;
 				}
 			}
@@ -507,16 +467,9 @@ bool TestEstimator::testRobustWeight(const double testDuration)
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestEstimator::testTranslateEstimatorType()
