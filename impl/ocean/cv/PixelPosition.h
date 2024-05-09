@@ -16,7 +16,6 @@
 #include "ocean/math/Vector2.h"
 
 #include <limits>
-#include <vector>
 
 namespace Ocean
 {
@@ -987,6 +986,26 @@ inline std::vector<PixelPositionT<TTarget>> PixelPositionT<T>::pixelPositions2pi
 	}
 
 	return result;
+}
+
+template <typename T>
+std::ostream& operator<<(std::ostream& stream, const PixelPositionT<T>& pixelPosition)
+{
+	stream << "[" << pixelPosition.x() << ", " << pixelPosition.y() << "]";
+
+	return stream;
+}
+
+template <bool tActive, typename T>
+MessageObject<tActive>& operator<<(MessageObject<tActive>& messageObject, const PixelPositionT<T>& pixelPosition)
+{
+	return messageObject << "[" << pixelPosition.x() << ", " << pixelPosition.y() << "]";
+}
+
+template <bool tActive, typename T>
+MessageObject<tActive>& operator<<(MessageObject<tActive>&& messageObject, const PixelPositionT<T>& pixelPosition)
+{
+	return messageObject << "[" << pixelPosition.x() << ", " << pixelPosition.y() << "]";
 }
 
 }

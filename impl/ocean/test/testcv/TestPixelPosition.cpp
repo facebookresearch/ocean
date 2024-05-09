@@ -32,6 +32,12 @@ bool TestPixelPosition::test(const double testDuration)
 
 	bool allSucceeded = true;
 
+	allSucceeded = testWriteToMessenger() && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testIsNeighbor8(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -76,6 +82,11 @@ bool TestPixelPosition::test(const double testDuration)
 
 #ifdef OCEAN_USE_GTEST
 
+TEST(TestPixelPosition, WriteToMessenger)
+{
+	EXPECT_TRUE(TestPixelPosition::testWriteToMessenger());
+}
+
 TEST(TestPixelPosition, IsNeighbor8)
 {
 	EXPECT_TRUE(TestPixelPosition::testIsNeighbor8(GTEST_TEST_DURATION));
@@ -102,6 +113,24 @@ TEST(TestPixelPosition, Division)
 }
 
 #endif // OCEAN_USE_GTEST
+
+bool TestPixelPosition::testWriteToMessenger()
+{
+	Log::info() << "Write to messenger test:";
+
+	// this is mainly a check whether the code does not compile or crash
+
+	Log::info() << " ";
+
+	Log::info() << CV::PixelPosition(0u, 1u);
+	Log::info() << "Position: " << CV::PixelPosition(0u, 1u);
+	Log::info() << CV::PixelPosition(0u, 1u) << " <- Position";
+
+	Log::info() << " ";
+	Log::info() << "Validation succeeded.";
+
+	return true;
+}
 
 bool TestPixelPosition::testIsNeighbor8(const double testDuration)
 {

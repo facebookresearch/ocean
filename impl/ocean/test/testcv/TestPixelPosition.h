@@ -35,6 +35,12 @@ class OCEAN_TEST_CV_EXPORT TestPixelPosition
 		static bool test(const double testDuration);
 
 		/**
+		 * Tests the messenger function.
+		 * @return True, if succeeded
+		 */
+		static bool testWriteToMessenger();
+
+		/**
 		 * Tests the is neighbor 8 function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
