@@ -5,8 +5,6 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(macos)
-
 if (IOS)
 
     set(OCEAN_TARGET_NAME "ocean_platform_apple_ios")
