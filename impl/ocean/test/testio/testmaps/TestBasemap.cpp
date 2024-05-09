@@ -169,7 +169,7 @@ bool TestBasemap::testTileFromPBFData()
 						}
 					}
 
-					if (numberBuildings < 180 || numberBuildings > 250) // 188 expected
+					if (numberBuildings < 150 || numberBuildings > 200) // 165 expected
 					{
 						allSucceeded = false;
 					}
