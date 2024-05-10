@@ -6,6 +6,7 @@
  */
 
 #include "application/ocean/demo/cv/detector/linedetector/win/LineDetectorMainWindow.h"
+#include "application/ocean/demo/cv/detector/linedetector/win/Resource.h"
 
 #include "ocean/platform/win/Utilities.h"
 
@@ -15,7 +16,8 @@ LineDetectorMainWindow::LineDetectorMainWindow(HINSTANCE instance, const std::ws
 	ApplicationWindow(instance, name),
 	lineDetectorWrapper_(commandArguments)
 {
-	initialize();
+	initialize(instance, IDI_ICON);
+
 	start();
 }
 

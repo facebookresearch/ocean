@@ -31,5 +31,11 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\linedetector\LineDetectorWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\linedetector\win\Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\..\..\..\..\..\..\..\..\res\application\ocean\demo\cv\detector\linedetector\win\democvdetectorlinedetector.rc" />
   </ItemGroup>
 </Project>

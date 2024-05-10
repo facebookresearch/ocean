@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef FACEBOOK_APPLICATION_OCEAN_DEMO_CV_DETECTOR_LINE_DETECTOR_WIN_LINE_DETECTOR_MAINWINDOW_H
-#define FACEBOOK_APPLICATION_OCEAN_DEMO_CV_DETECTOR_LINE_DETECTOR_WIN_LINE_DETECTOR_MAINWINDOW_H
+#ifndef META_OCEAN_APPLICATION_OCEAN_DEMO_CV_DETECTOR_LINE_DETECTOR_WIN_LINE_DETECTOR_MAINWINDOW_H
+#define META_OCEAN_APPLICATION_OCEAN_DEMO_CV_DETECTOR_LINE_DETECTOR_WIN_LINE_DETECTOR_MAINWINDOW_H
 
 #include "application/ocean/demo/cv/detector/linedetector/win/LineDetector.h"
 
@@ -30,7 +30,7 @@ class LineDetectorMainWindow :
 		/**
 		 * Creates a new main window.
 		 * @param instance Application instance
-		 * @param name name of the main window
+		 * @param name The name of the main window
 		 * @param commandArguments The command arguments used to configure the tracker
 		 */
 		LineDetectorMainWindow(HINSTANCE instance, const std::wstring& name, const std::vector<std::wstring>& commandArguments);
@@ -38,7 +38,7 @@ class LineDetectorMainWindow :
 		/**
 		 * Destructs the main window.
 		 */
-		virtual ~LineDetectorMainWindow();
+		~LineDetectorMainWindow() override;
 
 	protected:
 
@@ -54,4 +54,4 @@ class LineDetectorMainWindow :
 		LineDetectorWrapper lineDetectorWrapper_;
 };
 
-#endif // FACEBOOK_APPLICATION_OCEAN_DEMO_CV_DETECTOR_LINE_DETECTOR_WIN_LINE_DETECTOR_MAINWINDOW_H
+#endif // META_OCEAN_APPLICATION_OCEAN_DEMO_CV_DETECTOR_LINE_DETECTOR_WIN_LINE_DETECTOR_MAINWINDOW_H
