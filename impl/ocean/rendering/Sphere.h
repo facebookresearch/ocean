@@ -70,13 +70,13 @@ class OCEAN_RENDERING_EXPORT Sphere : virtual public Shape
 		~Sphere() override;
 
 		/**
-		 * Calculates the coordinate for given latitude and longitute values.
+		 * Calculates the coordinate for given latitude and longitude values.
 		 * The resulting position is for a sphere with radius 1.
-		 * @param latitude Latitude value
-		 * @param longitude Longitude value
+		 * @param latitude The latitude value, in radian
+		 * @param longitude The longitude value, in radian
 		 * @return Resulting position on the sphere surface
 		 */
-		static const Vertex vertex(const Scalar latitude, const Scalar longitude);
+		static Vertex vertex(const Scalar latitude, const Scalar longitude);
 };
 
 }

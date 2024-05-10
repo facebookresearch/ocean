@@ -652,7 +652,7 @@ void drawCameraOutlineInPanoramaFrame(Frame& cameraOutlines, const PinholeCamera
 {
 	Messenger::get().setOutputType(Messenger::OUTPUT_STANDARD);
 
-const std::string frameworkPath(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
+	const std::string frameworkPath(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
 
 #ifdef OCEAN_RUNTIME_STATIC
 	OCEAN_APPLY_IF_WINDOWS(Media::WIC::registerWICLibrary());

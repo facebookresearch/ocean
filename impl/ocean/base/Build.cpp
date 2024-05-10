@@ -16,7 +16,7 @@
 namespace Ocean
 {
 
-const std::string Build::platformType()
+std::string Build::platformType()
 {
 
 #if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
@@ -47,7 +47,7 @@ const std::string Build::platformType()
 
 }
 
-const std::string Build::architectureType()
+std::string Build::architectureType()
 {
 
 #if defined(_WINDOWS)
@@ -113,7 +113,7 @@ const std::string Build::architectureType()
 
 }
 
-const std::string Build::releaseType()
+std::string Build::releaseType()
 {
 
 #ifdef OCEAN_DEBUG
@@ -124,7 +124,7 @@ const std::string Build::releaseType()
 
 }
 
-const std::string Build::runtimeType()
+std::string Build::runtimeType()
 {
 
 #ifdef OCEAN_RUNTIME_SHARED
@@ -135,7 +135,7 @@ const std::string Build::runtimeType()
 
 }
 
-const std::string Build::compilerVersion()
+std::string Build::compilerVersion()
 {
 
 #if defined(OCEAN_COMPILER_MSC)
@@ -208,7 +208,7 @@ const std::string Build::compilerVersion()
 
 }
 
-const std::string Build::buildString()
+std::string Build::buildString()
 {
 	std::string result(platformType());
 

@@ -44,7 +44,7 @@ typedef size_t NodeId;
  * Definition of an invalid object id.
  * @ingroup scenedescription
  */
-const NodeId invalidNodeId = NodeId(-1);
+constexpr NodeId invalidNodeId = NodeId(-1);
 
 /**
  * Definition of a unique scene id.
@@ -54,7 +54,7 @@ typedef size_t SceneId;
 /**
  * Definition of an invalid scene id.
  */
-const SceneId invalidSceneId = SceneId(-1);
+constexpr SceneId invalidSceneId = SceneId(-1);
 
 /**
  * Definition of different scene description types.
@@ -62,9 +62,9 @@ const SceneId invalidSceneId = SceneId(-1);
  */
 enum DescriptionType : uint32_t
 {
-	/// A scene description holding a transient scene hierachy only.
+	/// A scene description holding a transient scene hierarchy only.
 	TYPE_TRANSIENT = 1u,
-	/// A scene description holding a permanent scene hierachy allowing permanent access.
+	/// A scene description holding a permanent scene hierarchy allowing permanent access.
 	TYPE_PERMANENT = 2u
 };
 

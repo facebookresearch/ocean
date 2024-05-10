@@ -100,7 +100,7 @@ class OCEAN_RENDERING_EXPORT ObjectRefManager : public Singleton<ObjectRefManage
 		 * @return Object reference of the requested object
 		 * @see Engine::object().
 		 */
-		const ObjectRef object(const ObjectId objectId) const;
+		ObjectRef object(const ObjectId objectId) const;
 
 		/**
 		 * Returns the first object specified by a given name.
@@ -109,7 +109,7 @@ class OCEAN_RENDERING_EXPORT ObjectRefManager : public Singleton<ObjectRefManage
 		 * @return Object reference of the requested object
 		 * @see Engine::object().
 		 */
-		const ObjectRef object(const std::string& name) const;
+		ObjectRef object(const std::string& name) const;
 
 		/**
 		 * Returns all objects specified by a given name.
@@ -117,14 +117,14 @@ class OCEAN_RENDERING_EXPORT ObjectRefManager : public Singleton<ObjectRefManage
 		 * @return Specified objects
 		 * @see Engine::objects().
 		 */
-		const ObjectRefs objects(const std::string& name) const;
+		ObjectRefs objects(const std::string& name) const;
 
 		/**
 		 * Registers a new object.
-		 * @param object Object to manage
+		 * @param object The object to manage, must be valid
 		 * @return Object reference
 		 */
-		const ObjectRef registerObject(Object* object);
+		ObjectRef registerObject(Object* object);
 
 		/**
 		 * Changes the name of a registered object.

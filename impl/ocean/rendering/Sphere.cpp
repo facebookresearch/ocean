@@ -34,7 +34,7 @@ bool Sphere::setRadius(const Scalar /*radius*/)
 	throw NotSupportedException("Sphere::setRadius() is not supported.");
 }
 
-const Vertex Sphere::vertex(const Scalar latitude, const Scalar longitude)
+Vertex Sphere::vertex(const Scalar latitude, const Scalar longitude)
 {
 	const Scalar d = Numeric::cos(latitude);
 	const Vector3 v(d * Numeric::sin(longitude), Numeric::sin(latitude), d * Numeric::cos(longitude));

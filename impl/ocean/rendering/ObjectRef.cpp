@@ -49,7 +49,7 @@ bool ObjectRefManager::hasEngineObject(const std::string& engine, const bool wri
 	return result;
 }
 
-const ObjectRef ObjectRefManager::object(const std::string& name) const
+ObjectRef ObjectRefManager::object(const std::string& name) const
 {
 	ocean_assert(name.empty() == false);
 
@@ -70,7 +70,7 @@ const ObjectRef ObjectRefManager::object(const std::string& name) const
 	return ObjectRef();
 }
 
-const ObjectRef ObjectRefManager::object(const ObjectId objectId) const
+ObjectRef ObjectRefManager::object(const ObjectId objectId) const
 {
 	if (objectId == invalidObjectId)
 	{
@@ -88,7 +88,7 @@ const ObjectRef ObjectRefManager::object(const ObjectId objectId) const
 	return i->second;
 }
 
-const ObjectRefs ObjectRefManager::objects(const std::string& name) const
+ObjectRefs ObjectRefManager::objects(const std::string& name) const
 {
 	ocean_assert(name.empty() == false);
 
@@ -113,7 +113,7 @@ const ObjectRefs ObjectRefManager::objects(const std::string& name) const
 	return objects;
 }
 
-const ObjectRef ObjectRefManager::registerObject(Object* object)
+ObjectRef ObjectRefManager::registerObject(Object* object)
 {
 	ocean_assert(object != nullptr);
 

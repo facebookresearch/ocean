@@ -26,41 +26,41 @@ class OCEAN_BASE_EXPORT Build
 		 * Platform type can be "android", "ios", "osx" or "win".
 		 * @return System type
 		 */
-		static const std::string platformType();
+		static std::string platformType();
 
 		/**
 		 * Returns a string holding the target architecture type.
 		 * Platform type can be e.g. "arm", "arm64", "x64", "x86", or "i386"
 		 * @return Target platform
 		 */
-		static const std::string architectureType();
+		static std::string architectureType();
 
 		/**
 		 * Returns a string holding the release type.
 		 * In debug mode "debug" is returned, in release mode an empty string is returned.
 		 * @return Release type
 		 */
-		static const std::string releaseType();
+		static std::string releaseType();
 
 		/**
 		 * Returns a string holding the runtime type.
 		 * Possible values are "shared" or "static"
 		 * @return Runtime type
 		 */
-		static const std::string runtimeType();
+		static std::string runtimeType();
 
 		/**
 		 * Returns a string holding the compiler version.
 		 * Compiler version are e.g. "gc48", "gc49", "xc6", "xc8", "cl38", "vc08", "vc09", "vc10", "vc11", "vc12", or "vc14".
 		 * @return Compiler version
 		 */
-		static const std::string compilerVersion();
+		static std::string compilerVersion();
 
 		/**
 		 * Returns a build string composed of platform type, architecture type, compiler version and release type.
 		 * @return Build string
 		 */
-		static const std::string buildString();
+		static std::string buildString();
 
 		/**
 		 * Returns the date of the compiler building process as string.

@@ -74,7 +74,7 @@ typedef unsigned int VertexIndex;
  * Definition of an invalid vertex index.
  * @ingroup rendering
  */
-const VertexIndex invalidIndex = 0xFFFFFFFF;
+constexpr VertexIndex invalidIndex = VertexIndex(-1);
 
 /**
  * Definition of a 3D normal.
