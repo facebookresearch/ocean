@@ -30,9 +30,9 @@ RendererWinMainWindow::~RendererWinMainWindow()
 	// nothing to do here
 }
 
-bool RendererWinMainWindow::initialize(const std::string& windowClass)
+bool RendererWinMainWindow::initialize(const HICON icon, const std::string& windowClass)
 {
-	if (!ApplicationWindow::initialize(windowClass))
+	if (!ApplicationWindow::initialize(icon, windowClass))
 	{
 		return false;
 	}

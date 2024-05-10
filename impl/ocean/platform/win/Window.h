@@ -62,10 +62,20 @@ class OCEAN_PLATFORM_WIN_EXPORT Window
 
 		/**
 		 * Initializes the window.
-		 * @param windowClass Name of the window class
+		 * @param icon The optional handle of the icon to be used, nullptr to use default icon
+		 * @param windowClass The name of the window class
 		 * @return True, if succeeded
 		 */
-		virtual bool initialize(const std::string& windowClass = std::string("window"));
+		virtual bool initialize(const HICON icon = nullptr, const std::string& windowClass = "window");
+
+		/**
+		 * Initializes the window.
+		 * @param applicationInstance The instance of the application, must be valid
+		 * @param iconId The id of the icon as specified in the resources, with range [0, infinity)
+		 * @param windowClass The name of the window class
+		 * @return True, if succeeded
+		 */
+		inline bool initialize(const HINSTANCE applicationInstance, const int iconId, const std::string& windowClass = "window");
 
 		/**
 		 * Shows the window.
@@ -161,7 +171,7 @@ class OCEAN_PLATFORM_WIN_EXPORT Window
 		 * Sets the parent window handle.
 		 * @return True, if succeeded
 		 */
-		bool setParent(HWND parent);
+		bool setParent(const HWND parent);
 
 		/**
 		 * Sets or changes the text of this windows.
@@ -181,12 +191,12 @@ class OCEAN_PLATFORM_WIN_EXPORT Window
 		/**
 		 * Creates a new window.
 		 * Beware: If a derived window class will use a different window class as the default one you have to change the window class name in the constructor.
-		 * @param applicationInstance Application instance
+		 * @param applicationInstance The instance of the application, must be valid
 		 * @param name The name of the application window
 		 * @param parent Possible parent window making this window to a child window
 		 * @param isChild True, if the window is intended to be a child window
 		 */
-		Window(HINSTANCE applicationInstance, const std::wstring& name, HWND parent = nullptr, const bool isChild = false);
+		Window(HINSTANCE applicationInstance, const std::wstring& name, const HWND parent = nullptr, const bool isChild = false);
 
 		/**
 		 * Destructs a window.
@@ -195,9 +205,10 @@ class OCEAN_PLATFORM_WIN_EXPORT Window
 
 		/**
 		 * Registers a new windows class for the application window.
+		 * @param icon The optional handle of the icon to be used, nullptr to use default icon
 		 * @return True, if succeeded
 		 */
-		virtual bool registerWindowClass();
+		virtual bool registerWindowClass(const HICON icon = nullptr);
 
 		/**
 		 * Creates the window itself using the registered window class.
@@ -372,6 +383,16 @@ class OCEAN_PLATFORM_WIN_EXPORT Window
 		/// True, if the window is a child window.
 		bool isChild_ = false;
 };
+
+inline bool Window::initialize(const HINSTANCE applicationInstance, const int iconId, const std::string& windowClass)
+{
+	ocean_assert(applicationInstance != nullptr);
+	ocean_assert(iconId >= 0);
+
+	const HICON hIcon = LoadIcon(applicationInstance, MAKEINTRESOURCE(iconId));
+
+	return initialize(hIcon, windowClass);
+}
 
 inline HINSTANCE Window::applicationInstance() const
 {

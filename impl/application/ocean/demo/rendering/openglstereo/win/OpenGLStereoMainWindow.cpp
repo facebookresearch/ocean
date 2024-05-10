@@ -38,9 +38,9 @@ OpenGLStereoMainWindow::~OpenGLStereoMainWindow()
 	releaseOpenGL();
 }
 
-bool OpenGLStereoMainWindow::initialize(const std::string& windowClass)
+bool OpenGLStereoMainWindow::initialize(const HICON icon, const std::string& windowClass)
 {
-	if (!ApplicationWindow::initialize(windowClass))
+	if (!ApplicationWindow::initialize(icon, windowClass))
 	{
 		return false;
 	}

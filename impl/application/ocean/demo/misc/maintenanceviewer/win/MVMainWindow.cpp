@@ -33,11 +33,11 @@ MVMainWindow::~MVMainWindow()
 void MVMainWindow::onInitialized()
 {
 	renderWindow_.setParent(handle());
-	renderWindow_.initialize("renderer");
+	renderWindow_.initialize(nullptr, "renderer");
 	renderWindow_.show();
 
 	textWindow_.setParent(handle());
-	textWindow_.initialize("");
+	textWindow_.initialize(nullptr, "");
 	textWindow_.setText("");
 	textWindow_.show();
 

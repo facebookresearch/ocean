@@ -40,7 +40,7 @@ class RendererWinMainWindow : public Platform::Win::ApplicationWindow
 		 * Initializes the application.
 		 * @see MainWindow::initialize().
 		 */
-		bool initialize(const std::string& windowClass = std::string("window")) override;
+		bool initialize(const HICON icon = nullptr, const std::string& windowClass = std::string("window")) override;
 
 	protected:
 

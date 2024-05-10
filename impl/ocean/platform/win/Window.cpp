@@ -20,7 +20,7 @@ namespace Platform
 namespace Win
 {
 
-Window::Window(HINSTANCE applicationInstance, const std::wstring& name, HWND parent, const bool isChild) :
+Window::Window(HINSTANCE applicationInstance, const std::wstring& name, const HWND parent, const bool isChild) :
 	parentHandle_(parent),
 	className_(L"window"),
 	applicationInstance_(applicationInstance),
@@ -55,7 +55,7 @@ Window::~Window()
 	ReleaseDC(handle_, dc_);
 }
 
-bool Window::initialize(const std::string& windowClass)
+bool Window::initialize(const HICON icon, const std::string& windowClass)
 {
 	if (!windowClass.empty())
 	{
@@ -71,7 +71,7 @@ bool Window::initialize(const std::string& windowClass)
 		ClassMap::iterator iClass = windowClassMap.find(className_);
 		if (iClass == windowClassMap.end())
 		{
-			if (registerWindowClass() == false)
+			if (registerWindowClass(icon) == false)
 			{
 				return false;
 			}
@@ -96,7 +96,7 @@ bool Window::initialize(const std::string& windowClass)
 	return false;
 }
 
-bool Window::setParent(HWND parent)
+bool Window::setParent(const HWND parent)
 {
 	if (handle())
 	{
@@ -207,7 +207,7 @@ unsigned int Window::clientHeight() const
 	return 0;
 }
 
-bool Window::registerWindowClass()
+bool Window::registerWindowClass(const HICON icon)
 {
 	WNDCLASSW windowClass;
 
@@ -216,7 +216,7 @@ bool Window::registerWindowClass()
 	windowClass.cbClsExtra       = 0;
 	windowClass.cbWndExtra       = 0;
 	windowClass.hInstance        = applicationInstance_;
-	windowClass.hIcon            = nullptr;
+	windowClass.hIcon            = icon;
 	windowClass.hCursor          = LoadCursor(nullptr, IDC_ARROW);
 	windowClass.hbrBackground    = (HBRUSH)(COLOR_WINDOWFRAME);
 	windowClass.lpszMenuName     = 0;
