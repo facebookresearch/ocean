@@ -104,7 +104,7 @@ bool TestError::testDeterminePoseErrorSeparatePinhole(const double testDuration)
 
 	RandomGenerator randomGenerator;
 
-	ValidationPrecision validation(randomGenerator);
+	ValidationPrecision validation(0.999, randomGenerator);
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Scalar(0.001);
 
@@ -189,7 +189,7 @@ bool TestError::testDeterminePoseErrorSeparatePinhole(const double testDuration)
 
 	Log::info() << "Validation: " << validation;
 
-	return validation.succeeded(0.999);
+	return validation.succeeded();
 }
 
 bool TestError::testDeterminePoseErrorSeparateAnyCamera(const double testDuration)
@@ -202,7 +202,7 @@ bool TestError::testDeterminePoseErrorSeparateAnyCamera(const double testDuratio
 
 	uint64_t distortionIteration = 0ull;
 
-	ValidationPrecision validation;
+	ValidationPrecision validation(0.999, randomGenerator);
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Scalar(0.001);
 
@@ -292,7 +292,7 @@ bool TestError::testDeterminePoseErrorSeparateAnyCamera(const double testDuratio
 
 	Log::info() << "Validation: " << validation;
 
-	return validation.succeeded(0.999);
+	return validation.succeeded();
 }
 
 bool TestError::testDeterminePoseErrorCombinedPinhole(const double testDuration)
@@ -303,7 +303,7 @@ bool TestError::testDeterminePoseErrorCombinedPinhole(const double testDuration)
 
 	RandomGenerator randomGenerator;
 
-	ValidationPrecision validation;
+	ValidationPrecision validation(0.999, randomGenerator);
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Scalar(0.001);
 
@@ -392,7 +392,7 @@ bool TestError::testDeterminePoseErrorCombinedPinhole(const double testDuration)
 
 	Log::info() << "Validation: " << validation;
 
-	return validation.succeeded(0.999);
+	return validation.succeeded();
 }
 
 bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuration)
@@ -405,7 +405,7 @@ bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuratio
 
 	const Scalar epsilon = std::is_same<float, Scalar>::value ? Scalar(0.01) : Scalar(0.001);
 
-	ValidationPrecision validation;
+	ValidationPrecision validation(0.999, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -526,7 +526,7 @@ bool TestError::testDeterminePoseErrorCombinedAnyCamera(const double testDuratio
 
 	Log::info() << "Validation: " << validation;
 
-	return validation.succeeded(0.999);
+	return validation.succeeded();
 }
 
 bool TestError::testDetermineHomographyErrorSeparate(const double testDuration)
@@ -537,7 +537,7 @@ bool TestError::testDetermineHomographyErrorSeparate(const double testDuration)
 
 	RandomGenerator randomGenerator;
 
-	ValidationPrecision validation;
+	ValidationPrecision validation(0.999, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -684,7 +684,7 @@ bool TestError::testDetermineHomographyErrorSeparate(const double testDuration)
 
 	Log::info() << "Validation: " << validation;
 
-	return validation.succeeded(0.999);
+	return validation.succeeded();
 }
 
 }

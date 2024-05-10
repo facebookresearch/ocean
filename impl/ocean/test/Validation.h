@@ -314,6 +314,11 @@ class Validation
 	protected:
 
 		/**
+		 * Disabled copy constructor.
+		 */
+		Validation(const Validation&) = delete;
+
+		/**
 		 * Sets the succeeded state to false.
 		 */
 		inline void setSucceededFalse();

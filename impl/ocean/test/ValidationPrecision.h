@@ -82,21 +82,23 @@ class ValidationPrecision
 				bool accurate_ = true;
 
 				/// The owner of this scoped object.
-				ValidationPrecision& ValidationPrecision_;
+				ValidationPrecision& validationPrecision_;
 		};
 
 	public:
 
 		/**
-		 * Default constructor, by default the verified has succeeded.
+		 * Creates a new precision-based validation object with specified threshold.
+		 * @param threshold The necessary percent of accurate iterations necessary for a successful verification, with range (0, 1]
 		 */
-		ValidationPrecision() = default;
+		explicit inline ValidationPrecision(const double threshold);
 
 		/**
 		 * Creates a new validation object associated with a random generator, by default the verified has succeeded.
+		 * @param threshold The necessary percent of accurate iterations necessary for a successful verification, with range (0, 1]
 		 * @param randomGenerator The random generator which will be used during verification
 		 */
-		explicit inline ValidationPrecision(RandomGenerator& randomGenerator);
+		inline ValidationPrecision(const double threshold, RandomGenerator& randomGenerator);
 
 		/**
 		 * Destructs this validation object.
@@ -134,10 +136,9 @@ class ValidationPrecision
 
 		/**
 		 * Returns if this validation has succeeded.
-		 * @param threshold The necessary percent of accurate iterations necessary for a successful verification, with range (0, 1]
 		 * @return True, if so; False, if the validation has failed
 		 */
-		[[nodiscard]] inline bool succeeded(const double threshold) const;
+		[[nodiscard]] inline bool succeeded() const;
 
 		/**
 		 * Returns the accuracy of all iterations.
@@ -145,6 +146,12 @@ class ValidationPrecision
 		 * @return The validation's accuracy, in percent, with range [0, 1]
 		 */
 		[[nodiscard]] inline double accuracy() const;
+
+		/**
+		 * Returns the defined threshold.
+		 * @return The validation object's precision threshold, with range [0, 1]
+		 */
+		inline double threshold() const;
 
 		/**
 		 * Returns whether this validation object has been set to failed explicitly.
@@ -163,11 +170,19 @@ class ValidationPrecision
 	protected:
 
 		/**
+		 * Disabled copy constructor.
+		 */
+		ValidationPrecision(const ValidationPrecision&) = delete;
+
+		/**
 		 * Sets the succeeded state to false.
 		 */
 		inline void setSucceededFalse();
 
 	protected:
+
+		/// The necessary percent of accurate iterations necessary for a successful verification, with range (0, 1]
+		double threshold_ = 1.0;
 
 		/// True, if the validation has succeeded; False, if the validation has failed.
 		bool succeeded_ = true;
@@ -188,14 +203,14 @@ class ValidationPrecision
 };
 
 inline ValidationPrecision::ScopedIteration::ScopedIteration(ValidationPrecision& ValidationPrecision) :
-	ValidationPrecision_(ValidationPrecision)
+	validationPrecision_(ValidationPrecision)
 {
 	// nothing to do here
 }
 
 ValidationPrecision::ScopedIteration::~ScopedIteration()
 {
-	ValidationPrecision_.addIteration(accurate_);
+	validationPrecision_.addIteration(accurate_);
 }
 
 inline void ValidationPrecision::ScopedIteration::setInaccurate()
@@ -212,15 +227,28 @@ inline void ValidationPrecision::ScopedIteration::setInaccurate(const T& expecte
 	ocean_assert(file != nullptr);
 	if (file != nullptr)
 	{
-		Log::error() << "ScopedIteration::setInaccurate() in '" << file << "', in line " << line << ": expected " << expected << ", got " << actual;
+		Log::error() << "ScopedIteration::setInaccurate() in '" << file << "', in line " << line << ": expected " << expected << ", got " << actual << validationPrecision_.randomGeneratorOutput();
 	}
 }
 
-
-inline ValidationPrecision::ValidationPrecision(RandomGenerator& randomGenerator) :
-	randomGenerator_(&randomGenerator)
+inline ValidationPrecision::ValidationPrecision(const double threshold)
 {
-	// nothing to do here
+	ocean_assert(threshold > 0.0 && threshold <= 1.0);
+
+	if (threshold > 0.0 && threshold <= 1.0)
+	{
+		threshold_ = threshold;
+	}
+	else
+	{
+		succeeded_ = false;
+	}
+}
+
+inline ValidationPrecision::ValidationPrecision(const double threshold, RandomGenerator& randomGenerator) :
+	ValidationPrecision(threshold)
+{
+	randomGenerator_ = &randomGenerator;
 }
 
 inline ValidationPrecision::~ValidationPrecision()
@@ -252,7 +280,11 @@ inline void ValidationPrecision::setFailed(const char* file, const int line)
 	ocean_assert(file != nullptr);
 	if (file != nullptr)
 	{
-		Log::error() << "Verifier::setFailed() in '" << file << "', in line " << line;
+#ifdef OCEAN_USE_GTEST
+		std::cerr << "\nValidationPrecision::setFailed() in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+#else
+		Log::error() << "ValidationPrecision::setFailed() in '" << file << "', in line " << line << randomGeneratorOutput();
+#endif
 	}
 }
 
@@ -261,32 +293,26 @@ inline uint64_t ValidationPrecision::iterations() const
 	return iterations_;
 }
 
-inline bool ValidationPrecision::succeeded(const double threshold) const
+inline bool ValidationPrecision::succeeded() const
 {
 #ifdef OCEAN_DEBUG
 	succeededChecked_ = true;
 #endif
 
-	ocean_assert(threshold > 0.0 && threshold <= 1.0);
+	ocean_assert(threshold_ > 0.0 && threshold_ <= 1.0);
 
-	if (threshold <= 0.0 || threshold > 1.0)
+	if (threshold_ <= 0.0 || threshold_ > 1.0)
 	{
 		return false;
 	}
 
-	ocean_assert(iterations_ != 0ull);
+	const double percent = accuracy();
 
-	if (iterations_ == 0u)
+	if (percent < threshold_)
 	{
-		return false;
-	}
-
-	ocean_assert(accurateIterations_ <= iterations_);
-
-	const double percent = double(accurateIterations_) / double(iterations_);
-
-	if (percent < threshold)
-	{
+#ifdef OCEAN_USE_GTEST
+		std::cerr << "\nFAILED with only " << String::toAString(accuracy() * 100.0, 1u) << "%, threshold is " << String::toAString(threshold() * 100.0, 1u) << "%" << randomGeneratorOutput() << "\n" << std::endl;
+#endif
 		return false;
 	}
 
@@ -308,6 +334,11 @@ inline bool ValidationPrecision::succeeded(const double threshold) const
 	ocean_assert(percent >= 0.0 && percent <= 1.0);
 
 	return percent;
+}
+
+inline double ValidationPrecision::threshold() const
+{
+	return threshold_;
 }
 
 [[nodiscard]] inline bool ValidationPrecision::hasSetFailed() const
@@ -334,11 +365,18 @@ inline std::ostream& operator<<(std::ostream& stream, const ValidationPrecision&
 {
 	if (validation.hasSetFailed())
 	{
-		stream << "FAILED!";
+		stream << "FAILED!" << validation.randomGeneratorOutput();
 	}
 	else
 	{
-		stream << String::toAString(validation.accuracy() * 100.0, 1u) << "% succeeded.";
+		if (validation.accuracy() < validation.threshold())
+		{
+			stream << "FAILED with only " << String::toAString(validation.accuracy() * 100.0, 1u) << "%, threshold is " << String::toAString(validation.threshold() * 100.0, 1u) << "%" << validation.randomGeneratorOutput();
+		}
+		else
+		{
+			stream << String::toAString(validation.accuracy() * 100.0, 1u) << "% succeeded.";
+		}
 	}
 
 	return stream;
@@ -349,11 +387,18 @@ MessageObject<tActive>& operator<<(MessageObject<tActive>& messageObject, const 
 {
 	if (validation.hasSetFailed())
 	{
-		messageObject << "FAILED!";
+		messageObject << "FAILED!" << validation.randomGeneratorOutput();
 	}
 	else
 	{
-		messageObject << String::toAString(validation.accuracy() * 100.0, 1u) << "% succeeded.";
+		if (validation.accuracy() < validation.threshold())
+		{
+			messageObject << "FAILED with only " << String::toAString(validation.accuracy() * 100.0, 1u) << "%, threshold is " << String::toAString(validation.threshold() * 100.0, 1u) << "%" << validation.randomGeneratorOutput();
+		}
+		else
+		{
+			messageObject << String::toAString(validation.accuracy() * 100.0, 1u) << "% succeeded.";
+		}
 	}
 
 	return messageObject;
@@ -364,11 +409,18 @@ MessageObject<tActive>& operator<<(MessageObject<tActive>&& messageObject, const
 {
 	if (validation.hasSetFailed())
 	{
-		messageObject << "FAILED!";
+		messageObject << "FAILED!" << validation.randomGeneratorOutput();
 	}
 	else
 	{
-		messageObject << String::toAString(validation.accuracy() * 100.0, 1u) << "% succeeded.";
+		if (validation.accuracy() < validation.threshold())
+		{
+			messageObject << "FAILED with only " << String::toAString(validation.accuracy() * 100.0, 1u) << "%, threshold is " << String::toAString(validation.threshold() * 100.0, 1u) << "%" << validation.randomGeneratorOutput();
+		}
+		else
+		{
+			messageObject << String::toAString(validation.accuracy() * 100.0, 1u) << "% succeeded.";
+		}
 	}
 
 	return messageObject;
