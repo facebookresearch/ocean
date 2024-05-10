@@ -23,6 +23,8 @@
 #include "ocean/math/PinholeCamera.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -141,9 +143,9 @@ bool TestQRCodeDetector2D::testStressTest(const double testDuration, Worker& wor
 
 	Log::info() << "Stress test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -164,24 +166,14 @@ bool TestQRCodeDetector2D::testStressTest(const double testDuration, Worker& wor
 			QRCodeDetector2D::Observations observations;
 			const QRCodes codes = QRCodeDetector2D::detectQRCodes(*anyCamera, frame, &observations, workerToUse);
 
-			if (codes.size() != observations.size())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, codes.size(), observations.size());
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Stress test: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Stress test: FAILED!";
-	}
+	Log::info() << "Stress test: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gaussianFilterSize, const double testDuration, Worker& worker)
@@ -191,13 +183,13 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 
 	Log::info() << "Detect QR codes test using synthetic data (" << (gaussianFilterSize == 0u ? "no Gaussian filter" : "Gaussian filter: " + String::toAString(gaussianFilterSize)) + ")";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
-	Timestamp start(true);
 
-	unsigned int numberDetectedCodes = 0u;
-	unsigned int numberAllCodes = 0u;
+	constexpr double threshold = std::is_same<Scalar, double>::value ? 0.99 : 0.90;
+
+	ValidationPrecision validation(threshold, randomGenerator);
+
+	Timestamp start(true);
 
 	do
 	{
@@ -288,7 +280,8 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 		if (!CV::FrameInterpolatorBilinear::Comfort::affine(frameWithCode, frame, frameWithCode_T_frame, &backgroundValue, &worker))
 		{
 			ocean_assert(false && "This should never happen!");
-			allSucceeded = false;
+
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (gaussianFilterSize != 0u)
@@ -301,16 +294,16 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 
 		for (const bool useWorker : {true, false})
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			Worker* workerToUse = useWorker ? &worker : nullptr;
 
 			QRCodeDetector2D::Observations observations;
 			const QRCodes codes = QRCodeDetector2D::detectQRCodes(*anyCamera, frame, &observations, workerToUse);
 
-			numberAllCodes++;
-
-			if (codes.size() == 1 && groundtruthCode == codes[0])
+			if (codes.size() != 1 || groundtruthCode != codes[0])
 			{
-				numberDetectedCodes++;
+				scopedIteration.setInaccurate();
 			}
 		}
 	}
@@ -318,33 +311,9 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 
 	Log::info() << " ";
 
-	ocean_assert(numberAllCodes != 0u);
+	Log::info() << "Validation: " << validation;
 
-	const double correctInPercent = double(numberDetectedCodes) / double(numberAllCodes);
-
-	Log::info() << "Correct detections: " << String::toAString(correctInPercent * 100.0, 2u) << "%";
-
-	if constexpr (std::is_same<Scalar, double>::value)
-	{
-		allSucceeded = correctInPercent >= 0.99 && allSucceeded;
-	}
-	else
-	{
-		// In case of 32-bit floating numbers, a lower threshold will be applied in order to account for precision issues.
-		allSucceeded = correctInPercent >= 0.90 && allSucceeded;
-	}
-
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: Succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-		Log::info() << "Random generator seed: " << randomGenerator.seed();
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 } // namespace TestQRCodes
