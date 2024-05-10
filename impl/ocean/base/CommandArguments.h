@@ -45,7 +45,7 @@ class OCEAN_BASE_EXPORT CommandArguments
 		/**
 		 * This class implements a simple singleton holding the raw application's command arguments.
 		 */
-		class Manager : public Singleton<Manager>
+		class OCEAN_BASE_EXPORT Manager : public Singleton<Manager>
 		{
 			friend class Singleton<Manager>;
 
