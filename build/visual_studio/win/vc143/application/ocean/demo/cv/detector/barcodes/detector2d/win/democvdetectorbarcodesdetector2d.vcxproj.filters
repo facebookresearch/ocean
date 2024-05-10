@@ -20,6 +20,9 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\barcodes\detector2d\win\MainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\barcodes\detector2d\win\Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\barcodes\detector2d\Wrapper.cpp">
@@ -31,5 +34,8 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\cv\detector\barcodes\detector2d\win\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\..\..\..\..\..\..\..\..\..\res\application\ocean\demo\cv\detector\barcodes\detector2d\win\democvdetectorbarcodesdetector2d.rc" />
   </ItemGroup>
 </Project>

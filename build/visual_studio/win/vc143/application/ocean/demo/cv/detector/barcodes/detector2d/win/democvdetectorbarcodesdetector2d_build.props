@@ -20,4 +20,10 @@
     <Import Condition="'$(ocean_mediawic_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\..\ocean\media\wic\mediawic_use.props" />
     <Import Condition="'$(ocean_platformwin_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\..\ocean\platform\win\platformwin_use.props" />
   </ImportGroup>
+  
+  <ItemDefinitionGroup>
+   <ResourceCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\impl\application\ocean\demo\cv\detector\barcodes\detector2d\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
 </Project>

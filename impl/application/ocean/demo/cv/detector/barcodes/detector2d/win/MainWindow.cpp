@@ -6,6 +6,7 @@
  */
 
 #include "application/ocean/demo/cv/detector/barcodes/detector2d/win/MainWindow.h"
+#include "application/ocean/demo/cv/detector/barcodes/detector2d/win/Resource.h"
 
 #include "ocean/platform/win/Utilities.h"
 
@@ -15,7 +16,8 @@ MainWindow::MainWindow(HINSTANCE instance, const std::wstring& name, const std::
 	ApplicationWindow(instance, name),
 	wrapper_(commandArguments)
 {
-	initialize();
+	initialize(instance, IDI_ICON);
+
 	start();
 }
 
