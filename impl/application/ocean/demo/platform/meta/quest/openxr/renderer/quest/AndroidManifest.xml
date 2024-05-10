@@ -16,7 +16,7 @@
 	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-	<application android:allowBackup="false" android:label="OceanOpenXRRendererApplication">
+	<application android:allowBackup="false" android:label="OceanOpenXRRendererApplication" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
 		<meta-data android:name="com.samsung.android.vr.application.mode" android:value="vr_only"/>
 		<!-- The activity is the built-in NativeActivity framework class. -->
 		<!-- launchMode is set to singleTask because there should never be multiple copies of the app running. -->
