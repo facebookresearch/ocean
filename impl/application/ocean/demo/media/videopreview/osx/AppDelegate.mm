@@ -20,11 +20,8 @@
 
 @interface AppDelegate ()
 {
-	/// Simple helper object initializing the random number system (we also could call RandomI::initialize() in main() directly).
-	const RandomI::Initializer randomInitialier;
-
 	/// The view displaying the medium
-	Platform::Apple::MacOS::FrameMediumView frameMediumView;
+	Platform::Apple::MacOS::FrameMediumView frameMediumView_;
 }
 
 /// The window object.
@@ -71,8 +68,8 @@
 
 	// we create the view that can display frame medium object on its own
 
-	frameMediumView = Platform::Apple::MacOS::FrameMediumView([_mainWindowView frame]);
-	frameMediumView.nsView().autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+	frameMediumView_ = Platform::Apple::MacOS::FrameMediumView([_mainWindowView frame]);
+	frameMediumView_.nsView().autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 
 	// we start the medium so that medium will deliver frames
 
@@ -80,9 +77,9 @@
 
 	// and we tell the view which medium to display
 
-	frameMediumView.setFrameMedium(medium);
+	frameMediumView_.setFrameMedium(medium);
 
-	[_mainWindowView addSubview:frameMediumView.nsView()];
+	[_mainWindowView addSubview:frameMediumView_.nsView()];
 }
 
 /**
@@ -90,9 +87,9 @@
  */
 - (void)applicationWillTerminate:(NSNotification*)aNotification
 {
-	frameMediumView = Platform::Apple::MacOS::FrameMediumView();
+	frameMediumView_ = Platform::Apple::MacOS::FrameMediumView();
 
-	// finally we relase the media plugins
+	// finally we release the media plugins
 
 #ifdef OCEAN_RUNTIME_SHARED
 	PluginManager::get().release();

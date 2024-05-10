@@ -27,30 +27,6 @@ namespace Ocean
  */
 class OCEAN_BASE_EXPORT RandomI
 {
-	public:
-
-		/**
-		 * This class implements a simple helper object allowing to call RandomI::initialize() by defining an object.
-		 * This helper class may be helpful whenever the random number system needs to be initialized within e.g. a constructor already.
-		 */
-		class Initializer
-		{
-			public:
-
-				/**
-				 * Creates a new Initializer object doing nothing but calling RandomI::initialize() immediately.
-				 * @see RandomI::initialize().
-				 */
-				inline Initializer();
-
-				/**
-				 * Creates a new Initializer object doing nothing but calling RandomI::initialize(unsigned int value) immediately.
-				 * @param value Initialization value to be used, with range [0, infinity)
-				 * @see RandomI::initialize().
-				 */
-				explicit inline Initializer(const unsigned int value);
-		};
-
 	protected:
 
 		// Forward declaration.
@@ -62,7 +38,6 @@ class OCEAN_BASE_EXPORT RandomI
 		 * Initializes the standard random generator for this thread with a time-based seed value.
 		 * Please ensure that you have called RandomI::initialize() just once (for each individual thread) before using any other function of this class.<br>
 		 * You also my use a user-defined seed value e.g., to be able to reproduce the behavior of a system using random numbers, just use the second initialize function in this case.
-		 * @see Initializer.
 		 */
 		static void initialize();
 
@@ -70,7 +45,6 @@ class OCEAN_BASE_EXPORT RandomI
 		 * Initializes the standard random generator for this thread with a user-defined seed value.
 		 * In contrast to the time-based initialization function, this function here can be invoked as often as necessary for any thread at any time.
 		 * @param value Initialization value to be used, with range [0, infinity)
-		 * @see Initializer.
 		 */
 		static void initialize(const unsigned int value);
 
@@ -253,17 +227,6 @@ class OCEAN_BASE_EXPORT RandomI
 		 */
 		static constexpr unsigned int randMax();
 };
-
-inline RandomI::Initializer::Initializer()
-{
-	RandomI::initialize();
-}
-
-inline RandomI::Initializer::Initializer(const unsigned int value)
-{
-	RandomI::initialize(value);
-}
-
 
 inline unsigned int RandomI::random(RandomGenerator& randomGenerator, const unsigned int maxValue)
 {
