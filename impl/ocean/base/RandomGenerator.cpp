@@ -12,7 +12,7 @@ namespace Ocean
 {
 
 RandomGenerator::RandomGenerator() :
-	initialSeed_(RandomI::random32())
+	initialSeed_(timeBasedCombinedSeed())
 {
 	seed_ = initialSeed_;
 }
@@ -28,7 +28,7 @@ RandomGenerator::RandomGenerator(RandomGenerator* optionalGenerator)
 	}
 	else
 	{
-		initialSeed_ = RandomI::random32();
+		initialSeed_ = timeBasedCombinedSeed();
 	}
 
 	seed_ = initialSeed_;
@@ -41,11 +41,19 @@ RandomGenerator& RandomGenerator::operator=(RandomGenerator&& randomGenerator)
 		initialSeed_ = randomGenerator.initialSeed_;
 		seed_ = randomGenerator.seed_;
 
-		randomGenerator.initialSeed_ = RandomI::random32();
+		randomGenerator.initialSeed_ = timeBasedCombinedSeed();
 		randomGenerator.seed_ = randomGenerator.initialSeed_;
 	}
 
 	return *this;
+}
+
+unsigned int RandomGenerator::timeBasedCombinedSeed()
+{
+	unsigned int seed = RandomI::random32();
+	seed ^= RandomI::timeBasedSeed() + 0x9e3779b9 + (seed << 6u) + (seed >> 2u);
+
+	return seed;
 }
 
 }

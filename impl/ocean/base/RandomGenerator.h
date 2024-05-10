@@ -118,6 +118,14 @@ class OCEAN_BASE_EXPORT RandomGenerator
 
 	private:
 
+		/**
+		 * Returns a seed value based on the current time and a random value from RandomI.
+		 * @return The combined seed value
+		 */
+		static unsigned int timeBasedCombinedSeed();
+
+	private:
+
 		/// The seed value which was used to initialize this random generator.
 		unsigned int initialSeed_ = (unsigned int)(-1);
 
