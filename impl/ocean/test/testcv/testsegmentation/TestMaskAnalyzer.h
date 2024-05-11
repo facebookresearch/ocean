@@ -233,12 +233,11 @@ class OCEAN_TEST_CV_SEGMENTATION_EXPORT TestMaskAnalyzer : public CV::Segmentati
 		 * @param randomGenerator The random generator to be used
 		 * @param width The width of the frame that will be generated, range: [1, infinity)
 		 * @param height The height of the frame that will be generated, range: [1, infinity)
-		 * @param paddingElements The number of padding elements at the end of each mask row, in elements, with range [0, infinity)
 		 * @param maskValue The value of mask pixels, with range [0, 255]
 		 * @param nonMaskValue The value of non-mask pixels, with range [0, 255] without 'maskValue'
 		 * @return The generated test frame
 		 */
-		static Frame generateTestMask(RandomGenerator& randomGenerator, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const uint8_t maskValue = 0x00, const uint8_t nonMaskValue = 0xFF);
+		static Frame generateTestMask(RandomGenerator& randomGenerator, const unsigned int width, const unsigned int height, const uint8_t maskValue = 0x00u, const uint8_t nonMaskValue = 0xFFu);
 
 	protected:
 

@@ -316,12 +316,11 @@ bool TestMaskAnalyzer::testHasMaskNeighbor4(const double testDuration)
 	{
 		const unsigned int width = RandomI::random(randomGenerator, 3u, 2000u);
 		const unsigned int height = RandomI::random(randomGenerator, 3u, 2000u);
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
 		const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
-		const uint8_t nonMaskValue = ((unsigned int)(maskValue) + RandomI::random(randomGenerator, 254u)) % 256;
+		const uint8_t nonMaskValue = uint8_t(((unsigned int)(maskValue) + RandomI::random(randomGenerator, 1u, 255u)) % 256u);
 
-		Frame mask(generateTestMask(randomGenerator, width, height, paddingElements, maskValue, nonMaskValue));
+		const Frame mask(generateTestMask(randomGenerator, width, height, maskValue, nonMaskValue));
 
 		for (const bool isEqual : {true, false})
 		{
@@ -412,12 +411,11 @@ bool TestMaskAnalyzer::testHasMaskNeighbor4Center(const double testDuration)
 	{
 		const unsigned int width = RandomI::random(randomGenerator, 3u, 2000u);
 		const unsigned int height = RandomI::random(randomGenerator, 3u, 2000u);
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
 		const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
-		const uint8_t nonMaskValue = ((unsigned int)(maskValue) + RandomI::random(randomGenerator, 254u)) % 256u;
+		const uint8_t nonMaskValue = uint8_t(((unsigned int)(maskValue) + RandomI::random(randomGenerator, 1u, 255u)) % 256u);
 
-		Frame mask(generateTestMask(randomGenerator, width, height, paddingElements, maskValue, nonMaskValue));
+		const Frame mask(generateTestMask(randomGenerator, width, height, maskValue, nonMaskValue));
 
 		for (const bool isEqual : {true, false})
 		{
@@ -509,12 +507,11 @@ bool TestMaskAnalyzer::testHasMaskNeighbor5(const double testDuration)
 	{
 		const unsigned int width = RandomI::random(randomGenerator, 3u, 2000u);
 		const unsigned int height = RandomI::random(randomGenerator, 3u, 2000u);
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
 		const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
-		const uint8_t nonMaskValue = ((unsigned int)(maskValue) + RandomI::random(randomGenerator, 254u)) % 256u;
+		const uint8_t nonMaskValue = uint8_t(((unsigned int)(maskValue) + RandomI::random(randomGenerator, 1u, 255u)) % 256u);
 
-		Frame mask(generateTestMask(randomGenerator, width, height, paddingElements, maskValue, nonMaskValue));
+		const Frame mask(generateTestMask(randomGenerator, width, height, maskValue, nonMaskValue));
 
 		for (const bool isEqual : {true, false})
 		{
@@ -606,12 +603,11 @@ bool TestMaskAnalyzer::testHasMaskNeighbor5Center(const double testDuration)
 	{
 		const unsigned int width = RandomI::random(randomGenerator, 3u, 2000u);
 		const unsigned int height = RandomI::random(randomGenerator, 3u, 2000u);
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
 		const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
-		const uint8_t nonMaskValue = ((unsigned int)(maskValue) + RandomI::random(randomGenerator, 254u)) % 256u;
+		const uint8_t nonMaskValue = uint8_t(((unsigned int)(maskValue) + RandomI::random(randomGenerator, 1u, 255u)) % 256u);
 
-		Frame mask(generateTestMask(randomGenerator, width, height, paddingElements, maskValue, nonMaskValue));
+		const Frame mask(generateTestMask(randomGenerator, width, height, maskValue, nonMaskValue));
 
 		for (const bool isEqual : {true, false})
 		{
@@ -694,12 +690,11 @@ bool TestMaskAnalyzer::testHasMaskNeighbor8(const double testDuration)
 	{
 		const unsigned int width = RandomI::random(randomGenerator, 3u, 2000u);
 		const unsigned int height = RandomI::random(randomGenerator, 3u, 2000u);
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
 		const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
-		const uint8_t nonMaskValue = ((unsigned int)(maskValue) + RandomI::random(randomGenerator, 254u)) % 256u;
+		const uint8_t nonMaskValue = uint8_t(((unsigned int)(maskValue) + RandomI::random(randomGenerator, 1u, 255u)) % 256u);
 
-		Frame mask(generateTestMask(randomGenerator, width, height, paddingElements, maskValue, nonMaskValue));
+		const Frame mask(generateTestMask(randomGenerator, width, height, maskValue, nonMaskValue));
 
 		for (const bool isEqual : {true, false})
 		{
@@ -788,12 +783,11 @@ bool TestMaskAnalyzer::testHasMaskNeighbor8Center(const double testDuration)
 	{
 		const unsigned int width = RandomI::random(randomGenerator, 3u, 2000u);
 		const unsigned int height = RandomI::random(randomGenerator, 3u, 2000u);
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
 		const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
-		const uint8_t nonMaskValue = ((unsigned int)(maskValue) + RandomI::random(randomGenerator, 254u)) % 256u;
+		const uint8_t nonMaskValue = uint8_t(((unsigned int)(maskValue) + RandomI::random(randomGenerator, 1u, 255u)) % 256u);
 
-		Frame mask(generateTestMask(randomGenerator, width, height, paddingElements, maskValue, nonMaskValue));
+		const Frame mask(generateTestMask(randomGenerator, width, height, maskValue, nonMaskValue));
 
 		for (const bool isEqual : {true, false})
 		{
@@ -882,12 +876,11 @@ bool TestMaskAnalyzer::testHasMaskNeighbor9(const double testDuration)
 	{
 		const unsigned int width = RandomI::random(randomGenerator, 3u, 2000u);
 		const unsigned int height = RandomI::random(randomGenerator, 3u, 2000u);
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
 		const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
-		const uint8_t nonMaskValue = ((unsigned int)(maskValue) + RandomI::random(randomGenerator, 254u)) % 256u;
+		const uint8_t nonMaskValue = uint8_t(((unsigned int)(maskValue) + RandomI::random(randomGenerator, 1u, 255u)) % 256u);
 
-		Frame mask(generateTestMask(randomGenerator, width, height, paddingElements, maskValue, nonMaskValue));
+		const Frame mask(generateTestMask(randomGenerator, width, height, maskValue, nonMaskValue));
 
 		for (const bool isEqual : {true, false})
 		{
@@ -973,12 +966,11 @@ bool TestMaskAnalyzer::testHasMaskNeighbor9Center(const double testDuration)
 	{
 		const unsigned int width = RandomI::random(randomGenerator, 3u, 2000u);
 		const unsigned int height = RandomI::random(randomGenerator, 3u, 2000u);
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
 
 		const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
-		const uint8_t nonMaskValue = ((unsigned int)(maskValue) + RandomI::random(randomGenerator, 254u)) % 256u;
+		const uint8_t nonMaskValue = uint8_t(((unsigned int)(maskValue) + RandomI::random(randomGenerator, 1u, 255u)) % 256u);
 
-		Frame mask(generateTestMask(randomGenerator, width, height, paddingElements, maskValue, nonMaskValue));
+		const Frame mask(generateTestMask(randomGenerator, width, height, maskValue, nonMaskValue));
 
 		for (const bool isEqual : {true, false})
 		{
@@ -1075,7 +1067,7 @@ bool TestMaskAnalyzer::testDetermineDistancesToBorder(const unsigned int width, 
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	constexpr uint8_t nonMaskValue = 0xFF;
+	constexpr uint8_t nonMaskValue = 0xFFu;
 
 	RandomGenerator randomGenerator;
 
@@ -1103,11 +1095,9 @@ bool TestMaskAnalyzer::testDetermineDistancesToBorder(const unsigned int width, 
 				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
 				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-				const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+				const bool assignFinal = RandomI::boolean(randomGenerator);
 
-				const bool assignFinal = RandomI::random(randomGenerator, 1u) == 0u;
-
-				const Frame maskFrame = TestMaskAnalyzer::generateTestMask(randomGenerator, testWidth, testHeight, maskPaddingElements);
+				const Frame maskFrame = TestMaskAnalyzer::generateTestMask(randomGenerator, testWidth, testHeight);
 				Frame distanceFrame(maskFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
 				const CV::PixelBoundingBox boundingBox(CV::MaskAnalyzer::detectBoundingBox(maskFrame.constdata<uint8_t>(), testWidth, testHeight, nonMaskValue, maskFrame.paddingElements()));
@@ -1182,14 +1172,12 @@ bool TestMaskAnalyzer::testFindBorderPixels4(const unsigned int width, const uns
 				const unsigned int widthToUse = performanceIteration ? width : RandomI::random(randomGenerator, 3u, 1920u);
 				const unsigned int heightToUse = performanceIteration ? height : RandomI::random(randomGenerator, 3u, 1080u);
 
-				const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-				const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse, maskPaddingElements);
+				const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse);
 
 				CV::PixelPositions borderPixels;
 				CV::PixelBoundingBox boundingBox;
 
-				if (!performanceIteration && RandomI::random(randomGenerator, 1u) == 0u)
+				if (!performanceIteration && RandomI::boolean(randomGenerator))
 				{
 					const unsigned int left = RandomI::random(randomGenerator, mask.width() - 1u);
 					const unsigned int top = RandomI::random(randomGenerator, mask.height() - 1u);
@@ -1263,14 +1251,12 @@ bool TestMaskAnalyzer::testFindBorderPixels8(const unsigned int width, const uns
 				const unsigned int widthToUse = performanceIteration ? width : RandomI::random(randomGenerator, 3u, 1920u);
 				const unsigned int heightToUse = performanceIteration ? height : RandomI::random(randomGenerator, 3u, 1080u);
 
-				const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-				const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse, maskPaddingElements);
+				const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse);
 
 				CV::PixelPositions borderPixels;
 				CV::PixelBoundingBox boundingBox;
 
-				if (!performanceIteration && RandomI::random(randomGenerator, 1u) == 0u)
+				if (!performanceIteration && RandomI::boolean(randomGenerator))
 				{
 					const unsigned int left = RandomI::random(randomGenerator, mask.width() - 1u);
 					const unsigned int top = RandomI::random(randomGenerator, mask.height() - 1u);
@@ -1336,14 +1322,12 @@ bool TestMaskAnalyzer::testFindNonUniquePixels4(const unsigned int width, const 
 			const unsigned int widthToUse = performanceIteration ? width : RandomI::random(randomGenerator, 3u, 1920u);
 			const unsigned int heightToUse = performanceIteration ? height : RandomI::random(randomGenerator, 3u, 1080u);
 
-			const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse, maskPaddingElements);
+			const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse);
 
 			CV::PixelPositions nonUniquePixels;
 			CV::PixelBoundingBox boundingBox;
 
-			if (!performanceIteration && RandomI::random(randomGenerator, 1u) == 0u)
+			if (!performanceIteration && RandomI::boolean(randomGenerator))
 			{
 				const unsigned int left = RandomI::random(randomGenerator, mask.width() - 1u);
 				const unsigned int top = RandomI::random(randomGenerator, mask.height() - 1u);
@@ -1402,14 +1386,12 @@ bool TestMaskAnalyzer::testFindNonUniquePixels8(const unsigned int width, const 
 			const unsigned int widthToUse = performanceIteration ? width : RandomI::random(randomGenerator, 3u, 1920u);
 			const unsigned int heightToUse = performanceIteration ? height : RandomI::random(randomGenerator, 3u, 1080u);
 
-			const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
-			const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse, maskPaddingElements);
+			const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse);
 
 			CV::PixelPositions nonUniquePixels;
 			CV::PixelBoundingBox boundingBox;
 
-			if (!performanceIteration && RandomI::random(randomGenerator, 1u) == 0u)
+			if (!performanceIteration && RandomI::boolean(randomGenerator))
 			{
 				const unsigned int left = RandomI::random(randomGenerator, mask.width() - 1u);
 				const unsigned int top = RandomI::random(randomGenerator, mask.height() - 1u);
@@ -1468,12 +1450,10 @@ bool TestMaskAnalyzer::testFindOutlinePixels4(const unsigned int width, const un
 			const unsigned int widthToUse = performanceIteration ? width : RandomI::random(randomGenerator, 3u, 1920u);
 			const unsigned int heightToUse = performanceIteration ? height : RandomI::random(randomGenerator, 3u, 1080u);
 
-			const unsigned int maskPaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
 			const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
-			const uint8_t nonMaskValue = ((unsigned int)(maskValue) + RandomI::random(randomGenerator, 254u)) % 256u;
+			const uint8_t nonMaskValue = uint8_t(((unsigned int)(maskValue) + RandomI::random(randomGenerator, 1u, 255u)) % 256u);
 
-			const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse, maskPaddingElements, maskValue, nonMaskValue);
+			const Frame mask = generateTestMask(randomGenerator, widthToUse, heightToUse, maskValue, nonMaskValue);
 
 			CV::PixelPositions outlinePixels;
 			CV::PixelBoundingBox boundingBox;
@@ -1681,16 +1661,14 @@ bool TestMaskAnalyzer::testCountMaskPixels(const double testDuration)
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 1000u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1000u);
 
-		const unsigned int paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-
 		const uint8_t maskValue = uint8_t(RandomI::random(randomGenerator, 255u));
 		const uint8_t nonMaskValue = uint8_t(255u - maskValue);
 
-		const Frame mask = generateTestMask(randomGenerator, width, height, paddingElements, maskValue, nonMaskValue);
+		const Frame mask = generateTestMask(randomGenerator, width, height, maskValue, nonMaskValue);
 
 		CV::PixelBoundingBox boundingBox;
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			const unsigned int left = RandomI::random(randomGenerator, width - 1u);
 			const unsigned int top = RandomI::random(randomGenerator, height - 1u);
@@ -1753,12 +1731,12 @@ bool TestMaskAnalyzer::testCountMaskPixels(const double testDuration)
 	return allSucceeded;
 }
 
-Frame TestMaskAnalyzer::generateTestMask(RandomGenerator& randomGenerator, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const uint8_t maskValue, const uint8_t nonMaskValue)
+Frame TestMaskAnalyzer::generateTestMask(RandomGenerator& randomGenerator, const unsigned int width, const unsigned int height, const uint8_t maskValue, const uint8_t nonMaskValue)
 {
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(maskValue != nonMaskValue);
 
-	Frame mask(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), paddingElements);
+	Frame mask = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 	mask.setValue(nonMaskValue);
 
 	const unsigned int numberBoxes = RandomI::random(randomGenerator, 1u, 30u);
