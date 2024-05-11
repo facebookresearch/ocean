@@ -5,22 +5,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+// Force staticdocs rebuild #1
+
+const {fbContent, fbInternalOnly} = require('docusaurus-plugin-internaldocs-fb/internal');
+const repoUrl = 'https://github.com/facebookresearch/ocean';
+
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 // With JSDoc @type annotations, IDEs can provide config autocompletion
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 (module.exports = {
-  title: 'Ocean', // TODO
-  tagline: 'Ocean is cool', // TODO
-  url: 'https://internalfb.com',
-  baseUrl: '/',
+  title: 'Ocean',
+  tagline: 'A C++ Framework For Computer Vision (CV) And Augmented Reality (AR) Applications',
+  url: 'https://facebookresearch.github.io',
+  baseUrl: '/ocean/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'throw',
   trailingSlash: true,
-  favicon: 'img/favicon.ico',
-  organizationName: 'facebook',
-  projectName: 'Ocean', // TODO
+  favicon: 'img/ocean_favicon.ico',
+  organizationName: 'facebookresearch',
+  projectName: 'ocean',
   customFields: {
     fbRepoName: 'fbsource',
     ossRepoPath: 'xplat/ocean/website',
@@ -28,17 +33,20 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
   presets: [
     [
-      'docusaurus-plugin-internaldocs-fb/docusaurus-preset',
+      require.resolve('docusaurus-plugin-internaldocs-fb/docusaurus-preset'),
       /** @type {import('docusaurus-plugin-internaldocs-fb').PresetOptions} */
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://www.internalfb.com/code/fbsource/xplat/ocean/website', // TODO Please change this to your repo.
+          editUrl: fbContent({
+            internal: 'https://www.internalfb.com/intern/diffusion/FBS/browse/master/xplat/ocean/website/',
+            external: 'https://github.com/facebookresearch/ocean/edit/main/website',
+          }),
         },
         experimentalXRepoSnippets: {
           baseDir: '.',
         },
-        staticDocsProject: 'Ocean',
+        staticDocsProject: 'ocean',
         trackingFile: 'fbcode/staticdocs/WATCHED_FILES',
         blog: {
           showReadingTime: true,
@@ -47,6 +55,11 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
+        'remark-code-snippets': {
+          baseDir: '..',
+        },
+        internSearch: true,
+        enableEditor: false,
       }),
     ],
   ],
