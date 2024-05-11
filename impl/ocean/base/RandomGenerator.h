@@ -119,10 +119,10 @@ class OCEAN_BASE_EXPORT RandomGenerator
 	private:
 
 		/**
-		 * Returns a seed value based on the current time and a random value from RandomI.
+		 * Returns a seed value based on the current time, the thread id, and a random value from RandomI.
 		 * @return The combined seed value
 		 */
-		static unsigned int timeBasedCombinedSeed();
+		static unsigned int threadAndTimeBasedSeed();
 
 	private:
 
