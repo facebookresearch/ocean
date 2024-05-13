@@ -215,7 +215,7 @@ void FrameFilterMean::filterWithIntegral8BitPerChannelSubset(const uint32_t* bor
 		{
 			for (unsigned int n = 0u; n < tChannels; ++n)
 			{
-				ocean_assert((*integralTopLeft - *integralTopRight - *integralBottomLeft + *integralBottomRight + area_2) / area < 255u);
+				ocean_assert((*integralTopLeft - *integralTopRight - *integralBottomLeft + *integralBottomRight + area_2) / area <= 255u);
 
 				*targetRow++ = uint8_t((*integralTopLeft++ - *integralTopRight++ - *integralBottomLeft++ + *integralBottomRight++ + area_2) / area);
 			}
