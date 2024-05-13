@@ -143,35 +143,6 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		static bool testConstructFromPyramid(const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the construction of a new frame pyramid from an existing source pyramid.
-		 * @param testDuration Requested duration of test loop in seconds
-		 * @param worker The worker object to distribute the computation
-		 * @return True, if the test succeeded; otherwise, false is returned.
-		 */
-		static bool testConstructFromPyramidDeprecated(const double testDuration, Worker& worker);
-
-		/**
-		 * Tests the construction of a new frame pyramid from an existing source pyramid.
-		 * @param downsamplingMode The downsampling mode to use
-		 * @param testDuration Requested duration of test loop in seconds
-		 * @param worker The worker object to distribute the computation
-		 * @return True, if the test succeeded; otherwise, false is returned.
-		 */
-		static bool testConstructFromPyramidDeprecated(const CV::FramePyramid::DownsamplingMode downsamplingMode, const double testDuration, Worker& worker);
-
-		/**
-		 * Tests the construction of a new frame pyramid from an existing source pyramid.
-		 * @param sourcePyramid Source frame pyramid that is used to generate the frame pyramid
-		 * @param copyData True, if frame data is copied; otherwise, a reference to the frame data is created
-		 * @param layerIndex Index of the first source pyramid layer that is used
-		 * @param layerCount Number of layers to create
-		 * @param testDuration Requested duration of test loop in seconds
-		 * @param worker The worker object to distribute the computation
-		 * @return True, if the test succeeded; otherwise, false is returned.
-		 */
-		static bool testConstructFromPyramidDeprecated(const CV::FramePyramid& sourcePyramid, const bool copyData, const unsigned int  layerIndex, const unsigned int layerCount, const double testDuration, Worker& worker);
-
-		/**
 		 * Tests the replacement of a frame pyramid using a frame type.
 		 * @param testDuration Requested duration of test loop in seconds
 		 * @return True, if the test succeeded; otherwise, false is returned.
@@ -258,17 +229,6 @@ class OCEAN_TEST_CV_EXPORT TestFramePyramid : protected CV::FramePyramid
 		 * @return True, if the pyramid is correct
 		 */
 		static bool validateConstructFromFrame(const CV::FramePyramid& framePyramid, const CV::FramePyramid::DownsamplingFunction& downsamplingFunction, const Frame& frame, const unsigned int numberLayers, const UnorderedIndexSet32& readOnlyLayers, const UnorderedIndexSet32& ownerLayers, const UnorderedIndexSet32& outsideMemoryBlockLayers);
-
-		/**
-		 * Validates if the frame pyramid was created correctly with the specified settings.
-		 * @param framePyramid Created frame pyramid
-		 * @param sourcePyramid Frame pyramid that was used as source
-		 * @param copyData True, if frame data was copied; otherwise, a reference to the frame data was created
-		 * @param layerIndex Index of the first source pyramid layer
-		 * @param layerCount Number of layers that should have been created
-		 * @return True, if the generated frame pyramid is valid; otherwise, false is returned.
-		 */
-		static bool validateConstructFromPyramid(const CV::FramePyramid& framePyramid, const CV::FramePyramid& sourcePyramid, const bool copyData, const unsigned int  layerIndex, const unsigned int layerCount);
 
 		/**
 		 * Returns the maximum layer count for the given frame width and height
