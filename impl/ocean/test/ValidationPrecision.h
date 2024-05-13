@@ -40,7 +40,7 @@ class ValidationPrecision
 				/**
 				 * Destructs this scoped object and forwards the information to the owning validation.
 				 */
-				~ScopedIteration();
+				inline ~ScopedIteration();
 
 				/**
 				 * Sets this iteration to be not precise enough.
@@ -208,7 +208,7 @@ inline ValidationPrecision::ScopedIteration::ScopedIteration(ValidationPrecision
 	// nothing to do here
 }
 
-ValidationPrecision::ScopedIteration::~ScopedIteration()
+inline ValidationPrecision::ScopedIteration::~ScopedIteration()
 {
 	validationPrecision_.addIteration(accurate_);
 }
