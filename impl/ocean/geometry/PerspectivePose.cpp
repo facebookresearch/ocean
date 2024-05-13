@@ -40,8 +40,8 @@ bool PerspectivePose::calculateCosineSolutions(const T x1, const T x1_2, const T
 	x2a = cos12 * x1 + sqrtValue;
 	x2b = cos12 * x1 - sqrtValue;
 
-	ocean_assert(NumericT<T>::isWeakEqual(x1_2 + x2a * x2a - 2 * x1 * x2a * cos12, d12_2));
-	ocean_assert(NumericT<T>::isWeakEqual(x1_2 + x2b * x2b - 2 * x1 * x2b * cos12, d12_2));
+	ocean_assert_accuracy(NumericT<T>::isWeakEqual(x1_2 + x2a * x2a - 2 * x1 * x2a * cos12, d12_2));
+	ocean_assert_accuracy(NumericT<T>::isWeakEqual(x1_2 + x2b * x2b - 2 * x1 * x2b * cos12, d12_2));
 
 	return true;
 }

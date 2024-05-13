@@ -19,6 +19,8 @@
 #include "ocean/math/Random.h"
 #include "ocean/math/Vector3.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -114,12 +116,13 @@ bool TestPnP::testPose(const unsigned int numberPoints, const double testDuratio
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberPoints >= 5u);
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	constexpr double threshold = std::is_same<float, Scalar>::value ? 0.15 : 0.95; // very generous threshold for 32bit precision
+
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performance;
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -129,6 +132,7 @@ bool TestPnP::testPose(const unsigned int numberPoints, const double testDuratio
 		const Quaternion randomOrientation = Random::quaternion(randomGenerator);
 
 		const HomogenousMatrix4 world_T_camera(randomTranslation, randomOrientation);
+		const HomogenousMatrix4 flippedCamera_T_world = AnyCamera::standard2InvertedFlipped(world_T_camera);
 
 		const AnyCameraType anyCameraType = Random::random(randomGenerator, Utilities::realisticCameraTypes());
 		const unsigned int anyCameraIndex = RandomI::random(randomGenerator, 1u);
@@ -141,16 +145,16 @@ bool TestPnP::testPose(const unsigned int numberPoints, const double testDuratio
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			imagePoints[n] = Random::vector2(randomGenerator, Scalar(0), Scalar(camera->width() - 1u), Scalar(0), Scalar(camera->height() - 1u));
+			imagePoints[n] = Random::vector2(randomGenerator, Scalar(10), Scalar(camera->width() - 10u), Scalar(10), Scalar(camera->height() - 10u));
 
 			const Line3 ray = camera->ray(imagePoints[n], world_T_camera);
-			objectPoints[n] = ray.point(Random::scalar(Scalar(0.1), Scalar(10)));
+			objectPoints[n] = ray.point(Random::scalar(Scalar(0.25), Scalar(10)));
 
-			ocean_assert(AnyCamera::isObjectPointInFrontIF(AnyCamera::standard2InvertedFlipped(world_T_camera), objectPoints[n]));
+			ocean_assert_and_suppress_unused(AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[n]), flippedCamera_T_world);
 
 			if constexpr (std::is_same<double, Scalar>::value)
 			{
-				ocean_assert(imagePoints[n].distance(camera->projectToImage(world_T_camera, objectPoints[n])) < Scalar(1));
+				ocean_assert(imagePoints[n].distance(camera->projectToImage(world_T_camera, objectPoints[n])) <= Scalar(1));
 			}
 		}
 
@@ -160,6 +164,8 @@ bool TestPnP::testPose(const unsigned int numberPoints, const double testDuratio
 			const bool localSuccess = Geometry::PnP::pose(*camera, objectPoints.data(), imagePoints.data(), objectPoints.size(), world_T_determinedCamera);
 		performance.stop();
 
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		if (localSuccess)
 		{
 			Scalar sqrAveragePixelError = Numeric::maxValue();
@@ -168,35 +174,19 @@ bool TestPnP::testPose(const unsigned int numberPoints, const double testDuratio
 
 			Geometry::Error::determinePoseError<ConstArrayAccessor<Vector3>, ConstArrayAccessor<Vector2>>(world_T_determinedCamera, *camera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
 
-			if (sqrAveragePixelError <= Scalar(2 * 2) && sqrMaximalPixelError <= Scalar(10 * 10))
+			if (sqrAveragePixelError > Scalar(2 * 2) || sqrMaximalPixelError > Scalar(10 * 10))
 			{
-				++validIterations;
+				scopedIteration.setInaccurate();
 			}
 		}
-
-		++iterations;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Average performance: " << performance.averageMseconds() << "ms";
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 2u) << "% succeeded.";
-
-	const bool succeeded = percent >= 0.95;
-
-	if (!succeeded)
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
-	return succeeded;
+	return validation.succeeded();
 }
 
 }
