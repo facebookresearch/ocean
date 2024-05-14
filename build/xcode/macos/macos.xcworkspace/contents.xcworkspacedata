@@ -130,9 +130,6 @@
                   location = "group:application/ocean/demo/tracking/pointtracker/macos/demotrackingpointtrackerosx.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/demo/tracking/representativefeaturemap/macos/demotrackingrepresentativefeaturemap.xcodeproj">
-               </FileRef>
-               <FileRef
                   location = "group:application/ocean/demo/tracking/uvtexturemapping/ios/demotrackinguvtexturemappingios.xcodeproj">
                </FileRef>
                <FileRef

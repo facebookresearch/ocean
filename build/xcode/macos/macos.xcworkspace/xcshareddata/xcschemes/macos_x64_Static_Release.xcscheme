@@ -1092,20 +1092,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5D01409A1C16E55B00C5E27F"
-               BuildableName = "demotrackingrepresentativefeaturemap"
-               BlueprintName = "demotrackingrepresentativefeaturemap x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/tracking/representativefeaturemap/macos/demotrackingrepresentativefeaturemap.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
                BuildableName = "demotrackingfeaturetrackerosx.app"
                BlueprintName = "demotrackingfeaturetrackerosx x64 (Static)"
