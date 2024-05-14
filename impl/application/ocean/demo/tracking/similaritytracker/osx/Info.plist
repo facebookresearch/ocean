@@ -30,5 +30,7 @@
 	<string>Application</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Needing the camera as input</string>
 </dict>
 </plist>

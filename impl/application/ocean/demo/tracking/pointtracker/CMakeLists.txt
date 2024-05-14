@@ -141,6 +141,11 @@ if (MACOS)
     # Install Application.nib
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Resources DESTINATION bin/${OCEAN_TARGET_NAME}.app/Contents)
 
+    install(CODE "
+        include(BundleUtilities)
+        fixup_bundle(${CMAKE_INSTALL_PREFIX}/bin/${OCEAN_TARGET_NAME}.app \"\" \"${CMAKE_INSTALL_PREFIX}/lib\")
+        " COMPONENT Runtime)
+
 endif()
 
 if (ANDROID)
