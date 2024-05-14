@@ -1,0 +1,17 @@
+libjpeg
+gl
+zlib
+eigen
+giflib
+openxr
+tinyxml2
+protozero
+harfbuzz
+mbedtls
+libpng
+libtiff
+vtzero
+curl
+libyuv
+freetype
+assimp

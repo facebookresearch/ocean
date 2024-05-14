@@ -20,50 +20,14 @@ set(OCEAN_TARGET_PROCESSOR_TYPE ${CMAKE_SYSTEM_PROCESSOR})
 message(CHECK_START "Third-party dependencies")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
-set(CPM_SOURCE_CACHE "${CMAKE_BINARY_DIR}/../third-party_cache")
+set(CPM_SOURCE_CACHE "${CMAKE_BINARY_DIR}/../../third-party_cache")
 include(CPM.cmake)
 
 set(CMAKE_PLATFORM_NO_VERSIONED_SONAME TRUE)
 
 set(CMAKE_STAGING_PREFIX ${CMAKE_INSTALL_PREFIX})
 
-# Do not change the order of these.
-if(BUILD_PASS_INDEX EQUAL 0)
-    include(libjpeg.cmake)
-    include(gl.cmake)
-    include(zlib.cmake)
-    include(eigen.cmake)
-    include(giflib.cmake)
-    include(openxr.cmake)
-    include(tinyxml2.cmake)
-    include(protozero.cmake)
-    include(harfbuzz.cmake)
-    include(mbedtls.cmake)
-
-    if (ANDROID)
-        add_subdirectory(arcore-android-sdk)
-    endif()
-
-elseif(BUILD_PASS_INDEX EQUAL 1)
-
-    include(libpng.cmake)
-    include(libtiff.cmake)
-    include(vtzero.cmake)
-    include(curl.cmake)
-    include(libyuv.cmake)
-
-elseif(BUILD_PASS_INDEX EQUAL 2)
-
-    include(freetype.cmake)
-    include(assimp.cmake)
-
-    if (MACOS OR LINUX OR WIN32)
-        include(wxwidgets.cmake)
-    endif()
-
-    # Disabled by default
-    # include(opencv.cmake)
-endif()
+include(${INCLUDED_DEP_NAME}.cmake)
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
 message(CHECK_PASS "completed")

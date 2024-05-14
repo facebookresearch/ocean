@@ -8,6 +8,8 @@ else()
   set(DYNAMIC_LOADER OFF)
 endif()
 
+include(GNUInstallDirs)
+
 CPMAddPackage(
   NAME           openxr
   GIT_REPOSITORY https://github.com/KhronosGroup/OpenXR-SDK.git

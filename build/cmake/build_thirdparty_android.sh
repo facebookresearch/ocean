@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-# (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
 
 if [ -z "${ANDROID_NDK}" ]; then
   echo "ERROR: Set ANDROID_NDK to the location of your Android NDK installation."
@@ -60,53 +64,15 @@ function run_build_for_android {
     echo "OCEAN_THIRD_PARTY_INSTALL_DIRECTORY: ${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}"
     echo " "
 
-    echo " "
-    echo "PASS 0"
-    cmake -S"${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" \
-        -B"${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" \
-        -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
-        -DANDROID_ABI="${ANDROID_ABI}" \
-        -DANDROID_PLATFORM="${ANDROID_SDK_VERSION}" \
-        -DCMAKE_ANDROID_STL=c++_static \
-        -DCMAKE_ANDROID_NDK="${ANDROID_NDK}" \
-        -DCMAKE_TOOLCHAIN_FILE="${ANDROID_NDK}/build/cmake/android.toolchain.cmake" \
-        -DCMAKE_INSTALL_PREFIX="${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
-        -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
-        -DBUILD_PASS_INDEX="0"
-
-    cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16
-
-    echo " "
-    echo "PASS 1"
-    cmake -S"${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" \
-        -B"${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" \
-        -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
-        -DANDROID_ABI="${ANDROID_ABI}" \
-        -DANDROID_PLATFORM="${ANDROID_SDK_VERSION}" \
-        -DCMAKE_ANDROID_STL=c++_static \
-        -DCMAKE_ANDROID_NDK="${ANDROID_NDK}" \
-        -DCMAKE_TOOLCHAIN_FILE="${ANDROID_NDK}/build/cmake/android.toolchain.cmake" \
-        -DCMAKE_INSTALL_PREFIX="${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
-        -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
-        -DBUILD_PASS_INDEX="1"
-
-    cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16
-
-    echo " "
-    echo "PASS 2"
-    cmake -S"${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" \
-        -B"${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" \
-        -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
-        -DANDROID_ABI="${ANDROID_ABI}" \
-        -DANDROID_PLATFORM="${ANDROID_SDK_VERSION}" \
-        -DCMAKE_ANDROID_STL=c++_static \
-        -DCMAKE_ANDROID_NDK="${ANDROID_NDK}" \
-        -DCMAKE_TOOLCHAIN_FILE="${ANDROID_NDK}/build/cmake/android.toolchain.cmake" \
-        -DCMAKE_INSTALL_PREFIX="${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
-        -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
-        -DBUILD_PASS_INDEX="2"
-
-    cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16
+    ${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}/build_deps.sh "${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" android \
+        "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" \
+        "-DANDROID_ABI=${ANDROID_ABI}" \
+        "-DANDROID_PLATFORM=${ANDROID_SDK_VERSION}" \
+        "-DCMAKE_ANDROID_STL=c++_static" \
+        "-DCMAKE_ANDROID_NDK=${ANDROID_NDK}" \
+        "-DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake" \
+        "-DCMAKE_INSTALL_PREFIX=${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
+        "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}"
 
     echo " "
     echo " "

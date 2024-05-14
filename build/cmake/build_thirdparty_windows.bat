@@ -1,4 +1,7 @@
-@REM (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+@REM Copyright (c) Meta Platforms, Inc. and affiliates.
+@REM
+@REM This source code is licensed under the MIT license found in the
+@REM LICENSE file in the root directory of this source tree.
 
 echo off
 
@@ -49,18 +52,7 @@ if "%BUILD_FAILURES%" == "" (
 )
 
 :run_build
-set BUILD_PASS=0
-call :build_pass
-
-set BUILD_PASS=1
-call :build_pass
-
-set BUILD_PASS=2
-call :build_pass
-
-:build_pass
-cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% -DBUILD_PASS_INDEX=%BUILD_PASS%
-cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
+call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat %OCEAN_THIRD_PARTY_SOURCE_DIR% %BUILD_DIRECTORY% %INSTALL_DIRECTORY% %BUILD_TYPE% %BUILD_SHARED_LIBS%
 
 @echo off
 if %errorlevel% neq 0 (

@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-# (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
 
 echo "Building the third-party libraries required for Ocean ...:"
 echo " "
@@ -41,42 +45,9 @@ function run_build {
     echo " "
 
     echo " "
-    echo "PASS 0"
-    cmake -S "${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" \
-        -B "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" \
-        -DCMAKE_INSTALL_PREFIX="${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
-        -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
-        -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
-        -DBUILD_PASS_INDEX="0"
-
-    if ! cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16; then
+    ${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}/build_deps.sh "${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" macos "-DCMAKE_INSTALL_PREFIX=${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}"
+    if [ $? != 0 ]; then
         failed_configs+=("${LIBRARY_TYPE}_${BUILD_TYPE}_0")
-    fi
-
-    echo " "
-    echo "PASS 1"
-    cmake -S "${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" \
-        -B "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" \
-        -DCMAKE_INSTALL_PREFIX="${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
-        -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
-        -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
-        -DBUILD_PASS_INDEX="1"
-
-    if ! cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16; then
-        failed_configs+=("${LIBRARY_TYPE}_${BUILD_TYPE}_1")
-    fi
-
-    echo " "
-    echo "PASS 2"
-    cmake -S "${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" \
-        -B "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" \
-        -DCMAKE_INSTALL_PREFIX="${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
-        -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
-        -DBUILD_SHARED_LIBS="${ENABLE_BUILD_SHARED_LIBS}" \
-        -DBUILD_PASS_INDEX="2"
-
-    if ! cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- -j16; then
-        failed_configs+=("${LIBRARY_TYPE}_${BUILD_TYPE}_2")
     fi
 
     echo " "

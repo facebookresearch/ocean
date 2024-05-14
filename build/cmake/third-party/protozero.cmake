@@ -4,6 +4,8 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
 find_package(Git REQUIRED)
 
+set(BUILD_TESTING OFF)
+
 CPMAddPackage(
   NAME           protozero
   GIT_REPOSITORY https://github.com/mapbox/protozero.git
