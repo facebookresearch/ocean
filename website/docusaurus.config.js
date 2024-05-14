@@ -43,9 +43,6 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             external: 'https://github.com/facebookresearch/ocean/edit/main/website',
           }),
         },
-        experimentalXRepoSnippets: {
-          baseDir: '.',
-        },
         staticDocsProject: 'ocean',
         trackingFile: 'fbcode/staticdocs/WATCHED_FILES',
         blog: {
@@ -71,18 +68,23 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         title: 'Ocean',
         logo: {
           alt: 'Ocean Logo',
-          src: 'img/logo.svg',
+          src: 'img/ocean_logo_circular.svg',
         },
         items: [
           {
             type: 'doc',
-            docId: 'intro',
+            docId: 'introduction',
             position: 'left',
-            label: 'Tutorial',
+            label: 'Documentation',
+          },
+          {
+            href: 'pathname://doxygen/index.html',
+            position: 'left',
+            label: 'Reference',
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/facebookresearch/ocean',
             label: 'GitHub',
             position: 'right',
           },
@@ -92,46 +94,48 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         style: 'dark',
         links: [
           {
-            title: 'Docs',
+            title: 'Documentation',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro',
+                label: 'Introduction',
+                to: '/docs/introduction',
+              },
+              {
+                label: 'Building',
+                to: '/docs/building',
               },
             ],
           },
           {
-            title: 'Community',
+            title: 'Legal',
+            // Please do not remove the privacy and terms, it's a legal requirement.
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                  label: 'Privacy',
+                  href: 'https://opensource.facebook.com/legal/privacy/',
               },
               {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                  label: 'Terms',
+                  href: 'https://opensource.facebook.com/legal/terms/',
               },
             ],
           },
           {
-            title: 'More',
+            title: 'Legal (continued)',
+            // Please do not remove the privacy and terms, it's a legal requirement.
             items: [
               {
-                label: 'Blog',
-                to: '/blog',
+                  label: 'Data Policy',
+                  href: 'https://opensource.facebook.com/legal/data-policy/',
               },
               {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                  label: 'Cookie Policy',
+                  href: 'https://opensource.facebook.com/legal/cookie-policy/',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Meta Platforms, Inc. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
