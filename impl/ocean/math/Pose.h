@@ -410,12 +410,12 @@ template <typename T>
 template <typename U>
 inline PoseT<T>::PoseT(const PoseT<U>& pose)
 {
-	values_[0] = T(pose.values_[0]);
-	values_[1] = T(pose.values_[1]);
-	values_[2] = T(pose.values_[2]);
-	values_[3] = T(pose.values_[3]);
-	values_[4] = T(pose.values_[4]);
-	values_[5] = T(pose.values_[5]);
+	values_[0] = T(pose[0]);
+	values_[1] = T(pose[1]);
+	values_[2] = T(pose[2]);
+	values_[3] = T(pose[3]);
+	values_[4] = T(pose[4]);
+	values_[5] = T(pose[5]);
 }
 
 template <typename T>
