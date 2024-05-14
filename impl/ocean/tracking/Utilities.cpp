@@ -554,21 +554,21 @@ void Utilities::paintBoundingBoxIF(Frame& frame, const HomogenousMatrix4& flippe
 	}
 }
 
-void Utilities::paintWireframeConeIF(Frame& frame, const HomogenousMatrix4& pose_flippedCamera_T_cone, const PinholeCamera& pinholeCamera, const Cone3& cone, const bool distortProjectedObjectPoints, Worker* worker, const uint8_t* color, const unsigned int numCircles, const unsigned int numVerticalLines, const unsigned int numSamples)
+void Utilities::paintWireframeConeIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_cone, const PinholeCamera& pinholeCamera, const Cone3& cone, const bool distortProjectedObjectPoints, Worker* worker, const uint8_t* color, const unsigned int numCircles, const unsigned int numVerticalLines, const unsigned int numSamples)
 {
-	ocean_assert(frame && pose_flippedCamera_T_cone.isValid() && pinholeCamera && cone.isValid());
+	ocean_assert(frame && flippedCamera_T_cone.isValid() && pinholeCamera && cone.isValid());
 	ocean_assert(frame.width() == pinholeCamera.width() && frame.height() == pinholeCamera.height());
 	ocean_assert(numCircles >= 2u && numSamples >= 3u);
 
 	// The drawing procedure below assumes that the pose is given w.r.t a cone with the axis [0, 0, 1].
 	// If this isn't the case, we'll first compute a corrected pose.
-	HomogenousMatrix4 pose_flippedCamera_T_canonicalCone = pose_flippedCamera_T_cone;
+	HomogenousMatrix4 flippedCamera_T_canonicalCone = flippedCamera_T_cone;
 	Vector3 apex = cone.apex();
 
 	if (cone.axis() != Vector3(Scalar(0.0), Scalar(0.0), Scalar(1.0)))
 	{
 		const Quaternion quaternion_cone_T_canonicalCone(Vector3(Scalar(0.0), Scalar(0.0), Scalar(1.0)), cone.axis());
-		pose_flippedCamera_T_canonicalCone = pose_flippedCamera_T_cone * HomogenousMatrix4(quaternion_cone_T_canonicalCone);
+		flippedCamera_T_canonicalCone = flippedCamera_T_cone * HomogenousMatrix4(quaternion_cone_T_canonicalCone);
 		apex = quaternion_cone_T_canonicalCone.inverted() * apex;
 	}
 
@@ -597,7 +597,7 @@ void Utilities::paintWireframeConeIF(Frame& frame, const HomogenousMatrix4& pose
 			const Scalar theta = Scalar(j) * angleStep;
 			const Vector3 point(radius * Numeric::cos(theta), radius * Numeric::sin(theta), z);
 
-			path.push_back(pinholeCamera.projectToImageIF<true>(pose_flippedCamera_T_canonicalCone, point + apex, distortProjectedObjectPoints));
+			path.push_back(pinholeCamera.projectToImageIF<true>(flippedCamera_T_canonicalCone, point + apex, distortProjectedObjectPoints));
 		}
 
 		path.push_back(path[0]);
@@ -618,12 +618,12 @@ void Utilities::paintWireframeConeIF(Frame& frame, const HomogenousMatrix4& pose
 			Scalar z = cone.minSignedDistanceAlongAxis();
 			Scalar radius = z * tanHalfApexAngle;
 			Vector3 point(radius * Numeric::cos(theta), radius * Numeric::sin(theta), z);
-			path.push_back(pinholeCamera.projectToImageIF<true>(pose_flippedCamera_T_canonicalCone, point + apex, distortProjectedObjectPoints));
+			path.push_back(pinholeCamera.projectToImageIF<true>(flippedCamera_T_canonicalCone, point + apex, distortProjectedObjectPoints));
 
 			z = cone.maxSignedDistanceAlongAxis();
 			radius = z * tanHalfApexAngle;
 			point = Vector3(radius * Numeric::cos(theta), radius * Numeric::sin(theta), z);
-			path.push_back(pinholeCamera.projectToImageIF<true>(pose_flippedCamera_T_canonicalCone, point + apex, distortProjectedObjectPoints));
+			path.push_back(pinholeCamera.projectToImageIF<true>(flippedCamera_T_canonicalCone, point + apex, distortProjectedObjectPoints));
 
 			paths.push_back(path);
 		}
@@ -632,21 +632,21 @@ void Utilities::paintWireframeConeIF(Frame& frame, const HomogenousMatrix4& pose
 	Tracking::Utilities::paintPaths<3>(frame, paths.data(), paths.size(), color, worker);
 }
 
-void Utilities::paintWireframeCylinderIF(Frame& frame, const HomogenousMatrix4& pose_flippedCamera_T_cylinder, const PinholeCamera& pinholeCamera, const Cylinder3& cylinder, const bool distortProjectedObjectPoints, Worker* worker, const uint8_t* color, const unsigned int numCircles, const unsigned int numVerticalLines, const unsigned int numSamples)
+void Utilities::paintWireframeCylinderIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_cylinder, const PinholeCamera& pinholeCamera, const Cylinder3& cylinder, const bool distortProjectedObjectPoints, Worker* worker, const uint8_t* color, const unsigned int numCircles, const unsigned int numVerticalLines, const unsigned int numSamples)
 {
-	ocean_assert(frame && pose_flippedCamera_T_cylinder.isValid() && pinholeCamera && cylinder.isValid());
+	ocean_assert(frame && flippedCamera_T_cylinder.isValid() && pinholeCamera && cylinder.isValid());
 	ocean_assert(frame.width() == pinholeCamera.width() && frame.height() == pinholeCamera.height());
 	ocean_assert(numCircles >= 2u && numSamples >= 3u);
 
 	// The drawing procedure below assumes that the pose is given w.r.t a cylinder with the axis [0, 0, 1].
 	// If this isn't the case, we'll first compute a corrected pose.
-	HomogenousMatrix4 pose_flippedCamera_T_canonicalCylinder = pose_flippedCamera_T_cylinder;
+	HomogenousMatrix4 flippedCamera_T_canonicalCylinder = flippedCamera_T_cylinder;
 	Vector3 origin = cylinder.origin();
 
 	if (cylinder.axis() != Vector3(Scalar(0.0), Scalar(0.0), Scalar(1.0)))
 	{
 		const Quaternion quaternion_cylinder_T_canonicalCylinder(Vector3(Scalar(0.0), Scalar(0.0), Scalar(1.0)), cylinder.axis());
-		pose_flippedCamera_T_canonicalCylinder = pose_flippedCamera_T_cylinder * HomogenousMatrix4(quaternion_cylinder_T_canonicalCylinder);
+		flippedCamera_T_canonicalCylinder = flippedCamera_T_cylinder * HomogenousMatrix4(quaternion_cylinder_T_canonicalCylinder);
 		origin = quaternion_cylinder_T_canonicalCylinder.inverted() * origin;
 	}
 
@@ -672,7 +672,7 @@ void Utilities::paintWireframeCylinderIF(Frame& frame, const HomogenousMatrix4& 
 			const Scalar theta = Scalar(j) * angleStep;
 			const Vector3 point(cylinder.radius() * Numeric::cos(theta), cylinder.radius() * Numeric::sin(theta), z);
 
-			path.push_back(pinholeCamera.projectToImageIF<true>(pose_flippedCamera_T_canonicalCylinder, point + origin, distortProjectedObjectPoints));
+			path.push_back(pinholeCamera.projectToImageIF<true>(flippedCamera_T_canonicalCylinder, point + origin, distortProjectedObjectPoints));
 		}
 
 		path.push_back(path[0]);
@@ -693,10 +693,10 @@ void Utilities::paintWireframeCylinderIF(Frame& frame, const HomogenousMatrix4& 
 
 			Vector3 point(cylinder.radius() * Numeric::cos(theta), cylinder.radius() * Numeric::sin(theta), cylinder.minSignedDistanceAlongAxis());
 
-			path.push_back(pinholeCamera.projectToImageIF<true>(pose_flippedCamera_T_canonicalCylinder, point + origin, distortProjectedObjectPoints));
+			path.push_back(pinholeCamera.projectToImageIF<true>(flippedCamera_T_canonicalCylinder, point + origin, distortProjectedObjectPoints));
 
 			point.z() = cylinder.maxSignedDistanceAlongAxis();
-			path.push_back(pinholeCamera.projectToImageIF<true>(pose_flippedCamera_T_canonicalCylinder, point + origin, distortProjectedObjectPoints));
+			path.push_back(pinholeCamera.projectToImageIF<true>(flippedCamera_T_canonicalCylinder, point + origin, distortProjectedObjectPoints));
 
 			paths.push_back(path);
 		}

@@ -425,7 +425,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		/**
 		 * Paints a (projected) wire-frame cone into a given frame.
 		 * @param frame The frame being drawn to, must be valid
-		 * @param pose_flippedCamera_T_cone Inverted and flipped pose of the camera w.r.t the cone
+		 * @param flippedCamera_T_cone Inverted and flipped pose of the camera w.r.t the cone
 		 * @param pinholeCamera The pinhole camera profile defining the projection, with dimension equal to the frame dimension
 		 * @param cone The cone that will be painted
 		 * @param distortProjectedObjectPoints True, to apply the distortion parameters of the camera to the projected object points
@@ -435,12 +435,12 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param numVerticalLines Number axis-parallel lines to draw around the cone, with range [0, infinity)
 		 * @param numSamples Number of lines to draw to approximate the projection of each circle, with range [3, infinity)
 		 */
-		static void paintWireframeConeIF(Frame& frame, const HomogenousMatrix4& pose_flippedCamera_T_cone, const PinholeCamera& pinholeCamera, const Cone3& cone, const bool distortProjectedObjectPoints = true, Worker* worker = nullptr, const uint8_t* color = CV::Canvas::yellow(), const unsigned int numCircles = 6u, const unsigned int numVerticalLines = 4u, const unsigned int numSamples = 72u);
+		static void paintWireframeConeIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_cone, const PinholeCamera& pinholeCamera, const Cone3& cone, const bool distortProjectedObjectPoints = true, Worker* worker = nullptr, const uint8_t* color = CV::Canvas::yellow(), const unsigned int numCircles = 6u, const unsigned int numVerticalLines = 4u, const unsigned int numSamples = 72u);
 
 		/**
 		 * Paints a (projected) wire-frame cylinder into a given frame.
 		 * @param frame The frame being drawn to, must be valid
-		 * @param pose_flippedCamera_T_cylinder Inverted and flipped pose of the camera w.r.t the cylinder
+		 * @param flippedCamera_T_cylinder Inverted and flipped pose of the camera w.r.t the cylinder
 		 * @param pinholeCamera The pinhole camera profile defining the projection, with dimension equal to the frame dimension
 		 * @param cylinder The cylinder that will be painted
 		 * @param distortProjectedObjectPoints True, to apply the distortion parameters of the camera to the projected object points
@@ -450,7 +450,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param numVerticalLines Number axis-parallel lines to draw around the cylinder, with range [0, infinity)
 		 * @param numSamples Number of lines to draw to approximate the projection of each circle, with range [3, infinity)
 		 */
-		static void paintWireframeCylinderIF(Frame& frame, const HomogenousMatrix4& pose_flippedCamera_T_cylinder, const PinholeCamera& pinholeCamera, const Cylinder3& cylinder, const bool distortProjectedObjectPoints = true, Worker* worker = nullptr, const uint8_t* color = CV::Canvas::yellow(), const unsigned int numCircles = 6u, const unsigned int numVerticalLines = 4u, const unsigned int numSamples = 72u);
+		static void paintWireframeCylinderIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_cylinder, const PinholeCamera& pinholeCamera, const Cylinder3& cylinder, const bool distortProjectedObjectPoints = true, Worker* worker = nullptr, const uint8_t* color = CV::Canvas::yellow(), const unsigned int numCircles = 6u, const unsigned int numVerticalLines = 4u, const unsigned int numSamples = 72u);
 
 		/**
 		 * Paints a (projected) 3D triangle into a given frame.

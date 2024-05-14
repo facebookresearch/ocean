@@ -111,15 +111,15 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 
 			Scalar sqrErrors = 0;
 
-			const HomogenousMatrix4 poseIF_flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(cameraPoses_world_T_camera[n]));
+			const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(cameraPoses_world_T_camera[n]));
 
 			// now we test each 2D/3D point correspondences and check whether the accuracy of the pose is good enough, we can stop if we cannot reach a better configuration than we have already
 			for (unsigned int c = 0u; indices.size() + (correspondences - c) >= bestIndices.size() && c < correspondences; ++c)
 			{
 				// we accept only object points lying in front of the camera
-				if (PinholeCamera::isObjectPointInFrontIF(poseIF_flippedCamera_T_world, objectPoints[c]))
+				if (PinholeCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[c]))
 				{
-					const Vector2 projectedImagePoint(anyCamera.projectToImageIF(poseIF_flippedCamera_T_world, objectPoints[c]));
+					const Vector2 projectedImagePoint(anyCamera.projectToImageIF(flippedCamera_T_world, objectPoints[c]));
 					const ImagePoint& imagePoint = imagePoints[c];
 
 					const Scalar sqrError = imagePoint.sqrDistance(projectedImagePoint);
@@ -172,15 +172,15 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 		// check whether we need to determine the indices for the optimized pose followed by another final optimization step
 		if (usedIndices && bestIndices.size() != correspondences)
 		{
-			const HomogenousMatrix4 poseIF_flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(pose_world_T_camera));
+			const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(pose_world_T_camera));
 
 			bestIndices.clear();
 			for (unsigned int c = 0; c < correspondences; ++c)
 			{
 				// we accept only object points lying in front of the camera
-				if (PinholeCamera::isObjectPointInFrontIF(poseIF_flippedCamera_T_world, objectPoints[c]))
+				if (PinholeCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[c]))
 				{
-					if (imagePoints[c].sqrDistance(anyCamera.projectToImageIF(poseIF_flippedCamera_T_world, objectPoints[c])) <= sqrPixelErrorThreshold)
+					if (imagePoints[c].sqrDistance(anyCamera.projectToImageIF(flippedCamera_T_world, objectPoints[c])) <= sqrPixelErrorThreshold)
 				 	{
 						bestIndices.push_back(c);
 					}
