@@ -27,7 +27,6 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-loadable": "^5.5.0"
-
   },
   "browserslist": {
     "production": [
@@ -50,14 +49,14 @@
     "@babel/core": "^7.11.0",
     "@babel/eslint-parser": "^7.13.10",
     "@babel/plugin-proposal-optional-chaining": "^7.0.0-0",
+    "eslint": "^7.20.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-header": "^3.0.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-react": "^7.21.5",
-    "eslint": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "2.8.8",
     "stylelint": "^13.2.1",
     "yarn-audit-fix": "^9.3.10"
