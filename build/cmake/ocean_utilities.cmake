@@ -1,9 +1,19 @@
-# (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
 
 # The builtin variable APPLE is set to true for both, macOS and iOS. While there is a dedicated
 # builtin variable for iOS (IOS), there is no such variable for only macOS. So, it's added here.
 if (APPLE AND (${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
     set(MACOS TRUE)
+endif()
+
+if (IOS OR MACOS)
+    # Enable CMake language support Objective-C/C++ for IOS and MACOS.
+    # Some third-party builds (e.g. OpenCV) need this enabled to build successfully.
+    # Some Ocean build targets need this enabled in order to apply compiler options intended for Objective-C/C++ files.
+    enable_language(OBJC OBJCXX)
 endif()
 
 # Translates the system names CMake uses to system names Ocean prefers
