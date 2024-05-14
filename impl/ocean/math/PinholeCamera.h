@@ -1280,10 +1280,7 @@ inline const typename PinholeCameraT<T>::DistortionPair& PinholeCameraT<T>::tang
 template <typename T>
 template <typename U>
 inline PinholeCameraT<T>::PinholeCameraT(const PinholeCameraT<U>& pinholeCamera, const bool copyDistortionParameters) :
-	intrinsics_(SquareMatrixT3<T>(pinholeCamera.intrinsics_)),
-	invertedIntrinsics_(SquareMatrixT3<T>(pinholeCamera.invertedIntrinsics_)),
-	width_(pinholeCamera.width_),
-	height_(pinholeCamera.height_)
+	PinholeCameraT<T>(SquareMatrixT3<T>(pinholeCamera.intrinsics_), pinholeCamera.width(), pinholeCamera.height())
 {
 	if (copyDistortionParameters)
 	{
