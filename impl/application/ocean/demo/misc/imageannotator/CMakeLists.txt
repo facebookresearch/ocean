@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-find_package(OpenCV)
+find_package(OpenCV COMPONENTS core imgproc)
 
 if (MACOS AND OpenCV_FOUND)
 
@@ -22,6 +22,7 @@ if (MACOS AND OpenCV_FOUND)
         PRIVATE
             "${OCEAN_IMPL_DIR}"
             "${CMAKE_SOURCE_DIR}/res"  # for res/application/ocean/demo/misc/imageannotator
+            ${OpenCV_INCLUDE_DIRS}
     )
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_PREPROCESSOR_FLAGS})
@@ -46,11 +47,15 @@ if (MACOS AND OpenCV_FOUND)
             ocean_media
             ocean_media_imageio
             ocean_platform_wxwidgets
+            ${OpenCV_LIBS}
     )
-
-    target_link_libraries(${OCEAN_TARGET_NAME} PRIVATE OpenCV::OpenCV)
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME} BUNDLE DESTINATION bin)
+
+    install(CODE "
+        include(BundleUtilities)
+        fixup_bundle(${CMAKE_INSTALL_PREFIX}/bin/${OCEAN_TARGET_NAME}.app \"\" \"${CMAKE_INSTALL_PREFIX}/lib\")
+        " COMPONENT Runtime)
 
 endif()
