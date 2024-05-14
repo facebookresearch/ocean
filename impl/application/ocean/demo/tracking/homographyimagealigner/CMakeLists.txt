@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (ANDROID OR IOS OR MACOS OR WINDOWS)
+if (ANDROID OR IOS OR MACOS)
 
     set(OCEAN_TARGET_NAME "application_ocean_demo_tracking_homographyimagealigner")
 
@@ -55,7 +55,7 @@ if (ANDROID OR IOS OR MACOS OR WINDOWS)
         )
     endif()
 
-    if (WINDOWS)
+    if (WIN32)
         target_link_libraries(${OCEAN_TARGET_NAME}
             PUBLIC
                 ocean_media_directshow
@@ -106,7 +106,7 @@ if (MACOS)
     target_include_directories(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_IMPL_DIR})
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
-    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS} -fobjc-arc)
+    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
 
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
@@ -114,6 +114,7 @@ if (MACOS)
             application_ocean_demo_tracking_homographyimagealigner
             ocean_base
             ocean_platform_apple_macos
+
             ${APPKIT_LIB}
             ${AVFOUNDATION_LIB}
             ${COREMEDIA_LIB}
@@ -136,6 +137,11 @@ if (MACOS)
 
     # Install Application.nib
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Resources DESTINATION bin/${OCEAN_TARGET_NAME}.app/Contents)
+
+    install(CODE "
+        include(BundleUtilities)
+        fixup_bundle(${CMAKE_INSTALL_PREFIX}/bin/${OCEAN_TARGET_NAME}.app \"\" \"${CMAKE_INSTALL_PREFIX}/lib\")
+        " COMPONENT Runtime)
 
 endif()
 
