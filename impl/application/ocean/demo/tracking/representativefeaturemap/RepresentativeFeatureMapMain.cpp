@@ -41,7 +41,7 @@ bool createCountingFeatureMap(const IO::File& patternFile, RandomGenerator& rand
 
 	const Frame pattern = Media::Utilities::loadImage(patternFile());
 
-	if (pattern.isNull())
+	if (!pattern.isValid())
 	{
 		return false;
 	}
