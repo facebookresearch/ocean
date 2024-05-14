@@ -45,10 +45,6 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         },
         staticDocsProject: 'ocean',
         trackingFile: 'fbcode/staticdocs/WATCHED_FILES',
-        blog: {
-          showReadingTime: true,
-          editUrl: 'https://www.internalfb.com/code/fbsource/xplat/ocean/website', // TODO change to path to your project in fbsource/www
-        },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -82,7 +78,6 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             position: 'left',
             label: 'Reference',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/facebookresearch/ocean',
             label: 'GitHub',
