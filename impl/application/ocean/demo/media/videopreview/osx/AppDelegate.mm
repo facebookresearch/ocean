@@ -7,6 +7,7 @@
 
 #include "application/ocean/demo/media/videopreview/osx/AppDelegate.h"
 
+#include "ocean/base/Build.h"
 #include "ocean/base/PluginManager.h"
 #include "ocean/base/RandomI.h"
 
