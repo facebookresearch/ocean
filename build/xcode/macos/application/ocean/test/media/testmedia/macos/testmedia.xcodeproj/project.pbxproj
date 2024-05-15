@@ -99,7 +99,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1200;
-				ORGANIZATIONNAME = Meta Platforms, Inc.;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
 				TargetAttributes = {
 					5D63F58F1B9744B100E2498E = {
 						CreatedOnToolsVersion = 6.4;

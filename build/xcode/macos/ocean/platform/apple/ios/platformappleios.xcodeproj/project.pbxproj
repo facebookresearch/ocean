@@ -173,7 +173,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1200;
-				ORGANIZATIONNAME = Meta Platforms, Inc.;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
 			};
 			buildConfigurationList = 5DCD189C1BB54C3B00656104 /* Build configuration list for PBXProject "platformappleios" */;
 			compatibilityVersion = "Xcode 3.2";
