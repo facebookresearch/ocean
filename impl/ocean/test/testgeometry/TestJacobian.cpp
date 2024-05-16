@@ -18,6 +18,8 @@
 #include "ocean/math/FisheyeCamera.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -213,12 +215,12 @@ bool TestJacobian::test(const double testDuration)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestJacobian, AnyCameraOrientationJacobian2x3_Float)
+TEST(TestJacobian, AnyCameraOrientationJacobian2x3_float)
 {
 	EXPECT_TRUE((TestJacobian::testAnyCameraOrientationJacobian2x3<float>(GTEST_TEST_DURATION)));
 }
 
-TEST(TestJacobian, AnyCameraOrientationJacobian2x3_Double)
+TEST(TestJacobian, AnyCameraOrientationJacobian2x3_double)
 {
 	EXPECT_TRUE((TestJacobian::testAnyCameraOrientationJacobian2x3<double>(GTEST_TEST_DURATION)));
 }
@@ -355,23 +357,22 @@ bool TestJacobian::testAnyCameraOrientationJacobian2x3(const double testDuration
 {
 	ocean_assert(testDuration > 0.0);
 
-	const unsigned int numberPoints = 50u;
+	constexpr unsigned int numberPoints = 50u;
 
-	Log::info() << "Testing any camera orientation Jacobian rodrigues 2x3 for " << numberPoints << " points with " << sizeof(T) * 8 << "bit precision:";
+	Log::info() << "Testing any camera orientation Jacobian rodrigues 2x3 for " << numberPoints << " points with " << sizeof(T) * 8 << "-bit precision:";
 
-	const std::vector<T> epsilons = {NumericT<T>::weakEps(), NumericT<T>::weakEps() / T(10), NumericT<T>::weakEps() * T(10), NumericT<T>::weakEps() / T(100), NumericT<T>::weakEps() * T(100)};
+	const std::vector<double> epsilons = {NumericD::weakEps(), NumericD::weakEps() / 10.0, NumericD::weakEps() * 10.0, NumericD::weakEps() / 100.0, NumericD::weakEps() * 100.0};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	constexpr double threshold = std::is_same<float, T>::value ? 0.95 : 0.99;
+
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performanceOptimized;
 
-	RandomGenerator randomGenerator;
-
 	constexpr T cameraBorder = T(50);
-
-	const Timestamp startTimestamp(true);
 
 	enum DistortionType : uint32_t
 	{
@@ -380,11 +381,13 @@ bool TestJacobian::testAnyCameraOrientationJacobian2x3(const double testDuration
 		DT_FULL_DISTORTION = (1u << 1u) | DT_RADIAL_DISTORTION
 	};
 
+	const Timestamp startTimestamp(true);
+
 	do
 	{
 		for (const DistortionType distortionType : {DT_NO_DISTORTION, DT_RADIAL_DISTORTION, DT_FULL_DISTORTION})
 		{
-			bool accurate = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			constexpr unsigned int width = 1280u;
 			constexpr unsigned int height = 720u;
@@ -497,10 +500,16 @@ bool TestJacobian::testAnyCameraOrientationJacobian2x3(const double testDuration
 				}
 			performanceOptimized.stop();
 
+			const SharedAnyCameraD cameraD = camera.cloneToDouble();
+			ocean_assert(cameraD);
+
+			const QuaternionD flippedCamera_R_translationD = QuaternionD(flippedCamera_R_translation).normalized();
+			const HomogenousMatrixD4 flippedCamera_T_worldD = HomogenousMatrixD4(flippedCamera_R_translationD) * HomogenousMatrixD4(VectorD3(translation_T_world));
+
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
-				const VectorT3<T> objectPoint = objectPoints[n];
-				const VectorT2<T> imagePoint(camera.projectToImageIF(flippedCamera_T_world, objectPoint));
+				const VectorD3 objectPoint = VectorD3(objectPoints[n]);
+				const VectorD2 imagePoint(cameraD->projectToImageIF(flippedCamera_T_worldD, objectPoint));
 
 				const T* jacobianX = jacobian[2 * n + 0];
 				const T* jacobianY = jacobian[2 * n + 1];
@@ -508,13 +517,13 @@ bool TestJacobian::testAnyCameraOrientationJacobian2x3(const double testDuration
 				{
 					bool localAccuracy = false;
 
-					for (const T epsilon : epsilons)
+					for (const double epsilon : epsilons)
 					{
 						// df / dwx
-						ExponentialMapT<T> rotationWx(flippedCamera_R_translation);
+						ExponentialMapD rotationWx = ExponentialMapD(flippedCamera_R_translationD);
 						rotationWx[0] += epsilon;
 
-						const VectorT2<T> imagePointWx(camera.projectToImageIF(HomogenousMatrixT4<T>(rotationWx.quaternion()) * HomogenousMatrixT4<T>(translation_T_world), objectPoint));
+						const VectorD2 imagePointWx(cameraD->projectToImageIF(HomogenousMatrixD4(rotationWx.quaternion()) * HomogenousMatrixD4(VectorD3(translation_T_world)), objectPoint));
 						if (checkAccuracy(imagePoint, imagePointWx, epsilon, jacobianX[0], jacobianY[0]))
 						{
 							localAccuracy = true;
@@ -524,20 +533,20 @@ bool TestJacobian::testAnyCameraOrientationJacobian2x3(const double testDuration
 
 					if (!localAccuracy)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
 				{
 					bool localAccuracy = false;
 
-					for (const T epsilon : epsilons)
+					for (const double epsilon : epsilons)
 					{
 						// df / dwy
-						ExponentialMapT<T> rotationWy(flippedCamera_R_translation);
+						ExponentialMapD rotationWy = ExponentialMapD(flippedCamera_R_translationD);
 						rotationWy[1] += epsilon;
 
-						const VectorT2<T> imagePointWy(camera.projectToImageIF(HomogenousMatrixT4<T>(rotationWy.quaternion()) * HomogenousMatrixT4<T>(translation_T_world), objectPoint));
+						const VectorD2 imagePointWy(cameraD->projectToImageIF(HomogenousMatrixD4(rotationWy.quaternion()) * HomogenousMatrixD4(VectorD3(translation_T_world)), objectPoint));
 						if (checkAccuracy(imagePoint, imagePointWy, epsilon, jacobianX[1], jacobianY[1]))
 						{
 							localAccuracy = true;
@@ -547,20 +556,20 @@ bool TestJacobian::testAnyCameraOrientationJacobian2x3(const double testDuration
 
 					if (!localAccuracy)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
 				{
 					bool localAccuracy = false;
 
-					for (const T epsilon : epsilons)
+					for (const double epsilon : epsilons)
 					{
 						// df / dwz
-						ExponentialMapT<T> rotationWz(flippedCamera_R_translation);
+						ExponentialMapD rotationWz = ExponentialMapD(flippedCamera_R_translationD);
 						rotationWz[2] += epsilon;
 
-						const VectorT2<T> imagePointWz(camera.projectToImageIF(HomogenousMatrixT4<T>(rotationWz.quaternion()) * HomogenousMatrixT4<T>(translation_T_world), objectPoint));
+						const VectorD2 imagePointWz(cameraD->projectToImageIF(HomogenousMatrixD4(rotationWz.quaternion()) * HomogenousMatrixD4(VectorD3(translation_T_world)), objectPoint));
 						if (checkAccuracy(imagePoint, imagePointWz, epsilon, jacobianX[2], jacobianY[2]))
 						{
 							localAccuracy = true;
@@ -570,40 +579,19 @@ bool TestJacobian::testAnyCameraOrientationJacobian2x3(const double testDuration
 
 					if (!localAccuracy)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
-
-				if (accurate)
-				{
-					++succeeded;
-				}
-
-				++iterations;
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
-
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance optimized: " << performanceOptimized.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (std::is_same<T, float>::value)
-	{
-		if (!allSucceeded)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
@@ -7737,7 +7725,7 @@ bool TestJacobian::testCalculateFisheyeDistortNormalized2x2(const double testDur
 
 	if (!allSucceeded)
 	{
-		if (std::is_same<Scalar, float>::value)
+		if (std::is_same<T, float>::value)
 		{
 			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
 			return true;
