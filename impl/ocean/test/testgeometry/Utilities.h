@@ -127,13 +127,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT Utilities
 		 * @param principalPointDistortion True, to modify the principal point
 		 * @param radialDistortion True, to modify the radial distortion
 		 * @param tangentialDistortion True, to modify the tangential distortion
+		 * @param randomGenerator Optional random generator, nullptr to use a default random generator
 		 * @param maximalPrincipalPointOffset Maximal offset of the principal point, with range [0, infinity)
 		 * @param maximalRadialDistortion Maximal radial distortion, with range [0, infinity)
 		 * @param maximalTangentialDistortion Maximal tangential distortion, with range [0, infinity)
-		 * @param randomGenerator Optional random generator
 		 * @return Resulting modified camera
 		 */
-		static PinholeCamera distortedCamera(const PinholeCamera& pinholeCamera, const bool principalPointDistortion = true, const bool radialDistortion = true, const bool tangentialDistortion = true, const Scalar maximalPrincipalPointOffset = Scalar(20), const Scalar maximalRadialDistortion = Scalar(0.1), const Scalar maximalTangentialDistortion = Scalar(0.01), RandomGenerator* randomGenerator = nullptr);
+		static PinholeCamera distortedCamera(const PinholeCamera& pinholeCamera, const bool principalPointDistortion = true, const bool radialDistortion = true, const bool tangentialDistortion = true, RandomGenerator* randomGenerator = nullptr, const Scalar maximalPrincipalPointOffset = Scalar(20), const Scalar maximalRadialDistortion = Scalar(0.1), const Scalar maximalTangentialDistortion = Scalar(0.01));
 
 		/**
 		 * Returns one of two realistic pinhole camera profiles.

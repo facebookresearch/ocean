@@ -156,11 +156,13 @@ HomogenousMatrix4 Utilities::viewPosition(const AnyCamera& anyCamera, const Vect
 	return viewPosition(anyCamera, objectPoints, viewingDirection, circumcircle);
 }
 
-PinholeCamera Utilities::distortedCamera(const PinholeCamera& pinholeCamera, const bool principalPointDistortion, const bool radialDistortion, const bool tangentialDistortion, const Scalar maximalPrincipalPointOffset, const Scalar maximalRadialDistortion, const Scalar maximalTangentialDistortion, RandomGenerator* randomGenerator)
+PinholeCamera Utilities::distortedCamera(const PinholeCamera& pinholeCamera, const bool principalPointDistortion, const bool radialDistortion, const bool tangentialDistortion, RandomGenerator* randomGenerator, const Scalar maximalPrincipalPointOffset, const Scalar maximalRadialDistortion, const Scalar maximalTangentialDistortion)
 {
 	ocean_assert(pinholeCamera.isValid());
 
 	PinholeCamera result(pinholeCamera);
+
+	RandomGenerator localRandomGenerator(randomGenerator);
 
 	if (principalPointDistortion)
 	{
@@ -168,8 +170,8 @@ PinholeCamera Utilities::distortedCamera(const PinholeCamera& pinholeCamera, con
 		ocean_assert(maximalPrincipalPointOffset < Scalar(pinholeCamera.width() / 4u));
 		ocean_assert(maximalPrincipalPointOffset < Scalar(pinholeCamera.height() / 4u));
 
-		const Scalar xOffset = randomGenerator ? Random::scalar(*randomGenerator, -maximalPrincipalPointOffset, maximalPrincipalPointOffset) : Random::scalar(-maximalPrincipalPointOffset, maximalPrincipalPointOffset);
-		const Scalar yOffset = randomGenerator ? Random::scalar(*randomGenerator, -maximalPrincipalPointOffset, maximalPrincipalPointOffset) : Random::scalar(-maximalPrincipalPointOffset, maximalPrincipalPointOffset);
+		const Scalar xOffset = Random::scalar(localRandomGenerator, -maximalPrincipalPointOffset, maximalPrincipalPointOffset);
+		const Scalar yOffset = Random::scalar(localRandomGenerator, -maximalPrincipalPointOffset, maximalPrincipalPointOffset);
 
 		SquareMatrix3 intrinsic(pinholeCamera.intrinsic());
 		intrinsic(0, 2) += xOffset;
@@ -182,15 +184,17 @@ PinholeCamera Utilities::distortedCamera(const PinholeCamera& pinholeCamera, con
 	{
 		ocean_assert(maximalRadialDistortion >= 0);
 
-		const Scalar k1 = randomGenerator ? Random::scalar(*randomGenerator, -maximalRadialDistortion, maximalRadialDistortion) : Random::scalar(-maximalRadialDistortion, maximalRadialDistortion);
-		const Scalar k2 = randomGenerator ? Random::scalar(*randomGenerator, -maximalRadialDistortion, maximalRadialDistortion) : Random::scalar(-maximalRadialDistortion, maximalRadialDistortion);
+		const Scalar k1 = Random::scalar(localRandomGenerator, -maximalRadialDistortion, maximalRadialDistortion);
+		const Scalar k2 = Random::scalar(localRandomGenerator, -maximalRadialDistortion, maximalRadialDistortion);
+
 		result.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
 	}
 
 	if (tangentialDistortion)
 	{
-		const Scalar p1 = randomGenerator ? Random::scalar(*randomGenerator, -maximalTangentialDistortion, maximalTangentialDistortion) : Random::scalar(-maximalTangentialDistortion, maximalTangentialDistortion);
-		const Scalar p2 = randomGenerator ? Random::scalar(*randomGenerator, -maximalTangentialDistortion, maximalTangentialDistortion) : Random::scalar(-maximalTangentialDistortion, maximalTangentialDistortion);
+		const Scalar p1 = Random::scalar(localRandomGenerator, -maximalTangentialDistortion, maximalTangentialDistortion);
+		const Scalar p2 = Random::scalar(localRandomGenerator, -maximalTangentialDistortion, maximalTangentialDistortion);
+
 		result.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2));
 	}
 
