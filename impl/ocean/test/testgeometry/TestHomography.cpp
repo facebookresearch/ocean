@@ -24,6 +24,8 @@
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -1533,14 +1535,16 @@ bool TestHomography::testHomotheticMatrix(const double testDuration, const size_
 
 	RandomGenerator randomGenerator;
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const Vector2 xAxis(1, 0);
 		const Vector2 yAxis(0, 1);
 
@@ -1552,35 +1556,32 @@ bool TestHomography::testHomotheticMatrix(const double testDuration, const size_
 
 		for (size_t n = 0; n < points; ++n)
 		{
-			pointsLeft[n] = Vector2(Random::scalar(0, Scalar(width)), Random::scalar(0, Scalar(height)));
+			pointsLeft[n] = Random::vector2(randomGenerator, Scalar(0), Scalar(width), Scalar(0), Scalar(height));
 			pointsRight[n] = right_H_left * pointsLeft[n];
 
-			pointsRightNoised[n] = pointsRight[n] + Vector2(Random::gaussianNoise(0.5), Random::gaussianNoise(0.5));
+			pointsRightNoised[n] = pointsRight[n] + Random::gaussianNoiseVector2(randomGenerator, Scalar(0.5), Scalar(0.5));
 		}
 
 		SquareMatrix3 homothetic;
 
 		performance.start();
-		const bool result = Geometry::Homography::homotheticMatrix(pointsLeft.data(), pointsRight.data(), points, homothetic);
+			const bool result = Geometry::Homography::homotheticMatrix(pointsLeft.data(), pointsRight.data(), points, homothetic);
 		performance.stop();
 
-		ocean_assert(result);
 		if (result)
 		{
-			bool localSucceeded = true;
-
 			// s   0  tx
 			// 0   s  ty
 			// 0   0   1
 
 			if (Numeric::isNotEqual(homothetic(0, 0), homothetic(1, 1)) || Numeric::isNotEqualEps(homothetic(1, 0)) || Numeric::isNotEqualEps(homothetic(0, 1)))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if (Numeric::isNotEqual(homothetic(2, 0), 0) || Numeric::isNotEqual(homothetic(2, 1), 0) || Numeric::isNotEqual(homothetic(2, 2), 1))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			for (size_t n = 0; n < points; ++n)
@@ -1588,27 +1589,22 @@ bool TestHomography::testHomotheticMatrix(const double testDuration, const size_
 				Vector2 transformedPoint;
 				if (!homothetic.multiply(pointsLeft[n], transformedPoint) || !transformedPoint.isEqual(pointsRight[n], 1))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
+					break;
 				}
 			}
-
-			if (localSucceeded)
-			{
-				++validIterations;
-			}
 		}
-
-		++iterations;
+		else
+		{
+			OCEAN_SET_FAILED(validation);
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << " ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << " % succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestHomography::testSimilarityMatrix(const double testDuration)
@@ -1659,14 +1655,17 @@ bool TestHomography::testSimilarityMatrix(const double testDuration, const size_
 
 	RandomGenerator randomGenerator;
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	constexpr double successThreshold = std::is_same<Scalar, float>::value ? 0.98 : 0.99;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const Vector2 xAxis(Random::vector2(randomGenerator));
 		const Vector2 yAxis(xAxis.perpendicular());
 
@@ -1678,10 +1677,10 @@ bool TestHomography::testSimilarityMatrix(const double testDuration, const size_
 
 		for (size_t n = 0; n < points; ++n)
 		{
-			pointsLeft[n] = Vector2(Random::scalar(0, Scalar(width)), Random::scalar(0, Scalar(height)));
+			pointsLeft[n] = Random::vector2(randomGenerator, Scalar(0), Scalar(width), Scalar(0), Scalar(height));
 			pointsRight[n] = rightTleft * pointsLeft[n];
 
-			pointsRightNoised[n] = pointsRight[n] + Vector2(Random::gaussianNoise(0.5), Random::gaussianNoise(0.5));
+			pointsRightNoised[n] = pointsRight[n] + Random::gaussianNoiseVector2(randomGenerator, Scalar(0.5), Scalar(0.5));
 		}
 
 		SquareMatrix3 similarity;
@@ -1692,20 +1691,18 @@ bool TestHomography::testSimilarityMatrix(const double testDuration, const size_
 
 		if (result)
 		{
-			bool localSucceeded = true;
-
 			// a  -b  tx
 			// b   a  ty
 			// 0   0   1
 
 			if (Numeric::isNotEqual(similarity(0, 0), similarity(1, 1)) || Numeric::isNotEqual(similarity(1, 0), -similarity(0, 1)))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			if (Numeric::isNotEqual(similarity(2, 0), 0) || Numeric::isNotEqual(similarity(2, 1), 0) || Numeric::isNotEqual(similarity(2, 2), 1))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
 
 			for (size_t n = 0; n < points; ++n)
@@ -1713,29 +1710,22 @@ bool TestHomography::testSimilarityMatrix(const double testDuration, const size_
 				const Vector2 transformedPoint = similarity * pointsLeft[n];
 				if (!transformedPoint.isEqual(pointsRight[n], 1))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
+					break;
 				}
 			}
-
-			if (localSucceeded)
-			{
-				++validIterations;
-			}
 		}
-
-		++iterations;
+		else
+		{
+			OCEAN_SET_FAILED(validation);
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << " ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << " % succeeded.";
-
-	constexpr double threshold = std::is_same<Scalar, float>::value ? 0.98 : 0.99;
-
-	return percent >= threshold;
+	return validation.succeeded();
 }
 
 bool TestHomography::testAffineMatrix(const double testDuration)
@@ -1784,14 +1774,16 @@ bool TestHomography::testAffineMatrix(const double testDuration, const size_t po
 
 	RandomGenerator randomGenerator;
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const Vector2 xAxis(Random::vector2(randomGenerator));
 		const Vector2 yAxis(xAxis.perpendicular());
 
@@ -1804,10 +1796,10 @@ bool TestHomography::testAffineMatrix(const double testDuration, const size_t po
 
 		for (size_t n = 0; n < points; ++n)
 		{
-			pointsLeft[n] = Vector2(Random::scalar(0, Scalar(width)), Random::scalar(0, Scalar(height)));
+			pointsLeft[n] = Random::vector2(randomGenerator, Scalar(0), Scalar(width), Scalar(0), Scalar(height));
 			pointsRight[n] = rightTleft * pointsLeft[n];
 
-			pointsRightNoised[n] = pointsRight[n] + Vector2(Random::gaussianNoise(0.5), Random::gaussianNoise(0.5));
+			pointsRightNoised[n] = pointsRight[n] + Random::gaussianNoiseVector2(randomGenerator, Scalar(0.5), Scalar(0.5));
 		}
 
 		SquareMatrix3 similarity;
@@ -1818,34 +1810,27 @@ bool TestHomography::testAffineMatrix(const double testDuration, const size_t po
 
 		if (result)
 		{
-			bool localSucceeded = true;
-
 			for (size_t n = 0; n < points; ++n)
 			{
 				const Vector2 transformedPoint = similarity * pointsLeft[n];
 				if (!transformedPoint.isEqual(pointsRight[n], 1))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
+					break;
 				}
 			}
-
-			if (localSucceeded)
-			{
-				++validIterations;
-			}
 		}
-
-		++iterations;
+		else
+		{
+			OCEAN_SET_FAILED(validation);
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << " ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << " % succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestHomography::testHomographyMatrix(const double testDuration, const bool useSVD)
@@ -1938,14 +1923,18 @@ bool TestHomography::testHomographyMatrix(const double testDuration, const size_
 
 	RandomGenerator randomGenerator;
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	const double successThreshold = useSVD ? 0.99 : 0.95;
+
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	HighPerformanceStatistic performance;
+
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		// we create a realistic homography based on two camera poses and a 3D plane in front of both cameras
 
 		const Plane3 plane(Vector3(0, 0, -4), Vector3(0, 0, 1));
@@ -1958,7 +1947,7 @@ bool TestHomography::testHomographyMatrix(const double testDuration, const size_
 
 		for (size_t n = 0; n < points; ++n)
 		{
-			pointsLeft[n] = Vector2(Random::scalar(0, Scalar(width)), Random::scalar(0, Scalar(height)));
+			pointsLeft[n] = Random::vector2(randomGenerator, Scalar(0), Scalar(width), Scalar(0), Scalar(height));
 
 			Vector3 objectPoint(Numeric::minValue(), Numeric::minValue(), Numeric::minValue());
 			if (!plane.intersection(pinholeCamera.ray(pointsLeft[n], leftPose), objectPoint))
@@ -1971,7 +1960,7 @@ bool TestHomography::testHomographyMatrix(const double testDuration, const size_
 
 			pointsRight[n] = pinholeCamera.projectToImage<false>(rightPose, objectPoint, false);
 
-			pointsRightNoised[n] = pointsRight[n] + Vector2(Random::gaussianNoise(0.5), Random::gaussianNoise(0.5));
+			pointsRightNoised[n] = pointsRight[n] + Random::gaussianNoiseVector2(randomGenerator, Scalar(0.5), Scalar(0.5));
 		}
 
 		SquareMatrix3 homography;
@@ -1987,32 +1976,22 @@ bool TestHomography::testHomographyMatrix(const double testDuration, const size_
 				const Vector2 transformedPoint = homography * pointsLeft[n];
 				if (!transformedPoint.isEqual(pointsRight[n], 1))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
+					break;
 				}
 			}
-
-			if (localSucceeded)
-			{
-				++validIterations;
-			}
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << " ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << " % succeeded.";
-
-	if (useSVD)
-	{
-		return percent >= 0.99;
-	}
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double testDuration, const size_t correspondences)
