@@ -236,30 +236,31 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 
 		/**
 		 * Determines the derivative for a given 2D position and compares the accuracy with the precise derivatives.
-		 * @param original The original position
-		 * @param offset The offset position (epsilon offset)
-		 * @param eps Used epsilon
-		 * @param derivativeX Precise derivative
-		 * @param derivativeY Precise derivative
+		 * @param original The original 2D position
+		 * @param offset The offset position (result of the epsilon offset)
+		 * @param eps The epsilon which was used to create the offset position, with range (0, infinity)
+		 * @param derivativeX The precise derivative in x-direction to verify
+		 * @param derivativeY The precise derivative in y-direction to verify
 		 * @return True, if so
 		 * @tparam T The data type of the scalar to be used, 'float' or 'double'
+		 * @tparam TDerivative The data type of the derivative, `float` or `double`
 		 */
-		template <typename T>
-		static inline bool checkAccuracy(const VectorT2<T>& original, const VectorT2<T>& offset, const T eps, const T derivativeX, const T derivativeY);
+		template <typename T, typename TDerivative>
+		static inline bool checkAccuracy(const VectorT2<T>& original, const VectorT2<T>& offset, const T eps, const TDerivative derivativeX, const TDerivative derivativeY);
 
 		/**
 		 * Determines the derivative for a given 3D position and compares the accuracy with the precise derivatives.
-		 * @param original The original position
-		 * @param offset The offset position (epsilon offset)
-		 * @param eps Used epsilon
-		 * @param derivativeX Precise derivative
-		 * @param derivativeY Precise derivative
-		 * @param derivativeZ Precise derivative
+		 * @param original The original 2D position
+		 * @param offset The offset position (result of the epsilon offset)
+		 * @param eps The epsilon which was used to create the offset position, with range (0, infinity)
+		 * @param derivativeX The precise derivative in x-direction to verify
+		 * @param derivativeY The precise derivative in y-direction to verify
+		 * @param derivativeZ The precise derivative in z-direction to verify
 		 * @return True, if so
 		 * @tparam T The data type of the scalar to be used, 'float' or 'double'
 		 */
-		template <typename T>
-		static inline bool checkAccuracy(const VectorT3<T>& original, const VectorT3<T>& offset, const T eps, const T derivativeX, const T derivativeY, const T derivativeZ);
+		template <typename T, typename TDerivative>
+		static inline bool checkAccuracy(const VectorT3<T>& original, const VectorT3<T>& offset, const T eps, const TDerivative derivativeX, const TDerivative derivativeY, const TDerivative derivativeZ);
 
 		/**
 		 * Calculates the two Jacobian rows for a given pose and dynamic object point.
@@ -285,9 +286,11 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		static constexpr double successThreshold();
 };
 
-template <typename T>
-bool TestJacobian::checkAccuracy(const VectorT2<T>& original, const VectorT2<T>& offset, const T eps, const T derivativeX, const T derivativeY)
+template <typename T, typename TDerivative>
+bool TestJacobian::checkAccuracy(const VectorT2<T>& original, const VectorT2<T>& offset, const T eps, const TDerivative derivativeX, const TDerivative derivativeY)
 {
+	static_assert(sizeof(TDerivative) <= sizeof(T), "The derivative should not have more precision than epsilon");
+
 	ocean_assert(eps > NumericT<T>::eps());
 
 	// approximation of the derivative:
@@ -296,30 +299,50 @@ bool TestJacobian::checkAccuracy(const VectorT2<T>& original, const VectorT2<T>&
 	const T calculatedDerivativeX = (offset.x() - original.x()) / eps;
 	const T calculatedDerivativeY = (offset.y() - original.y()) / eps;
 
-	const T diffX = NumericT<T>::abs(derivativeX - calculatedDerivativeX);
+	const T maxX = max(NumericT<T>::abs(T(derivativeX)), NumericT<T>::abs(calculatedDerivativeX));
+	const T maxY = max(NumericT<T>::abs(T(derivativeY)), NumericT<T>::abs(calculatedDerivativeY));
 
-	const T maxX = max(NumericT<T>::abs(derivativeX), NumericT<T>::abs(calculatedDerivativeX));
+	const T diffX = NumericT<T>::abs(T(derivativeX) - calculatedDerivativeX);
+	const T diffY = NumericT<T>::abs(T(derivativeY) - calculatedDerivativeY);
 
-	if ((derivativeX != 0 && calculatedDerivativeX != 0 && NumericT<T>::isNotEqualEps(maxX) && diffX / maxX > T(0.05)) || ((derivativeX == 0 || calculatedDerivativeX == 0) && NumericT<T>::abs(diffX) > T(0.001)))
+	if (NumericT<TDerivative>::isEqualEps(derivativeX) || NumericT<T>::isEqualEps(calculatedDerivativeX))
 	{
-		return false;
+		if (NumericT<T>::abs(diffX) > T(0.001))
+		{
+			return false;
+		}
+	}
+	else
+	{
+		if (NumericT<T>::isNotEqualEps(maxX) && diffX / maxX > T(0.05))
+		{
+			return false;
+		}
 	}
 
-	const T diffY = NumericT<T>::abs(derivativeY - calculatedDerivativeY);
-
-	const T maxY = max(NumericT<T>::abs(derivativeY), NumericT<T>::abs(calculatedDerivativeY));
-
-	if ((derivativeY != 0 && calculatedDerivativeY != 0 && NumericT<T>::isNotEqualEps(maxY) && diffY / maxY > T(0.05)) || ((derivativeY == 0 || calculatedDerivativeY == 0) && NumericT<T>::abs(diffY) > T(0.001)))
+	if (NumericT<TDerivative>::isEqualEps(derivativeY) || NumericT<T>::isEqualEps(calculatedDerivativeY))
 	{
-		return false;
+		if (NumericT<T>::abs(diffY) > T(0.001))
+		{
+			return false;
+		}
+	}
+	else
+	{
+		if (NumericT<T>::isNotEqualEps(maxY) && diffY / maxY > T(0.05))
+		{
+			return false;
+		}
 	}
 
 	return true;
 }
 
-template <typename T>
-inline bool TestJacobian::checkAccuracy(const VectorT3<T>& original, const VectorT3<T>& offset, const T eps, const T derivativeX, const T derivativeY, const T derivativeZ)
+template <typename T, typename TDerivative>
+inline bool TestJacobian::checkAccuracy(const VectorT3<T>& original, const VectorT3<T>& offset, const T eps, const TDerivative derivativeX, const TDerivative derivativeY, const TDerivative derivativeZ)
 {
+	static_assert(sizeof(TDerivative) <= sizeof(T), "The derivative should not have more precision than epsilon");
+
 	ocean_assert(eps > NumericT<T>::eps());
 
 	// approximation of the derivative:
@@ -329,31 +352,57 @@ inline bool TestJacobian::checkAccuracy(const VectorT3<T>& original, const Vecto
 	const T calculatedDerivativeY = (offset.y() - original.y()) / eps;
 	const T calculatedDerivativeZ = (offset.z() - original.z()) / eps;
 
-	const T diffX = NumericT<T>::abs(derivativeX - calculatedDerivativeX);
+	const T maxX = max(NumericT<T>::abs(T(derivativeX)), NumericT<T>::abs(calculatedDerivativeX));
+	const T maxY = max(NumericT<T>::abs(T(derivativeY)), NumericT<T>::abs(calculatedDerivativeY));
+	const T maxZ = max(NumericT<T>::abs(T(derivativeZ)), NumericT<T>::abs(calculatedDerivativeZ));
 
-	const T maxX = max(NumericT<T>::abs(derivativeX), NumericT<T>::abs(calculatedDerivativeX));
+	const T diffX = NumericT<T>::abs(T(derivativeX) - calculatedDerivativeX);
+	const T diffY = NumericT<T>::abs(T(derivativeY) - calculatedDerivativeY);
+	const T diffZ = NumericT<T>::abs(T(derivativeZ) - calculatedDerivativeZ);
 
-	if ((derivativeX != 0 && NumericT<T>::isNotEqualEps(maxX) && diffX / maxX > T(0.05)) || (derivativeX == 0 && NumericT<T>::abs(diffX) > T(0.001)))
+	if (NumericT<TDerivative>::isEqualEps(derivativeX) || NumericT<T>::isEqualEps(calculatedDerivativeX))
 	{
-		return false;
+		if (NumericT<T>::abs(diffX) > T(0.001))
+		{
+			return false;
+		}
+	}
+	else
+	{
+		if (NumericT<T>::isNotEqualEps(maxX) && diffX / maxX > T(0.05))
+		{
+			return false;
+		}
 	}
 
-	const T diffY = NumericT<T>::abs(derivativeY - calculatedDerivativeY);
-
-	const T maxY = max(NumericT<T>::abs(derivativeY), NumericT<T>::abs(calculatedDerivativeY));
-
-	if ((derivativeY != 0 && NumericT<T>::isNotEqualEps(maxY) && diffY / maxY > T(0.05)) || (derivativeY == 0 && NumericT<T>::abs(diffY) > T(0.001)))
+	if (NumericT<TDerivative>::isEqualEps(derivativeY) || NumericT<T>::isEqualEps(calculatedDerivativeY))
 	{
-		return false;
+		if (NumericT<T>::abs(diffY) > T(0.001))
+		{
+			return false;
+		}
+	}
+	else
+	{
+		if (NumericT<T>::isNotEqualEps(maxY) && diffY / maxY > T(0.05))
+		{
+			return false;
+		}
 	}
 
-	const T diffZ = NumericT<T>::abs(derivativeZ - calculatedDerivativeZ);
-
-	const T maxZ = max(NumericT<T>::abs(derivativeZ), NumericT<T>::abs(calculatedDerivativeZ));
-
-	if ((derivativeZ != 0 && NumericT<T>::isNotEqualEps(maxZ) && diffZ / maxZ > T(0.05)) || (derivativeZ == 0 && NumericT<T>::abs(diffZ) > T(0.001)))
+	if (NumericT<TDerivative>::isEqualEps(derivativeZ) || NumericT<T>::isEqualEps(calculatedDerivativeZ))
 	{
-		return false;
+		if (NumericT<T>::abs(diffZ) > T(0.001))
+		{
+			return false;
+		}
+	}
+	else
+	{
+		if (NumericT<T>::isNotEqualEps(maxZ) && diffZ / maxZ > T(0.05))
+		{
+			return false;
+		}
 	}
 
 	return true;
