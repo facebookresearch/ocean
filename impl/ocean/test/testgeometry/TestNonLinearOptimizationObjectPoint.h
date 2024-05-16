@@ -251,10 +251,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationObjectPoint : protecte
 		 * @param type Estimator type to be used
 		 * @param standardDeviation Optional standard deviation of the Gaussian normal distribution for noised image points, with range [0, infinity)
 		 * @param outliers Number of outliers correspondences
-		 * @param roughObjectPoint True, to use a rough object point as start for the optimization; False, to use a RANSAC approach for a initial object point
+		 * @param useRoughObjectPoint True, to use a rough object point as start for the optimization; False, to use a RANSAC approach for a initial object point
 		 * @return True, if succeeded
 		 */
-		static bool testOptimizeObjectPointRotationalPoses(const PinholeCamera& patternCamera, const unsigned int numberObservations, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation = 0, const unsigned int outliers = 0u, const bool roughObjectPoint = true);
+		static bool testOptimizeObjectPointRotationalPoses(const PinholeCamera& patternCamera, const unsigned int numberObservations, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int outliers, const bool useRoughObjectPoint);
 };
 
 }

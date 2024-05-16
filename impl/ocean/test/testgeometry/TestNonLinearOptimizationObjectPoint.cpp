@@ -18,6 +18,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -345,6 +347,79 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPos
 	for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
 	{
 		EXPECT_TRUE(TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationalPosesObjectPoints(numberPoses, numberObjectPoints, GTEST_TEST_DURATION, estimatorType, noise, numberPoses * percentOutliers / 100u));
+	}
+}
+
+
+TEST(TestNonLinearOptimizationObjectPoint, OptimizeObjectPointRotationalPoses_50Observations_NoOutliers_NoNoise)
+{
+	const PinholeCamera pinholeCamera(1280u, 720u, Numeric::deg2rad(60));
+
+	constexpr unsigned int numberObservations = 50u;
+
+	constexpr Scalar noise = Scalar(0);
+	constexpr unsigned int percentOutliers = 0u;
+
+	for (const bool useRoughObjectPoint : {false, true})
+	{
+		for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+		{
+			EXPECT_TRUE(TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPoses(pinholeCamera, numberObservations, GTEST_TEST_DURATION, estimatorType, noise, numberObservations * percentOutliers / 100u, useRoughObjectPoint));
+		}
+	}
+}
+
+TEST(TestNonLinearOptimizationObjectPoint, OptimizeObjectPointRotationalPoses_50Observations_Outliers_NoNoise)
+{
+	const PinholeCamera pinholeCamera(1280u, 720u, Numeric::deg2rad(60));
+
+	constexpr unsigned int numberObservations = 50u;
+
+	constexpr Scalar noise = Scalar(0);
+	constexpr unsigned int percentOutliers = 10u;
+
+	for (const bool useRoughObjectPoint : {false, true})
+	{
+		for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+		{
+			EXPECT_TRUE(TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPoses(pinholeCamera, numberObservations, GTEST_TEST_DURATION, estimatorType, noise, numberObservations * percentOutliers / 100u, useRoughObjectPoint));
+		}
+	}
+}
+
+TEST(TestNonLinearOptimizationObjectPoint, OptimizeObjectPointRotationalPoses_50Observations_NoOutliers_Noise)
+{
+	const PinholeCamera pinholeCamera(1280u, 720u, Numeric::deg2rad(60));
+
+	constexpr unsigned int numberObservations = 50u;
+
+	constexpr Scalar noise = Scalar(1);
+	constexpr unsigned int percentOutliers = 0u;
+
+	for (const bool useRoughObjectPoint : {false, true})
+	{
+		for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+		{
+			EXPECT_TRUE(TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPoses(pinholeCamera, numberObservations, GTEST_TEST_DURATION, estimatorType, noise, numberObservations * percentOutliers / 100u, useRoughObjectPoint));
+		}
+	}
+}
+
+TEST(TestNonLinearOptimizationObjectPoint, OptimizeObjectPointRotationalPoses_50Observations_Outliers_Noise)
+{
+	const PinholeCamera pinholeCamera(1280u, 720u, Numeric::deg2rad(60));
+
+	constexpr unsigned int numberObservations = 50u;
+
+	constexpr Scalar noise = Scalar(1);
+	constexpr unsigned int percentOutliers = 10u;
+
+	for (const bool useRoughObjectPoint : {false, true})
+	{
+		for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+		{
+			EXPECT_TRUE(TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPoses(pinholeCamera, numberObservations, GTEST_TEST_DURATION, estimatorType, noise, numberObservations * percentOutliers / 100u, useRoughObjectPoint));
+		}
 	}
 }
 
@@ -3023,192 +3098,269 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Optimization of 3D object points for fixed 3DOF (orientational) poses:";
-	Log::info() << " ";
 
-	bool result = true;
+	bool allSucceeded = true;
+
 	const PinholeCamera pinholeCamera(1280u, 720u, Numeric::deg2rad(60));
 
-	for (const unsigned int outlier : {0u, 10u})
+	for (const bool useRoughObjectPoint : {true, false})
 	{
-		Log::info().newLine(outlier != 0u);
-		Log::info().newLine(outlier != 0u);
+		Log::info().newLine();
+		Log::info().newLine();
 
-		for (const Scalar noise : {Scalar(0), Scalar(1)})
+		if (useRoughObjectPoint)
 		{
-			Log::info().newLine(noise != Scalar(0));
-			Log::info().newLine(noise != Scalar(0));
+			Log::info() << "... with rough object point";
+		}
+		else
+		{
+			Log::info() << "... without rough object point";
+		}
 
-			Log::info() << "Samples with Gaussian noise " << String::toAString(noise, 1u) << "px and " << outlier << "% outliers:";
-			Log::info() << " ";
-
-			for (const unsigned int observations : {10u, 20u, 50u, 500u})
+		for (const unsigned int outlier : {0u, 10u})
+		{
+			for (const Scalar noise : {Scalar(0), Scalar(1)})
 			{
-				Log::info().newLine(observations != 10u);
+				Log::info().newLine();
+				Log::info().newLine();
 
-				Log::info() << "With " << observations << " observations";
+				Log::info() << "Samples with Gaussian noise " << String::toAString(noise, 1u) << "px and " << outlier << "% outliers:";
+				Log::info() << " ";
 
-				for (Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+				for (const unsigned int observations : {10u, 20u, 50u, 500u})
 				{
-					Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
+					Log::info().newLine(observations != 10u);
 
-					result = testOptimizeObjectPointRotationalPoses(pinholeCamera, observations, testDuration, estimatorType, noise, observations * outlier / 100u) && result;
+					Log::info() << "With " << observations << " observations";
+
+					for (Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+					{
+						Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
+
+						if (!testOptimizeObjectPointRotationalPoses(pinholeCamera, observations, testDuration, estimatorType, noise, observations * outlier / 100u, useRoughObjectPoint))
+						{
+							allSucceeded = false;
+						}
+					}
 				}
 			}
 		}
 	}
 
-	return result;
+	return allSucceeded;
 }
 
-bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPoses(const PinholeCamera& patternCamera, const unsigned int numberObservations, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int numberOutliers, const bool roughObjectPoint)
+bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPoses(const PinholeCamera& patternCamera, const unsigned int numberObservations, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int numberOutliers, const bool useRoughObjectPoint)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberObservations);
 
-	Scalar averageInitialError = 0;
-	Scalar averageOptimizedError = 0;
+	Scalars initialErrors;
+	Scalars optimizedErrors;
 
-	Scalars medianInitialErrors;
-	Scalars medianOptimizedErrors;
-
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
 	HighPerformanceStatistic performance;
 
+	enum DistortionType : uint32_t
+	{
+		DT_NO_DISTORTION = 0u,
+		DT_RADIAL_DISTORTION = 1u << 0u | DT_NO_DISTORTION,
+		DT_FULL_DISTORTION = (1u << 1u) | DT_RADIAL_DISTORTION
+	};
+
 	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		// create a distorted camera
-		const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, iterations % 3u == 1u || iterations % 3u == 2u, iterations % 3u == 2u));
-
-		SquareMatrices3 orientations;
-		Vectors2 imagePoints;
-		Vector3 objectPoint(0, 0, 0);
-
-		while (orientations.size() < numberObservations)
+		for (const DistortionType distortionType : {DT_NO_DISTORTION, DT_RADIAL_DISTORTION, DT_FULL_DISTORTION})
 		{
-			const SquareMatrix3 orientation(Random::euler(Numeric::deg2rad(0), Numeric::deg2rad(30)));
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			if (orientations.empty())
+			const AnyCameraPinhole camera(Utilities::distortedCamera(patternCamera, true, (distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION, (distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION));
+
+			Vectors2 perfectImagePoints;
+			SquareMatrices3 world_R_cameras;
+
+			Vector3 objectPoint(Numeric::minValue(), Numeric::minValue(), Numeric::minValue());
+
+			while (world_R_cameras.size() < numberObservations)
 			{
-				const Vector2 roughImagePoint(Random::scalar(40, Scalar(pinholeCamera.width() - 41u)), Random::scalar(40, Scalar(pinholeCamera.height() - 41u)));
-				const Line3 imagePointRay = pinholeCamera.ray(pinholeCamera.undistort<true>(roughImagePoint), HomogenousMatrix4(orientation));
+				constexpr Scalar cameraBorder = Scalar(20);
 
-				objectPoint = imagePointRay.direction() * Random::scalar(2, 5);
+				const SquareMatrix3 world_R_camera(Random::euler(Numeric::deg2rad(0), Numeric::deg2rad(30)));
 
-				const Vector2 imagePoint = pinholeCamera.projectToImage<true>(HomogenousMatrix4(orientation), objectPoint, true);
-
-				orientations.push_back(orientation);
-				imagePoints.push_back(imagePoint);
-			}
-			else
-			{
-				const HomogenousMatrix4 world_T_camera(orientation);
-
-				if (PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), objectPoint))
+				if (world_R_cameras.empty())
 				{
-					const Vector2 projectedObjectPoint(pinholeCamera.projectToImage<true>(world_T_camera, objectPoint, true));
+					const Vector2 imagePoint(Random::vector2(randomGenerator, cameraBorder, Scalar(camera.width()) - cameraBorder, cameraBorder, Scalar(camera.height()) - cameraBorder));
 
-					if (pinholeCamera.isInside(projectedObjectPoint))
+					const Line3 imagePointRay = camera.ray(imagePoint, HomogenousMatrix4(world_R_camera));
+
+					objectPoint = imagePointRay.direction() * Random::scalar(randomGenerator, 2, 5);
+
+					world_R_cameras.push_back(world_R_camera);
+					perfectImagePoints.push_back(imagePoint);
+				}
+				else
+				{
+					if (AnyCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_R_camera), objectPoint))
 					{
-						orientations.push_back(orientation);
-						imagePoints.push_back(projectedObjectPoint);
+						const Vector2 projectedObjectPoint(camera.projectToImage(HomogenousMatrix4(world_R_camera), objectPoint));
+
+						if (camera.isInside(projectedObjectPoint, cameraBorder))
+						{
+							world_R_cameras.push_back(world_R_camera);
+							perfectImagePoints.push_back(projectedObjectPoint);
+						}
 					}
 				}
 			}
-		}
 
-		Vectors2 perfectImagePoints(imagePoints);
+			Vectors2 imagePoints(perfectImagePoints);
 
-		if (standardDeviation > 0)
-		{
-			for (size_t n = 0; n < imagePoints.size(); ++n)
+			if (standardDeviation > 0)
 			{
-				const Vector2 noise(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation));
-				imagePoints[n] += noise;
+				for (size_t n = 0; n < imagePoints.size(); ++n)
+				{
+					imagePoints[n] += Vector2(Random::gaussianNoise(randomGenerator, standardDeviation), Random::gaussianNoise(randomGenerator, standardDeviation));
+				}
 			}
-		}
 
-		const IndexSet32 outlierSet(Utilities::randomIndices(numberObservations - 1u, numberOutliers));
-		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
-		{
-			const Vector2 outlierNoise(Random::scalar(10, 100) * Random::sign(), Random::scalar(10, 100) * Random::sign());
-			imagePoints[*i] += outlierNoise;
-		}
+			UnorderedIndexSet32 outlierSet;
 
-		performance.start();
-
-		if (roughObjectPoint)
-		{
-			const Euler faultyEuler(Random::euler(Numeric::deg2rad(20)));
-			const Vector3 startObjectPoint(Quaternion(faultyEuler) * objectPoint);
-
-			Vector3 optimizedObjectPoint;
-
-			Scalar initialError, finalError;
-			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientations(pinholeCamera, ConstArrayAccessor<SquareMatrix3>(orientations), ConstArrayAccessor<Vector2>(imagePoints), startObjectPoint, Scalar(1), pinholeCamera.hasDistortionParameters(), optimizedObjectPoint, 20u, type, Scalar(0.001), Scalar(5), true, &initialError, &finalError))
+			while (outlierSet.size() < numberOutliers)
 			{
-				performance.stop();
+				const unsigned int index = RandomI::random(randomGenerator, numberObservations - 1u);
 
-				averageInitialError += initialError;
-				averageOptimizedError += finalError;
+				if (outlierSet.emplace(index).second)
+				{
+					const Scalar sign = Random::sign(randomGenerator);
 
-				medianInitialErrors.push_back(initialError);
-				medianOptimizedErrors.push_back(finalError);
-
-				succeeded++;
+					imagePoints[index] += Random::vector2(randomGenerator, Scalar(10), Scalar(100)) * sign;
+				}
 			}
-			else
+
+			performance.start();
+
+			if (useRoughObjectPoint)
 			{
-				performance.skip();
-			}
-		}
-		else
-		{
-			Vector3 startObjectPoint;
-			Indices32 usedIndices;
-			if (Geometry::RANSAC::objectPoint(pinholeCamera, ConstArrayAccessor<SquareMatrix3>(orientations), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, startObjectPoint, Scalar(1), pinholeCamera.hasDistortionParameters(), 50u, Scalar(5 * 5), 3u, true, Geometry::Estimator::ET_INVALID, nullptr, &usedIndices))
-			{
+				const Vector3 startObjectPoint = objectPoint + Random::vector3(randomGenerator, Scalar(-0.1), Scalar(0.1));
+
 				Vector3 optimizedObjectPoint;
-				Scalar initialError, finalError;
-				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientations(pinholeCamera, ConstArraySubsetAccessor<SquareMatrix3, unsigned int>(orientations, usedIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, usedIndices), startObjectPoint, Scalar(1), pinholeCamera.hasDistortionParameters(), optimizedObjectPoint, 20u, type, Scalar(0.001), Scalar(5), true, &initialError, &finalError))
+
+				Scalar initialError = Numeric::maxValue();
+				Scalar finalError = Numeric::maxValue();
+
+				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientations(camera.actualCamera(), ConstArrayAccessor<SquareMatrix3>(world_R_cameras), ConstArrayAccessor<Vector2>(imagePoints), startObjectPoint, Scalar(1), camera.actualCamera().hasDistortionParameters(), optimizedObjectPoint, 20u, type, Scalar(0.001), Scalar(5), true, &initialError, &finalError))
 				{
 					performance.stop();
 
-					averageInitialError += initialError;
-					averageOptimizedError += finalError;
-
-					medianInitialErrors.push_back(initialError);
-					medianOptimizedErrors.push_back(finalError);
-
-					succeeded++;
+					initialErrors.push_back(initialError);
+					optimizedErrors.push_back(finalError);
 				}
 				else
 				{
 					performance.skip();
+
+					scopedIteration.setInaccurate();
+				}
+			}
+			else
+			{
+				Vector3 startObjectPoint;
+				Indices32 usedIndices;
+				if (Geometry::RANSAC::objectPoint(camera.actualCamera(), ConstArrayAccessor<SquareMatrix3>(world_R_cameras), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, startObjectPoint, Scalar(1), camera.actualCamera().hasDistortionParameters(), 50u, Scalar(5 * 5), 3u, true, Geometry::Estimator::ET_INVALID, nullptr, &usedIndices))
+				{
+					Vector3 optimizedObjectPoint;
+					Scalar initialError, finalError;
+					if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientations(camera.actualCamera(), ConstArraySubsetAccessor<SquareMatrix3, unsigned int>(world_R_cameras, usedIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, usedIndices), startObjectPoint, Scalar(1), camera.actualCamera().hasDistortionParameters(), optimizedObjectPoint, 20u, type, Scalar(0.001), Scalar(5), true, &initialError, &finalError))
+					{
+						performance.stop();
+
+						initialErrors.push_back(initialError);
+						optimizedErrors.push_back(finalError);
+					}
+					else
+					{
+						performance.skip();
+
+						scopedIteration.setInaccurate();
+					}
 				}
 			}
 		}
-
-		++iterations;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	averageInitialError /= Scalar(iterations);
-	averageOptimizedError /= Scalar(iterations);
+	std::sort(initialErrors.begin(), initialErrors.end());
+	std::sort(optimizedErrors.begin(), optimizedErrors.end());
 
-	const double percent = double(succeeded) / double(iterations);
+	ocean_assert(initialErrors.size() == optimizedErrors.size());
 
-	Log::info() << "Average error: " << String::toAString(averageInitialError, 1u) << "px -> " << String::toAString(averageOptimizedError, 1u) << "px";
-	Log::info() << "Median error: " << String::toAString(Median::constMedian(medianInitialErrors.data(), medianInitialErrors.size()), 1u) << "px -> " << String::toAString(Median::constMedian(medianOptimizedErrors.data(), medianOptimizedErrors.size()), 1u) << "px";
-	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 2u) << "ms, average: " << String::toAString(performance.averageMseconds(), 2u) << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	if (!initialErrors.empty())
+	{
+		Scalar averageInitialError = 0;
+		Scalar averageOptimizedError = 0;
 
-	return percent >= 0.995;
+		for (size_t n = 0; n < initialErrors.size(); ++n)
+		{
+			averageInitialError += initialErrors[n];
+			averageOptimizedError += optimizedErrors[n];
+		}
+
+		averageInitialError /= Scalar(initialErrors.size());
+		averageOptimizedError /= Scalar(initialErrors.size());
+
+		const Scalar medianIntitialError = initialErrors[initialErrors.size() / 2];
+		const Scalar medianOptimizedError = optimizedErrors[initialErrors.size() / 2];
+
+		Log::info() << "Average error: " << String::toAString(averageInitialError, 1u) << "px -> " << String::toAString(averageOptimizedError, 1u) << "px";
+		Log::info() << "Median error: " << String::toAString(medianIntitialError, 1u) << "px -> " << String::toAString(medianOptimizedError, 1u) << "px";
+
+		if (numberOutliers == 0u)
+		{
+			if (standardDeviation == Scalar(0))
+			{
+				if (useRoughObjectPoint)
+				{
+					if (medianOptimizedError > Scalar(0.1))
+					{
+						// we have perfect conditions, so we expect perfect results
+						OCEAN_SET_FAILED(validation);
+					}
+				}
+				else
+				{
+					if (optimizedErrors.back() > Scalar(0.1))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+				}
+			}
+			else
+			{
+				if (numberOutliers == 0u)
+				{
+					if (medianOptimizedError > Scalar(10 * 10))
+					{
+						// we have no outliers, so we expect some noisy results
+						OCEAN_SET_FAILED(validation);
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		OCEAN_SET_FAILED(validation);
+	}
+
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 }
