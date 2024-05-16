@@ -102,6 +102,29 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		static inline bool optimizePose(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
 
 		/**
+		 * Minimizes the projection error of a given 6-DOF camera pose.
+		 * Beware: There is another optimizePose() function with almost identical functionality/parameter layout.<br>
+		 * However, this function here supports covariance parameters and thus creates a bigger binary footprint.
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param world_T_camera The camera pose to optimized, transforming camera points to world points, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
+		 * @param objectPoints 3D object points to be projected into the camera plane
+		 * @param imagePoints 2D image points corresponding to the object points, the image points may be distorted or undistorted depending on the usage of the distortImagePoints state
+		 * @param world_T_optimizedCamera The resulting optimized 6-DOF camera pose, transforming camera points to world points, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
+		 * @param iterations Number of iterations to be applied at most, if no convergence can be reached, with range [1, infinity)
+		 * @param estimator Robust error estimator to be used
+		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity)
+		 * @param lambdaFactor Levenberg-Marquardt damping factor to be applied to the damping value, with range [1, infinity)
+		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator, nullptr to avoid the usage of the return value
+		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator, nullptr to avoid the usage of the return value
+		 * @param invertedCovariances Optional 2x2 inverted covariance matrices which represent the uncertainties of the image points, one for each image point (a (2*n)x2 matrix)
+		 * @return True, if the optimization succeeded
+		 * @see optimizePoseIF().
+		 */
+		static inline bool optimizePose(const AnyCamera& camera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances);
+
+		/**
+		 * Deprecated.
+		 *
 		 * Minimizes the projection error of a given 6DOF pose holding orientation and translation parameters.
 		 * The given 6DOF pose is a standard extrinsic camera matrix.<br>
 		 * Beware: There is another optimizePose() function with almost identical functionality/parameter layout.<br>
@@ -192,6 +215,30 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		static bool optimizePoseIF(const AnyCamera& anyCamera, const HomogenousMatrix4& flippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& optimizedPose_flippedCamera_T_world, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
 
 		/**
+		 * Minimizes the projection error of a given 6-DOF camera pose.
+		 * Beware: There is another optimizePose() function with almost identical functionality/parameter layout.<br>
+		 * However, this function here supports covariance parameters and thus creates a bigger binary footprint.
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param flippedCamera_T_world The inverted and flipped camera pose to optimized, transforming world points to flipped camera points, with default camera pointing towards the positive z-space with y-axis downwards, must be valid
+		 * @param objectPoints 3D object points to be projected into the camera plane
+		 * @param imagePoints 2D image points corresponding to the object points, the image points may be distorted or undistorted depending on the usage of the distortImagePoints state
+		 * @param optimizedFlippedCamera_T_world The resulting optimized inverted and flipped camera pose, transforming world points to flipped camera points, with default camera pointing towards the positive z-space with y-axis downwards, must be valid
+		 * @param iterations Number of iterations to be applied at most, if no convergence can be reached, with range [1, infinity)
+		 * @param estimator Robust error estimator to be used
+		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity)
+		 * @param lambdaFactor Levenberg-Marquardt damping factor to be applied to the damping value, with range [1, infinity)
+		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator, nullptr to avoid the usage of the return value
+		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator, nullptr to avoid the usage of the return value
+		 * @param invertedCovariances Optional 2x2 inverted covariance matrices which represent the uncertainties of the image points, one for each image point (a (2*n)x2 matrix)
+		 * @return True, if the optimization succeeded
+		 * @see optimizePose().
+		 */
+		static bool optimizePoseIF(const AnyCamera& camera, const HomogenousMatrix4& flippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& optimizedFlippedCamera_T_world, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances);
+
+
+		/**
+		 * Deprecated.
+		 *
 		 * Minimizes the projection error of a given inverted and flipped 6DOF pose holding orientation and translation parameters.
 		 * Beware: The given inverted and flipped 6DOF pose is not equivalent to a standard extrinsic camera matrix.<br>
 		 * Beware: There is another optimizePoseIF() function with almost identical functionality/parameter layout.<br>
@@ -276,22 +323,31 @@ inline bool NonLinearOptimizationPose::optimizePose(const AnyCamera& anyCamera, 
 	return true;
 }
 
-inline bool NonLinearOptimizationPose::optimizePose(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, const bool distortImagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances)
+inline bool NonLinearOptimizationPose::optimizePose(const AnyCamera& camera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances)
 {
+	ocean_assert(camera.isValid());
 	ocean_assert(world_T_camera.isValid());
+
 	ocean_assert(objectPoints.size() >= 3u);
 	ocean_assert(objectPoints.size() == imagePoints.size());
 
 	const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
 
-	HomogenousMatrix4 optimizedInvertedFlippedPose;
-	if (!optimizePoseIF(pinholeCamera, flippedCamera_T_world, objectPoints, imagePoints, distortImagePoints, optimizedInvertedFlippedPose, iterations, estimator, lambda, lambdaFactor, initialError, finalError, invertedCovariances))
+	HomogenousMatrix4 optimizedFlippedCamera_T_world(false);
+	if (!optimizePoseIF(camera, flippedCamera_T_world, objectPoints, imagePoints, optimizedFlippedCamera_T_world, iterations, estimator, lambda, lambdaFactor, initialError, finalError, invertedCovariances))
 	{
 		return false;
 	}
 
-	world_T_optimizedCamera = PinholeCamera::invertedFlipped2Standard(optimizedInvertedFlippedPose);
+	world_T_optimizedCamera = PinholeCamera::invertedFlipped2Standard(optimizedFlippedCamera_T_world);
 	return true;
+}
+
+inline bool NonLinearOptimizationPose::optimizePose(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, const bool distortImagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances)
+{
+	const AnyCameraPinhole anyCamera(PinholeCamera(pinholeCamera, distortImagePoints));
+
+	return optimizePose(anyCamera, world_T_camera, objectPoints, imagePoints, world_T_optimizedCamera, iterations, estimator, lambda, lambdaFactor, initialError, finalError, invertedCovariances);
 }
 
 inline bool NonLinearOptimizationPose::optimizePoseZoom(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Scalar zoom, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, const bool distortImagePoints, HomogenousMatrix4& world_T_optimizedCamera, Scalar& optimizedZoom, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances)

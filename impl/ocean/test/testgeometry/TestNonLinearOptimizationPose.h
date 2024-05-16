@@ -42,6 +42,8 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationPose
 		static bool test(const double testDuration, Worker* worker);
 
 		/**
+		 * Deprecated.
+		 *
 		 * Tests the non linear optimization function for a 6DOF pose and a pinhole camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -49,6 +51,8 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationPose
 		static bool testNonLinearOptimizationPosePinholeCamera(const double testDuration);
 
 		/**
+		 * Deprecated.
+		 *
 		 * Tests the non linear optimizations function for a 6DOF pose and a pinhole camera, with specified correspondences, estimator type and outliers.
 		 * @param pinholeCamera The pinhole camera profile to be used, must be valid
 		 * @param correspondences Number of point correspondences
@@ -76,9 +80,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationPose
 		 * @param type Estimator type to be used
 		 * @param standardDeviation Optional standard deviation of the Gaussian distribution for noised image points
 		 * @param outliers Number of outlier correspondences
+		 * @param useCovariances True, to use covariances
 		 * @return True, if succeeded
 		 */
-		static bool testNonLinearOptimizationPoseAnyCamera(const AnyCamera& anyCamera, const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int outliers);
+		static bool testNonLinearOptimizationPoseAnyCamera(const AnyCamera& anyCamera, const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int outliers, const bool useCovariances);
 
 		/**
 		 * Tests the non linear optimization function for a 6DOF pose with flexible zoom factor.

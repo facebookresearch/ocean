@@ -32,16 +32,14 @@ class NonLinearOptimizationPose::PoseOptimizationProvider : public NonLinearOpti
 		 * @param objectPoints 3D object points that are projected into the camera frame
 		 * @param imagePoints 2D observation image points, each point corresponds to one object point
 		 * @param correspondences Number of points correspondences
-		 * @param distortImagePoints True, to apply the distortion parameters of the camera
 		 */
-		inline PoseOptimizationProvider(const PinholeCamera& pinholeCamera, Pose& flippedCamera_P_world, const ObjectPoint* objectPoints, const ImagePoint* imagePoints, const size_t correspondences, const bool distortImagePoints) :
-			camera_(pinholeCamera),
+		inline PoseOptimizationProvider(const AnyCamera& camera, Pose& flippedCamera_P_world, const ObjectPoint* objectPoints, const ImagePoint* imagePoints, const size_t correspondences) :
+			camera_(camera),
 			flippedCamera_P_world_(flippedCamera_P_world),
 			candidateFlippedCamera_P_world_(flippedCamera_P_world),
 			objectPoints_(objectPoints),
 			imagePoints_(imagePoints),
-			correspondences_(correspondences),
-			distortImagePoints_(distortImagePoints)
+			correspondences_(correspondences)
 		{
 			ocean_assert(correspondences_ >= 3);
 		};
@@ -83,7 +81,7 @@ class NonLinearOptimizationPose::PoseOptimizationProvider : public NonLinearOpti
 
 			jacobian.resize(correspondences_ * 2, 6);
 
-			Jacobian::calculatePoseJacobianRodrigues2nx6(jacobian.data(), camera_, Pose(flippedCamera_P_world_), objectPoints_, correspondences_, distortImagePoints_);
+			Jacobian::calculatePoseJacobianRodrigues2nx6IF(jacobian.data(), camera_, flippedCamera_P_world_, objectPoints_, correspondences_);
 		}
 
 		/**
@@ -124,7 +122,7 @@ class NonLinearOptimizationPose::PoseOptimizationProvider : public NonLinearOpti
 				ocean_assert(!weightVector);
 
 				// determine the averaged square error
-				Scalar sqrError = Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, true, false>(candidateFlippedCamera_T_world, camera_, ConstTemplateArrayAccessor<Vector3>(objectPoints_, correspondences_), ConstTemplateArrayAccessor<Vector2>(imagePoints_, correspondences_), distortImagePoints_, Scalar(1), weightedErrors);
+				Scalar sqrError = Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, false>(candidateFlippedCamera_T_world, camera_, ConstTemplateArrayAccessor<Vector3>(objectPoints_, correspondences_), ConstTemplateArrayAccessor<Vector2>(imagePoints_, correspondences_), weightedErrors);
 
 				if (transposedInvertedCovariances != nullptr)
 				{
@@ -145,7 +143,7 @@ class NonLinearOptimizationPose::PoseOptimizationProvider : public NonLinearOpti
 				weightVector.resize(2 * correspondences_, 1u);
 
 				Scalars sqrErrors(correspondences_);
-				Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, true, true>(candidateFlippedCamera_T_world, camera_, ConstTemplateArrayAccessor<Vector3>(objectPoints_, correspondences_), ConstTemplateArrayAccessor<Vector2>(imagePoints_, correspondences_), distortImagePoints_, Scalar(1), weightedErrors, sqrErrors.data());
+				Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, true>(candidateFlippedCamera_T_world, camera_, ConstTemplateArrayAccessor<Vector3>(objectPoints_, correspondences_), ConstTemplateArrayAccessor<Vector2>(imagePoints_, correspondences_), weightedErrors, sqrErrors.data());
 				return sqrErrors2robustErrors2<tEstimator>(sqrErrors, 6, weightedErrors, (Vector2*)weightVector.data(), transposedInvertedCovariances);
 			}
 		}
@@ -161,7 +159,7 @@ class NonLinearOptimizationPose::PoseOptimizationProvider : public NonLinearOpti
 	protected:
 
 		/// The camera object.
-		const PinholeCamera& camera_;
+		const AnyCamera& camera_;
 
 		/// Inverted and flipped pose that will be optimized.
 		Pose& flippedCamera_P_world_;
@@ -177,9 +175,6 @@ class NonLinearOptimizationPose::PoseOptimizationProvider : public NonLinearOpti
 
 		/// Number of points correspondences.
 		const size_t correspondences_;
-
-		/// True, to use the camera distortion parameters.
-		const bool distortImagePoints_;
 };
 
 /**
@@ -1178,40 +1173,47 @@ bool NonLinearOptimizationPose::optimizePoseIF(const AnyCamera& anyCamera, const
 	return true;
 }
 
-bool NonLinearOptimizationPose::optimizePoseIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, const bool distortImagePoints, HomogenousMatrix4& optimizedFlippedCamera_T_world, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances)
+bool NonLinearOptimizationPose::optimizePoseIF(const AnyCamera& camera, const HomogenousMatrix4& flippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& optimizedFlippedCamera_T_world, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances)
 {
+	ocean_assert(camera.isValid());
 	ocean_assert(flippedCamera_T_world.isValid());
 	ocean_assert(objectPoints.size() >= 3u);
 	ocean_assert(objectPoints.size() == imagePoints.size());
 
-	ocean_assert(pinholeCamera.isValid() && flippedCamera_T_world.isValid());
 	ocean_assert(&flippedCamera_T_world != &optimizedFlippedCamera_T_world);
 
 	optimizedFlippedCamera_T_world = flippedCamera_T_world;
-	Pose optimizedInvertedFlipped(flippedCamera_T_world);
+	Pose flippedCamera_P_world(flippedCamera_T_world);
 
 	const ScopedConstMemoryAccessor<Vector3> scopedObjectPointMemoryAccessor(objectPoints);
 	const ScopedConstMemoryAccessor<Vector2> scopedImagePointMemoryAccessor(imagePoints);
 
 	if (invertedCovariances == nullptr)
 	{
-		AdvancedPinholeCameraPoseOptimizationProvider provider(pinholeCamera, optimizedInvertedFlipped, scopedObjectPointMemoryAccessor.data(), scopedImagePointMemoryAccessor.data(), scopedObjectPointMemoryAccessor.size(), estimator, distortImagePoints);
-		if (!advancedDenseOptimization<AdvancedPinholeCameraPoseOptimizationProvider>(provider, iterations, lambda, lambdaFactor, initialError, finalError))
+		AdvancedAnyCameraPoseOptimizationProvider provider(camera, flippedCamera_P_world, scopedObjectPointMemoryAccessor.data(), scopedImagePointMemoryAccessor.data(), scopedObjectPointMemoryAccessor.size(), estimator);
+		if (!advancedDenseOptimization<AdvancedAnyCameraPoseOptimizationProvider>(provider, iterations, lambda, lambdaFactor, initialError, finalError))
 		{
 			return false;
 		}
 	}
 	else
 	{
-		PoseOptimizationProvider provider(pinholeCamera, optimizedInvertedFlipped, scopedObjectPointMemoryAccessor.data(), scopedImagePointMemoryAccessor.data(), scopedObjectPointMemoryAccessor.size(), distortImagePoints);
+		PoseOptimizationProvider provider(camera, flippedCamera_P_world, scopedObjectPointMemoryAccessor.data(), scopedImagePointMemoryAccessor.data(), scopedObjectPointMemoryAccessor.size());
 		if (!denseOptimization<PoseOptimizationProvider>(provider, iterations, estimator, lambda, lambdaFactor, initialError, finalError, invertedCovariances))
 		{
 			return false;
 		}
 	}
 
-	optimizedFlippedCamera_T_world = optimizedInvertedFlipped.transformation();
+	optimizedFlippedCamera_T_world = flippedCamera_P_world.transformation();
 	return true;
+}
+
+bool NonLinearOptimizationPose::optimizePoseIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, const bool distortImagePoints, HomogenousMatrix4& optimizedFlippedCamera_T_world, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances)
+{
+	const AnyCameraPinhole anyCamera(PinholeCamera(pinholeCamera, distortImagePoints));
+
+	return optimizePoseIF(anyCamera, flippedCamera_T_world, objectPoints, imagePoints, optimizedFlippedCamera_T_world, iterations, estimator, lambda, lambdaFactor, initialError, finalError, invertedCovariances);
 }
 
 /**

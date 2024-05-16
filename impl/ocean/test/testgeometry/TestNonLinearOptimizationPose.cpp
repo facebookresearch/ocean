@@ -73,7 +73,7 @@ TEST(TestNonLinearOptimizationPose, NonLinearOptimizationPosePinholeCamera_100Po
 	}
 }
 
-TEST(TestNonLinearOptimizationPose, NonLinearOptimizationPoseAnyCamera_100Points_NoNoise)
+TEST(TestNonLinearOptimizationPose, NonLinearOptimizationPoseAnyCamera_100Points_NoNoise_NoCovariances)
 {
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
@@ -82,7 +82,21 @@ TEST(TestNonLinearOptimizationPose, NonLinearOptimizationPoseAnyCamera_100Points
 
 		for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
 		{
-			EXPECT_TRUE(TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(*anyCamera, 100u, GTEST_TEST_DURATION, estimatorType, Scalar(0), 0u));
+			EXPECT_TRUE(TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(*anyCamera, 100u, GTEST_TEST_DURATION, estimatorType, Scalar(0), 0u, false));
+		}
+	}
+}
+
+TEST(TestNonLinearOptimizationPose, NonLinearOptimizationPoseAnyCamera_100Points_NoNoise_Covariances)
+{
+	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
+	{
+		const std::shared_ptr<AnyCamera> anyCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+		ocean_assert(anyCamera);
+
+		for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+		{
+			EXPECT_TRUE(TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(*anyCamera, 100u, GTEST_TEST_DURATION, estimatorType, Scalar(0), 0u, true));
 		}
 	}
 }
@@ -164,8 +178,8 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPosePinholeCamera(c
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= correspondences);
 
-	unsigned long long succeeded = 0ull;
-	unsigned long long iterations = 0ull;
+	uint64_t succeeded = 0ull;
+	uint64_t iterations = 0ull;
 
 	Scalar averagePixelError = 0;
 	Scalar averageOptimizedPixelError = 0;
@@ -383,11 +397,29 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const
 
 					Log::info() << "With " << correspondences << " correspondences";
 
-					for (Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+					for (const bool useCovariances : {false, true})
 					{
-						Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
+						if (noise == 0u && useCovariances)
+						{
+							continue;
+						}
 
-						result = testNonLinearOptimizationPoseAnyCamera(*anyCamera, correspondences, testDuration, estimatorType, noise, correspondences * outlier / 100u) && result;
+						if (useCovariances)
+						{
+							Log::info() << " ";
+							Log::info() << "... using covariances";
+						}
+						else
+						{
+							Log::info() << "... no covariances";
+						}
+
+						for (Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+						{
+							Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
+
+							result = testNonLinearOptimizationPoseAnyCamera(*anyCamera, correspondences, testDuration, estimatorType, noise, correspondences * outlier / 100u, useCovariances) && result;
+						}
 					}
 				}
 			}
@@ -399,14 +431,14 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const
 	return result;
 }
 
-bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const AnyCamera& anyCamera, const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int numberOutliers)
+bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const AnyCamera& anyCamera, const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int numberOutliers, const bool useCovariances)
 {
 	ocean_assert(anyCamera.isValid());
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= correspondences);
 
-	unsigned long long succeeded = 0ull;
-	unsigned long long iterations = 0ull;
+	uint64_t succeeded = 0ull;
+	uint64_t iterations = 0ull;
 
 	Scalar averagePixelError = 0;
 	Scalar averageOptimizedPixelError = 0;
@@ -451,6 +483,18 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const
 			if (standardDeviation > 0)
 			{
 				imagePointNoise = Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation));
+
+				if (useCovariances)
+				{
+					const SquareMatrix2 covariance(Geometry::Utilities::covarianceMatrix(imagePointNoise, standardDeviation));
+					const SquareMatrix2 invertedCovariance(covariance.inverted());
+
+					invertedCovariance.copyElements(invertedCovariances[2u * n + 0u], false);
+				}
+			}
+			else if (useCovariances)
+			{
+				SquareMatrix2(true).copyElements(invertedCovariances[2u * n + 0u], false);
 			}
 
 			distortedImagePoints.push_back(distortedImagePoint);
@@ -498,7 +542,7 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const
 
 		performance.start();
 
-		if (Geometry::NonLinearOptimizationPose::optimizePoseIF(anyCamera, faultyPoseIF, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(distortedNoisedImagePoints), optimizedPoseIF, 20u, type, Scalar(0.001), Scalar(5.0), nullptr, nullptr))
+		if (Geometry::NonLinearOptimizationPose::optimizePoseIF(anyCamera, faultyPoseIF, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(distortedNoisedImagePoints), optimizedPoseIF, 20u, type, Scalar(0.001), Scalar(5.0), nullptr, nullptr, useCovariances ? &invertedCovariances : nullptr))
 		{
 			performance.stop();
 
@@ -634,8 +678,8 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseZoom(const Pinh
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= correspondences);
 
-	unsigned long long succeeded = 0ull;
-	unsigned long long iterations = 0ull;
+	uint64_t succeeded = 0ull;
+	uint64_t iterations = 0ull;
 
 	Scalar averagePixelError = 0;
 	Scalar averageOptimizedPixelError = 0;
