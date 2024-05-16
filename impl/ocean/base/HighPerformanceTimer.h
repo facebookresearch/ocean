@@ -9,6 +9,7 @@
 #define META_OCEAN_BASE_HIGH_PERFORMANCE_TIMER_H
 
 #include "ocean/base/Base.h"
+#include "ocean/base/Messenger.h"
 #include "ocean/base/Singleton.h"
 #include "ocean/base/Value.h"
 
@@ -360,6 +361,13 @@ class OCEAN_BASE_EXPORT HighPerformanceStatistic
 		 * Resets all gathered statistics.
 		 */
 		void reset();
+
+		/**
+		 * Returns a string with the relevant performance information of this statistic object.
+		 * @param precision The number of decimal places displayed, with range [1, infinity)
+		 * @return The resulting string
+		 */
+		std::string toString(const unsigned int precision = 2u) const;
 
 		/**
 		 * Returns whether at least one measurement has been done.
@@ -949,6 +957,30 @@ inline bool HighPerformanceStatistic::isRunning() const
 inline HighPerformanceStatistic::operator bool() const
 {
 	return !measurements_.empty();
+}
+
+
+inline std::ostream& operator<<(std::ostream& stream, const HighPerformanceStatistic& highPerformanceStatistic)
+{
+	stream << highPerformanceStatistic.toString();
+
+	return stream;
+}
+
+template <bool tActive>
+MessageObject<tActive>& operator<<(MessageObject<tActive>& messageObject, const HighPerformanceStatistic& highPerformanceStatistic)
+{
+	messageObject << highPerformanceStatistic.toString();
+
+	return messageObject;
+}
+
+template <bool tActive>
+MessageObject<tActive>& operator<<(MessageObject<tActive>&& messageObject, const HighPerformanceStatistic& highPerformanceStatistic)
+{
+	messageObject << highPerformanceStatistic.toString();
+
+	return messageObject;
 }
 
 inline HighPerformanceBenchmark::ScopedCategory::ScopedCategory(std::string name) :

@@ -287,6 +287,38 @@ void HighPerformanceStatistic::reset()
 	started_ = false;
 }
 
+std::string HighPerformanceStatistic::toString(const unsigned int precision) const
+{
+	if (measurements_.empty())
+	{
+		return "No measurements";
+	}
+
+	const double performanceBest = best();
+	const double performanceAverage = average();
+	const double performanceMedian = median();
+	const double performanceWorst = worst();
+
+	double unitFactor = 1.0;
+	std::string unit = "s";
+
+	if (performanceBest < 0.0001) // using microseconds when < 0.1ms
+	{
+		unitFactor = 1000000.0;
+		unit = "ys";
+	}
+	else if (performanceBest < 10.0) // using milliseconds when < 10s
+	{
+		unitFactor = 1000.0;
+		unit = "ms";
+	}
+
+	return "Performance: Best: " + String::toAString(performanceBest * unitFactor, precision) + unit + ", "
+				+ "average: " + String::toAString(performanceAverage * unitFactor, precision) + unit + ", "
+				+ "median: " + String::toAString(performanceMedian * unitFactor, precision) + unit + ", "
+				+ "worst: " + String::toAString(performanceWorst * unitFactor, precision) + unit;
+}
+
 HighPerformanceStatistic& HighPerformanceStatistic::operator+=(const HighPerformanceStatistic& right)
 {
 	ocean_assert(started_ == false);
