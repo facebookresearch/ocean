@@ -394,6 +394,89 @@ TransformRef Utilities::createSphere(const EngineRef& engine, const Scalar radiu
 	return TransformRef();
 }
 
+TransformRef Utilities::createSphere(const EngineRef& engine, const Scalar radius, Frame&& frame, FrameTexture2DRef* texture, const bool createMipmaps, AttributeSetRef* attributeSet, GeometryRef* geometry, const RGBAColor* color)
+{
+	if (engine.isNull() || radius < 0)
+	{
+		ocean_assert(false && "Invalid input!");
+		return TransformRef();
+	}
+
+	if (!frame.isValid() || !frame.isOwner())
+	{
+		ocean_assert(false && "Frame must be valid and must own the memory");
+		return TransformRef();
+	}
+
+	try
+	{
+		const Rendering::SphereRef sphere(engine->factory().createSphere());
+		sphere->setRadius(radius);
+
+		const Rendering::AttributeSetRef internalAttributeSet(engine->factory().createAttributeSet());
+
+		const Rendering::FrameTexture2DRef internalTexture = engine->factory().createFrameTexture2D();
+		internalTexture->setTexture(std::move(frame));
+
+		const Rendering::TexturesRef textures = engine->factory().createTextures();
+		textures->addTexture(internalTexture);
+
+		internalAttributeSet->addAttribute(textures);
+
+		if (color != nullptr)
+		{
+			const MaterialRef internalMaterial(engine->factory().createMaterial());
+			internalMaterial->setDiffuseColor(*color);
+			internalMaterial->setTransparency(1.0f - color->alpha());
+
+			internalAttributeSet->addAttribute(internalMaterial);
+
+			if (internalMaterial->transparency() != 0)
+			{
+				internalAttributeSet->addAttribute(engine->factory().createBlendAttribute());
+			}
+		}
+
+		const Rendering::GeometryRef internalGeometry(engine->factory().createGeometry());
+		internalGeometry->addRenderable(sphere, internalAttributeSet);
+
+		Rendering::TransformRef transform = engine->factory().createTransform();
+		transform->addChild(internalGeometry);
+
+		internalTexture->setMagnificationFilterMode(Texture::MAG_MODE_LINEAR);
+
+		if (createMipmaps)
+		{
+			internalTexture->setMinificationFilterMode(Texture::MIN_MODE_LINEAR_MIPMAP_LINEAR);
+		}
+
+		internalTexture->setUseMipmaps(createMipmaps);
+
+		if (texture)
+		{
+			*texture = internalTexture;
+		}
+
+		if (attributeSet)
+		{
+			*attributeSet = internalAttributeSet;
+		}
+
+		if (geometry)
+		{
+			*geometry = internalGeometry;
+		}
+
+		return transform;
+	}
+	catch (...)
+	{
+		// nothing to do here
+	}
+
+	return TransformRef();
+}
+
 TransformRef Utilities::createCylinder(const EngineRef& engine, const Scalar radius, const Scalar height, const RGBAColor& color, CylinderRef* cylinder, AttributeSetRef* attributeSet, MaterialRef* material, GeometryRef* geometry)
 {
 	if (engine.isNull() || radius <= Numeric::eps() || height <= Numeric::eps())

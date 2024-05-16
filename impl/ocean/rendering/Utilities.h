@@ -108,7 +108,7 @@ class OCEAN_RENDERING_EXPORT Utilities
 		/**
 		 * Returns a Transform object holding a visible sphere, further a material is applied.
 		 * @param engine Rendering engine to be used
-		 * @param radius The radius of the sphere
+		 * @param radius The radius of the sphere, with range [0, infinity)
 		 * @param color Diffuse color to be used
 		 * @param sphere Optional resulting sphere object which is attached with the geometry
 		 * @param attributeSet Optional resulting AttributeSet object which is attached with the geometry
@@ -116,6 +116,19 @@ class OCEAN_RENDERING_EXPORT Utilities
 		 * @param geometry Optional resulting geometry object which is encapsulating the 3D object
 		 */
 		static TransformRef createSphere(const EngineRef& engine, const Scalar radius, const RGBAColor& color, SphereRef* sphere = nullptr, AttributeSetRef* attributeSet = nullptr, MaterialRef* material = nullptr, GeometryRef* geometry = nullptr);
+
+		/**
+		 * Returns a Transform object holding a visible sphere, further a texture is applied.
+		 * @param engine Rendering engine to be used
+		 * @param radius The radius of the sphere, with range [0, infinity)
+		 * @param frame The frame which is used for the texture, must own the image memory, must be valid
+		 * @param texture Optional resulting texture object which is attached with the resulting sphere
+		 * @param createMipmaps True, to create a texture with mipmaps; False, to create a texture without mipmaps
+		 * @param attributeSet Optional resulting AttributeSet object which is attached with the geometry
+		 * @param geometry Optional resulting geometry object which is encapsulating the 3D object
+		 * @param color Optional color to be used, nullptr to create a sphere without material
+		 */
+		static TransformRef createSphere(const EngineRef& engine, const Scalar radius, Frame&& frame, FrameTexture2DRef* texture = nullptr, const bool createMipmaps = true, AttributeSetRef* attributeSet = nullptr, GeometryRef* geometry = nullptr, const RGBAColor* color = nullptr);
 
 		/**
 		 * Returns a Transform object holding a visible cylinder, further a material is applied.
