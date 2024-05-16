@@ -69,10 +69,10 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random sign (either +1 or -1).
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @return The random sign
 		 */
-		static inline T sign(RandomGenerator& generator);
+		static inline T sign(RandomGenerator& randomGenerator);
 
 		/**
 		 * Returns a random number between two borders.
@@ -84,12 +84,12 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random number between two borders using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @param lower The lower border, with range (-infinity, infinity)
 		 * @param upper The upper border, with range [lower, infinity)
 		 * @return Random number
 		 */
-		static T scalar(RandomGenerator& generator, const T lower, const T upper);
+		static T scalar(RandomGenerator& randomGenerator, const T lower, const T upper);
 
 		/**
 		 * Returns a random number with Gaussian distribution.
@@ -101,12 +101,31 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random number with Gaussian distribution using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * The returned value lies inside the range [-5 * sigma, 5 * sigma].
 		 * @param sigma The sigma parameter defining the standard deviation of the Gaussian distribution, with range (0, infinity)
 		 * @return Gaussian distributed random value
 		 */
-		static T gaussianNoise(RandomGenerator& generator, const T sigma);
+		static T gaussianNoise(RandomGenerator& randomGenerator, const T sigma);
+
+		/**
+		 * Returns a random 2D vector with Gaussian distribution.
+		 * The returned value lies inside the range [-5 * sigma, 5 * sigma]x[-5 * sigma, 5 * sigma].
+		 * @param sigmaX The sigma parameter defining the standard deviation of the Gaussian distribution for the x value, with range (0, infinity)
+		 * @param sigmaY The sigma parameter defining the standard deviation of the Gaussian distribution for the y value, with range (0, infinity)
+		 * @return Gaussian distributed random 2D vector
+		 */
+		static VectorT2<T> gaussianNoiseVector2(const T sigmaX, const T sigmaY);
+
+		/**
+		 * Returns a random 2D vector with Gaussian distribution using an explicit random generator.
+		 * The returned value lies inside the range [-5 * sigma, 5 * sigma]x[-5 * sigma, 5 * sigma].
+		 * @param randomGenerator The random generator to be used
+		 * @param sigmaX The sigma parameter defining the standard deviation of the Gaussian distribution for the x value, with range (0, infinity)
+		 * @param sigmaY The sigma parameter defining the standard deviation of the Gaussian distribution for the y value, with range (0, infinity)
+		 * @return Gaussian distributed random 2D vector
+		 */
+		static VectorT2<T> gaussianNoiseVector2(RandomGenerator& randomGenerator, const T sigmaX, const T sigmaY);
 
 		/**
 		 * Returns a random 2D vector with length 1 which is equal distributed within a circle.
@@ -116,10 +135,10 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random 2D vector with length 1 which is equal distributed within a circle using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @return The resulting random 2D vector, with vector2().length() == 1
 		 */
-		static VectorT2<T> vector2(RandomGenerator& generator);
+		static VectorT2<T> vector2(RandomGenerator& randomGenerator);
 
 		/**
 		 * Returns a random 2D vector with coordinates in a given range.
@@ -131,12 +150,12 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random 2D vector with coordinates in a given range using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @param min Minimum coordinate value for each axis, with range (-infinity, infinity)
 		 * @param max Maximum coordinate value for each axis, with range [min, infinity)
 		 * @return Random 2D vector with random length
 		 */
-		static VectorT2<T> vector2(RandomGenerator& generator, const T min, const T max);
+		static VectorT2<T> vector2(RandomGenerator& randomGenerator, const T min, const T max);
 
 		/**
 		 * Returns a random 2D vector with coordinates in a given range.
@@ -150,14 +169,14 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random 2D vector with coordinates in a given range using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @param xMin Minimum x coordinate value for each axis, with range (-infinity, infinity)
 		 * @param xMax Maximum x coordinate value for each axis, with range [xMin, infinity)
 		 * @param yMin Minimum x coordinate value for each axis, with range (-infinity, infinity)
 		 * @param yMax Maximum x coordinate value for each axis, with range [yMin, infinity)
 		 * @return Random 2D vector with random length
 		 */
-		static VectorT2<T> vector2(RandomGenerator& generator, const T xMin, const T xMax, const T yMin, const T yMax);
+		static VectorT2<T> vector2(RandomGenerator& randomGenerator, const T xMin, const T xMax, const T yMin, const T yMax);
 
 		/**
 		 * Returns a random 3D vector with length 1 which is equal distributed within a sphere.
@@ -167,10 +186,10 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random 3D vector with length 1 which is equal distributed within a sphere using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @return The resulting random 3D vector, with vector3().length() == 1
 		 */
-		static VectorT3<T> vector3(RandomGenerator& generator);
+		static VectorT3<T> vector3(RandomGenerator& randomGenerator);
 
 		/**
 		 * Returns a random 3D vector with coordinates in a given range.
@@ -189,20 +208,20 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random 3D vector with coordinates in a given range using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @param min Minimum coordinate value for each axis, with range (-infinity, infinity)
 		 * @param max Maximum coordinate value for each axis, with range [min, infinity)
 		 * @return Random 3D vector with random length
 		 */
-		static VectorT3<T> vector3(RandomGenerator& generator, const T min, const T max);
+		static VectorT3<T> vector3(RandomGenerator& randomGenerator, const T min, const T max);
 
 		/**
 		 * Returns a random 3D vector with coordinates in a given range using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @param range 3D vector defining the +/- ranges separately for each axis, with range [0, infinity] x [0, infinity] x [0, infinity]
 		 * @return Random 3D vector with random length
 		 */
-		static VectorT3<T> vector3(RandomGenerator& generator, const VectorT3<T>& range);
+		static VectorT3<T> vector3(RandomGenerator& randomGenerator, const VectorT3<T>& range);
 
 		/**
 		 * Returns a random 4D vector with length 1 which is equal distributed within a hyper sphere.
@@ -212,10 +231,10 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random 4D vector with length 1 which is equal distributed within a hyper sphere using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @return The resulting random 4D vector, with vector4().length() == 1
 		 */
-		static VectorT4<T> vector4(RandomGenerator& generator);
+		static VectorT4<T> vector4(RandomGenerator& randomGenerator);
 
 		/**
 		 * Returns a random 4D vector with coordinates in a given range.
@@ -227,12 +246,12 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random 4D vector with coordinates in a given range using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @param min Minimum coordinate value for each axis, with range (-infinity, infinity)
 		 * @param max Maximum coordinate value for each axis, with range [min, infinity)
 		 * @return Random 4D vector with random length
 		 */
-		static VectorT4<T> vector4(RandomGenerator& generator, const T min, const T max);
+		static VectorT4<T> vector4(RandomGenerator& randomGenerator, const T min, const T max);
 
 		/**
 		 * Returns a random rotation as unit quaternion.
@@ -242,10 +261,10 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random rotation as unit quaternion using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @return Random rotation
 		 */
-		static QuaternionT<T> quaternion(RandomGenerator& generator);
+		static QuaternionT<T> quaternion(RandomGenerator& randomGenerator);
 
 		/**
 		 * Returns a random rotation.
@@ -255,10 +274,10 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random rotation using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @return Random rotation
 		 */
-		static RotationT<T> rotation(RandomGenerator& generator);
+		static RotationT<T> rotation(RandomGenerator& randomGenerator);
 
 		/**
 		 * Returns a random euler.
@@ -286,30 +305,30 @@ class RandomT : public RandomI
 
 		/**
 		 * Returns a random euler using an explicit random generator using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @return Random euler
 		 */
-		static EulerT<T> euler(RandomGenerator& generator);
+		static EulerT<T> euler(RandomGenerator& randomGenerator);
 
 		/**
 		 * Returns a random euler with angles in a given range using an explicit random generator using an explicit random generator.
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @param range Scalar defining the +/- range for each angle axis in radian, with range [0, PI/2)
 		 * @return Random euler
 		 */
-		static EulerT<T> euler(RandomGenerator& generator, const T range);
+		static EulerT<T> euler(RandomGenerator& randomGenerator, const T range);
 
 		/**
 		 * Returns a random euler with angles in a given range using an explicit random generator using an explicit random generator.
 		 * This function allows to specified an angle range so that a minimal and maximal rotation is guaranteed.<br>
 		 * First, three individual random angles are determined lying inside the specified range.<br>
 		 * Second, the signs of the three angles are determined randomly (as the range is specified with positive values).<br>
-		 * @param generator Random generator to be used
+		 * @param randomGenerator The random generator to be used
 		 * @param minRange Scalar defining the minimal range for each angle axis in radian, with range [0, PI/2)
 		 * @param maxRange Scalar defining the minimal range for each angle axis in radian, with range [minRange, PI/2)
 		 * @return Random euler
 		 */
-		static EulerT<T> euler(RandomGenerator& generator, const T minRange, const T maxRange);
+		static EulerT<T> euler(RandomGenerator& randomGenerator, const T minRange, const T maxRange);
 
 	protected:
 
@@ -340,9 +359,9 @@ inline T RandomT<T>::sign()
 }
 
 template <typename T>
-inline T RandomT<T>::sign(RandomGenerator& generator)
+inline T RandomT<T>::sign(RandomGenerator& randomGenerator)
 {
-	if (generator.rand() % 2u == 0u)
+	if (randomGenerator.rand() % 2u == 0u)
 	{
 		return T(-1);
 	}
@@ -363,13 +382,13 @@ T RandomT<T>::scalar(const T lower, const T upper)
 }
 
 template <typename T>
-T RandomT<T>::scalar(RandomGenerator& generator, const T lower, const T upper)
+T RandomT<T>::scalar(RandomGenerator& randomGenerator, const T lower, const T upper)
 {
 	ocean_assert(std::is_floating_point<T>::value);
 
 	ocean_assert(upper >= lower);
 
-	return T(generator.rand()) * inverseMaxRandomGenerator() * (upper - lower) + lower;
+	return T(randomGenerator.rand()) * inverseMaxRandomGenerator() * (upper - lower) + lower;
 }
 
 template <typename T>
@@ -396,7 +415,7 @@ T RandomT<T>::gaussianNoise(const T sigma)
 }
 
 template <typename T>
-T RandomT<T>::gaussianNoise(RandomGenerator& generator, const T sigma)
+T RandomT<T>::gaussianNoise(RandomGenerator& randomGenerator, const T sigma)
 {
 	const T maxValue = NumericT<T>::gaussianDistribution(T(0.0), sigma);
 
@@ -406,8 +425,8 @@ T RandomT<T>::gaussianNoise(RandomGenerator& generator, const T sigma)
 
 	while (true)
 	{
-		const T randomValue = scalar(generator, T(-5.0) * sigma, T(5.0) * sigma);
-		const T check = scalar(generator, T(0.0), maxValue);
+		const T randomValue = scalar(randomGenerator, T(-5.0) * sigma, T(5.0) * sigma);
+		const T check = scalar(randomGenerator, T(0.0), maxValue);
 
 		if (check <= NumericT<T>::gaussianDistribution(randomValue, sigma))
 		{
@@ -416,6 +435,24 @@ T RandomT<T>::gaussianNoise(RandomGenerator& generator, const T sigma)
 
 		ocean_assert(++debugN < 1000);
 	}
+}
+
+template <typename T>
+VectorT2<T> RandomT<T>::gaussianNoiseVector2(const T sigmaX, const T sigmaY)
+{
+	const T x = gaussianNoise(sigmaX);
+	const T y = gaussianNoise(sigmaY);
+
+	return VectorT2<T>(x, y);
+}
+
+template <typename T>
+VectorT2<T> RandomT<T>::gaussianNoiseVector2(RandomGenerator& randomGenerator, const T sigmaX, const T sigmaY)
+{
+	const T x = gaussianNoise(randomGenerator, sigmaX);
+	const T y = gaussianNoise(randomGenerator, sigmaY);
+
+	return VectorT2<T>(x, y);
 }
 
 template <typename T>
@@ -436,12 +473,12 @@ VectorT2<T> RandomT<T>::vector2()
 }
 
 template <typename T>
-VectorT2<T> RandomT<T>::vector2(RandomGenerator& generator)
+VectorT2<T> RandomT<T>::vector2(RandomGenerator& randomGenerator)
 {
 	while (true)
 	{
-		const T x = scalar(generator, T(-1.0), T(1.0));
-		const T y = scalar(generator, T(-1.0), T(1.0));
+		const T x = scalar(randomGenerator, T(-1.0), T(1.0));
+		const T y = scalar(randomGenerator, T(-1.0), T(1.0));
 
 		VectorT2<T> vector(x, y);
 
@@ -462,10 +499,10 @@ VectorT2<T> RandomT<T>::vector2(const T min, const T max)
 }
 
 template <typename T>
-VectorT2<T> RandomT<T>::vector2(RandomGenerator& generator, const T min, const T max)
+VectorT2<T> RandomT<T>::vector2(RandomGenerator& randomGenerator, const T min, const T max)
 {
-	const T x = scalar(generator, min, max);
-	const T y = scalar(generator, min, max);
+	const T x = scalar(randomGenerator, min, max);
+	const T y = scalar(randomGenerator, min, max);
 
 	return VectorT2<T>(x, y);
 }
@@ -477,10 +514,10 @@ VectorT2<T> RandomT<T>::vector2(const T xMin, const T xMax, const T yMin, const 
 }
 
 template <typename T>
-VectorT2<T> RandomT<T>::vector2(RandomGenerator& generator, const T xMin, const T xMax, const T yMin, const T yMax)
+VectorT2<T> RandomT<T>::vector2(RandomGenerator& randomGenerator, const T xMin, const T xMax, const T yMin, const T yMax)
 {
-	const T x = scalar(generator, xMin, xMax);
-	const T y = scalar(generator, yMin, yMax);
+	const T x = scalar(randomGenerator, xMin, xMax);
+	const T y = scalar(randomGenerator, yMin, yMax);
 
 	return VectorT2<T>(x, y);
 }
@@ -494,13 +531,13 @@ VectorT3<T> RandomT<T>::vector3(const VectorT3<T>& range)
 }
 
 template <typename T>
-VectorT3<T> RandomT<T>::vector3(RandomGenerator& generator, const VectorT3<T>& range)
+VectorT3<T> RandomT<T>::vector3(RandomGenerator& randomGenerator, const VectorT3<T>& range)
 {
 	ocean_assert(range.x() >= T(0.0) && range.y() >= T(0.0) && range.z() >= T(0.0));
 
-	const T x = scalar(generator, -range.x(), range.x());
-	const T y = scalar(generator, -range.y(), range.y());
-	const T z = scalar(generator, -range.z(), range.z());
+	const T x = scalar(randomGenerator, -range.x(), range.x());
+	const T y = scalar(randomGenerator, -range.y(), range.y());
+	const T z = scalar(randomGenerator, -range.z(), range.z());
 
 	return VectorT3<T>(x, y, z);
 }
@@ -523,13 +560,13 @@ VectorT3<T> RandomT<T>::vector3()
 }
 
 template <typename T>
-VectorT3<T> RandomT<T>::vector3(RandomGenerator& generator)
+VectorT3<T> RandomT<T>::vector3(RandomGenerator& randomGenerator)
 {
 	while (true)
 	{
-		const T x = scalar(generator, T(-1.0), T(1.0));
-		const T y = scalar(generator, T(-1.0), T(1.0));
-		const T z = scalar(generator, T(-1.0), T(1.0));
+		const T x = scalar(randomGenerator, T(-1.0), T(1.0));
+		const T y = scalar(randomGenerator, T(-1.0), T(1.0));
+		const T z = scalar(randomGenerator, T(-1.0), T(1.0));
 
 		VectorT3<T> vector(x, y, z);
 
@@ -550,11 +587,11 @@ VectorT3<T> RandomT<T>::vector3(const T min, const T max)
 }
 
 template <typename T>
-VectorT3<T> RandomT<T>::vector3(RandomGenerator& generator, const T min, const T max)
+VectorT3<T> RandomT<T>::vector3(RandomGenerator& randomGenerator, const T min, const T max)
 {
-	const T x = scalar(generator, min, max);
-	const T y = scalar(generator, min, max);
-	const T z = scalar(generator, min, max);
+	const T x = scalar(randomGenerator, min, max);
+	const T y = scalar(randomGenerator, min, max);
+	const T z = scalar(randomGenerator, min, max);
 
 	return VectorT3<T>(x, y, z);
 }
@@ -577,14 +614,14 @@ VectorT4<T> RandomT<T>::vector4()
 }
 
 template <typename T>
-VectorT4<T> RandomT<T>::vector4(RandomGenerator& generator)
+VectorT4<T> RandomT<T>::vector4(RandomGenerator& randomGenerator)
 {
 	while (true)
 	{
-		const T x = scalar(generator, T(-1.0), T(1.0));
-		const T y = scalar(generator, T(-1.0), T(1.0));
-		const T z = scalar(generator, T(-1.0), T(1.0));
-		const T w = scalar(generator, T(-1.0), T(1.0));
+		const T x = scalar(randomGenerator, T(-1.0), T(1.0));
+		const T y = scalar(randomGenerator, T(-1.0), T(1.0));
+		const T z = scalar(randomGenerator, T(-1.0), T(1.0));
+		const T w = scalar(randomGenerator, T(-1.0), T(1.0));
 
 		VectorT4<T> vector(x, y, z, w);
 
@@ -605,12 +642,12 @@ VectorT4<T> RandomT<T>::vector4(const T min, const T max)
 }
 
 template <typename T>
-VectorT4<T> RandomT<T>::vector4(RandomGenerator& generator, const T min, const T max)
+VectorT4<T> RandomT<T>::vector4(RandomGenerator& randomGenerator, const T min, const T max)
 {
-	const T x = scalar(generator, min, max);
-	const T y = scalar(generator, min, max);
-	const T z = scalar(generator, min, max);
-	const T w = scalar(generator, min, max);
+	const T x = scalar(randomGenerator, min, max);
+	const T y = scalar(randomGenerator, min, max);
+	const T z = scalar(randomGenerator, min, max);
+	const T w = scalar(randomGenerator, min, max);
 
 	return VectorT4<T>(x, y, z, w);
 }
@@ -622,10 +659,10 @@ QuaternionT<T> RandomT<T>::quaternion()
 }
 
 template <typename T>
-QuaternionT<T> RandomT<T>::quaternion(RandomGenerator& generator)
+QuaternionT<T> RandomT<T>::quaternion(RandomGenerator& randomGenerator)
 {
-	const VectorT3<T> axis = vector3(generator);
-	const T angle = scalar(generator, T(0.0), NumericT<T>::pi2() - NumericT<T>::eps());
+	const VectorT3<T> axis = vector3(randomGenerator);
+	const T angle = scalar(randomGenerator, T(0.0), NumericT<T>::pi2() - NumericT<T>::eps());
 
 	return QuaternionT<T>(axis, angle);
 }
@@ -637,10 +674,10 @@ RotationT<T> RandomT<T>::rotation()
 }
 
 template <typename T>
-RotationT<T> RandomT<T>::rotation(RandomGenerator& generator)
+RotationT<T> RandomT<T>::rotation(RandomGenerator& randomGenerator)
 {
-	const VectorT3<T> axis = vector3(generator);
-	const T angle = scalar(generator, T(0.0), NumericT<T>::pi2() - NumericT<T>::eps());
+	const VectorT3<T> axis = vector3(randomGenerator);
+	const T angle = scalar(randomGenerator, T(0.0), NumericT<T>::pi2() - NumericT<T>::eps());
 
 	return RotationT<T>(axis, angle);
 }
@@ -670,42 +707,42 @@ EulerT<T> RandomT<T>::euler(const T minRange, const T maxRange)
 }
 
 template <typename T>
-EulerT<T> RandomT<T>::euler(RandomGenerator& generator)
+EulerT<T> RandomT<T>::euler(RandomGenerator& randomGenerator)
 {
-	const T yaw = scalar(generator, -NumericT<T>::pi(), NumericT<T>::pi());
-	const T pitch = scalar(generator, -NumericT<T>::pi_2(), NumericT<T>::pi_2());
-	const T roll = scalar(generator, -NumericT<T>::pi(), NumericT<T>::pi());
+	const T yaw = scalar(randomGenerator, -NumericT<T>::pi(), NumericT<T>::pi());
+	const T pitch = scalar(randomGenerator, -NumericT<T>::pi_2(), NumericT<T>::pi_2());
+	const T roll = scalar(randomGenerator, -NumericT<T>::pi(), NumericT<T>::pi());
 
 	return EulerT<T>(yaw, pitch, roll);
 }
 
 template <typename T>
-EulerT<T> RandomT<T>::euler(RandomGenerator& generator, const T range)
+EulerT<T> RandomT<T>::euler(RandomGenerator& randomGenerator, const T range)
 {
 	ocean_assert(range >= T(0.0) && range < NumericT<T>::pi_2());
 
-	const T yaw = scalar(generator, -range, range);
-	const T pitch = scalar(generator, -range, range);
-	const T roll = scalar(generator, -range, range);
+	const T yaw = scalar(randomGenerator, -range, range);
+	const T pitch = scalar(randomGenerator, -range, range);
+	const T roll = scalar(randomGenerator, -range, range);
 
 	return EulerT<T>(yaw, pitch, roll);
 }
 
 template <typename T>
-EulerT<T> RandomT<T>::euler(RandomGenerator& generator, const T minRange, const T maxRange)
+EulerT<T> RandomT<T>::euler(RandomGenerator& randomGenerator, const T minRange, const T maxRange)
 {
 	ocean_assert(minRange >= T(0.0) && minRange < NumericT<T>::pi_2());
 	ocean_assert(maxRange >= T(0.0) && maxRange < NumericT<T>::pi_2());
 	ocean_assert(minRange <= maxRange);
 
-	const T yawSign = sign(generator);
-	const T yaw = scalar(generator, minRange, maxRange) * yawSign;
+	const T yawSign = sign(randomGenerator);
+	const T yaw = scalar(randomGenerator, minRange, maxRange) * yawSign;
 
-	const T pitchSign = sign(generator);
-	const T pitch = scalar(generator, minRange, maxRange) * pitchSign;
+	const T pitchSign = sign(randomGenerator);
+	const T pitch = scalar(randomGenerator, minRange, maxRange) * pitchSign;
 
-	const T rollSign = sign(generator);
-	const T roll = scalar(generator, minRange, maxRange) * rollSign;
+	const T rollSign = sign(randomGenerator);
+	const T roll = scalar(randomGenerator, minRange, maxRange) * rollSign;
 
 	return EulerT<T>(yaw, pitch, roll);
 }
