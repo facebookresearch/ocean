@@ -126,6 +126,30 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		static inline bool p3p(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights);
 
 		/**
+		 * Calculates a camera pose using the perspective pose problem with three point correspondences.
+		 * The calculation uses a rough camera pose (e.g., from a previous camera frame) to increase the robustness.
+		 * @param world_T_roughCamera The already known rough camera pose, transforming rough camera points to world points, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
+		 * @param camera The camera profile defining the project, must be valid
+		 * @param objectPointAccessor The accessor providing the 3D object points, at least 4
+		 * @param imagePointAccessor The accessor providing the 2D image points, one image point for each 3D object point
+		 * @param randomGenerator The random generator to be used
+		 * @param world_T_camera The resulting camera pose, transforming camera points to world points, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
+		 * @param maxPositionOffset Maximal position offset between initial and final pose for three axis
+		 * @param maxOrientationOffset Maximal orientation offset between initial and final pose in radian angle
+		 * @param minValidCorrespondences Minimal number of valid correspondences
+		 * @param refine True, if optimization step will be applied to increase the pose accuracy after the RANSAC step
+		 * @param iterations Number of maximal RANSAC iterations, with range [1, infinity)
+		 * @param sqrPixelErrorThreshold Square pixel error threshold for valid RANSAC candidates, with range (0, infinity)
+		 * @param usedIndices Optional vector receiving the indices of all valid correspondences
+		 * @param sqrAccuracy Optional resulting average square pixel error, with range [0, infinity)
+		 * @param weights Optional weights to weight the individual point correspondences individually, nullptr to use the same weight for all point correspondences
+		 * @return True, if succeeded
+		 */
+		static inline bool p3p(const HomogenousMatrix4& world_T_roughCamera, const AnyCamera& camera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const Vector3& maxPositionOffset = Vector3(Scalar(0.1), Scalar(0.1), Scalar(0.1)), const Scalar maxOrientationOffset = Numeric::deg2rad(10), const unsigned int minValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr, const Scalar* weights = nullptr);
+
+		/**
+		 * Deprecated.
+		 *
 		 * Calculates a pose using the perspective pose problem with three point correspondences.
 		 * The calculation uses a pose from a previous calculation to increase the robustness.<br>
 		 * The specified point correspondences should be sorted by strength or stability to enhance the pose determination.<br>
@@ -709,19 +733,14 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		static bool p3p(const HomogenousMatrix4* initialPose, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr);
 
 		/**
-		 * Calculates a pose using the perspective pose problem with three point correspondences.
-		 * The calculation can use a pose from a previous calculation to increase the robustness.<br>
-		 * The specified point correspondences should be sorted by strength or stability to enhance the pose determination.<br>
-		 * This function may use apriori information (like e.g. a previous pose).<br>
-		 * Beware: There is another p3p() function with almost identical functionality/parameter layout.<br>
-		 * However, this function here supports 'weights' parameters and thus creates a bigger binary footprint.
-		 * @param initialPose Optional rough initial pose to increase determination robustness
-		 * @param pinholeCamera The pinhole camera object specifying the intrinsic camera parameters
+		 * Calculates a camera pose using the perspective pose problem with three point correspondences.
+		 * The calculation can use a rough camera pose (e.g., from a previous camera frame) to increase the robustness.
+		 * @param world_T_roughCamera Optional already known rough camera pose, transforming rough camera points to world points, with default camera pointing towards the negative z-space with y-axis upwards, nullptr if unknown
+		 * @param camera The camera profile defining the project, must be valid
 		 * @param objectPointAccessor The accessor providing the 3D object points, each corresponding to one image point, at least four
 		 * @param imagePointAccessor The accessor providing the 2D image points, each corresponding to one object point, at least four
-		 * @param randomGenerator A random generator object
-		 * @param useDistortionParameters True, to use the distortion parameters of the camera profile; False, otherwise
-		 * @param pose Resulting pose
+		 * @param randomGenerator The random generator to be used
+		 * @param world_T_camera The resulting camera pose, transforming camera points to world points, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
 		 * @param maxPositionOffset Optional maximal position offset between initial and final pose for three axis
 		 * @param maxOrientationOffset Optional maximal orientation offset between initial and final pose in radian angle
 		 * @param minValidCorrespondences Minimal number of valid correspondences
@@ -729,11 +748,11 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param iterations Number of maximal RANSAC iterations, with range [1, infinity)
 		 * @param sqrPixelErrorThreshold Square pixel error threshold for valid RANSAC candidates
 		 * @param usedIndices Optional vector receiving the indices of all valid correspondences
-		 * @param sqrAccuracy Optional resulting average square pixel error
-		 * @param weights Optional weights for each point correspondence
+		 * @param sqrAccuracy Optional resulting average square pixel error, with range [0, infinity)
+		 * @param weights Optional weights to weight the individual point correspondences individually, nullptr to use the same weight for all point correspondences
 		 * @return True, if succeeded
 		 */
-		static bool p3p(const HomogenousMatrix4* initialPose, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights);
+		static bool p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& camera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights);
 
 		/**
 		 * Calculates a pose including zoom factor using the perspective pose problem with three point correspondences.
@@ -1116,12 +1135,21 @@ inline bool RANSAC::p3p(const PinholeCamera& pinholeCamera, const ConstIndexedAc
 
 inline bool RANSAC::p3p(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
 {
-	return p3p(nullptr, pinholeCamera, objectPointAccessor, imagePointAccessor, randomGenerator, useDistortionParameters, pose, nullptr, nullptr, minimalValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
+	const AnyCameraPinhole anyCameraPinhole(PinholeCamera(pinholeCamera, useDistortionParameters));
+
+	return p3p(nullptr, anyCameraPinhole, objectPointAccessor, imagePointAccessor, randomGenerator, pose, nullptr, nullptr, minimalValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
+}
+
+inline bool RANSAC::p3p(const HomogenousMatrix4& world_T_roughCamera, const AnyCamera& camera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const Vector3& maxPositionOffset, const Scalar maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
+{
+	return p3p(&world_T_roughCamera, camera, objectPointAccessor, imagePointAccessor, randomGenerator, world_T_camera, &maxPositionOffset, &maxOrientationOffset, minValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
 }
 
 inline bool RANSAC::p3p(const HomogenousMatrix4& initialPose, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, const Vector3& maxPositionOffset, const Scalar maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
 {
-	return p3p(&initialPose, pinholeCamera, objectPointAccessor, imagePointAccessor, randomGenerator, useDistortionParameters, pose, &maxPositionOffset, &maxOrientationOffset, minValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
+	const AnyCameraPinhole anyCameraPinhole(PinholeCamera(pinholeCamera, useDistortionParameters));
+
+	return p3p(&initialPose, anyCameraPinhole, objectPointAccessor, imagePointAccessor, randomGenerator, pose, &maxPositionOffset, &maxOrientationOffset, minValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
 }
 
 inline bool RANSAC::p3pZoom(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, Scalar& zoom, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
