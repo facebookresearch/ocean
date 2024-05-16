@@ -14,6 +14,9 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -131,9 +134,9 @@ bool TestSpatialDistribution::testIdealBins(const double testDuration)
 
 	Log::info() << "Testing ideal number of bins:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -155,28 +158,17 @@ bool TestSpatialDistribution::testIdealBins(const double testDuration)
 		ocean_assert(horizontalBins != (unsigned int)(-1));
 		ocean_assert(verticalBins != (unsigned int)(-1));
 
-		if (horizontalBins < minimalHorizontalBins || horizontalBins > width)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER_EQUAL(validation, horizontalBins, minimalHorizontalBins);
+		OCEAN_EXPECT_LESS_EQUAL(validation, horizontalBins, width);
 
-		if (verticalBins < minimalVerticalBins || verticalBins > height)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER_EQUAL(validation, verticalBins, minimalVerticalBins);
+		OCEAN_EXPECT_LESS_EQUAL(validation, verticalBins, height);
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSpatialDistribution::testIdealBinsNeighborhood9(const double testDuration)
@@ -185,9 +177,9 @@ bool TestSpatialDistribution::testIdealBinsNeighborhood9(const double testDurati
 
 	Log::info() << "Testing ideal number of bins with 9 neighborhood guarantee:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -215,28 +207,17 @@ bool TestSpatialDistribution::testIdealBinsNeighborhood9(const double testDurati
 		ocean_assert(horizontalBins != (unsigned int)(-1));
 		ocean_assert(verticalBins != (unsigned int)(-1));
 
-		if (horizontalBins < minimalHorizontalBins || horizontalBins > maximalHorizontalBins)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER_EQUAL(validation, horizontalBins, minimalHorizontalBins);
+		OCEAN_EXPECT_LESS_EQUAL(validation, horizontalBins, maximalHorizontalBins);
 
-		if (verticalBins < minimalVerticalBins || verticalBins > maximalVerticalBins)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_GREATER_EQUAL(validation, verticalBins, minimalVerticalBins);
+		OCEAN_EXPECT_LESS_EQUAL(validation, verticalBins, maximalVerticalBins);
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSpatialDistribution::testMinimalSqrDistances(const double testDuration)
@@ -257,7 +238,7 @@ bool TestSpatialDistribution::testMinimalSqrDistances(const double testDuration)
 
 	RandomGenerator randomGenerator;
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -359,9 +340,9 @@ bool TestSpatialDistribution::testMinimalSqrDistances(const double testDuration)
 
 			for (unsigned int n = 0u; n < numberImagePoints; ++n)
 			{
-				if (minimalSqrDistances[n] != testMinimalSqrDistances[n] && minimalSqrDistances[n] != Numeric::maxValue())
+				if (minimalSqrDistances[n] != Numeric::maxValue())
 				{
-					allSucceeded = false;
+					OCEAN_EXPECT_EQUAL(validation, minimalSqrDistances[n], testMinimalSqrDistances[n]);
 				}
 			}
 		}
@@ -371,16 +352,9 @@ bool TestSpatialDistribution::testMinimalSqrDistances(const double testDuration)
 	Log::info() << "Brute force performance: " << performanceBruteForce.averageMseconds() << "ms";
 	Log::info() << "Distribution performance: " << performanceDistributionCreation.averageMseconds() + performanceDistributionSearch.averageMseconds() << "ms (creation: " << performanceDistributionCreation.averageMseconds() << "ms + search: " << performanceDistributionSearch.averageMseconds() << "ms)";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSpatialDistribution::testDistribute(const double testDuration)
@@ -391,10 +365,10 @@ bool TestSpatialDistribution::testDistribute(const double testDuration)
 
 	Log::info() << "Testing distribute function for " << numberPoints << " points:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
-
 	RandomGenerator randomGenerator;
+
+	constexpr double threshold = std::is_same<float, Scalar>::value ? 0.95 : 0.99;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -402,6 +376,8 @@ bool TestSpatialDistribution::testDistribute(const double testDuration)
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		Vectors2 imagePoints;
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
@@ -426,8 +402,6 @@ bool TestSpatialDistribution::testDistribute(const double testDuration)
 
 		size_t numberDistributed = 0;
 
-		bool localSucceeded = true;
-
 		for (size_t n = 0; n < imagePoints.size(); ++n)
 		{
 			const Vector2& imagePoint = imagePoints[n];
@@ -448,7 +422,7 @@ bool TestSpatialDistribution::testDistribute(const double testDuration)
 				}
 				else
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 		}
@@ -461,28 +435,15 @@ bool TestSpatialDistribution::testDistribute(const double testDuration)
 
 		if (numberDistributed != testNumberDistributed)
 		{
-			localSucceeded = false;
-		}
-
-		++iterations;
-
-		if (localSucceeded)
-		{
-			++validIterations;
+			scopedIteration.setInaccurate();
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
-
-	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	constexpr double threshold = std::is_same<float, Scalar>::value ? 0.95 : 0.99;
-
-	return percent >= threshold;
+	return validation.succeeded();
 }
 
 bool TestSpatialDistribution::testDistributeAndFilter(const double testDuration)
@@ -493,17 +454,18 @@ bool TestSpatialDistribution::testDistributeAndFilter(const double testDuration)
 
 	Log::info() << "Testing distribute and filter function for " << numberPoints << " points:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
-
 	HighPerformanceStatistic performance;
 
 	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		Vectors2 imagePoints;
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
@@ -534,8 +496,6 @@ bool TestSpatialDistribution::testDistributeAndFilter(const double testDuration)
 
 		size_t numberFiltered = 0;
 
-		bool localSucceeded = true;
-
 		for (size_t n = 0; n < imagePoints.size(); ++n)
 		{
 			const Vector2& imagePoint = imagePoints[n];
@@ -560,7 +520,7 @@ bool TestSpatialDistribution::testDistributeAndFilter(const double testDuration)
 					}
 					else
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
@@ -568,26 +528,15 @@ bool TestSpatialDistribution::testDistributeAndFilter(const double testDuration)
 
 		if (filteredImagePoints.size() != numberFiltered)
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
-
-		if (localSucceeded)
-		{
-			++validIterations;
-		}
-
-		++iterations;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
-
-	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestSpatialDistribution::testDistributeAndFilterIndices(const double testDuration)
@@ -598,17 +547,18 @@ bool TestSpatialDistribution::testDistributeAndFilterIndices(const double testDu
 
 	Log::info() << "Testing distribute and filter indices function for " << numberPoints << " points:";
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
-
 	HighPerformanceStatistic performance;
 
 	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		Vectors2 imagePoints;
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
@@ -634,8 +584,6 @@ bool TestSpatialDistribution::testDistributeAndFilterIndices(const double testDu
 		Indices32 occupiedBins(horizontalBins * verticalBins, 0u);
 
 		size_t numberFiltered = 0;
-
-		bool localSucceeded = true;
 
 		for (size_t n = 0; n < imagePoints.size(); ++n)
 		{
@@ -663,7 +611,7 @@ bool TestSpatialDistribution::testDistributeAndFilterIndices(const double testDu
 					}
 					else
 					{
-						localSucceeded = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
@@ -671,26 +619,15 @@ bool TestSpatialDistribution::testDistributeAndFilterIndices(const double testDu
 
 		if (filteredIndices.size() != numberFiltered)
 		{
-			localSucceeded = false;
+			scopedIteration.setInaccurate();
 		}
-
-		if (localSucceeded)
-		{
-			++validIterations;
-		}
-
-		iterations++;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
-
-	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestSpatialDistribution::testCopyConstructorWithNeighborhood8(const double testDuration)
@@ -699,9 +636,9 @@ bool TestSpatialDistribution::testCopyConstructorWithNeighborhood8(const double 
 
 	Log::info() << "Testing copy constructor with 8-neighborhood:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -754,11 +691,8 @@ bool TestSpatialDistribution::testCopyConstructorWithNeighborhood8(const double 
 							{
 								if (localIndex == index)
 								{
-									if (indexFound)
-									{
-										// the index must not exist in two individual bins (in the original distribution array)
-										allSucceeded = false;
-									}
+									// the index must not exist in two individual bins (in the original distribution array)
+									OCEAN_EXPECT_FALSE(validation, indexFound);
 
 									indexFound = true;
 								}
@@ -766,31 +700,18 @@ bool TestSpatialDistribution::testCopyConstructorWithNeighborhood8(const double 
 						}
 					}
 
-					if (indexFound == false)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, indexFound);
 
-					if (neighborhoodIndices != indices.size())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, neighborhoodIndices, indices.size());
 				}
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
