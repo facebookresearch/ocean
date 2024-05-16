@@ -58,20 +58,24 @@ public class BaseJni
 
 	/**
 	 * Java native interface function to initialize the Ocean Framework.
-	 * @param messageOutputFile Output file of all messages, otherwise all messages will be queued
+	 * Several individual message output types can be specified and combined:
+	 * - "OUTPUT_STANDARD": To write all messages to the standard output (e.g., std::cout on desktop platforms, or Android logcat on Android platforms).
+	 * - "OUTPUT_QUEUED": To queue all messages and to explicitly pop the messages later (e.g., to display messages in a debug window).
+	 * - <filename>: To write all messages to a define file.
+	 * @param messageOutputType The type of the message output to be used, empty to use 'OUTPUT_STANDARD'
 	 * @return True, if succeeded
 	 * @see release().
 	 */
-	public static native boolean initialize(String messageOutputFile);
+	public static native boolean initialize(String messageOutputType);
 
 	/**
 	 * Java native interface function to initialize the Ocean Framework.
-	 * @param messageOutput The message output type to be used, can be a combintation of any enum value from 'MessageOutput'
-	 * @param messageOutputFile The explicit filename of the file to which the messages will be written, relevant if messageOutput contains OUTPUT_FILE
+	 * @param messageOutputType The type of the message output to be used.
+ 	 * @param outputFile The name of the file to which messages will be written, 'messageOutputType' must contain 'OUTPUT_FILE', empty otherwise
 	 * @return True, if succeeded
 	 * @see release().
 	 */
-	public static native boolean initializeWithMessageOutput(int messageOutput, String messageOutputFile);
+	public static native boolean initializeWithMessageOutput(int messageOutputType, String outputFile);
 
 	/**
 	 * Java native interface function to set the current activity.

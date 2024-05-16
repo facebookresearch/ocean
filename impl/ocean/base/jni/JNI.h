@@ -8,8 +8,6 @@
 #ifndef META_OCEAN_BASE_JNI_JNI_H
 #define META_OCEAN_BASE_JNI_JNI_H
 
-#include "ocean/base/Exception.h"
-
 #include "ocean/base/Base.h"
 
 namespace Ocean

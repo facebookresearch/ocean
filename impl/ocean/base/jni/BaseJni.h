@@ -5,41 +5,39 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef META_OCEAN_BASE_JNI_BASEJNI_H
-#define META_OCEAN_BASE_JNI_BASEJNI_H
+#ifndef META_OCEAN_BASE_JNI_BASE_JNI_H
+#define META_OCEAN_BASE_JNI_BASE_JNI_H
 
 #include "ocean/base/jni/JNI.h"
 
-#include "ocean/base/Build.h"
-#include "ocean/base/DateTime.h"
-#include "ocean/base/Processor.h"
-#include "ocean/base/String.h"
-#include "ocean/base/WorkerPool.h"
+#include "ocean/base/Messenger.h"
 
-#include "ocean/math/Math.h"
+#include <jni.h>
 
-#include "ocean/platform/android/Battery.h"
+/**
+ * Java native interface function to initialize the Ocean Framework.
+ * Several individual message output types can be specified and combined:
+ * - "OUTPUT_STANDARD": To write all messages to the standard output (e.g., std::cout on desktop platforms, or Android logcat on Android platforms).
+ * - "OUTPUT_QUEUED": To queue all messages and to explicitly pop the messages later (e.g., to display messages in a debug window).
+ * - <filename>: To write all messages to a define file.
+ * @param env The JNI environment, must be valid
+ * @param javaThis The JNI Base object
+ * @param messageOutputType The type of the message output to be used, empty to use 'OUTPUT_STANDARD'
+ * @return True, if succeeded
+ * @ingroup basejni
+ */
+extern "C" jboolean Java_com_meta_ocean_base_BaseJni_initialize(JNIEnv* env, jobject javaThis, jstring messageOutputType);
 
 /**
  * Java native interface function to initialize the Ocean Framework.
  * @param env The JNI environment, must be valid
  * @param javaThis The JNI Base object
- * @param messageOutputFile Output file of all messages, otherwise all messages will be queued
+ * @param messageOutputType The type of the message output to be used.
+ * @param outputFile The name of the file to which messages will be written, 'messageOutputType' must contain 'OUTPUT_FILE', empty otherwise
  * @return True, if succeeded
  * @ingroup basejni
  */
-extern "C" jboolean Java_com_meta_ocean_base_BaseJni_initialize(JNIEnv* env, jobject javaThis, jstring messageOutputFile);
-
-/**
- * Java native interface function to initialize the Ocean Framework.
- * @param env The JNI environment, must be valid
- * @param javaThis The JNI Base object
- * @param messageOutput The message output type to be used, can be a combintation of any enum value from 'MessageOutput'
- * @param messageOutputFile The explicit filename of the file to which the messages will be written, relevant if messageOutput contains OUTPUT_FILE
- * @return True, if succeeded
- * @ingroup basejni
- */
-extern "C" jboolean Java_com_meta_ocean_base_BaseJni_initializeWithMessageOutput(JNIEnv* env, jobject javaThis, jint messageOutput, jstring messageOutputFile);
+extern "C" jboolean Java_com_meta_ocean_base_BaseJni_initializeWithMessageOutput(JNIEnv* env, jobject javaThis, jint messageOutputType, jstring outputFile);
 
 /**
  * Java native interface function to set the current activity.
@@ -136,163 +134,64 @@ class OCEAN_BASE_JNI_EXPORT BaseJni
 
 		/**
 		 * Initializes the Ocean framework.
-		 * @param outputFile Message output file or device
+		 * Several individual message output types can be specified and combined:
+		 * - "STANDARD": To write all messages to the standard output (e.g., std::cout on desktop platforms, or Android logcat on Android platforms).
+		 * - "QUEUED": To queue all messages and to explicitly pop the messages later (e.g., to display messages in a debug window).
+		 * - <filename>: To write all messages to a define file.
+		 * @param messageOutputType The type of the message output to be used, empty to use 'STANDARD'
 		 * @return True, if succeeded
 		 */
-		static inline bool initialize(const std::string& outputFile);
+		static bool initialize(const std::string& messageOutputType);
 
 		/**
 		 * Initializes the Ocean framework.
-		 * @param messageOutput The message output to be used
- 		 * @param outputFile The explicit filename of the file to which the messages will be written, relevant if messageOutput contains OUTPUT_FILE
+		 * @param messageOutputType The type of the message output to be used.
+ 		 * @param outputFile The name of the file to which messages will be written, 'messageOutputType' must contain 'OUTPUT_FILE', empty otherwise
 		 * @return True, if succeeded
 		 */
-		static inline bool initialize(const Messenger::MessageOutput messageOutput, const std::string& outputFile);
+		static bool initialize(const Messenger::MessageOutput messageOutputType, const std::string& outputFile);
 
 		/**
 		 * Forces a specific number of processor cores.
 		 * @param cores CPU cores to be forced during initialization
 		 * @return True, if succeeded
 		 */
-		static inline bool forceProcessorCoreNumber(const unsigned int cores);
+		static bool forceProcessorCoreNumber(const unsigned int cores);
 
 		/**
 		 * Sets or changes the maximal capacity of the worker pool.
 		 * @param capacity The maximal number of worker objects the worker pool may provide
 		 * @return True, if succeeded
 		 */
-		static inline bool setWorkerPoolCapacity(const unsigned int capacity);
+		static bool setWorkerPoolCapacity(const unsigned int capacity);
 
 		/**
 		 * Java native interface function to forward an information message to the framework.
 		 * @param message The information message to forward
 		 */
-		static inline void information(const std::string& message);
+		static void information(const std::string& message);
 
 		/**
 		 * Java native interface function to forward a warning message to the framework.
 		 * @param message The warning message to forward
 		 */
-		static inline void warning(const std::string& message);
+		static void warning(const std::string& message);
 
 		/**
 		 * Java native interface function to forward an error message to the framework.
 		 * @param message The error message to forward
 		 */
-		static inline void error(const std::string& message);
+		static void error(const std::string& message);
 
 		/**
 		 * Pops all messages that a currently waiting in the message queue.
 		 * @return The messages that have been popped.
 		 */
-		static inline std::string popMessages();
+		static std::string popMessages();
 };
 
-inline bool BaseJni::initialize(const std::string& outputFile)
-{
-	if (outputFile.empty())
-	{
-		return initialize(Messenger::OUTPUT_QUEUED, std::string());
-	}
-	else
-	{
-		if (String::toUpper(outputFile) == std::string("STANDARD"))
-		{
-			return initialize(Messenger::OUTPUT_STANDARD, std::string());
-		}
-		else
-		{
-			return initialize(Messenger::OUTPUT_FILE, outputFile);
-		}
-	}
-}
-
-inline bool BaseJni::initialize(const Messenger::MessageOutput messageOutput, const std::string& outputFile)
-{
-	ocean_assert((messageOutput & Messenger::OUTPUT_FILE) != Messenger::OUTPUT_FILE || !outputFile.empty());
-
-	if (!outputFile.empty())
-	{
-		Messenger::get().setFileOutput(outputFile);
-	}
-
-	Messenger::get().setOutputType(messageOutput);
-
-	Log::info() << "Build: " << Build::buildString();
-	Log::info() << "Time: " << DateTime::localString();
-	Log::info() << " ";
-	Log::info() << "Floating point precision: " << sizeof(Scalar);
-	Log::info() << " ";
-	Log::info() << "Battery capacity: " << Platform::Android::Battery::currentCapacity() << "%";
-	Log::info() << " ";
-
-	return true;
-}
-
-inline bool BaseJni::forceProcessorCoreNumber(const unsigned int cores)
-{
-	if (cores >= 1u && cores <= 1024u)
-	{
-		return Processor::get().forceCores(cores);
-	}
-
-	return false;
-}
-
-inline bool BaseJni::setWorkerPoolCapacity(const unsigned int capacity)
-{
-	if (capacity >= 1u && capacity <= 1024u)
-	{
-		return WorkerPool::get().setCapacity(capacity);
-	}
-
-	return false;
-}
-
-inline void BaseJni::information(const std::string& message)
-{
-	Ocean::Log::info() << message;
-}
-
-inline void BaseJni::warning(const std::string& message)
-{
-	Ocean::Log::warning() << message;
-}
-
-inline void BaseJni::error(const std::string& message)
-{
-	Ocean::Log::error() << message;
-}
-
-inline std::string BaseJni::popMessages()
-{
-	std::string result;
-
-	std::string message;
-	bool isNew = false;
-
-	while (true)
-	{
-		message = Messenger::get().popMessage(Messenger::TYPE_UNDEFINED, &isNew);
-
-		if (message.empty())
-		{
-			break;
-		}
-
-		if (!result.empty())
-		{
-			result += std::string("\n");
-		}
-
-		result += message;
-	}
-
-	return result;
 }
 
 }
 
-}
-
-#endif // META_OCEAN_BASE_JNI_BASEJNI_H
+#endif // META_OCEAN_BASE_JNI_BASE_JNI_H
