@@ -49,6 +49,8 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		static bool testAnyCameraOrientationJacobian2x3(const double testDuration);
 
 		/**
+		 * Deprecated.
+		 *
 		 * Tests the Jacobian for the extrinsic camera parameters and a pinhole camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -56,6 +58,8 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		static bool testPinholeCameraPoseJacobian2nx6(const double testDuration);
 
 		/**
+		 * Deprecated.
+		 *
 		 * Tests the Jacobian for the extrinsic camera parameters and fisheye camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -66,8 +70,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		 * Tests the Jacobian for the extrinsic camera parameters and any camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T the data type of the scalar to be used, either 'float' or 'double'
 		 */
-		static bool testAnyCameraPoseJacobian2x6(const double testDuration);
+		template <typename T>
+		static bool testAnyCameraPoseJacobian2nx6(const double testDuration);
 
 		/**
 		 * Tests the Jacobian for the extrinsic camera parameters using a damped distortion.

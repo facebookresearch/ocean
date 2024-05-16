@@ -916,9 +916,9 @@ OCEAN_FORCE_INLINE void Jacobian::calculatePoseJacobianRodrigues2x6IF(const AnyC
 
 	anyCamera.pointJacobian2x3IF(flippedCamera_T_world * worldObjectPoint, jx + 3, jy + 3);
 
-	const Vector3 dwx(Rwx * worldObjectPoint);
-	const Vector3 dwy(Rwy * worldObjectPoint);
-	const Vector3 dwz(Rwz * worldObjectPoint);
+	const VectorT3<T> dwx(Rwx * worldObjectPoint);
+	const VectorT3<T> dwy(Rwy * worldObjectPoint);
+	const VectorT3<T> dwz(Rwz * worldObjectPoint);
 
 	// now, we apply the chain rule to determine the left 2x3 sub-matrix
 	jx[0] = jx[3] * dwx[0] + jx[4] * dwx[1] + jx[5] * dwx[2];

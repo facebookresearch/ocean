@@ -57,7 +57,9 @@ bool TestJacobian::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testAnyCameraPoseJacobian2x6(testDuration) && allSucceeded;
+	allSucceeded = testAnyCameraPoseJacobian2nx6<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testAnyCameraPoseJacobian2nx6<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -235,9 +237,14 @@ TEST(TestJacobian, FisheyeCameraPoseJacobian2nx6)
 	EXPECT_TRUE(TestJacobian::testFisheyeCameraPoseJacobian2x6(GTEST_TEST_DURATION));
 }
 
-TEST(TestJacobian, AnyCameraPoseJacobian2nx6)
+TEST(TestJacobian, AnyCameraPoseJacobian2nx6_float)
 {
-	EXPECT_TRUE(TestJacobian::testAnyCameraPoseJacobian2x6(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestJacobian::testAnyCameraPoseJacobian2nx6<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestJacobian, AnyCameraPoseJacobian2nx6_double)
+{
+	EXPECT_TRUE(TestJacobian::testAnyCameraPoseJacobian2nx6<double>(GTEST_TEST_DURATION));
 }
 
 TEST(TestJacobian, PoseJacobianDampedDistortion2nx6)
@@ -1197,17 +1204,20 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestJacobian::testAnyCameraPoseJacobian2x6(const double testDuration)
+template <typename T>
+bool TestJacobian::testAnyCameraPoseJacobian2nx6(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	const unsigned int numberPoints = 50u;
+	constexpr unsigned int numberPoints = 50u;
 
-	Log::info() << "Testing any camera pose Jacobian rodrigues 2x6 for " << numberPoints << " points:";
+	Log::info() << "Testing any camera pose Jacobian rodrigues 2x6 for " << numberPoints << " points with " << sizeof(T) * 8 << "-bit precision:";
 
-	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
+	const std::vector<double> epsilons = {NumericD::weakEps(), NumericD::weakEps() / 10.0, NumericD::weakEps() * 10.0, NumericD::weakEps() / 100.0, NumericD::weakEps() * 100.0};
 
 	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
 
 	bool firstCameraIteration = true;
 
@@ -1216,13 +1226,16 @@ bool TestJacobian::testAnyCameraPoseJacobian2x6(const double testDuration)
 		Log::info().newLine(!firstCameraIteration);
 		firstCameraIteration = false;
 
-		const std::shared_ptr<AnyCamera> anyCameraShared = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
-		ocean_assert(anyCameraShared);
+		const SharedAnyCameraT<T> sharedAnyCamera = Utilities::realisticAnyCamera<T>(anyCameraType, RandomI::random(randomGenerator, 1u));
+		ocean_assert(sharedAnyCamera);
 
-		const AnyCamera& anyCamera = *anyCameraShared;
+		const AnyCameraT<T>& anyCamera = *sharedAnyCamera;
 
-		uint64_t succeeded = 0ull;
-		uint64_t iterations = 0ull;
+		Log::info() << "Camera name: " << anyCamera.name();
+
+		constexpr double threshold = std::is_same<float, T>::value ? 0.95 : 0.99;
+
+		ValidationPrecision validation(threshold, randomGenerator);
 
 		HighPerformanceStatistic performanceNaive;
 		HighPerformanceStatistic performance;
@@ -1231,25 +1244,25 @@ bool TestJacobian::testAnyCameraPoseJacobian2x6(const double testDuration)
 
 		do
 		{
-			bool accurate = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 translation(Random::vector3(-10, 10));
-			const Quaternion quaternion(Random::quaternion());
+			const VectorT3<T> translation(Random::vector3(randomGenerator, -10, 10));
+			const QuaternionT<T> quaternion(Random::quaternion(randomGenerator));
 
-			const Pose pose(translation, quaternion);
-			const HomogenousMatrix4 transformation(translation, quaternion);
+			const HomogenousMatrixT4<T> world_T_camera(translation, quaternion);
 
-			const HomogenousMatrix4 transformationIF(PinholeCamera::standard2InvertedFlipped(transformation));
-			const Pose poseIF(transformationIF);
+			const HomogenousMatrixT4<T> flippedCamera_T_world(AnyCameraT<T>::standard2InvertedFlipped(world_T_camera));
+			const PoseT<T> flippedCamera_P_world(flippedCamera_T_world);
 
-			Vectors3 objectPoints;
+			VectorsT3<T> objectPoints;
 			objectPoints.reserve(numberPoints);
+
 			while (objectPoints.size() < numberPoints)
 			{
-				const Vector2 imagePoint(Random::vector2(Scalar(5), Scalar(anyCamera.width() - 5u), Scalar(5), Scalar(anyCamera.height() - 5u)));
+				const VectorT2<T> imagePoint(RandomT<T>::vector2(randomGenerator, T(5), T(anyCamera.width() - 5u), T(5), T(anyCamera.height() - 5u)));
 
-				const Line3 ray(anyCamera.ray(imagePoint, transformation));
-				const Vector3 objectPoint(ray.point(Random::scalar(1, 5)));
+				const LineT3<T> ray(anyCamera.ray(imagePoint, world_T_camera));
+				const VectorT3<T> objectPoint(ray.point(RandomT<T>::scalar(randomGenerator, T(1), T(5))));
 
 				objectPoints.push_back(objectPoint);
 			}
@@ -1260,37 +1273,37 @@ bool TestJacobian::testAnyCameraPoseJacobian2x6(const double testDuration)
 			 * jacobian y: | dfy / dwx, dfy / dwy, dfy / dwz, dfy / dtx, dfy / dty, dfy / dtz |
 			 */
 
-			Matrix jacobian(2 * objectPoints.size(), 6);
+			MatrixT<T> jacobian(2 * objectPoints.size(), 6);
 
 			{
 				const HighPerformanceStatistic::ScopedStatistic scope(performance);
 
-				SquareMatrix3 dwx, dwy, dwz;
-				Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(poseIF[3], poseIF[4], poseIF[5]), dwx, dwy, dwz);
+				SquareMatrixT3<T> dwx, dwy, dwz;
+				Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMapT<T>(flippedCamera_P_world[3], flippedCamera_P_world[4], flippedCamera_P_world[5]), dwx, dwy, dwz);
 
 				for (size_t n = 0; n < objectPoints.size(); ++n)
 				{
-					Geometry::Jacobian::calculatePoseJacobianRodrigues2x6IF(anyCamera, poseIF.transformation(), objectPoints[n], dwx, dwy, dwz, jacobian[n * 2 + 0], jacobian[n * 2 + 1]);
+					Geometry::Jacobian::calculatePoseJacobianRodrigues2x6IF<T>(anyCamera, flippedCamera_T_world, objectPoints[n], dwx, dwy, dwz, jacobian[n * 2 + 0], jacobian[n * 2 + 1]);
 				}
 			}
 
 			{
-				Matrix naiveJacobian(2 * objectPoints.size(), 6);
+				MatrixT<T> naiveJacobian(2 * objectPoints.size(), 6);
 
 				const HighPerformanceStatistic::ScopedStatistic scope(performanceNaive);
 
 				for (size_t n = 0; n < objectPoints.size(); ++n)
 				{
-					const Vector3 objectPoint = objectPoints[n];
-					const Vector2 imagePoint(anyCamera.projectToImageIF(transformationIF, objectPoint));
+					const VectorT3<T> objectPoint = objectPoints[n];
+					const VectorT2<T> imagePoint(anyCamera.projectToImageIF(flippedCamera_T_world, objectPoint));
 
 					for (unsigned int i = 0u; i < 6u; ++i)
 					{
-						Pose poseDelta(poseIF);
-						poseDelta[i] += Numeric::weakEps();
+						PoseT<T> poseDelta(flippedCamera_P_world);
+						poseDelta[i] += NumericT<T>::weakEps();
 
-						const Vector2 imagePointDelta(anyCamera.projectToImageIF(poseDelta.transformation(), objectPoint));
-						const Vector2 derivative = (imagePointDelta - imagePoint) / Numeric::weakEps();
+						const VectorT2<T> imagePointDelta(anyCamera.projectToImageIF(poseDelta.transformation(), objectPoint));
+						const VectorT2<T> derivative = (imagePointDelta - imagePoint) / NumericT<T>::weakEps();
 
 						naiveJacobian[n * 2 + 0][i] = derivative.x();
 						naiveJacobian[n * 2 + 1][i] = derivative.y();
@@ -1298,24 +1311,27 @@ bool TestJacobian::testAnyCameraPoseJacobian2x6(const double testDuration)
 				}
 			}
 
+			const SharedAnyCameraD sharedAnyCameraD = AnyCameraD::convert(sharedAnyCamera);
+			ocean_assert(sharedAnyCameraD);
+
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
-				const Vector3 objectPoint = objectPoints[n];
-				const Vector2 imagePoint(anyCamera.projectToImageIF(transformationIF, objectPoint));
+				const VectorD3 objectPoint = VectorD3(objectPoints[n]);
+				const VectorD2 imagePoint(sharedAnyCameraD->projectToImageIF(PoseD(flippedCamera_P_world).transformation(), objectPoint));
 
-				const Scalar* jacobianX = jacobian[2 * n + 0];
-				const Scalar* jacobianY = jacobian[2 * n + 1];
+				const T* jacobianX = jacobian[2 * n + 0];
+				const T* jacobianY = jacobian[2 * n + 1];
 
 				{
 					bool localAccuracy = false;
 
-					for (const Scalar epsilon : epsilons)
+					for (const double epsilon : epsilons)
 					{
 						// df / dwx
-						Pose poseWx(poseIF);
+						PoseD poseWx(flippedCamera_P_world);
 						poseWx.rx() += epsilon;
 
-						const Vector2 imagePointWx(anyCamera.projectToImageIF(poseWx.transformation(), objectPoint));
+						const VectorD2 imagePointWx(sharedAnyCameraD->projectToImageIF(poseWx.transformation(), objectPoint));
 						if (checkAccuracy(imagePoint, imagePointWx, epsilon, jacobianX[0], jacobianY[0]))
 						{
 							localAccuracy = true;
@@ -1325,20 +1341,20 @@ bool TestJacobian::testAnyCameraPoseJacobian2x6(const double testDuration)
 
 					if (!localAccuracy)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
 				{
 					bool localAccuracy = false;
 
-					for (const Scalar epsilon : epsilons)
+					for (const double epsilon : epsilons)
 					{
 						// df / dwy
-						Pose poseWy(poseIF);
+						PoseD poseWy(flippedCamera_P_world);
 						poseWy.ry() += epsilon;
 
-						const Vector2 imagePointWy(anyCamera.projectToImageIF(poseWy.transformation(), objectPoint));
+						const VectorD2 imagePointWy(sharedAnyCameraD->projectToImageIF(poseWy.transformation(), objectPoint));
 						if (checkAccuracy(imagePoint, imagePointWy, epsilon, jacobianX[1], jacobianY[1]))
 						{
 							localAccuracy = true;
@@ -1348,20 +1364,20 @@ bool TestJacobian::testAnyCameraPoseJacobian2x6(const double testDuration)
 
 					if (!localAccuracy)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
 				{
 					bool localAccuracy = false;
 
-					for (const Scalar epsilon : epsilons)
+					for (const double epsilon : epsilons)
 					{
 						// df / dwz
-						Pose poseWz(poseIF);
+						PoseD poseWz(flippedCamera_P_world);
 						poseWz.rz() += epsilon;
 
-						const Vector2 imagePointWz(anyCamera.projectToImageIF(poseWz.transformation(), objectPoint));
+						const VectorD2 imagePointWz(sharedAnyCameraD->projectToImageIF(poseWz.transformation(), objectPoint));
 						if (checkAccuracy(imagePoint, imagePointWz, epsilon, jacobianX[2], jacobianY[2]))
 						{
 							localAccuracy = true;
@@ -1371,20 +1387,20 @@ bool TestJacobian::testAnyCameraPoseJacobian2x6(const double testDuration)
 
 					if (!localAccuracy)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
 				{
 					bool localAccuracy = false;
 
-					for (const Scalar epsilon : epsilons)
+					for (const double epsilon : epsilons)
 					{
 						// df / dtx
-						Pose poseTx(poseIF);
+						PoseD poseTx(flippedCamera_P_world);
 						poseTx.x() += epsilon;
 
-						const Vector2 imagePointTx(anyCamera.projectToImageIF(poseTx.transformation(), objectPoint));
+						const VectorD2 imagePointTx(sharedAnyCameraD->projectToImageIF(poseTx.transformation(), objectPoint));
 						if (checkAccuracy(imagePoint, imagePointTx, epsilon, jacobianX[3], jacobianY[3]))
 						{
 							localAccuracy = true;
@@ -1394,20 +1410,20 @@ bool TestJacobian::testAnyCameraPoseJacobian2x6(const double testDuration)
 
 					if (!localAccuracy)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
 				{
 					bool localAccuracy = false;
 
-					for (const Scalar epsilon : epsilons)
+					for (const double epsilon : epsilons)
 					{
 						// df / dty
-						Pose poseTy(poseIF);
+						PoseD poseTy(flippedCamera_P_world);
 						poseTy.y() += epsilon;
 
-						const Vector2 imagePointTy(anyCamera.projectToImageIF(poseTy.transformation(), objectPoint));
+						const VectorD2 imagePointTy(sharedAnyCameraD->projectToImageIF(poseTy.transformation(), objectPoint));
 						if (checkAccuracy(imagePoint, imagePointTy, epsilon, jacobianX[4], jacobianY[4]))
 						{
 							localAccuracy = true;
@@ -1417,20 +1433,20 @@ bool TestJacobian::testAnyCameraPoseJacobian2x6(const double testDuration)
 
 					if (!localAccuracy)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
 				{
 					bool localAccuracy = false;
 
-					for (const Scalar epsilon : epsilons)
+					for (const double epsilon : epsilons)
 					{
 						// df / dtz
-						Pose poseTz(poseIF);
+						PoseD poseTz(flippedCamera_P_world);
 						poseTz.z() += epsilon;
 
-						const Vector2 imagePointTz(anyCamera.projectToImageIF(poseTz.transformation(), objectPoint));
+						const VectorD2 imagePointTz(sharedAnyCameraD->projectToImageIF(poseTz.transformation(), objectPoint));
 						if (checkAccuracy(imagePoint, imagePointTz, epsilon, jacobianX[5], jacobianY[5]))
 						{
 							localAccuracy = true;
@@ -1440,40 +1456,20 @@ bool TestJacobian::testAnyCameraPoseJacobian2x6(const double testDuration)
 
 					if (!localAccuracy)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
-
-				if (accurate)
-				{
-					++succeeded;
-				}
-
-				++iterations;
 			}
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
 
-		ocean_assert(iterations != 0ull);
-		const double percent = double(succeeded) / double(iterations);
-
-		Log::info() << "Camera name: " << anyCamera.name();
 		Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 		Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+		Log::info() << "Validation: " << validation;
 
-		if (percent < successThreshold())
+		if (!validation.succeeded())
 		{
 			allSucceeded = false;
-		}
-	}
-
-	if (!allSucceeded)
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
 		}
 	}
 
@@ -7599,7 +7595,7 @@ bool TestJacobian::testCalculateFisheyeDistortNormalized2x2(const double testDur
 
 	const unsigned int numberPoints = 50u;
 
-	Log::info() << "Testing fisheye Jacobian 2x2 for " << numberPoints << " points with " << sizeof(T) * 8 << "bit precision:";
+	Log::info() << "Testing fisheye Jacobian 2x2 for " << numberPoints << " points with " << sizeof(T) * 8 << "-bit precision:";
 
 	const T epsilons[5] = {NumericT<T>::weakEps(), NumericT<T>::weakEps() / 10, NumericT<T>::weakEps() * 10, NumericT<T>::weakEps() / 100, NumericT<T>::weakEps() * 100};
 
