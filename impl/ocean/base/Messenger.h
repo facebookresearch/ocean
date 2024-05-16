@@ -120,10 +120,10 @@ class OCEAN_BASE_EXPORT Messenger : public Singleton<Messenger>
 		{
 			/// All messages will be discarded.
 			OUTPUT_DISCARDED = 0u,
-			/// All messages are queued and must be popped from the message stack explicitly.
-			OUTPUT_QUEUED = 1u << 0u,
 			/// All messages are directed to the standard output immediately.
-			OUTPUT_STANDARD = 1u << 1u,
+			OUTPUT_STANDARD = 1u << 0u,
+			/// All messages are queued and must be popped from the message stack explicitly.
+			OUTPUT_QUEUED = 1u << 1u,
 			/// All messages are directed to a debug window.
 			OUTPUT_DEBUG_WINDOW = 1u << 2u,
 			/// All messages are directed to a file immediately.
@@ -213,7 +213,6 @@ class OCEAN_BASE_EXPORT Messenger : public Singleton<Messenger>
 
 		/**
 		 * Sets the output type of the messenger.
-		 * The messenger is in queued message state by default.
 		 * @param type Output type to set
 		 * @return True, if succeeded
 		 * @see setFileOutput(), setOutputStream().
@@ -273,7 +272,6 @@ class OCEAN_BASE_EXPORT Messenger : public Singleton<Messenger>
 
 		/**
 		 * Returns the output type of the messenger.
-		 * The messenger is in queued message state by default.
 		 * @return Current output type
 		 */
 		inline MessageOutput outputType() const;
@@ -298,7 +296,7 @@ class OCEAN_BASE_EXPORT Messenger : public Singleton<Messenger>
 
 		/**
 		 * Returns whether the date/time integration is activated.
-		 * By default the date time integration is deactivated.<br>
+		 * By default the date time integration is deactivated.
 		 * @return True, if so
 		 * @see setIntegrateDateTime().
 		 */
@@ -344,7 +342,7 @@ class OCEAN_BASE_EXPORT Messenger : public Singleton<Messenger>
 	protected:
 
 		/// Message output type.
-		MessageOutput outputType_ = OUTPUT_QUEUED;
+		MessageOutput outputType_ = OUTPUT_STANDARD;
 
 #ifdef OCEAN_DEBUG
 		/// Debug message queue.
