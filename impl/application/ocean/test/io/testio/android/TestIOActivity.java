@@ -10,12 +10,12 @@ package com.meta.ocean.app.test.io.testio.android;
 import com.meta.ocean.base.BaseJni;
 import com.meta.ocean.platform.android.application.TextActivity;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.view.WindowManager;
 
+/**
+ * This class implements the main Activity of the test application of the IO library.
+ * @ingroup applicationtestiotestioandroid
+ */
 public class TestIOActivity extends TextActivity
 {
 	// load the library
@@ -25,18 +25,11 @@ public class TestIOActivity extends TextActivity
 	}
 
 	/**
-	 * Native interface function to invoke the cv test.
-	 * @param outputFilename Optional filename for the output information
-	 * @param testDuration Number of seconds for each test
-	 */
-	private native String invokeTest(String outputFilename, double testDuration);
-
-	/**
 	 * Native interface function to invoke the test.
 	 * @param testDuration Number of seconds for each test, with range (0, infinity)
 	 * @param testFunctions Optional name of test functions to be executed
 	 */
-	private native void invokeTest(String testFunctions, String outputfilename);
+	private native void invokeTest(double testDuration, String testFunctions);
 
 	/**
 	 * Called when the activity is becoming visible to the user.
@@ -59,11 +52,21 @@ public class TestIOActivity extends TextActivity
 		// Define the test duration in seconds.
 		final double testDuration = 2.0;
 
-		String nativeValue = invokeTest(testOutput, testDuration);
-		TextView textView = new TextView(this);
-		textView.setText(nativeValue);
-		ScrollView scrollView = new ScrollView(this);
-		scrollView.addView(textView);
-		setContentView(scrollView);
+		// Use "" to execute the entire test
+		// Use e.g. "base64" to execute only the Base64 test
+		// Use e.g. "directory, file" to execute more than one test
+		final String testFunctions = "";
+
+		invokeTest(testDuration, testFunctions);
+	}
+
+	/**
+	 * Called when the activity is no longer visible to the user, because another activity has been resumed and is covering this one.
+	 */
+	public void onStop()
+	{
+		super.onStop();
+
+		BaseJni.exit(0);
 	}
 }

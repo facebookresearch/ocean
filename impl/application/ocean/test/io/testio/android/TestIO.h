@@ -25,10 +25,10 @@
  * Native interface function to invoke the io test.
  * @param env Native interface environment
  * @param javaThis JNI object
- * @param outputFilename Optional filename for the output information
- * @param testDuration Duration of each test in seconds
+ * @param testDuration Duration of each test in seconds, with range (0, infinity)
+ * @param testFunctions Test functions to be invoked
  * @ingroup applicationtestiotestioandroid
  */
-extern "C" jstring Java_com_meta_ocean_app_test_io_testio_android_TestIOActivity_invokeTest(JNIEnv* env, jobject javaThis, jstring outputFilename, jdouble testDuration);
+extern "C" void Java_com_meta_ocean_app_test_io_testio_android_TestIOActivity_invokeTest(JNIEnv* env, jobject javaThis, jdouble testDuration, jstring testFunctions);
 
 #endif // FACEBOOK_APPLICATION_OCEAN_TEST_TESTIO_ANDROID_TEST_IO_H

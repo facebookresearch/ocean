@@ -55,6 +55,16 @@ namespace TestIO
  */
 OCEAN_TEST_IO_EXPORT bool testIO(const double testDuration, const std::string& testFunctions = std::string());
 
+/**
+ * Tests the entire io library.
+ * This function returns directly as the actual test is invoked in an own thread.<br>
+ * Use this function in intendet for non-console applications like e.g., mobile devices.
+ * @param testDuration Number of seconds for each test, with range (0, infinity)
+ * @param testFunctions Optional name of the functions to be tested
+ * @ingroup testio
+ */
+OCEAN_TEST_IO_EXPORT void testIOAsynchron(const double testDuration, const std::string& testFunctions = std::string());
+
 }
 
 }

@@ -67,8 +67,6 @@
 
 #include "ocean/system/Process.h"
 
-#include <set>
-
 namespace Ocean
 {
 
