@@ -27,6 +27,21 @@ namespace TestGeometry
  */
 class OCEAN_TEST_GEOMETRY_EXPORT TestRANSAC
 {
+	protected:
+
+		/**
+		 * Definition of individual camera distortion types.
+		 */
+		enum DistortionType : uint32_t
+		{
+			/// No distortion.
+			DT_NO_DISTORTION = 0u,
+			/// The camera has radial distortion.
+			DT_RADIAL_DISTORTION = 1u << 0u | DT_NO_DISTORTION,
+			/// The camera has full distortion (e.g., radial and tangential).
+			DT_FULL_DISTORTION = (1u << 1u) | DT_RADIAL_DISTORTION
+		};
+
 	public:
 
 		/**
@@ -53,6 +68,22 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestRANSAC
 		 * @return True, if succeeded
 		 */
 		static bool testP3P(const AnyCameraType anyCameraType, const size_t correspondences, const double faultyRate, const double testDuration);
+
+		/**
+		 * Deprecated.
+		 *
+		 * Tests the RANSAC implementation of the perspective pose problem for three random points and a pinhole camera.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testP3PPinholeCamera(const double testDuration);
+
+		/**
+		 * Tests the RANSAC implementation of the perspective pose problem for three random points including unknown zoom factor.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testP3PZoom(const double testDuration);
 
 		/**
 		 * Tests the determination of a 6-DOF object transformation with any stereo camera.

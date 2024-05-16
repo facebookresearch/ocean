@@ -39,6 +39,18 @@ bool TestRANSAC::test(const double testDuration, Worker* /*worker*/)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testP3PPinholeCamera(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testP3PZoom(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testObjectTransformationStereoAnyCamera(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -138,6 +150,17 @@ TEST(TestRANSAC, P3P_Fisheye_100Correspondences_15Outliers)
 TEST(TestRANSAC, P3P_Fisheye_1000Correspondences_15Outliers)
 {
 	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::FISHEYE, 1000, 0.15, GTEST_TEST_DURATION));
+}
+
+
+TEST(TestRANSAC, P3PPinholeCamera)
+{
+	EXPECT_TRUE(TestRANSAC::testP3PPinholeCamera(GTEST_TEST_DURATION));
+}
+
+TEST(TestRANSAC, P3PZoom)
+{
+	EXPECT_TRUE(TestRANSAC::testP3PZoom(GTEST_TEST_DURATION));
 }
 
 
@@ -370,6 +393,216 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 	}
 
 	return allSucceeded;
+}
+
+bool TestRANSAC::testP3PPinholeCamera(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing RANSAC P3P with pinhole camera:";
+
+	const PinholeCamera patternCamera(640, 480, Numeric::deg2rad(58));
+
+	HighPerformanceStatistic performance;
+
+	RandomGenerator randomGenerator;
+
+	constexpr double threshold = std::is_same<float, Scalar>::value ? 0.85 : 0.95;
+
+	ValidationPrecision validation(threshold, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (const DistortionType distortionType : {DT_NO_DISTORTION, DT_RADIAL_DISTORTION, DT_FULL_DISTORTION})
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			// determine random points inside a unit circle which are not collinear
+
+			Vectors3 objectPoints;
+
+			// create a distorted camera
+			const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, (distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION, (distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION));
+
+			for (unsigned int n = 0u; n < 30u; ++n)
+			{
+				objectPoints.emplace_back(Random::scalar(randomGenerator, -1, 1), Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1)), Random::scalar(randomGenerator, -1, 1));
+			}
+
+			const Euler euler(Random::euler(randomGenerator, Numeric::deg2rad(0), Numeric::deg2rad(30)));
+			const Quaternion quaternion(euler);
+
+			const HomogenousMatrix4 perfectPose(Utilities::viewPosition(pinholeCamera, objectPoints, quaternion * Vector3(0, -1, 0)));
+
+			// determine the perfectly projected image points
+
+			Vectors2 imagePoints(objectPoints.size());
+			pinholeCamera.projectToImage<true>(perfectPose, objectPoints.data(), objectPoints.size(), true, imagePoints.data());
+
+#ifdef OCEAN_DEBUG
+			for (size_t n = 0; n < imagePoints.size(); ++n)
+			{
+				ocean_assert(pinholeCamera.isInside(imagePoints[n]));
+			}
+#endif
+
+			IndexSet32 outlierIndices;
+			while (outlierIndices.size() < 5)
+			{
+				outlierIndices.insert(RandomI::random(randomGenerator, (unsigned int)objectPoints.size() - 1u));
+			}
+
+			for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
+			{
+				imagePoints[*i] = Random::vector2(randomGenerator, Scalar(0), Scalar(pinholeCamera.width()), Scalar(0), Scalar(pinholeCamera.height()));
+			}
+
+			performance.start();
+
+			Indices32 validIndices;
+			HomogenousMatrix4 pose;
+			if (Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pinholeCamera.hasDistortionParameters(), pose, 5u, false, 50u, Scalar(3.5 * 3.5), &validIndices))
+			{
+				performance.stop();
+
+				Scalar maximalError = 0;
+				for (Indices32::const_iterator i = validIndices.begin(); i != validIndices.end(); ++i)
+				{
+					maximalError = max(maximalError, imagePoints[*i].distance(pinholeCamera.projectToImage<true>(pose, objectPoints[*i], pinholeCamera.hasDistortionParameters())));
+				}
+
+				if (maximalError > 1.5 || validIndices.size() + outlierIndices.size() < objectPoints.size())
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+			else
+			{
+				performance.skip();
+
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestRANSAC::testP3PZoom(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing RANSAC P3P with zoom:";
+
+	const PinholeCamera patternCamera(640, 480, Numeric::deg2rad(58));
+
+	HighPerformanceStatistic performance;
+
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(0.95, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (const DistortionType distortionType : {DT_NO_DISTORTION, DT_RADIAL_DISTORTION, DT_FULL_DISTORTION})
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			// determine random points inside a unit circle which are not collinear
+
+			Vectors3 objectPoints;
+
+			// create a distorted camera
+			const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, (distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION, (distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION));
+
+			const Scalar perfectZoom = Random::scalar(randomGenerator, Scalar(0.1), 10);
+
+			PinholeCamera zoomedCamera(pinholeCamera);
+			zoomedCamera.applyZoomFactor(perfectZoom);
+
+			for (unsigned int n = 0u; n < 30u; ++n)
+			{
+				objectPoints.emplace_back(Random::scalar(randomGenerator, -1, 1), Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1)), Random::scalar(randomGenerator, -1, 1));
+			}
+
+			const Euler euler(Random::euler(randomGenerator, Numeric::deg2rad(0), Numeric::deg2rad(30)));
+			const Quaternion quaternion(euler);
+
+			const HomogenousMatrix4 perfectPose(Utilities::viewPosition(zoomedCamera, objectPoints, quaternion * Vector3(0, -1, 0)));
+
+			for (unsigned int n = 0u; n < objectPoints.size(); ++n)
+			{
+				if (!PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(perfectPose), objectPoints[n]))
+				{
+					continue;
+				}
+			}
+
+			// determine the perfectly projected image points
+
+			Vectors2 imagePoints(objectPoints.size());
+			zoomedCamera.projectToImage<true>(perfectPose, objectPoints.data(), objectPoints.size(), true, imagePoints.data());
+
+#ifdef OCEAN_DEBUG
+			for (size_t n = 0; n < imagePoints.size(); ++n)
+			{
+				ocean_assert(zoomedCamera.isInside(imagePoints[n]));
+			}
+#endif
+
+			IndexSet32 outlierIndices;
+			while (outlierIndices.size() < 5)
+			{
+				outlierIndices.insert(RandomI::random(randomGenerator, (unsigned int)objectPoints.size() - 1u));
+			}
+
+			for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
+			{
+				imagePoints[*i] = Random::vector2(randomGenerator, Scalar(0), Scalar(pinholeCamera.width()), Scalar(0), Scalar(pinholeCamera.height()));
+			}
+
+			performance.start();
+
+			Indices32 validIndices;
+			HomogenousMatrix4 pose;
+			Scalar zoom;
+			if (Geometry::RANSAC::p3pZoom(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pinholeCamera.hasDistortionParameters(), pose, zoom, 5u, false, 50u, Scalar(3.5 * 3.5), &validIndices))
+			{
+				performance.stop();
+
+				Scalar maximalError = 0;
+				for (Indices32::const_iterator i = validIndices.begin(); i != validIndices.end(); ++i)
+				{
+					maximalError = max(maximalError, imagePoints[*i].distance(pinholeCamera.projectToImage<true>(pose, objectPoints[*i], pinholeCamera.hasDistortionParameters(), zoom)));
+				}
+
+				if (maximalError > 1.5 || validIndices.size() + outlierIndices.size() < objectPoints.size())
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+			else
+			{
+				performance.skip();
+
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDuration)

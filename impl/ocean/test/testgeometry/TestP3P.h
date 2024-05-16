@@ -76,20 +76,6 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestP3P
 		template <typename T>
 		static bool testP3PWithRaysStressTest(const double testDuration);
 
-		/**
-		 * Tests the RANSAC implementation of the perspective pose problem for three random points and a pinhole camera.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		static bool testRANSACP3PPinholeCamera(const double testDuration);
-
-		/**
-		 * Tests the RANSAC implementation of the perspective pose problem for three random points including unknown zoom factor.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		static bool testRANSACP3PZoom(const double testDuration);
-
 	private:
 
 		/**
