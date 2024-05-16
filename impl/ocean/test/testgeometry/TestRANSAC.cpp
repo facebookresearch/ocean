@@ -298,7 +298,7 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 				}
 			}
 
-			const unsigned int ransacIterations = std::max(20u, Geometry::RANSAC::iterations(6u, Scalar(0.995), Scalar(faultyRate + 0.05)));
+			const unsigned int ransacIterations = std::max(20u, Geometry::RANSAC::iterations(3u, Scalar(0.995), Scalar(faultyRate + 0.05)));
 
 			constexpr unsigned int minimalValidCorrespondences = 4u;
 			constexpr Scalar sqrPixelErrorThreshold = Scalar(5 * 5);
@@ -424,7 +424,7 @@ bool TestRANSAC::testP3PPinholeCamera(const double testDuration)
 			Vectors3 objectPoints;
 
 			// create a distorted camera
-			const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, (distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION, (distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION));
+			const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, (distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION, (distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION, &randomGenerator));
 
 			for (unsigned int n = 0u; n < 30u; ++n)
 			{
@@ -451,7 +451,7 @@ bool TestRANSAC::testP3PPinholeCamera(const double testDuration)
 			IndexSet32 outlierIndices;
 			while (outlierIndices.size() < 5)
 			{
-				outlierIndices.insert(RandomI::random(randomGenerator, (unsigned int)objectPoints.size() - 1u));
+				outlierIndices.insert(RandomI::random(randomGenerator, (unsigned int)(objectPoints.size()) - 1u));
 			}
 
 			for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
@@ -459,11 +459,13 @@ bool TestRANSAC::testP3PPinholeCamera(const double testDuration)
 				imagePoints[*i] = Random::vector2(randomGenerator, Scalar(0), Scalar(pinholeCamera.width()), Scalar(0), Scalar(pinholeCamera.height()));
 			}
 
+			constexpr Scalar pixelErrorThreshold = Scalar(3.5);
+
 			performance.start();
 
 			Indices32 validIndices;
 			HomogenousMatrix4 pose;
-			if (Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pinholeCamera.hasDistortionParameters(), pose, 5u, false, 50u, Scalar(3.5 * 3.5), &validIndices))
+			if (Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pinholeCamera.hasDistortionParameters(), pose, 5u, false, 50u, Numeric::sqr(pixelErrorThreshold), &validIndices))
 			{
 				performance.stop();
 
@@ -473,7 +475,7 @@ bool TestRANSAC::testP3PPinholeCamera(const double testDuration)
 					maximalError = max(maximalError, imagePoints[*i].distance(pinholeCamera.projectToImage<true>(pose, objectPoints[*i], pinholeCamera.hasDistortionParameters())));
 				}
 
-				if (maximalError > 1.5 || validIndices.size() + outlierIndices.size() < objectPoints.size())
+				if (maximalError > pixelErrorThreshold || validIndices.size() + outlierIndices.size() < objectPoints.size())
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -684,7 +686,7 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 				}
 			}
 
-			const unsigned int ransacIterations = Geometry::RANSAC::iterations(6u, Scalar(0.995), Scalar(faultyRate));
+			const unsigned int ransacIterations = Geometry::RANSAC::iterations(3u, Scalar(0.995), Scalar(faultyRate));
 
 			HomogenousMatrix4 ransac_world_T_object;
 

@@ -65,7 +65,7 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 	const ScopedConstMemoryAccessor<Vector3> objectPoints(objectPointAccessor);
 	const ScopedConstMemoryAccessor<Vector2> imagePoints(imagePointAccessor);
 
-	const unsigned int correspondences = (unsigned int)objectPoints.size();
+	const unsigned int correspondences = (unsigned int)(objectPoints.size());
 
 	Indices32 indices, bestIndices;
 	indices.reserve(correspondences);
@@ -78,12 +78,15 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 
 	Scalar bestSqrErrors = Numeric::maxValue();
 
+	// due to numerical stability, we ensure that we always apply at least 4 iterations
+	const unsigned int minimalAdaptiveIterations = std::min(4u, iterations);
+
 	unsigned int adpativeIterations = iterations;
 
 	for (unsigned int i = 0u; i < adpativeIterations; ++i)
 	{
 		unsigned int index0, index1, index2;
-		Random::random(randomGenerator, (unsigned int)correspondences - 1u, index0, index1, index2);
+		Random::random(randomGenerator, correspondences - 1u, index0, index1, index2);
 
 		ocean_assert(index0 < correspondences);
 		ocean_assert(index1 < correspondences);
@@ -139,7 +142,9 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 					internalPose_world_T_camera = cameraPoses_world_T_camera[n];
 					std::swap(bestIndices, indices);
 
-					adpativeIterations = std::min(RANSAC::iterations(3u, Scalar(0.99), Scalar(1) - Scalar(bestIndices.size()) / Scalar(correspondences)), adpativeIterations);
+					const unsigned int expectedIterationsForFoundCorrespondences = RANSAC::iterations(3u, Scalar(0.99), Scalar(1) - Scalar(bestIndices.size()) / Scalar(correspondences));
+
+					adpativeIterations = minmax(minimalAdaptiveIterations, expectedIterationsForFoundCorrespondences, adpativeIterations);
 				}
 			}
 		}
@@ -2155,6 +2160,9 @@ bool RANSAC::p3p(const HomogenousMatrix4* initialPose, const PinholeCamera& pinh
 
 	Scalar bestSqrErrors = Numeric::maxValue();
 
+	// due to numerical stability, we ensure that we always apply at least 4 iterations
+	const unsigned int minimalAdaptiveIterations = std::min(4u, iterations);
+
 	unsigned int adpativeIterations = iterations;
 
 	for (unsigned int i = 0u; i < adpativeIterations; ++i)
@@ -2168,7 +2176,7 @@ bool RANSAC::p3p(const HomogenousMatrix4* initialPose, const PinholeCamera& pinh
 		}
 		else
 		{
-			// On subsequenet iterations, or if initialPose is null, we calculate candidate poses from 3 correspondences
+			// On subsequent iterations, or if initialPose is null, we calculate candidate poses from 3 correspondences
 			unsigned int index0, index1, index2;
 			Random::random(randomGenerator, correspondences - 1u, index0, index1, index2);
 
@@ -2238,7 +2246,9 @@ bool RANSAC::p3p(const HomogenousMatrix4* initialPose, const PinholeCamera& pinh
 					internalPose = poses[n];
 					std::swap(bestIndices, indices);
 
-					adpativeIterations = minmax<unsigned int>(2u, RANSAC::iterations(3u, Scalar(0.99), Scalar(1) - Scalar(bestIndices.size()) / Scalar(correspondences)), adpativeIterations);
+					const unsigned int expectedIterationsForFoundCorrespondences = RANSAC::iterations(3u, Scalar(0.99), Scalar(1) - Scalar(bestIndices.size()) / Scalar(correspondences));
+
+					adpativeIterations = minmax(minimalAdaptiveIterations, expectedIterationsForFoundCorrespondences, adpativeIterations);
 				}
 			}
 		}
