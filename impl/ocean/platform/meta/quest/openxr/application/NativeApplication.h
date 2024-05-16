@@ -261,7 +261,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT NativeApplication
 		/**
 		 * Checks if a specific permission has been granted.
 		 * @param permission The string identifier of a permission, must be valid
-		 * @param translate Optionally translate permissions internally (short to long name), must be `false` in conjunction with Oculus permission such as `com.oculus.permission.ACCESS_MR_SENSOR_DATA`
+		 * @param translate Optionally translate permissions internally (short to long name), must be `false` in conjunction with Oculus permission such as `com.oculus.permission.USE_SCENE`
 		 * @return True if the specified permission has been granted, otherwise false
 		 */
 		bool isAndroidPermissionGranted(const std::string& permission, const bool translate = false) const;

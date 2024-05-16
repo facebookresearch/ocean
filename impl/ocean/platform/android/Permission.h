@@ -32,7 +32,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Permission
 	 * @param javaVM The Java virtual machine, must be valid
 	 * @param activity The Android main activity, must be valid
 	 * @param permission The permission to be checked, must be valid
-	 * @param translate If true, translates short permission name to Android-internal full permission name, note: must be `false` for Oculus permissions, e.g., `com.oculus.permission.ACCESS_MR_SENSOR_DATA`
+	 * @param translate If true, translates short permission name to Android-internal full permission name, note: must be `false` for Oculus permissions, e.g., `com.oculus.permission.USE_SCENE`
 	 * @param state True, if the app has the specified permission; False, if the app does not have the specified permission
 	 * @return True, if succeeded
 	 */
@@ -43,7 +43,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Permission
 	 * @param javaVM The Java virtual machine, must be valid
 	 * @param activity The Android main activity, must be valid
 	 * @param permissions The permissions to be requested, at least one
-	 * @param translate If true, translates short permission name to Android-internal full permission name, note: must be `false` for Oculus permissions, e.g., `com.oculus.permission.ACCESS_MR_SENSOR_DATA`
+	 * @param translate If true, translates short permission name to Android-internal full permission name, note: must be `false` for Oculus permissions, e.g., `com.oculus.permission.USE_SCENE`
 	 * @return True, if the request was invoked successfully, does not check whether the permission was granted
 	 */
 	static bool requestPermissions(JavaVM* javaVM, jobject activity, const std::vector<std::string>& permissions, const bool translate = true);
