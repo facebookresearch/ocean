@@ -352,9 +352,14 @@ TEST(TestJacobian, Similarity2x4)
 	EXPECT_TRUE(TestJacobian::testSimilarity2x4(GTEST_TEST_DURATION));
 }
 
-TEST(TestJacobian, CalculateFisheyeDistortNormalized2x2)
+TEST(TestJacobian, CalculateFisheyeDistortNormalized2x2_float)
 {
-	EXPECT_TRUE((TestJacobian::testCalculateFisheyeDistortNormalized2x2<double>(GTEST_TEST_DURATION)));
+	EXPECT_TRUE(TestJacobian::testCalculateFisheyeDistortNormalized2x2<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestJacobian, CalculateFisheyeDistortNormalized2x2_double)
+{
+	EXPECT_TRUE(TestJacobian::testCalculateFisheyeDistortNormalized2x2<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -7593,28 +7598,29 @@ bool TestJacobian::testCalculateFisheyeDistortNormalized2x2(const double testDur
 {
 	ocean_assert(testDuration > 0.0);
 
-	const unsigned int numberPoints = 50u;
+	constexpr unsigned int numberPoints = 50u;
 
 	Log::info() << "Testing fisheye Jacobian 2x2 for " << numberPoints << " points with " << sizeof(T) * 8 << "-bit precision:";
 
-	const T epsilons[5] = {NumericT<T>::weakEps(), NumericT<T>::weakEps() / 10, NumericT<T>::weakEps() * 10, NumericT<T>::weakEps() / 100, NumericT<T>::weakEps() * 100};
+	constexpr std::array<double, 5> epsilons = {NumericD::weakEps(), NumericD::weakEps() / 10.0, NumericD::weakEps() * 10.0, NumericD::weakEps() / 100.0, NumericD::weakEps() * 100.0};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	constexpr double threshold = std::is_same<float, T>::value ? 0.95 : 0.99;
+
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
-
-	std::vector<VectorT2<T>> points(numberPoints);
-
-	MatrixT<T> jacobians(2 * numberPoints, 2);
-	MatrixT<T> naiveJacobians(2 * numberPoints, 2);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		bool accurate = true;
+		MatrixT<T> jacobians(2 * numberPoints, 2);
+		MatrixT<T> naiveJacobians(2 * numberPoints, 2);
+
+		VectorsT2<T> points(numberPoints);
 
 		std::vector<T> radialDistortions(6);
 		std::vector<T> tangentialDistortions(2);
@@ -7668,10 +7674,14 @@ bool TestJacobian::testCalculateFisheyeDistortNormalized2x2(const double testDur
 			}
 		}
 
+		const FisheyeCameraD fisheyeCameraD(fisheyeCamera);
+
 		for (size_t n = 0; n < points.size(); ++n)
 		{
-			const VectorT2<T> point = points[n];
-			const VectorT2<T> transformedPoint = fisheyeCamera.distortNormalized(point);
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const VectorD2 point = VectorD2(points[n]);
+			const VectorD2 transformedPoint = fisheyeCameraD.distortNormalized(point);
 
 			const T* jacobianX = jacobians[2u * n + 0u];
 			const T* jacobianY = jacobians[2u * n + 1u];
@@ -7680,12 +7690,12 @@ bool TestJacobian::testCalculateFisheyeDistortNormalized2x2(const double testDur
 			{
 				bool localAccuracy = false;
 
-				for (const T epsilon : epsilons)
+				for (const double epsilon : epsilons)
 				{
-					VectorT2<T> pointDelta(point);
-					pointDelta[s] += T(epsilon);
+					VectorD2 pointDelta(point);
+					pointDelta[s] += epsilon;
 
-					const VectorT2<T> transformedPointDelta = fisheyeCamera.distortNormalized(pointDelta);
+					const VectorD2 transformedPointDelta = fisheyeCameraD.distortNormalized(pointDelta);
 
 					if (checkAccuracy(transformedPoint, transformedPointDelta, epsilon, jacobianX[s], jacobianY[s]))
 					{
@@ -7696,39 +7706,18 @@ bool TestJacobian::testCalculateFisheyeDistortNormalized2x2(const double testDur
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
-
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
-	{
-		if (std::is_same<T, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
