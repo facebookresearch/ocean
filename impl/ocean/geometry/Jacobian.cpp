@@ -835,6 +835,48 @@ void Jacobian::calculatePoseJacobianRodrigues2x6(Scalar* jx, Scalar* jy, const F
 #endif // SLOWER_IMPLEMENTATION
 }
 
+template <typename T>
+void Jacobian::calculatePoseJacobianRodrigues2nx6IF(T* jacobian, const AnyCameraT<T>& camera, const PoseT<T>& flippedCamera_P_world, const VectorT3<T>* objectPoints, const size_t numberObjectPoints)
+{
+	ocean_assert(jacobian != nullptr);
+	ocean_assert(camera.isValid());
+	ocean_assert(objectPoints != nullptr);
+	ocean_assert(numberObjectPoints >= 1);
+
+	SquareMatrixT3<T> Rwx, Rwy, Rwz;
+	calculateRotationRodriguesDerivative<T>(ExponentialMapT<T>(VectorT3<T>(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
+
+	const HomogenousMatrixT4<T> flippedCamera_T_world(flippedCamera_P_world.transformation());
+
+	for (size_t n = 0; n < numberObjectPoints; ++n)
+	{
+		T* const jx = jacobian;
+		T* const jy = jacobian + 6;
+
+		const VectorT3<T>& objectPoint = objectPoints[n];
+
+		camera.pointJacobian2x3IF(flippedCamera_T_world * objectPoint, jx + 3, jy + 3);
+
+		const VectorT3<T> dwx(Rwx * objectPoint);
+		const VectorT3<T> dwy(Rwy * objectPoint);
+		const VectorT3<T> dwz(Rwz * objectPoint);
+
+		// now, we apply the chain rule to determine the left 2x3 sub-matrix
+		jx[0] = jx[3] * dwx[0] + jx[4] * dwx[1] + jx[5] * dwx[2];
+		jx[1] = jx[3] * dwy[0] + jx[4] * dwy[1] + jx[5] * dwy[2];
+		jx[2] = jx[3] * dwz[0] + jx[4] * dwz[1] + jx[5] * dwz[2];
+
+		jy[0] = jy[3] * dwx[0] + jy[4] * dwx[1] + jy[5] * dwx[2];
+		jy[1] = jy[3] * dwy[0] + jy[4] * dwy[1] + jy[5] * dwy[2];
+		jy[2] = jy[3] * dwz[0] + jy[4] * dwz[1] + jy[5] * dwz[2];
+
+		jacobian += 12;
+	}
+}
+
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculatePoseJacobianRodrigues2nx6IF(float* jacobian, const AnyCameraT<float>& camera, const PoseT<float>& flippedCamera_P_world, const VectorT3<float>* objectPoints, const size_t numberObjectPoints);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculatePoseJacobianRodrigues2nx6IF(double* jacobian, const AnyCameraT<double>& camera, const PoseT<double>& flippedCamera_P_world, const VectorT3<double>* objectPoints, const size_t numberObjectPoints);
+
 void Jacobian::calculatePoseJacobianRodrigues2nx6(Scalar* jacobian, const PinholeCamera& pinholeCamera, const Pose& flippedCamera_P_world, const Vector3* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints)
 {
 	SquareMatrix3 Rwx, Rwy, Rwz;

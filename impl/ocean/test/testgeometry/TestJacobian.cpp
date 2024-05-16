@@ -1251,8 +1251,8 @@ bool TestJacobian::testAnyCameraPoseJacobian2nx6(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const VectorT3<T> translation(Random::vector3(randomGenerator, -10, 10));
-			const QuaternionT<T> quaternion(Random::quaternion(randomGenerator));
+			const VectorT3<T> translation(RandomT<T>::vector3(randomGenerator, -10, 10));
+			const QuaternionT<T> quaternion(RandomT<T>::quaternion(randomGenerator));
 
 			const HomogenousMatrixT4<T> world_T_camera(translation, quaternion);
 
@@ -1283,13 +1283,7 @@ bool TestJacobian::testAnyCameraPoseJacobian2nx6(const double testDuration)
 			{
 				const HighPerformanceStatistic::ScopedStatistic scope(performance);
 
-				SquareMatrixT3<T> dwx, dwy, dwz;
-				Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMapT<T>(flippedCamera_P_world[3], flippedCamera_P_world[4], flippedCamera_P_world[5]), dwx, dwy, dwz);
-
-				for (size_t n = 0; n < objectPoints.size(); ++n)
-				{
-					Geometry::Jacobian::calculatePoseJacobianRodrigues2x6IF<T>(anyCamera, flippedCamera_T_world, objectPoints[n], dwx, dwy, dwz, jacobian[n * 2 + 0], jacobian[n * 2 + 1]);
-				}
+				Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6IF(jacobian.data(), anyCamera, flippedCamera_P_world, objectPoints.data(), objectPoints.size());
 			}
 
 			{

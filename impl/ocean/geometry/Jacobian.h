@@ -228,7 +228,7 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		static void calculatePoseJacobianRodrigues2x6(Scalar* jx, Scalar* jy, const FisheyeCamera& fisheyeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& worldObjectPoint, const SquareMatrix3& dwx, const SquareMatrix3& dwy, const SquareMatrix3& dwz);
 
 		/**
-		 * Calculates the two jacobian rows for a given (flexible) pose and one static 3D object point.
+		 * Calculates the two jacobian rows for a given (flexible) 6-DOF camera pose and one static 3D object point.
 		 * This function uses the pre-calculated 3x3 Jacobian matrix of the camera's orientation provided by three separated 3x3 matrices.<br>
 		 * The 6 derivatives are calculated for the 6DOF pose.<br>
 		 * The resulting jacobian rows have the following form:
@@ -239,7 +239,7 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * With transformation function f = (fx, fy), exponential map w = (wx, wy, wz) and translation t = (tx, ty, tz).<br>
 		 * The jacobian calculation uses the Rodrigues rotation formula to determine the rotation derivatives.<br>
 		 * @param anyCamera The camera profile to determine the jacobian values for, must be valid
-		 * @param flippedCamera_T_world Inverted and flipped pose (rotation and translation) to determine the jacobian for
+		 * @param flippedCamera_T_world The inverted and flipped camera pose to determine the jacobian for, with default flipped camera pointing towards the positive z-space with y-axis downwards, must be valid
 		 * @param worldObjectPoint 3D object point to determine the jacobian for, in world coordinate system
 		 * @param dwx Rotation matrix derived to wx, as determined by calculateRotationRodriguesDerivative()
 		 * @param dwy Rotation matrix derived to wy, as determined by calculateRotationRodriguesDerivative()
@@ -253,6 +253,28 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		static OCEAN_FORCE_INLINE void calculatePoseJacobianRodrigues2x6IF(const AnyCameraT<T>& anyCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& worldObjectPoint, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz, T* jx, T* jy);
 
 		/**
+		 * Calculates all jacobian rows for a given (flexible) 6-DOF camera pose with a static camera profile and several static 3D object points.
+		 * The 6 derivatives are calculated for the entire 6DOF pose.<br>
+		 * The resulting jacobian rows have the following form:
+		 * <pre>
+		 * | dfx / dwx, dfx / dwy, dfx / dwz, dfx / dtx, dfx / dty, dfx / dtz |
+		 * | dfy / dwx, dfy / dwy, dfy / dwz, dfy / dtx, dfy / dty, dfy / dtz |
+		 * </pre>
+		 * With transformation function f = (fx, fy), exponential map w = (wx, wy, wz) and translation t = (tx, ty, tz).<br>
+		 * The jacobian calculation uses the Rodrigues rotation formula to determine the rotation derivatives.<br>
+		 * @param jacobian First element in the first row of the (row major aligned) jacobian matrix, with 2 * numberObjectPoints rows and 6 columns
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param flippedCamera_P_world The inverted and flipped pose to determine the jacobian for, with default flipped camera pointing towards the positive z-space with y-axis downwards, must be valid
+		 * @param objectPoints The 3D object points to determine the jacobian for, must be valid
+		 * @param numberObjectPoints The number of given object points, with range [1, infinity)
+		 * @see calculatePoseJacobianRodrigues2x6IF().
+		 */
+		template <typename T>
+		static void calculatePoseJacobianRodrigues2nx6IF(T* jacobian, const AnyCameraT<T>& camera, const PoseT<T>& flippedCamera_P_world, const VectorT3<T>* objectPoints, const size_t numberObjectPoints);
+
+		/**
+		 * Deprecated.
+		 *
 		 * Calculates all pose jacobian rows for a given (flexible) pose with a static camera profile supporting distortion and a set of static 3D object points.
 		 * The 6 derivatives are calculated for the entire 6DOF pose.<br>
 		 * The resulting jacobian rows have the following form:
