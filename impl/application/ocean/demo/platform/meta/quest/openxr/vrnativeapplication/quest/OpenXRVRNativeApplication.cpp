@@ -23,4 +23,6 @@ void OpenXRVRNativeApplication::onFramebufferInitialized()
 
 	// const Rendering::SceneRef scene = engine_->factory().createScene();
 	// framebuffer_->addScene(scene);
+
+	Log::info() << "OpenXRVRNativeApplication::onFramebufferInitialized(), create a rendering scene...";
 }
