@@ -223,7 +223,7 @@ Frame resizedFrame(resizedFrameType);
 CV::FrameInterpolator::resize(sourceFrame, resizedFrame);
 ```
 
-For more details and a visual comparisons of the available image resizing methods, see [Image Resizing](image-resizing).
+For more details and a visual comparisons of the available image resizing methods, see [Image Resizing](../image-resizing.md).
 
 ## Reading and writing images
 
