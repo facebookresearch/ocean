@@ -682,31 +682,6 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 */
 		static bool objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const ConstIndexedAccessor<Vector3>& objectPointsA, const ConstIndexedAccessor<Vector3>& objectPointsB, const ConstIndexedAccessor<Vector2>& imagePointsA, const ConstIndexedAccessor<Vector2>& imagePointsB, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_object, const unsigned int minimalValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndicesA = nullptr, Indices32* usedIndicesB = nullptr, Scalar* sqrAccuracy = nullptr, const bool allowMonoObservation = true);
 
-		/**
-		 * Deprecated.
-		 *
-		 * Determines the 6-DOF object transformation between world and object so that the transformation fits with two observations in two images (left and right stereo image).
-		 * @param fisheyeCameraA The camera profile of the first fisheye camera, must be valid
-		 * @param fisheyeCameraB the camera profile of the second fisheye camera, must be valid
-		 * @param world_T_cameraA The transformation between first camera and world, must be valid
-		 * @param world_T_cameraB The transformation between second camera and world, must be valid
-		 * @param objectPointsA The 3D object points of the observation of the object in the first camera, defined in the coordinate system of the object
-		 * @param objectPointsB The 3D object points of the observation of the object in the second camera, defined in the coordinate system of the object
-		 * @param imagePointsA The 2D image points of the observation of the object in the first camera, one for each 3D object point
-		 * @param imagePointsB The 2D image points of the observation of the object in the second camera, one for each 3D object point
-		 * @param randomGenerator Random generator object to be used
-		 * @param world_T_object The resulting transformation between object and world
-		 * @param minimalValidCorrespondences Minimal number of correspondences so that the resulting transformation counts as valid, with range [4, objectPointsA.size() + objectPointsB.size()]
-		 * @param refine True, to apply a non-linear least square optimization to increase the transformation accuracy after the RANSAC step
-		 * @param iterations The number of RANSAC iteration to be applied, with range [1, infinity)
-		 * @param sqrPixelErrorThreshold Square projection error for valid 2D/3D correspondences, with range [0, infinity)
-		 * @param usedIndicesA Optional resulting indices of valid correspondences from the first camera
-		 * @param usedIndicesB Optional resulting indices of valid correspondences from the second camera
-		 * @param sqrAccuracy Optional resulting average square pixel error
-		 * @return True, if succeeded
-		 */
-		static bool objectTransformationStereo(const FisheyeCamera& fisheyeCameraA, const FisheyeCamera& fisheyeCameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const ConstIndexedAccessor<Vector3>& objectPointsA, const ConstIndexedAccessor<Vector3>& objectPointsB, const ConstIndexedAccessor<Vector2>& imagePointsA, const ConstIndexedAccessor<Vector2>& imagePointsB, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_object, const unsigned int minimalValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndicesA = nullptr, Indices32* usedIndicesB = nullptr, Scalar* sqrAccuracy = nullptr);
-
 	private:
 
 		/**

@@ -60,13 +60,6 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestRANSAC
 		 * @return True, if succeeded
 		 */
 		static bool testObjectTransformationStereoAnyCamera(const double testDuration);
-
-		/**
-		 * Tests the determination of a 6-DOF object transformation with stereo fisheye camera.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		static bool testObjectTransformationStereo(const double testDuration);
 };
 
 }
