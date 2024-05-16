@@ -157,7 +157,7 @@ void VRNativeApplicationAdvanced::onFramebufferInitialized()
 
 	vrHandVisualizer_ = VRHandVisualizer(engine_, framebuffer_);
 
-	// Load the render models from disk and initialize the visualizers
+	// Load the controller models from disk and initialize the visualizers
 	ocean_assert(Platform::Android::ResourceManager::get().isValid());
 	const IO::Directory temporaryTargetDirectory = IO::Directory(Platform::Android::ResourceManager::get().externalFilesDirectory()) + IO::Directory("meta_quest_application/controller");
 

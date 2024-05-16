@@ -1,0 +1,9 @@
+Image Credits
+
+vlt-mw-potw.jpg:
+https://www.eso.org/public/images/vlt-mw-potw/
+Credit: ESO/H.H. Heyer
+Added a black border on top and bottom to create a full 360deg image with aspect ratio 2:1
+
+Usage of ESO Images, Videos, Web texts and Music:
+Unless specifically noted, the images, videos, and music distributed on the public ESO website, along with the texts of press releases, announcements, pictures of the week, blog posts and captions, are licensed under a Creative Commons Attribution 4.0 International License, and may on a non-exclusive basis be reproduced without fee provided the credit is clear and visible. The license allows adaptation of the material, but any adaptations do not affect or impair the use of the original ESO material by others under Creative Commons license. Details on how to interpret this are given below for those who need further explanation.
