@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.26)
 
 add_subdirectory(testqrcodes)
 
-if (MACOS OR ANDROID OR LINUX)
+if (MACOS OR ANDROID OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv_testdetector")
 

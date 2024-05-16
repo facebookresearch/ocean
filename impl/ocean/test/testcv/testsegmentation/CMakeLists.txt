@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (MACOS OR ANDROID OR IOS OR LINUX)
+if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_test_testcv_testsegmentation")
 
