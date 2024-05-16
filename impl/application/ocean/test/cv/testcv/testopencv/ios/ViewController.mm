@@ -25,10 +25,8 @@ using namespace Ocean;
 {
 	[super viewDidLoad];
 
-#if 0
-    // Enable this block to redirect the output to Xcode
-	Messenger::get().setOutputType(Messenger::OUTPUT_QUEUED);
-#endif
+	// writing the logs to standard output (e.g,. debug window) and queuing the messages to allow popping them
+	Messenger::get().setOutputType(Messenger::MessageOutput(Messenger::OUTPUT_STANDARD | Messenger::OUTPUT_QUEUED));
 
 	// define the number of seconds each test is applied
 	const double testDurations = 2.0;
@@ -49,7 +47,9 @@ using namespace Ocean;
 	const std::string message(Messenger::get().popMessage());
 
 	if (!message.empty())
+	{
 		[_controllerTextView setText:[[_controllerTextView text] stringByAppendingString:StringApple::toNSString(message + std::string("\n"))]];
+	}
 }
 
 - (void)didReceiveMemoryWarning

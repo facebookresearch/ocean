@@ -51,6 +51,9 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification
 {
+	// writing the logs to standard output (e.g,. debug window) and queuing the messages to allow popping them
+	Messenger::get().setOutputType(Messenger::MessageOutput(Messenger::OUTPUT_STANDARD | Messenger::OUTPUT_QUEUED));
+
 	binaryAnalyzer_ = std::make_shared<BinaryAnalyzer>();
 	previousAnalyzerState = BinaryAnalyzer::AS_EMPTY;
 
