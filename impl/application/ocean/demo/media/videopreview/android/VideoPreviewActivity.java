@@ -38,7 +38,7 @@ public class VideoPreviewActivity extends Activity
 		super.onCreate(savedInstanceState);
 		android.os.Process.setThreadPriority(-20);
 
-		BaseJni.initialize("STANDARD");
+		BaseJni.initialize("STANDARD, QUEUED");
 		MediaAndroidJni.registerLibrary();
 		RenderingGLESceneGraphJni.registerLibrary();
 

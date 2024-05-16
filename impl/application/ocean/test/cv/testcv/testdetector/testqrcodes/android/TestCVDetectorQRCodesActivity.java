@@ -47,16 +47,13 @@ public class TestCVDetectorQRCodesActivity extends TextActivity
 
 		Assets.copyFiles(getAssets(), getExternalFilesDir(null) + "/", true);
 
-		// Use "" to provide the test result in the text view
-		// Use "STANDARD" to use the LogCat for the test result
-		// Use getExternalFilesDir(null) + "/"filename.txt" for a file output
+		// The output to which the application's log will be written
+		// use "STANDARD" to show the log output in 'adb logcat -s "Ocean"'
+		// use "QUEUED" to queue the logs and to allow popping them later
+		// use "filename" to write the log output into a file (e.g., with getExternalFilesDir(null) + "/filename.txt")
+		final String applicationOutput = "STANDARD, QUEUED";
 
-		// stream output to file with timestamp suffix
-		// String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		// final String testOutput = getExternalFilesDir(null) + "/"testCVDetectorQRCodes-" + timeStamp + ".txt";
-		final String testOutput = "";
-
-		BaseJni.initialize(testOutput);
+		BaseJni.initialize(applicationOutput);
 
 		// Define the test duration in seconds.
 		final double testDuration = 2.0;

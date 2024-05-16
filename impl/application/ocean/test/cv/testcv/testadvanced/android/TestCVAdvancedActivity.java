@@ -44,12 +44,13 @@ public class TestCVAdvancedActivity extends TextActivity
 		// ensuring that the screenn does not turn off during execution
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-		// stream output to file with timestamp suffix
-		// String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		// final String testOutput = getExternalFilesDir(null) + "/testCVAdvandedDetector-" + timeStamp + ".txt";
-		final String testOutput = "";
+		// The output to which the application's log will be written
+		// use "STANDARD" to show the log output in 'adb logcat -s "Ocean"'
+		// use "QUEUED" to queue the logs and to allow popping them later
+		// use "filename" to write the log output into a file (e.g., with getExternalFilesDir(null) + "/filename.txt")
+		final String applicationOutput = "STANDARD, QUEUED";
 
-		BaseJni.initialize(testOutput);
+		BaseJni.initialize(applicationOutput);
 
 		// Define the dimension of the default test frame in pixel, with range [32, infinity)x[32, infinity)
 		final int testWidth = 1920;
