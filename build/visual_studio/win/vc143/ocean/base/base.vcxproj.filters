@@ -277,5 +277,8 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\ScopedSubscription.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\Version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

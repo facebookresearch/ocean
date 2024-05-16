@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		504712342BF5668700DE0899 /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 504712332BF5668700DE0899 /* Version.h */; };
+		504712352BF5668700DE0899 /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 504712332BF5668700DE0899 /* Version.h */; };
+		504712362BF5668700DE0899 /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 504712332BF5668700DE0899 /* Version.h */; };
+		504712372BF5668700DE0899 /* Version.h in Headers */ = {isa = PBXBuildFile; fileRef = 504712332BF5668700DE0899 /* Version.h */; };
 		5048C45420A392470011480F /* Processor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5048C45320A392460011480F /* Processor.mm */; };
 		5048C45520A392470011480F /* Processor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5048C45320A392460011480F /* Processor.mm */; };
 		5048C45620A392470011480F /* Processor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5048C45320A392460011480F /* Processor.mm */; };
@@ -382,6 +386,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		504712332BF5668700DE0899 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Version.h; path = ../../../../../impl/ocean/base/Version.h; sourceTree = "<group>"; };
 		5048C45320A392460011480F /* Processor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Processor.mm; path = ../../../../../impl/ocean/base/Processor.mm; sourceTree = "<group>"; };
 		5063B4DA1FA09EF500424003 /* PluginManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PluginManager.mm; path = ../../../../../impl/ocean/base/PluginManager.mm; sourceTree = "<group>"; };
 		5063B4DB1FA09EF500424003 /* Thread.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Thread.mm; path = ../../../../../impl/ocean/base/Thread.mm; sourceTree = "<group>"; };
@@ -591,6 +596,7 @@
 				5DFD7C281B91029100ABF245 /* Triple.h */,
 				5DFD7C291B91029100ABF245 /* Utilities.h */,
 				5DFD7C2A1B91029100ABF245 /* Value.h */,
+				504712332BF5668700DE0899 /* Version.h */,
 				5DFD7C2B1B91029100ABF245 /* Worker.h */,
 				5DFD7C2C1B91029100ABF245 /* WorkerPool.h */,
 			);
@@ -653,6 +659,7 @@
 				5DFD7C031B9100C900ABF245 /* Scheduler.h in Headers */,
 				5DFD7BD71B91006400ABF245 /* Frame.h in Headers */,
 				5DFD7C301B91029100ABF245 /* Timestamp.h in Headers */,
+				504712342BF5668700DE0899 /* Version.h in Headers */,
 				5DFD7C341B91029100ABF245 /* Worker.h in Headers */,
 				5DFD7BEB1B9100A700ABF245 /* Lock.h in Headers */,
 				5DFD7BED1B9100A700ABF245 /* Maintenance.h in Headers */,
@@ -716,6 +723,7 @@
 				5D2229E21BB1684300298788 /* Scheduler.h in Headers */,
 				5D2229E31BB1684300298788 /* Frame.h in Headers */,
 				5D2229E41BB1684300298788 /* Timestamp.h in Headers */,
+				504712352BF5668700DE0899 /* Version.h in Headers */,
 				5D2229E51BB1684300298788 /* Worker.h in Headers */,
 				5D2229E61BB1684300298788 /* Lock.h in Headers */,
 				5D2229E71BB1684300298788 /* Maintenance.h in Headers */,
@@ -779,6 +787,7 @@
 				5D8380D31D8F366700939AD7 /* Scheduler.h in Headers */,
 				5D8380D41D8F366700939AD7 /* Frame.h in Headers */,
 				5D8380D51D8F366700939AD7 /* Timestamp.h in Headers */,
+				504712372BF5668700DE0899 /* Version.h in Headers */,
 				5D8380D61D8F366700939AD7 /* Worker.h in Headers */,
 				5D8380D71D8F366700939AD7 /* Lock.h in Headers */,
 				5D8380D81D8F366700939AD7 /* Maintenance.h in Headers */,
@@ -842,6 +851,7 @@
 				5D9CA2BC1D8B23140020FD83 /* Scheduler.h in Headers */,
 				5D9CA2BD1D8B23140020FD83 /* Frame.h in Headers */,
 				5D9CA2BE1D8B23140020FD83 /* Timestamp.h in Headers */,
+				504712362BF5668700DE0899 /* Version.h in Headers */,
 				5D9CA2BF1D8B23140020FD83 /* Worker.h in Headers */,
 				5D9CA2C01D8B23140020FD83 /* Lock.h in Headers */,
 				5D9CA2C11D8B23140020FD83 /* Maintenance.h in Headers */,

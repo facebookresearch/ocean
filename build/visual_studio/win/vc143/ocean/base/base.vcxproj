@@ -272,6 +272,7 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\Triple.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\Utilities.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\Value.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\Version.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\Worker.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\WorkerPool.h" />
   </ItemGroup>
