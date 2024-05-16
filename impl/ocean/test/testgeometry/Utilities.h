@@ -139,23 +139,29 @@ class OCEAN_TEST_GEOMETRY_EXPORT Utilities
 		 * Returns one of two realistic pinhole camera profiles.
 		 * @param index The index of the camera profile to be returned, with range [0, 1]
 		 * @return The realistic camera profile
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
 		 */
-		static PinholeCamera realisticPinholeCamera(const unsigned int index = 0u);
+		template <typename T = Scalar>
+		static PinholeCameraT<T> realisticPinholeCamera(const unsigned int index = 0u);
 
 		/**
 		 * Returns one of two realistic fisheye camera profiles.
 		 * @param index The index of the camera profile to be returned, with range [0, 1]
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
 		 * @return The realistic camera profile
 		 */
-		static FisheyeCamera realisticFisheyeCamera(const unsigned int index = 0u);
+		template <typename T = Scalar>
+		static FisheyeCameraT<T> realisticFisheyeCamera(const unsigned int index = 0u);
 
 		/**
 		 * Returns one of two realistic camera profiles provided as an AnyCamera object.
 		 * @param anyCameraType The type of the camera to be created, must be valid
 		 * @param index The index of the camera profile to be returned, with range [0, 1]
 		 * @return The realistic camera profile
+		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
 		 */
-		static SharedAnyCamera realisticAnyCamera(const AnyCameraType anyCameraType, const unsigned int index = 0u);
+		template <typename T = Scalar>
+		static SharedAnyCameraT<T> realisticAnyCamera(const AnyCameraType anyCameraType, const unsigned int index = 0u);
 
 		/**
 		 * Returns all camera types for which a realistic camera object can be accessed.

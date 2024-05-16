@@ -27,45 +27,55 @@ template <typename T> class AnyCameraT;
  * @see AnyCameraT
  * @ingroup math
  */
-typedef AnyCameraT<Scalar> AnyCamera;
+using AnyCamera = AnyCameraT<Scalar>;
 
 /**
  * Definition of an AnyCamera object with double precision.
  * @see AnyCameraT
  * @ingroup math
  */
-typedef AnyCameraT<double> AnyCameraD;
+using AnyCameraD = AnyCameraT<double>;
 
 /**
  * Definition of an AnyCamera object with float precision.
  * @see AnyCameraT
  * @ingroup math
  */
-typedef AnyCameraT<float> AnyCameraF;
+using AnyCameraF = AnyCameraT<float>;
+
+/**
+ * Definition of a shared pointer holding an AnyCamera object with Scalar precision.
+ * @tparam T the data type of the scalar to be used either 'float' or 'double'
+ * @see AnyCameraT
+ * @ingroup math
+ */
+template <typename T>
+using SharedAnyCameraT = std::shared_ptr<AnyCameraT<T>>;
 
 /**
  * Definition of a shared pointer holding an AnyCamera object with Scalar precision.
  * @see AnyCameraT
  * @ingroup math
  */
-typedef std::shared_ptr<AnyCamera> SharedAnyCamera;
+using SharedAnyCamera = std::shared_ptr<AnyCamera>;
 
 /**
  * Definition of a shared pointer holding an AnyCamera object with double precision.
  * @see AnyCameraT
  * @ingroup math
  */
-typedef std::shared_ptr<AnyCameraD> SharedAnyCameraD;
+using SharedAnyCameraD = std::shared_ptr<AnyCameraD>;
 
 /**
  * Definition of a shared pointer holding an AnyCamera object with float precision.
  * @see AnyCameraT
  * @ingroup math
  */
-typedef std::shared_ptr<AnyCameraF> SharedAnyCameraF;
+using SharedAnyCameraF = std::shared_ptr<AnyCameraF>;
 
 /**
  * Definition of a typename alias for vectors with shared AnyCameraT objects.
+ * @tparam T the data type of the scalar to be used either 'float' or 'double'
  * @see VectorT2
  * @ingroup math
  */
@@ -77,22 +87,21 @@ using SharedAnyCamerasT = std::vector<std::shared_ptr<AnyCameraT<T>>>;
  * @see AnyCamera
  * @ingroup math
  */
-typedef SharedAnyCamerasT<Scalar> SharedAnyCameras;
+using SharedAnyCameras = SharedAnyCamerasT<Scalar>;
 
 /**
  * Definition of a vector holding AnyCameraD objects.
  * @see AnyCameraD
  * @ingroup math
  */
-typedef SharedAnyCamerasT<double> SharedAnyCamerasD;
+using SharedAnyCamerasD = SharedAnyCamerasT<double>;
 
 /**
  * Definition of a vector holding AnyCameraF objects.
  * @see AnyCameraF
  * @ingroup math
  */
-typedef SharedAnyCamerasT<float> SharedAnyCamerasF;
-
+using SharedAnyCamerasF = SharedAnyCamerasT<float>;
 
 /**
  * Definition of individual camera types.

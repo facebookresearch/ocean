@@ -197,7 +197,8 @@ PinholeCamera Utilities::distortedCamera(const PinholeCamera& pinholeCamera, con
 	return result;
 }
 
-PinholeCamera Utilities::realisticPinholeCamera(const unsigned int index)
+template <typename T>
+PinholeCameraT<T> Utilities::realisticPinholeCamera(const unsigned int index)
 {
 	ocean_assert(index <= 1u);
 
@@ -206,36 +207,40 @@ PinholeCamera Utilities::realisticPinholeCamera(const unsigned int index)
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
 
-		const Scalar focalLengthX = Scalar(685.126);
-		const Scalar focalLengthY = Scalar(695.00901883);
+		const T focalLengthX = T(685.126);
+		const T focalLengthY = T(695.00901883);
 
-		const Scalar principalX = Scalar(309.097);
-		const Scalar principalY = Scalar(232.743);
+		const T principalX = T(309.097);
+		const T principalY = T(232.743);
 
-		const PinholeCamera::DistortionPair radialDistortion(Scalar(0), Scalar(0));
-		const PinholeCamera::DistortionPair tangentialDistortion(Scalar(0), Scalar(0));
+		const typename PinholeCameraT<T>::DistortionPair radialDistortion(T(0), T(0));
+		const typename PinholeCameraT<T>::DistortionPair tangentialDistortion(T(0), T(0));
 
-		return PinholeCamera(width, height,  focalLengthX, focalLengthY, principalX, principalY, radialDistortion, tangentialDistortion);
+		return PinholeCameraT<T>(width, height,  focalLengthX, focalLengthY, principalX, principalY, radialDistortion, tangentialDistortion);
 	}
 	else
 	{
 		const unsigned int width = 1980u;
 		const unsigned int height = 1080u;
 
-		const Scalar focalLengthX = Scalar(1265.43456618);
-		const Scalar focalLengthY = Scalar(1286.62742462);
+		const T focalLengthX = T(1265.43456618);
+		const T focalLengthY = T(1286.62742462);
 
-		const Scalar principalX = Scalar(943.35628029);
-		const Scalar principalY = Scalar(573.48833202);
+		const T principalX = T(943.35628029);
+		const T principalY = T(573.48833202);
 
-		const PinholeCamera::DistortionPair radialDistortion(Scalar(0), Scalar(0));
-		const PinholeCamera::DistortionPair tangentialDistortion(Scalar(0), Scalar(0));
+		const typename PinholeCameraT<T>::DistortionPair radialDistortion(T(0), T(0));
+		const typename PinholeCameraT<T>::DistortionPair tangentialDistortion(T(0), T(0));
 
-		return PinholeCamera(width, height,  focalLengthX, focalLengthY, principalX, principalY, radialDistortion, tangentialDistortion);
+		return PinholeCameraT<T>(width, height,  focalLengthX, focalLengthY, principalX, principalY, radialDistortion, tangentialDistortion);
 	}
 }
 
-FisheyeCamera Utilities::realisticFisheyeCamera(const unsigned int index)
+template PinholeCameraT<float> OCEAN_TEST_GEOMETRY_EXPORT Utilities::realisticPinholeCamera(const unsigned int index);
+template PinholeCameraT<double> OCEAN_TEST_GEOMETRY_EXPORT Utilities::realisticPinholeCamera(const unsigned int index);
+
+template <typename T>
+FisheyeCameraT<T> Utilities::realisticFisheyeCamera(const unsigned int index)
 {
 	ocean_assert(index <= 1u);
 
@@ -244,34 +249,38 @@ FisheyeCamera Utilities::realisticFisheyeCamera(const unsigned int index)
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
 
-		const Scalar focalLength = Scalar(191.787);
+		const T focalLength = T(191.787);
 
-		const Scalar principalX = Scalar(314.304);
-		const Scalar principalY = Scalar(243.711);
+		const T principalX = T(314.304);
+		const T principalY = T(243.711);
 
-		const Scalars radialDistortions = {Scalar(0.29192), Scalar(0.00329052), Scalar(-0.151158), Scalar(0.0952214), Scalar(-0.0230753), Scalar(0.00194645)};
-		const Scalars tangentialDistortions = {Scalar(0.0003358), Scalar(-0.000474032)};
+		const std::vector<T> radialDistortions = {T(0.29192), T(0.00329052), T(-0.151158), T(0.0952214), T(-0.0230753), T(0.00194645)};
+		const std::vector<T> tangentialDistortions = {T(0.0003358), T(-0.000474032)};
 
-		return FisheyeCamera(width, height,  focalLength, focalLength, principalX, principalY, radialDistortions.data(), tangentialDistortions.data());
+		return FisheyeCameraT<T>(width, height,  focalLength, focalLength, principalX, principalY, radialDistortions.data(), tangentialDistortions.data());
 	}
 	else
 	{
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
 
-		const Scalar focalLength = Scalar(191.3389);
+		const T focalLength = T(191.3389);
 
-		const Scalar principalX = Scalar(318.2509);
-		const Scalar principalY = Scalar(244.1959);
+		const T principalX = T(318.2509);
+		const T principalY = T(244.1959);
 
-		const Scalars radialDistortions = {Scalar(0.286137), Scalar(0.0375097), Scalar(-0.229221), Scalar(0.178376), Scalar(-0.0642987), Scalar(0.00963856)};
-		const Scalars tangentialDistortions = {Scalar(0.000138048), Scalar(-0.000289689)};
+		const std::vector<T> radialDistortions = {T(0.286137), T(0.0375097), T(-0.229221), T(0.178376), T(-0.0642987), T(0.00963856)};
+		const std::vector<T> tangentialDistortions = {T(0.000138048), T(-0.000289689)};
 
-		return FisheyeCamera(width, height,  focalLength, focalLength, principalX, principalY, radialDistortions.data(), tangentialDistortions.data());
+		return FisheyeCameraT<T>(width, height,  focalLength, focalLength, principalX, principalY, radialDistortions.data(), tangentialDistortions.data());
 	}
 }
 
-SharedAnyCamera Utilities::realisticAnyCamera(const AnyCameraType anyCameraType, const unsigned int index)
+template FisheyeCameraT<float> OCEAN_TEST_GEOMETRY_EXPORT Utilities::realisticFisheyeCamera(const unsigned int index);
+template FisheyeCameraT<double> OCEAN_TEST_GEOMETRY_EXPORT Utilities::realisticFisheyeCamera(const unsigned int index);
+
+template <typename T>
+SharedAnyCameraT<T> Utilities::realisticAnyCamera(const AnyCameraType anyCameraType, const unsigned int index)
 {
 	ocean_assert(index <= 1u);
 
@@ -282,16 +291,18 @@ SharedAnyCamera Utilities::realisticAnyCamera(const AnyCameraType anyCameraType,
 			return nullptr;
 
 		case AnyCameraType::PINHOLE:
-			return std::make_shared<AnyCameraPinhole>(realisticPinholeCamera(index));
+			return std::make_shared<AnyCameraPinholeT<T>>(realisticPinholeCamera<T>(index));
 
 		case AnyCameraType::FISHEYE:
-			return std::make_shared<AnyCameraFisheye>(realisticFisheyeCamera(index));
+			return std::make_shared<AnyCameraFisheyeT<T>>(realisticFisheyeCamera<T>(index));
 	}
-
 
 	ocean_assert(false && "Invalid camera type!");
 	return nullptr;
 }
+
+template SharedAnyCameraT<float> OCEAN_TEST_GEOMETRY_EXPORT Utilities::realisticAnyCamera(const AnyCameraType anyCameraType, const unsigned int index);
+template SharedAnyCameraT<double> OCEAN_TEST_GEOMETRY_EXPORT Utilities::realisticAnyCamera(const AnyCameraType anyCameraType, const unsigned int index);
 
 std::vector<AnyCameraType> Utilities::realisticCameraTypes()
 {
