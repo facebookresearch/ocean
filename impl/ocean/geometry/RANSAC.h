@@ -62,6 +62,8 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		static unsigned int iterations(const unsigned int model, const Scalar successProbability = Scalar(0.99), const Scalar faultyRate = Scalar(0.2));
 
 		/**
+		 * Deprecated.
+		 *
 		 * Calculates a pose using the perspective pose problem with three point correspondences and a pinhole camera.
 		 * The specified point correspondences should be sorted by strength or stability to enhance the pose determination.<br>
 		 * This function does not used any apriori information (like e.g. a previous pose).<br>
@@ -92,7 +94,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param imagePointAccessor The accessor providing the 2D image points, one image point for each object point
 		 * @param randomGenerator A random generator to be used
 		 * @param pose_world_T_camera The resulting pose transforming camera points to world points
-		 * @param minimalValidCorrespondences Minimal number of valid correspondences
+		 * @param minimalValidCorrespondences Minimal number of valid correspondences, with range [4, objectPointAccessor.size()]
 		 * @param refine Determines whether a not linear least square algorithm is used to increase the pose accuracy after the RANSAC step
 		 * @param iterations Number of maximal RANSAC iterations, with range [1, infinity)
 		 * @param sqrPixelErrorThreshold Square pixel error threshold for valid RANSAC candidates, with range (0, infinity)
@@ -103,6 +105,8 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		static bool p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& pose_world_T_camera, const unsigned int minimalValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr);
 
 		/**
+		 * Deprecated.
+		 *
 		 * Calculates a pose using the perspective pose problem with three point correspondences.
 		 * The specified point correspondences should be sorted by strength or stability to enhance the pose determination.<br>
 		 * This function does not used any apriori information (like e.g. a previous pose).<br>

@@ -10,6 +10,8 @@
 
 #include "ocean/test/testgeometry/TestGeometry.h"
 
+#include "ocean/math/AnyCamera.h"
+
 namespace Ocean
 {
 
@@ -34,6 +36,23 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestRANSAC
 		 * @return True, if the entire function test has succeeded
 		 */
 		static bool test(const double testDuration, Worker* worker);
+
+		/**
+		 * Tests the perspective pose function p3p for mono cameras.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testP3P(const double testDuration);
+
+		/**
+		 * Tests the perspective pose function p3p for mono cameras.
+		 * @param anyCameraType The camera type to be tested
+		 * @param correspondences The number of correspondences to use, with range [4, infinity)
+		 * @param faultyRate The rate of invalid correspondences, with range [0, 1)
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testP3P(const AnyCameraType anyCameraType, const size_t correspondences, const double faultyRate, const double testDuration);
 
 		/**
 		 * Tests the determination of a 6-DOF object transformation with any stereo camera.
