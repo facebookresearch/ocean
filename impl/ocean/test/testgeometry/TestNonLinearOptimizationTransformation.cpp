@@ -33,13 +33,13 @@ bool TestNonLinearOptimizationTransformation::test(const double testDuration, Wo
 
 	bool allSucceeded = true;
 
-	allSucceeded = testNonLinearOptimizationObjectTransformationAnyCamera(testDuration) && allSucceeded;
+	allSucceeded = testNonLinearOptimizationObjectTransformation(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testNonLinearOptimizationObjectTransformationStereoAnyCamera(testDuration) && allSucceeded;
+	allSucceeded = testNonLinearOptimizationObjectTransformationStereo(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -57,55 +57,55 @@ bool TestNonLinearOptimizationTransformation::test(const double testDuration, Wo
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestNonLinearOptimizationTransformation, NonLinearOptimizationObjectTransformationAnyCamera_5_20)
+TEST(TestNonLinearOptimizationTransformation, NonLinearOptimizationObjectTransformation_5_20)
 {
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> anyCamera = Utilities::realisticAnyCamera(anyCameraType);
-		ocean_assert(anyCamera);
+		const std::shared_ptr<AnyCamera> camera = Utilities::realisticAnyCamera(anyCameraType);
+		ocean_assert(camera);
 
-		EXPECT_TRUE(TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationAnyCamera(*anyCamera, 5u, 20u, GTEST_TEST_DURATION));
+		EXPECT_TRUE(TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformation(*camera, 5u, 20u, GTEST_TEST_DURATION));
 	}
 }
 
-TEST(TestNonLinearOptimizationTransformation, NonLinearOptimizationObjectTransformationAnyCamera_20_50)
+TEST(TestNonLinearOptimizationTransformation, NonLinearOptimizationObjectTransformation_20_50)
 {
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> anyCamera = Utilities::realisticAnyCamera(anyCameraType);
-		ocean_assert(anyCamera);
+		const std::shared_ptr<AnyCamera> camera = Utilities::realisticAnyCamera(anyCameraType);
+		ocean_assert(camera);
 
-		EXPECT_TRUE(TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationAnyCamera(*anyCamera, 20u, 50u, GTEST_TEST_DURATION));
+		EXPECT_TRUE(TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformation(*camera, 20u, 50u, GTEST_TEST_DURATION));
 	}
 }
 
-TEST(TestNonLinearOptimizationTransformation, NonLinearOptimizationObjectTransformationStereoAnyCamera_5_20)
+TEST(TestNonLinearOptimizationTransformation, NonLinearOptimizationObjectTransformationStereo_5_20)
 {
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> anyCameraA = Utilities::realisticAnyCamera(anyCameraType, 0u);
-		const std::shared_ptr<AnyCamera> anyCameraB = Utilities::realisticAnyCamera(anyCameraType, 1u);
-		ocean_assert(anyCameraA && anyCameraB);
+		const std::shared_ptr<AnyCamera> cameraA = Utilities::realisticAnyCamera(anyCameraType, 0u);
+		const std::shared_ptr<AnyCamera> cameraB = Utilities::realisticAnyCamera(anyCameraType, 1u);
+		ocean_assert(cameraA && cameraB);
 
-		EXPECT_TRUE(TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationStereoAnyCamera(*anyCameraA, *anyCameraB, 5u, 20u, GTEST_TEST_DURATION));
+		EXPECT_TRUE(TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationStereo(*cameraA, *cameraB, 5u, 20u, GTEST_TEST_DURATION));
 	}
 }
 
-TEST(TestNonLinearOptimizationTransformation, NonLinearOptimizationObjectTransformationStereoAnyCamera_20_50)
+TEST(TestNonLinearOptimizationTransformation, NonLinearOptimizationObjectTransformationStereo_20_50)
 {
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> anyCameraA = Utilities::realisticAnyCamera(anyCameraType, 0u);
-		const std::shared_ptr<AnyCamera> anyCameraB = Utilities::realisticAnyCamera(anyCameraType, 1u);
-		ocean_assert(anyCameraA && anyCameraB);
+		const std::shared_ptr<AnyCamera> cameraA = Utilities::realisticAnyCamera(anyCameraType, 0u);
+		const std::shared_ptr<AnyCamera> cameraB = Utilities::realisticAnyCamera(anyCameraType, 1u);
+		ocean_assert(cameraA && cameraB);
 
-		EXPECT_TRUE(TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationStereoAnyCamera(*anyCameraA, *anyCameraB, 20u, 50u, GTEST_TEST_DURATION));
+		EXPECT_TRUE(TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationStereo(*cameraA, *cameraB, 20u, 50u, GTEST_TEST_DURATION));
 	}
 }
 
 #endif // OCEAN_USE_GTEST
 
-bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationAnyCamera(const double testDuration)
+bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformation(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -115,12 +115,12 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> anyCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
-		ocean_assert(anyCamera);
+		const std::shared_ptr<AnyCamera> camera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+		ocean_assert(camera);
 
 		Log::info() << " ";
 		Log::info() << " ";
-		Log::info() << "Camera name: " << anyCamera->name();
+		Log::info() << "Camera name: " << camera->name();
 		Log::info() << " ";
 
 		for (const unsigned int poses : {2u, 5u, 10u, 20u, 100u})
@@ -141,7 +141,7 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 				Log::info() << "Testing " << poses << " poses and " << correspondences << " correspondences:";
 
-				result = testNonLinearOptimizationObjectTransformationAnyCamera(*anyCamera, poses, correspondences, testDuration) && result;
+				result = testNonLinearOptimizationObjectTransformation(*camera, poses, correspondences, testDuration) && result;
 			}
 		}
 	}
@@ -149,9 +149,9 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 	return result;
 }
 
-bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationAnyCamera(const AnyCamera& anyCamera, const unsigned int poses, const unsigned int correspondences, const double testDuration)
+bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformation(const AnyCamera& camera, const unsigned int poses, const unsigned int correspondences, const double testDuration)
 {
-	ocean_assert(anyCamera.isValid());
+	ocean_assert(camera.isValid());
 	ocean_assert(poses >= 2u && correspondences >= 5u);
 	ocean_assert(testDuration > 0.0);
 
@@ -183,10 +183,10 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 			for (Vector2& imagePoint : imagePoints)
 			{
-				imagePoint = Random::vector2(Scalar(20), Scalar(anyCamera.width() - 20u), Scalar(20), Scalar(anyCamera.height() - 20u));
+				imagePoint = Random::vector2(Scalar(20), Scalar(camera.width() - 20u), Scalar(20), Scalar(camera.height() - 20u));
 
-				const Vector3 objectPoint = iObjectTransformation * anyCamera.ray(imagePoint, world_T_camera).point(Random::scalar(1, 5));
-				ocean_assert(anyCamera.projectToImage(world_T_camera, objectTransformation * objectPoint).isEqual(imagePoint, 1));
+				const Vector3 objectPoint = iObjectTransformation * camera.ray(imagePoint, world_T_camera).point(Random::scalar(1, 5));
+				ocean_assert(camera.projectToImage(world_T_camera, objectTransformation * objectPoint).isEqual(imagePoint, 1));
 
 				objectPoints.push_back(objectPoint);
 			}
@@ -206,7 +206,7 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 		constexpr Geometry::Estimator::EstimatorType estimatorType = Geometry::Estimator::ET_LINEAR;
 
 		performance.start();
-		if (Geometry::NonLinearOptimizationTransformation::optimizeObjectTransformation(anyCamera, world_T_cameras, faultyObjectTransformation, objectPointGroups, imagePointGroups, optimizedObjectTransformation, 20u, estimatorType, Scalar(0.001), Scalar(5), &initialError, &finalError, &intermediateErrors))
+		if (Geometry::NonLinearOptimizationTransformation::optimizeObjectTransformation(camera, world_T_cameras, faultyObjectTransformation, objectPointGroups, imagePointGroups, optimizedObjectTransformation, 20u, estimatorType, Scalar(0.001), Scalar(5), &initialError, &finalError, &intermediateErrors))
 		{
 			if (finalError < Scalar(0.1))
 			{
@@ -230,7 +230,7 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 	return percent >= threshold;
 }
 
-bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationStereoAnyCamera(const double testDuration)
+bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationStereo(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -240,13 +240,13 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> anyCameraA = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
-		const std::shared_ptr<AnyCamera> anyCameraB = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
-		ocean_assert(anyCameraA && anyCameraB);
+		const std::shared_ptr<AnyCamera> cameraA = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+		const std::shared_ptr<AnyCamera> cameraB = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+		ocean_assert(cameraA && cameraB);
 
 		Log::info() << " ";
 		Log::info() << " ";
-		Log::info() << "Camera name: " << anyCameraA->name();
+		Log::info() << "Camera name: " << cameraA->name();
 		Log::info() << " ";
 
 		for (const unsigned int poses : {2u, 5u, 10u, 20u, 100u})
@@ -267,7 +267,7 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 				Log::info() << "Testing " << poses << " poses and " << correspondences << " correspondences:";
 
-				result = testNonLinearOptimizationObjectTransformationStereoAnyCamera(*anyCameraA, *anyCameraB, poses, correspondences, testDuration) && result;
+				result = testNonLinearOptimizationObjectTransformationStereo(*cameraA, *cameraB, poses, correspondences, testDuration) && result;
 			}
 		}
 	}
@@ -275,9 +275,9 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 	return result;
 }
 
-bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationStereoAnyCamera(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const unsigned int poses, const unsigned int correspondences, const double testDuration)
+bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTransformationStereo(const AnyCamera& cameraA, const AnyCamera& cameraB, const unsigned int poses, const unsigned int correspondences, const double testDuration)
 {
-	ocean_assert(anyCameraA.isValid() && anyCameraB.isValid());
+	ocean_assert(cameraA.isValid() && cameraB.isValid());
 	ocean_assert(poses >= 2u && correspondences >= 5u);
 	ocean_assert(testDuration > 0.0);
 
@@ -309,10 +309,10 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 			for (Vector2& imagePoint : imagePoints)
 			{
-				imagePoint = Random::vector2(Scalar(20), Scalar(anyCameraA.width() - 20u), Scalar(20), Scalar(anyCameraA.height() - 20u));
+				imagePoint = Random::vector2(Scalar(20), Scalar(cameraA.width() - 20u), Scalar(20), Scalar(cameraA.height() - 20u));
 
-				const Vector3 objectPoint = iObjectTransformation * anyCameraA.ray(imagePoint, extrinsic).point(Random::scalar(1, 5));
-				ocean_assert(anyCameraA.projectToImage(extrinsic, objectTransformation * objectPoint).isEqual(imagePoint, 1));
+				const Vector3 objectPoint = iObjectTransformation * cameraA.ray(imagePoint, extrinsic).point(Random::scalar(1, 5));
+				ocean_assert(cameraA.projectToImage(extrinsic, objectTransformation * objectPoint).isEqual(imagePoint, 1));
 
 				objectPoints.push_back(objectPoint);
 			}
@@ -334,10 +334,10 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 
 			for (Vector2& imagePoint : imagePoints)
 			{
-				imagePoint = Random::vector2(Scalar(20), Scalar(anyCameraB.width() - 20u), Scalar(20), Scalar(anyCameraB.height() - 20u));
+				imagePoint = Random::vector2(Scalar(20), Scalar(cameraB.width() - 20u), Scalar(20), Scalar(cameraB.height() - 20u));
 
-				const Vector3 objectPoint = iObjectTransformation * anyCameraB.ray(imagePoint, extrinsic).point(Random::scalar(1, 5));
-				ocean_assert(anyCameraB.projectToImage(extrinsic, objectTransformation * objectPoint).isEqual(imagePoint, 1));
+				const Vector3 objectPoint = iObjectTransformation * cameraB.ray(imagePoint, extrinsic).point(Random::scalar(1, 5));
+				ocean_assert(cameraB.projectToImage(extrinsic, objectTransformation * objectPoint).isEqual(imagePoint, 1));
 
 				objectPoints.push_back(objectPoint);
 			}
@@ -357,7 +357,7 @@ bool TestNonLinearOptimizationTransformation::testNonLinearOptimizationObjectTra
 		constexpr Geometry::Estimator::EstimatorType estimatorType = Geometry::Estimator::ET_LINEAR;
 
 		performance.start();
-		if (Geometry::NonLinearOptimizationTransformation::optimizeObjectTransformationStereo(anyCameraA, anyCameraB, extrinsicsA, extrinsicsB, faultyObjectTransformation, objectPointGroupsA, objectPointGroupsB, imagePointGroupsA, imagePointGroupsB, optimizedObjectTransformation, 20u, estimatorType, Scalar(0.001), Scalar(5), &initialError, &finalError, &intermediateErrors))
+		if (Geometry::NonLinearOptimizationTransformation::optimizeObjectTransformationStereo(cameraA, cameraB, extrinsicsA, extrinsicsB, faultyObjectTransformation, objectPointGroupsA, objectPointGroupsB, imagePointGroupsA, imagePointGroupsB, optimizedObjectTransformation, 20u, estimatorType, Scalar(0.001), Scalar(5), &initialError, &finalError, &intermediateErrors))
 		{
 			if (finalError < Scalar(0.1))
 			{

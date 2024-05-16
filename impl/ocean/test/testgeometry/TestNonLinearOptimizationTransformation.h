@@ -13,8 +13,6 @@
 #include "ocean/geometry/NonLinearOptimization.h"
 
 #include "ocean/math/AnyCamera.h"
-#include "ocean/math/FisheyeCamera.h"
-#include "ocean/math/PinholeCamera.h"
 
 namespace Ocean
 {
@@ -46,35 +44,35 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationTransformation
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testNonLinearOptimizationObjectTransformationAnyCamera(const double testDuration);
+		static bool testNonLinearOptimizationObjectTransformation(const double testDuration);
 
 		/**
 		 * Tests the non linear optimizations function for a 6-DOF transformation with fisheye camera, with specified poses and correspondences.
-		 * @param anyCamera The camera model to be used, must be valid
+		 * @param camera The camera model to be used, must be valid
 		 * @param poses The number of camera poses, with range [2, infinity)
 		 * @param correspondences The number of point correspondences, with range [5, infinity)
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testNonLinearOptimizationObjectTransformationAnyCamera(const AnyCamera& anyCamera, const unsigned int poses, const unsigned int correspondences, const double testDuration);
+		static bool testNonLinearOptimizationObjectTransformation(const AnyCamera& camera, const unsigned int poses, const unsigned int correspondences, const double testDuration);
 
 		/**
 		 * Tests the non linear optimization function for a 6-DOF object transformation with stereo fisheye camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testNonLinearOptimizationObjectTransformationStereoAnyCamera(const double testDuration);
+		static bool testNonLinearOptimizationObjectTransformationStereo(const double testDuration);
 
 		/**
 		 * Tests the non linear optimizations function for a 6-DOF transformation with stereo fisheye camera, with specified poses and correspondences.
-		 * @param anyCameraA The first camera model to be used, must be valid
-		 * @param anyCameraB The second camera model to be used, must be valid
+		 * @param cameraA The first camera model to be used, must be valid
+		 * @param cameraB The second camera model to be used, must be valid
 		 * @param poses The number of camera poses, with range [2, infinity)
 		 * @param correspondences The number of point correspondences, with range [5, infinity)
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testNonLinearOptimizationObjectTransformationStereoAnyCamera(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const unsigned int poses, const unsigned int correspondences, const double testDuration);
+		static bool testNonLinearOptimizationObjectTransformationStereo(const AnyCamera& cameraA, const AnyCamera& cameraB, const unsigned int poses, const unsigned int correspondences, const double testDuration);
 };
 
 }

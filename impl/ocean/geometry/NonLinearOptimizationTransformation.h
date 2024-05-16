@@ -12,9 +12,7 @@
 #include "ocean/geometry/NonLinearOptimization.h"
 
 #include "ocean/math/AnyCamera.h"
-#include "ocean/math/FisheyeCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
-#include "ocean/math/PinholeCamera.h"
 
 namespace Ocean
 {
@@ -33,17 +31,17 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationTransformation : protected NonL
 		/**
 		 * Forward declaration of a class implementing a provider allowing to optimize a 6-DOF transformation for any camera.
 		 */
-		class AdvancedObjectTransformationAnyCameraOptimizationProvider;
+		class AdvancedObjectTransformationOptimizationProvider;
 
 		/**
 		 * Forward declaration of a class implementing a provider allowing to optimize a 6-DOF transformation for any stereo camera.
 		 */
-		class AdvancedObjectTransformationStereoAnyCameraOptimizationProvider;
+		class AdvancedObjectTransformationStereoOptimizationProvider;
 
 	public:
 
 		/**
-		 * Minimizes the projection error for several 3D object points projected into several fisheye camera images via a 6-DOF object transformation (to be optimized).
+		 * Minimizes the projection error for several 3D object points projected into several camera images via a 6-DOF object transformation (to be optimized).
 		 * The individual camera poses and the camera profile will not be adjusted.<br>
 		 * The entire projection pipeline has the following equation:
 		 * <pre>
@@ -56,7 +54,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationTransformation : protected NonL
 		 * world_T_object  6-DOF object transformation for which the projection error will be minimized, transforming points in the object coordinate system to points in the world coordinate system
 		 * X               3D object point, defined in the object coordinate system
 		 * </pre>
-		 * @param anyCamera The camera profile defining the projection between 3D object points and 2D image points, must be valid
+		 * @param camera The camera profile defining the projection between 3D object points and 2D image points, must be valid
 		 * @param world_T_cameras Several 6-DOF camera pose which will not be adjusted, transforming points from the world coordinate system to points in the camera coordinate systems, (world_T_camera), one pose for each group of 2D image points
 		 * @param world_T_object The 6-DOF object transformation to be optimized, with orthonormal rotation matrix, must be valid
 		 * @param objectPointGroups The groups of 3D object points to be projected into the camera image, one group for each camera pose, one 3D object point for each 2D image point visible in each camera frame
@@ -72,20 +70,20 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationTransformation : protected NonL
 		 * @return True, if the optimization succeeded
 		 * @see optimizeObjectTransformationIF(), optimizeObjectTransformationStereo().
 		 */
-		static inline bool optimizeObjectTransformation(const AnyCamera& anyCamera, const HomogenousMatrices4& world_T_cameras, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroups, const ImagePointGroups& imagePointGroups, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static inline bool optimizeObjectTransformation(const AnyCamera& camera, const HomogenousMatrices4& world_T_cameras, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroups, const ImagePointGroups& imagePointGroups, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
-		 * Minimizes the projection error for several 3D object points projected into several fisheye camera images via a 6-DOF object transformation (to be optimized).
+		 * Minimizes the projection error for several 3D object points projected into several camera images via a 6-DOF object transformation (to be optimized).
 		 * This function applies the same optimization as optimizeObjectTransformation() while uses 6-DOF camera poses with inverted and flipped coordinate system.
 		 * @see optimizeObjectTransformation(), optimizeObjectTransformationStereoIF().
 		 */
-		static bool optimizeObjectTransformationIF(const AnyCamera& anyCamera, const HomogenousMatrices4& flippedCameras_T_world, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroups, const ImagePointGroups& imagePointGroups, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeObjectTransformationIF(const AnyCamera& camera, const HomogenousMatrices4& flippedCameras_T_world, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroups, const ImagePointGroups& imagePointGroups, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
-		 * Minimizes the projection error for several 3D object points projected into several stereo fisheye camera images via a 6-DOF object transformation (to be optimized).
+		 * Minimizes the projection error for several 3D object points projected into several stereo camera images via a 6-DOF object transformation (to be optimized).
 		 * The individual camera poses and the camera profile will not be adjusted.<br>
-		 * @param anyCameraA First camera profile defining the project for the first stereo camera, must be valid
-		 * @param anyCameraB Second camera profile defining the project for the second stereo camera, must be valid
+		 * @param cameraA First camera profile defining the project for the first stereo camera, must be valid
+		 * @param cameraB Second camera profile defining the project for the second stereo camera, must be valid
 		 * @param world_T_camerasA Several 6-DOF camera pose connected with the first camera profile which will not be adjusted, transforming points from the world coordinate system to points in the camera coordinate systems, (world_T_camera), one pose for each group of 2D image points
 		 * @param world_T_camerasB Several 6-DOF camera pose connected with the second camera profile which will not be adjusted, transforming points from the world coordinate system to points in the camera coordinate systems, (world_T_camera), one pose for each group of 2D image points
 		 * @param world_T_object The 6-DOF object transformation to be optimized, with orthonormal rotation matrix, must be valid
@@ -104,24 +102,24 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationTransformation : protected NonL
 		 * @return True, if the optimization succeeded
 		 * @see optimizeObjectTransformationStereoIF(), optimizeObjectTransformation().
 		 */
-		static inline bool optimizeObjectTransformationStereo(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const HomogenousMatrices4& world_T_camerasA, const HomogenousMatrices4& world_T_camerasB, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroupsA, const ObjectPointGroups& objectPointGroupsB, const ImagePointGroups& imagePointGroupsA, const ImagePointGroups& imagePointGroupsB, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static inline bool optimizeObjectTransformationStereo(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrices4& world_T_camerasA, const HomogenousMatrices4& world_T_camerasB, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroupsA, const ObjectPointGroups& objectPointGroupsB, const ImagePointGroups& imagePointGroupsA, const ImagePointGroups& imagePointGroupsB, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
-		 * Minimizes the projection error for several 3D object points projected into several stereo fisheye camera images via a 6-DOF object transformation (to be optimized).
+		 * Minimizes the projection error for several 3D object points projected into several stereo camera images via a 6-DOF object transformation (to be optimized).
 		 * This function applies the same optimization as optimizeObjectTransformation() while uses 6-DOF camera poses with inverted and flipped coordinate system.
 		 * @see optimizeObjectTransformation().
 		 */
-		static bool optimizeObjectTransformationStereoIF(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const HomogenousMatrices4& flippedCamerasA_T_world, const HomogenousMatrices4& flippedCamerasB_T_world, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroupsA, const ObjectPointGroups& objectPointGroupsB, const ImagePointGroups& imagePointGroupsA, const ImagePointGroups& imagePointGroupsB, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeObjectTransformationStereoIF(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrices4& flippedCamerasA_T_world, const HomogenousMatrices4& flippedCamerasB_T_world, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroupsA, const ObjectPointGroups& objectPointGroupsB, const ImagePointGroups& imagePointGroupsA, const ImagePointGroups& imagePointGroupsB, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 };
 
-inline bool NonLinearOptimizationTransformation::optimizeObjectTransformation(const AnyCamera& anyCamera, const HomogenousMatrices4& world_T_cameras, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroups, const ImagePointGroups& imagePointGroups, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+inline bool NonLinearOptimizationTransformation::optimizeObjectTransformation(const AnyCamera& camera, const HomogenousMatrices4& world_T_cameras, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroups, const ImagePointGroups& imagePointGroups, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
-	return optimizeObjectTransformationIF(anyCamera, PinholeCamera::standard2InvertedFlipped(world_T_cameras), world_T_object, objectPointGroups, imagePointGroups, optimized_world_T_object, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
+	return optimizeObjectTransformationIF(camera, PinholeCamera::standard2InvertedFlipped(world_T_cameras), world_T_object, objectPointGroups, imagePointGroups, optimized_world_T_object, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
 }
 
-inline bool NonLinearOptimizationTransformation::optimizeObjectTransformationStereo(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const HomogenousMatrices4& world_T_camerasA, const HomogenousMatrices4& world_T_camerasB, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroupsA, const ObjectPointGroups& objectPointGroupsB, const ImagePointGroups& imagePointGroupsA, const ImagePointGroups& imagePointGroupsB, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+inline bool NonLinearOptimizationTransformation::optimizeObjectTransformationStereo(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrices4& world_T_camerasA, const HomogenousMatrices4& world_T_camerasB, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroupsA, const ObjectPointGroups& objectPointGroupsB, const ImagePointGroups& imagePointGroupsA, const ImagePointGroups& imagePointGroupsB, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
-	return optimizeObjectTransformationStereoIF(anyCameraA, anyCameraB, PinholeCamera::standard2InvertedFlipped(world_T_camerasA), PinholeCamera::standard2InvertedFlipped(world_T_camerasB), world_T_object, objectPointGroupsA, objectPointGroupsB, imagePointGroupsA, imagePointGroupsB, optimized_world_T_object, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
+	return optimizeObjectTransformationStereoIF(cameraA, cameraB, PinholeCamera::standard2InvertedFlipped(world_T_camerasA), PinholeCamera::standard2InvertedFlipped(world_T_camerasB), world_T_object, objectPointGroupsA, objectPointGroupsB, imagePointGroupsA, imagePointGroupsB, optimized_world_T_object, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors);
 }
 
 }

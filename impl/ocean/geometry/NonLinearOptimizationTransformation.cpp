@@ -15,12 +15,15 @@ namespace Ocean
 namespace Geometry
 {
 
-class NonLinearOptimizationTransformation::AdvancedObjectTransformationAnyCameraOptimizationProvider : public NonLinearOptimization::AdvancedDenseOptimizationProvider
+/**
+ * An advanced optimization provider for mono cameras.
+ */
+class NonLinearOptimizationTransformation::AdvancedObjectTransformationOptimizationProvider : public NonLinearOptimization::AdvancedDenseOptimizationProvider
 {
 	public:
 
-		inline AdvancedObjectTransformationAnyCameraOptimizationProvider(const AnyCamera& anyCamera, const HomogenousMatrices4& flippedCameras_P_world, Pose& world_P_object, const ObjectPointGroups& objectPointGroups, const ImagePointGroups& imagePointGroups, const Estimator::EstimatorType estimator) :
-			anyCamera_(anyCamera),
+		inline AdvancedObjectTransformationOptimizationProvider(const AnyCamera& camera, const HomogenousMatrices4& flippedCameras_P_world, Pose& world_P_object, const ObjectPointGroups& objectPointGroups, const ImagePointGroups& imagePointGroups, const Estimator::EstimatorType estimator) :
+			camera_(camera),
 			flippedCameras_P_world_(flippedCameras_P_world),
 			world_P_object_(world_P_object),
 			world_P_candidateObject_(world_P_object),
@@ -29,7 +32,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationAnyCamera
 			estimator_(estimator),
 			measurements_(0)
 		{
-			ocean_assert(anyCamera_.isValid());
+			ocean_assert(camera_.isValid());
 			ocean_assert(flippedCameras_P_world.size() == objectPointGroups.size());
 			ocean_assert(flippedCameras_P_world.size() == imagePointGroups.size());
 
@@ -72,7 +75,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationAnyCamera
 					Vector2* weightedPoseErrors = weightedErrors_.data() + measurements;
 
 					// determine the averaged square error
-					const Scalar averagePoseSqrError = Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, false>(flippedCamera_T_candidateObject, anyCamera_, ConstTemplateArrayAccessor<Vector3>(objectPointGroups_[n]), ConstTemplateArrayAccessor<Vector2>(imagePointGroups_[n]), weightedPoseErrors);
+					const Scalar averagePoseSqrError = Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, false>(flippedCamera_T_candidateObject, camera_, ConstTemplateArrayAccessor<Vector3>(objectPointGroups_[n]), ConstTemplateArrayAccessor<Vector2>(imagePointGroups_[n]), weightedPoseErrors);
 
 					// we will normalize the overall error at the end, we do not sum up averaged errors for individual poses
 					sqrError += averagePoseSqrError * Scalar(objectPointGroups_[n].size());
@@ -98,7 +101,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationAnyCamera
 					Vector2* const weightedPoseErrors = weightedErrors_.data() + measurements;
 					Scalar* const sqrPoseErrors = sqrErrors.data() + measurements;
 
-					Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, true>(flippedCamera_T_candidateObject, anyCamera_, ConstTemplateArrayAccessor<Vector3>(objectPointGroups_[n]), ConstTemplateArrayAccessor<Vector2>(imagePointGroups_[n]), weightedPoseErrors, sqrPoseErrors);
+					Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, true>(flippedCamera_T_candidateObject, camera_, ConstTemplateArrayAccessor<Vector3>(objectPointGroups_[n]), ConstTemplateArrayAccessor<Vector2>(imagePointGroups_[n]), weightedPoseErrors, sqrPoseErrors);
 
 					measurements += objectPointGroups_[n].size();
 				}
@@ -182,7 +185,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationAnyCamera
 					{
 						const Vector3& objectPoint = objectPoints[nObject];
 
-						anyCamera_.pointJacobian2x3IF(flippedCamera_T_object * objectPoint, xPointJacobian, yPointJacobian);
+						camera_.pointJacobian2x3IF(flippedCamera_T_object * objectPoint, xPointJacobian, yPointJacobian);
 
 						const Scalar jFocalPoseXx = xPointJacobian[0] * flippedCamera_T_world[0] + xPointJacobian[1] * flippedCamera_T_world[1] + xPointJacobian[2] * flippedCamera_T_world[2];
 						const Scalar jFocalPoseXy = xPointJacobian[0] * flippedCamera_T_world[4] + xPointJacobian[1] * flippedCamera_T_world[5] + xPointJacobian[2] * flippedCamera_T_world[6];
@@ -269,7 +272,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationAnyCamera
 					{
 						const Vector3& objectPoint = objectPoints[nObject];
 
-						anyCamera_.pointJacobian2x3IF(flippedCamera_T_object * objectPoint, xPointJacobian, yPointJacobian);
+						camera_.pointJacobian2x3IF(flippedCamera_T_object * objectPoint, xPointJacobian, yPointJacobian);
 
 						const Scalar jFocalPoseXx = xPointJacobian[0] * flippedCamera_T_world[0] + xPointJacobian[1] * flippedCamera_T_world[1] + xPointJacobian[2] * flippedCamera_T_world[2];
 						const Scalar jFocalPoseXy = xPointJacobian[0] * flippedCamera_T_world[4] + xPointJacobian[1] * flippedCamera_T_world[5] + xPointJacobian[2] * flippedCamera_T_world[6];
@@ -409,7 +412,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationAnyCamera
 					Vector2* const weightedPoseErrors = debugWeightedErrors.data() + measurements;
 					Scalar* const sqrPoseErrors = debugSqrErrors.data() + measurements;
 
-					Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, true>(candidateIF, anyCamera_, ConstTemplateArrayAccessor<Vector3>(objectPointGroups_[n]), ConstTemplateArrayAccessor<Vector2>(imagePointGroups_[n]), weightedPoseErrors, sqrPoseErrors);
+					Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, true>(candidateIF, camera_, ConstTemplateArrayAccessor<Vector3>(objectPointGroups_[n]), ConstTemplateArrayAccessor<Vector2>(imagePointGroups_[n]), weightedPoseErrors, sqrPoseErrors);
 
 					measurements += objectPointGroups_[n].size();
 				}
@@ -439,7 +442,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationAnyCamera
 					{
 						const Vectors3& objectPoints = objectPointGroups_[n];
 
-						Jacobian::calculateObjectTransformation2nx6(debugJacobian[measurements * 2], anyCamera_, flippedCameras_P_world_[n], world_P_object_, objectPoints.data(), objectPoints.size());
+						Jacobian::calculateObjectTransformation2nx6(debugJacobian[measurements * 2], camera_, flippedCameras_P_world_[n], world_P_object_, objectPoints.data(), objectPoints.size());
 
 						measurements += objectPoints.size();
 					}
@@ -511,7 +514,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationAnyCamera
 	protected:
 
 		/// The camera profile to be used.
-		const AnyCamera& anyCamera_;
+		const AnyCamera& camera_;
 
 		/// The inverted and flipped camera poses, one for each group of image points.
 		const HomogenousMatrices4& flippedCameras_P_world_;
@@ -541,12 +544,12 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationAnyCamera
 		size_t measurements_;
 };
 
-bool NonLinearOptimizationTransformation::optimizeObjectTransformationIF(const AnyCamera& anyCamera, const HomogenousMatrices4& flippedCameras_T_world, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroups, const ImagePointGroups& imagePointGroups, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+bool NonLinearOptimizationTransformation::optimizeObjectTransformationIF(const AnyCamera& camera, const HomogenousMatrices4& flippedCameras_T_world, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroups, const ImagePointGroups& imagePointGroups, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
 
 #ifdef OCEAN_DEBUG
 
-	ocean_assert(anyCamera.isValid());
+	ocean_assert(camera.isValid());
 	ocean_assert(flippedCameras_T_world.size() >= 1);
 	ocean_assert(flippedCameras_T_world.size() == objectPointGroups.size());
 	ocean_assert(flippedCameras_T_world.size() == imagePointGroups.size());
@@ -563,8 +566,8 @@ bool NonLinearOptimizationTransformation::optimizeObjectTransformationIF(const A
 
 	Pose objectTransformationPose(world_T_object);
 
-	AdvancedObjectTransformationAnyCameraOptimizationProvider provider(anyCamera, flippedCameras_T_world, objectTransformationPose, objectPointGroups, imagePointGroups, estimator);
-	if (!advancedDenseOptimization<AdvancedObjectTransformationAnyCameraOptimizationProvider>(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+	AdvancedObjectTransformationOptimizationProvider provider(camera, flippedCameras_T_world, objectTransformationPose, objectPointGroups, imagePointGroups, estimator);
+	if (!advancedDenseOptimization<AdvancedObjectTransformationOptimizationProvider>(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
 	{
 		return false;
 	}
@@ -575,15 +578,15 @@ bool NonLinearOptimizationTransformation::optimizeObjectTransformationIF(const A
 }
 
 /**
- * An advanced optimization provider for stereo fisheye cameras.
+ * An advanced optimization provider for stereo cameras.
  */
-class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoAnyCameraOptimizationProvider : public NonLinearOptimization::AdvancedDenseOptimizationProvider
+class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoOptimizationProvider : public NonLinearOptimization::AdvancedDenseOptimizationProvider
 {
 	public:
 
-		inline AdvancedObjectTransformationStereoAnyCameraOptimizationProvider(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const HomogenousMatrices4& flippedCamerasA_T_world, const HomogenousMatrices4& flippedCamerasB_T_world, Pose& world_P_object, const ObjectPointGroups& objectPointGroupsA, const ObjectPointGroups& objectPointGroupsB, const ImagePointGroups& imagePointGroupsA, const ImagePointGroups& imagePointGroupsB, const Estimator::EstimatorType estimator) :
-			anyCameraA_(anyCameraA),
-			anyCameraB_(anyCameraB),
+		inline AdvancedObjectTransformationStereoOptimizationProvider(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrices4& flippedCamerasA_T_world, const HomogenousMatrices4& flippedCamerasB_T_world, Pose& world_P_object, const ObjectPointGroups& objectPointGroupsA, const ObjectPointGroups& objectPointGroupsB, const ImagePointGroups& imagePointGroupsA, const ImagePointGroups& imagePointGroupsB, const Estimator::EstimatorType estimator) :
+			cameraA_(cameraA),
+			cameraB_(cameraB),
 			flippedCamerasA_T_world_(flippedCamerasA_T_world),
 			flippedCamerasB_T_world_(flippedCamerasB_T_world),
 			world_P_object_(world_P_object),
@@ -595,8 +598,8 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoAny
 			estimator_(estimator),
 			measurements_(0)
 		{
-			ocean_assert(anyCameraA_.isValid());
-			ocean_assert(anyCameraB_.isValid());
+			ocean_assert(cameraA_.isValid());
+			ocean_assert(cameraB_.isValid());
 
 			ocean_assert(flippedCamerasA_T_world_.size() == objectPointGroupsA_.size());
 			ocean_assert(flippedCamerasA_T_world_.size() == imagePointGroupsA_.size());
@@ -655,7 +658,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoAny
 
 				for (unsigned int nStereo = 0u; nStereo < 2u; ++nStereo)
 				{
-					const AnyCamera& anyCamera = nStereo == 0u ? anyCameraA_ : anyCameraB_;
+					const AnyCamera& camera = nStereo == 0u ? cameraA_ : cameraB_;
 					const HomogenousMatrices4& flippedCameras_T_world = nStereo == 0u ? flippedCamerasA_T_world_ : flippedCamerasB_T_world_;
 					const std::vector<Vectors3>& objectPointGroups = nStereo == 0u ? objectPointGroupsA_ : objectPointGroupsB_;
 					const std::vector<Vectors2>& imagePointGroups = nStereo == 0u ? imagePointGroupsA_ : imagePointGroupsB_;
@@ -667,7 +670,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoAny
 						Vector2* weightedPoseErrors = weightedErrors_.data() + measurements;
 
 						// determine the averaged square error
-						const Scalar averagePoseSqrError = Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, false>(candidateIF, anyCamera, ConstTemplateArrayAccessor<Vector3>(objectPointGroups[n]), ConstTemplateArrayAccessor<Vector2>(imagePointGroups[n]), weightedPoseErrors);
+						const Scalar averagePoseSqrError = Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, false>(candidateIF, camera, ConstTemplateArrayAccessor<Vector3>(objectPointGroups[n]), ConstTemplateArrayAccessor<Vector2>(imagePointGroups[n]), weightedPoseErrors);
 
 						// we will normalize the overall error at the end, we do not sum up averaged errors for individual poses
 						sqrError += averagePoseSqrError * Scalar(objectPointGroups[n].size());
@@ -689,7 +692,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoAny
 
 				for (unsigned int nStereo = 0u; nStereo < 2u; ++nStereo)
 				{
-					const AnyCamera& anyCamera = nStereo == 0u ? anyCameraA_ : anyCameraB_;
+					const AnyCamera& camera = nStereo == 0u ? cameraA_ : cameraB_;
 					const HomogenousMatrices4& flippedCameras_T_world = nStereo == 0u ? flippedCamerasA_T_world_ : flippedCamerasB_T_world_;
 					const std::vector<Vectors3>& objectPointGroups = nStereo == 0u ? objectPointGroupsA_ : objectPointGroupsB_;
 					const std::vector<Vectors2>& imagePointGroups = nStereo == 0u ? imagePointGroupsA_ : imagePointGroupsB_;
@@ -701,7 +704,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoAny
 						Vector2* const weightedPoseErrors = weightedErrors_.data() + measurements;
 						Scalar* const sqrPoseErrors = sqrErrors.data() + measurements;
 
-						Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, true>(candidateIF, anyCamera, ConstTemplateArrayAccessor<Vector3>(objectPointGroups[n]), ConstTemplateArrayAccessor<Vector2>(imagePointGroups[n]), weightedPoseErrors, sqrPoseErrors);
+						Error::determinePoseErrorIF<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, true>(candidateIF, camera, ConstTemplateArrayAccessor<Vector3>(objectPointGroups[n]), ConstTemplateArrayAccessor<Vector2>(imagePointGroups[n]), weightedPoseErrors, sqrPoseErrors);
 
 						measurements += objectPointGroups[n].size();
 					}
@@ -776,7 +779,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoAny
 
 				for (unsigned int nStereo = 0u; nStereo < 2u; ++nStereo)
 				{
-					const AnyCamera& anyCamera = nStereo == 0u ? anyCameraA_ : anyCameraB_;
+					const AnyCamera& camera = nStereo == 0u ? cameraA_ : cameraB_;
 					const HomogenousMatrices4& flippedCameras_T_world = nStereo == 0u ? flippedCamerasA_T_world_ : flippedCamerasB_T_world_;
 					const std::vector<Vectors3>& objectPointGroups = nStereo == 0u ? objectPointGroupsA_ : objectPointGroupsB_;
 					const std::vector<Vectors2>& imagePointGroups = nStereo == 0u ? imagePointGroupsA_ : imagePointGroupsB_;
@@ -800,13 +803,13 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoAny
 						}
 
 						ocean_assert(objectPoints.size() * 6 <= pointJacobians_.size());
-						anyCamera.pointJacobian2nx3IF(flippedCameraObjectPoints_.data(), objectPoints.size(), pointJacobians_.data());
+						camera.pointJacobian2nx3IF(flippedCameraObjectPoints_.data(), objectPoints.size(), pointJacobians_.data());
 
 						for (size_t nObject = 0; nObject < objectPoints.size(); ++nObject)
 						{
 							const Vector3& objectPoint = objectPoints[nObject];
 
-							//anyCamera.jacobian2x3IF(flippedCamera_T_object * objectPoint, xPointJacobian, yPointJacobian);
+							//camera.jacobian2x3IF(flippedCamera_T_object * objectPoint, xPointJacobian, yPointJacobian);
 
 							const Scalar* xPointJacobian = pointJacobians_.data() + nObject * 6 + 0;
 							const Scalar* yPointJacobian = pointJacobians_.data() + nObject * 6 + 3;
@@ -887,7 +890,7 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoAny
 
 				for (unsigned int nStereo = 0u; nStereo < 2u; ++nStereo)
 				{
-					const AnyCamera& anyCamera = nStereo == 0u ? anyCameraA_ : anyCameraB_;
+					const AnyCamera& camera = nStereo == 0u ? cameraA_ : cameraB_;
 					const HomogenousMatrices4& flippedCameras_T_world = nStereo == 0u ? flippedCamerasA_T_world_ : flippedCamerasB_T_world_;
 					const std::vector<Vectors3>& objectPointGroups = nStereo == 0u ? objectPointGroupsA_ : objectPointGroupsB_;
 					const std::vector<Vectors2>& imagePointGroups = nStereo == 0u ? imagePointGroupsA_ : imagePointGroupsB_;
@@ -911,13 +914,13 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoAny
 						}
 
 						ocean_assert(objectPoints.size() * 6 <= pointJacobians_.size());
-						anyCamera.pointJacobian2nx3IF(flippedCameraObjectPoints_.data(), objectPoints.size(), pointJacobians_.data());
+						camera.pointJacobian2nx3IF(flippedCameraObjectPoints_.data(), objectPoints.size(), pointJacobians_.data());
 
 						for (size_t nObject = 0; nObject < objectPoints.size(); ++nObject)
 						{
 							const Vector3& objectPoint = objectPoints[nObject];
 
-							//anyCamera.jacobian2x3IF(flippedCamera_T_object * objectPoint, xPointJacobian, yPointJacobian);
+							//camera.jacobian2x3IF(flippedCamera_T_object * objectPoint, xPointJacobian, yPointJacobian);
 
 							const Scalar* xPointJacobian = pointJacobians_.data() + nObject * 6 + 0;
 							const Scalar* yPointJacobian = pointJacobians_.data() + nObject * 6 + 3;
@@ -1090,10 +1093,10 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoAny
 	protected:
 
 		/// The first stereo camera profile to be used.
-		const AnyCamera& anyCameraA_;
+		const AnyCamera& cameraA_;
 
 		/// The first stereo camera profile to be used.
-		const AnyCamera& anyCameraB_;
+		const AnyCamera& cameraB_;
 
 		/// The inverted and flipped camera poses for the first stereo camera, one for each group of image points.
 		const HomogenousMatrices4& flippedCamerasA_T_world_;
@@ -1138,13 +1141,13 @@ class NonLinearOptimizationTransformation::AdvancedObjectTransformationStereoAny
 		Vectors3 flippedCameraObjectPoints_;
 };
 
-bool NonLinearOptimizationTransformation::optimizeObjectTransformationStereoIF(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const HomogenousMatrices4& flippedCamerasA_T_world, const HomogenousMatrices4& flippedCamerasB_T_world, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroupsA, const ObjectPointGroups& objectPointGroupsB, const ImagePointGroups& imagePointGroupsA, const ImagePointGroups& imagePointGroupsB, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+bool NonLinearOptimizationTransformation::optimizeObjectTransformationStereoIF(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrices4& flippedCamerasA_T_world, const HomogenousMatrices4& flippedCamerasB_T_world, const HomogenousMatrix4& world_T_object, const ObjectPointGroups& objectPointGroupsA, const ObjectPointGroups& objectPointGroupsB, const ImagePointGroups& imagePointGroupsA, const ImagePointGroups& imagePointGroupsB, HomogenousMatrix4& optimized_world_T_object, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
 
 #ifdef OCEAN_DEBUG
 
-	ocean_assert(anyCameraA.isValid());
-	ocean_assert(anyCameraB.isValid());
+	ocean_assert(cameraA.isValid());
+	ocean_assert(cameraB.isValid());
 
 	ocean_assert(flippedCamerasA_T_world.size() == objectPointGroupsA.size());
 	ocean_assert(flippedCamerasA_T_world.size() == imagePointGroupsA.size());
@@ -1172,8 +1175,8 @@ bool NonLinearOptimizationTransformation::optimizeObjectTransformationStereoIF(c
 
 	Pose world_P_object(world_T_object);
 
-	AdvancedObjectTransformationStereoAnyCameraOptimizationProvider provider(anyCameraA, anyCameraB, flippedCamerasA_T_world, flippedCamerasB_T_world, world_P_object, objectPointGroupsA, objectPointGroupsB, imagePointGroupsA, imagePointGroupsB, estimator);
-	if (!advancedDenseOptimization<AdvancedObjectTransformationStereoAnyCameraOptimizationProvider>(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+	AdvancedObjectTransformationStereoOptimizationProvider provider(cameraA, cameraB, flippedCamerasA_T_world, flippedCamerasB_T_world, world_P_object, objectPointGroupsA, objectPointGroupsB, imagePointGroupsA, imagePointGroupsB, estimator);
+	if (!advancedDenseOptimization<AdvancedObjectTransformationStereoOptimizationProvider>(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
 	{
 		return false;
 	}
