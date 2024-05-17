@@ -94,31 +94,35 @@ HomogenousMatrix4 Utilities::viewPosition(const PinholeCamera& pinholeCamera, co
 	return world_T_camera;
 }
 
-HomogenousMatrix4 Utilities::viewPosition(const AnyCamera& anyCamera, const Sphere3& boundingSphere, const Vector3& viewingDirection)
+template <typename T>
+HomogenousMatrixT4<T> Utilities::viewPosition(const AnyCameraT<T>& anyCamera, const SphereT3<T>& boundingSphere, const VectorT3<T>& viewingDirection)
 {
 	ocean_assert(anyCamera.isValid());
 	ocean_assert(boundingSphere.isValid());
 
-	const Scalar fov = min(anyCamera.fovX(), anyCamera.fovY());
-	const Scalar fov_2 = fov * Scalar(0.5);
-	ocean_assert(fov_2 > Numeric::eps());
+	const T fov = min(anyCamera.fovX(), anyCamera.fovY());
+	const T fov_2 = fov * T(0.5);
+	ocean_assert(fov_2 > NumericT<T>::eps());
 
-	const Scalar sideDistance = boundingSphere.radius() / Numeric::sin(fov_2);
-	const Scalar viewDistance = Numeric::sqrt(Numeric::sqr(sideDistance) + Numeric::sqr(boundingSphere.radius()));
+	const T sideDistance = boundingSphere.radius() / NumericT<T>::sin(fov_2);
+	const T viewDistance = NumericT<T>::sqrt(NumericT<T>::sqr(sideDistance) + NumericT<T>::sqr(boundingSphere.radius()));
 
-	ocean_assert(Numeric::isEqual(viewingDirection.length(), 1));
+	ocean_assert(NumericT<T>::isEqual(viewingDirection.length(), 1));
 
-	const Vector3 newViewPosition = boundingSphere.center() - viewingDirection * viewDistance;
-	HomogenousMatrix4 world_T_camera(newViewPosition, Rotation(Vector3(0, 0, -1), viewingDirection));
+	const VectorT3<T> newViewPosition = boundingSphere.center() - viewingDirection * viewDistance;
+	HomogenousMatrixT4<T> world_T_camera(newViewPosition, RotationT<T>(VectorT3<T>(0, 0, -1), viewingDirection));
 
-	if (Numeric::isEqualEps(boundingSphere.radius()))
+	if (NumericT<T>::isEqualEps(boundingSphere.radius()))
 	{
 		// in case the sphere is a point, we move the camera slightly back to ensure that sphere is still slightly in front of the camera)
-		world_T_camera *= HomogenousMatrix4(Vector3(0, 0, Scalar(0.0001)));
+		world_T_camera *= HomogenousMatrixT4<T>(VectorT3<T>(0, 0, T(0.0001)));
 	}
 
 	return world_T_camera;
 }
+
+template HomogenousMatrixT4<float> OCEAN_TEST_GEOMETRY_EXPORT Utilities::viewPosition(const AnyCameraT<float>& anyCamera, const SphereT3<float>& boundingSphere, const VectorT3<float>& viewingDirection);
+template HomogenousMatrixT4<double> OCEAN_TEST_GEOMETRY_EXPORT Utilities::viewPosition(const AnyCameraT<double>& anyCamera, const SphereT3<double>& boundingSphere, const VectorT3<double>& viewingDirection);
 
 HomogenousMatrix4 Utilities::viewPosition(const PinholeCamera& pinholeCamera, const Vectors3& objectPoints, const Vector3& viewingDirection, const bool circumcircle)
 {
@@ -132,17 +136,28 @@ HomogenousMatrix4 Utilities::viewPosition(const PinholeCamera& pinholeCamera, co
 	return viewPosition(pinholeCamera, boundingSphere, viewingDirection);
 }
 
-HomogenousMatrix4 Utilities::viewPosition(const AnyCamera& anyCamera, const Vectors3& objectPoints, const Vector3& viewingDirection, const bool circumcircle)
+template <typename T>
+HomogenousMatrixT4<T> Utilities::viewPosition(const AnyCameraT<T>& anyCamera, const VectorsT3<T>& objectPoints, const VectorT3<T>& viewingDirection, const bool circumcircle)
 {
 	ocean_assert(anyCamera.isValid());
 	ocean_assert(!objectPoints.empty());
 
-	const Box3 boundingBox(objectPoints);
+	const BoxT3<T> boundingBox(objectPoints);
 
-	const Sphere3 boundingSphere(circumcircle ? Sphere3(boundingBox) : Sphere3(boundingBox.center(), max(boundingBox.xDimension(), max(boundingBox.yDimension(), boundingBox.zDimension())) * Scalar(0.75)));
+	if (circumcircle)
+	{
+		return viewPosition(anyCamera, SphereT3<T>(boundingBox), viewingDirection);
+	}
+	else
+	{
+		const SphereT3<T> boundingSphere(boundingBox.center(), max(boundingBox.xDimension(), max(boundingBox.yDimension(), boundingBox.zDimension())) * T(0.75));
 
-	return viewPosition(anyCamera, boundingSphere, viewingDirection);
+		return viewPosition(anyCamera, boundingSphere, viewingDirection);
+	}
 }
+
+template HomogenousMatrixT4<float> OCEAN_TEST_GEOMETRY_EXPORT Utilities::viewPosition(const AnyCameraT<float>& anyCamera, const VectorsT3<float>& objectPoints, const VectorT3<float>& viewingDirection, const bool circumcircle);
+template HomogenousMatrixT4<double> OCEAN_TEST_GEOMETRY_EXPORT Utilities::viewPosition(const AnyCameraT<double>& anyCamera, const VectorsT3<double>& objectPoints, const VectorT3<double>& viewingDirection, const bool circumcircle);
 
 HomogenousMatrix4 Utilities::viewPosition(const PinholeCamera& pinholeCamera, const Vectors3& objectPoints, const bool circumcircle, RandomGenerator* randomGenerator)
 {
@@ -150,11 +165,16 @@ HomogenousMatrix4 Utilities::viewPosition(const PinholeCamera& pinholeCamera, co
 	return viewPosition(pinholeCamera, objectPoints, viewingDirection, circumcircle);
 }
 
-HomogenousMatrix4 Utilities::viewPosition(const AnyCamera& anyCamera, const Vectors3& objectPoints, const bool circumcircle, RandomGenerator* randomGenerator)
+template <typename T>
+HomogenousMatrixT4<T> Utilities::viewPosition(const AnyCameraT<T>& anyCamera, const VectorsT3<T>& objectPoints, const bool circumcircle, RandomGenerator* randomGenerator)
 {
-	const Vector3 viewingDirection(randomGenerator ? Random::vector3(*randomGenerator) : Random::vector3());
+	const VectorT3<T> viewingDirection(randomGenerator ? RandomT<T>::vector3(*randomGenerator) : RandomT<T>::vector3());
+
 	return viewPosition(anyCamera, objectPoints, viewingDirection, circumcircle);
 }
+
+template HomogenousMatrixT4<float> OCEAN_TEST_GEOMETRY_EXPORT Utilities::viewPosition(const AnyCameraT<float>& anyCamera, const VectorsT3<float>& objectPoints, const bool circumcircle, RandomGenerator* randomGenerator);
+template HomogenousMatrixT4<double> OCEAN_TEST_GEOMETRY_EXPORT Utilities::viewPosition(const AnyCameraT<double>& anyCamera, const VectorsT3<double>& objectPoints, const bool circumcircle, RandomGenerator* randomGenerator);
 
 PinholeCamera Utilities::distortedCamera(const PinholeCamera& pinholeCamera, const bool principalPointDistortion, const bool radialDistortion, const bool tangentialDistortion, RandomGenerator* randomGenerator, const Scalar maximalPrincipalPointOffset, const Scalar maximalRadialDistortion, const Scalar maximalTangentialDistortion)
 {

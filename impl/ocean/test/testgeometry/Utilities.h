@@ -74,8 +74,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT Utilities
 		 * @param boundingSphere Bounding sphere that has to be visible in the final view, can have radius 0, must be valid
 		 * @param viewingDirection Viewing direction of the resulting camera with unit length
 		 * @return Resulting camera pose, transforming camera to world (world_T_camera)
+		 * @tparam T The data type of the scalar to use, either 'float' or 'double'
 		 */
-		static HomogenousMatrix4 viewPosition(const AnyCamera& anyCamera, const Sphere3& boundingSphere, const Vector3& viewingDirection);
+		template <typename T>
+		static HomogenousMatrixT4<T> viewPosition(const AnyCameraT<T>& anyCamera, const SphereT3<T>& boundingSphere, const VectorT3<T>& viewingDirection);
 
 		/**
 		 * Deprecated.
@@ -96,8 +98,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT Utilities
 		 * @param viewingDirection Viewing direction of the resulting camera with unit length
 		 * @param circumcircle True, to ensure that all object points will project into the frame, otherwise some sole points will project outside the image frame
 		 * @return Resulting camera pose, transforming camera to world (world_T_camera)
+		 * @tparam T The data type of the scalar to use, either 'float' or 'double'
 		 */
-		static HomogenousMatrix4 viewPosition(const AnyCamera& anyCamera, const Vectors3& objectPoints, const Vector3& viewingDirection, const bool circumcircle = true);
+		template <typename T>
+		static HomogenousMatrixT4<T> viewPosition(const AnyCameraT<T>& anyCamera, const VectorsT3<T>& objectPoints, const VectorT3<T>& viewingDirection, const bool circumcircle = true);
 
 		/**
 		 * Deprecated.
@@ -118,8 +122,10 @@ class OCEAN_TEST_GEOMETRY_EXPORT Utilities
 		 * @param circumcircle True, to ensure that all object points will project into the frame, otherwise some sole points will project outside the image frame
 		 * @param randomGenerator Optional random generator
 		 * @return Resulting camera pose, transforming camera to world (world_T_camera)
+		 * @tparam T The data type of the scalar to use, either 'float' or 'double'
 		 */
-		static HomogenousMatrix4 viewPosition(const AnyCamera& anyCamera, const Vectors3& objectPoints, const bool circumcircle = true, RandomGenerator* randomGenerator = nullptr);
+		template <typename T>
+		static HomogenousMatrixT4<T> viewPosition(const AnyCameraT<T>& anyCamera, const VectorsT3<T>& objectPoints, const bool circumcircle = true, RandomGenerator* randomGenerator = nullptr);
 
 		/**
 		 * Modifies a provided camera and adds random radial and tangential distortion.
