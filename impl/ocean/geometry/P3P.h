@@ -32,6 +32,8 @@ class OCEAN_GEOMETRY_EXPORT P3P : public PerspectivePose
 	public:
 
 		/**
+		 * Deprecated.
+		 *
 		 * Calculates the possible camera poses for three correspondences between 3D object points and 2D image points.
 		 * The 3D object points as well as the resulting camera poses are defined in relation to a common world coordinate system.<br>
 		 * Each pose is defined using a default camera pointing into the negative z-space of the coordinate system, with x-axis to the right of the camera frame, and y-axis pointing upwards (this coordinate system is often used in Computer Graphics).<br>
@@ -56,6 +58,8 @@ class OCEAN_GEOMETRY_EXPORT P3P : public PerspectivePose
 		static unsigned int poses(const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const Vector2* imagePoints, HomogenousMatrix4* world_T_cameras, const Scalar minimalCollinearSqrDistance = Scalar(1 * 1));
 
 		/**
+		 * Deprecated.
+		 *
 		 * Calculates the possible camera poses for three correspondences between 3D object points and 2D image points.
 		 * The 3D object points as well as the resulting camera poses are defined in relation to a common world coordinate system.<br>
 		 * Each pose is defined using a default camera pointing into the negative z-space of the coordinate system, with x-axis to the right of the camera frame, and y-axis pointing upwards (this coordinate system is often used in Computer Graphics).<br>
@@ -80,8 +84,7 @@ class OCEAN_GEOMETRY_EXPORT P3P : public PerspectivePose
 		 * The resulting poses can be transformed to an inverted flipped coordinate system e.g., by using PinholeCamera::standard2InvertedFlipped().<br>
 		 * An inverted and flipped pose is pointing into the positive z-space of the coordinate system, with x-axis to the right of the camera frame, and y-axis pointing downwards (this coordinate system is often used in Computer Vision).<br>
 		 * The provided image points should be defined in the domain of a normal image (with origin in the upper left corner, x pointing to the right, y pointing downwards).<br>
-		 * The p3p can result in at most four different poses due to the under-determined system of equations.<br>
-		 * The image points should be undistorted to improve the pose quality.
+		 * The p3p can result in at most four different poses due to the under-determined system of equations.
 		 * @param anyCamera The camera profile defining the projection, must be valid
 		 * @param objectPoints Three 3D objects points each corresponding to a different 2D image point, the points must not be collinear
 		 * @param imagePoints Three 2D image points each corresponding to a different 3D object point

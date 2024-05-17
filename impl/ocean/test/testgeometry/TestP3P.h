@@ -63,7 +63,9 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestP3P
 		 * Tests the perspective pose problem for three rays.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The floating point data type to be used for testing
 		 */
+		template <typename T>
 		static bool testP3PWithRays(const double testDuration);
 
 		/**
