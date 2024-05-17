@@ -2222,7 +2222,12 @@ const unsigned int* PatternTrackerCore6DOF::createIntegralImage(const Frame& yFr
 {
 	ocean_assert(yFrame && FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
 
-	trackerIntegralImage.set(FrameType(yFrame.width() + 1u, yFrame.height() + 1u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), /* forceOwner */ true);
+	if (!trackerIntegralImage.set(FrameType(yFrame.width() + 1u, yFrame.height() + 1u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), /* forceOwner */ true))
+	{
+		ocean_assert(false && "This should never happen!");
+		return nullptr;
+	}
+
 	ocean_assert(trackerIntegralImage);
 	ocean_assert(trackerIntegralImage.isContinuous() && "The output of this function is assumed to be continuous.");
 

@@ -680,7 +680,12 @@ void NewTextureGenerator::convertToTexture(const TexturedRegionMap& texturedRegi
 	unsigned int textureHeight = 0u;
 	const CV::Segmentation::BinPacking::Packings packings = CV::Segmentation::BinPacking::binPacking(islandBoxes, false, &textureWidth, &textureHeight);
 
-	textureFrame.set(FrameType(textureWidth, textureHeight, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), true, true);
+	if (!textureFrame.set(FrameType(textureWidth, textureHeight, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), true, true))
+	{
+		ocean_assert(false && "This should never happen");
+		return;
+	}
+
 	textureFrame.setValue(0x00u);
 
 	CV::PixelPositionsI islandOffsets(islandBoxes.size());

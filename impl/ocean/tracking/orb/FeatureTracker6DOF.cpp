@@ -289,7 +289,11 @@ const uint32_t* FeatureTracker6DOF::createLinedIntegralImage(const Frame& frame,
 	}
 
 	ocean_assert(yFrame_.isValid());
-	linedIntegralImage_.set(FrameType(yFrame_.width() + 1u, yFrame_.height() + 1u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+	if (!linedIntegralImage_.set(FrameType(yFrame_.width() + 1u, yFrame_.height() + 1u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return nullptr;
+	}
 
 	ocean_assert(linedIntegralImage_.isValid() && linedIntegralImage_.isContinuous());
 	IntegralImage::createLinedImage<uint8_t, uint32_t, 1u>(yFrame_.constdata<uint8_t>(), linedIntegralImage_.data<uint32_t>(), yFrame_.width(), yFrame_.height(), yFrame_.paddingElements(), linedIntegralImage_.paddingElements());

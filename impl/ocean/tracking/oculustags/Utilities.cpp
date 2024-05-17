@@ -348,7 +348,12 @@ Frame Utilities::generateTagImage(const uint32_t& tagID, const uint8_t* bit1Colo
 	{
 		// Initialize the frame
 
-		frame.set(FrameType(frameSize, frameSize, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), /* forceOwner */ true, /* forceWritable */ true);
+		if (!frame.set(FrameType(frameSize, frameSize, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), /* forceOwner */ true, /* forceWritable */ true))
+		{
+			ocean_assert(false && "This should never happen!");
+			return Frame();
+		}
+
 		ocean_assert(frame.isContinuous());
 
 		uint8_t* frameData = frame.data<uint8_t>();

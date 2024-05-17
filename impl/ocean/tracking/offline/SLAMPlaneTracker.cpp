@@ -222,7 +222,11 @@ bool SLAMPlaneTracker::HomographyTrackerComponent::optimizeHomography(const CV::
 	ocean_assert(previousFramePyramid && currentFrame);
 
 	// transform the current frame into the coordinate system of the previous frame
-	componentIntermediateHomographyFrame_.set(currentFrame.frameType(), true, true);
+	if (!componentIntermediateHomographyFrame_.set(currentFrame.frameType(), true, true))
+	{
+		return false;
+	}
+
 	if (!CV::FrameInterpolatorBilinear::Comfort::homographyWithCamera(componentCamera_, componentCamera_, currentFrame, componentIntermediateHomographyFrame_, homography, componentCamera_.hasDistortionParameters(), nullptr, worker))
 	{
 		return false;
@@ -828,7 +832,11 @@ bool SLAMPlaneTracker::PlaneTrackerComponent::optimizePose(const CV::FramePyrami
 	const SquareMatrix3 homography(Geometry::Homography::homographyMatrix(previousPose, currentPose, componentCamera_, componentCamera_, componentPlane_));
 	const SquareMatrix3 cameraFreeHomography(Geometry::Homography::normalizedHomography(componentCamera_.invertedIntrinsic() * homography * componentCamera_.intrinsic()));
 
-	componentIntermediateHomographyFrame_.set(currentFrame.frameType(), true, true);
+	if (!componentIntermediateHomographyFrame_.set(currentFrame.frameType(), true, true))
+	{
+		return false;
+	}
+
 	if (!CV::FrameInterpolatorBilinear::Comfort::homographyWithCamera(componentCamera_, componentCamera_, currentFrame, componentIntermediateHomographyFrame_, homography, componentCamera_.hasDistortionParameters(), nullptr, worker))
 	{
 		ocean_assert(false && "This should never happen!");

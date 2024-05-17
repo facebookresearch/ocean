@@ -795,7 +795,12 @@ const uint32_t* BlobTracker6DOF::createIntegralImage(const Frame& frame, Worker*
 		return nullptr;
 	}
 
-	integralImage_.set(FrameType(frame.width() + 1u, frame.height() + 1u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+	if (!integralImage_.set(FrameType(frame.width() + 1u, frame.height() + 1u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return nullptr;
+	}
+
 	ocean_assert(integralImage_.isValid());
 
 	ocean_assert(yFrame_.isValid());

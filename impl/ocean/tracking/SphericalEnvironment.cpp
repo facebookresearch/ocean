@@ -1144,7 +1144,11 @@ bool SphericalEnvironment::nonHomographyMask(const CV::FramePyramid& previousFra
 
 	const Geometry::Delaunay::IndexTriangles triangleIndices = Geometry::Delaunay::triangulation(currentImagePoints);
 
-	currnetMask.set(FrameType(currentFramePyramid.frameType(), FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/);
+	if (!currnetMask.set(FrameType(currentFramePyramid.frameType(), FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
+
 	currnetMask.setValue(maskValue);
 
 	for (size_t n = 0; n < triangleIndices.size(); ++n)

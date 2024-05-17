@@ -378,7 +378,10 @@ bool Utilities::createRectifiedFrameFromFisheyeFrame(const AnyCamera& anyCamera,
 		}
 	}
 
-	rectifiedFrame.set(FrameType(fisheyeFrame, rectifiedFrameWidth, rectifiedFrameHeight), false /*forceOwner*/, true /*forceWritable*/);
+	if (!rectifiedFrame.set(FrameType(fisheyeFrame, rectifiedFrameWidth, rectifiedFrameHeight), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
 
 	CV::FrameInterpolatorBilinear::lookup<uint8_t, (unsigned int)tChannels>(fisheyeFrame.constdata<uint8_t>(), fisheyeFrame.width(), fisheyeFrame.height(), lookupTable, true, nullptr, rectifiedFrame.data<uint8_t>(), fisheyeFrame.paddingElements(), rectifiedFrame.paddingElements(),  nullptr /*no worker*/);
 

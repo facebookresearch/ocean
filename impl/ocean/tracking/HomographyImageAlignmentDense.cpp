@@ -239,8 +239,17 @@ inline HomographyImageAlignmentDense::HomographyProvider<tChannels>::HomographyP
 		templateFrameMean_[n] = Numeric::maxValue();
 	}
 
-	reusableTransformedCurrentFrame_.set(templateFrame_.frameType(), true /*forceOwner*/, true /*forceWritable*/);
-	reusableTransformedCurrentMask_.set(FrameType(templateFrame_.frameType(), FrameType::FORMAT_Y8), true /*forceOwner*/, true /*forceWritable*/);
+	if (!reusableTransformedCurrentFrame_.set(templateFrame_.frameType(), true /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return;
+	}
+
+	if (!reusableTransformedCurrentMask_.set(FrameType(templateFrame_.frameType(), FrameType::FORMAT_Y8), true /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return;
+	}
 
 	ocean_assert(templateSubRegion_.boundingBox().isValid());
 
@@ -478,7 +487,11 @@ inline HomographyImageAlignmentDense::DenseAdditiveHomographyProvider<tChannels>
 {
 	static_assert(tChannels >= 1u && tChannels <= 4u, "Invalid channel number!");
 
-	reusableGradientCurrentFrame_.set(FrameType(currentFrame, FrameType::genericPixelFormat<int16_t, tChannels * 2u>()), true /*forceOwner*/, true /*forceWritable*/);
+	if (!reusableGradientCurrentFrame_.set(FrameType(currentFrame, FrameType::genericPixelFormat<int16_t, tChannels * 2u>()), true /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return;
+	}
 
 	if (consistencyData)
 	{
@@ -985,8 +998,17 @@ inline HomographyImageAlignmentDense::DenseInverseCompositionalHomographyProvide
 		this->templateFrameMean_[n] = Numeric::maxValue();
 	}
 
-	this->reusableTransformedCurrentFrame_.set(this->templateFrame_.frameType(), true /*forceOwner*/, true /*forceWritable*/);
-	this->reusableTransformedCurrentMask_.set(FrameType(this->templateFrame_.frameType(), FrameType::FORMAT_Y8), true /*forceOwner*/, true /*forceWritable*/);
+	if (!this->reusableTransformedCurrentFrame_.set(this->templateFrame_.frameType(), true /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return;
+	}
+
+	if (!this->reusableTransformedCurrentMask_.set(FrameType(this->templateFrame_.frameType(), FrameType::FORMAT_Y8), true /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return;
+	}
 
 	ocean_assert(this->templateSubRegion_.boundingBox().isValid());
 

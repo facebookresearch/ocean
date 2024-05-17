@@ -464,7 +464,10 @@ bool PlanarRectangleTracker::PlaneTrackerComponent::optimizePose(const Frame& cu
 	ocean_assert(!initialRectifiedCamera_.hasDistortionParameters());
 
 	// this frame (as well as componentInitialRectifiedFramePyramid) will receive the undistorted rectified frame (as the componentInitialRectifiedCamera object holds no distortion parameters)
-	intermediateRectifiedFrame_.set(FrameType(currentFrame, initialRectifiedCamera_.width(), initialRectifiedCamera_.height()), true, true);
+	if (!intermediateRectifiedFrame_.set(FrameType(currentFrame, initialRectifiedCamera_.width(), initialRectifiedCamera_.height()), true, true))
+	{
+		return false;
+	}
 
 	intermediateRectifiedFrame_.setValue(0x00);
 	Frame rectifiedMask(FrameType(intermediateRectifiedFrame_, FrameType::FORMAT_Y8));
