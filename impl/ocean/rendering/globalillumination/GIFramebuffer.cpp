@@ -182,7 +182,10 @@ void GIFramebuffer::viewport(unsigned int& left, unsigned int& top, unsigned int
 
 void GIFramebuffer::setViewport(const unsigned int /*left*/, const unsigned int /*top*/, const unsigned int width, const unsigned int height)
 {
-	frame_.set(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false, true);
+	if (!frame_.set(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), false, true))
+	{
+		ocean_assert(false && "This should never happen!");
+	}
 }
 
 void GIFramebuffer::addScene(const SceneRef& scene)
@@ -240,7 +243,12 @@ void GIFramebuffer::render()
 
 	if (antialiasingEnabled_ && frame_.width() >= 3u && frame_.height() >= 3u)
 	{
-		sobelFrame_.set(FrameType(frame_, FrameType::FORMAT_Y8), false, true);
+		if (!sobelFrame_.set(FrameType(frame_, FrameType::FORMAT_Y8), false, true))
+		{
+			ocean_assert(false && "This should never happen!");
+			return;
+		}
+
 		CV::FrameFilterSobelMagnitude::Comfort::filterHorizontalVerticalTo1Response(frame_, sobelFrame_, scopedWorker());
 
 		if (scopedWorker)

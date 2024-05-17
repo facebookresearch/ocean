@@ -493,7 +493,10 @@ bool GLESTextureFramebuffer::copyColorTextureToFrame(Frame& frame, const CV::Pix
 
 	if (framebufferMultisamples_ == 1u)
 	{
-		frame.set(frameType, false /*forceOwner*/, true /*forceWritable*/);
+		if (!frame.set(frameType, false /*forceOwner*/, true /*forceWritable*/))
+		{
+			return false;
+		}
 
 		GLenum textureFormat = GL_RGB;
 		GLenum textureType = GL_UNSIGNED_BYTE;
@@ -927,7 +930,10 @@ bool GLESTextureFramebuffer::copyDepthTextureToFrame(Frame& frame, const CV::Pix
 		return false;
 	}
 
-	frame.set(FrameType(yFrame, FrameType::FORMAT_F32), false /*forceOwner*/, true /*forceWritable*/);
+	if (!frame.set(FrameType(yFrame, FrameType::FORMAT_F32), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
 
 	constexpr float normalization = float(1.0 / 4294967000.0);
 
@@ -975,7 +981,10 @@ bool GLESTextureFramebuffer::copyDepthTextureToFrame(Frame& frame, const CV::Pix
 		return false;
 	}
 
-	frame.set(frameType, false /*forceOwner*/, true /*forceWritable*/);
+	if (!frame.set(frameType, false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
 
 	if (framebufferMultisamples_ == 1u)
 	{
