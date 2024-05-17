@@ -9,6 +9,12 @@ cmake_minimum_required(VERSION 3.26)
 cmake_policy(SET CMP0077 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW) # For CMake subprojects
 
+if (APPLE)
+    # Workaround to allow shared libraries to be found via RPATH.
+    # "-install_name @rpath/..." linker option not specified for Objective-C++ libraries otherwise
+    set(CMAKE_SHARED_LIBRARY_SONAME_OBJC_FLAG "-install_name")
+endif()
+
 project(ocean)
 
 # Additional CMake configurations
@@ -51,11 +57,9 @@ endif()
 
 if (BUILD_SHARED_LIBS)
     if (MACOS)
-        set(CMAKE_MACOSX_RPATH 1)
-    endif()
-
-    if (MACOS OR LINUX)
-        set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+        set(CMAKE_INSTALL_RPATH "@loader_path;@loader_path/../lib")
+    elseif (LINUX)
+        set(CMAKE_INSTALL_RPATH "$ORIGIN;$ORIGIN/../lib")
     endif()
 endif()
 
@@ -74,7 +78,6 @@ if (ANDROID)
         message(STATUS "OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE = [not defined]")
     endif()
 endif()
-
 
 message(STATUS " ")
 message(STATUS "BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS}")
