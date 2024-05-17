@@ -25,7 +25,11 @@ unsigned int SeedSegmentation::Comfort::seedSegmentation(const Frame& frame, Fra
 	{
 		if (setMaskFrameType)
 		{
-			mask.set(FrameType(frame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/);
+			if (!mask.set(FrameType(frame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/))
+			{
+				ocean_assert(false && "This should never happen!");
+				return 0u;
+			}
 		}
 		else if (FrameType(frame, FrameType::FORMAT_Y8) != mask.frameType())
 		{
@@ -62,7 +66,11 @@ unsigned int SeedSegmentation::Comfort::iterativeSeedSegmentation(const Frame& f
 	{
 		if (setMaskFrameType)
 		{
-			mask.set(FrameType(frame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/);
+			if (!mask.set(FrameType(frame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/))
+			{
+				ocean_assert(false && "This should never happen!");
+				return 0u;
+			}
 		}
 		else if (FrameType(frame, FrameType::FORMAT_Y8) != mask.frameType())
 		{

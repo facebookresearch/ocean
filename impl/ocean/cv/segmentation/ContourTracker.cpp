@@ -189,7 +189,11 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 
 	const PixelContour denseContour(ContourAnalyzer::createDenseContour(currentContour));
 
-	intermediateRoughMask_.set(FrameType(frame, FrameType::FORMAT_Y8), true /*forceOwner*/, true /*forceWritable*/);
+	if (!intermediateRoughMask_.set(FrameType(frame, FrameType::FORMAT_Y8), true /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
+
 	intermediateRoughMask_.setValue(0xFF);
 
 	MaskCreator::contour2inclusiveMaskByTriangulation(intermediateRoughMask_.data<uint8_t>(), intermediateRoughMask_.width(), intermediateRoughMask_.height(), intermediateRoughMask_.paddingElements(), denseContour.simplified(), 0x00, worker);
