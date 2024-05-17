@@ -57,9 +57,10 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param model Number of data elements sufficient to define a test model
 		 * @param successProbability Probability that at least one outlier-free model will be selected, with range (0, 1)
 		 * @param faultyRate Rate of faulty data elements inside the given data set, with range [0, 1)
-		 * @return Minimal number of iterations to guarantee the specified probability
+		 * @param maximalIterations The number of maximal iterations which can be returned, with range [1, infinity)
+		 * @return Minimal number of iterations to guarantee the specified probability, with range [1, maximalIterations]
 		 */
-		static unsigned int iterations(const unsigned int model, const Scalar successProbability = Scalar(0.99), const Scalar faultyRate = Scalar(0.2));
+		static unsigned int iterations(const unsigned int model, const Scalar successProbability = Scalar(0.99), const Scalar faultyRate = Scalar(0.2), const unsigned int maximalIterations = 1000000u);
 
 		/**
 		 * Deprecated.

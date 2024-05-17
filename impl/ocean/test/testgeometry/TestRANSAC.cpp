@@ -10,11 +10,13 @@
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
+#include "ocean/base/Utilities.h"
 
 #include "ocean/geometry/RANSAC.h"
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
 #include "ocean/test/ValidationPrecision.h"
 
 namespace Ocean
@@ -32,6 +34,12 @@ bool TestRANSAC::test(const double testDuration, Worker* /*worker*/)
 	Log::info() << " ";
 
 	bool allSucceeded = true;
+
+	allSucceeded = testIterations(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 
 	allSucceeded = testP3P(testDuration) && allSucceeded;
 
@@ -68,6 +76,12 @@ bool TestRANSAC::test(const double testDuration, Worker* /*worker*/)
 }
 
 #ifdef OCEAN_USE_GTEST
+
+TEST(TestRANSAC, Iterations)
+{
+	EXPECT_TRUE(TestRANSAC::testIterations(GTEST_TEST_DURATION));
+}
+
 
 TEST(TestRANSAC, P3P_Pinhole_10Correspondences_0Outliers)
 {
@@ -170,6 +184,103 @@ TEST(TestRANSAC, ObjectTransformationStereoAnyCamera)
 }
 
 #endif // OCEAN_USE_GTEST
+
+bool TestRANSAC::testIterations(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing Iterations:";
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	{
+		// testing hard-coded values
+
+		constexpr Scalar successProbability = Scalar(0.99);
+
+		OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(2u, successProbability, Scalar(0.1)), 3u);
+		OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(2u, successProbability, Scalar(0.2)), 5u);
+		OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(2u, successProbability, Scalar(0.3)), 7u);
+		OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(2u, successProbability, Scalar(0.7)), 49u);
+
+		OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(3u, successProbability, Scalar(0.1)), 4u);
+		OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(3u, successProbability, Scalar(0.2)), 7u);
+		OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(3u, successProbability, Scalar(0.3)), 11u);
+		OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(3u, successProbability, Scalar(0.7)), 169u);
+
+		OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(8u, successProbability, Scalar(0.1)), 9u);
+		OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(8u, successProbability, Scalar(0.2)), 26u);
+		OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(8u, successProbability, Scalar(0.3)), 78u);
+
+		if constexpr (std::is_same<Scalar, float>::value) // due to floating point precision, we have to distinguish between float and double result
+		{
+			OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(8u, successProbability, Scalar(0.7)), 70173u);
+		}
+		else
+		{
+			OCEAN_EXPECT_EQUAL(validation, Geometry::RANSAC::iterations(8u, successProbability, Scalar(0.7)), 70188u);
+		}
+	}
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// checking extremely high faulty rate
+
+			const unsigned int model = RandomI::random(randomGenerator, 1u, 10u);
+
+			const unsigned int maximalIterations = RandomI::random(randomGenerator, 1u, 10000000u);
+
+			constexpr Scalar faultyRate = Scalar(0.9999999);
+
+			const unsigned int iterations = Geometry::RANSAC::iterations(model, Scalar(0.99), faultyRate, maximalIterations);
+
+			OCEAN_EXPECT_EQUAL(validation, iterations, maximalIterations);
+		}
+
+		{
+			// checking extremely low faulty rate
+
+			const unsigned int model = RandomI::random(randomGenerator, 1u, 10u);
+
+			const unsigned int maximalIterations = RandomI::random(randomGenerator, 1u, 10000000u);
+
+			constexpr Scalar faultyRate = Scalar(0.0000001);
+
+			const unsigned int iterations = Geometry::RANSAC::iterations(model, Scalar(0.99), faultyRate, maximalIterations);
+
+			OCEAN_EXPECT_EQUAL(validation, iterations, 1u);
+		}
+
+		{
+			// checking random numbers
+
+			const unsigned int model = RandomI::random(randomGenerator, 1u, 10u);
+
+			const unsigned int maximalIterations = RandomI::random(randomGenerator, 1u, 10000000u);
+
+			Scalar faultyRateLow = Random::scalar(randomGenerator, Scalar(0), Scalar(0.9999));
+			Scalar faultyRateHigh = Random::scalar(randomGenerator, Scalar(0), Scalar(0.9999));
+			Ocean::Utilities::sortLowestToFront2(faultyRateLow, faultyRateHigh);
+
+			const Scalar successProbability = Random::scalar(randomGenerator, Scalar(0.001), Scalar(0.9999));
+
+			const unsigned int iterationsLow = Geometry::RANSAC::iterations(model, successProbability, faultyRateLow, maximalIterations);
+			const unsigned int iterationsHigh = Geometry::RANSAC::iterations(model, successProbability, faultyRateHigh, maximalIterations);
+
+			OCEAN_EXPECT_LESS_EQUAL(validation, iterationsLow, iterationsHigh);
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
 
 bool TestRANSAC::testP3P(const double testDuration)
 {

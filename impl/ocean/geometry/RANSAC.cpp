@@ -33,11 +33,12 @@ namespace Ocean
 namespace Geometry
 {
 
-unsigned int RANSAC::iterations(const unsigned int model, const Scalar successProbability, const Scalar faultyRate)
+unsigned int RANSAC::iterations(const unsigned int model, const Scalar successProbability, const Scalar faultyRate, const unsigned int maximalIterations)
 {
 	ocean_assert(model > 0u);
-	ocean_assert(successProbability > 0 && successProbability < 1);
-	ocean_assert(faultyRate >= 0 && faultyRate < 1);
+	ocean_assert(successProbability > Scalar(0) && successProbability < Scalar(1));
+	ocean_assert(faultyRate >= Scalar(0) && faultyRate < Scalar(1));
+	ocean_assert(maximalIterations >= 1u);
 
 	if (Numeric::isEqualEps(faultyRate))
 	{
@@ -45,7 +46,58 @@ unsigned int RANSAC::iterations(const unsigned int model, const Scalar successPr
 		return 1u;
 	}
 
-	return max((unsigned int)(Numeric::ceil(Numeric::log(1 - successProbability) / Numeric::log(1 - Numeric::pow(1 - faultyRate, Scalar(model))))), 1u);
+	/*
+	 * successProbablity      =  1 - faultyCandidateProbability ^ iterations
+	 *                        =  1 - (1 - inlierCandidateProbability) ^ iterations
+	 *                        =  1 - (1 - inlierRate ^ model) ^ iterations
+	 *                        =  1 - (1 - (1 - faultyRate) ^ model) ^ iterations
+	 *
+	 * 1 - successProbablity  =  (1 - (1 - faultyRate) ^ model) ^ iterations
+	 *
+	 * iterations = log(1 - successProbablity)  / log(1 - (1 - faultyRate) ^ model)
+	 *            = log(1 - successProbability) / log(faultyCandidateProbability)
+	 *            = log(failureProbability)     / log(faultyCandidateProbability)
+	 */
+
+	const Scalar inlierRate = Scalar(1) - faultyRate;
+	const Scalar inlierCandidateProbability = Numeric::pow(inlierRate, Scalar(model));
+	const Scalar faultyCandidateProbability = Scalar(1) - inlierCandidateProbability;
+
+	ocean_assert(faultyCandidateProbability > Numeric::eps());
+
+	if (Numeric::isEqualEps(faultyCandidateProbability))
+	{
+		// we mainly have no outliers
+		return 1u;
+	}
+
+	const Scalar failureProbability = Scalar(1 - successProbability);
+
+	ocean_assert(failureProbability > Numeric::eps());
+
+	if (Numeric::isEqualEps(failureProbability))
+	{
+		// we mainly want to guarantee that we find a valid solution
+		return maximalIterations;
+	}
+
+	const Scalar nominator = Numeric::log(failureProbability);
+	const Scalar denominator = Numeric::log(faultyCandidateProbability);
+
+	if (Numeric::isEqualEps(denominator))
+	{
+		return maximalIterations;
+	}
+
+	const Scalar expectedIterations = nominator / denominator;
+	ocean_assert(expectedIterations >= 0);
+
+	if (expectedIterations > Scalar(maximalIterations))
+	{
+		return maximalIterations;
+	}
+
+	return std::max(1u, (unsigned int)(Numeric::ceil(expectedIterations)));
 }
 
 bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& pose_world_T_camera, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy)

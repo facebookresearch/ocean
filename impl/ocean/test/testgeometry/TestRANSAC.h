@@ -53,6 +53,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestRANSAC
 		static bool test(const double testDuration, Worker* worker);
 
 		/**
+		 * Tests the iterations function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testIterations(const double testDuration);
+
+		/**
 		 * Tests the perspective pose function p3p for mono cameras.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
