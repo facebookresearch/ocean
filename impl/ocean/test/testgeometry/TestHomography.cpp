@@ -238,20 +238,69 @@ TEST(TestHomography, Intrinsic)
 	EXPECT_TRUE(TestHomography::testIntrinsic(GTEST_TEST_DURATION));
 }
 
-TEST(TestHomography, HomotheticMatrix)
+
+TEST(TestHomography, HomotheticMatrix_100)
 {
-	EXPECT_TRUE(TestHomography::testHomotheticMatrix(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestHomography::testHomotheticMatrix(GTEST_TEST_DURATION, 100));
 }
 
-TEST(TestHomography, SimilarityMatrix)
+TEST(TestHomography, HomotheticMatrix_1000)
 {
-	EXPECT_TRUE(TestHomography::testSimilarityMatrix(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestHomography::testHomotheticMatrix(GTEST_TEST_DURATION, 1000));
 }
 
-TEST(TestHomography, AffineMatrix)
+TEST(TestHomography, HomotheticMatrix_10000)
 {
-	EXPECT_TRUE(TestHomography::testAffineMatrix(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestHomography::testHomotheticMatrix(GTEST_TEST_DURATION, 10000));
 }
+
+TEST(TestHomography, HomotheticMatrix_100000)
+{
+	EXPECT_TRUE(TestHomography::testHomotheticMatrix(GTEST_TEST_DURATION, 100000));
+}
+
+
+TEST(TestHomography, SimilarityMatrix_100)
+{
+	EXPECT_TRUE(TestHomography::testSimilarityMatrix(GTEST_TEST_DURATION, 100));
+}
+
+TEST(TestHomography, SimilarityMatrix_1000)
+{
+	EXPECT_TRUE(TestHomography::testSimilarityMatrix(GTEST_TEST_DURATION, 1000));
+}
+
+TEST(TestHomography, SimilarityMatrix_10000)
+{
+	EXPECT_TRUE(TestHomography::testSimilarityMatrix(GTEST_TEST_DURATION, 10000));
+}
+
+TEST(TestHomography, SimilarityMatrix_100000)
+{
+	EXPECT_TRUE(TestHomography::testSimilarityMatrix(GTEST_TEST_DURATION, 100000));
+}
+
+
+TEST(TestHomography, AffineMatrix_100)
+{
+	EXPECT_TRUE(TestHomography::testAffineMatrix(GTEST_TEST_DURATION, 100));
+}
+
+TEST(TestHomography, AffineMatrix_1000)
+{
+	EXPECT_TRUE(TestHomography::testAffineMatrix(GTEST_TEST_DURATION, 1000));
+}
+
+TEST(TestHomography, AffineMatrix_10000)
+{
+	EXPECT_TRUE(TestHomography::testAffineMatrix(GTEST_TEST_DURATION, 10000));
+}
+
+TEST(TestHomography, AffineMatrix_100000)
+{
+	EXPECT_TRUE(TestHomography::testAffineMatrix(GTEST_TEST_DURATION, 100000));
+}
+
 
 TEST(TestHomography, HomographyMatrixSVD)
 {
@@ -1494,17 +1543,18 @@ bool TestHomography::testHomotheticMatrix(const double testDuration)
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Testing determination of homothetic matrix with " << sizeof(Scalar) * 8 << "bit floating point precision:";
-	Log::info() << " ";
 
 	bool allSucceeded = true;
 
-	allSucceeded = testHomotheticMatrix(testDuration, 100) && allSucceeded;
+	for (const size_t points : {100, 1000, 10000, 100000})
+	{
+		Log::info() << " ";
 
-	allSucceeded = testHomotheticMatrix(testDuration, 1000) && allSucceeded;
-
-	allSucceeded = testHomotheticMatrix(testDuration, 10000) && allSucceeded;
-
-	allSucceeded = testHomotheticMatrix(testDuration, 100000) && allSucceeded;
+		if (!testHomotheticMatrix(testDuration, points) && allSucceeded)
+		{
+			allSucceeded = false;
+		}
+	}
 
 	Log::info() << " ";
 
@@ -1529,10 +1579,6 @@ bool TestHomography::testHomotheticMatrix(const double testDuration, const size_
 	constexpr unsigned int width = 1920u;
 	constexpr unsigned int height = 1080u;
 
-	Vectors2 pointsLeft(points);
-	Vectors2 pointsRight(points);
-	Vectors2 pointsRightNoised(points);
-
 	RandomGenerator randomGenerator;
 
 	ValidationPrecision validation(0.99, randomGenerator);
@@ -1548,24 +1594,33 @@ bool TestHomography::testHomotheticMatrix(const double testDuration, const size_
 		const Vector2 xAxis(1, 0);
 		const Vector2 yAxis(0, 1);
 
-		const Scalar scale(Random::scalar(randomGenerator, -2, 2));
-		const Vector2 translation(Random::vector2(randomGenerator, -10, 10));
+		Scalar scale = Random::scalar(randomGenerator, Scalar(0.01), 2);
+		scale *= Random::sign(randomGenerator);
+
+		const Vector2 translation = Random::vector2(randomGenerator, -10, 10);
 
 		// transformation transforming left points to right points (right = T * left)
-		const SquareMatrix3 right_H_left(Vector3(xAxis * scale, 0), Vector3(yAxis * scale, 0), Vector3(translation, 1));
+		const SquareMatrix3 right_T_left(Vector3(xAxis * scale, 0), Vector3(yAxis * scale, 0), Vector3(translation, 1));
+
+		Vectors2 pointsLeft;
+		Vectors2 pointsRight;
+		Vectors2 pointsRightNoised;
 
 		for (size_t n = 0; n < points; ++n)
 		{
-			pointsLeft[n] = Random::vector2(randomGenerator, Scalar(0), Scalar(width), Scalar(0), Scalar(height));
-			pointsRight[n] = right_H_left * pointsLeft[n];
+			const Vector2 leftPoint = Random::vector2(randomGenerator, Scalar(0), Scalar(width), Scalar(0), Scalar(height));
+			const Vector2 rightPoint = right_T_left * leftPoint;
 
-			pointsRightNoised[n] = pointsRight[n] + Random::gaussianNoiseVector2(randomGenerator, Scalar(0.5), Scalar(0.5));
+			pointsLeft.push_back(leftPoint);
+			pointsRight.push_back(rightPoint);
+
+			pointsRightNoised.emplace_back(rightPoint + Random::gaussianNoiseVector2(randomGenerator, Scalar(0.5), Scalar(0.5)));
 		}
 
-		SquareMatrix3 homothetic;
+		SquareMatrix3 right_H_left(false);
 
 		performance.start();
-			const bool result = Geometry::Homography::homotheticMatrix(pointsLeft.data(), pointsRight.data(), points, homothetic);
+			const bool result = Geometry::Homography::homotheticMatrix(pointsLeft.data(), pointsRight.data(), points, right_H_left);
 		performance.stop();
 
 		if (result)
@@ -1574,20 +1629,20 @@ bool TestHomography::testHomotheticMatrix(const double testDuration, const size_
 			// 0   s  ty
 			// 0   0   1
 
-			if (Numeric::isNotEqual(homothetic(0, 0), homothetic(1, 1)) || Numeric::isNotEqualEps(homothetic(1, 0)) || Numeric::isNotEqualEps(homothetic(0, 1)))
+			if (Numeric::isNotEqual(right_H_left(0, 0), right_H_left(1, 1)) || Numeric::isNotEqualEps(right_H_left(1, 0)) || Numeric::isNotEqualEps(right_H_left(0, 1)))
 			{
 				scopedIteration.setInaccurate();
 			}
 
-			if (Numeric::isNotEqual(homothetic(2, 0), 0) || Numeric::isNotEqual(homothetic(2, 1), 0) || Numeric::isNotEqual(homothetic(2, 2), 1))
+			if (Numeric::isNotEqual(right_H_left(2, 0), 0) || Numeric::isNotEqual(right_H_left(2, 1), 0) || Numeric::isNotEqual(right_H_left(2, 2), 1))
 			{
 				scopedIteration.setInaccurate();
 			}
 
 			for (size_t n = 0; n < points; ++n)
 			{
-				Vector2 transformedPoint;
-				if (!homothetic.multiply(pointsLeft[n], transformedPoint) || !transformedPoint.isEqual(pointsRight[n], 1))
+				Vector2 rightPoint;
+				if (!right_H_left.multiply(pointsLeft[n], rightPoint) || !rightPoint.isEqual(pointsRight[n], 1))
 				{
 					scopedIteration.setInaccurate();
 					break;
@@ -1612,19 +1667,18 @@ bool TestHomography::testSimilarityMatrix(const double testDuration)
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Testing determination of similarity matrix with " << sizeof(Scalar) * 8 << "bit floating point precision:";
-	Log::info() << " ";
 
 	bool allSucceeded = true;
 
-	allSucceeded = testSimilarityMatrix(testDuration, 100) && allSucceeded;
+	for (const size_t points : {100, 1000, 10000, 100000})
+	{
+		Log::info() << " ";
 
-	allSucceeded = testSimilarityMatrix(testDuration, 1000) && allSucceeded;
-
-	allSucceeded = testSimilarityMatrix(testDuration, 10000) && allSucceeded;
-
-#ifndef OCEAN_USE_GTEST // skipping during gtests due to execution time
-	allSucceeded = testSimilarityMatrix(testDuration, 100000) && allSucceeded;
-#endif
+		if (!testSimilarityMatrix(testDuration, points) && allSucceeded)
+		{
+			allSucceeded = false;
+		}
+	}
 
 	Log::info() << " ";
 
@@ -1649,14 +1703,9 @@ bool TestHomography::testSimilarityMatrix(const double testDuration, const size_
 	constexpr unsigned int width = 1920u;
 	constexpr unsigned int height = 1080u;
 
-	Vectors2 pointsLeft(points);
-	Vectors2 pointsRight(points);
-	Vectors2 pointsRightNoised(points);
-
 	RandomGenerator randomGenerator;
 
-	constexpr double successThreshold = std::is_same<Scalar, float>::value ? 0.98 : 0.99;
-	ValidationPrecision validation(successThreshold, randomGenerator);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -1666,27 +1715,36 @@ bool TestHomography::testSimilarityMatrix(const double testDuration, const size_
 	{
 		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const Vector2 xAxis(Random::vector2(randomGenerator));
-		const Vector2 yAxis(xAxis.perpendicular());
+		const Vector2 xAxis = Random::vector2(randomGenerator);
+		const Vector2 yAxis = xAxis.perpendicular();
 
-		const Scalar scale(Random::scalar(randomGenerator, -2, 2));
-		const Vector2 translation(Random::vector2(randomGenerator, -10, 10));
+		Scalar scale = Random::scalar(randomGenerator, Scalar(0.01), 2);
+		scale *= Random::sign(randomGenerator);
+
+		const Vector2 translation = Random::vector2(randomGenerator, -10, 10);
 
 		// transformation transforming left points to right points (right = T * left)
-		const SquareMatrix3 rightTleft(Vector3(xAxis * scale, 0), Vector3(yAxis * scale, 0), Vector3(translation, 1));
+		const SquareMatrix3 right_T_left(Vector3(xAxis * scale, 0), Vector3(yAxis * scale, 0), Vector3(translation, 1));
+
+		Vectors2 pointsLeft;
+		Vectors2 pointsRight;
+		Vectors2 pointsRightNoised;
 
 		for (size_t n = 0; n < points; ++n)
 		{
-			pointsLeft[n] = Random::vector2(randomGenerator, Scalar(0), Scalar(width), Scalar(0), Scalar(height));
-			pointsRight[n] = rightTleft * pointsLeft[n];
+			const Vector2 leftPoint = Random::vector2(randomGenerator, Scalar(0), Scalar(width), Scalar(0), Scalar(height));
+			const Vector2 rightPoint = right_T_left * leftPoint;
 
-			pointsRightNoised[n] = pointsRight[n] + Random::gaussianNoiseVector2(randomGenerator, Scalar(0.5), Scalar(0.5));
+			pointsLeft.push_back(leftPoint);
+			pointsRight.push_back(rightPoint);
+
+			pointsRightNoised.emplace_back(rightPoint + Random::gaussianNoiseVector2(randomGenerator, Scalar(0.5), Scalar(0.5)));
 		}
 
-		SquareMatrix3 similarity;
+		SquareMatrix3 right_S_left(false);
 
 		performance.start();
-			const bool result = Geometry::Homography::similarityMatrix(pointsLeft.data(), pointsRightNoised.data(), points, similarity);
+			const bool result = Geometry::Homography::similarityMatrix(pointsLeft.data(), pointsRightNoised.data(), points, right_S_left);
 		performance.stop();
 
 		if (result)
@@ -1695,20 +1753,21 @@ bool TestHomography::testSimilarityMatrix(const double testDuration, const size_
 			// b   a  ty
 			// 0   0   1
 
-			if (Numeric::isNotEqual(similarity(0, 0), similarity(1, 1)) || Numeric::isNotEqual(similarity(1, 0), -similarity(0, 1)))
+			if (Numeric::isNotEqual(right_S_left(0, 0), right_S_left(1, 1)) || Numeric::isNotEqual(right_S_left(1, 0), -right_S_left(0, 1)))
 			{
 				scopedIteration.setInaccurate();
 			}
 
-			if (Numeric::isNotEqual(similarity(2, 0), 0) || Numeric::isNotEqual(similarity(2, 1), 0) || Numeric::isNotEqual(similarity(2, 2), 1))
+			if (Numeric::isNotEqual(right_S_left(2, 0), 0) || Numeric::isNotEqual(right_S_left(2, 1), 0) || Numeric::isNotEqual(right_S_left(2, 2), 1))
 			{
 				scopedIteration.setInaccurate();
 			}
 
 			for (size_t n = 0; n < points; ++n)
 			{
-				const Vector2 transformedPoint = similarity * pointsLeft[n];
-				if (!transformedPoint.isEqual(pointsRight[n], 1))
+				const Vector2 rightPoint = right_S_left * pointsLeft[n];
+
+				if (!rightPoint.isEqual(pointsRight[n], 1))
 				{
 					scopedIteration.setInaccurate();
 					break;
@@ -1733,17 +1792,18 @@ bool TestHomography::testAffineMatrix(const double testDuration)
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Testing determination of affine matrix with " << sizeof(Scalar) * 8 << "bit floating point precision:";
-	Log::info() << " ";
 
 	bool allSucceeded = true;
 
-	allSucceeded = testAffineMatrix(testDuration, 100) && allSucceeded;
+	for (const size_t points : {100, 1000, 10000, 100000})
+	{
+		Log::info() << " ";
 
-	allSucceeded = testAffineMatrix(testDuration, 1000) && allSucceeded;
-
-	allSucceeded = testAffineMatrix(testDuration, 10000) && allSucceeded;
-
-	allSucceeded = testAffineMatrix(testDuration, 100000) && allSucceeded;
+		if (!testAffineMatrix(testDuration, points))
+		{
+			allSucceeded = false;
+		}
+	}
 
 	Log::info() << " ";
 
@@ -1768,10 +1828,6 @@ bool TestHomography::testAffineMatrix(const double testDuration, const size_t po
 	constexpr unsigned int width = 1920u;
 	constexpr unsigned int height = 1080u;
 
-	Vectors2 pointsLeft(points);
-	Vectors2 pointsRight(points);
-	Vectors2 pointsRightNoised(points);
-
 	RandomGenerator randomGenerator;
 
 	ValidationPrecision validation(0.99, randomGenerator);
@@ -1784,36 +1840,48 @@ bool TestHomography::testAffineMatrix(const double testDuration, const size_t po
 	{
 		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const Vector2 xAxis(Random::vector2(randomGenerator));
-		const Vector2 yAxis(xAxis.perpendicular());
+		const Vector2 xAxis = Random::vector2(randomGenerator);
+		const Vector2 yAxis = xAxis.perpendicular();
 
-		const Scalar scaleX(Random::scalar(randomGenerator, -2, 2));
-		const Scalar scaleY(Random::scalar(randomGenerator, -2, 2));
-		const Vector2 translation(Random::vector2(randomGenerator, -10, 10));
+		Scalar scaleX = Random::scalar(randomGenerator, Scalar(0.01), 2);
+		scaleX *= Random::sign(randomGenerator);
+
+		Scalar scaleY = Random::scalar(randomGenerator, Scalar(0.01), 2);
+		scaleY *= Random::sign(randomGenerator);
+
+		const Vector2 translation = Random::vector2(randomGenerator, -10, 10);
 
 		// transformation transforming left points to right points (right = T * left)
-		const SquareMatrix3 rightTleft(Vector3(xAxis * scaleX, 0), Vector3(yAxis * scaleY, 0), Vector3(translation, 1));
+		const SquareMatrix3 right_T_left(Vector3(xAxis * scaleX, 0), Vector3(yAxis * scaleY, 0), Vector3(translation, 1));
+
+		Vectors2 pointsLeft;
+		Vectors2 pointsRight;
+		Vectors2 pointsRightNoised;
 
 		for (size_t n = 0; n < points; ++n)
 		{
-			pointsLeft[n] = Random::vector2(randomGenerator, Scalar(0), Scalar(width), Scalar(0), Scalar(height));
-			pointsRight[n] = rightTleft * pointsLeft[n];
+			const Vector2 leftPoint = Random::vector2(randomGenerator, Scalar(0), Scalar(width), Scalar(0), Scalar(height));
+			const Vector2 rightPoint = right_T_left * leftPoint;
 
-			pointsRightNoised[n] = pointsRight[n] + Random::gaussianNoiseVector2(randomGenerator, Scalar(0.5), Scalar(0.5));
+			pointsLeft.push_back(leftPoint);
+			pointsRight.push_back(rightPoint);
+
+			pointsRightNoised.emplace_back(rightPoint + Random::gaussianNoiseVector2(randomGenerator, Scalar(0.5), Scalar(0.5)));
 		}
 
-		SquareMatrix3 similarity;
+		SquareMatrix3 right_A_left(false);
 
 		performance.start();
-			const bool result = Geometry::Homography::affineMatrix(pointsLeft.data(), pointsRightNoised.data(), points, similarity);
+			const bool result = Geometry::Homography::affineMatrix(pointsLeft.data(), pointsRightNoised.data(), points, right_A_left);
 		performance.stop();
 
 		if (result)
 		{
 			for (size_t n = 0; n < points; ++n)
 			{
-				const Vector2 transformedPoint = similarity * pointsLeft[n];
-				if (!transformedPoint.isEqual(pointsRight[n], 1))
+				const Vector2 rightPoint = right_A_left * pointsLeft[n];
+
+				if (!rightPoint.isEqual(pointsRight[n], 1))
 				{
 					scopedIteration.setInaccurate();
 					break;

@@ -30,7 +30,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestHomography
 	public:
 
 		/**
-		 * Tests all homograhy functions.
+		 * Tests all homography functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation
 		 * @return True, if succeeded
