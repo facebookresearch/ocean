@@ -233,11 +233,11 @@ class OCEAN_GEOMETRY_EXPORT Homography
 		 * @param leftPoints Image points in the left camera, each point corresponds to one point in the right image
 		 * @param rightPoints Image points in the right camera
 		 * @param correspondences Number of points correspondences, with range [2, infinity)
-		 * @param similarity Resulting similarity transformation matrix for the given image points
+		 * @param right_S_left The resulting similarity transformation matrix transforming left points to right points
 		 * @return True, if succeeded
 		 * @see homographyMatrix(), affineMatrix(), homotheticMatrix().
 		 */
-		static bool similarityMatrix(const ImagePoint* leftPoints, const ImagePoint* rightPoints, const size_t correspondences, SquareMatrix3& similarity);
+		static bool similarityMatrix(const ImagePoint* leftPoints, const ImagePoint* rightPoints, const size_t correspondences, SquareMatrix3& right_S_left);
 
 		/**
 		 * Calculates the homothetic transformation (3DOF - translation,  scale) between two sets of image points.

@@ -972,9 +972,9 @@ bool Homography::affineMatrix(const ImagePoint* leftPoints, const ImagePoint* ri
 	return true;
 }
 
-bool Homography::similarityMatrix(const ImagePoint* leftPoints, const ImagePoint* rightPoints, const size_t correspondences, SquareMatrix3& similarity)
+bool Homography::similarityMatrix(const ImagePoint* leftPoints, const ImagePoint* rightPoints, const size_t correspondences, SquareMatrix3& right_S_left)
 {
-	ocean_assert(leftPoints && rightPoints && correspondences >= 2);
+	ocean_assert(leftPoints != nullptr && rightPoints != nullptr && correspondences >= 2);
 
 	// determine       [a  -b  t_x]
 	//             S = [b   a  t_y] in equation: rightPoint = S * leftPoint
@@ -1066,15 +1066,15 @@ bool Homography::similarityMatrix(const ImagePoint* leftPoints, const ImagePoint
 	const Scalar Y3 = (rySum - (lxSum * mtb1 / lx2ly2Sum) - (lySum * mtb0 / lx2ly2Sum)) / d;
 
 	// SquareMatrix3 is column based
-	similarity[8] = Scalar(1); // a33
-	similarity[5] = Scalar(0); // a32
-	similarity[2] = Scalar(0); // a31
-	similarity[7] = Y3 / d; // t_y
-	similarity[6] = Y2 / d; // t_x
-	similarity[1] = (mtb1 + (lySum * Y2 - lxSum * Y3) / d) / lx2ly2Sum; // p2
-	similarity[3] = -similarity[1];// -p2
-	similarity[4] = (mtb0 - (lxSum * Y2 + lySum * Y3) / d) / lx2ly2Sum; // p1
-	similarity[0] = similarity[4]; //p1
+	right_S_left[8] = Scalar(1); // a33
+	right_S_left[5] = Scalar(0); // a32
+	right_S_left[2] = Scalar(0); // a31
+	right_S_left[7] = Y3 / d; // t_y
+	right_S_left[6] = Y2 / d; // t_x
+	right_S_left[1] = (mtb1 + (lySum * Y2 - lxSum * Y3) / d) / lx2ly2Sum; // p2
+	right_S_left[3] = -right_S_left[1];// -p2
+	right_S_left[4] = (mtb0 - (lxSum * Y2 + lySum * Y3) / d) / lx2ly2Sum; // p1
+	right_S_left[0] = right_S_left[4]; //p1
 
 #ifdef OCEAN_USE_SLOWER_IMPLEMENTATION
 
@@ -1111,18 +1111,20 @@ bool Homography::similarityMatrix(const ImagePoint* leftPoints, const ImagePoint
 	// solve for x
 	StaticMatrix<Scalar, 4, 1> matrixA;
 	if (!mMatrix.solve<Matrix::MP_SYMMETRIC>(matrixMtb.data(), matrixA.data()))
+	{
 		return false;
+	}
 
 	// SquareMatrix3 is column based
-	similarity[0] = matrixA(0, 0);
-	similarity[1] = matrixA(1, 0);
-	similarity[2] = Scalar(0);
-	similarity[3] = -matrixA(1, 0);
-	similarity[4] = matrixA(0, 0);
-	similarity[5] = Scalar(0);
-	similarity[6] = matrixA(2, 0);
-	similarity[7] = matrixA(3, 0);
-	similarity[8] = Scalar(1);
+	right_S_left[0] = matrixA(0, 0);
+	right_S_left[1] = matrixA(1, 0);
+	right_S_left[2] = Scalar(0);
+	right_S_left[3] = -matrixA(1, 0);
+	right_S_left[4] = matrixA(0, 0);
+	right_S_left[5] = Scalar(0);
+	right_S_left[6] = matrixA(2, 0);
+	right_S_left[7] = matrixA(3, 0);
+	right_S_left[8] = Scalar(1);
 
 #endif// OCEAN_USE_SLOWER_IMPLEMENTATION
 
@@ -1157,22 +1159,24 @@ bool Homography::similarityMatrix(const ImagePoint* leftPoints, const ImagePoint
 	// A is [4 x 1]
 	Matrix aMatrix;
 	if (!(mMatrixTranspose * mMatrix).solve(mMatrixTranspose * bMatrix, aMatrix))
+	{
 		return false;
+	}
 
 	// SquareMatrix3 is column based
-	similarity[0] = aMatrix(0);
-	similarity[1] = aMatrix(1);
-	similarity[2] = Scalar(0);
-	similarity[3] = -aMatrix(1);
-	similarity[4] = aMatrix(0);
-	similarity[5] = Scalar(0);
-	similarity[6] = aMatrix(2);
-	similarity[7] = aMatrix(3);
-	similarity[8] = Scalar(1);
+	right_S_left[0] = aMatrix(0);
+	right_S_left[1] = aMatrix(1);
+	right_S_left[2] = Scalar(0);
+	right_S_left[3] = -aMatrix(1);
+	right_S_left[4] = aMatrix(0);
+	right_S_left[5] = Scalar(0);
+	right_S_left[6] = aMatrix(2);
+	right_S_left[7] = aMatrix(3);
+	right_S_left[8] = Scalar(1);
 
 #endif
 
-	return similarity.isSingular() == false;
+	return !right_S_left.isSingular();
 }
 
 bool Homography::homotheticMatrix(const ImagePoint* leftPoints, const ImagePoint* rightPoints, const size_t correspondences, SquareMatrix3& right_H_left)
