@@ -55,7 +55,7 @@ bool TestP3P::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testP3PWithPointsAnyCamera(testDuration) && allSucceeded;
+	allSucceeded = testP3PWithPoints(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -64,6 +64,14 @@ bool TestP3P::test(const double testDuration)
 	allSucceeded = testP3PWithRays<float>(testDuration) && allSucceeded;
 	Log::info() << " ";
 	allSucceeded = testP3PWithRays<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testP3PWithPointsStressTest<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testP3PWithPointsStressTest<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -99,9 +107,9 @@ TEST(TestP3P, P3PWithPointsFisheyeCamera)
 	EXPECT_TRUE(TestP3P::testP3PWithPointsFisheyeCamera(GTEST_TEST_DURATION));
 }
 
-TEST(TestP3P, P3PWithPointsAnyCamera)
+TEST(TestP3P, P3PWithPoints)
 {
-	EXPECT_TRUE(TestP3P::testP3PWithPointsAnyCamera(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestP3P::testP3PWithPoints(GTEST_TEST_DURATION));
 }
 
 
@@ -113,6 +121,17 @@ TEST(TestP3P, P3PWithRays_float)
 TEST(TestP3P, P3PWithRays_double)
 {
 	EXPECT_TRUE(TestP3P::testP3PWithRays<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestP3P, P3PWithPointsStressTest_float)
+{
+	EXPECT_TRUE(TestP3P::testP3PWithPointsStressTest<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestP3P, P3PWithPointsStressTest_double)
+{
+	EXPECT_TRUE(TestP3P::testP3PWithPointsStressTest<double>(GTEST_TEST_DURATION));
 }
 
 
@@ -419,11 +438,11 @@ bool TestP3P::testP3PWithPointsFisheyeCamera(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestP3P::testP3PWithPointsAnyCamera(const double testDuration)
+bool TestP3P::testP3PWithPoints(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing P3P for 2D image points and AnyCamera:";
+	Log::info() << "Testing P3P for 2D image points:";
 	Log::info() << " ";
 
 	bool allSucceeded = true;
@@ -746,6 +765,66 @@ bool TestP3P::testP3PWithRays(const double testDuration)
 }
 
 template <typename T>
+bool TestP3P::testP3PWithPointsStressTest(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Stress testing P3P for 3D points for '" << TypeNamer::name<T>() << "':";
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		// we create arbitrary 3D object points within the bounding box [-10000, 10000]
+		const VectorT3<T> objectPoints[3] =
+		{
+			randomVector<T>(randomGenerator),
+			randomVector<T>(randomGenerator),
+			randomVector<T>(randomGenerator)
+		};
+
+		for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
+		{
+			const SharedAnyCameraT<T> camera = Utilities::realisticAnyCamera<T>(anyCameraType, RandomI::random(randomGenerator, 1u));
+
+			const VectorT2<T> imagePoints[3] =
+			{
+				RandomT<T>::vector2(randomGenerator, T(0), T(camera->width()), T(0), T(camera->height())),
+				RandomT<T>::vector2(randomGenerator, T(0), T(camera->width()), T(0), T(camera->height())),
+				RandomT<T>::vector2(randomGenerator, T(0), T(camera->width()), T(0), T(camera->height()))
+			};
+
+			// we do not evaluate the resulting poses, we just want to ensure that the function does not crash
+
+			HomogenousMatrixT4<T> world_T_cameras[4];
+			const unsigned int numberPoses = Geometry::P3P::poses<T>(*camera, objectPoints, imagePoints, world_T_cameras);
+
+			for (unsigned int n = 0u; n < numberPoses; ++n)
+			{
+				const HomogenousMatrixT4<T> flippedCamera_T_world(AnyCameraT<T>::standard2InvertedFlipped(world_T_cameras[n]));
+
+				for (unsigned int o = 0u; o < 3u; ++o)
+				{
+					if (!AnyCameraT<T>::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[o]))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+				}
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
 bool TestP3P::testP3PWithRaysStressTest(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
@@ -754,11 +833,10 @@ bool TestP3P::testP3PWithRaysStressTest(const double testDuration)
 
 	RandomGenerator randomGenerator;
 
-	HomogenousMatrixT4<T> poses[4];
-
-	unsigned long long dummyValue = 0u;
+	uint64_t dummyValue = 0ull;
 
 	const Timestamp startTimestamp(true);
+
 	do
 	{
 		// we create arbitrary 3D object points within the bounding box [-10000, 10000]
@@ -790,12 +868,13 @@ bool TestP3P::testP3PWithRaysStressTest(const double testDuration)
 
 		// we do not evaluate the resulting poses, we just want to ensure that the function does not crash
 
-		const unsigned int numberPoses = Geometry::P3P::poses<T>(objectPoints, rays, poses);
+		HomogenousMatrixT4<T> world_T_cameras[4];
+		const unsigned int numberPoses = Geometry::P3P::poses<T>(objectPoints, rays, world_T_cameras);
 		dummyValue += numberPoses;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (dummyValue % 2u == 0u)
+	if (dummyValue % 2ull == 0ull)
 	{
 		Log::info() << "Validation: succeeded.";
 	}
@@ -805,7 +884,20 @@ bool TestP3P::testP3PWithRaysStressTest(const double testDuration)
 	}
 
 	// we return True in any case
-	return (dummyValue % 2u == 0u) || (dummyValue % 2u == 1u);
+	return (dummyValue % 2ull == 0ull) || (dummyValue % 2ull == 1ull);
+}
+
+template <typename T>
+VectorT3<T> TestP3P::randomVector(RandomGenerator& randomGenerator)
+{
+	VectorT3<T> vector = RandomT<T>::vector3(randomGenerator, VectorT3<T>(1, 1, 1));
+
+	for (unsigned int n = 0u; n < 4u; ++n)
+	{
+		vector *= RandomT<T>::scalar(randomGenerator, -10, 10);
+	}
+
+	return vector;
 }
 
 }

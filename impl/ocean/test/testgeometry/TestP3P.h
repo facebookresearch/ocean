@@ -39,6 +39,8 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestP3P
 		static bool test(const double testDuration);
 
 		/**
+		 * Deprecated.
+		 *
 		 * Tests the perspective pose problem for three image points and a pinhole camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -46,6 +48,8 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestP3P
 		static bool testP3PWithPointsPinholeCamera(const double testDuration);
 
 		/**
+		 * Deprecated.
+		 *
 		 * Tests the perspective pose problem for three image points and a fisheye camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -57,7 +61,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestP3P
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testP3PWithPointsAnyCamera(const double testDuration);
+		static bool testP3PWithPoints(const double testDuration);
 
 		/**
 		 * Tests the perspective pose problem for three rays.
@@ -67,6 +71,16 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestP3P
 		 */
 		template <typename T>
 		static bool testP3PWithRays(const double testDuration);
+
+		/**
+		 * Tests whether the perspective pose problem for three points does not crash and whether basic requirements hold.
+		 * This test simply creates random data without any meaning and invokes the function to ensure that the function never crashes.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T The floating point data type to be used for testing
+		 */
+		template <typename T>
+		static bool testP3PWithPointsStressTest(const double testDuration);
 
 		/**
 		 * Tests whether the perspective pose problem for three rays does not crash.
@@ -87,17 +101,8 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestP3P
 		 * @tparam T The data type of each element
 		 */
 		template <typename T>
-		static inline VectorT3<T> randomVector(RandomGenerator& randomGenerator);
+		static VectorT3<T> randomVector(RandomGenerator& randomGenerator);
 };
-
-template <typename T>
-inline VectorT3<T> TestP3P::randomVector(RandomGenerator& randomGenerator)
-{
-	const VectorT3<T> vector(RandomT<T>::scalar(randomGenerator, -1, 1), RandomT<T>::scalar(randomGenerator, -1, 1), RandomT<T>::scalar(randomGenerator, -1, 1));
-	const T scale = RandomT<T>::scalar(randomGenerator, -10, 10) * RandomT<T>::scalar(randomGenerator, -10, 10) * RandomT<T>::scalar(randomGenerator, -10, 10) * RandomT<T>::scalar(randomGenerator, -10, 10);
-
-	return vector * scale;
-}
 
 }
 
