@@ -494,7 +494,11 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 		constexpr bool forceOwner = false;
 		constexpr bool forceWritable = true;
 
-		target.set(targetType, forceOwner, forceWritable);
+		if (!target.set(targetType, forceOwner, forceWritable))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		switch (functionType)
 		{
@@ -667,7 +671,11 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 			constexpr bool forceOwner = false;
 			constexpr bool forceWritable = true;
 
-			target.set(targetType, forceOwner, forceWritable);
+			if (!target.set(targetType, forceOwner, forceWritable))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			ocean_assert(source.numberPlanes() == 1u && target.numberPlanes() == 1u);
 

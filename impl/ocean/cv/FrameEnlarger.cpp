@@ -25,7 +25,11 @@ bool FrameEnlarger::Comfort::addBorder(const Frame& source, Frame& target, const
 
 		if (source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 		{
-			target.set(FrameType(source, source.width() + borderSizeLeft + borderSizeRight, source.height() + borderSizeTop + borderSizeBottom), targetForceOwner, targetForceWritable);
+			if (!target.set(FrameType(source, source.width() + borderSizeLeft + borderSizeRight, source.height() + borderSizeTop + borderSizeBottom), targetForceOwner, targetForceWritable))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			switch (source.channels())
 			{
@@ -49,7 +53,11 @@ bool FrameEnlarger::Comfort::addBorder(const Frame& source, Frame& target, const
 
 		else if (source.dataType() == FrameType::DT_SIGNED_FLOAT_32)
 		{
-			target.set(FrameType(source, source.width() + borderSizeLeft + borderSizeRight, source.height() + borderSizeTop + borderSizeBottom), targetForceOwner, targetForceWritable);
+			if (!target.set(FrameType(source, source.width() + borderSizeLeft + borderSizeRight, source.height() + borderSizeTop + borderSizeBottom), targetForceOwner, targetForceWritable))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			ocean_assert(FrameType::dataIsAligned<float>(color));
 
@@ -89,7 +97,11 @@ bool FrameEnlarger::Comfort::addBorderNearestPixel(const Frame& source, Frame& t
 
 		if (source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 		{
-			target.set(FrameType(source, source.width() + borderSizeLeft + borderSizeRight, source.height() + borderSizeTop + borderSizeBottom), targetForceOwner, targetForceWritable);
+			if (!target.set(FrameType(source, source.width() + borderSizeLeft + borderSizeRight, source.height() + borderSizeTop + borderSizeBottom), targetForceOwner, targetForceWritable))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			switch (source.channels())
 			{
@@ -113,7 +125,11 @@ bool FrameEnlarger::Comfort::addBorderNearestPixel(const Frame& source, Frame& t
 
 		else if (source.dataType() == FrameType::DT_SIGNED_FLOAT_32)
 		{
-			target.set(FrameType(source, source.width() + borderSizeLeft + borderSizeRight, source.height() + borderSizeTop + borderSizeBottom), targetForceOwner, targetForceWritable);
+			if (!target.set(FrameType(source, source.width() + borderSizeLeft + borderSizeRight, source.height() + borderSizeTop + borderSizeBottom), targetForceOwner, targetForceWritable))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			switch (source.channels())
 			{
@@ -157,7 +173,11 @@ bool FrameEnlarger::Comfort::addBorderMirrored(const Frame& source, Frame& targe
 
 		if (source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 		{
-			target.set(FrameType(source, source.width() + borderSizeLeft + borderSizeRight, source.height() + borderSizeTop + borderSizeBottom), targetForceOwner, targetForceWritable);
+			if (!target.set(FrameType(source, source.width() + borderSizeLeft + borderSizeRight, source.height() + borderSizeTop + borderSizeBottom), targetForceOwner, targetForceWritable))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			switch (source.channels())
 			{
@@ -181,7 +201,11 @@ bool FrameEnlarger::Comfort::addBorderMirrored(const Frame& source, Frame& targe
 
 		else if (source.dataType() == FrameType::DT_SIGNED_FLOAT_32)
 		{
-			target.set(FrameType(source, source.width() + borderSizeLeft + borderSizeRight, source.height() + borderSizeTop + borderSizeBottom), targetForceOwner, targetForceWritable);
+			if (!target.set(FrameType(source, source.width() + borderSizeLeft + borderSizeRight, source.height() + borderSizeTop + borderSizeBottom), targetForceOwner, targetForceWritable))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			switch (source.channels())
 			{
@@ -214,7 +238,11 @@ bool FrameEnlarger::Comfort::multiplyByTwo(const Frame& source, Frame& target, W
 
 	if (source.numberPlanes() == 1u && source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 	{
-		target.set(FrameType(source, source.width() * 2u, source.height() * 2u), true, true);
+		if (!target.set(FrameType(source, source.width() * 2u, source.height() * 2u), true, true))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		switch (source.channels())
 		{

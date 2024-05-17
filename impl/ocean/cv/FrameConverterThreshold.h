@@ -101,7 +101,11 @@ class OCEAN_CV_EXPORT FrameConverterThreshold : public FrameConverter
 		 *
 		 *     const uint8_t otsuThreshold = CV::FrameConverterThreshold::calculateOtsuThreshold(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), worker);
 		 *
-		 *     target.set(yFrame.frameType(), true, true);
+		 *     if (!target.set(yFrame.frameType(), true, true))
+		 *     {
+		 *         return false;
+		 *     }
+		 *
 		 *     CV::FrameConverterThreshold::convertY8ToB8(yFrame.constdata<uint8_t>(), target.data<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), target.paddingElements(), otsuThreshold, worker);
 		 *
 		 *     return true;

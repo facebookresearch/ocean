@@ -529,7 +529,13 @@ bool FTFont::initialize(const FT_Face& ftFace)
 						return false;
 					}
 
-					charactersFrame_.set(FrameType(framePositionX, maxCharacterHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+					if (!charactersFrame_.set(FrameType(framePositionX, maxCharacterHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/))
+					{
+						ocean_assert(false && "This should never happen!");
+
+						return false;
+					}
+
 					charactersFrame_.setValue(0x00);
 				}
 

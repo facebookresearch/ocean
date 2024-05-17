@@ -635,7 +635,12 @@ bool FrameEnlarger::Comfort::addTransparentBorder(const Frame& source, Frame& ta
 			targetPixelFormat = FrameType::formatAddAlphaChannel(source.pixelFormat());
 		}
 
-		target.set(FrameType(source.width() + leftBorder + rightBorder, source.height() + topBorder + bottomBorder, targetPixelFormat, source.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(FrameType(source.width() + leftBorder + rightBorder, source.height() + topBorder + bottomBorder, targetPixelFormat, source.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
+
 		ocean_assert(target && FrameType::formatHasAlphaChannel(target.pixelFormat()));
 
 		if (!target)

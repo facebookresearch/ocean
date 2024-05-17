@@ -47,7 +47,11 @@ bool FrameConverterColorMap::Comfort::convertFloat1ChannelToRGB24(const Frame& s
 			return false;
 		}
 
-		convertedSourceFrame.set(FrameType(source.frameType(), FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/);
+		if (!convertedSourceFrame.set(FrameType(source.frameType(), FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
+		{
+			return false;
+		}
+
 		FrameConverter::cast<double, float>(source.constdata<double>(), convertedSourceFrame.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), convertedSourceFrame.paddingElements());
 	}
 
@@ -56,7 +60,11 @@ bool FrameConverterColorMap::Comfort::convertFloat1ChannelToRGB24(const Frame& s
 
 	if (!target.isValid() || target.width() != source.width() || target.height() != source.height() || target.pixelFormat() != FrameType::FORMAT_RGB24)
 	{
-		target.set(FrameType(convertedSourceFrame, FrameType::FORMAT_RGB24), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(FrameType(convertedSourceFrame, FrameType::FORMAT_RGB24), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 	}
 
 	if (minValue == NumericF::maxValue() || maxValue == NumericF::minValue())
@@ -143,42 +151,74 @@ bool FrameConverterColorMap::Comfort::convertInteger1ChannelToRGB24(const Frame&
 
 	if (source.isPixelFormatCompatible(Frame::FORMAT_Y8))
 	{
-		convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/);
+		if (!convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
+		{
+			return false;
+		}
+
 		FrameConverter::cast<uint8_t, float>(source.constdata<uint8_t>(), convertedSourceFrame.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), convertedSourceFrame.paddingElements());
 	}
 	else if (source.isPixelFormatCompatible(Frame::genericPixelFormat<int8_t, 1u>()))
 	{
-		convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/);
+		if (!convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
+		{
+			return false;
+		}
+
 		FrameConverter::cast<int8_t, float>(source.constdata<int8_t>(), convertedSourceFrame.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), convertedSourceFrame.paddingElements());
 	}
 	else if (source.isPixelFormatCompatible(Frame::FORMAT_Y16))
 	{
-		convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/);
+		if (!convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
+		{
+			return false;
+		}
+
 		FrameConverter::cast<uint16_t, float>(source.constdata<uint16_t>(), convertedSourceFrame.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), convertedSourceFrame.paddingElements());
 	}
 	else if (source.isPixelFormatCompatible(Frame::genericPixelFormat<int16_t, 1u>()))
 	{
-		convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/);
+		if (!convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
+		{
+			return false;
+		}
+
 		FrameConverter::cast<int16_t, float>(source.constdata<int16_t>(), convertedSourceFrame.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), convertedSourceFrame.paddingElements());
 	}
 	else if (source.isPixelFormatCompatible(Frame::FORMAT_Y32))
 	{
-		convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/);
+		if (!convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
+		{
+			return false;
+		}
+
 		FrameConverter::cast<uint32_t, float>(source.constdata<uint32_t>(), convertedSourceFrame.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), convertedSourceFrame.paddingElements());
 	}
 	else if (source.isPixelFormatCompatible(Frame::genericPixelFormat<int32_t, 1u>()))
 	{
-		convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/);
+		if (!convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
+		{
+			return false;
+		}
+
 		FrameConverter::cast<int32_t, float>(source.constdata<int32_t>(), convertedSourceFrame.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), convertedSourceFrame.paddingElements());
 	}
 	else if (source.isPixelFormatCompatible(Frame::FORMAT_Y64))
 	{
-		convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/);
+		if (!convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
+		{
+			return false;
+		}
+
 		FrameConverter::cast<uint64_t, float>(source.constdata<uint64_t>(), convertedSourceFrame.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), convertedSourceFrame.paddingElements());
 	}
 	else if (source.isPixelFormatCompatible(Frame::genericPixelFormat<int64_t, 1u>()))
 	{
-		convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/);
+		if (!convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
+		{
+			return false;
+		}
+
 		FrameConverter::cast<int64_t, float>(source.constdata<int64_t>(), convertedSourceFrame.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), convertedSourceFrame.paddingElements());
 	}
 

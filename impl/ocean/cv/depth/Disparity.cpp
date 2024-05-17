@@ -67,7 +67,11 @@ bool Disparity::mergeDisparityMaps(const Frames& disparityMaps, const double inl
 		return false;
 	}
 
-	mergedDisparityMap.set(disparityMaps[0], false /*forceOwner*/, true /*forceWritable*/);
+	if (!mergedDisparityMap.set(disparityMaps[0], false /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
 	switch (mergedDisparityMap.dataType())
 	{

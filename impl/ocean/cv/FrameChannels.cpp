@@ -51,7 +51,11 @@ bool FrameChannels::Comfort::separateTo1Channel(const Frame& sourceFrame, Frames
 		{
 			if (!FrameType::arePixelFormatsCompatible(targetFrames[n].pixelFormat(), individualFrameType.pixelFormat()) || targetFrames[n].pixelOrigin() != individualFrameType.pixelOrigin())
 			{
-				targetFrames[n].set(individualFrameType, false /*forceOwner*/, true /*forceWritable*/);
+				if (!targetFrames[n].set(individualFrameType, false /*forceOwner*/, true /*forceWritable*/))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
 			}
 		}
 		else
@@ -235,7 +239,11 @@ bool FrameChannels::Comfort::zipChannels(const std::initializer_list<Frame>& sou
 		pixelFormatToUse = targetPixelFormat;
 	}
 
-	targetFrame.set(FrameType(sourceFrameType, pixelFormatToUse), false /*forceOwner*/, true /*forceWritable*/);
+	if (!targetFrame.set(FrameType(sourceFrameType, pixelFormatToUse), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
 	switch (dataType)
 	{
@@ -326,7 +334,11 @@ bool FrameChannels::Comfort::zipChannels(const Frames& sourceFrames, Frame& targ
 		pixelFormatToUse = targetPixelFormat;
 	}
 
-	targetFrame.set(FrameType(sourceFrameType, pixelFormatToUse), false /*forceOwner*/, true /*forceWritable*/);
+	if (!targetFrame.set(FrameType(sourceFrameType, pixelFormatToUse), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
 	switch (dataType)
 	{
@@ -405,7 +417,11 @@ bool FrameChannels::Comfort::premultipliedAlphaToStraightAlpha(const Frame& sour
 		case FrameType::FORMAT_ABGR32:
 		case FrameType::FORMAT_ARGB32:
 		{
-			target.set(source.frameType(), false, true);
+			if (!target.set(source.frameType(), false, true))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			FrameChannels::premultipliedAlphaToStraightAlpha8BitPerChannel<4u, 0u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
 			return true;
@@ -415,7 +431,11 @@ bool FrameChannels::Comfort::premultipliedAlphaToStraightAlpha(const Frame& sour
 		case FrameType::FORMAT_BGRA32:
 		case FrameType::FORMAT_YUVA32:
 		{
-			target.set(source.frameType(), false, true);
+			if (!target.set(source.frameType(), false, true))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			FrameChannels::premultipliedAlphaToStraightAlpha8BitPerChannel<4u, 3u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
 			return true;
@@ -423,7 +443,11 @@ bool FrameChannels::Comfort::premultipliedAlphaToStraightAlpha(const Frame& sour
 
 		case FrameType::FORMAT_YA16:
 		{
-			target.set(source.frameType(), false, true);
+			if (!target.set(source.frameType(), false, true))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			FrameChannels::premultipliedAlphaToStraightAlpha8BitPerChannel<2u, 1u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
 			return true;
@@ -481,7 +505,11 @@ bool FrameChannels::Comfort::straightAlphaToPremultipliedAlpha(const Frame& sour
 		case FrameType::FORMAT_ABGR32:
 		case FrameType::FORMAT_ARGB32:
 		{
-			target.set(source.frameType(), false, true);
+			if (!target.set(source.frameType(), false, true))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			FrameChannels::straightAlphaToPremultipliedAlpha8BitPerChannel<4u, 0u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
 			return true;
@@ -491,7 +519,11 @@ bool FrameChannels::Comfort::straightAlphaToPremultipliedAlpha(const Frame& sour
 		case FrameType::FORMAT_BGRA32:
 		case FrameType::FORMAT_YUVA32:
 		{
-			target.set(source.frameType(), false, true);
+			if (!target.set(source.frameType(), false, true))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			FrameChannels::straightAlphaToPremultipliedAlpha8BitPerChannel<4u, 3u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
 			return true;
@@ -499,7 +531,11 @@ bool FrameChannels::Comfort::straightAlphaToPremultipliedAlpha(const Frame& sour
 
 		case FrameType::FORMAT_YA16:
 		{
-			target.set(source.frameType(), false, true);
+			if (!target.set(source.frameType(), false, true))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			FrameChannels::straightAlphaToPremultipliedAlpha8BitPerChannel<2u, 1u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
 			return true;

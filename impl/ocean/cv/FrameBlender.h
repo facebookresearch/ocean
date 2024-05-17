@@ -604,7 +604,11 @@ bool FrameBlender::blend(const Frame& sourceWithAlpha, Frame& target, Worker* wo
 template <bool tTransparentIs0xFF, FrameBlender::AlphaTargetModulation tAlphaTargetModulation>
 bool FrameBlender::blend(const Frame& sourceWithAlpha, Frame& result, const uint8_t* backgroundColor, Worker* worker)
 {
-	result.set(FrameType(sourceWithAlpha, FrameType::formatRemoveAlphaChannel(sourceWithAlpha.pixelFormat())), false /*forceOwner*/, true /*forceWritable*/);
+	if (!result.set(FrameType(sourceWithAlpha, FrameType::formatRemoveAlphaChannel(sourceWithAlpha.pixelFormat())), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
+
 	result.setValue<uint8_t>(backgroundColor, result.channels(), 0u);
 
 	return blend<tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha, result, worker);

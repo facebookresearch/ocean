@@ -33,14 +33,22 @@ bool FrameFilterGaussian::filter(const Frame& source, Frame& target, const unsig
 
 	if (source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 	{
-		target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		return filter<uint8_t, uint32_t>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.channels(), source.paddingElements(), target.paddingElements(), filterSize, filterSize, -1.0f, worker, reusableMemory, Processor::get().instructions());
 	}
 
 	if (source.dataType() == FrameType::DT_SIGNED_FLOAT_32)
 	{
-		target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		return filter<float, float>(source.constdata<float>(), target.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), target.paddingElements(), filterSize, filterSize, -1.0f, worker, reusableMemory, Processor::get().instructions());
 	}
