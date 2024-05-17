@@ -14,6 +14,8 @@
 
 #include "ocean/cv/detector/FeatureDetector.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -67,9 +69,9 @@ bool TestFeatureDetector::testDetermineHarrisPoints(const Frame& testFrame, cons
 
 	Log::info() << "Harris corner detection test:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	Timestamp start(true);
 
@@ -83,8 +85,8 @@ bool TestFeatureDetector::testDetermineHarrisPoints(const Frame& testFrame, cons
 		if (testFrame.isValid())
 		{
 			yFrame.set(FrameType(testFrame.frameType(), FrameType::FORMAT_Y8), true, true, Indices32(1, paddingElements));
-
 			CV::FrameConverter::Comfort::convert(testFrame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_ALWAYS_COPY, useWorker);
+
 			ocean_assert(yFrame.paddingElements() == paddingElements);
 		}
 		else
@@ -92,15 +94,20 @@ bool TestFeatureDetector::testDetermineHarrisPoints(const Frame& testFrame, cons
 			const unsigned int width = RandomI::random(randomGenerator, 20u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 20u, 1080u);
 
-			yFrame.set(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), true, true, Indices32(1, paddingElements));
-			CV::CVUtilities::randomizeFrame(yFrame, false, &randomGenerator);
+			yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+		}
+
+		if (!yFrame.isValid())
+		{
+			OCEAN_SET_FAILED(validation);
+			break;
 		}
 
 		CV::SubRegion subRegion;
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
-			if (RandomI::random(randomGenerator, 1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				const Scalar left = Random::scalar(randomGenerator, -10, 10);
 				const Scalar top = Random::scalar(randomGenerator, -10, 10);
@@ -123,7 +130,7 @@ bool TestFeatureDetector::testDetermineHarrisPoints(const Frame& testFrame, cons
 		unsigned int horizontalBins = 0u;
 		unsigned int verticalBins = 0u;
 
-		if (RandomI::random(randomGenerator, 1u) == 0u)
+		if (RandomI::boolean(randomGenerator))
 		{
 			horizontalBins = RandomI::random(randomGenerator, 1u, yFrame.width() / 3u);
 			verticalBins = RandomI::random(randomGenerator, 1u, yFrame.height() / 3u);
@@ -137,16 +144,9 @@ bool TestFeatureDetector::testDetermineHarrisPoints(const Frame& testFrame, cons
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }

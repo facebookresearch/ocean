@@ -16,6 +16,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+
 #include "ocean/tracking/point/SimilarityTracker.h"
 
 namespace Ocean
@@ -327,7 +329,8 @@ bool TestSimilarityTracker::testStressTest(const double testDuration, Worker& wo
 	// we simply ensure that the SimilarityTracker does not crash
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -336,8 +339,7 @@ bool TestSimilarityTracker::testStressTest(const double testDuration, Worker& wo
 		const unsigned int width = RandomI::random(randomGenerator, 40u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 40u, 1080u);
 
-		Frame initialFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
-		CV::CVUtilities::randomizeFrame(initialFrame);
+		Frame initialFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
 		const CV::PixelPosition initialSubRegionPoint0(RandomI::random(randomGenerator, width - 1u), RandomI::random(randomGenerator, height - 1u));
 		CV::PixelPosition initialSubRegionPoint1(RandomI::random(randomGenerator, width - 1u), RandomI::random(randomGenerator, height - 1u));
@@ -372,14 +374,21 @@ bool TestSimilarityTracker::testStressTest(const double testDuration, Worker& wo
 				randomSimilarity(0, 2) = randomTranslation.x();
 				randomSimilarity(0, 2) = randomTranslation.y();
 
-				frame.set(initialFrame.frameType(), true, true);
-				CV::FrameInterpolatorBilinear::Comfort::homography(initialFrame, frame, randomSimilarity);
+				if (!frame.set(initialFrame.frameType(), true, true))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (!CV::FrameInterpolatorBilinear::Comfort::homography(initialFrame, frame, randomSimilarity))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 			else
 			{
 				// we simply randomize the image again
 
-				CV::CVUtilities::randomizeFrame(initialFrame);
+				initialFrame = CV::CVUtilities::randomizedFrame(initialFrame.frameType(), &randomGenerator);
 
 				frame = Frame(initialFrame, Frame::ACM_USE_KEEP_LAYOUT);
 			}
@@ -444,22 +453,15 @@ bool TestSimilarityTracker::testStressTest(const double testDuration, Worker& wo
 			// dummy check to ensure that the similarity tracker is not stripped away
 			if (int(trackerConfidence) < 0 ||  int(regionTextureness) < 0)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
