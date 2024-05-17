@@ -445,7 +445,7 @@ unsigned int P3P::poses(const VectorT3<T>* objectPoints, const VectorT3<T>* imag
 		ocean_assert(NumericT<T>::isNotEqualEps(c));
 		ocean_assert(!foot0.isNull() && !foot1.isNull() && !foot2.isNull());
 
-		// we avoid to normalize the feets, we use the lengths we have already calculated
+		// we avoid to normalize the feet, we use the lengths we have already calculated
 
 		foot0 /= a;
 		foot1 /= b;
@@ -473,8 +473,8 @@ unsigned int P3P::poses(const VectorT3<T>* objectPoints, const VectorT3<T>* imag
 		}
 #endif
 
-		// now we have the CP and we have three feets with unit length
-		// we finally have to rotate the feets so that they match with the rays defined as function parameters
+		// now we have the CP and we have three feet with unit length
+		// we finally have to rotate the feet so that they match with the rays defined as function parameters
 
 		// thus, we seek for an orthonormal transformation T that holds for:
 		// feet0 = T * imageRays0
@@ -484,7 +484,7 @@ unsigned int P3P::poses(const VectorT3<T>* objectPoints, const VectorT3<T>* imag
 		// so that we get
 		// [foot0 | foot1 | foot2] = T * [imageRays0 | imageRays1 | imageRays2]
 
-		// therfore, we simply need to solve the equation for T:
+		// therefore, we simply need to solve the equation for T:
 
 		SquareMatrixT3<T> invImageRayMatrix;
 		if (!SquareMatrixT3<T>(imageRays[0], imageRays[1], imageRays[2]).invert(invImageRayMatrix))

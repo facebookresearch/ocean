@@ -166,6 +166,10 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 
 			const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(cameraPoses_world_T_camera[n]));
 
+			ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[index0]));
+			ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[index1]));
+			ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[index2]));
+
 			// now we test each 2D/3D point correspondences and check whether the accuracy of the pose is good enough, we can stop if we cannot reach a better configuration than we have already
 			for (unsigned int c = 0u; indices.size() + (correspondences - c) >= bestIndices.size() && c < correspondences; ++c)
 			{
@@ -194,7 +198,10 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 					internalPose_world_T_camera = cameraPoses_world_T_camera[n];
 					std::swap(bestIndices, indices);
 
-					const unsigned int expectedIterationsForFoundCorrespondences = RANSAC::iterations(3u, Scalar(0.99), Scalar(1) - Scalar(bestIndices.size()) / Scalar(correspondences));
+					constexpr Scalar successProbability = Scalar(0.99);
+					const Scalar faultyRate =  Scalar(1) - Scalar(bestIndices.size()) / Scalar(correspondences);
+
+					const unsigned int expectedIterationsForFoundCorrespondences = RANSAC::iterations(3u, successProbability, faultyRate);
 
 					adpativeIterations = minmax(minimalAdaptiveIterations, expectedIterationsForFoundCorrespondences, adpativeIterations);
 				}
@@ -2049,7 +2056,10 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 
 					const unsigned int correspondences = correspondencesA + correspondencesB;
 
-					adpativeIterations = minmax<unsigned int>(2u, RANSAC::iterations(3u, Scalar(0.99), Scalar(1) - Scalar(bestIndicesA.size() + bestIndicesB.size()) / Scalar(correspondences)), adpativeIterations);
+					constexpr Scalar successProbability = Scalar(0.99);
+					const Scalar faultyRate = Scalar(1) - Scalar(bestIndicesA.size() + bestIndicesB.size()) / Scalar(correspondences);
+
+					adpativeIterations = minmax<unsigned int>(2u, RANSAC::iterations(3u, successProbability, faultyRate), adpativeIterations);
 				}
 			}
 		}
@@ -2298,7 +2308,10 @@ bool RANSAC::p3p(const HomogenousMatrix4* initialPose, const PinholeCamera& pinh
 					internalPose = poses[n];
 					std::swap(bestIndices, indices);
 
-					const unsigned int expectedIterationsForFoundCorrespondences = RANSAC::iterations(3u, Scalar(0.99), Scalar(1) - Scalar(bestIndices.size()) / Scalar(correspondences));
+					constexpr Scalar successProbability = Scalar(0.99);
+					const Scalar faultyRate = Scalar(1) - Scalar(bestIndices.size()) / Scalar(correspondences);
+
+					const unsigned int expectedIterationsForFoundCorrespondences = RANSAC::iterations(3u, successProbability, faultyRate);
 
 					adpativeIterations = minmax(minimalAdaptiveIterations, expectedIterationsForFoundCorrespondences, adpativeIterations);
 				}

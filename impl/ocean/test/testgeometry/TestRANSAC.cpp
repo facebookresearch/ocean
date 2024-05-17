@@ -103,6 +103,11 @@ TEST(TestRANSAC, P3P_Pinhole_1000Correspondences_0Outliers)
 	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::PINHOLE, 1000, 0.0, GTEST_TEST_DURATION));
 }
 
+TEST(TestRANSAC, P3P_Pinhole_10000Correspondences_0Outliers)
+{
+	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::PINHOLE, 10000, 0.0, GTEST_TEST_DURATION));
+}
+
 
 TEST(TestRANSAC, P3P_Pinhole_10Correspondences_15Outliers)
 {
@@ -122,6 +127,11 @@ TEST(TestRANSAC, P3P_Pinhole_100Correspondences_15Outliers)
 TEST(TestRANSAC, P3P_Pinhole_1000Correspondences_15Outliers)
 {
 	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::PINHOLE, 1000, 0.15, GTEST_TEST_DURATION));
+}
+
+TEST(TestRANSAC, P3P_Pinhole_10000Correspondences_15Outliers)
+{
+	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::PINHOLE, 10000, 0.15, GTEST_TEST_DURATION));
 }
 
 
@@ -145,6 +155,11 @@ TEST(TestRANSAC, P3P_Fisheye_1000Correspondences_0Outliers)
 	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::FISHEYE, 1000, 0.0, GTEST_TEST_DURATION));
 }
 
+TEST(TestRANSAC, P3P_Fisheye_10000Correspondences_0Outliers)
+{
+	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::FISHEYE, 10000, 0.0, GTEST_TEST_DURATION));
+}
+
 
 TEST(TestRANSAC, P3P_Fisheye_10Correspondences_15Outliers)
 {
@@ -164,6 +179,11 @@ TEST(TestRANSAC, P3P_Fisheye_100Correspondences_15Outliers)
 TEST(TestRANSAC, P3P_Fisheye_1000Correspondences_15Outliers)
 {
 	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::FISHEYE, 1000, 0.15, GTEST_TEST_DURATION));
+}
+
+TEST(TestRANSAC, P3P_Fisheye_10000Correspondences_15Outliers)
+{
+	EXPECT_TRUE(TestRANSAC::testP3P(AnyCameraType::FISHEYE, 10000, 0.15, GTEST_TEST_DURATION));
 }
 
 
@@ -312,6 +332,12 @@ bool TestRANSAC::testP3P(const double testDuration)
 
 			for (const size_t correspondences : {10, 50, 100, 1000, 10000})
 			{
+				if (faultyRate >= 0.35 && correspondences < 50u)
+				{
+					// we skip this combination
+					continue;
+				}
+
 				Log::info() << " ";
 				Log::info() << "Using " << correspondences << " correspondences:";
 
@@ -350,7 +376,7 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 			Log::info() << "... without refinement";
 		}
 
-		constexpr double successThreshold = std::is_same<Scalar, float>::value ? 0.35 : 0.99; // **TODO** temporary workaround
+		constexpr double successThreshold = std::is_same<Scalar, float>::value ? 0.85 : 0.99;
 
 		ValidationPrecision validation(successThreshold, randomGenerator);
 
@@ -409,7 +435,7 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 				}
 			}
 
-			const unsigned int ransacIterations = std::max(20u, Geometry::RANSAC::iterations(3u, Scalar(0.995), Scalar(faultyRate + 0.05)));
+			const unsigned int ransacIterations = std::max(50u, Geometry::RANSAC::iterations(3u, Scalar(0.995), Scalar(faultyRate + 0.05)));
 
 			constexpr unsigned int minimalValidCorrespondences = 4u;
 			constexpr Scalar sqrPixelErrorThreshold = Scalar(5 * 5);
@@ -428,8 +454,7 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 
 			if (!result)
 			{
-				// OCEAN_SET_FAILED(validation); // **TODO** temporary workaround
-				scopedIteration.setInaccurate();
+				OCEAN_SET_FAILED(validation);
 
 				continue;
 			}

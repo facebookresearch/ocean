@@ -103,7 +103,6 @@ class OCEAN_GEOMETRY_EXPORT P3P : public PerspectivePose
 		 * Each pose is defined using a default camera pointing into the negative z-space of the coordinate system, with x-axis to the right of the camera frame and y-axis pointing upwards.<br>
 		 * The resulting poses can be transformed to an inverted flipped coordinate system e.g., by using PinholeCamera::standard2InvertedFlipped().<br>
 		 * The p3p can result in at most four different poses due to the under-determined system of equations.<br>
-		 * The image rays should be based on undistorted image points to improve the pose quality.
 		 * @param objectPoints Three 3D objects points each corresponding to a different 2D image point, the points must not be collinear
 		 * @param imageRays Three 3D rays with unit length, defined in the coordinate system of the camera, starting at the camera's center of projection (equal to the origin), hitting the image plane at image points corresponding to the 3D object points and pointing towards the object points, each ray corresponds to one 3D object point
 		 * @param cameraPoses The resulting transformation matrices receiving the different poses, the buffer must be large enough to store up to four resulting poses
