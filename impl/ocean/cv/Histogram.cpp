@@ -53,20 +53,48 @@ bool Histogram::equalization(const Frame& source, Frame& target, const Scalar fa
 		switch (target.channels())
 		{
 			case 1u:
-				target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+			{
+				if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				return equalization<1u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), factor, source.paddingElements(), target.paddingElements(), worker);
+			}
 
 			case 2u:
-				target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+			{
+				if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				return equalization<2u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), factor, source.paddingElements(), target.paddingElements(), worker);
+			}
 
 			case 3u:
-				target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+			{
+				if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				return equalization<3u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), factor, source.paddingElements(), target.paddingElements(), worker);
+			}
 
 			case 4u:
-				target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+			{
+				if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				return equalization<4u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), factor, source.paddingElements(), target.paddingElements(), worker);
+			}
 		}
 	}
 
@@ -157,25 +185,45 @@ bool Histogram::adjustColorToReference(const Frame& source, Frame& target, const
 		{
 			case 1u:
 			{
-				target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+				if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				return adjustColorToReference<1u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), reference.constdata<uint8_t>(), reference.width(), reference.height(), source.paddingElements(), target.paddingElements(), reference.paddingElements(), worker);
 			}
 
 			case 2u:
 			{
-				target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+				if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				return adjustColorToReference<2u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), reference.constdata<uint8_t>(), reference.width(), reference.height(), source.paddingElements(), target.paddingElements(), reference.paddingElements(), worker);
 			}
 
 			case 3u:
 			{
-				target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+				if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				return adjustColorToReference<3u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), reference.constdata<uint8_t>(), reference.width(), reference.height(), source.paddingElements(), target.paddingElements(), reference.paddingElements(), worker);
 			}
 
 			case 4u:
 			{
-				target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+				if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				return adjustColorToReference<4u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), reference.constdata<uint8_t>(), reference.width(), reference.height(), source.paddingElements(), target.paddingElements(), reference.paddingElements(), worker);
 			}
 		}

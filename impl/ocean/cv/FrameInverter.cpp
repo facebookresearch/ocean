@@ -21,7 +21,11 @@ bool FrameInverter::invert(const Frame& source, Frame& target, Worker* worker)
 
 	if (source.numberPlanes() == 1u && source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 	{
-		target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		invert8BitPerChannel(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.channels(), source.paddingElements(), target.paddingElements(), worker);
 

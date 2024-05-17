@@ -25,54 +25,134 @@ bool FrameNormalizer::normalizeToUint8(const Frame& source, Frame& target, Worke
 		switch (source.dataType())
 		{
 			case FrameType::dataType<uint8_t>():
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalize1ChannelToUint8<uint8_t>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::dataType<int8_t>():
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalize1ChannelToUint8<int8_t>(source.constdata<int8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::dataType<uint16_t>():
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalize1ChannelToUint8<uint16_t>(source.constdata<uint16_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::dataType<int16_t>():
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalize1ChannelToUint8<int16_t>(source.constdata<int16_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::dataType<uint32_t>():
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalize1ChannelToUint8<uint32_t>(source.constdata<uint32_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::dataType<int32_t>():
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalize1ChannelToUint8<int32_t>(source.constdata<int32_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::dataType<uint64_t>():
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalize1ChannelToUint8<uint64_t>(source.constdata<uint64_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::dataType<int64_t>():
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalize1ChannelToUint8<int64_t>(source.constdata<int64_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::dataType<float>():
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalize1ChannelToUint8<float>(source.constdata<float>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::dataType<double>():
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalize1ChannelToUint8<double>(source.constdata<double>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			default:
 				break;
@@ -93,7 +173,11 @@ bool FrameNormalizer::normalizeToFloat32(const Frame& source, Frame& target, con
 	ocean_assert(source.isValid() && source.numberPlanes() == 1u);
 	ocean_assert((bias == nullptr && scale == nullptr) || (bias != nullptr && scale != nullptr));
 
-	target.set(FrameType(source, FrameType::genericPixelFormat(FrameType::DT_SIGNED_FLOAT_32, source.channels())), /* targetForceOwner */ false, /* targetForceWritable */ true);
+	if (!target.set(FrameType(source, FrameType::genericPixelFormat(FrameType::DT_SIGNED_FLOAT_32, source.channels())), /* targetForceOwner */ false, /* targetForceWritable */ true))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
 	switch (source.dataType())
 	{
@@ -154,34 +238,82 @@ bool FrameNormalizer::normalizeLogarithmToUint8(const Frame& source, Frame& targ
 		switch (source.dataType())
 		{
 			case FrameType::DT_UNSIGNED_INTEGER_8:
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalizeLogarithm1ChannelToUint8<uint8_t>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), scalar, source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::DT_UNSIGNED_INTEGER_16:
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalizeLogarithm1ChannelToUint8<uint16_t>(source.constdata<uint16_t>(), target.data<uint8_t>(), source.width(), source.height(), scalar, source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::DT_UNSIGNED_INTEGER_32:
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalizeLogarithm1ChannelToUint8<uint32_t>(source.constdata<uint32_t>(), target.data<uint8_t>(), source.width(), source.height(), scalar, source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::DT_UNSIGNED_INTEGER_64:
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalizeLogarithm1ChannelToUint8<uint64_t>(source.constdata<uint64_t>(), target.data<uint8_t>(), source.width(), source.height(), scalar, source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::DT_SIGNED_FLOAT_32:
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalizeLogarithm1ChannelToUint8<float>(source.constdata<float>(), target.data<uint8_t>(), source.width(), source.height(), scalar, source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::DT_SIGNED_FLOAT_64:
-				target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_Y8), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalizeLogarithm1ChannelToUint8<double>(source.constdata<double>(), target.data<uint8_t>(), source.width(), source.height(), scalar, source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			default:
 				break;
@@ -210,34 +342,82 @@ bool FrameNormalizer::normalizeLogarithmToFloat32(const Frame& source, Frame& ta
 		switch (source.dataType())
 		{
 			case FrameType::DT_UNSIGNED_INTEGER_8:
-				target.set(FrameType(source, FrameType::FORMAT_F32), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_F32), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalizeLogarithm1ChannelToFloat<uint8_t, float>(source.constdata<uint8_t>(), target.data<float>(), source.width(), source.height(), scalar, source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::DT_UNSIGNED_INTEGER_16:
-				target.set(FrameType(source, FrameType::FORMAT_F32), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_F32), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalizeLogarithm1ChannelToFloat<uint16_t, float>(source.constdata<uint16_t>(), target.data<float>(), source.width(), source.height(), scalar, source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::DT_UNSIGNED_INTEGER_32:
-				target.set(FrameType(source, FrameType::FORMAT_F32), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_F32), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalizeLogarithm1ChannelToFloat<uint32_t, float>(source.constdata<uint32_t>(), target.data<float>(), source.width(), source.height(), scalar, source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::DT_UNSIGNED_INTEGER_64:
-				target.set(FrameType(source, FrameType::FORMAT_F32), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_F32), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalizeLogarithm1ChannelToFloat<uint64_t, float>(source.constdata<uint64_t>(), target.data<float>(), source.width(), source.height(), scalar, source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::DT_SIGNED_FLOAT_32:
-				target.set(FrameType(source, FrameType::FORMAT_F32), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_F32), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalizeLogarithm1ChannelToFloat<float, float>(source.constdata<float>(), target.data<float>(), source.width(), source.height(), scalar, source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			case FrameType::DT_SIGNED_FLOAT_64:
-				target.set(FrameType(source, FrameType::FORMAT_F32), targetForceOwner, targetForceWritable);
+			{
+				if (!target.set(FrameType(source, FrameType::FORMAT_F32), targetForceOwner, targetForceWritable))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+
 				normalizeLogarithm1ChannelToFloat<double, float>(source.constdata<double>(), target.data<float>(), source.width(), source.height(), scalar, source.paddingElements(), target.paddingElements(), worker);
+
 				return true;
+			}
 
 			default:
 				break;

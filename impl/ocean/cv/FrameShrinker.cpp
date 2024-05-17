@@ -32,7 +32,11 @@ bool FrameShrinker::downsampleByTwo11(const Frame& source, Frame& target, Worker
 
 		if (targetWidth % widthMultiple == 0u || targetHeight % heightMultiple == 0u)
 		{
-			target.set(FrameType(source, targetWidth, targetHeight), false /*forceOwner*/, true /*forceWritable*/);
+			if (!target.set(FrameType(source, targetWidth, targetHeight), false /*forceOwner*/, true /*forceWritable*/))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			for (unsigned int planeIndex = 0u; planeIndex < source.numberPlanes(); ++planeIndex)
 			{
@@ -62,7 +66,11 @@ bool FrameShrinker::downsampleBinayMaskByTwo11(const Frame& source, Frame& targe
 		{
 			case 1u:
 			{
-				target.set(FrameType(source, width_2, height_2), false /*forceOwner*/, true /*forceWritable*/);
+				if (!target.set(FrameType(source, width_2, height_2), false /*forceOwner*/, true /*forceWritable*/))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
 
 				downsampleBinayMaskByTwo8BitPerChannel11(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), threshold, worker);
 				return true;
@@ -104,7 +112,11 @@ bool FrameShrinker::downsampleByTwo14641(const Frame& source, Frame& target, Wor
 
 		if (targetWidth % widthMultiple == 0u || targetHeight % heightMultiple == 0u)
 		{
-			target.set(FrameType(targetWidth, targetHeight, source.pixelFormat(), source.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/);
+			if (!target.set(FrameType(targetWidth, targetHeight, source.pixelFormat(), source.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			for (unsigned int planeIndex = 0u; planeIndex < source.numberPlanes(); ++planeIndex)
 			{

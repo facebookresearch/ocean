@@ -23,7 +23,11 @@ bool FrameShrinkerAlpha::Comfort::divideByTwo(const Frame& source, Frame& target
 		const unsigned int width_2 = source.width() / 2u;
 		const unsigned int height_2 = source.height() / 2u;
 
-		target.set(FrameType(source, width_2, height_2), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(FrameType(source, width_2, height_2), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		switch (source.channels())
 		{

@@ -84,7 +84,12 @@ void Constraints::initializeDecisions(const uint8_t* mask, const unsigned int wi
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(constraints_.size() < 250);
 
-	decisionFrame_.set(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+	if (!decisionFrame_.set(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return;
+	}
+
 	decisionFrame_.setValue(0xFFu);
 
 	const unsigned int maskStrideElements = width + maskPaddingElements;

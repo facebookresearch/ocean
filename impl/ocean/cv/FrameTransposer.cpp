@@ -37,7 +37,11 @@ bool FrameTransposer::Comfort::rotate90(const Frame& input, Frame& output, const
 		return false;
 	}
 
-	output.set(FrameType(input, input.height(), input.width()), false /*forceOwner*/, true /*forceWritable*/);
+	if (!output.set(FrameType(input, input.height(), input.width()), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
 	const bool adjustedClockwise = input.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT ? clockwise : !clockwise;
 
@@ -206,7 +210,11 @@ bool FrameTransposer::Comfort::rotate180(const Frame& input, Frame& output, Work
 		return false;
 	}
 
-	output.set(input.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+	if (!output.set(input.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
 	switch (input.dataType())
 	{
@@ -380,8 +388,15 @@ bool FrameTransposer::Comfort::rotate(const Frame& input, Frame& output, const i
 	switch (adjustedAngle)
 	{
 		case 0:
-			output.set(input.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+		{
+			if (!output.set(input.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
+
 			return output.copy(0, 0, input);
+		}
 
 		case 90:
 			return rotate90(input, output, true /*clockwise*/, worker);
@@ -415,7 +430,11 @@ bool FrameTransposer::transpose(const Frame& source, Frame& target, Worker* work
 		case FrameType::DT_SIGNED_INTEGER_8:
 		case FrameType::DT_UNSIGNED_INTEGER_8:
 		{
-			target.set(FrameType(source, source.height(), source.width()), false /*forceOwner*/, true /*forceWritable*/);
+			if (!target.set(FrameType(source, source.height(), source.width()), false /*forceOwner*/, true /*forceWritable*/))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			switch (source.channels())
 			{
@@ -440,7 +459,11 @@ bool FrameTransposer::transpose(const Frame& source, Frame& target, Worker* work
 		case FrameType::DT_SIGNED_INTEGER_16:
 		case FrameType::DT_UNSIGNED_INTEGER_16:
 		{
-			target.set(FrameType(source, source.height(), source.width()), false /*forceOwner*/, true /*forceWritable*/);
+			if (!target.set(FrameType(source, source.height(), source.width()), false /*forceOwner*/, true /*forceWritable*/))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			switch (source.channels())
 			{
@@ -466,7 +489,11 @@ bool FrameTransposer::transpose(const Frame& source, Frame& target, Worker* work
 		case FrameType::DT_SIGNED_INTEGER_32:
 		case FrameType::DT_UNSIGNED_INTEGER_32:
 		{
-			target.set(FrameType(source, source.height(), source.width()), false /*forceOwner*/, true /*forceWritable*/);
+			if (!target.set(FrameType(source, source.height(), source.width()), false /*forceOwner*/, true /*forceWritable*/))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			switch (source.channels())
 			{
