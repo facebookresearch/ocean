@@ -13,8 +13,6 @@
 #include "ocean/math/Rotation.h"
 #include "ocean/math/SquareMatrix3.h"
 
-#include <vector>
-
 namespace Ocean
 {
 
@@ -72,8 +70,8 @@ typedef std::vector<Euler> Eulers;
  * The pitch angle is defined about the positive x-axis with range [-Pi/2, Pi/2].<br>
  * The roll angle is defined about the positive z-axis with range [-Pi, Pi].<br>
  * The entire rotation can be written as matrix product: Ry(yaw) * Rx(pitch) * Rz(roll).<br>
- * All angles are defined in radian.<br>
- * @tparam T Data type of angle values
+ * All angles are defined in radian.
+ * @tparam T Data type of angle values_
  * @see Euler, EulerF, EulerD, Rotation, Quaternion, SquareMatrix3, ExponentialMap.
  * @ingroup math
  */
@@ -96,21 +94,21 @@ class EulerT
 
 		/**
 		 * Creates a new euler rotation by given angles.
-		 * @param yaw Yaw angle with range [-Pi, Pi]
-		 * @param pitch Pitch angle with range [-Pi/2, Pi/2]
-		 * @param roll Roll angle with range [-Pi, Pi]
+		 * @param yaw The yaw angle with range [-Pi, Pi]
+		 * @param pitch The pitch angle with range [-Pi/2, Pi/2]
+		 * @param roll The roll angle with range [-Pi, Pi]
 		 */
 		EulerT(const T yaw, const T pitch, const T roll);
 
 		/**
 		 * Creates a new euler rotation by an array of angles.
-		 * @param arrayValue Array with three angles, with order yaw, ptich, roll, must be valid
+		 * @param arrayValue Array with three angles, with order yaw, pitch, roll, must be valid
 		 */
 		explicit EulerT(const T* arrayValue);
 
 		/**
-		 * Creates a new euler rotation by a given homogenous transformation.
-		 * @param transformation Homogenous transformation to create a euler rotation from
+		 * Creates a new euler rotation by a given homogeneous transformation.
+		 * @param transformation The homogeneous transformation to create a euler rotation from
 		 */
 		explicit EulerT(const HomogenousMatrixT4<T>& transformation);
 
@@ -122,13 +120,13 @@ class EulerT
 
 		/**
 		 * Creates a new euler rotation by a given quaternion rotation.
-		 * @param quaternion Quaternion rotation to create a euler rotation from
+		 * @param quaternion The quaternion rotation to create a euler rotation from
 		 */
 		explicit EulerT(const QuaternionT<T>& quaternion);
 
 		/**
 		 * Creates a new euler rotation by a given 3x3 matrix rotation.
-		 * @param matrix Matrix rotation to create a euler rotation from
+		 * @param matrix The rotation matrix to create a euler rotation from
 		 */
 		explicit EulerT(const SquareMatrixT3<T>& matrix);
 
@@ -190,29 +188,29 @@ class EulerT
 
 		/**
 		 * Element access operator.
-		 * @param index Index of the element to access
-		 * @return Element of the vector
+		 * @param index The index of the element to access, with range [0, 2]
+		 * @return Element of the euler rotation
 		 */
 		inline const T& operator[](const unsigned int index) const;
 
 		/**
 		 * Element access operator.
-		 * @param index Index of the element to access
-		 * @return Element of the vector
+		 * @param index The index of the element to access, with range [0, 2]
+		 * @return Element of the euler rotation
 		 */
 		inline T& operator[](const unsigned int index);
 
 		/**
 		 * Element access operator.
-		 * @param index Index of the element to access
-		 * @return Element of the vector
+		 * @param index The index of the element to access, with range [0, 2]
+		 * @return Element of the euler rotation
 		 */
 		inline const T& operator()(const unsigned int index) const;
 
 		/**
 		 * Element access operator.
-		 * @param index Index of the element to access
-		 * @return Element of the vector
+		 * @param index The index of the element to access, with range [0, 2]
+		 * @return Element of the euler rotation
 		 */
 		inline T& operator()(const unsigned int index);
 
@@ -231,20 +229,20 @@ class EulerT
 		/**
 		 * Decomposes a 3x3 rotation matrix to the corresponding yaw, pitch and roll angles as defined by the euler class.
 		 * The provided rotation matrix can be recreated by the matrix product: Ry(yAngle) * Rx(xAngle) * Rz(zAngle).
-		 * @param matrix The 3x3 square matrix to decompose, must be an ortonormal rotation matrix
+		 * @param matrix The 3x3 square matrix to decompose, must be an orthonormal rotation matrix
 		 * @param yAngle The resulting (yaw) angle (rotation around the y-axis), with range [-PI, PI]
 		 * @param xAngle The resulting (pitch) angle (rotation around the x-axis), with range [-PI/2, PI/2]
-		 * @param zAngle The resulting (roll) angle (rotation around the z-axis), with rnage [-PI, PI]
+		 * @param zAngle The resulting (roll) angle (rotation around the z-axis), with range [-PI, PI]
 		 */
 		static void decomposeRotationMatrixToYXZ(const SquareMatrixT3<T>& matrix, T& yAngle, T& xAngle, T& zAngle);
 
 		/**
 		 * Decomposes a 3x3 rotation matrix to the corresponding x, y and z angles.
 		 * The provided rotation matrix can be recreated by the matrix product: Rx(xAngle) * Ry(yAngle) * Rz(zAngle).
-		 * @param matrix The 3x3 square matrix to decompose, must be an ortonormal rotation matrix
+		 * @param matrix The 3x3 square matrix to decompose, must be an orthonormal rotation matrix
 		 * @param xAngle The resulting x angle (rotation around the x-axis), with range [-PI, PI]
 		 * @param yAngle The resulting y angle (rotation around the y-axis), with range [-PI/2, PI/2]
-		 * @param zAngle The resulting z angle (rotation around the z-axis), with rnage [-PI, PI]
+		 * @param zAngle The resulting z angle (rotation around the z-axis), with range [-PI, PI]
 		 */
 		static void decomposeRotationMatrixToXYZ(const SquareMatrixT3<T>& matrix, T& xAngle, T& yAngle, T& zAngle);
 
@@ -259,108 +257,108 @@ class EulerT
 	protected:
 
 		/// The three angles of the euler rotation.
-		T values[3];
+		T values_[3];
 };
 
 template <typename T>
 EulerT<T>::EulerT()
 {
-	values[0] = T(0);
-	values[1] = T(0);
-	values[2] = T(0);
+	values_[0] = T(0);
+	values_[1] = T(0);
+	values_[2] = T(0);
 }
 
 template <typename T>
 EulerT<T>::EulerT(const T yaw, const T pitch, const T roll)
 {
-	values[0] = yaw;
-	values[1] = pitch;
-	values[2] = roll;
+	values_[0] = yaw;
+	values_[1] = pitch;
+	values_[2] = roll;
 }
 
 template <typename T>
 EulerT<T>::EulerT(const T* arrayValue)
 {
 	ocean_assert(arrayValue);
-	memcpy(values, arrayValue, sizeof(T) * 3);
+	memcpy(values_, arrayValue, sizeof(T) * 3);
 }
 
 template <typename T>
 EulerT<T>::EulerT(const HomogenousMatrixT4<T>& transformation)
 {
-	decomposeRotationMatrixToYXZ(transformation.orthonormalRotationMatrix(), values[0], values[1], values[2]);
+	decomposeRotationMatrixToYXZ(transformation.orthonormalRotationMatrix(), values_[0], values_[1], values_[2]);
 	ocean_assert(isValid());
 }
 
 template <typename T>
 EulerT<T>::EulerT(const RotationT<T>& rotation)
 {
-	decomposeRotationMatrixToYXZ(SquareMatrixT3<T>(rotation), values[0], values[1], values[2]);
+	decomposeRotationMatrixToYXZ(SquareMatrixT3<T>(rotation), values_[0], values_[1], values_[2]);
 	ocean_assert(isValid());
 }
 
 template <typename T>
 EulerT<T>::EulerT(const QuaternionT<T>& quaternion)
 {
-	decomposeRotationMatrixToYXZ(SquareMatrixT3<T>(quaternion), values[0], values[1], values[2]);
+	decomposeRotationMatrixToYXZ(SquareMatrixT3<T>(quaternion), values_[0], values_[1], values_[2]);
 	ocean_assert(isValid());
 }
 
 template <typename T>
 EulerT<T>::EulerT(const SquareMatrixT3<T>& matrix)
 {
-	decomposeRotationMatrixToYXZ(matrix, values[0], values[1], values[2]);
+	decomposeRotationMatrixToYXZ(matrix, values_[0], values_[1], values_[2]);
 	ocean_assert(isValid());
 }
 
 template <typename T>
 inline const T& EulerT<T>::yaw() const
 {
-	return values[0];
+	return values_[0];
 }
 
 template <typename T>
 inline T& EulerT<T>::yaw()
 {
-	return values[0];
+	return values_[0];
 }
 
 template <typename T>
 inline const T& EulerT<T>::pitch() const
 {
-	return values[1];
+	return values_[1];
 }
 
 template <typename T>
 inline T& EulerT<T>::pitch()
 {
-	return values[1];
+	return values_[1];
 }
 
 template <typename T>
 inline const T& EulerT<T>::roll() const
 {
-	return values[2];
+	return values_[2];
 }
 
 template <typename T>
 inline T& EulerT<T>::roll()
 {
-	return values[2];
+	return values_[2];
 }
 
 template <typename T>
 bool EulerT<T>::isValid() const
 {
-	return NumericT<T>::isInsideRange(-NumericT<T>::pi(), values[0], NumericT<T>::pi())
-			&& NumericT<T>::isInsideRange(-NumericT<T>::pi_2(), values[1], NumericT<T>::pi_2())
-			&& NumericT<T>::isInsideRange(-NumericT<T>::pi(), values[2], NumericT<T>::pi());
+	return NumericT<T>::isInsideRange(-NumericT<T>::pi(), values_[0], NumericT<T>::pi())
+			&& NumericT<T>::isInsideRange(-NumericT<T>::pi_2(), values_[1], NumericT<T>::pi_2())
+			&& NumericT<T>::isInsideRange(-NumericT<T>::pi(), values_[2], NumericT<T>::pi());
 }
 
 template <typename T>
 bool EulerT<T>::operator==(const EulerT<T>& euler) const
 {
-	return NumericT<T>::isEqual(values[0], euler.values[0]) && NumericT<T>::isEqual(values[1], euler.values[1]) && NumericT<T>::isEqual(values[2], euler.values[2]);
+	return NumericT<T>::isEqual(values_[0], euler.values_[0]) && NumericT<T>::isEqual(values_[1], euler.values_[1]) && NumericT<T>::isEqual(values_[2], euler.values_[2]);
 }
 
 template <typename T>
@@ -373,40 +371,40 @@ template <typename T>
 inline const T& EulerT<T>::operator[](const unsigned int index) const
 {
 	ocean_assert(index < 3u);
-	return values[index];
+	return values_[index];
 }
 
 template <typename T>
 inline T& EulerT<T>::operator[](const unsigned int index)
 {
 	ocean_assert(index < 3u);
-	return values[index];
+	return values_[index];
 }
 
 template <typename T>
 inline const T& EulerT<T>::operator()(const unsigned int index) const
 {
 	ocean_assert(index < 3u);
-	return values[index];
+	return values_[index];
 }
 
 template <typename T>
 inline T& EulerT<T>::operator()(const unsigned int index)
 {
 	ocean_assert(index < 3u);
-	return values[index];
+	return values_[index];
 }
 
 template <typename T>
 inline const T* EulerT<T>::operator()() const
 {
-	return values;
+	return values_;
 }
 
 template <typename T>
 inline T* EulerT<T>::operator()()
 {
-	return values;
+	return values_;
 }
 
 template <typename T>
@@ -425,20 +423,20 @@ void EulerT<T>::decomposeRotationMatrixToYXZ(const SquareMatrixT3<T>& matrix, T&
 	{
 		if (matrix(1, 2) < T(1) - NumericT<T>::eps())
 		{
-			// we have the normale case without any extreme angles
+			// we have the normal case without any extreme angles
 
 			xAngle = NumericT<T>::asin(-matrix(1, 2));
 
-			ocean_assert(Numeric::isNotEqualEps(matrix(0, 2)) || Numeric::isNotEqualEps(matrix(2, 2)));
+			ocean_assert(NumericT<T>::isNotEqualEps(matrix(0, 2)) || NumericT<T>::isNotEqualEps(matrix(2, 2)));
 			yAngle = NumericT<T>::atan2(matrix(0, 2), matrix(2, 2));
 
-			ocean_assert(Numeric::isNotEqualEps(matrix(1, 0)) || Numeric::isNotEqualEps(matrix(1, 1)));
+			ocean_assert(NumericT<T>::isNotEqualEps(matrix(1, 0)) || NumericT<T>::isNotEqualEps(matrix(1, 1)));
 			zAngle = NumericT<T>::atan2(matrix(1, 0), matrix(1, 1));
 		}
 		else
 		{
 			// we have a special case where sx == -1
-			ocean_assert((std::is_same<float, T>::value) ? Numeric::isWeakEqual(matrix(1, 2), 1) : Numeric::isEqual(matrix(1, 2), 1));
+			ocean_assert((std::is_same<float, T>::value) ? NumericT<T>::isWeakEqual(matrix(1, 2), 1) : NumericT<T>::isEqual(matrix(1, 2), 1));
 
 			/**
 			 * Combined rotation matrix for R(y)R(x)R(z), with sx == -1 and cx == 0
@@ -457,7 +455,7 @@ void EulerT<T>::decomposeRotationMatrixToYXZ(const SquareMatrixT3<T>& matrix, T&
 	else
 	{
 		// we have a special case where sx == 1
-		ocean_assert((std::is_same<float, T>::value) ? Numeric::isWeakEqual(matrix(1, 2), -1) : Numeric::isEqual(matrix(1, 2), -1));
+		ocean_assert((std::is_same<float, T>::value) ? NumericT<T>::isWeakEqual(matrix(1, 2), -1) : NumericT<T>::isEqual(matrix(1, 2), -1));
 
 		/**
 		 * Combined rotation matrix for R(y)R(x)R(z), with sx == 1 and cx == 0
@@ -494,20 +492,20 @@ void EulerT<T>::decomposeRotationMatrixToXYZ(const SquareMatrixT3<T>& matrix, T&
 	{
 		if (matrix(0, 2) > T(-1) + NumericT<T>::eps())
 		{
-			// we have the normale case without any extreme angles
+			// we have the normal case without any extreme angles
 
-			ocean_assert(Numeric::isNotEqualEps(matrix(1, 2)) || Numeric::isNotEqualEps(matrix(2, 2)));
+			ocean_assert(NumericT<T>::isNotEqualEps(matrix(1, 2)) || NumericT<T>::isNotEqualEps(matrix(2, 2)));
 			xAngle = NumericT<T>::atan2(-matrix(1, 2), matrix(2, 2));
 
 			yAngle = NumericT<T>::asin(matrix(0, 2));
 
-			ocean_assert(Numeric::isNotEqualEps(matrix(0, 1)) || Numeric::isNotEqualEps(matrix(0, 0)));
+			ocean_assert(NumericT<T>::isNotEqualEps(matrix(0, 1)) || NumericT<T>::isNotEqualEps(matrix(0, 0)));
 			zAngle = NumericT<T>::atan2(-matrix(0, 1), matrix(0, 0));
 		}
 		else
 		{
 			// we have a special case where sx == -1
-			ocean_assert((std::is_same<float, T>::value) ? Numeric::isWeakEqual(matrix(0, 2), -1) : Numeric::isEqual(matrix(0, 2), -1));
+			ocean_assert((std::is_same<float, T>::value) ? NumericT<T>::isWeakEqual(matrix(0, 2), -1) : NumericT<T>::isEqual(matrix(0, 2), -1));
 
 			/**
 			 * Combined rotation matrix for R(x)R(y)R(z), with sy == -1 and cy == 0
@@ -526,7 +524,7 @@ void EulerT<T>::decomposeRotationMatrixToXYZ(const SquareMatrixT3<T>& matrix, T&
 	else
 	{
 		// we have a special case where sy == 1
-		ocean_assert((std::is_same<float, T>::value) ? Numeric::isWeakEqual(matrix(0, 2), 1) : Numeric::isEqual(matrix(0, 2), 1));
+		ocean_assert((std::is_same<float, T>::value) ? NumericT<T>::isWeakEqual(matrix(0, 2), 1) : NumericT<T>::isEqual(matrix(0, 2), 1));
 
 		/**
 		 * Combined rotation matrix for R(x)R(y)R(z), with sy == 1 and cy == 0
@@ -552,9 +550,9 @@ void EulerT<T>::adjustAngles(T& yaw, T& pitch, T& roll)
 {
 	pitch = NumericT<T>::angleAdjustNull(pitch);
 
-	if (Numeric::abs(pitch) > Numeric::pi_2())
+	if (NumericT<T>::abs(pitch) > NumericT<T>::pi_2())
 	{
-		pitch = Numeric::copySign(Numeric::pi(), pitch) - pitch;
+		pitch = NumericT<T>::copySign(NumericT<T>::pi(), pitch) - pitch;
 		yaw += NumericT<T>::pi();
 		roll += NumericT<T>::pi();
 	}
