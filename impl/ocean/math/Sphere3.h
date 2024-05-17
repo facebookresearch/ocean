@@ -60,12 +60,12 @@ class SphereT3
 		/**
 		 * Creates an invalid sphere.
 		 */
-		inline SphereT3();
+		SphereT3() = default;
 
 		/**
 		 * Creates a new sphere by a center point and a radius.
-		 * @param center Center of the sphere
-		 * @param radius Radius of the sphere, with range [0, infinity), negative to create an invalid sphere
+		 * @param center The center of the sphere
+		 * @param radius The radius of the sphere, with range [0, infinity), negative to create an invalid sphere
 		 */
 		inline SphereT3(const VectorT3<T>& center, const T radius);
 
@@ -73,7 +73,7 @@ class SphereT3
 		 * Creates a new sphere entirely containing a given 3D box.
 		 * @param boundingBox The box which will be contained by the new sphere, must be valid
 		 */
-		explicit inline SphereT3(const Box3& boundingBox);
+		explicit inline SphereT3(const BoxT3<T>& boundingBox);
 
 		/**
 		 * Returns the center of the sphere.
@@ -89,14 +89,14 @@ class SphereT3
 
 		/**
 		 * Returns whether a given point is inside this sphere.
-		 * @param point Point to check
+		 * @param point The point to check
 		 * @return True, if so
 		 */
 		inline bool isInside(const VectorT3<T>& point) const;
 
 		/**
 		 * Returns whether a given point is inside this sphere including a thin epsilon boundary.
-		 * @param point Point to check
+		 * @param point The point to check
 		 * @param eps Epsilon to be used, with range [0, infinity)
 		 * @return True, if so
 		 */
@@ -104,7 +104,7 @@ class SphereT3
 
 		/**
 		 * Returns whether a given ray has an intersection with this sphere.
-		 * @param ray Ray to be tested
+		 * @param ray The ray to be tested
 		 * @return True, if so
 		 */
 		bool hasIntersection(const LineT3<T>& ray) const;
@@ -125,21 +125,21 @@ class SphereT3
 		inline bool hasIntersection(const SphereT3<T>& sphere) const;
 
 		/**
-		 * Returns whether this radius of this spehere is not negative and thus the sphere is valid.
+		 * Returns whether this radius of this sphere is not negative and thus the sphere is valid.
 		 * @return True, if so
 		 */
 		inline bool isValid() const;
 
 		/**
 		 * Returns a new sphere with an enlarged radius (the center of the sphere stays constant).
-		 * @param factor Factor to be multiplied with the radius of this sphere, with range [0, infinity)
+		 * @param factor The factor to be multiplied with the radius of this sphere, with range [0, infinity)
 		 * @return New resulting sphere
 		 */
 		inline SphereT3<T> operator*(const T factor) const;
 
 		/**
 		 * Multiplies the radius of this sphere with a given factor.
-		 * @param factor Factor to be multiplied with the radius, with range [0, infinity)
+		 * @param factor The factor to be multiplied with the radius, with range [0, infinity)
 		 * @return Reference to this sphere object
 		 */
 		inline SphereT3<T>& operator*=(const T factor);
@@ -176,19 +176,11 @@ class SphereT3
 	protected:
 
 		/// Sphere center.
-		VectorT3<T> center_;
+		VectorT3<T> center_ = VectorT3<T>(0, 0, 0);
 
 		/// Sphere radius.
-		T radius_;
+		T radius_ = T(-1);
 };
-
-template <typename T>
-inline SphereT3<T>::SphereT3() :
-	center_(0, 0, 0),
-	radius_(-1)
-{
-	// nothing to do here
-}
 
 template <typename T>
 inline SphereT3<T>::SphereT3(const VectorT3<T>& center, const T radius) :
@@ -199,7 +191,7 @@ inline SphereT3<T>::SphereT3(const VectorT3<T>& center, const T radius) :
 }
 
 template <typename T>
-inline SphereT3<T>::SphereT3(const Box3& boundingBox) :
+inline SphereT3<T>::SphereT3(const BoxT3<T>& boundingBox) :
 	center_(boundingBox.center()),
 	radius_(boundingBox.diagonal() * T(0.5))
 {
