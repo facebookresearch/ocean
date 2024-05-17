@@ -1,3 +1,8 @@
+// Copyright (c) Meta Platforms, Inc. and affiliates.
+//
+// This source code is licensed under the MIT license found in the
+// LICENSE file in the root directory of this source tree.
+
 // Ocean camera calibration file
 
 // Camera
@@ -6,7 +11,7 @@
 //     Priority -> Holds the priority of this calibration data, possible values: LOW, MEDIUM, HIGH
 //     -> Priority and Date are used for selection of calibration data if more then one is available
 //     -> A higher priority is more important than a newer date
-// 
+//
 //     Calibration (First alternative)
 //     {
 //         ResolutionX -> Width of the image frame in pixel
@@ -46,21 +51,21 @@ Camera
 {
 	Name "C922 Pro Stream Webcam"
 	Priority LOW
-	
+
 	Calibration
 	{
 		ResolutionX 640
 		ResolutionY 480
-		
+
 		PrincipalPointX 309.09736914
 		PrincipalPointY 232.74396707
-	
+
 		FocalLengthX 685.12643676
 		FocalLengthY 695.00901883
-	
+
 		RadialDistortionR2 0.07524783
 		RadialDistortionR4 -0.19310302
-	
+
 		TangentialDistortion0 -0.00263855
 		TangentialDistortion1 -0.00188676
 
@@ -71,16 +76,16 @@ Camera
 	{
 		ResolutionX 1920
 		ResolutionY 1080
-		
+
 		PrincipalPointX 943.35628029
 		PrincipalPointY 573.48833202
-	
+
 		FocalLengthX 1265.43456618
 		FocalLengthY 1286.62742462
-	
+
 		RadialDistortionR2 0.07532071
 		RadialDistortionR4 -0.12394417
-	
+
 		TangentialDistortion0 -0.00167372
 		TangentialDistortion1 -0.00105942
 
@@ -92,30 +97,30 @@ Camera
 {
 	Name "Logitech HD Pro Webcam C920"
 	Priority LOW
-	
+
 	Calibration
 	{
 		ResolutionX 640
 		ResolutionY 480
-		
+
 		// Horizontal field of view of 54 degrees
 		FovX 0.942477796076938
 	}
-	
+
 	Calibration
 	{
 		ResolutionX 800
 		ResolutionY 600
-		
+
 		PrincipalPointX 418.02555434
 		PrincipalPointY 300.66693714
-	
+
 		FocalLengthX 761.83603688
 		FocalLengthY 765.03960695
-	
+
 		RadialDistortionR2 0.07570739
 		RadialDistortionR4 -0.17132481
-	
+
 		TangentialDistortion0 0.00384170
 		TangentialDistortion1 0.00253430
 
@@ -126,7 +131,7 @@ Camera
 	{
 		ResolutionX 1920
 		ResolutionY 1080
-		
+
 		// Horizontal field of view of 68 degrees
 		FovX 1.1918360110326
 	}
@@ -134,26 +139,26 @@ Camera
 
 Camera
 {
-	Name "Logitech QuickCam for Notebooks Pro"	
+	Name "Logitech QuickCam for Notebooks Pro"
 	Priority LOW
 
 	Calibration
-	{	
+	{
 		ResolutionX 320
 		ResolutionY 240
-	
+
 		PrincipalPointX 168.191223
 		PrincipalPointY 131.952301
-	
+
 		FocalLengthX 439.635162
 		FocalLengthY 441.505371
-	
+
 		RadialDistortionR2 -0.064084
 		RadialDistortionR4 0.028782
-	
+
 		TangentialDistortion0 -0.001756
 		TangentialDistortion1 -0.000587
-		
+
 		// CalibrationTool: 320 240 168.191223 131.952301 439.635162 441.505371 -0.064084 0.028782 -0.001756 -0.000587 0.0 0.0 0
 	}
 
@@ -173,7 +178,7 @@ Camera
 
 		TangentialDistortion0 -0.002763
 		TangentialDistortion1 -0.001886
-		
+
 		// CalibrationTool: 640 480 341.905426 262.526459 881.602661 885.158386 -0.045344 -0.014904 -0.002763 -0.001886 0.0 0.0 0
 	}
 }
@@ -226,7 +231,7 @@ Camera
 
 Camera
 {
-	Name "QuickCam for Notebooks Pro"	
+	Name "QuickCam for Notebooks Pro"
 	Priority LOW
 
 	Calibration
@@ -274,7 +279,7 @@ Camera
 {
 	Name "Logitech Webcam 905"
 	Priority LOW
-	
+
 	Calibration
 	{
 		ResolutionX 640

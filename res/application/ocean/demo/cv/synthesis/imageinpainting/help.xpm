@@ -1,4 +1,11 @@
-/* XPM */
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+ /* XPM */
 static const char * help_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 15 50 1",
