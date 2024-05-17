@@ -50,8 +50,9 @@ class OCEAN_CV_ADVANCED_EXPORT ColorChannelMapper
 		 * @param pixelFormat Pixel format
 		 * @param lookupFrame Lookup table that is filled
 		 * @param function The function that defines the color channel mapping
+		 * @return True, if succeeded
 		 */
-		static void createLookup8BitsPerChannel(FrameType::PixelFormat pixelFormat, Frame& lookupFrame, const ColorChannelMapFunction& function);
+		static bool createLookup8BitsPerChannel(FrameType::PixelFormat pixelFormat, Frame& lookupFrame, const ColorChannelMapFunction& function);
 
 		/**
 		 * Maps the colors of the specified frame to new values using the specified look-up table

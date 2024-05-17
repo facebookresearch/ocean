@@ -47,10 +47,20 @@ PanoramaFrame::PanoramaFrame(Frame&& frame, Frame&& mask, const uint8_t maskValu
 {
 	if (updateMode_ == UM_AVERAGE_GLOBAL)
 	{
-		nominatorFrame_.set(FrameType(frame_, FrameType::genericPixelFormat<uint32_t>(frame_.channels())), true, true);
+		if (!nominatorFrame_.set(FrameType(frame_, FrameType::genericPixelFormat<uint32_t>(frame_.channels())), true, true))
+		{
+			ocean_assert(false && "This should never happen!");
+			return;
+		}
+
 		nominatorFrame_.setValue(0x00u);
 
-		denominatorFrame_.set(FrameType(mask_, FrameType::FORMAT_Y32), true, true);
+		if (!denominatorFrame_.set(FrameType(mask_, FrameType::FORMAT_Y32), true, true))
+		{
+			ocean_assert(false && "This should never happen!");
+			return;
+		}
+
 		denominatorFrame_.setValue(0x00u);
 
 		const uint8_t nonMaskValue = 0xFFu - maskValue_;
@@ -129,8 +139,12 @@ bool PanoramaFrame::cameraFrame2panoramaSubFrame(const PinholeCamera& pinholeCam
 
 	ocean_assert(width <= dimensionWidth_ && height <= dimensionHeight_);
 
-	panoramaSubFrame.set(FrameType(width, height, frame.pixelFormat(), frame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/);
-	panoramaSubMask.set(FrameType(panoramaSubFrame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/);
+	if (!panoramaSubFrame.set(FrameType(width, height, frame.pixelFormat(), frame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/)
+			|| !panoramaSubMask.set(FrameType(panoramaSubFrame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
+
 	panoramaSubMask.setValue(0xFFu - maskValue_);
 
 	subFrameTopLeft = PixelPositionI(left, top);
@@ -474,10 +488,20 @@ bool PanoramaFrame::reset(const PinholeCamera& pinholeCamera, const Frame& frame
 
 	ocean_assert(width <= dimensionWidth_ && height <= dimensionHeight_);
 
-	frame_.set(FrameType(width, height, frame.pixelFormat(), frame.pixelOrigin()), true, true);
-	frame_.setValue(0x00);
+	if (!frame_.set(FrameType(width, height, frame.pixelFormat(), frame.pixelOrigin()), true, true))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
-	mask_.set(FrameType(frame_, FrameType::FORMAT_Y8), true, true);
+	frame_.setValue(0x00u);
+
+	if (!mask_.set(FrameType(frame_, FrameType::FORMAT_Y8), true, true))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
+
 	mask_.setValue(0xFFu - maskValue_);
 
 	if (!cameraFrame2panoramaFrame(pinholeCamera, frame, orientation, dimensionWidth_, dimensionHeight_, CV::PixelPositionI(left, top), frame_, mask_, maskValue_, approximationBinSize, worker))
@@ -559,10 +583,20 @@ bool PanoramaFrame::reset(const PixelPosition& topLeft, const Frame& frame, cons
 	// for the global average update mode we need a nominator and denominator frames
 	if (updateMode_ == UM_AVERAGE_GLOBAL)
 	{
-		nominatorFrame_.set(FrameType(frame_, FrameType::genericPixelFormat<uint32_t>(frame.channels())), true, true);
+		if (!nominatorFrame_.set(FrameType(frame_, FrameType::genericPixelFormat<uint32_t>(frame.channels())), true, true))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
+
 		nominatorFrame_.setValue(0x00u);
 
-		denominatorFrame_.set(FrameType(mask_, FrameType::FORMAT_Y32), true, true);
+		if (!denominatorFrame_.set(FrameType(mask_, FrameType::FORMAT_Y32), true, true))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
+
 		denominatorFrame_.setValue(0x00u);
 
 		const uint8_t nonMaskValue = 0xFFu - maskValue_;
@@ -600,8 +634,12 @@ void PanoramaFrame::resize(const PixelPosition& topLeft, const unsigned int widt
 	{
 		ocean_assert(denominatorFrame_);
 
-		newNominatorFrame.set(FrameType(nominatorFrame_, width, height), true, true);
-		newDenominatorFrame.set(FrameType(denominatorFrame_, width, height), true, true);
+		if (!newNominatorFrame.set(FrameType(nominatorFrame_, width, height), true, true)
+				|| !newDenominatorFrame.set(FrameType(denominatorFrame_, width, height), true, true))
+		{
+			ocean_assert(false && "This should never happen!");
+			return;
+		}
 
 		newNominatorFrame.setValue(0x00u);
 		newDenominatorFrame.setValue(0x00u);
@@ -1151,8 +1189,11 @@ bool PanoramaFrame::cameraFrame2cameraFrame(const PinholeCamera& inputCamera, co
 	ocean_assert(!inputOrientation.isSingular() && !outputOrientation.isSingular());
 	ocean_assert(outputCamera.isValid());
 
-	outputFrame.set(FrameType(outputCamera.width(), outputCamera.height(), inputFrame.pixelFormat(), inputFrame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/);
-	outputMask.set(FrameType(outputCamera.width(), outputCamera.height(), FrameType::FORMAT_Y8, inputFrame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/);
+	if (!outputFrame.set(FrameType(outputCamera.width(), outputCamera.height(), inputFrame.pixelFormat(), inputFrame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/)
+			|| !outputMask.set(FrameType(outputCamera.width(), outputCamera.height(), FrameType::FORMAT_Y8, inputFrame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
 
 	ocean_assert(inputFrame.numberPlanes() == 1u && inputFrame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 
@@ -1189,8 +1230,11 @@ bool PanoramaFrame::panoramaFrame2cameraFrame(const PinholeCamera& pinholeCamera
 	ocean_assert(cameraFrame.width() == 0u || cameraFrame.width() == pinholeCamera.width());
 	ocean_assert(cameraFrame.height() == 0u || cameraFrame.height() == pinholeCamera.height());
 
-	cameraFrame.set(FrameType(pinholeCamera.width(), pinholeCamera.height(), panoramaFrame.pixelFormat(), panoramaFrame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/);
-	cameraMask.set(FrameType(pinholeCamera.width(), pinholeCamera.height(), FrameType::FORMAT_Y8, panoramaFrame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/);
+	if (!cameraFrame.set(FrameType(pinholeCamera.width(), pinholeCamera.height(), panoramaFrame.pixelFormat(), panoramaFrame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/)
+			|| !cameraMask.set(FrameType(pinholeCamera.width(), pinholeCamera.height(), FrameType::FORMAT_Y8, panoramaFrame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
 
 	ocean_assert(panoramaFrame.numberPlanes() == 1u && panoramaFrame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 
@@ -1232,8 +1276,15 @@ bool PanoramaFrame::cameraFrame2panoramaFrame(const PinholeCamera& pinholeCamera
 	ocean_assert(cameraFrame.pixelFormat() == panoramaFrame.pixelFormat());
 	ocean_assert(cameraFrame.pixelOrigin() == panoramaFrame.pixelOrigin());
 
-	panoramaFrame.set(FrameType(panoramaFrame, cameraFrame.pixelFormat(), cameraFrame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/);
-	panoramaMask.set(FrameType(panoramaFrame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/);
+	if (!panoramaFrame.set(FrameType(panoramaFrame, cameraFrame.pixelFormat(), cameraFrame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
+
+	if (!panoramaMask.set(FrameType(panoramaFrame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
 
 	ocean_assert(cameraFrame.numberPlanes() == 1u && cameraFrame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 
@@ -1278,8 +1329,15 @@ bool PanoramaFrame::cameraFrame2panoramaFrame(const PinholeCamera& pinholeCamera
 	ocean_assert(FrameType::formatIsGeneric(cameraMask.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
 	ocean_assert(cameraMask.pixelOrigin() == panoramaFrame.pixelOrigin());
 
-	panoramaFrame.set(FrameType(panoramaFrame, cameraFrame.pixelFormat(), cameraFrame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/);
-	panoramaMask.set(FrameType(panoramaFrame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/);
+	if (!panoramaFrame.set(FrameType(panoramaFrame, cameraFrame.pixelFormat(), cameraFrame.pixelOrigin()), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
+
+	if (!panoramaMask.set(FrameType(panoramaFrame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
 
 	ocean_assert(cameraFrame.numberPlanes() == 1u && cameraFrame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 

@@ -16,14 +16,18 @@ namespace CV
 namespace Advanced
 {
 
-void ColorChannelMapper::createLookup8BitsPerChannel(FrameType::PixelFormat pixelFormat, Frame& lookupFrame, const ColorChannelMapFunction& function)
+bool ColorChannelMapper::createLookup8BitsPerChannel(FrameType::PixelFormat pixelFormat, Frame& lookupFrame, const ColorChannelMapFunction& function)
 {
 	ocean_assert(FrameType::dataType(pixelFormat) == FrameType::DT_UNSIGNED_INTEGER_8);
 	ocean_assert(FrameType::numberPlanes(pixelFormat) == 1u);
 
 	const unsigned int channels = FrameType::channels(pixelFormat);
 
-	lookupFrame.set(FrameType(256u, 1u, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, true);
+	if (!lookupFrame.set(FrameType(256u, 1u, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), false, true))
+	{
+		return false;
+	}
+
 	uint8_t* data = lookupFrame.data<uint8_t>();
 
 	for (unsigned int i = 0u; i < 256u; i++)
@@ -33,6 +37,8 @@ void ColorChannelMapper::createLookup8BitsPerChannel(FrameType::PixelFormat pixe
 			*data++ = function(c, uint8_t(i));
 		}
 	}
+
+	return true;
 }
 
 void ColorChannelMapper::applyLookup8BitsPerChannel(Frame& frame, const Frame& lookupFrame, Worker* worker)

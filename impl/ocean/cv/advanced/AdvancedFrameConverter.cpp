@@ -40,7 +40,10 @@ bool AdvancedFrameConverter::convertToYUT24ScharrMagnitude(const Frame& source, 
 		return false;
 	}
 
-	targetFrame.set(FrameType(yuvFrame.width(), yuvFrame.height(), FrameType::FORMAT_YUV24, yuvFrame.pixelOrigin()), true /*forceOwner*/, true /*forceWritable*/);
+	if (!targetFrame.set(FrameType(yuvFrame.width(), yuvFrame.height(), FrameType::FORMAT_YUV24, yuvFrame.pixelOrigin()), true /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
 
 	const unsigned int integralBorder = window / 2u;
 
@@ -88,7 +91,10 @@ bool AdvancedFrameConverter::convertToYUVT32ScharrMagnitude(const Frame& source,
 		return false;
 	}
 
-	targetFrame.set(FrameType(yuvFrame.width(), yuvFrame.height(), FrameType::FORMAT_YUVT32, yuvFrame.pixelOrigin()), true /*forceOwner*/, true /*forceWritable*/);
+	if (!targetFrame.set(FrameType(yuvFrame.width(), yuvFrame.height(), FrameType::FORMAT_YUVT32, yuvFrame.pixelOrigin()), true /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
 
 	const unsigned int integralBorder = window / 2u;
 
@@ -142,7 +148,10 @@ bool AdvancedFrameConverter::convertToRGBT32ScharrMagnitude(const Frame& source,
 		return false;
 	}
 
-	targetFrame.set(FrameType(source, FrameType::FORMAT_RGBT32), true, true);
+	if (!targetFrame.set(FrameType(source, FrameType::FORMAT_RGBT32), true, true))
+	{
+		return false;
+	}
 
 	const unsigned int integralBorder = window / 2u;
 
@@ -191,7 +200,11 @@ bool AdvancedFrameConverter::convertToRGBT32ScharrMagnitude(const Frame& source,
 	Frame tFrame(yFrame.frameType());
 	FrameFilterScharr::filterMaximumAbsolute8BitPerChannel<uint8_t, 1u>(yFrame.constdata<uint8_t>(), tFrame.data<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), tFrame.paddingElements(), worker);
 
-	target.set(FrameType(source, FrameType::FORMAT_RGBT32), true, true);
+	if (!target.set(FrameType(source, FrameType::FORMAT_RGBT32), true, true))
+	{
+		return false;
+	}
+
 	CV::FrameChannels::addLastChannel<unsigned char, 3u>(rgbFrame.constdata<uint8_t>(), tFrame.constdata<uint8_t>(), target.data<uint8_t>(), target.width(), target.height(), CV::FrameChannels::CONVERT_NORMAL, rgbFrame.paddingElements(), tFrame.paddingElements(), target.paddingElements(), worker);
 
 	return true;
@@ -235,7 +248,10 @@ bool AdvancedFrameConverter::convertToYUVLLL48LaplaceMagnitude(const Frame& sour
 
 	constexpr unsigned int targetChannels = 6u;
 
-	target.set(FrameType(source, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, targetChannels>()), true, true);
+	if (!target.set(FrameType(source, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, targetChannels>()), true, true))
+	{
+		return false;
+	}
 
 	const uint8_t* sourceFrames[targetChannels] = {frame0.constdata<uint8_t>(), frame1.constdata<uint8_t>(), frame2.constdata<uint8_t>(), laplace0.constdata<uint8_t>(), laplace1.constdata<uint8_t>(), laplace2.constdata<uint8_t>()};
 	const unsigned int sourceFramesPaddingElements[targetChannels] = {frame0.paddingElements(), frame1.paddingElements(), frame2.paddingElements(), laplace0.paddingElements(), laplace1.paddingElements(), laplace2.paddingElements()};
@@ -301,7 +317,11 @@ bool AdvancedFrameConverter::createScharrMagnitudeIntegral(const Frame& frame, c
 	const unsigned int integralWidth = yFrame.width() + 2u * integralBorder + 1u;
 	const unsigned int integralHeight = yFrame.height() + 2u * integralBorder + 1u;
 
-	integralFrame.set(FrameType(integralWidth, integralHeight, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), true, true);
+	if (!integralFrame.set(FrameType(integralWidth, integralHeight, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), true, true))
+	{
+		return false;
+	}
+
 	IntegralImage::createBorderedImageMirror<uint8_t, uint32_t, 1u>(magnitudeFrame.constdata<uint8_t>(), integralFrame.data<uint32_t>(), yFrame.width(), yFrame.height(), integralBorder, magnitudeFrame.paddingElements(), integralFrame.paddingElements());
 
 	return true;

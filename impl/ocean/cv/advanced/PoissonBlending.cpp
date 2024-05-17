@@ -97,7 +97,12 @@ size_t PoissonBlending::createIndexLookup(const Frame& sourceMask, const CV::Pix
 	ocean_assert(sourceMask.pixelFormat() == FrameType::FORMAT_Y8);
 	ocean_assert(sourceBoundingBox.isValid() && sourceBoundingBox.right() < sourceMask.width() && sourceBoundingBox.bottom() < sourceMask.height());
 
-	indexLookup.set(FrameType(sourceMask.width() + 2u, sourceMask.height() + 2u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), true, true);
+	if (!indexLookup.set(FrameType(sourceMask.width() + 2u, sourceMask.height() + 2u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), true, true))
+	{
+		ocean_assert(false && "This should never happen!");
+		return 0;
+	}
+
 	indexLookup.setValue(0xFF); // sets all pixels to invalid index
 
 	uint32_t index = 0u;

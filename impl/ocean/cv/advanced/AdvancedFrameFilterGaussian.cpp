@@ -82,8 +82,14 @@ bool AdvancedFrameFilterGaussian::Comfort::filter(const Frame& source, const Fra
 
 	if (source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 	{
-		target.set(source.frameType(), false, true);
-		targetMask.set(sourceMask.frameType(), false, true);
+		if (!target.set(source.frameType(), false, true))
+		{
+			return false;
+		}
+		if (!targetMask.set(sourceMask.frameType(), false, true))
+		{
+			return false;
+		}
 
 		AdvancedFrameFilterGaussian::filter<uint8_t, uint32_t>(source.constdata<uint8_t>(), sourceMask.constdata<uint8_t>(), target.data<uint8_t>(), targetMask.data<uint8_t>(), source.width(), source.height(), source.channels(), source.paddingElements(), sourceMask.paddingElements(), target.paddingElements(), targetMask.paddingElements(), filterSize, filterSize, -1.0f, maskValue, worker);
 
@@ -92,8 +98,14 @@ bool AdvancedFrameFilterGaussian::Comfort::filter(const Frame& source, const Fra
 
 	if (source.dataType() == FrameType::DT_SIGNED_FLOAT_32)
 	{
-		target.set(source.frameType(), false, true);
-		targetMask.set(sourceMask.frameType(), false, true);
+		if (!target.set(source.frameType(), false, true))
+		{
+			return false;
+		}
+		if (!targetMask.set(sourceMask.frameType(), false, true))
+		{
+			return false;
+		}
 
 		AdvancedFrameFilterGaussian::filter<float, float>(source.constdata<float>(), sourceMask.constdata<uint8_t>(), target.data<float>(), targetMask.data<uint8_t>(), source.width(), source.height(), source.channels(), source.paddingElements(), sourceMask.paddingElements(), target.paddingElements(), targetMask.paddingElements(), filterSize, filterSize, -1.0f, maskValue, worker);
 

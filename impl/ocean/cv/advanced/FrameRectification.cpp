@@ -220,7 +220,11 @@ bool FrameRectification::Comfort::planarRectangleObjectMask(const Frame& cameraF
 
 	const HomogenousMatrix4 flippedCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_camera));
 
-	targetMask.set(FrameType(targetFrame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/);
+	if (!targetMask.set(FrameType(targetFrame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
 	switch (cameraFrame.channels())
 	{
@@ -276,7 +280,11 @@ bool FrameRectification::Comfort::arbitraryRectangleObjectMask(const Frame& came
 
 	const HomogenousMatrix4 flippedCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_camera));
 
-	targetMask.set(FrameType(targetFrame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/);
+	if (!targetMask.set(FrameType(targetFrame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
 	switch (cameraFrame.channels())
 	{
@@ -334,7 +342,11 @@ bool FrameRectification::Comfort::triangleObjectMask(const Frame& cameraFrame, c
 
 	const HomogenousMatrix4 flippedCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_camera));
 
-	targetMask.set(FrameType(targetFrame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/);
+	if (!targetMask.set(FrameType(targetFrame, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
 	switch (cameraFrame.channels())
 	{

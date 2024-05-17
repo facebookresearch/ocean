@@ -31,8 +31,17 @@ bool AdvancedFrameShrinker::divideByTwo(const Frame& source, Frame& target, cons
 			&& sourceMask.isPixelFormatCompatible(FrameType::FORMAT_Y8)
 			&& source.pixelOrigin() == sourceMask.pixelOrigin())
 	{
-		target.set(FrameType(source, source.width() / 2u, source.height() / 2u), false /*forceOwner*/, true /*forceWritable*/);
-		targetMask.set(FrameType(sourceMask, sourceMask.width() / 2u, sourceMask.height() / 2u), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(FrameType(source, source.width() / 2u, source.height() / 2u), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
+
+		if (!targetMask.set(FrameType(sourceMask, sourceMask.width() / 2u, sourceMask.height() / 2u), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		switch (source.channels())
 		{
