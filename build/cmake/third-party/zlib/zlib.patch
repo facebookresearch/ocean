@@ -1,7 +1,25 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 15ceebe..20bd31c 100644
+index 15ceebe..e6ef088 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -154,7 +154,7 @@ target_include_directories(zlib PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRE
+ add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
+ target_include_directories(zlibstatic PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+ set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
+-set_target_properties(zlib PROPERTIES SOVERSION 1)
++#set_target_properties(zlib PROPERTIES SOVERSION 1)
+ 
+ if(NOT CYGWIN)
+     # This property causes shared libraries on Linux to have the full version
+@@ -164,7 +164,7 @@ if(NOT CYGWIN)
+     #
+     # This has no effect with MSVC, on that platform the version info for
+     # the DLL comes from the resource file win32/zlib1.rc
+-    set_target_properties(zlib PROPERTIES VERSION ${ZLIB_FULL_VERSION})
++#    set_target_properties(zlib PROPERTIES VERSION ${ZLIB_FULL_VERSION})
+ endif()
+ 
+ if(UNIX)
 @@ -176,10 +176,21 @@ if(UNIX)
  elseif(BUILD_SHARED_LIBS AND WIN32)
      # Creates zlib1.dll when building shared library version

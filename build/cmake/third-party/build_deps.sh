@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
 [ ! $# -ge 3 ] &&\
-echo "Usage: $0 OCEAN_THIRD_PARTY_SOURCE_DIR BUILD_DIRECTORY_BASE PLATFORM OTHER_CMAKE_ARGS" &&\
+echo "Usage: $0 PLATFORM OCEAN_THIRD_PARTY_SOURCE_DIR BUILD_DIRECTORY_BASE EXTRA_BUILD_FLAGS [OTHER_CMAKE_CONFIG_ARGS...]" &&\
 exit 1
 
-OCEAN_THIRD_PARTY_SOURCE_DIR=$1
-BUILD_DIRECTORY_BASE=$2
-PLATFORM=$3
+PLATFORM=$1
+OCEAN_THIRD_PARTY_SOURCE_DIR=$2
+BUILD_DIRECTORY_BASE=$3
+EXTRA_BUILD_FLAGS=$4
 
+shift
 shift
 shift
 shift
@@ -24,8 +26,10 @@ for dep in $alldeps; do
         continue
     fi
 
-    cmake -S "${OCEAN_THIRD_PARTY_SOURCE_DIR}" -B "${BUILD_DIRECTORY_BASE}"/$dep -DINCLUDED_DEP_NAME=$dep "$@"
-    cmake --build "${BUILD_DIRECTORY_BASE}"/$dep --target install -- -j16
+    cmake -S "${OCEAN_THIRD_PARTY_SOURCE_DIR}" -B "${BUILD_DIRECTORY_BASE}"/$dep -DINCLUDED_DEP_NAME=$dep "$@" \
+    || exit 1
 
+    cmake --build "${BUILD_DIRECTORY_BASE}"/$dep --target install -- $EXTRA_BUILD_FLAGS \
+    || exit 2
 done
 

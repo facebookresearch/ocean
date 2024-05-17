@@ -6,6 +6,10 @@
 message(CHECK_START "harfbuzz")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
+if(IOS)
+  set(HB_HAVE_CORETEXT OFF)
+endif()
+
 CPMAddPackage(
   NAME           harfbuzz
   GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git

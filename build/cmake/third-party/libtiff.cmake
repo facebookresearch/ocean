@@ -10,6 +10,7 @@ set(tiff-install ON CACHE BOOL "")
 set(tiff-tools OFF CACHE BOOL "")
 set(tiff-tests OFF CACHE BOOL "")
 set(tiff-contrib OFF CACHE BOOL "")
+set(HAVE_LD_VERSION_SCRIPT OFF)
 
 find_package(Git REQUIRED)
 

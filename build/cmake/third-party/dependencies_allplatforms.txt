@@ -12,6 +12,6 @@ libpng
 libtiff
 vtzero
 curl
-libyuv
+#libyuv
 freetype
 assimp

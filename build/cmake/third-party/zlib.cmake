@@ -8,6 +8,8 @@ list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
 find_package(Git REQUIRED)
 
+set(ZLIB_BUILD_EXAMPLES OFF)
+
 CPMAddPackage(
   NAME                zlib
   GIT_REPOSITORY      https://github.com/madler/zlib.git

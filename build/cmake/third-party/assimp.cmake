@@ -6,6 +6,8 @@
 message(CHECK_START "assimp")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
+find_package(Git REQUIRED)
+
 set(ZLIB_ROOT ${CMAKE_INSTALL_PREFIX})
 set(JPEG_ROOT ${CMAKE_INSTALL_PREFIX})
 
@@ -18,12 +20,13 @@ else()
 endif()
 
 set(ASSIMP_BUILD_ZLIB OFF CACHE BOOL "")
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "")
 
 CPMAddPackage(
   NAME           assimp
   GIT_REPOSITORY https://github.com/assimp/assimp.git
   GIT_TAG        v5.4.0
-  PATCH_COMMAND  ${CMAKE_COMMAND} -E remove ./cmake-modules/FindZLIB.cmake
+  PATCH_COMMAND  ${GIT_EXECUTABLE} apply "${CMAKE_CURRENT_SOURCE_DIR}/assimp/assimp.patch"
 )
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)

@@ -1,8 +1,8 @@
 diff --git a/libtiff/CMakeLists.txt b/libtiff/CMakeLists.txt
-index 9c8024e..c47573c 100755
+index 9c8024e..74be450 100755
 --- a/libtiff/CMakeLists.txt
 +++ b/libtiff/CMakeLists.txt
-@@ -165,10 +165,10 @@ if(WEBP_SUPPORT)
+@@ -165,21 +165,21 @@ if(WEBP_SUPPORT)
    target_link_libraries(tiff PRIVATE WebP::webp)
    string(APPEND tiff_requires_private " libwebp")
  endif()
@@ -17,3 +17,32 @@ index 9c8024e..c47573c 100755
  
  set(tiff_libs_private_list "${tiff_libs_private_list}" PARENT_SCOPE)
  set(tiff_requires_private "${tiff_requires_private}" PARENT_SCOPE)
+ 
+-set_target_properties(tiff PROPERTIES SOVERSION ${SO_COMPATVERSION})
++#set_target_properties(tiff PROPERTIES SOVERSION ${SO_COMPATVERSION})
+ if(NOT CYGWIN)
+     # This property causes shared libraries on Linux to have the full version
+     # encoded into their final filename.  We disable this on Cygwin because
+     # it causes cygz-${TIFF_FULL_VERSION}.dll to be created when cygz.dll
+     # seems to be the default.
+-    set_target_properties(tiff PROPERTIES VERSION ${SO_VERSION})
++    #set_target_properties(tiff PROPERTIES VERSION ${SO_VERSION})
+ endif()
+ if(HAVE_LD_VERSION_SCRIPT)
+   set_target_properties(tiff PROPERTIES LINK_FLAGS
+@@ -232,13 +232,13 @@ if(CXX_SUPPORT)
+           ${tiffxx_HEADERS}
+           tif_stream.cxx)
+   target_link_libraries(tiffxx tiff)
+-  set_target_properties(tiffxx PROPERTIES SOVERSION ${SO_COMPATVERSION})
++#  set_target_properties(tiffxx PROPERTIES SOVERSION ${SO_COMPATVERSION})
+   if(NOT CYGWIN)
+     # This property causes shared libraries on Linux to have the full version
+     # encoded into their final filename.  We disable this on Cygwin because
+     # it causes cygz-${TIFF_FULL_VERSION}.dll to be created when cygz.dll
+     # seems to be the default.
+-    set_target_properties(tiffxx PROPERTIES VERSION ${SO_VERSION})
++    #set_target_properties(tiffxx PROPERTIES VERSION ${SO_VERSION})
+   endif()
+   if(HAVE_LD_VERSION_SCRIPT)
+     set_target_properties(tiffxx PROPERTIES LINK_FLAGS

@@ -34,7 +34,7 @@ file(GLOB giflib_MAN doc/*.1)
 
 if(BUILD_SHARED_LIBS)
     add_library(gif SHARED ${giflib_SRC})
-    set_target_properties(gif PROPERTIES VERSION ${LIBVER} SOVERSION ${LIBMAJOR})
+    #set_target_properties(gif PROPERTIES VERSION ${LIBVER} SOVERSION ${LIBMAJOR})
     if(WIN32)
         set_target_properties(gif PROPERTIES SUFFIX "-${LIBMAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX}")
         target_compile_definitions(gif PRIVATE "-Dstrtok_r=strtok_s")

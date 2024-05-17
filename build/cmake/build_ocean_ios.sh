@@ -120,7 +120,7 @@ function run_build_for_ios {
     echo "CMAKE_CONFIGURE_COMMAND = ${CMAKE_CONFIGURE_COMMAND}"
     eval "${CMAKE_CONFIGURE_COMMAND}"
 
-    cmake --build "${OCEAN_BUILD_DIRECTORY}" --target install -- CODE_SIGNING_ALLOWED=NO
+    cmake --build "${OCEAN_BUILD_DIRECTORY}" --target install -- CODE_SIGNING_ALLOWED=NO -parallelizeTargets -jobs 16
 
     echo " "
     echo " "
