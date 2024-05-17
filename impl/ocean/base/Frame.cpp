@@ -2485,7 +2485,7 @@ bool Frame::copy(const int targetLeft, const int targetTop, const Frame& source,
 	return true;
 }
 
-void Frame::set(const FrameType& frameType, const bool forceOwner, const bool forceWritable, const Indices32& planePaddingElements, const Timestamp& timestamp, bool* reallocated)
+bool Frame::set(const FrameType& frameType, const bool forceOwner, const bool forceWritable, const Indices32& planePaddingElements, const Timestamp& timestamp, bool* reallocated)
 {
 	ocean_assert(planePaddingElements.empty() || planePaddingElements.size() == size_t(frameType.numberPlanes()));
 
@@ -2496,7 +2496,7 @@ void Frame::set(const FrameType& frameType, const bool forceOwner, const bool fo
 		// the specified frame type is invalid, so we release this frame
 
 		release();
-		return;
+		return true;
 	}
 
 	bool needsReallocation = Frame::frameType() != frameType;
@@ -2567,14 +2567,14 @@ void Frame::set(const FrameType& frameType, const bool forceOwner, const bool fo
 
 				const unsigned int paddingElements = planeIndex < planePaddingElements.size() ? planePaddingElements[planeIndex] : 0u;
 
-				planes_.push_back(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, paddingElements));
+				planes_.emplace_back(planeWidth, planeHeight, planeChannels, bytesPerElement, paddingElements);
 			}
 			else
 			{
 				ocean_assert(false && "Invalid frame type!");
 
 				planes_.assign(1, Plane());
-				return;
+				return false;
 			}
 
 			if (!planes_.back().isValid())
@@ -2582,12 +2582,14 @@ void Frame::set(const FrameType& frameType, const bool forceOwner, const bool fo
 				// we may have ran out of memory, so we need to release the entire frame
 
 				release();
-				return;
+				return false;
 			}
 		}
 	}
 
 	ocean_assert(planes_.size() >= 1);
+
+	return true;
 }
 
 void Frame::makeContinuous()

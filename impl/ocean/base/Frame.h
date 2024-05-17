@@ -2442,8 +2442,9 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		 * @param planePaddingElements The padding elements at the end of each individual plane row, in elements, one for each plane, an empty vector to use the existing padding layout or no padding if reallocation
 		 * @param timestamp The timestamp to be set
 		 * @param reallocated Optional resulting state whether the frame has been reallocated; nullptr otherwise
+		 * @return True, if succeeded
 		 */
-		void set(const FrameType& frameType, const bool forceOwner, const bool forceWritable = false, const Indices32& planePaddingElements = Indices32(), const Timestamp& timestamp = Timestamp(false), bool* reallocated = nullptr);
+		bool set(const FrameType& frameType, const bool forceOwner, const bool forceWritable = false, const Indices32& planePaddingElements = Indices32(), const Timestamp& timestamp = Timestamp(false), bool* reallocated = nullptr);
 
 		/**
 		 * Makes the memory of this frame continuous.

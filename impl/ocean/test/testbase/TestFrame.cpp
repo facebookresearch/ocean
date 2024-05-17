@@ -13,6 +13,8 @@
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -2308,9 +2310,9 @@ bool TestFrame::testRelease(const double testDuration)
 
 	Log::info() << "Testing release:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats genericPixelFormats =
 	{
@@ -2331,67 +2333,62 @@ bool TestFrame::testRelease(const double testDuration)
 
 		if (!frame.isValid())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		frame.release();
 
 		if (frame.isValid() || frame.planes().size() != 1u)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		frame.release(); // just a second call
 
 		if (frame.isValid() || frame.planes().size() != 1u)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		const bool forceOwner = RandomI::random(randomGenerator, 1u) == 0u;
 		const bool forceWritable = RandomI::random(randomGenerator, 1u) == 0u;
 
-		frame.set(randomizedFrameType(pixelFormats, &randomGenerator), forceOwner, forceWritable);
+		const bool setResult = frame.set(randomizedFrameType(pixelFormats, &randomGenerator), forceOwner, forceWritable);
+
+		OCEAN_EXPECT_TRUE(validation, setResult);
 
 		if (!frame.isValid())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
+
 
 		frame.release();
 
 		if (frame.isValid() || frame.planes().size() != 1u)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		frame = Frame(randomizedFrameType(pixelFormats, &randomGenerator));
 
 		if (!frame.isValid())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		frame.release();
 
 		if (frame.isValid() || frame.planes().size() != 1u)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
-
+	return validation.succeeded();
 }
 
 bool TestFrame::testSubFrame(const double testDuration)
@@ -3286,9 +3283,9 @@ bool TestFrame::testSetFrameType(const double testDuration)
 
 	Log::info() << "Testing set frame type:";
 
-	bool allSucceeded = true;
-
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -3324,11 +3321,13 @@ bool TestFrame::testSetFrameType(const double testDuration)
 
 		// testing setting/changing/updating an existing valid frame
 
-		sourceFrame.set(targetFrameType, forceOwner, forceWritable);
+		const bool setResult = sourceFrame.set(targetFrameType, forceOwner, forceWritable);
+
+		OCEAN_EXPECT_TRUE(validation, setResult);
 
 		if (sourceFrame.frameType() != targetFrameType)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (sourceFrameType != targetFrameType)
@@ -3337,18 +3336,18 @@ bool TestFrame::testSetFrameType(const double testDuration)
 
 			if (sourceFrame.isContinuous() == false)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
 		if (forceOwner && !sourceFrame.isOwner())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (sourceFrame.isReadOnly())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		// testing setting and invalid frame 1/2
@@ -3357,17 +3356,17 @@ bool TestFrame::testSetFrameType(const double testDuration)
 		newSourceFrame.set(sourceFrameType, forceOwner, forceWritable);
 		if (!newSourceFrame.isValid() || newSourceFrame.frameType() != sourceFrameType || newSourceFrame.isContinuous() == false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (forceOwner && !newSourceFrame.isOwner())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (newSourceFrame.isReadOnly())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		// testing setting and invalid frame 2/2
@@ -3376,17 +3375,17 @@ bool TestFrame::testSetFrameType(const double testDuration)
 		newTargetFrame.set(targetFrameType, forceOwner, forceWritable);
 		if (!newTargetFrame.isValid() || newTargetFrame.frameType() != targetFrameType || newTargetFrame.isContinuous() == false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (forceOwner && !newTargetFrame.isOwner())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (newTargetFrame.isReadOnly())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		const Frame& constNewTargetFrame = newTargetFrame;
@@ -3395,17 +3394,17 @@ bool TestFrame::testSetFrameType(const double testDuration)
 		readOnlyFrame.set(targetFrameType, forceOwner, forceWritable);
 		if (!readOnlyFrame.isValid() || readOnlyFrame.frameType() != targetFrameType || readOnlyFrame.isContinuous() == false)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (forceOwner && !readOnlyFrame.isOwner())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (forceWritable && readOnlyFrame.isReadOnly())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		// finally testing whether the updated frames have consistent/valid data
@@ -3432,16 +3431,9 @@ bool TestFrame::testSetFrameType(const double testDuration)
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrame::testLegacyCopy(const double testDuration)
