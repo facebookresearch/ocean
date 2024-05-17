@@ -829,7 +829,11 @@ bool IAMainWindow::createGradientImage(const Frame& frame, Frame& gradientFrame,
 		return false;
 	}
 
-	gradientFrame.set(yFrame.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+	if (!gradientFrame.set(yFrame.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		return false;
+	}
+
 	CV::FrameFilterScharr::filterHorizontalVerticalMaximumAbsolute8BitPerChannel<uint8_t, 1u>(yFrame.constdata<uint8_t>(), gradientFrame.data<uint8_t>(), gradientFrame.width(), gradientFrame.height(), yFrame.paddingElements(), gradientFrame.paddingElements(), WorkerPool::get().scopedWorker()());
 
 	// let's invert the gradients to improve visibility

@@ -2277,15 +2277,27 @@ bool FourierTransformation::dft0(const Frame& source, Frame& target, int flags, 
 
 	if (!inv && source.channels() == 1 && (flags & DFT_COMPLEX_OUTPUT))
 	{
-		target.set(FrameType(source, FrameType::genericPixelFormat(source.dataType(), 2u)), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(FrameType(source, FrameType::genericPixelFormat(source.dataType(), 2u)), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 	}
 	else if (inv && source.channels() == 2 && (flags & DFT_REAL_OUTPUT))
 	{
-		target.set(FrameType(source, FrameType::genericPixelFormat(source.dataType(), 1u)), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(FrameType(source, FrameType::genericPixelFormat(source.dataType(), 1u)), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 	}
 	else
 	{
-		target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 	}
 
 	return dft(source, target, flags, nonzero_rows);
