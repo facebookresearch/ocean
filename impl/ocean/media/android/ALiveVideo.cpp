@@ -1006,7 +1006,12 @@ bool ALiveVideo::frameFromImage(AImage* image, Frame& frame)
 				}
 			}
 
-			frame.set(FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_Y_UV12, FrameType::ORIGIN_UPPER_LEFT), false /*forceOwner*/, true /*forceWritable*/);
+			if (!frame.set(FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_Y_UV12, FrameType::ORIGIN_UPPER_LEFT), false /*forceOwner*/, true /*forceWritable*/))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
+
 			frame.setTimestamp(timestamp);
 
 			CV::FrameConverterY_U_V12::convertY_U_V12ToY_UV12(sources[0], sources[1], sources[2], frame.data<uint8_t>(0u), frame.data<uint8_t>(1u), frame.width(), frame.height(), sourcePaddingElements[0], sourcePaddingElements[1], sourcePaddingElements[2], frame.paddingElements(0u), frame.paddingElements(1u), sourcePixelStrides[0], sourcePixelStrides[1], sourcePixelStrides[2]);

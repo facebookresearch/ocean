@@ -174,7 +174,11 @@ Frame ImageOcn::decodeImage(const void* buffer, const size_t size)
 				return Frame();
 			}
 
-			frame.set(frameType, true /*forceOwner*/, true /*forceWritable*/);
+			if (!frame.set(frameType, true /*forceOwner*/, true /*forceWritable*/))
+			{
+				ocean_assert(false && "This should never happen!");
+				return Frame();
+			}
 		}
 
 		if (planeWidth != uint64_t(frame.planeWidth((unsigned int)(planeIndex)))

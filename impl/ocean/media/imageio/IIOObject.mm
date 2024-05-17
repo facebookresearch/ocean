@@ -254,7 +254,12 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 		const uint8_t* dataPtr = (const uint8_t*)(CFDataGetBytePtr(data.object()));
 
 		ocean_assert(pixelFormat == FrameType::FORMAT_Y8);
-		result.set(FrameType((unsigned int)(width), (unsigned int)(height), pixelFormat, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/, Indices32() /*paddingElements*/);
+		if (!result.set(FrameType((unsigned int)(width), (unsigned int)(height), pixelFormat, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/, Indices32() /*paddingElements*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return Frame();
+		}
+
 		result.setTimestamp(Timestamp(true));
 
 		for (unsigned int y = 0u; y < result.height(); ++y)
@@ -280,7 +285,12 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 	}
 	else if (pixelFormat == FrameType::FORMAT_RGB32)
 	{
-		result.set(FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/, Indices32() /*paddingElements*/);
+		if (!result.set(FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/, Indices32() /*paddingElements*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return Frame();
+		}
+
 		result.setTimestamp(Timestamp(true));
 
 		const void* dataPtr = CFDataGetBytePtr(data.object());
@@ -300,7 +310,12 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 	{
 		// we convert FORMAT_RGB48 images to FORMAT_RGB24 images (as for now nobody needs 16 bit depth)
 
-		result.set(FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/, Indices32() /*paddingElements*/);
+		if (!result.set(FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/, Indices32() /*paddingElements*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return Frame();
+		}
+
 		result.setTimestamp(Timestamp(true));
 
 		const void* dataPtr = CFDataGetBytePtr(data.object());
@@ -320,7 +335,12 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 	{
 		// we convert FORMAT_RGBA64 images to FORMAT_RGBA32 images (as for now nobody needs 16 bit depth)
 
-		result.set(FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/, Indices32() /*paddingElements*/);
+		if (!result.set(FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/, Indices32() /*paddingElements*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return Frame();
+		}
+
 		result.setTimestamp(Timestamp(true));
 
 		const void* dataPtr = CFDataGetBytePtr(data.object());
@@ -410,7 +430,11 @@ bool IIOObject::writeFrameToImageDestination(CGImageDestinationRef imageDestinat
 
 	if (frame.pixelOrigin() != FrameType::ORIGIN_UPPER_LEFT)
 	{
-		targetFrame.set(FrameType(frame, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+		if (!targetFrame.set(FrameType(frame, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		const unsigned int rowBytes = targetFrame.planeWidthBytes(0u);
 
