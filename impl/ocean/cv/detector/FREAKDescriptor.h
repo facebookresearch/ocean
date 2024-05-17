@@ -1259,13 +1259,13 @@ bool FREAKDescriptorT<tSize>::blurAndDownsampleByTwo11(const Frame& finerLayer, 
 	ocean_assert(finerLayer.numberPlanes() == 1u && finerLayer.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 	ocean_assert(finerLayer.isPixelFormatCompatible(coarserLayer.pixelFormat()));
 
-	reusableFrame.set(finerLayer.frameType(), false /*forceOwner*/, true /*forceWritable*/);
-
-	if (!reusableFrame.isValid())
+	if (!reusableFrame.set(finerLayer.frameType(), false /*forceOwner*/, true /*forceWritable*/))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
 	}
+
+	ocean_assert(reusableFrame.isValid());
 
 	const Frame* sourceLayer = &finerLayer;
 

@@ -811,8 +811,9 @@ class OCEAN_CV_DETECTOR_EXPORT LineDetectorULF
 		 * @param minimalLength The minimal length an extracted line must have in pixel, with range [2, infinity)
 		 * @param maximalStraightLineDistance The maximal distance between the ideal line and every pixel on actual extracted line in pixel, with range [0, infinity)
 		 * @param types Optional resulting types of the individual resulting lines, one type for each line
+		 * @return True, if succeeded
 		 */
-		static void detectLines(const uint8_t* const yFrame, Memory& yFrameTransposedMemory, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, unsigned int& yFrameTransposedMemoryPaddingElements, const EdgeDetector& edgeDetector, FiniteLines2& detectedLines, const ScanDirection scanDirection, const unsigned int threshold = 50u, int16_t* reusableResponseBuffer = nullptr, const unsigned int minimalLength = 20u, const float maximalStraightLineDistance = 1.6f, EdgeTypes* types = nullptr);
+		static bool detectLines(const uint8_t* const yFrame, Memory& yFrameTransposedMemory, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, unsigned int& yFrameTransposedMemoryPaddingElements, const EdgeDetector& edgeDetector, FiniteLines2& detectedLines, const ScanDirection scanDirection, const unsigned int threshold = 50u, int16_t* reusableResponseBuffer = nullptr, const unsigned int minimalLength = 20u, const float maximalStraightLineDistance = 1.6f, EdgeTypes* types = nullptr);
 
 		/**
 		 * Returns whether a given value is larger than or equal to a given threshold (or smaller than or equal to a given threshold).

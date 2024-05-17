@@ -3629,7 +3629,7 @@ void LineDetectorULF::separateStraightLines(const unsigned int* pixelPositionsMa
 	}
 }
 
-void LineDetectorULF::detectLines(const uint8_t* yFrame, Memory& yFrameTransposedMemory, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, unsigned int& yFrameTransposedMemoryPaddingElements, const EdgeDetector& edgeDetector, FiniteLines2& detectedLines, const ScanDirection scanDirection, const unsigned int threshold, int16_t* reusableResponseBuffer, const unsigned int minimalLength, const float maximalStraightLineDistance, EdgeTypes* types)
+bool LineDetectorULF::detectLines(const uint8_t* yFrame, Memory& yFrameTransposedMemory, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, unsigned int& yFrameTransposedMemoryPaddingElements, const EdgeDetector& edgeDetector, FiniteLines2& detectedLines, const ScanDirection scanDirection, const unsigned int threshold, int16_t* reusableResponseBuffer, const unsigned int minimalLength, const float maximalStraightLineDistance, EdgeTypes* types)
 {
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(width != 0u && height != 0u);
@@ -3640,9 +3640,13 @@ void LineDetectorULF::detectLines(const uint8_t* yFrame, Memory& yFrameTranspose
 
 	if (reusableResponseBuffer == nullptr)
 	{
-		// we have to create our own reponse buffer;
+		// we have to create our own response buffer;
 
-		ownResponseFrame.set(FrameType(width, height, FrameType::genericPixelFormat<int16_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+		if (!ownResponseFrame.set(FrameType(width, height, FrameType::genericPixelFormat<int16_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/))
+		{
+			return false;
+		}
+
 		reusableResponseBuffer = ownResponseFrame.data<int16_t>();
 	}
 
@@ -3704,6 +3708,8 @@ void LineDetectorULF::detectLines(const uint8_t* yFrame, Memory& yFrameTranspose
 			(*types)[n] = EdgeType((*types)[n] | edgeDetector.edgeType());
 		}
 	}
+
+	return true;
 }
 
 }

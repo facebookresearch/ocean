@@ -130,7 +130,12 @@ MessengerCodeDetector::Codes MessengerCodeDetector::detectMessengerCodes(const u
 	{
 		bullseyes.clear();
 
-		yFrameInverted.set(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+		if (!yFrameInverted.set(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return Codes();
+		}
+
 		CV::FrameInverter::invert8BitPerChannel(yFrame, yFrameInverted.data<uint8_t>(), width, height, 1u, yFramePaddingElements, yFrameInverted.paddingElements(), nullptr /* no worker, as too fast already*/);
 
 		bullseyes = MessengerCodeDetector::detectBullseyes(yFrameInverted.constdata<uint8_t>(), width, height, yFrameInverted.paddingElements(), worker);

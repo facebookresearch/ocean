@@ -72,8 +72,11 @@ BlobFeatureDetector::ResponseMap::ResponseMap(const unsigned int frameWidth, con
 		ocean_assert(mapResponseWidth > 0u);
 		ocean_assert(mapResponseHeight > 0u);
 
-		mapFilterResponseFrame.set(FrameType(mapResponseWidth, mapResponseHeight, FrameType::genericPixelFormat<Scalar, 1u>(), FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
-		mapLaplacianSignFrame.set(FrameType(mapResponseWidth, mapResponseHeight, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>(), FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+		const bool resultResponse = mapFilterResponseFrame.set(FrameType(mapResponseWidth, mapResponseHeight, FrameType::genericPixelFormat<Scalar, 1u>(), FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+		ocean_assert_and_suppress_unused(resultResponse, resultResponse);
+
+		const bool resultSign = mapLaplacianSignFrame.set(FrameType(mapResponseWidth, mapResponseHeight, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>(), FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+		ocean_assert_and_suppress_unused(resultSign, resultSign);
 
 		ocean_assert(mapFilterResponseFrame.isContinuous());
 		ocean_assert(mapLaplacianSignFrame.isContinuous());
@@ -115,8 +118,11 @@ BlobFeatureDetector::ResponseMap::ResponseMap(const unsigned int frameWidth, con
 		ocean_assert(mapResponseWidth > 0u);
 		ocean_assert(mapResponseHeight > 0u);
 
-		mapFilterResponseFrame.set(FrameType(mapResponseWidth, mapResponseHeight, FrameType::genericPixelFormat<Scalar, 1u>(), FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
-		mapLaplacianSignFrame.set(FrameType(mapResponseWidth, mapResponseHeight, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>(), FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+		const bool resultResponse = mapFilterResponseFrame.set(FrameType(mapResponseWidth, mapResponseHeight, FrameType::genericPixelFormat<Scalar, 1u>(), FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+		ocean_assert_and_suppress_unused(resultResponse, resultResponse);
+
+		const bool resultSign = mapLaplacianSignFrame.set(FrameType(mapResponseWidth, mapResponseHeight, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>(), FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+		ocean_assert_and_suppress_unused(resultSign, resultSign);
 
 		ocean_assert(mapFilterResponseFrame.isContinuous());
 		ocean_assert(mapLaplacianSignFrame.isContinuous());

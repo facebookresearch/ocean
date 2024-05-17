@@ -275,7 +275,12 @@ LineDetectorHough::Accumulator::Accumulator(const unsigned int width, const unsi
 	const unsigned int accumulatorHeight = accumulatorHeightCore + 2u * accumulatorMirroredAngleBins_;
 
 	// sets the dimension of the accumulator
-	accumulatorFrame_.set(FrameType(accumulatorWidth, accumulatorHeight, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/);
+	if (!accumulatorFrame_.set(FrameType(accumulatorWidth, accumulatorHeight, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), true /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return;
+	}
+
 	accumulatorFrame_.setValue(0x00);
 
 	accumulatorMaximalDistance_ = Numeric::round32(Numeric::sqrt(Scalar(width * width) + Scalar(height * height)) * Scalar(0.5));
@@ -948,7 +953,11 @@ bool LineDetectorHough::internalDetectLines(const Frame& frame, const FilterType
 	{
 		case FR_HORIZONTAL_VERTICAL:
 		{
-			response.set(FrameType(frame, FrameType::genericPixelFormat<int8_t, 2u>()), true, true);
+			if (!response.set(FrameType(frame, FrameType::genericPixelFormat<int8_t, 2u>()), true, true))
+			{
+				return false;
+			}
+
 			voteNumber = 1u;
 
 			switch (filterType)
@@ -972,7 +981,11 @@ bool LineDetectorHough::internalDetectLines(const Frame& frame, const FilterType
 
 		case FR_DIAGONAL:
 		{
-			response.set(FrameType(frame, FrameType::genericPixelFormat<int8_t, 2u>()), true, true);
+			if (!response.set(FrameType(frame, FrameType::genericPixelFormat<int8_t, 2u>()), true, true))
+			{
+				return false;
+			}
+
 			voteNumber = 1u;
 
 			switch (filterType)
@@ -996,7 +1009,11 @@ bool LineDetectorHough::internalDetectLines(const Frame& frame, const FilterType
 
 		case FR_HORIZONTAL_VERTICAL_DIAGONAL:
 		{
-			response.set(FrameType(frame, FrameType::genericPixelFormat<int8_t, 4u>()), true, true);
+			if (!response.set(FrameType(frame, FrameType::genericPixelFormat<int8_t, 4u>()), true, true))
+			{
+				return false;
+			}
+
 			voteNumber = 2u;
 
 			switch (filterType)
