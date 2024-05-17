@@ -26,7 +26,11 @@ bool FrameFilterMean::filter(const Frame& source, Frame& target, const unsigned 
 
 	if (source.numberPlanes() == 1u && source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 	{
-		target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		switch (source.channels())
 		{

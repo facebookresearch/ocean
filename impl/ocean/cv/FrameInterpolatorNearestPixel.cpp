@@ -174,7 +174,11 @@ bool FrameInterpolatorNearestPixel::Comfort::transform(const Frame& input, Frame
 
 	if (input.dataType() == FrameType::DT_UNSIGNED_INTEGER_8 && input.numberPlanes() == 1u)
 	{
-		output.set(FrameType(input.frameType(), (unsigned int)(lookupTable.sizeX()), (unsigned int)(lookupTable.sizeY())), false /*forceOwner*/, true /*forceWritable*/);
+		if (!output.set(FrameType(input.frameType(), (unsigned int)(lookupTable.sizeX()), (unsigned int)(lookupTable.sizeY())), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		switch (input.channels())
 		{
@@ -208,8 +212,17 @@ bool FrameInterpolatorNearestPixel::Comfort::transformMask(const Frame& input, F
 
 	if (input.dataType() == FrameType::DT_UNSIGNED_INTEGER_8 && input.numberPlanes() == 1u)
 	{
-		output.set(FrameType(input.frameType(), (unsigned int)(lookupTable.sizeX()), (unsigned int)(lookupTable.sizeY())), false /*forceOwner*/, true /*forceWritable*/);
-		outputMask.set(FrameType(output, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/);
+		if (!output.set(FrameType(input.frameType(), (unsigned int)(lookupTable.sizeX()), (unsigned int)(lookupTable.sizeY())), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
+
+		if (!outputMask.set(FrameType(output, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		switch (input.channels())
 		{

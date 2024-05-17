@@ -141,7 +141,11 @@ bool FrameInterpolatorBilinear::Comfort::zoom(const Frame& source, Frame& target
 		return false;
 	}
 
-	target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+	if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
 
 	ocean_assert(Numeric::isNotEqualEps(zoomFactor));
 	const Scalar invZoomFactor = Scalar(1) / zoomFactor;
@@ -369,7 +373,11 @@ bool FrameInterpolatorBilinear::Comfort::homographyWithCamera(const PinholeCamer
 
 	if (input.dataType() == FrameType::DT_UNSIGNED_INTEGER_8 && input.numberPlanes() == 1u)
 	{
-		output.set(FrameType(input.frameType(), outputCamera.width(), outputCamera.height()), true, true);
+		if (!output.set(FrameType(input.frameType(), outputCamera.width(), outputCamera.height()), true, true))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		switch (input.channels())
 		{
@@ -408,8 +416,17 @@ bool FrameInterpolatorBilinear::Comfort::homographyWithCameraMask(const AnyCamer
 
 	if (input.dataType() == FrameType::DT_UNSIGNED_INTEGER_8 && input.numberPlanes() == 1u)
 	{
-		output.set(FrameType(input.frameType(), outputCamera.width(), outputCamera.height()), false /*forceOwner*/, true /*forceWritable*/);
-		outputMask.set(FrameType(output, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/);
+		if (!output.set(FrameType(input.frameType(), outputCamera.width(), outputCamera.height()), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
+
+		if (!outputMask.set(FrameType(output, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		if (inputCamera.name() == AnyCameraPinhole::WrappedCamera::name() && outputCamera.name() == AnyCameraPinhole::WrappedCamera::name())
 		{
@@ -453,7 +470,11 @@ bool FrameInterpolatorBilinear::Comfort::lookup(const Frame& input, Frame& outpu
 	{
 		if (input.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 		{
-			output.set(FrameType(input, (unsigned int)(lookupTable.sizeX()), (unsigned int)(lookupTable.sizeY())), false /*forceOwner*/, true /*foreWritable*/);
+			if (!output.set(FrameType(input, (unsigned int)(lookupTable.sizeX()), (unsigned int)(lookupTable.sizeY())), false /*forceOwner*/, true /*foreWritable*/))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			switch (input.channels())
 			{
@@ -476,7 +497,11 @@ bool FrameInterpolatorBilinear::Comfort::lookup(const Frame& input, Frame& outpu
 		}
 		else if (input.dataType() == FrameType::DT_SIGNED_FLOAT_32)
 		{
-			output.set(FrameType(input, (unsigned int)(lookupTable.sizeX()), (unsigned int)(lookupTable.sizeY())), false /*forceOwner*/, true /*foreWritable*/);
+			if (!output.set(FrameType(input, (unsigned int)(lookupTable.sizeX()), (unsigned int)(lookupTable.sizeY())), false /*forceOwner*/, true /*foreWritable*/))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
 
 			ocean_assert(borderColor == nullptr || size_t(borderColor) % sizeof(float) == 0);
 
@@ -511,8 +536,17 @@ bool FrameInterpolatorBilinear::Comfort::lookupMask(const Frame& input, Frame& o
 
 	if (input.isValid() && input.numberPlanes() == 1u && input.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 	{
-		output.set(FrameType(input, (unsigned int)(lookupTable.sizeX()), (unsigned int)(lookupTable.sizeY())), false /*forceOwner*/, true /*forceWritable*/);
-		outputMask.set(FrameType(output, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/);
+		if (!output.set(FrameType(input, (unsigned int)(lookupTable.sizeX()), (unsigned int)(lookupTable.sizeY())), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
+
+		if (!outputMask.set(FrameType(output, FrameType::FORMAT_Y8), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		switch (input.channels())
 		{
@@ -545,7 +579,11 @@ bool FrameInterpolatorBilinear::Comfort::rotate(const Frame& source, Frame& targ
 
 	if (source.numberPlanes() == 1u && source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 	{
-		target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		switch (source.channels())
 		{
@@ -591,7 +629,10 @@ bool FrameInterpolatorBilinear::Comfort::resampleCameraImage(const Frame& source
 		{
 			ocean_assert(borderColor == nullptr || size_t(borderColor) % sizeof(uint8_t) == 0);
 
-			targetFrame.set(FrameType(sourceFrame.frameType(), targetCamera.width(), targetCamera.height()), false /*forceOwner*/, true /*forceWritable*/);
+			if (!targetFrame.set(FrameType(sourceFrame.frameType(), targetCamera.width(), targetCamera.height()), false /*forceOwner*/, true /*forceWritable*/))
+			{
+				return false;
+			}
 
 			switch (sourceFrame.channels())
 			{
@@ -616,7 +657,10 @@ bool FrameInterpolatorBilinear::Comfort::resampleCameraImage(const Frame& source
 		{
 			ocean_assert(borderColor == nullptr || size_t(borderColor) % sizeof(float) == 0);
 
-			targetFrame.set(FrameType(sourceFrame.frameType(), targetCamera.width(), targetCamera.height()), false /*forceOwner*/, true /*forceWritable*/);
+			if (!targetFrame.set(FrameType(sourceFrame.frameType(), targetCamera.width(), targetCamera.height()), false /*forceOwner*/, true /*forceWritable*/))
+			{
+				return false;
+			}
 
 			switch (sourceFrame.channels())
 			{

@@ -37,14 +37,22 @@ bool FrameFilterSeparable::filter(const Frame& source, Frame& target, const std:
 
 	if (source.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 	{
-		target.set(source.frameType(), false, true);
+		if (!target.set(source.frameType(), false, true))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		return filter<uint8_t, uint32_t>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.channels(), source.paddingElements(), target.paddingElements(), horizontalFilter.data(), (unsigned int)(horizontalFilter.size()), verticalFilter.data(), (unsigned int)(verticalFilter.size()), worker, reusableMemory, processorInstructions);
 	}
 
 	if (source.dataType() == FrameType::DT_SIGNED_FLOAT_32)
 	{
-		target.set(source.frameType(), false, true);
+		if (!target.set(source.frameType(), false, true))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 
 		const unsigned int sumHorizontalFilter = sumFilterValues(horizontalFilter.data(), horizontalFilter.size());
 		if (sumHorizontalFilter == 0u)

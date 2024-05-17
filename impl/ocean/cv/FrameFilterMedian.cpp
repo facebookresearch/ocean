@@ -27,7 +27,11 @@ bool FrameFilterMedian::Comfort::filter(const Frame& source, Frame& target, cons
 
 	if (!target.isValid())
 	{
-		target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/);
+		if (!target.set(source.frameType(), false /*forceOwner*/, true /*forceWritable*/))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
 	}
 
 	for (unsigned int planeIndex = 0u; planeIndex < source.numberPlanes(); ++planeIndex)
