@@ -25,6 +25,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/build/cmake")
 
 if (ANDROID)
     list(APPEND CMAKE_FIND_ROOT_PATH "${CMAKE_CURRENT_LIST_DIR}/build/cmake")
+    set(CMAKE_STAGING_PREFIX ${CMAKE_INSTALL_PREFIX})
 endif()
 
 # Build options
