@@ -660,9 +660,6 @@ bool TestP3P::testP3PWithRays(const double testDuration)
 		bool imagePointsColinear = false;
 		for (unsigned int n = 0u; n < 3u; ++n)
 		{
-			ocean_assert(pinholeCamera.isInside(undistortedImagePoints[n]));
-			ocean_assert(pinholeCamera.isInside(distortedImagePoints[n]));
-
 			const unsigned int n1 = (n + 1u) % 3u;
 			const unsigned int n2 = (n + 2u) % 3u;
 

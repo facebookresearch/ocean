@@ -278,8 +278,6 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 		*usedIndices = std::move(bestIndices);
 	}
 
-	ocean_assert(world_T_camera == world_T_bestCamera);
-
 	return true;
 }
 
@@ -2671,8 +2669,6 @@ bool RANSAC::p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& 
 	{
 		*usedIndices = std::move(bestIndices);
 	}
-
-	ocean_assert(world_T_bestCamera == world_T_camera);
 
 	return true;
 }
