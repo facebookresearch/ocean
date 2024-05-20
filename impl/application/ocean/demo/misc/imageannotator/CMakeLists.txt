@@ -6,6 +6,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 find_package(OpenCV COMPONENTS core imgproc)
+find_package(Eigen3 REQUIRED) # Workaround linker error
 
 if (MACOS AND OpenCV_FOUND)
 

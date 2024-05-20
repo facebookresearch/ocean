@@ -33,6 +33,15 @@ set(OPENCV_LIB_INSTALL_PATH "lib" CACHE BOOL "")
 set(OPENCV_LIB_ARCHIVE_INSTALL_PATH "lib" CACHE BOOL "")
 
 CPMAddPackage(
+  NAME           opencv_contrib
+  GIT_REPOSITORY https://github.com/opencv/opencv_contrib.git
+  GIT_TAG        4.9.0
+  DOWNLOAD_ONLY
+)
+
+set(OPENCV_EXTRA_MODULES_PATH "${opencv_contrib_SOURCE_DIR}/modules")
+
+CPMAddPackage(
   NAME           opencv
   GIT_REPOSITORY https://github.com/opencv/opencv.git
   GIT_TAG        4.9.0

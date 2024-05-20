@@ -1,0 +1,97 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
+cmake_minimum_required(VERSION 3.26)
+
+find_package(OpenCV COMPONENTS calib3d core features2d highgui imgcodecs imgproc objdetect photo video xfeatures2d)
+
+# Workaround some OpenCV-related linker errors
+find_package(Eigen3)
+find_package(ZLIB)
+find_package(JPEG)
+
+if ((MACOS OR ANDROID OR IOS OR LINUX) AND OpenCV_FOUND)
+
+    set(OCEAN_TARGET_NAME "ocean_test_testcv_testopencv")
+
+    if (IOS)
+        find_library(AVFOUNDATION_LIB AVFoundation)
+        find_library(COREGRAPHICS_LIB CoreGraphics)
+        find_library(OPENGLES_LIB OpenGLES)
+        find_library(QUARTZCORE_LIB QuartzCore)
+    endif()
+
+    # Source files
+    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
+    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
+
+    # Target definition
+    add_library(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
+
+    target_include_directories(${OCEAN_TARGET_NAME}
+        PRIVATE
+            ${OCEAN_IMPL_DIR}
+            ${OpenCV_INCLUDE_DIRS}
+    )
+
+    target_compile_definitions(${OCEAN_TARGET_NAME}
+        PUBLIC
+            ${OCEAN_PREPROCESSOR_FLAGS}
+            "-DOCEAN_TEST_CV_LIBYUV_HAS_EXTRAS"
+    )
+
+    if (BUILD_SHARED_LIBS)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_CV_OPENCV_EXPORT")
+    endif()
+
+    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_COMPILER_FLAGS})
+
+    if (NOT WIN32)
+        target_compile_options(${OCEAN_TARGET_NAME} PRIVATE "-fexceptions")
+    endif()
+
+    # Dependencies
+    target_link_libraries(${OCEAN_TARGET_NAME}
+        PUBLIC
+            ocean_base
+            ocean_cv
+            ocean_geometry
+            ocean_math
+            ocean_platform
+            ocean_system
+            ocean_test_testcv
+            ${OpenCV_LIBS}
+    )
+
+    if (ANDROID)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_android)
+    endif()
+
+    if (IOS OR MACOS)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_apple)
+    endif()
+
+    if (IOS)
+        target_link_libraries(${OCEAN_TARGET_NAME}
+            PUBLIC
+                ${AVFOUNDATION_LIB}
+                ${COREGRAPHICS_LIB}
+                ${OPENGLES_LIB}
+                ${QUARTZCORE_LIB}
+        )
+    endif()
+
+    # Installation
+    install(TARGETS ${OCEAN_TARGET_NAME}
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            COMPONENT lib
+    )
+
+    install(FILES ${OCEAN_TARGET_HEADER_FILES}
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/test/testcv/testopencv
+            COMPONENT include
+    )
+
+endif()
