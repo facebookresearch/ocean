@@ -14,6 +14,9 @@ else()
   set(wxWidgets_USE_STATIC ON)
 endif()
 
+# Disable features/components not used in Ocean
+set(wxUSE_WEBREQUEST OFF)
+
 set(CMAKE_DEBUG_POSTFIX "")
 
 CPMAddPackage(
