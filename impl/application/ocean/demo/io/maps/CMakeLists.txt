@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (MACOS)
+if (MACOS OR WIN32)
 
     set(OCEAN_TARGET_NAME "application_ocean_demo_io_maps_basemaploader")
 
