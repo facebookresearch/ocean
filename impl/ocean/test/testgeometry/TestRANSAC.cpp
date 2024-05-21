@@ -756,6 +756,10 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
+		constexpr double successThreshold = std::is_same<Scalar, float>::value ? 0.95 : 0.99;
+
+		ValidationPrecision validation(successThreshold, randomGenerator);
+
 		const std::shared_ptr<AnyCamera> anyCameraA = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
 		const std::shared_ptr<AnyCamera> anyCameraB = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
 		ocean_assert(anyCameraA && anyCameraB);
@@ -765,15 +769,14 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 
 		ocean_assert(testDuration > 0.0);
 
-		const double faultyRate = 0.15; // 15%
-
-		unsigned long long iterations = 0ull;
-		unsigned long long validIterations = 0ull;
+		constexpr double faultyRate = 0.15; // 15%
 
 		const Timestamp startTimestamp(true);
 
 		do
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const HomogenousMatrix4 world_T_object(Random::vector3(randomGenerator, -5, 5), Random::quaternion(randomGenerator));
 			const HomogenousMatrix4 object_T_world = world_T_object.inverted();
 
@@ -781,14 +784,14 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 			std::vector<Vectors2> imagePointGroups(2);
 			HomogenousMatrices4 world_T_cameras(2);
 
-			std::vector<IndexSet32> faultyCorrespondenceGroups(2);
+			std::vector<UnorderedIndexSet32> faultyCorrespondenceGroups(2);
 
 			for (unsigned int nCamera = 0u; nCamera < 2u; ++nCamera)
 			{
 				Vectors3& objectPoints = objectPointGroups[nCamera];
 				Vectors2& imagePoints = imagePointGroups[nCamera];
 				HomogenousMatrix4& world_T_camera = world_T_cameras[nCamera];
-				IndexSet32& faultyCorrespondences = faultyCorrespondenceGroups[nCamera];
+				UnorderedIndexSet32& faultyCorrespondences = faultyCorrespondenceGroups[nCamera];
 
 				const AnyCamera& anyCamera = nCamera == 0u ? *anyCameraA : *anyCameraB;
 
@@ -837,12 +840,12 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 				for (unsigned int nCamera = 0u; nCamera < 2u; ++nCamera)
 				{
 					const Vectors3& objectPoints = objectPointGroups[nCamera];
-					const IndexSet32& faultyCorrespondences = faultyCorrespondenceGroups[nCamera];
+					const UnorderedIndexSet32& faultyCorrespondences = faultyCorrespondenceGroups[nCamera];
 
 					const Indices32& usedIndices = nCamera == 0u ? usedIndicesA : usedIndicesB;
 
 					const std::vector<uint8_t> faultyStatements = Subset::indices2statements<Index32, 1u>(faultyCorrespondences, objectPoints.size());
-					const IndexSet32 usedIndexSet = IndexSet32(usedIndices.cbegin(), usedIndices.cend());
+					const UnorderedIndexSet32 usedIndexSet = UnorderedIndexSet32(usedIndices.cbegin(), usedIndices.cend());
 
 					ocean_assert(faultyCorrespondences.size() < objectPoints.size());
 					if (usedIndices.size() < objectPoints.size() - faultyCorrespondences.size())
@@ -861,30 +864,24 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 								{
 									// although the correspondence is not faulty, it hasn't been used
 									iterationIsValid = false;
+									break;
 								}
 							}
 						}
 					}
 				}
 
-				if (iterationIsValid)
+				if (!iterationIsValid)
 				{
-					++validIterations;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			++iterations;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-		ocean_assert(iterations != 0ull);
-		const double percent = double(validIterations) / double(iterations);
+		Log::info() << "Validation: " << validation;
 
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-		const double threshold = std::is_same<Scalar, double>::value ? 0.99 : 0.95;
-
-		if (percent < threshold)
+		if (!validation.succeeded())
 		{
 			allSucceeded = false;
 		}
