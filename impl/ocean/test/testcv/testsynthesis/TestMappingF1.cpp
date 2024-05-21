@@ -569,8 +569,6 @@ bool TestMappingF1::testAppearanceCost5x5(const unsigned int width, const unsign
 
 	do
 	{
-		ValidationPrecision::ScopedIteration scopedIteration(validation);
-
 		const unsigned int testWidth = RandomI::random(randomGenerator, 6u, width);
 		const unsigned int testHeight = RandomI::random(randomGenerator, 6u, height);
 
@@ -586,6 +584,8 @@ bool TestMappingF1::testAppearanceCost5x5(const unsigned int width, const unsign
 
 		for (size_t n = 0; n < iterations; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			CV::PixelPosition target;
 			Vector2 source;
 
@@ -624,8 +624,9 @@ bool TestMappingF1::testAppearanceCost5x5(const unsigned int width, const unsign
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
+	Log::info() << validation.iterations();
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
@@ -692,8 +693,6 @@ bool TestMappingF1::testAppearanceReferenceCost5x5(const unsigned int width, con
 
 	do
 	{
-		ValidationPrecision::ScopedIteration scopedIteration(validation);
-
 		const unsigned int testWidth = RandomI::random(randomGenerator, 6u, width);
 		const unsigned int testHeight = RandomI::random(randomGenerator, 6u, height);
 
@@ -710,6 +709,8 @@ bool TestMappingF1::testAppearanceReferenceCost5x5(const unsigned int width, con
 
 		for (size_t n = 0; n < iterations; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			CV::PixelPosition target;
 			Vector2 source;
 
@@ -748,7 +749,7 @@ bool TestMappingF1::testAppearanceReferenceCost5x5(const unsigned int width, con
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Validation: " << validation;
 
