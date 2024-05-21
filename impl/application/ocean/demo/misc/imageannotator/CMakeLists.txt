@@ -5,58 +5,64 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-find_package(OpenCV COMPONENTS core imgproc)
-find_package(Eigen3 REQUIRED) # Workaround linker error
+if (MACOS)
 
-if (MACOS AND OpenCV_FOUND)
+    find_package(OpenCV COMPONENTS core imgproc QUIET)
+    find_package(Eigen3 REQUIRED) # Workaround linker error
 
-    set(OCEAN_TARGET_NAME "application_ocean_demo_misc_imageannotator_osx")
+    if (NOT OpenCV_FOUND)
+        message(STATUS "Excluding 'application_ocean_demo_misc_imageannotator_osx' because OpenCV hasn't been found.")
+    else()
 
-    # Source files
-    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/wxw/*.h")
-    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/wxw/*.cpp")
+        set(OCEAN_TARGET_NAME "application_ocean_demo_misc_imageannotator_osx")
 
-    # Target definition
-    add_executable(${OCEAN_TARGET_NAME} MACOSX_BUNDLE ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
+        # Source files
+        file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/wxw/*.h")
+        file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/wxw/*.cpp")
 
-    target_include_directories(${OCEAN_TARGET_NAME}
-        PRIVATE
-            "${OCEAN_IMPL_DIR}"
-            "${CMAKE_SOURCE_DIR}/res"  # for res/application/ocean/demo/misc/imageannotator
-            ${OpenCV_INCLUDE_DIRS}
-    )
+        # Target definition
+        add_executable(${OCEAN_TARGET_NAME} MACOSX_BUNDLE ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
 
-    target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_PREPROCESSOR_FLAGS})
-    target_compile_options(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_COMPILER_FLAGS})
+        target_include_directories(${OCEAN_TARGET_NAME}
+            PRIVATE
+                "${OCEAN_IMPL_DIR}"
+                "${CMAKE_SOURCE_DIR}/res"  # for res/application/ocean/demo/misc/imageannotator
+                ${OpenCV_INCLUDE_DIRS}
+        )
 
-    set_target_properties(${OCEAN_TARGET_NAME} PROPERTIES
-        BUNDLE True
-        MACOSX_BUNDLE_BUNDLE_NAME ${OCEAN_TARGET_NAME}
-        MACOSX_BUNDLE_BUNDLE_VERSION ${CMAKE_PROJECT_VERSION}
-        MACOSX_BUNDLE_GUI_IDENTIFIER com.meta.ocean.application.demo.misc.imageannotator.osx
-        MACOSX_BUNDLE_SHORT_VERSION_STRING ${CMAKE_PROJECT_VERSION}
-    )
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_PREPROCESSOR_FLAGS})
+        target_compile_options(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_COMPILER_FLAGS})
 
-    # Dependencies
-    target_link_libraries(${OCEAN_TARGET_NAME}
-        PRIVATE
-            ocean_base
-            ocean_cv
-            ocean_cv_advanced
-            ocean_cv_segmentation
-            ocean_io
-            ocean_media
-            ocean_media_imageio
-            ocean_platform_wxwidgets
-            ${OpenCV_LIBS}
-    )
+        set_target_properties(${OCEAN_TARGET_NAME} PROPERTIES
+            BUNDLE True
+            MACOSX_BUNDLE_BUNDLE_NAME ${OCEAN_TARGET_NAME}
+            MACOSX_BUNDLE_BUNDLE_VERSION ${CMAKE_PROJECT_VERSION}
+            MACOSX_BUNDLE_GUI_IDENTIFIER com.meta.ocean.application.demo.misc.imageannotator.osx
+            MACOSX_BUNDLE_SHORT_VERSION_STRING ${CMAKE_PROJECT_VERSION}
+        )
 
-    # Installation
-    install(TARGETS ${OCEAN_TARGET_NAME} BUNDLE DESTINATION bin)
+        # Dependencies
+        target_link_libraries(${OCEAN_TARGET_NAME}
+            PRIVATE
+                ocean_base
+                ocean_cv
+                ocean_cv_advanced
+                ocean_cv_segmentation
+                ocean_io
+                ocean_media
+                ocean_media_imageio
+                ocean_platform_wxwidgets
+                ${OpenCV_LIBS}
+        )
 
-    install(CODE "
-        include(BundleUtilities)
-        fixup_bundle(${CMAKE_INSTALL_PREFIX}/bin/${OCEAN_TARGET_NAME}.app \"\" \"${CMAKE_INSTALL_PREFIX}/lib\")
-        " COMPONENT Runtime)
+        # Installation
+        install(TARGETS ${OCEAN_TARGET_NAME} BUNDLE DESTINATION bin)
+
+        install(CODE "
+            include(BundleUtilities)
+            fixup_bundle(${CMAKE_INSTALL_PREFIX}/bin/${OCEAN_TARGET_NAME}.app \"\" \"${CMAKE_INSTALL_PREFIX}/lib\")
+            " COMPONENT Runtime)
+
+    endif()
 
 endif()

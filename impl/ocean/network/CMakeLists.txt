@@ -12,7 +12,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     set(OCEAN_TARGET_NAME "ocean_network")
 
     if (ANDROID OR LINUX)
-        find_package(CURL)
+        find_package(CURL QUIET)
     endif()
 
     # Source files
