@@ -565,7 +565,7 @@ bool TestP3P::testP3PWithPoints(const double testDuration)
 				scopedIteration.setInaccurate();
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
 		Log::info() << anyCamera->name() << ":";
 
@@ -753,7 +753,7 @@ bool TestP3P::testP3PWithRays(const double testDuration)
 			scopedIteration.setInaccurate();
 		}
 	}
-	while (validation.iterations() == 0ull && startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
