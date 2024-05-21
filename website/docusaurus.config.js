@@ -74,7 +74,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             label: 'Documentation',
           },
           {
-            href: 'pathname://doxygen/index.html',
+            href: 'pathname:///doxygen/index.html',
             position: 'left',
             label: 'Reference',
           },
