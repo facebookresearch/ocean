@@ -516,7 +516,7 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 				scopedIteration.setInaccurate();
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
 		Log::info() << "Performance: " << performance;
 
