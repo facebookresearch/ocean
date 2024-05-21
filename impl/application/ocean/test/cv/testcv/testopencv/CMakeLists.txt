@@ -9,6 +9,11 @@ if (MACOS OR LINUX)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv_testopencv")
 
+    if (NOT TARGET ocean_test_testcv_testopencv)
+        message(STATUS "Excluding '${OCEAN_TARGET_NAME}' because its dependency 'ocean_test_testcv_testopencv' is missing.")
+        return()
+    endif()
+
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")

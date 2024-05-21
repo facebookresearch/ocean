@@ -5,14 +5,19 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-find_package(OpenCV COMPONENTS calib3d core features2d highgui imgcodecs imgproc objdetect photo video xfeatures2d)
+if (MACOS OR ANDROID OR IOS OR LINUX)
 
-# Workaround some OpenCV-related linker errors
-find_package(Eigen3)
-find_package(ZLIB)
-find_package(JPEG)
+    find_package(OpenCV COMPONENTS calib3d core features2d highgui imgcodecs imgproc objdetect photo video xfeatures2d QUIET)
 
-if ((MACOS OR ANDROID OR IOS OR LINUX) AND OpenCV_FOUND)
+    if (NOT OpenCV_FOUND)
+        message(STATUS "Excluding 'ocean_test_testcv_testopencv' because OpenCV hasn't been found.")
+        return()
+    endif()
+
+    # Workaround some OpenCV-related linker errors
+    find_package(Eigen3)
+    find_package(ZLIB)
+    find_package(JPEG)
 
     set(OCEAN_TARGET_NAME "ocean_test_testcv_testopencv")
 
