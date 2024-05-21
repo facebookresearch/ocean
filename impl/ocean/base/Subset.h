@@ -32,7 +32,7 @@ class Subset
 
 				/**
 				 * Extracts a subset of a given set of objects by usage of an index vector holding the indices of all objects to be used.
-				 * If the index data type is an unsigned char, than the (boolean != 0u) statement is used to use the corresponding object or not.<br>
+				 * If the index data type is an uint8_t, than the (boolean != 0u) statement is used to use the corresponding object or not.<br>
 				 * Beware: No range check is done! Thus, each index must not exceed the number of given objects.<br>
 				 * @param objects Entire set of objects from that a subset will be extracted
 				 * @param indices Indices defining the subset to be extracted
@@ -77,7 +77,7 @@ class Subset
 
 				/**
 				 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be used.
-				 * If the index data type is an unsigned char, than the (boolean != 0u) statement is used to use the corresponding object or not.<br>
+				 * If the index data type is an uint8_t, than the (boolean != 0u) statement is used to use the corresponding object or not.<br>
 				 * Beware: No range check is done! Thus, each index must not exceed the number of given objects.<br>
 				 * @param objects Entire set of objects from that a subset will be extracted
 				 * @param numberObjects Number of given objects
@@ -91,7 +91,7 @@ class Subset
 
 				/**
 				 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be used.
-				 * If the index data type is an unsigned char, than the (boolean != 0u) statement is used to use the corresponding object or not.<br>
+				 * If the index data type is an uint8_t, than the (boolean != 0u) statement is used to use the corresponding object or not.<br>
 				 * Beware: No range check is done! Thus, each index must not exceed the number of given objects.<br>
 				 * @param objects Entire set of objects from that a subset will be extracted
 				 * @param numberObjects Number of given objects
@@ -139,61 +139,52 @@ class Subset
 				static inline std::vector<T> invertedSubset(const T* objects, const size_t numberObjects, const std::set<TIndex>& indices);
 
 				/**
-				 * Converts object indices to an unsigned char vector holding statements for each object.
+				 * Converts object indices to an uint8_t vector holding statements for each object.
 				 * @param indices Indices defining the subset of the objects, with range [0, numberObjects)
 				 * @param numberObjects Number of objects that can be addressed by the indices
 				 * @return Resulting (boolean != 0u) statements
+				 * @tparam TContainer The container to be used, e.g., std::vector, std::set, std::unordred_set
 				 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
 				 */
-				template <unsigned char tValue>
-				static inline std::vector<unsigned char> indices2statements(const std::vector<TIndex>& indices, const size_t numberObjects);
+				template <typename TContainer, uint8_t tValue>
+				static inline std::vector<uint8_t> indices2statements(const TContainer& indices, const size_t numberObjects);
 
 				/**
-				 * Converts object indices to an unsigned char vector holding statements for each object.
-				 * @param indices Indices defining the subset of the objects, with range [0, numberObjects)
-				 * @param numberObjects Number of objects that can be addressed by the indices
-				 * @return Resulting boolean statements
-				 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
-				 */
-				template <unsigned char tValue>
-				static inline std::vector<unsigned char> indices2statements(const std::set<TIndex>& indices, const size_t numberObjects);
-
-				/**
-				 * Converts object indices to an unsigned char vector holding statements for each object.
+				 * Converts object indices to an uint8_t vector holding statements for each object.
 				 * @param indices Indices defining the subset of the objects, with range [0, numberObjects)
 				 * @param numberIndices Number of provided indices
 				 * @param numberObjects Number of objects that can be addressed by the indices
 				 * @return Resulting boolean statements
 				 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
 				 */
-				template <unsigned char tValue>
-				static inline std::vector<unsigned char> indices2statements(const TIndex* indices, const size_t numberIndices, const size_t numberObjects);
+				template <uint8_t tValue>
+				static inline std::vector<uint8_t> indices2statements(const TIndex* indices, const size_t numberIndices, const size_t numberObjects);
 
 				/**
-				 * Converts an unsigned char vector holding statements for each object into object indices.
+				 * Converts an uint8_t vector holding statements for each object into object indices.
 				 * @param statements Boolean statement for each object
 				 * @return Resulting object indices
 				 * @tparam tValue Value for objects that will be defined in the indices
 				 */
-				template <unsigned char tValue>
-				static inline std::vector<TIndex> statements2indices(const std::vector<unsigned char>& statements);
+				template <uint8_t tValue>
+				static inline std::vector<TIndex> statements2indices(const std::vector<uint8_t>& statements);
 
 				/**
-				 * Converts an unsigned char vector holding statements for each object into object indices.
+				 * Converts an uint8_t vector holding statements for each object into object indices.
 				 * @param statements Boolean statement for each object
 				 * @param numberStatements Number of statements
 				 * @return Resulting object indices
 				 * @tparam tValue Value for objects that will be defined in the indices
 				 */
-				template <unsigned char tValue>
-				static inline std::vector<TIndex> statements2indices(const unsigned char* statements, const size_t numberStatements);
+				template <uint8_t tValue>
+				static inline std::vector<TIndex> statements2indices(const uint8_t* statements, const size_t numberStatements);
 			};
 
 	public:
 
 		/**
 		 * Extracts a subset of a given set of objects by usage of an index vector holding the indices of all objects to be used.
-		 * If the index data type is an unsigned char, than the (boolean != 0u) statement is used to use the corresponding object or not.<br>
+		 * If the index data type is an uint8_t, than the (boolean != 0u) statement is used to use the corresponding object or not.<br>
 		 * Beware: No range check is done! Thus, each index must not exceed the number of given objects.<br>
 		 * @param objects Entire set of objects from that a subset will be extracted
 		 * @param indices Indices defining the subset to be extracted
@@ -242,7 +233,7 @@ class Subset
 
 		/**
 		 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be used.
-		 * If the index data type is an unsigned char, than the (boolean != 0u) statement is used to use the corresponding object or not.<br>
+		 * If the index data type is an uint8_t, than the (boolean != 0u) statement is used to use the corresponding object or not.<br>
 		 * Beware: No range check is done! Thus, each index must not exceed the number of given objects.<br>
 		 * @param objects Entire set of objects from that a subset will be extracted
 		 * @param numberObjects Number of given objects
@@ -257,7 +248,7 @@ class Subset
 
 		/**
 		 * Extracts a subset of a given set of objects by usage of a set of indices of all objects to be used.
-		 * If the index data type is an unsigned char, than the (boolean != 0u) statement is used to use the corresponding object or not.<br>
+		 * If the index data type is an uint8_t, than the (boolean != 0u) statement is used to use the corresponding object or not.<br>
 		 * Beware: No range check is done! Thus, each index must not exceed the number of given objects.<br>
 		 * @param objects Entire set of objects from that a subset will be extracted
 		 * @param numberObjects Number of given objects
@@ -336,29 +327,40 @@ class Subset
 		static inline std::vector<T> invertedSubset(const T* objects, const size_t numberObjects, const std::set<TIndex>& indices);
 
 		/**
-		 * Converts object indices to an unsigned char vector holding statements for each object.
+		 * Converts object indices to an uint8_t vector holding statements for each object.
 		 * @param indices Indices defining the subset of the objects, with range [0, numberObjects)
 		 * @param numberObjects Number of objects that can be addressed by the indices
 		 * @return Resulting boolean statements
 		 * @tparam TIndex Data type of the index elements
 		 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
 		 */
-		template <typename TIndex, unsigned char tValue>
-		static inline std::vector<unsigned char> indices2statements(const std::vector<TIndex>& indices, const size_t numberObjects);
+		template <typename TIndex, uint8_t tValue>
+		static inline std::vector<uint8_t> indices2statements(const std::vector<TIndex>& indices, const size_t numberObjects);
 
 		/**
-		 * Converts object indices to an unsigned char vector holding statements for each object.
+		 * Converts object indices to an uint8_t vector holding statements for each object.
 		 * @param indices Indices defining the subset of the objects, with range [0, numberObjects)
 		 * @param numberObjects Number of objects that can be addressed by the indices
 		 * @return Resulting boolean statements
 		 * @tparam TIndex Data type of the index elements
 		 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
 		 */
-		template <typename TIndex, unsigned char tValue>
-		static inline std::vector<unsigned char> indices2statements(const std::set<TIndex>& indices, const size_t numberObjects);
+		template <typename TIndex, uint8_t tValue>
+		static inline std::vector<uint8_t> indices2statements(const std::set<TIndex>& indices, const size_t numberObjects);
 
 		/**
-		 * Converts object indices to an unsigned char vector holding statements for each object.
+		 * Converts object indices to an uint8_t vector holding statements for each object.
+		 * @param indices Indices defining the subset of the objects, with range [0, numberObjects)
+		 * @param numberObjects Number of objects that can be addressed by the indices
+		 * @return Resulting boolean statements
+		 * @tparam TIndex Data type of the index elements
+		 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
+		 */
+		template <typename TIndex, uint8_t tValue>
+		static inline std::vector<uint8_t> indices2statements(const std::unordered_set<TIndex>& indices, const size_t numberObjects);
+
+		/**
+		 * Converts object indices to an uint8_t vector holding statements for each object.
 		 * @param indices Indices defining the subset of the objects, with range [0, numberObjects)
 		 * @param numberIndices Number of provided indices
 		 * @param numberObjects Number of objects that can be addressed by the indices
@@ -366,29 +368,29 @@ class Subset
 		 * @tparam TIndex Data type of the index elements
 		 * @tparam tValue Value for objects that are defined in the indices, the inverse value is applied otherwise
 		 */
-		template <typename TIndex, unsigned char tValue>
-		static inline std::vector<unsigned char> indices2statements(const TIndex* indices, const size_t numberIndices, const size_t numberObjects);
+		template <typename TIndex, uint8_t tValue>
+		static inline std::vector<uint8_t> indices2statements(const TIndex* indices, const size_t numberIndices, const size_t numberObjects);
 
 		/**
-		 * Converts an unsigned char vector holding statements for each object into object indices.
+		 * Converts an uint8_t vector holding statements for each object into object indices.
 		 * @param statements Boolean statement for each object
 		 * @return Resulting object indices
 		 * @tparam TIndex Data type of the index elements
 		 * @tparam tValue Value for objects that will be defined in the indices
 		 */
-		template <typename TIndex, unsigned char tValue>
-		static inline std::vector<TIndex> statements2indices(const std::vector<unsigned char>& statements);
+		template <typename TIndex, uint8_t tValue>
+		static inline std::vector<TIndex> statements2indices(const std::vector<uint8_t>& statements);
 
 		/**
-		 * Converts an unsigned char vector holding statements for each object into object indices.
+		 * Converts an uint8_t vector holding statements for each object into object indices.
 		 * @param statements Boolean statement for each object
 		 * @param numberStatements Number of statements
 		 * @return Resulting object indices
 		 * @tparam TIndex Data type of the index elements
 		 * @tparam tValue Value for objects that will be defined in the indices
 		 */
-		template <typename TIndex, unsigned char tValue>
-		static inline std::vector<TIndex> statements2indices(const unsigned char* statements, const size_t numberStatements);
+		template <typename TIndex, uint8_t tValue>
+		static inline std::vector<TIndex> statements2indices(const uint8_t* statements, const size_t numberStatements);
 
 		/**
 		 * Determines corresponding element pairs from two sets of element maps.
@@ -452,14 +454,14 @@ inline std::vector<T> Subset::InternalSubset<TIndex>::subset(const std::vector<T
 
 template <>
 template <typename T>
-inline std::vector<T> Subset::InternalSubset<unsigned char>::subset(const std::vector<T>& objects, const std::vector<unsigned char>& indices)
+inline std::vector<T> Subset::InternalSubset<uint8_t>::subset(const std::vector<T>& objects, const std::vector<uint8_t>& indices)
 {
 	std::vector<T> result;
 	result.reserve(indices.size());
 
 	typename std::vector<T>::const_iterator iObject = objects.begin();
 
-	for (const unsigned char index : indices)
+	for (const uint8_t index : indices)
 	{
 		if (index != 0u)
 		{
@@ -573,7 +575,7 @@ inline std::vector<T> Subset::InternalSubset<TIndex>::subset(const T* objects, c
 
 template <>
 template <typename T>
-inline std::vector<T> Subset::InternalSubset<unsigned char>::subset(const T* objects, const size_t numberObjects, const unsigned char* indices, const size_t numberIndices)
+inline std::vector<T> Subset::InternalSubset<uint8_t>::subset(const T* objects, const size_t numberObjects, const uint8_t* indices, const size_t numberIndices)
 {
 	ocean_assert_and_suppress_unused(numberIndices <= numberObjects, numberObjects);
 
@@ -682,10 +684,10 @@ inline std::vector<T> Subset::InternalSubset<TIndex>::invertedSubset(const T* ob
 }
 
 template <typename TIndex>
-template <unsigned char tValue>
-inline std::vector<unsigned char> Subset::InternalSubset<TIndex>::indices2statements(const std::vector<TIndex>& indices, const size_t numberObjects)
+template <typename TContainer, uint8_t tValue>
+inline std::vector<uint8_t> Subset::InternalSubset<TIndex>::indices2statements(const TContainer& indices, const size_t numberObjects)
 {
-	std::vector<unsigned char> result(numberObjects, !tValue);
+	std::vector<uint8_t> result(numberObjects, !tValue);
 
 	for (const TIndex& index : indices)
 	{
@@ -697,25 +699,10 @@ inline std::vector<unsigned char> Subset::InternalSubset<TIndex>::indices2statem
 }
 
 template <typename TIndex>
-template <unsigned char tValue>
-inline std::vector<unsigned char> Subset::InternalSubset<TIndex>::indices2statements(const std::set<TIndex>& indices, const size_t numberObjects)
+template <uint8_t tValue>
+inline std::vector<uint8_t> Subset::InternalSubset<TIndex>::indices2statements(const TIndex* indices, const size_t numberIndices, const size_t numberObjects)
 {
-	std::vector<unsigned char> result(numberObjects, !tValue);
-
-	for (const TIndex& index : indices)
-	{
-		ocean_assert(index < result.size());
-		result[index] = tValue;
-	}
-
-	return result;
-}
-
-template <typename TIndex>
-template <unsigned char tValue>
-inline std::vector<unsigned char> Subset::InternalSubset<TIndex>::indices2statements(const TIndex* indices, const size_t numberIndices, const size_t numberObjects)
-{
-	std::vector<unsigned char> result(numberObjects, !tValue);
+	std::vector<uint8_t> result(numberObjects, !tValue);
 
 	for (size_t n = 0; n < numberIndices; ++n)
 	{
@@ -727,8 +714,8 @@ inline std::vector<unsigned char> Subset::InternalSubset<TIndex>::indices2statem
 }
 
 template <typename TIndex>
-template <unsigned char tValue>
-inline std::vector<TIndex> Subset::InternalSubset<TIndex>::statements2indices(const std::vector<unsigned char>& statements)
+template <uint8_t tValue>
+inline std::vector<TIndex> Subset::InternalSubset<TIndex>::statements2indices(const std::vector<uint8_t>& statements)
 {
 	std::vector<TIndex> result;
 
@@ -744,8 +731,8 @@ inline std::vector<TIndex> Subset::InternalSubset<TIndex>::statements2indices(co
 }
 
 template <typename TIndex>
-template <unsigned char tValue>
-inline std::vector<TIndex> Subset::InternalSubset<TIndex>::statements2indices(const unsigned char* statements, const size_t numberStatements)
+template <uint8_t tValue>
+inline std::vector<TIndex> Subset::InternalSubset<TIndex>::statements2indices(const uint8_t* statements, const size_t numberStatements)
 {
 	std::vector<TIndex> result;
 
@@ -912,32 +899,38 @@ inline std::vector<T> Subset::invertedSubset(const T* objects, const size_t numb
 	return InternalSubset<TIndex>::template invertedSubset<T>(objects, numberObjects, indices);
 }
 
-template <typename TIndex, unsigned char tValue>
-inline std::vector<unsigned char> Subset::indices2statements(const std::vector<TIndex>& indices, const size_t numberObjects)
+template <typename TIndex, uint8_t tValue>
+inline std::vector<uint8_t> Subset::indices2statements(const std::vector<TIndex>& indices, const size_t numberObjects)
 {
-	return InternalSubset<TIndex>::template indices2statements<tValue>(indices, numberObjects);
+	return InternalSubset<TIndex>::template indices2statements<std::vector<TIndex>, tValue>(indices, numberObjects);
 }
 
-template <typename TIndex, unsigned char tValue>
-inline std::vector<unsigned char> Subset::indices2statements(const std::set<TIndex>& indices, const size_t numberObjects)
+template <typename TIndex, uint8_t tValue>
+inline std::vector<uint8_t> Subset::indices2statements(const std::unordered_set<TIndex>& indices, const size_t numberObjects)
 {
-	return InternalSubset<TIndex>::template indices2statements<tValue>(indices, numberObjects);
+	return InternalSubset<TIndex>::template indices2statements<std::unordered_set<TIndex>, tValue>(indices, numberObjects);
 }
 
-template <typename TIndex, unsigned char tValue>
-inline std::vector<unsigned char> Subset::indices2statements(const TIndex* indices, const size_t numberIndices, const size_t numberObjects)
+template <typename TIndex, uint8_t tValue>
+inline std::vector<uint8_t> Subset::indices2statements(const std::set<TIndex>& indices, const size_t numberObjects)
+{
+	return InternalSubset<TIndex>::template indices2statements<std::set<TIndex>, tValue>(indices, numberObjects);
+}
+
+template <typename TIndex, uint8_t tValue>
+inline std::vector<uint8_t> Subset::indices2statements(const TIndex* indices, const size_t numberIndices, const size_t numberObjects)
 {
 	return InternalSubset<TIndex>::template indices2statements<tValue>(indices, numberIndices, numberObjects);
 }
 
-template <typename TIndex, unsigned char tValue>
-inline std::vector<TIndex> Subset::statements2indices(const std::vector<unsigned char>& statements)
+template <typename TIndex, uint8_t tValue>
+inline std::vector<TIndex> Subset::statements2indices(const std::vector<uint8_t>& statements)
 {
 	return InternalSubset<TIndex>::template statements2indices<tValue>(statements);
 }
 
-template <typename TIndex, unsigned char tValue>
-inline std::vector<TIndex> Subset::statements2indices(const unsigned char* statements, const size_t numberStatements)
+template <typename TIndex, uint8_t tValue>
+inline std::vector<TIndex> Subset::statements2indices(const uint8_t* statements, const size_t numberStatements)
 {
 	return InternalSubset<TIndex>::template statements2indices<tValue>(statements, numberStatements);
 }
