@@ -140,6 +140,18 @@ class ValidationPrecision
 		inline uint64_t iterations() const;
 
 		/**
+		 * Returns the necessary iterations to allow determining success or failure based on the specified success threshold.
+		 * @return The number of necessary iterations, with range [1, infinity)
+		 */
+		inline uint64_t necessaryIterations() const;
+
+		/**
+		 * Returns whether the number of iterations is not yet sufficient to determine a success or failure.
+		 * @return True, if more iterations are required
+		 */
+		inline bool needMoreIterations() const;
+
+		/**
 		 * Returns if this validation has succeeded.
 		 * @return True, if so; False, if the validation has failed
 		 */
@@ -192,6 +204,9 @@ class ValidationPrecision
 		/// True, if the validation has succeeded; False, if the validation has failed.
 		bool succeeded_ = true;
 
+		/// The number of iterations needed to determine success or failure.
+		uint64_t necessaryIterations_ = 0ull;
+
 		/// The overall number of iterations which have been added.
 		uint64_t iterations_ = 0ull;
 
@@ -243,6 +258,14 @@ inline ValidationPrecision::ValidationPrecision(const double threshold)
 	if (threshold > 0.0 && threshold <= 1.0)
 	{
 		threshold_ = threshold;
+
+		const double failureRate = 1.0 - threshold_;
+		ocean_assert(failureRate > 0.0);
+
+		const double idealIterations = 1.0 / failureRate;
+
+		ocean_assert(idealIterations <= 1000000000u);
+		necessaryIterations_ = std::max(1u, (unsigned int)(std::ceil(idealIterations) * 2.0));
 	}
 	else
 	{
@@ -298,6 +321,20 @@ inline uint64_t ValidationPrecision::iterations() const
 	return iterations_;
 }
 
+inline uint64_t ValidationPrecision::necessaryIterations() const
+{
+	ocean_assert(necessaryIterations_ >= 1ull);
+
+	return necessaryIterations_;
+}
+
+inline bool ValidationPrecision::needMoreIterations() const
+{
+	ocean_assert(necessaryIterations_ >= 1ull);
+
+	return iterations_ < necessaryIterations_;
+}
+
 inline bool ValidationPrecision::succeeded() const
 {
 #ifdef OCEAN_DEBUG
@@ -316,7 +353,15 @@ inline bool ValidationPrecision::succeeded() const
 	if (percent < threshold_)
 	{
 #ifdef OCEAN_USE_GTEST
-		std::cerr << "\nFAILED with only " << String::toAString(accuracy() * 100.0, 1u) << "%, threshold is " << String::toAString(threshold() * 100.0, 1u) << "%" << randomGeneratorOutput() << "\n" << std::endl;
+
+		std::ostream& stream = std::cerr << "\nFAILED with only " << String::toAString(accuracy() * 100.0, 1u) << "%, threshold is " << String::toAString(threshold() * 100.0, 1u) << "%" << randomGeneratorOutput() << "\n";
+
+		if (needMoreIterations())
+		{
+			stream << "Not enough iterations for the specified success threshold (executed " << iterations_ << " of " << necessaryIterations_ << " necessary iterations)\n";
+		}
+
+		stream << std::endl;
 #endif
 		return false;
 	}
