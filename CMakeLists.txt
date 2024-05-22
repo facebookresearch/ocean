@@ -28,6 +28,16 @@ if (ANDROID)
     set(CMAKE_STAGING_PREFIX ${CMAKE_INSTALL_PREFIX})
 endif()
 
+if (IOS)
+    if (NOT DEFINED CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY)
+        set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer")
+    endif()
+
+    if(NOT DEFINED CMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM)
+        message(FATAL_ERROR "You need to specify your own Apple Team ID when configurating with CMake: -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX")
+    endif()
+endif()
+
 # Build options
 option(BUILD_SHARED_LIBS "Build using shared libraries" FALSE)
 option(OCEAN_ENABLE_MESSENGER "When enabled, the logging mechanism in Ocean will be enabled. Otherwise it will be disabled" TRUE)
