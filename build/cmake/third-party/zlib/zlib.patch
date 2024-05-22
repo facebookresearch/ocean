@@ -1,17 +1,30 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 15ceebe..e6ef088 100644
+index 15ceebe..591f0f1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -154,7 +154,7 @@ target_include_directories(zlib PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRE
- add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
- target_include_directories(zlibstatic PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
- set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
+@@ -149,12 +149,15 @@ if(MINGW)
+     set(ZLIB_DLL_SRCS ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj)
+ endif(MINGW)
+ 
+-add_library(zlib SHARED ${ZLIB_SRCS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
+-target_include_directories(zlib PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+-add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
+-target_include_directories(zlibstatic PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+-set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
 -set_target_properties(zlib PROPERTIES SOVERSION 1)
++if(BUILD_SHARED_LIBS)
++  add_library(zlib SHARED ${ZLIB_SRCS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
++  target_include_directories(zlib PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
++  set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
++else()
++  add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
++  target_include_directories(zlibstatic PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
++endif()
 +#set_target_properties(zlib PROPERTIES SOVERSION 1)
  
  if(NOT CYGWIN)
      # This property causes shared libraries on Linux to have the full version
-@@ -164,7 +164,7 @@ if(NOT CYGWIN)
+@@ -164,7 +167,7 @@ if(NOT CYGWIN)
      #
      # This has no effect with MSVC, on that platform the version info for
      # the DLL comes from the resource file win32/zlib1.rc
@@ -20,7 +33,7 @@ index 15ceebe..e6ef088 100644
  endif()
  
  if(UNIX)
-@@ -176,10 +176,21 @@ if(UNIX)
+@@ -176,10 +179,21 @@ if(UNIX)
  elseif(BUILD_SHARED_LIBS AND WIN32)
      # Creates zlib1.dll when building shared library version
      set_target_properties(zlib PROPERTIES SUFFIX "1.dll")
