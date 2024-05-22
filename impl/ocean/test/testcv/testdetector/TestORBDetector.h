@@ -60,6 +60,15 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestORBDetector
 		static bool testDescriptorDetermination(const double testDuration, Worker& worker, const Frame& yFrameTest = Frame());
 
 		/**
+		 * Tests the detection and description of reference features.
+		 * This test is mainly a stress test.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		static bool testDetectReferenceFeaturesAndDetermineDescriptors(const double testDuration, Worker& worker);
+
+		/**
 		 * Tests the determination of the hamming distance between two randomized descriptors.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded

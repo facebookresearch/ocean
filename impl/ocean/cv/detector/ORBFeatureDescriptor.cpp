@@ -38,6 +38,11 @@ void ORBFeatureDescriptor::detectReferenceFeaturesAndDetermineDescriptors(const 
 		const Frame& layer = framePyramid[i];
 		ocean_assert(FrameType::formatIsGeneric(layer.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
 
+		if (layer.width() < 43u || layer.height() < 43u)
+		{
+			break;
+		}
+
 		ORBFeatures orbFeatures;
 
 		if (useHarrisFeatures)
@@ -85,7 +90,7 @@ void ORBFeatureDescriptor::detectReferenceFeaturesAndDetermineDescriptors(const 
 void ORBFeatureDescriptor::determineDescriptorsSubset(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, ORBFeature* featurePoints, const bool useMultiLayers, const unsigned int firstFeaturePoint, const unsigned int numberFeaturePoints)
 {
 	ocean_assert(linedIntegralFrame != nullptr && featurePoints != nullptr);
-	ocean_assert(width > 43u && height > 43u);
+	ocean_assert(width >= 43u && height >= 43u);
 
 	constexpr unsigned int linedIntegralFramePaddingElements = 0u;
 

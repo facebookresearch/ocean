@@ -16,6 +16,7 @@
 #include "ocean/cv/IntegralImage.h"
 
 #include "ocean/cv/detector/ORBSamplingPattern.h"
+#include "ocean/cv/detector/ORBFeatureDescriptor.h"
 #include "ocean/cv/detector/ORBFeatureOrientation.h"
 #include "ocean/cv/detector/FASTFeatureDetector.h"
 
@@ -67,6 +68,12 @@ bool TestORBDetector::test(const Frame& frame, const double testDuration, Worker
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testDetectReferenceFeaturesAndDetermineDescriptors(testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testHammingDistanceDetermination(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -103,9 +110,14 @@ TEST(TestORBDetector, DescriptorDetermination)
 	EXPECT_TRUE(TestORBDetector::testDescriptorDetermination(GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestORBDetector, HammingDistanceDetermination)
+TEST(TestORBDetector, DetectReferenceFeaturesAndDetermineDescriptors)
 {
 	Worker worker;
+	EXPECT_TRUE(TestORBDetector::testDetectReferenceFeaturesAndDetermineDescriptors(GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestORBDetector, HammingDistanceDetermination)
+{
 	EXPECT_TRUE(TestORBDetector::testHammingDistanceDetermination(GTEST_TEST_DURATION));
 }
 
@@ -287,6 +299,45 @@ bool TestORBDetector::testDescriptorDetermination(const double testDuration, Wor
 		Log::info() << "Multicore performance: " << performanceMulticore;
 		Log::info() << "Multicore boost factor: " << String::toAString(NumericD::ratio(performanceSinglecore.average(), performanceMulticore.average()), 1u) << "x";
 	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestORBDetector::testDetectReferenceFeaturesAndDetermineDescriptors(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing detect reference features and determine descriptors:";
+	Log::info() << " ";
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int width = RandomI::random(randomGenerator, 64u, 2000u);
+		const unsigned int height = RandomI::random(randomGenerator, 64u, 2000u);
+
+		const Frame yFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
+
+		const unsigned int layers = RandomI::random(randomGenerator, 1u, 20u);
+
+		const bool useHarrisFeatures = RandomI::boolean(randomGenerator);
+		const unsigned int featureThreshold = RandomI::random(randomGenerator, 40u);
+		const bool useWorker = RandomI::boolean(randomGenerator);
+
+		CV::Detector::ORBFeatures features;
+		if (!CV::Detector::ORBFeatureDescriptor::detectReferenceFeaturesAndDetermineDescriptors(yFrame, features, layers, useHarrisFeatures, featureThreshold, useWorker ? &worker : nullptr))
+		{
+			OCEAN_SET_FAILED(validation);
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Validation: " << validation;
 
