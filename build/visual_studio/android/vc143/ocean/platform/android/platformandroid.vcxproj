@@ -90,7 +90,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\PowerMonitor.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Processor.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ProcessorMonitor.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Resource.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ResourceManager.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIEnvironment.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIObject.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Utilities.h" />
@@ -113,7 +113,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\PowerMonitor.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Processor.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ProcessorMonitor.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Resource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ResourceManager.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIEnvironment.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Utilities.cpp" />
   </ItemGroup>

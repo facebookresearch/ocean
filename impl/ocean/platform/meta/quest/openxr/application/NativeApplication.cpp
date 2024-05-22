@@ -8,7 +8,7 @@
 #include "ocean/platform/meta/quest/openxr/application/NativeApplication.h"
 
 #include "ocean/platform/android/Permission.h"
-#include "ocean/platform/android/Resource.h"
+#include "ocean/platform/android/ResourceManager.h"
 
 #include "ocean/platform/linux/Utilities.h"
 

@@ -11,7 +11,7 @@
 
 #include "ocean/io/image/Image.h"
 
-#include "ocean/platform/android/Resource.h"
+#include "ocean/platform/android/ResourceManager.h"
 
 #include "ocean/rendering/AttributeSet.h"
 #include "ocean/rendering/PrimitiveAttribute.h"

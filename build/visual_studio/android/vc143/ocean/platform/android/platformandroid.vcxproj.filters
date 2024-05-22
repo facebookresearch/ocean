@@ -36,7 +36,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Resource.h">
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\jni\RenderingGLESceneGraphJni.h">
@@ -110,7 +110,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Processor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Resource.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIEnvironment.cpp">
@@ -181,5 +181,6 @@
     <None Include="..\..\..\..\..\..\..\impl\ocean\platform\android\OceanLocationManager.java">
       <Filter>Java Files</Filter>
     </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\SceneDescriptionSDXX3DJni.java" />
   </ItemGroup>
 </Project>

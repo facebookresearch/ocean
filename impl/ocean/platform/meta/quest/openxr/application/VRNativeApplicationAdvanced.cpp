@@ -13,7 +13,7 @@
 
 #include "ocean/media/openimagelibraries/OpenImageLibraries.h"
 
-#include "ocean/platform/android/Resource.h"
+#include "ocean/platform/android/ResourceManager.h"
 
 #include "ocean/scenedescription/Manager.h"
 #include "ocean/scenedescription/sdl/assimp/Assimp.h"

@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef META_OCEAN_PLATFORM_ANDROID_RESOURCE_H
-#define META_OCEAN_PLATFORM_ANDROID_RESOURCE_H
+#ifndef META_OCEAN_PLATFORM_ANDROID_RESOURCE_MANAGER_H
+#define META_OCEAN_PLATFORM_ANDROID_RESOURCE_MANAGER_H
 
 #include "ocean/platform/android/Android.h"
 
@@ -248,4 +248,4 @@ std::string ResourceManager::externalFilesDirectory() const
 
 }
 
-#endif // META_OCEAN_PLATFORM_ANDROID_RESOURCE_H
+#endif // META_OCEAN_PLATFORM_ANDROID_RESOURCE_MANAGER_H
