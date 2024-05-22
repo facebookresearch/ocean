@@ -22,23 +22,21 @@ namespace Detector
 {
 
 ORBSamplingPattern::ORBSamplingPattern() :
-	angleIncrements(72u),
-	anglePerIncrementFactor(Scalar(angleIncrements) / Numeric::pi2()), // 1 / (2 * PI / angleIncrements)
-	samplingPatternLookupTables(createLookupTable(angleIncrements))
+	lookupTables_(createLookupTables(angleIncrements_))
 {
 	static_assert(sizeof(ORBDescriptor::DescriptorBitset) * 8 == 256, "Invalid ORB descriptor bitset length!");
 
 #ifdef OCEAN_DEBUG
 
-	const Scalar anglePerIncrement = Numeric::pi2() / Scalar(angleIncrements);
+	const Scalar anglePerIncrement = Numeric::pi2() / Scalar(angleIncrements_);
 
 	// set the member variable for later calculations
-	ocean_assert(Numeric::isEqual(anglePerIncrementFactor, Scalar(1.0) / anglePerIncrement));
+	ocean_assert(Numeric::isEqual(anglePerIncrementFactor_, Scalar(1.0) / anglePerIncrement));
 
 #endif // OCEAN_DEBUG
 }
 
-std::vector<ORBSamplingPattern::IntensityComparisons> ORBSamplingPattern::createLookupTable(const unsigned int angleIncrements)
+ORBSamplingPattern::LookupTables ORBSamplingPattern::createLookupTables(const unsigned int angleIncrements)
 {
 	ocean_assert(angleIncrements >= 1u && angleIncrements <= 360u);
 
@@ -319,27 +317,44 @@ std::vector<ORBSamplingPattern::IntensityComparisons> ORBSamplingPattern::create
 
 	const Scalar anglePerIncrement = Numeric::pi2() / Scalar(angleIncrements);
 
-	std::vector<IntensityComparisons> lookupTable(angleIncrements);
+	LookupTables lookupTables(angleIncrements);
 
-	for (size_t i = 0; i < lookupTable.size(); ++i)
+	for (size_t i = 0; i < lookupTables.size(); ++i)
 	{
 		const Scalar angle = Scalar(i) * anglePerIncrement;
 		const Quaternion rotation(Vector3(0, 0, 1), angle);
 
-		lookupTable[i].resize(sizeof(ORBDescriptor::DescriptorBitset) * 8);
+		LookupTable& lookupTable = lookupTables[i];
 
-		for (size_t j = 0; j < lookupTable[i].size(); ++j)
+		lookupTable.resize(sizeof(ORBDescriptor::DescriptorBitset) * 8);
+
+		for (size_t j = 0; j < lookupTable.size(); ++j)
 		{
-			Vector3 point1(Scalar(bit_pattern_31[4 * j]), Scalar(bit_pattern_31[4 * j + 1]), Scalar(0.0));
-			Vector3 point2(Scalar(bit_pattern_31[4 * j + 2]), Scalar(bit_pattern_31[4 * j + 3]), Scalar(0.0));
-			point1 = rotation * point1;
-			point2 = rotation * point2;
+			Vector3 point0(Scalar(bit_pattern_31[4 * j]), Scalar(bit_pattern_31[4 * j + 1]), Scalar(0.0));
+			Vector3 point1(Scalar(bit_pattern_31[4 * j + 2]), Scalar(bit_pattern_31[4 * j + 3]), Scalar(0.0));
 
-			lookupTable[i][j].setValues(point1.x(), point1.y(), point2.x(), point2.y());
+			point0 = rotation * point0;
+			point1 = rotation * point1;
+
+#ifdef OCEAN_DEBUG
+			constexpr Scalar threshold = Scalar(18.385);
+
+			ocean_assert(point0.x() > -threshold && point0.x() < threshold);
+			ocean_assert(point1.y() > -threshold && point1.y() < threshold);
+
+			const Scalar layerFactor = Numeric::sqrt(Scalar(1.41421)); // sqrt(2)
+
+			constexpr Scalar layerThreshold = Scalar(26);
+
+			ocean_assert(point0.x() * layerFactor > -layerThreshold && point0.x() * layerFactor < layerThreshold);
+			ocean_assert(point1.y() * layerFactor > -layerThreshold && point1.y() * layerFactor < layerThreshold);
+#endif
+
+			lookupTable[j].setPositions(point0.xy(), point1.xy());
 		}
 	}
 
-	return lookupTable;
+	return lookupTables;
 }
 
 }

@@ -96,16 +96,16 @@ void ORBFeatureDescriptor::determineDescriptorsSubset(const uint32_t* linedInteg
 
 	const ORBSamplingPattern& samplingPattern = ORBSamplingPattern::get();
 
-	const size_t numberDescriptorBitset = sizeof(ORBDescriptor::DescriptorBitset) * 8;
+	constexpr size_t numberDescriptorBitset = sizeof(ORBDescriptor::DescriptorBitset) * 8;
 
 	const unsigned int numberLayers = useMultiLayers ? 3u : 1u;
 
-	const Scalar border = useMultiLayers ? Scalar(30) : Scalar(21);
+	const Scalar border = useMultiLayers ? Scalar(30) : Scalar(21); // 18.385 * sqrt(2) + 7/2 < 30; 18.385 * 1 + 5/2 < 21
 
 	const Scalar maxWidth = Scalar(width) - border;
 	const Scalar maxHeight = Scalar(height) - border;
 
-	const std::array<Scalar, 3> factors = {Scalar(1), Scalar(0.7071067811865475244), Scalar(1.4142135623730950)}; // 1, 1/sqrt(2), sqrt(2)
+	const std::array<Scalar, 3> factors = {Scalar(1), Scalar(0.707107), Scalar(1.41421)}; // 1, 1/sqrt(2), sqrt(2)
 	const std::array<unsigned int, 3> patchSizes = {5u, 3u, 7u};
 
 	for (unsigned int subLayer = 0u; subLayer < numberLayers; ++subLayer)
@@ -120,23 +120,34 @@ void ORBFeatureDescriptor::determineDescriptorsSubset(const uint32_t* linedInteg
 
 			const Vector2& observation = feature.observation();
 
-			const Scalar x = Scalar(observation.x() + Scalar(0.5));
-			const Scalar y = Scalar(observation.y() + Scalar(0.5));
+			const Vector2 centerPosition = observation + Vector2(Scalar(0.5), Scalar(0.5));
 
-			ocean_assert(x >= border && y >= border);
-			ocean_assert(x <= maxWidth && y <= maxHeight);
+			ocean_assert(centerPosition.x() >= border && centerPosition.y() >= border);
+			ocean_assert(centerPosition.x() <= maxWidth && centerPosition.y() <= maxHeight);
 
-			if (x >= border && y >= border && x <= maxWidth && y <= maxHeight)
+			if (centerPosition.x() >= border && centerPosition.y() >= border && centerPosition.x() <= maxWidth && centerPosition.y() <= maxHeight)
 			{
-				const ORBSamplingPattern::IntensityComparisons& lookupTable = samplingPattern.samplingPatternByAngle(feature.orientation());
+				const ORBSamplingPattern::LookupTable& lookupTable = samplingPattern.samplingPatternForAngle(feature.orientation());
 
 				ORBDescriptor descriptor;
 				//unsigned int strengthCounter = 0u;
 
 				for (size_t j = 0u; j < numberDescriptorBitset; ++j)
 				{
-					const Scalar intensity1 = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, Vector2(x + lookupTable[j].x1() * factor, y + lookupTable[j].y1() * factor), CV::PC_CENTER, patchSize, patchSize);
-					const Scalar intensity2 = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, Vector2(x + lookupTable[j].x2() * factor, y + lookupTable[j].y2() * factor), CV::PC_CENTER, patchSize, patchSize);
+					const Vector2& offset0 = lookupTable[j].point0();
+					const Vector2& offset1 = lookupTable[j].point1();
+
+					const Vector2 layerOffset0 = offset0 * factor;
+					const Vector2 layerOffset1 = offset1 * factor;
+
+					ocean_assert(layerOffset0.x() > Scalar(-29.5) && layerOffset0.x() < Scalar(29.5));
+					ocean_assert(layerOffset0.y() > Scalar(-29.5) && layerOffset0.y() < Scalar(29.5));
+
+					const Vector2 lookupPosition0 = centerPosition + layerOffset0;
+					const Vector2 lookupPosition1 = centerPosition + layerOffset1;
+
+					const Scalar intensity1 = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, lookupPosition0, CV::PC_CENTER, patchSize, patchSize);
+					const Scalar intensity2 = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, lookupPosition1, CV::PC_CENTER, patchSize, patchSize);
 
 					if (intensity1 < intensity2)
 					{

@@ -596,20 +596,25 @@ bool TestORBDetector::validateDescriptors(const uint32_t* linedIntegralFrame, co
 		ocean_assert(x >= Scalar(0.0) && x < Scalar(width));
 		ocean_assert(y >= Scalar(0.0) && y < Scalar(height));
 
-		const CV::Detector::ORBSamplingPattern::IntensityComparisons& lookupTable = samplingPattern.samplingPatternByAngle(features[i].orientation());
+		const CV::Detector::ORBSamplingPattern::LookupTable& lookupTable = samplingPattern.samplingPatternForAngle(features[i].orientation());
+
 		CV::Detector::ORBDescriptor descriptor;
 
 		for (size_t j = 0; j < numberDescriptorBitset; ++j)
 		{
-			const Vector2 point1(x + lookupTable[j].x1(), y + lookupTable[j].y1());
-			const Vector2 point2(x + lookupTable[j].x2(), y + lookupTable[j].y2());
+			const Vector2& offset0 = lookupTable[j].point0();
+			const Vector2& offset1 = lookupTable[j].point1();
+
+			const Vector2 point0(x + offset0.x(), y + offset0.y());
+			const Vector2 point1(x + offset1.x(), y + offset1.y());
+
+			ocean_assert(point0.x() - Scalar(2.0) >= Scalar(0.0) && point0.x() + Scalar(2.0) <= Scalar(width) && point0.y() - Scalar(2.0) >= Scalar(0.0) && point0.y() + Scalar(2.0) <= Scalar(height));
 			ocean_assert(point1.x() - Scalar(2.0) >= Scalar(0.0) && point1.x() + Scalar(2.0) <= Scalar(width) && point1.y() - Scalar(2.0) >= Scalar(0.0) && point1.y() + Scalar(2.0) <= Scalar(height));
-			ocean_assert(point2.x() - Scalar(2.0) >= Scalar(0.0) && point2.x() + Scalar(2.0) <= Scalar(width) && point2.y() - Scalar(2.0) >= Scalar(0.0) && point2.y() + Scalar(2.0) <= Scalar(height));
 
+			const Scalar intensity0 = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, point0, CV::PC_CENTER, 5u, 5u);
 			const Scalar intensity1 = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, point1, CV::PC_CENTER, 5u, 5u);
-			const Scalar intensity2 = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, point2, CV::PC_CENTER, 5u, 5u);
 
-			if (intensity1 < intensity2)
+			if (intensity0 < intensity1)
 			{
 				descriptor[j] = 1;
 			}
