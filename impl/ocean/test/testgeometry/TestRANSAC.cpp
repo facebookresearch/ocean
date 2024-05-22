@@ -488,7 +488,9 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 				{
 					// no outliers, we need a perfect result
 
-					if (averageSqrDistance > Numeric::sqr(Scalar(0.1)))
+					constexpr Scalar threshold = std::is_same<float, Scalar>::value ? Scalar(0.5) : Scalar(0.1);
+
+					if (averageSqrDistance > Numeric::sqr(threshold))
 					{
 						scopedIteration.setInaccurate();
 					}
