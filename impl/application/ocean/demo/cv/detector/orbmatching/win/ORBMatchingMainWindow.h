@@ -33,7 +33,7 @@ class ORBMatchingMainWindow :
 		/**
 		 * Creates a new main window.
 		 * @param instance Application instance
-		 * @param name name of the main window
+		 * @param name The name of the main window
 		 * @param patternMediaName The media containing the tracking pattern
 		 * @param inputMediaName The media used as input source
 		 * @param inputResolution Optional preferred resolution of the input source
@@ -43,7 +43,7 @@ class ORBMatchingMainWindow :
 		/**
 		 * Destructs the main window.
 		 */
-		virtual ~ORBMatchingMainWindow();
+		~ORBMatchingMainWindow() override;
 
 	protected:
 
@@ -51,19 +51,19 @@ class ORBMatchingMainWindow :
 		 * Event function if the windows has been initialized successfully.
 		 * @see Window::onInitialized().
 		 */
-		virtual void onInitialized();
+		void onInitialized() override;
 
 		/**
 		 * Function called by the windows message loop if the process is idling.
 		 * @see Window::onIdle().
 		 */
-		virtual void onIdle();
+		void onIdle() override;
 
 		/**
 		 * Function for mouse double click events.
-		 * @see Wiindow::onMouseDoubleClick().
+		 * @see Window::onMouseDoubleClick().
 		 */
-		virtual void onMouseDoubleClick(const MouseButton button, const int x, const int y);
+		void onMouseDoubleClick(const MouseButton button, const int x, const int y) override;
 
 		/**
 		 * Event function if a new frame has arrived.

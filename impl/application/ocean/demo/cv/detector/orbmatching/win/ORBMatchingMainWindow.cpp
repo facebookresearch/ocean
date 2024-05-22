@@ -205,12 +205,11 @@ void ORBMatchingMainWindow::onFrame(const Frame& frame)
 
 	// now, we describe the detected features points with ORB descriptors
 
-	Frame integralFrame(FrameType(yFrame.width() + 1u, yFrame.height() + 1u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT));
-	CV::IntegralImage::createLinedImage<uint8_t, uint32_t, 1u>(yFrame.constdata<uint8_t>(), integralFrame.data<uint32_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), integralFrame.paddingElements());
+	Frame integralFrame = CV::IntegralImage::Comfort::createLinedImage(yFrame);
 
 	ocean_assert(integralFrame.isContinuous());
 	CV::Detector::ORBFeatureOrientation::determineFeatureOrientation(integralFrame.constdata<uint32_t>(), yFrame.width(), yFrame.height(), featurePoints, scopedWorker());
-	CV::Detector::ORBFeatureDescriptor::determineDescriptors(integralFrame.constdata<uint32_t>(), yFrame.width(), yFrame.height(), featurePoints, false, scopedWorker());
+	CV::Detector::ORBFeatureDescriptor::determineDescriptors(integralFrame.constdata<uint32_t>(), yFrame.width(), yFrame.height(), featurePoints, true /*useMultiLayers*/, scopedWorker());
 
 	paintFeatures(rgbFrame, featurePoints, false);
 
@@ -260,7 +259,7 @@ void ORBMatchingMainWindow::paintFeatures(Frame& frame, const CV::Detector::ORBF
 	{
 		featurePointPositions.push_back(features[n].observation());
 		featurePointScales.push_back(10);
-		featurePointOrientations.push_back(Numeric::angleAdjustPositive(features[n].orientation())); // **TODO** precise docuntation regarding a feature's orientation necessary
+		featurePointOrientations.push_back(Numeric::angleAdjustPositive(features[n].orientation()));
 	}
 
 	Tracking::Utilities::paintFeaturePoints(frame, featurePointPositions.data(), featurePointScales.data(), featurePointOrientations.data(), featurePointPositions.size(), CV::Canvas::green(), shadow ? CV::Canvas::black() : nullptr, Vector2(0, 0), WorkerPool::get().scopedWorker()());

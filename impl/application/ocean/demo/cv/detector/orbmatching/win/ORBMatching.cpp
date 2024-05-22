@@ -9,6 +9,7 @@
 #include "application/ocean/demo/cv/detector/orbmatching/win/ORBMatchingMainWindow.h"
 
 #include "ocean/base/Build.h"
+#include "ocean/base/CommandArguments.h"
 #include "ocean/base/PluginManager.h"
 #include "ocean/base/String.h"
 
@@ -54,29 +55,33 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 
 	System::Process::setPriority(System::Process::PRIORITY_ABOVE_NORMAL);
 
-	const Platform::Utilities::Commands commands(Platform::Utilities::parseCommandLine(lpCmdLine));
+	CommandArguments commandArguments("Demo application matching ORB features");
+	commandArguments.registerNamelessParameters("Optional the first command argument is interpreted as pattern parameter");
+	commandArguments.registerParameter("help", "h", "Showing this help output.");
+	commandArguments.registerParameter("pattern", "p", "The file containing the pattern image for matching");
+	commandArguments.registerParameter("input", "i", "The input to be used for matching, either an image, a video, or a live camera, 'LiveVideoId:1,0' by default");
+	commandArguments.registerParameter("inputResolution", "ir", "Optional the preferred input resolution, either '320x240', '640x480', '1280x720', '1920x1080'", Value("1280x720"));
 
-	std::string patternMedia;
-	if (commands.size() >= 1)
+	Platform::Utilities::Commands commands = Platform::Utilities::parseCommandLine(lpCmdLine);
+
+	commandArguments.parse(commands);
+
+	if (commandArguments.hasValue("help"))
 	{
-		patternMedia = String::toAString(commands[0]);
+		Log::info() << commandArguments.makeSummary();
+		exit(0);
 	}
 
-	std::string inputMedia;
-	if (commands.size() >= 2)
-	{
-		inputMedia = String::toAString(commands[1]);
-	}
+	const std::string patternMedia = commandArguments.value<std::string>("pattern", "", false, 0);
 
-	std::string inputResolution;
-	if (commands.size() >= 3)
-	{
-		inputResolution = String::toAString(commands[2]);
-	}
+	const std::string inputMedia = commandArguments.value<std::string>("input", "", false);
+
+	const std::string inputResolution = commandArguments.value<std::string>("inputResolution", "", true);
 
 	try
 	{
 		ORBMatchingMainWindow mainWindow(hInstance, String::toWString(std::string("ORB Feature Matching, ") + Build::buildString()).c_str(), patternMedia, inputMedia, inputResolution);
+
 		mainWindow.initialize();
 		mainWindow.start();
 	}
