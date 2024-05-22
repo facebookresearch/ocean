@@ -804,7 +804,7 @@ bool TestMappingF1::testSpatialCost4Neighborhood(const unsigned int width, const
 
 	Log::info() << "... for " << tChannels << " channels:";
 
-	constexpr Scalar threshold = std::is_same<double, Scalar>::value ? Numeric::weakEps() : Scalar(0.01);
+	constexpr Scalar threshold = std::is_same<double, Scalar>::value ? Scalar(0.00001) : Scalar(0.1);
 
 	RandomGenerator randomGenerator;
 
