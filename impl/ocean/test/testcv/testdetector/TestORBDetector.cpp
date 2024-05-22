@@ -165,7 +165,7 @@ bool TestORBDetector::testOrientationDetermination(const double testDuration, Wo
 
 			while (randomFeatures.size() < numberRandomFeatures)
 			{
-				const Vector2 position = Random::vector2(randomGenerator, Scalar(31), Scalar(yFrame.width() - 32u), Scalar(31), Scalar(yFrame.height() - 32u));
+				const Vector2 position = Random::vector2(randomGenerator, Scalar(16), Scalar(yFrame.width() - 17u), Scalar(16), Scalar(yFrame.height() - 17u));
 
 				randomFeatures.emplace_back(position, CV::Detector::PointFeature::DS_UNKNOWN, Scalar(0));
 			}
@@ -245,7 +245,7 @@ bool TestORBDetector::testDescriptorDetermination(const double testDuration, Wor
 
 			while (randomFeatures.size() < numberRandomFeatures)
 			{
-				const Vector2 position = Random::vector2(randomGenerator, Scalar(31), Scalar(yFrame.width() - 32u), Scalar(31), Scalar(yFrame.height() - 32u));
+				const Vector2 position = Random::vector2(randomGenerator, Scalar(21), Scalar(yFrame.width() - 22u), Scalar(21), Scalar(yFrame.height() - 22u));
 
 				randomFeatures.emplace_back(position, CV::Detector::PointFeature::DS_UNKNOWN, Scalar(0));
 			}

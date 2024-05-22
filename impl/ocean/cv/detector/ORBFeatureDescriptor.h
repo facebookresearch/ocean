@@ -47,13 +47,13 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeatureDescriptor
 		 * Calculate the ORB descriptor for all given feature points.
 		 * If sub layers are used, three descriptors are determined per feature. One for the unmodified frame size, one for a resizing factor of sqrt(2) and one for a resizing factor of 1/sqrt(2).
 		 * @param linedIntegralFrame Pointer to the (lined) integral frame of the actual 8 bit frame for which the feature descriptors will be calculated, the integral frame has an extra line with zero pixels on the left and top of the integral frame
-		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [1, infinity)
-		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [1, infinity)
-		 * @param featurePoints Feature points to calculate the descriptors for
-		 * @param useSublayers True, if two additional sub layers for descriptors are use, create three descriptors per feature point; otherwise, only one layer is used
+		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [43, infinity)
+		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [43, infinity)
+		 * @param featurePoints Feature points to calculate the descriptors for, with range [21, width - 22]x[21, height - 22] for 'useMultiLayers == false', with range [31, width - 32]x[31, height - 32] for 'useMultiLayers == true'
+		 * @param useMultiLayers True, if two additional sub layers for descriptors are use, create three descriptors per feature point; otherwise, only one layer is used
 		 * @param worker Optional worker object to distribute the computation to several CPU cores
 		 */
-		static inline void determineDescriptors(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, ORBFeatures& featurePoints, const bool useSublayers = false, Worker* worker = nullptr);
+		static inline void determineDescriptors(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, ORBFeatures& featurePoints, const bool useMultiLayers = false, Worker* worker = nullptr);
 
 		/**
 		 * Detect feature points of the reference frame and calculate the ORB descriptors for them.
@@ -103,14 +103,14 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeatureDescriptor
 		 * Calculate the ORB descriptor for all given feature points.
 		 * If sub layers are used, three descriptors are determined per feature. One for the unmodified frame size, one for a resizing factor of sqrt(2) and one for a resizing factor of 1/sqrt(2).
 		 * @param linedIntegralFrame Pointer to the (lined) integral frame of the actual 8 bit frame for which the feature descriptors will be calculated, the integral frame has an extra line with zero pixels on the left and top of the integral frame
-		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [1, infinity)
-		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [1, infinity)
-		 * @param featurePoints Feature points to calculate the descriptors for
-		 * @param useSublayers True, if two additional sub layers for descriptors are use, create three descriptors per feature point; otherwise, only one layer is used
+		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [43, infinity)
+		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [43, infinity)
+		 * @param featurePoints Feature points to calculate the descriptors for, with range [21, width - 22]x[21, height - 22] for 'useMultiLayers == false', with range [31, width - 32]x[31, height - 32] for 'useMultiLayers == true'
+		 * @param useMultiLayers True, if two additional sub layers for descriptors are use, create three descriptors per feature point; otherwise, only one layer is used
 		 * @param firstFeaturePoint The first feature points to be handled, with range [0, size)
 		 * @param numberFeaturePoints The number of feature points to be handled, with range [1, size]
 		 */
-		static void determineDescriptorsSubset(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, ORBFeature* featurePoints, const bool useSublayers, const unsigned int firstFeaturePoint, const unsigned int numberFeaturePoints);
+		static void determineDescriptorsSubset(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, ORBFeature* featurePoints, const bool useMultiLayers, const unsigned int firstFeaturePoint, const unsigned int numberFeaturePoints);
 
 		/**
 		 * Determines feature correspondences for a subset of forward feature points - one backward feature point for each given forward feature point.
@@ -127,18 +127,18 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeatureDescriptor
 		static void determineNonBijectiveCorrespondencesSubset(const ORBFeature* forwardFeatures, const size_t numberForwardFeatures, const ORBFeature* backwardFeatures, const size_t numberBackwardFeatures, const float threshold, IndexPairs32* correspondences, Lock* lock, const unsigned int firstIndex, const unsigned int numberIndices);
 };
 
-inline void ORBFeatureDescriptor::determineDescriptors(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, ORBFeatures& featurePoints, const bool useSublayers, Worker* worker)
+inline void ORBFeatureDescriptor::determineDescriptors(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, ORBFeatures& featurePoints, const bool useMultiLayers, Worker* worker)
 {
 	ocean_assert(linedIntegralFrame != nullptr);
-	ocean_assert(width > 0u && height > 0u);
+	ocean_assert(width >= 43u && height >= 43u);
 
 	if (worker)
 	{
-		worker->executeFunction(Worker::Function::createStatic(&ORBFeatureDescriptor::determineDescriptorsSubset, linedIntegralFrame, width, height, featurePoints.data(), useSublayers, 0u, 0u), 0u, (unsigned int)(featurePoints.size()));
+		worker->executeFunction(Worker::Function::createStatic(&ORBFeatureDescriptor::determineDescriptorsSubset, linedIntegralFrame, width, height, featurePoints.data(), useMultiLayers, 0u, 0u), 0u, (unsigned int)(featurePoints.size()));
 	}
 	else
 	{
-		determineDescriptorsSubset(linedIntegralFrame, width, height, featurePoints.data(), useSublayers, 0u, (unsigned int)(featurePoints.size()));
+		determineDescriptorsSubset(linedIntegralFrame, width, height, featurePoints.data(), useMultiLayers, 0u, (unsigned int)(featurePoints.size()));
 	}
 }
 

@@ -78,7 +78,7 @@ class RandomT : public RandomI
 		 * Returns a random number between two borders.
 		 * @param lower The lower border, with range (-infinity, infinity)
 		 * @param upper The upper border, with range [lower, infinity)
-		 * @return Random number
+		 * @return Random number, with range [lower, upper]
 		 */
 		static T scalar(const T lower, const T upper);
 
@@ -87,7 +87,7 @@ class RandomT : public RandomI
 		 * @param randomGenerator The random generator to be used
 		 * @param lower The lower border, with range (-infinity, infinity)
 		 * @param upper The upper border, with range [lower, infinity)
-		 * @return Random number
+		 * @return Random number, with range [lower, upper]
 		 */
 		static T scalar(RandomGenerator& randomGenerator, const T lower, const T upper);
 

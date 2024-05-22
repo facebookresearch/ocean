@@ -133,7 +133,7 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeature : public OrientedPointFeature
 		 * @param features The point features to convert
 		 * @param width The width of the frame in which the feature points have been detected, in pixel, with range [border, infinity)
 		 * @param height The height of the frame in which the feature points have been detected, in pixel, with range [border, infinity)
-		 * @param border The minimal distance between the image border and a feature points, with range [0, infinity)
+		 * @param border The minimal distance between the image border and a feature points, with range [21 or 31, infinity), 21 for descriptors with 'useSublayers == false', 31 for descriptors with 'useSublayers == true'
 		 * @param validIndices Optional resulting indices of features which were not skipped
 		 * @return The resulting ORB feature points
 		 */

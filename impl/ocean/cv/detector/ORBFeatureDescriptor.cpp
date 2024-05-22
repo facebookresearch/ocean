@@ -64,7 +64,7 @@ void ORBFeatureDescriptor::detectReferenceFeaturesAndDetermineDescriptors(const 
 
 			ORBFeatureOrientation::determineFeatureOrientation(linedIntegralFrameData, layer.width(), layer.height(), orbFeatures, worker);
 
-			determineDescriptors(linedIntegralFrameData, layer.width(), layer.height(), orbFeatures, true, worker);
+			determineDescriptors(linedIntegralFrameData, layer.width(), layer.height(), orbFeatures, true /*useMultiLayers*/, worker);
 
 			if (i != 0u)
 			{
@@ -82,10 +82,10 @@ void ORBFeatureDescriptor::detectReferenceFeaturesAndDetermineDescriptors(const 
 	}
 }
 
-void ORBFeatureDescriptor::determineDescriptorsSubset(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, ORBFeature* featurePoints, const bool useSublayers, const unsigned int firstFeaturePoint, const unsigned int numberFeaturePoints)
+void ORBFeatureDescriptor::determineDescriptorsSubset(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, ORBFeature* featurePoints, const bool useMultiLayers, const unsigned int firstFeaturePoint, const unsigned int numberFeaturePoints)
 {
 	ocean_assert(linedIntegralFrame != nullptr && featurePoints != nullptr);
-	ocean_assert(width > 0u && height > 0u);
+	ocean_assert(width > 43u && height > 43u);
 
 	constexpr unsigned int linedIntegralFramePaddingElements = 0u;
 
@@ -93,10 +93,15 @@ void ORBFeatureDescriptor::determineDescriptorsSubset(const uint32_t* linedInteg
 
 	const size_t numberDescriptorBitset = sizeof(ORBDescriptor::DescriptorBitset) * 8;
 
-	const unsigned int numberLayers = useSublayers ? 3u : 1u;
+	const unsigned int numberLayers = useMultiLayers ? 3u : 1u;
 
-	const Scalar factors[3] = {Scalar(1), Scalar(0.7071067811865475244), Scalar(1.4142135623730950)}; // 1, 1/sqrt(2), sqrt(2)
-	const unsigned int patchSizes[3] = {5u, 3u, 7u};
+	const Scalar border = useMultiLayers ? Scalar(30) : Scalar(21);
+
+	const Scalar maxWidth = Scalar(width) - border;
+	const Scalar maxHeight = Scalar(height) - border;
+
+	const std::array<Scalar, 3> factors = {Scalar(1), Scalar(0.7071067811865475244), Scalar(1.4142135623730950)}; // 1, 1/sqrt(2), sqrt(2)
+	const std::array<unsigned int, 3> patchSizes = {5u, 3u, 7u};
 
 	for (unsigned int subLayer = 0u; subLayer < numberLayers; ++subLayer)
 	{
@@ -106,34 +111,45 @@ void ORBFeatureDescriptor::determineDescriptorsSubset(const uint32_t* linedInteg
 
 		for (unsigned int i = firstFeaturePoint; i < firstFeaturePoint + numberFeaturePoints; ++i)
 		{
-			const Scalar x = Scalar(featurePoints[i].observation().x() + Scalar(0.5));
-			const Scalar y = Scalar(featurePoints[i].observation().y() + Scalar(0.5));
-			const ORBSamplingPattern::IntensityComparisons& lookupTable = samplingPattern.samplingPatternByAngle(featurePoints[i].orientation());
+			ORBFeature& feature = featurePoints[i];
 
-			ORBDescriptor descriptor;
-			//unsigned int strengthCounter = 0u;
+			const Vector2& observation = feature.observation();
 
-			for (size_t j = 0u; j < numberDescriptorBitset; ++j)
+			const Scalar x = Scalar(observation.x() + Scalar(0.5));
+			const Scalar y = Scalar(observation.y() + Scalar(0.5));
+
+			ocean_assert(x >= border && y >= border);
+			ocean_assert(x <= maxWidth && y <= maxHeight);
+
+			if (x >= border && y >= border && x <= maxWidth && y <= maxHeight)
 			{
-				const Scalar intensity1 = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, Vector2(x + lookupTable[j].x1() * factor, y + lookupTable[j].y1() * factor), CV::PC_CENTER, patchSize, patchSize);
-				const Scalar intensity2 = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, Vector2(x + lookupTable[j].x2() * factor, y + lookupTable[j].y2() * factor), CV::PC_CENTER, patchSize, patchSize);
+				const ORBSamplingPattern::IntensityComparisons& lookupTable = samplingPattern.samplingPatternByAngle(feature.orientation());
 
-				if (intensity1 < intensity2)
+				ORBDescriptor descriptor;
+				//unsigned int strengthCounter = 0u;
+
+				for (size_t j = 0u; j < numberDescriptorBitset; ++j)
 				{
-					descriptor[j] = 1;
+					const Scalar intensity1 = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, Vector2(x + lookupTable[j].x1() * factor, y + lookupTable[j].y1() * factor), CV::PC_CENTER, patchSize, patchSize);
+					const Scalar intensity2 = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, Vector2(x + lookupTable[j].x2() * factor, y + lookupTable[j].y2() * factor), CV::PC_CENTER, patchSize, patchSize);
+
+					if (intensity1 < intensity2)
+					{
+						descriptor[j] = 1;
+					}
+
+					/*if (Numeric::abs(intensity1 - intensity2) > strengthThreshold)
+					{
+						++strengthCounter;
+					}*/
 				}
 
-				/*if (Numeric::abs(intensity1 - intensity2) > strengthThreshold)
-				{
-					++strengthCounter;
-				}*/
+				feature.setDescriptorType(ORBFeature::FDT_ORIENTED);
+				feature.addDescriptor(descriptor);
+
+				// feature strength is currently not used
+				//feature.setStrength(Scalar(strengthCounter) * Scalar(0.00390625)); // / 256
 			}
-
-			featurePoints[i].setDescriptorType(ORBFeature::FDT_ORIENTED);
-			featurePoints[i].addDescriptor(descriptor);
-
-			// feature strength is currently not used
-			//featurePoints[i].setStrength(Scalar(strengthCounter) * Scalar(0.00390625)); // / 256
 		}
 	}
 }
