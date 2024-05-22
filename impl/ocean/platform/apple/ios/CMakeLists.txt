@@ -34,16 +34,12 @@ if (IOS)
 
     target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${COREGRAPHICS_LIB})
 
-    if (MACOS)
-        target_link_libraries(${OCEAN_TARGET_NAME}
-            PUBLIC
-                ${GLKIT_LIB}
-                ${OPENGLES_LIB}
-                ${UIKIT_LIB}
-        )
-    elseif(IOS)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${UIKIT_LIB})
-    endif()
+    target_link_libraries(${OCEAN_TARGET_NAME}
+        PUBLIC
+            ${GLKIT_LIB}
+            ${OPENGLES_LIB}
+            ${UIKIT_LIB}
+    )
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
