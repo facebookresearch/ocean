@@ -81,7 +81,7 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestORBDetector
 		 * @param linedIntegralFrame Pointer to the (lined) integral frame of the actual 8 bit frame for which the feature descriptors will be calculated, the integral frame has an extra line with zero pixels on the left and top of the integral frame
 		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [1, infinity)
 		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [1, infinity)
-		 * @param features Features to validate the calculation
+		 * @param features The features to validate
 		 * @return The success percentage, with range [0, 1]
 		 */
 		static double validateOrientation(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, CV::Detector::ORBFeatures& features);
@@ -91,7 +91,7 @@ class OCEAN_TEST_CV_DETECTOR_EXPORT TestORBDetector
 		 * @param linedIntegralFrame Pointer to the (lined) integral frame of the actual 8 bit frame for which the feature descriptors will be calculated, the integral frame has an extra line with zero pixels on the left and top of the integral frame
 		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [1, infinity)
 		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [1, infinity)
-		 * @param features Features to validate the calculation
+		 * @param features The features to validate
 		 * @return True, if succeeded
 		 */
 		static bool validateDescriptors(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, CV::Detector::ORBFeatures& features);

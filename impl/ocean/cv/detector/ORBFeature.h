@@ -56,14 +56,14 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeature : public OrientedPointFeature
 		/**
 		 * Creates a new empty ORB feature object.
 		 */
-		inline ORBFeature();
+		ORBFeature() = default;
 
 		/**
 		 * Creates a new ORB feature object by a given 2D observation position in e.g. an image.
 		 * @param observation 2D feature observation
 		 * @param distortionState Distortion state of the 2D feature position
-		 * @param strength Strength of the feature
-		 * @param orientation Orientation angle of the feature in radian, range [0, 2*PI)
+		 * @param strength The strength of the feature
+		 * @param orientation The orientation angle of the feature in radian, range [0, 2*PI)
 		 */
 		inline ORBFeature(const Vector2& observation, const DistortionState distortionState = DS_UNKNOWN, const Scalar strength = Scalar(0), const Scalar orientation = Scalar(0));
 
@@ -103,7 +103,7 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeature : public OrientedPointFeature
 
 		/**
 		 * Adds a given descriptor to this feature.
-		 * @param descriptor Descriptor to add
+		 * @param descriptor The descriptor to add
 		 */
 		inline void addDescriptor(const ORBDescriptor& descriptor);
 
@@ -143,66 +143,58 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeature : public OrientedPointFeature
 	protected:
 
 		/// Feature descriptor type.
-		FeatureDescriptorType featureDescriptorType;
+		FeatureDescriptorType descriptorType_ = FDT_UNDESCRIBED;
 
 		/// Feature descriptor.
-		ORBDescriptors featureDescriptors;
+		ORBDescriptors descriptors_;
 };
 
-inline ORBFeature::ORBFeature() :
-	OrientedPointFeature(),
-	featureDescriptorType(FDT_UNDESCRIBED)
-{
-	// nothing to do here
-}
-
 inline ORBFeature::ORBFeature(const Vector2& observation, const DistortionState distortionState, const Scalar strength, const Scalar orientation) :
-	OrientedPointFeature(observation, distortionState, strength, orientation),
-	featureDescriptorType(FDT_UNDESCRIBED)
+	OrientedPointFeature(observation, distortionState, strength, orientation)
 {
 	// nothing to do here
 }
 
 inline size_t ORBFeature::numberDescriptors() const
 {
-	return featureDescriptors.size();
+	return descriptors_.size();
 }
 
 inline const ORBDescriptor& ORBFeature::firstDescriptor() const
 {
-	ocean_assert(!featureDescriptors.empty());
-	return featureDescriptors.front();
+	ocean_assert(!descriptors_.empty());
+	return descriptors_.front();
 }
 
 inline ORBDescriptor& ORBFeature::firstDescriptor()
 {
-	ocean_assert(!featureDescriptors.empty());
-	return featureDescriptors.front();
+	ocean_assert(!descriptors_.empty());
+	return descriptors_.front();
 }
 
 inline const ORBDescriptors& ORBFeature::descriptors() const
 {
-	return featureDescriptors;
+	return descriptors_;
 }
 
 inline ORBDescriptors& ORBFeature::descriptors()
 {
-	return featureDescriptors;
+	return descriptors_;
 }
 
 inline void ORBFeature::addDescriptor(const ORBDescriptor& descriptor)
 {
-	featureDescriptors.pushBack(descriptor);
+	descriptors_.pushBack(descriptor);
 }
 
 inline ORBFeature::FeatureDescriptorType ORBFeature::descriptorType() const
 {
-	return featureDescriptorType;
+	return descriptorType_;
 }
 
 inline void ORBFeature::setDescriptorType(const FeatureDescriptorType type)
 {
-	featureDescriptorType = type;
+	descriptorType_ = type;
 }
 
 template <typename T>
@@ -211,23 +203,25 @@ ORBFeatures ORBFeature::features2ORBFeatures(const std::vector<T>& features)
 	ORBFeatures result;
 	result.resize(features.size());
 
-	for (size_t i = 0; i < features.size(); i++)
+	for (const T& feature : features)
 	{
-		const PointFeature& feature = features[i];
-		result.push_back(ORBFeature(feature.observation(), feature.distortionState(), feature.strength()));
+		result.emplace_back(feature.observation(), feature.distortionState(), feature.strength());
 	}
 
 	return result;
 }
 
 template <typename T>
-ORBFeatures ORBFeature::features2ORBFeatures(const std::vector<T>& features, const unsigned int width, const unsigned int height, const unsigned int border, Indices32* validIndicesPtr)
+ORBFeatures ORBFeature::features2ORBFeatures(const std::vector<T>& features, const unsigned int width, const unsigned int height, const unsigned int border, Indices32* validIndices)
 {
 	ORBFeatures result;
 	result.reserve(features.size());
 
-	Indices32 validIndices;
-	validIndices.reserve(features.size());
+	if (validIndices != nullptr)
+	{
+		validIndices->clear();
+		validIndices->reserve(features.size());
+	}
 
 	const Scalar borderLeftTop = Scalar(border);
 	const Scalar borderRight = Scalar(width) - Scalar(border);
@@ -235,22 +229,20 @@ ORBFeatures ORBFeature::features2ORBFeatures(const std::vector<T>& features, con
 
 	for (size_t i = 0; i < features.size(); i++)
 	{
-		const PointFeature& feature = features[i];
+		const T& feature = features[i];
 
 		const Scalar x = feature.observation().x();
 		const Scalar y = feature.observation().y();
 
 		if (x >= borderLeftTop && y >= borderLeftTop && x < borderRight && y < borderBottom)
 		{
-			result.push_back(ORBFeature(feature.observation(), feature.distortionState(), feature.strength()));
-			validIndices.push_back((Index32)i);
+			result.emplace_back(feature.observation(), feature.distortionState(), feature.strength());
+
+			if (validIndices != nullptr)
+			{
+				validIndices->emplace_back(Index32(i));
+			}
 		}
-	}
-
-	ocean_assert(validIndices.size() == result.size());
-
-	if (validIndicesPtr) {
-		*validIndicesPtr = std::move(validIndices);
 	}
 
 	return result;

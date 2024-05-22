@@ -120,7 +120,7 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeatureDescriptor
 		 * @param numberBackwardFeatures The number of backward feature points, with range [0, infinity)
 		 * @param threshold The percentage (in relation to the number of descriptor bits) of the maximal hamming distance so that two descriptors count as similar, with range [0, 1]
 		 * @param correspondences The resulting feature correspondences, pairs of feature indices (forward to backward indices)
-		 * @param lock Lock for thread save adding of the match indices
+		 * @param lock The lock for thread save adding of the match indices, nullptr if the function is executed single-threaded
 		 * @param firstIndex First index of the feature point vector to be handled
 		 * @param numberIndices Number of feature points to be handled
 		 */
@@ -134,11 +134,11 @@ inline void ORBFeatureDescriptor::determineDescriptors(const uint32_t* linedInte
 
 	if (worker)
 	{
-		worker->executeFunction(Worker::Function::createStatic(&ORBFeatureDescriptor::determineDescriptorsSubset, linedIntegralFrame, width, height, featurePoints.data(), useSublayers, 0u, 0u), 0u, (unsigned int)featurePoints.size());
+		worker->executeFunction(Worker::Function::createStatic(&ORBFeatureDescriptor::determineDescriptorsSubset, linedIntegralFrame, width, height, featurePoints.data(), useSublayers, 0u, 0u), 0u, (unsigned int)(featurePoints.size()));
 	}
 	else
 	{
-		determineDescriptorsSubset(linedIntegralFrame, width, height, featurePoints.data(), useSublayers, 0u, (unsigned int)featurePoints.size());
+		determineDescriptorsSubset(linedIntegralFrame, width, height, featurePoints.data(), useSublayers, 0u, (unsigned int)(featurePoints.size()));
 	}
 }
 
@@ -159,6 +159,11 @@ inline bool ORBFeatureDescriptor::detectReferenceFeaturesAndDetermineDescriptors
 
 	const FramePyramid framePyramid(yFrame, std::min(pyramidLayers, maxLayerNumber), false /*copyFirstLayer*/, worker);
 
+	if (!framePyramid.isValid())
+	{
+		return false;
+	}
+
 	detectReferenceFeaturesAndDetermineDescriptors(framePyramid, featurePoints, useHarrisFeatures, featureThreshold, worker);
 
 	return true;
@@ -170,7 +175,7 @@ inline void ORBFeatureDescriptor::determineNonBijectiveCorrespondences(const ORB
 
 	correspondences.reserve(forwardFeatures.size());
 
-	if (worker)
+	if (worker != nullptr)
 	{
 		Lock lock;
 		worker->executeFunction(Worker::Function::createStatic(&ORBFeatureDescriptor::determineNonBijectiveCorrespondencesSubset, forwardFeatures.data(), forwardFeatures.size(), backwardFeatures.data(), backwardFeatures.size(), threshold, &correspondences, &lock, 0u, 0u), 0u, (unsigned int)(forwardFeatures.size()));

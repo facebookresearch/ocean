@@ -34,11 +34,10 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeatureOrientation
 
 		/**
 		 * Determines the orientation for all given feature points based on the intensity centroid of a patch around the feature positions.
-		 * A 31 x 31 pixel patch is used to calculate the orientation.
-		 * The determined orientations are set to the given feature points.
+		 * A image patch with size 31x31 pixels is used to calculate the orientation.
 		 * @param linedIntegralFrame Pointer to the lined integral frame of the frame where the feature points were detected; must be an integral frame for an 8 bit frame
-		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [1, infinity)
-		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [1, infinity)
+		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [31, infinity)
+		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [31, infinity)
 		 * @param featurePoints Feature points to determine the orientation for
 		 * @param worker Optional worker object to distribute the computation to several CPU cores
 		 */
@@ -48,27 +47,26 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeatureOrientation
 
 		/**
 		 * Determines the orientation for all given feature points based on the intensity centroid of a patch around the feature positions.
-		 * A 31 x 31 pixel patch is used to calculate the orientation.
-		 * The determined orientations are set to the given feature points.
+		 * A image patch with size 31x31 pixels is used to calculate the orientation.
 		 * @param linedIntegralFrame Pointer to the lined integral frame of the frame where the feature points were detected; must be an integral frame for an 8 bit frame
-		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [1, infinity)
-		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [1, infinity)
+		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [31, infinity)
+		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [31, infinity)
 		 * @param featurePoints Feature points to determine the orientation for
 		 * @param startIndex First index of the feature point vector to be handled
 		 * @param range Number of feature points to be handled
 		 */
-		static void determineFeatureOrientationSubset(const unsigned int* linedIntegralFrame, const unsigned int width, const unsigned int height, ORBFeatures* featurePoints, const unsigned int startIndex, const unsigned int range);
+		static void determineFeatureOrientationSubset(const unsigned int* linedIntegralFrame, const unsigned int width, const unsigned int height, ORBFeatures* const featurePoints, const unsigned int startIndex, const unsigned int range);
 
 		/**
 		 * Determines the orientation for a given feature point based on the intensity centroid of a patch around the feature position.
-		 * A 31 x 31 pixel patch is used to calculate the orientation.
+		 * A image patch with size 31x31 pixels is used to calculate the orientation.
 		 * @param linedIntegralFrame Pointer to the lined integral frame of the frame where the feature points were detected; must be an integral frame for an 8 bit frame
-		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [1, infinity)
-		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [1, infinity)
-		 * @param observation 2D observation position of the feature
+		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [31, infinity)
+		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [31, infinity)
+		 * @param position The 2D position of the feature, with pixel center PC_CENTER, with range (15, width - 15)x(15, height - 15)
 		 * @return Orientation angle in radian with range [0, 2*PI)
 		 */
-		static Scalar determineFeatureOrientation31(const unsigned int* linedIntegralFrame, const unsigned int width, const unsigned int height, const Vector2& observation);
+		static Scalar determineFeatureOrientation31(const unsigned int* linedIntegralFrame, const unsigned int width, const unsigned int height, const Vector2& position);
 };
 
 }
