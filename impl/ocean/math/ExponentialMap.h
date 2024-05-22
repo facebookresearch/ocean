@@ -70,16 +70,16 @@ class ExponentialMapT
 		/**
 		 * Creates a default rotation.
 		 */
-		inline ExponentialMapT();
+		ExponentialMapT() = default;
 
 		/**
-		 * Creates an exponential map rotation by a given 3D axis with axis length defining the rotation angle in radian.
+		 * Creates a rotation based on a given 3D axis with axis length defining the rotation angle in radian.
 		 * @param rotation 3D vector defining the rotation
 		 */
 		explicit inline ExponentialMapT(const VectorT3<T>& rotation);
 
 		/**
-		 * Creates an exponential map roation by a given 3D axis with axis length defining the rotation angle in radian.
+		 * Creates a rotation based on a given 3D axis with axis length defining the rotation angle in radian.
 		 * @param wx X component of the rotation axis
 		 * @param wy Y component of the rotation axis
 		 * @param wz Z component of the rotation axis
@@ -87,29 +87,37 @@ class ExponentialMapT
 		inline ExponentialMapT(const T wx, const T wy, const T wz);
 
 		/**
-		 * Creates an exponential map rotation by a given noramlized 3D axis with length 1 and a given rotation angle.
+		 * Creates a rotation based on a given 3D axis with length 1 and a given rotation angle.
 		 * @param axis Normalized rotation axis
-		 * @param angle Angle of the rotation, in radian
+		 * @param angle The angle of the rotation, in radian
 		 */
 		inline ExponentialMapT(const VectorT3<T>& axis, const T angle);
 
 		/**
-		 * Creates an exponential map rotation by a given angle axis rotation object.
-		 * @param rotation Rotation to be used
+		 * Creates an rotation based on a given angle-axis rotation.
+		 * @param rotation the rotation to be used, must be valid
 		 */
 		explicit inline ExponentialMapT(const RotationT<T>& rotation);
 
 		/**
-		 * Creates an exponential map rotation by a given quaternion rotation object.
-		 * @param rotation Rotation to be used
+		 * Creates a rotation based on a quaternion.
+		 * @param rotation The rotation to be used, must be valid
 		 */
 		explicit ExponentialMapT(const QuaternionT<T>& rotation);
 
 		/**
-		 * Creates an exponential map rotation by a given 3x3 rotation matrix.
-		 * @param rotation Rotation matrix to be used
+		 * Creates a rotation based on a 3x3 rotation matrix.
+		 * @param rotation The rotation matrix to be used, must be valid
 		 */
 		explicit ExponentialMapT(const SquareMatrixT3<T>& rotation);
+
+		/**
+		 * Copies an exponential map with different element data type than T.
+		 * @param exponentialMap The exponential map to copy
+		 * @tparam U The element data type of the exponential map
+		 */
+		template <typename U>
+		inline explicit ExponentialMapT(const ExponentialMapT<U>& expontentialMap) noexcept;
 
 		/**
 		 * Returns the (non-normalized) axis of this rotation object.
@@ -187,47 +195,40 @@ class ExponentialMapT
 	private:
 
 		/// Axis defining the rotation normal while the length defines the rotation angle.
-		VectorT3<T> rotationValues_;
+		VectorT3<T> value_ = VectorT3<T>(0, 0, 0);
 };
 
 template <typename T>
-inline ExponentialMapT<T>::ExponentialMapT() :
-	rotationValues_(0, 0, 0)
-{
-	// nothing to do here
-}
-
-template <typename T>
 inline ExponentialMapT<T>::ExponentialMapT(const VectorT3<T>& rotation) :
-	rotationValues_(rotation)
+	value_(rotation)
 {
 	// nothing to do here
 }
 
 template <typename T>
 inline ExponentialMapT<T>::ExponentialMapT(const T wx, const T wy, const T wz) :
-	rotationValues_(wx, wy, wz)
+	value_(wx, wy, wz)
 {
 	// nothing to do here
 }
 
 template <typename T>
 inline ExponentialMapT<T>::ExponentialMapT(const VectorT3<T>& axis, const T angle) :
-	rotationValues_(axis * angle)
+	value_(axis * angle)
 {
 	ocean_assert(axis.isUnit());
 }
 
 template <typename T>
 inline ExponentialMapT<T>::ExponentialMapT(const RotationT<T>& rotation) :
-	rotationValues_(rotation.axis() * rotation.angle())
+	value_(rotation.axis() * rotation.angle())
 {
 	ocean_assert(rotation.isValid());
 }
 
 template <typename T>
 ExponentialMapT<T>::ExponentialMapT(const QuaternionT<T>& rotation) :
-	rotationValues_(0, 0, 0)
+	value_(0, 0, 0)
 {
 	const RotationT<T> angleAxis(rotation);
 	ocean_assert(angleAxis.isValid());
@@ -235,12 +236,12 @@ ExponentialMapT<T>::ExponentialMapT(const QuaternionT<T>& rotation) :
 	const VectorT3<T> axis(angleAxis.axis());
 	ocean_assert(axis.isUnit());
 
-	rotationValues_ = axis * angleAxis.angle();
+	value_ = axis * angleAxis.angle();
 }
 
 template <typename T>
 ExponentialMapT<T>::ExponentialMapT(const SquareMatrixT3<T>& rotation) :
-	rotationValues_(0, 0, 0)
+	value_(0, 0, 0)
 {
 	const RotationT<T> angleAxis(rotation);
 	ocean_assert(angleAxis.isValid());
@@ -248,90 +249,98 @@ ExponentialMapT<T>::ExponentialMapT(const SquareMatrixT3<T>& rotation) :
 	const VectorT3<T> axis(angleAxis.axis());
 	ocean_assert(axis.isUnit());
 
-	rotationValues_ = axis * angleAxis.angle();
+	value_ = axis * angleAxis.angle();
+}
+
+template <typename T>
+template <typename U>
+inline ExponentialMapT<T>::ExponentialMapT(const ExponentialMapT<U>& expontentialMap) noexcept :
+	value_(expontentialMap.axis())
+{
+	// nothing to do here
 }
 
 template <typename T>
 inline const VectorT3<T>& ExponentialMapT<T>::axis() const
 {
-	return rotationValues_;
+	return value_;
 }
 
 template <typename T>
 inline T ExponentialMapT<T>::angle() const
 {
-	return rotationValues_.length();
+	return value_.length();
 }
 
 template <typename T>
 inline QuaternionT<T> ExponentialMapT<T>::quaternion() const
 {
-	const T angle = rotationValues_.length();
+	const T angle = value_.length();
 
 	if (NumericT<T>::isEqualEps(angle))
 	{
 		return QuaternionT<T>();
 	}
 
-	return QuaternionT<T>(rotationValues_ / angle, angle);
+	return QuaternionT<T>(value_ / angle, angle);
 }
 
 template <typename T>
 inline RotationT<T> ExponentialMapT<T>::rotation() const
 {
-	const T angle = rotationValues_.length();
+	const T angle = value_.length();
 
 	if (NumericT<T>::isEqualEps(angle))
 	{
 		return RotationT<T>();
 	}
 
-	return RotationT<T>(rotationValues_ / angle, angle);
+	return RotationT<T>(value_ / angle, angle);
 }
 
 template <typename T>
 inline const T* ExponentialMapT<T>::data() const
 {
-	return rotationValues_.data();
+	return value_.data();
 }
 
 template <typename T>
 inline const T& ExponentialMapT<T>::operator[](const unsigned int index) const
 {
 	ocean_assert(index <= 2u);
-	return rotationValues_[index];
+	return value_[index];
 }
 
 template <typename T>
 inline T& ExponentialMapT<T>::operator[](const unsigned int index)
 {
 	ocean_assert(index <= 2u);
-	return rotationValues_[index];
+	return value_[index];
 }
 
 template <typename T>
 inline ExponentialMapT<T> ExponentialMapT<T>::operator+(const ExponentialMapT<T>& exponentialMap) const
 {
-	return ExponentialMapT<T>(rotationValues_ + exponentialMap.rotationValues_);
+	return ExponentialMapT<T>(value_ + exponentialMap.value_);
 }
 
 template <typename T>
 inline ExponentialMapT<T>& ExponentialMapT<T>::operator+=(const ExponentialMapT<T>& exponentialMap)
 {
-	rotationValues_ += exponentialMap.rotationValues_;
+	value_ += exponentialMap.value_;
 	return *this;
 }
 
 template <typename T>
 inline ExponentialMapT<T> ExponentialMapT<T>::operator-(const ExponentialMapT<T>& exponentialMap) const
 {
-	return ExponentialMapT<T>(rotationValues_ - exponentialMap.rotationValues_);
+	return ExponentialMapT<T>(value_ - exponentialMap.value_);
 }
 
 template <typename T>
 inline ExponentialMapT<T>& ExponentialMapT<T>::operator-=(const ExponentialMapT<T>& exponentialMap)
 {
-	rotationValues_ -= exponentialMap.rotationValues_;
+	value_ -= exponentialMap.value_;
 	return *this;
 }
 

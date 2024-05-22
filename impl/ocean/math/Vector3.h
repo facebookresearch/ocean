@@ -147,7 +147,7 @@ class VectorT3
 
 		/**
 		 * Copies a vector with different element data type than T.
-		 * @param vector 3D vector that is coped
+		 * @param vector The 3D vector to copy
 		 * @tparam U The element data type of the second vector
 		 */
 		template <typename U>

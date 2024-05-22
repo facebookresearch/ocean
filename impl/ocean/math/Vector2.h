@@ -138,7 +138,7 @@ class VectorT2
 
 		/**
 		 * Copies a vector with different element data type than T.
-		 * @param vector 2D vector that is coped
+		 * @param vector The 2D vector to copy
 		 * @tparam U The element data type of the second vector
 		 */
 		template <typename U>
