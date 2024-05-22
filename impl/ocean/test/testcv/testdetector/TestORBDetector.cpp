@@ -21,6 +21,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+
 #include <random>
 
 namespace Ocean
@@ -56,13 +58,19 @@ bool TestORBDetector::test(const Frame& frame, const double testDuration, Worker
 	allSucceeded = testOrientationDetermination(testDuration, worker, yFrame) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 
 	allSucceeded = testDescriptorDetermination(testDuration, worker, yFrame) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 
 	allSucceeded = testHammingDistanceDetermination(testDuration) && allSucceeded;
 
+	Log::info() << " ";
+	Log::info() << "-";
 	Log::info() << " ";
 
 	allSucceeded = testDescriptorMatching(testDuration, worker) && allSucceeded;
@@ -117,13 +125,16 @@ bool TestORBDetector::testOrientationDetermination(const double testDuration, Wo
 	constexpr size_t numberRandomFeatures = 1000;
 
 	Log::info() << "Testing orientation calculation of " << numberRandomFeatures << " randomized feature points:";
-
-	bool allSucceeded = true;
+	Log::info() << " ";
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -137,7 +148,7 @@ bool TestORBDetector::testOrientationDetermination(const double testDuration, Wo
 		}
 		else
 		{
-			yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u);
+			yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u, &randomGenerator);
 			ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 		}
 
@@ -154,56 +165,36 @@ bool TestORBDetector::testOrientationDetermination(const double testDuration, Wo
 
 			while (randomFeatures.size() < numberRandomFeatures)
 			{
-				const Scalar x = Random::scalar(31, Scalar(yFrame.width()) - 32);
-				const Scalar y = Random::scalar(31, Scalar(yFrame.height()) - 32);
+				const Vector2 position = Random::vector2(randomGenerator, Scalar(31), Scalar(yFrame.width() - 32u), Scalar(31), Scalar(yFrame.height() - 32u));
 
-				randomFeatures.emplace_back(Vector2(x, y), CV::Detector::PointFeature::DS_UNKNOWN, Scalar(0));
+				randomFeatures.emplace_back(position, CV::Detector::PointFeature::DS_UNKNOWN, Scalar(0));
 			}
 
+			ocean_assert(linedIntegralFrame.isContinuous());
+
 			performance.start();
-				ocean_assert(linedIntegralFrame.isContinuous());
 				CV::Detector::ORBFeatureOrientation::determineFeatureOrientation(linedIntegralFrame.constdata<uint32_t>(), yFrame.width(), yFrame.height(), randomFeatures, useWorker);
 			performance.stop();
 
 			if (validateOrientation(linedIntegralFrame.constdata<uint32_t>(), yFrame.width(), yFrame.height(), randomFeatures) < 0.99)
 			{
-				allSucceeded = false;
-			}
-
-			// now, we validate features determine with the FAST detector
-
-			CV::Detector::FASTFeatures fastFeaturePoints;
-			CV::Detector::FASTFeatureDetector::detectFeatures(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), 30u, false, false, fastFeaturePoints, yFrame.paddingElements(), useWorker);
-			CV::Detector::ORBFeatures detectedFeatures = CV::Detector::ORBFeature::features2ORBFeatures(fastFeaturePoints, yFrame.width(), yFrame.height());
-
-			CV::Detector::ORBFeatureOrientation::determineFeatureOrientation(linedIntegralFrame.constdata<uint32_t>(), yFrame.width(), yFrame.height(), detectedFeatures, useWorker);
-
-			if (validateOrientation(linedIntegralFrame.constdata<uint32_t>(), yFrame.width(), yFrame.height(), detectedFeatures) < 0.99)
-			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	Log::info() << "Performance: " << String::toAString(performanceSinglecore.averageMseconds()) << "ms";
+	Log::info() << "Performance: " << performanceSinglecore;
 
 	if (performanceMulticore.measurements() != 0u)
 	{
-		Log::info() << "Multicore performance: " << String::toAString(performanceMulticore.averageMseconds()) << "ms";
+		Log::info() << "Multicore performance: " << performanceMulticore;
 		Log::info() << "Multicore boost factor: " << String::toAString(NumericD::ratio(performanceSinglecore.averageMseconds(), performanceMulticore.averageMseconds()), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestORBDetector::testDescriptorDetermination(const double testDuration, Worker& worker, const Frame& yFrameTest)
@@ -214,13 +205,16 @@ bool TestORBDetector::testDescriptorDetermination(const double testDuration, Wor
 	constexpr size_t numberRandomFeatures = 1000;
 
 	Log::info() << "Testing description of " << numberRandomFeatures << " randomized feature points:";
-
-	bool allSucceeded = true;
+	Log::info() << " ";
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -234,7 +228,7 @@ bool TestORBDetector::testDescriptorDetermination(const double testDuration, Wor
 		}
 		else
 		{
-			yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u);
+			yFrame = Utilities::createRandomFrameWithFeatures(1280u, 720u, 2u, &randomGenerator);
 			ocean_assert(yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 		}
 
@@ -251,22 +245,22 @@ bool TestORBDetector::testDescriptorDetermination(const double testDuration, Wor
 
 			while (randomFeatures.size() < numberRandomFeatures)
 			{
-				const Scalar x = Random::scalar(31, Scalar(yFrame.width()) - 32);
-				const Scalar y = Random::scalar(31, Scalar(yFrame.height()) - 32);
+				const Vector2 position = Random::vector2(randomGenerator, Scalar(31), Scalar(yFrame.width() - 32u), Scalar(31), Scalar(yFrame.height() - 32u));
 
-				randomFeatures.emplace_back(Vector2(x, y), CV::Detector::PointFeature::DS_UNKNOWN, Scalar(0));
+				randomFeatures.emplace_back(position, CV::Detector::PointFeature::DS_UNKNOWN, Scalar(0));
 			}
 
 			CV::Detector::ORBFeatureOrientation::determineFeatureOrientation(linedIntegralFrame.constdata<uint32_t>(), yFrame.width(), yFrame.height(), randomFeatures, useWorker);
 
+			ocean_assert(linedIntegralFrame.isContinuous());
+
 			performance.start();
-				ocean_assert(linedIntegralFrame.isContinuous());
 				CV::Detector::ORBFeatureDescriptor::determineDescriptors(linedIntegralFrame.constdata<uint32_t>(), yFrame.width(), yFrame.height(), randomFeatures, false /*useSublayers*/, useWorker);
 			performance.stop();
 
 			if (!validateDescriptors(linedIntegralFrame.constdata<uint32_t>(), yFrame.width(), yFrame.height(), randomFeatures))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			// now, we validate features determine with the FAST detector
@@ -280,44 +274,40 @@ bool TestORBDetector::testDescriptorDetermination(const double testDuration, Wor
 
 			if (!validateDescriptors(linedIntegralFrame.constdata<uint32_t>(), yFrame.width(), yFrame.height(), detectedFeatures))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	Log::info() << "Performance: " << String::toAString(performanceSinglecore.averageMseconds()) << "ms";
+	Log::info() << "Performance: " << performanceSinglecore;
 
 	if (performanceMulticore.measurements() != 0u)
 	{
-		Log::info() << "Multicore performance: " << String::toAString(performanceMulticore.averageMseconds()) << "ms";
-		Log::info() << "Multicore boost factor: " << String::toAString(NumericD::ratio(performanceSinglecore.averageMseconds(), performanceMulticore.averageMseconds()), 1u) << "x";
+		Log::info() << "Multicore performance: " << performanceMulticore;
+		Log::info() << "Multicore boost factor: " << String::toAString(NumericD::ratio(performanceSinglecore.average(), performanceMulticore.average()), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestORBDetector::testHammingDistanceDetermination(const double testDuration)
 {
 	constexpr unsigned int constIterations = 1000000u;
 
-	Log::info() << "Test hamming distance calculation of " << String::insertCharacter(String::toAString(constIterations), ',', 3, false) << " descriptor pairs: ";
-
-	bool allSucceeded = true;
-
-	unsigned int dummy = 0u;
+	Log::info() << "Test hamming distance calculation of " << String::insertCharacter(String::toAString(constIterations), ',', 3, false) << " descriptor pairs:";
+	Log::info() << " ";
 
 	HighPerformanceStatistic performance;
 	HighPerformanceStatistic performanceBitset;
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);;
+
+	unsigned int dummy = 0u;
 
 	const Timestamp startTimestamp;
 
@@ -330,11 +320,13 @@ bool TestORBDetector::testHammingDistanceDetermination(const double testDuration
 		{
 			for (unsigned int j = 0u; j < 4u; j++)
 			{
-				ocean_assert(size_t(&descriptors1[i]) % sizeof(uint64_t) == 0);
-				ocean_assert(size_t(&descriptors2[i]) % sizeof(uint64_t) == 0);
+				static_assert(sizeof(CV::Detector::ORBDescriptor) == 4 * sizeof(uint64_t), "Invalid data type!");
 
-				((uint64_t*)&descriptors1[i])[j] = RandomI::random64();
-				((uint64_t*)&descriptors2[i])[j] = RandomI::random64();
+				const uint64_t randomValue1 = RandomI::random64(randomGenerator);
+				const uint64_t randomValue2 = RandomI::random64(randomGenerator);
+
+				memcpy((uint8_t*)(&descriptors1[i]) + sizeof(uint64_t) * j, &randomValue1, sizeof(uint64_t));
+				memcpy((uint8_t*)(&descriptors2[i]) + sizeof(uint64_t) * j, &randomValue2, sizeof(uint64_t));
 			}
 		}
 
@@ -354,46 +346,42 @@ bool TestORBDetector::testHammingDistanceDetermination(const double testDuration
 
 		if (!validateHammingDistance(descriptors1, descriptors2))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (dummy > 1u)
 	{
-		Log::info() << "Bitset Performance: Best: " << performanceBitset.bestMseconds() << "ms, worst: " << performanceBitset.worstMseconds() << "ms, average: " << performanceBitset.averageMseconds() << "ms";
-		Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
+		Log::info() << "Bitset Performance: " << performanceBitset;
+		Log::info() << "Performance: " << performance;
 	}
 	else
 	{
-		Log::info() << "Bitset Performance: Best: " << performanceBitset.bestMseconds() << "ms, worst: " << performanceBitset.worstMseconds() << "ms, average: " << performanceBitset.averageMseconds() << "ms";
-		Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
+		Log::info() << "Bitset Performance: " << performanceBitset;
+		Log::info() << "Performance: " << performance;
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestORBDetector::testDescriptorMatching(const double testDuration, Worker& worker)
 {
 	constexpr size_t featureSize = 1000;
 
-	Log::info() << "Test brute force matching of " << featureSize << " randomized descriptor pairs (threshold 0.25): ";
-
-	bool allSucceeded = true;
+	Log::info() << "Test brute force matching of " << featureSize << " randomized descriptor pairs (threshold 0.25):";
+	Log::info() << " ";
 
 	const unsigned int maxWorkerIterations = worker ? 2u : 1u;
 
 	HighPerformanceStatistic performanceSinglecore;
 	HighPerformanceStatistic performanceMulticore;
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -420,9 +408,11 @@ bool TestORBDetector::testDescriptorMatching(const double testDuration, Worker& 
 
 				for (unsigned int j = 0u; j < 4u; j++)
 				{
-					ocean_assert(size_t(&tmpDescriptor) % sizeof(uint64_t) == 0);
+					static_assert(sizeof(CV::Detector::ORBDescriptor) == 4 * sizeof(uint64_t), "Invalid data type!");
 
-					((uint64_t*)&tmpDescriptor)[j] = RandomI::random64();
+					const uint64_t randomValue = RandomI::random64(randomGenerator);
+
+					memcpy((uint8_t*)(&tmpDescriptor) + sizeof(uint64_t) * j, &randomValue, sizeof(uint64_t));
 				}
 
 				if (descriptorSet.insert(tmpDescriptor).second)
@@ -459,30 +449,23 @@ bool TestORBDetector::testDescriptorMatching(const double testDuration, Worker& 
 
 			if (!validateDescriptorMatching(matches, checkMatches))
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	Log::info() << "Performance: " << String::toAString(performanceSinglecore.averageMseconds()) << "ms";
+	Log::info() << "Performance: " << performanceSinglecore;
 
 	if (performanceMulticore.measurements() != 0u)
 	{
-		Log::info() << "Multicore performance: " << String::toAString(performanceMulticore.averageMseconds()) << "ms";
-		Log::info() << "Multicore boost factor: " << String::toAString(NumericD::ratio(performanceSinglecore.averageMseconds(), performanceMulticore.averageMseconds()), 1u) << "x";
+		Log::info() << "Multicore performance: " << performanceMulticore;
+		Log::info() << "Multicore boost factor: " << String::toAString(NumericD::ratio(performanceSinglecore.average(), performanceMulticore.average()), 1u) << "x";
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();;
 }
 
 double TestORBDetector::validateOrientation(const uint32_t* linedIntegralFrame, const unsigned int width, const unsigned int height, CV::Detector::ORBFeatures& features)
@@ -493,26 +476,38 @@ double TestORBDetector::validateOrientation(const uint32_t* linedIntegralFrame, 
 
 	size_t validOrientations = 0;
 
-	for (size_t i = 0; i < features.size(); i++)
+	for (const CV::Detector::ORBFeature& feature : features)
 	{
 		ocean_assert(width != 0u && height != 0u);
 
-		constexpr int patchSizeHalf = 15;
-		ocean_assert(features[i].observation().x() - patchSizeHalf > 0 && features[i].observation().x() + Scalar(patchSizeHalf) < Scalar(width) && "patch outside of frame");
-		ocean_assert(features[i].observation().y() - patchSizeHalf > 0 && features[i].observation().y() + Scalar(patchSizeHalf) < Scalar(height) && "patch outside of frame");
+		const Vector2& observation = feature.observation();
 
-		const unsigned int radiusSquare = patchSizeHalf * patchSizeHalf;
+		constexpr int patchSize_2 = 15;
+
+		constexpr unsigned int radiusSquare = patchSize_2 * patchSize_2;
 
 		Scalar m_01 = Scalar(0.0);
 		Scalar m_10 = Scalar(0.0);
 
-		for (int y = -patchSizeHalf; y <= patchSizeHalf; y++)
+		for (int y = -patchSize_2; y <= patchSize_2; y++)
 		{
-			for (int x = -patchSizeHalf; x <= patchSizeHalf; x++)
+			for (int x = -patchSize_2; x <= patchSize_2; x++)
 			{
 				if ((unsigned int)(x * x + y * y) <= radiusSquare)
 				{
-					Scalar pixelValue = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, features[i].observation() + Vector2(Scalar(x) + Scalar(0.5), Scalar(y) + Scalar(0.5)), CV::PC_CENTER, 1u, 1u);
+					const Vector2 lookup = observation + Vector2(Scalar(x), Scalar(y));
+					const Vector2 centerLookup = lookup + Vector2(Scalar(0.5), Scalar(0.5));
+
+					ocean_assert(centerLookup.x() >= Scalar(0.5) && centerLookup.y() >= Scalar(0.5));
+					ocean_assert(centerLookup.x() < Scalar(width) - Scalar(0.5) && centerLookup.y() < Scalar(height) - Scalar(0.5));
+
+					if (centerLookup.x() < Scalar(0.5) || centerLookup.y() < Scalar(0.5) || centerLookup.x() >= Scalar(width) - Scalar(0.5) || centerLookup.y() >= Scalar(height) - Scalar(0.5))
+					{
+						return 0.0;
+					}
+
+					const Scalar pixelValue = CV::FrameInterpolatorBilinear::patchIntensitySum1Channel(linedIntegralFrame, width, height, linedIntegralFramePaddingElements, centerLookup, CV::PC_CENTER, 1u, 1u);
+
 					m_01 += Scalar(y) * pixelValue;
 					m_10 += Scalar(x) * pixelValue;
 				}
@@ -520,11 +515,10 @@ double TestORBDetector::validateOrientation(const uint32_t* linedIntegralFrame, 
 		}
 
 		const Scalar angle = Numeric::atan2(Scalar(m_01), Scalar(m_10));
-		// in 5 degree increments
 		const Scalar orientation = Numeric::angleAdjustPositive(angle);
 
 		ocean_assert(orientation >= 0 && orientation < Numeric::pi2());
-		const Scalar checkOrientation = features[i].orientation();
+		const Scalar checkOrientation = feature.orientation();
 		ocean_assert(checkOrientation >= 0 && checkOrientation < Numeric::pi2());
 
 		if (Numeric::isWeakEqual(orientation, checkOrientation))
