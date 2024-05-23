@@ -325,47 +325,6 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		static bool objectPoint(const ConstIndexedAccessor<const AnyCamera*>& cameras, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, ObjectPoint& objectPoint, const unsigned int iterations = 20u, const Scalar maximalSqrError = Scalar(3 * 3), const unsigned int minValidCorrespondences = 2u, const bool onlyFrontObjectPoint = true, const Estimator::EstimatorType refinementEstimator = Estimator::ET_SQUARE, Scalar* finalRobustError = nullptr, Indices32* usedIndices = nullptr);
 
 		/**
-		 * Deprecated.
-		 *
-		 * Determines the 3D object point for a set of image points observing the same object point under individual pinhole camera poses (with rotational and translational camera motion).
-		 * @param pinholeCamera The pinhole camera profile for all camera frames and poses, must be valid
-		 * @param poses The camera poses of the camera frames in which the image points are located
-		 * @param imagePoints The image points observing the 3D object point, one image point for each pose
-		 * @param randomGenerator Random generator object to be used for creating random numbers
-		 * @param objectPoint Resulting 3D object point
-		 * @param distortImagePoints True, to use the distortion parameters of the camera
-		 * @param iterations Number of RANSAC iterations, with range [1, infinity)
-		 * @param maximalSqrError The maximal square pixel error between a projected object point and an image point, with range [0, infinity)
-		 * @param minValidCorrespondences The minimal number of image points that have a projected pixel error smaller than 'maximalError', with range [2, correspondences]
-		 * @param onlyFrontObjectPoint True, if the resulting object point must lie in front of the camera
-		 * @param refinementEstimator An robust estimator to invoke an optimization step to increase the accuracy of the resulting position, ET_INVALID to avoid the refinement
-		 * @param finalSqrError Optional the resulting final sqr error
-		 * @param usedIndices Optional resulting indices of valid image points
-		 * @return True, if succeeded
-		 */
-		static bool objectPoint(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& poses, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, ObjectPoint& objectPoint, const bool distortImagePoints, const unsigned int iterations = 20u, const Scalar maximalSqrError = Scalar(3 * 3), const unsigned int minValidCorrespondences = 2u, const bool onlyFrontObjectPoint = true, const Estimator::EstimatorType refinementEstimator = Estimator::ET_SQUARE, Scalar* finalSqrError = nullptr, Indices32* usedIndices = nullptr);
-
-		/**
-		 * Deprecated.
-		 *
-		 * Determines the 3D object point for a set of image points observing the same object point under individual fisheye camera poses (with rotational and translational camera motion).
-		 * @param fisheyeCamera The fisheye camera profile for all camera frames and poses, must be valid
-		 * @param poses_world_T_camera The camera poses of the camera frames in which the image points are located, one for each image point
-		 * @param imagePoints The image points observing the 3D object point, one image point for each pose, one for each camera pose
-		 * @param randomGenerator Random generator object to be used for creating random numbers
-		 * @param worldObjectPoint Resulting 3D object point, defined in world
-		 * @param iterations Number of RANSAC iterations, with range [1, infinity)
-		 * @param maximalSqrError The maximal square pixel error between a projected object point and an image point, with range [0, infinity)
-		 * @param minValidCorrespondences The minimal number of image points that have a projected pixel error smaller than 'maximalError', with range [2, correspondences]
-		 * @param onlyFrontObjectPoint True, if the resulting object point must lie in front of the camera
-		 * @param refinementEstimator An robust estimator to invoke an optimization step to increase the accuracy of the resulting position, ET_INVALID to avoid the refinement
-		 * @param finalSqrError Optional the resulting final sqr error
-		 * @param usedIndices Optional resulting indices of valid image points
-		 * @return True, if succeeded
-		 */
-		static bool objectPoint(const FisheyeCamera& fisheyeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& poses_world_T_camera, const ConstIndexedAccessor<Vector2>& imagePoints, RandomGenerator& randomGenerator, Vector3& worldObjectPoint, const unsigned int iterations = 20u, const Scalar maximalSqrError = Scalar(3 * 3), const unsigned int minValidCorrespondences = 2u, const bool onlyFrontObjectPoint = true, const Estimator::EstimatorType refinementEstimator = Estimator::ET_SQUARE, Scalar* finalSqrError = nullptr, Indices32* usedIndices = nullptr);
-
-		/**
 		 * Determines the 3D object point for a set of image points observing the same object point under individual camera poses (with rotational camera motion only).
 		 * The center position of each camera is located at the origin of the coordinate system.
 		 * @param camera The camera profile defining the projection for all camera frames and poses, must be valid
