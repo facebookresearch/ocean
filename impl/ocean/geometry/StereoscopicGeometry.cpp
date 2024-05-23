@@ -62,7 +62,7 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 
 		Scalar sqrAverageError = Numeric::maxValue();
 		SquareMatrix3 world_R_optimizedCamera1_(false);
-		if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(pinholeCamera, world_R_camera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), usedIndices), pinholeCamera.hasDistortionParameters(), world_R_optimizedCamera1_, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, &sqrAverageError))
+		if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(AnyCameraPinhole(pinholeCamera), world_R_camera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), usedIndices), world_R_optimizedCamera1_, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, &sqrAverageError))
 		{
 			ocean_assert(!world_R_optimizedCamera1_.isSingular());
 

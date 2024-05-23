@@ -4486,6 +4486,10 @@ void Solver3::determineOrientationsSubset(const Database* database, const Pinhol
 
 bool Solver3::updateDatabaseToRotationalMotion(Database& database, const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalObservations, IndexSet32* relocatedObjectPointIds)
 {
+	ocean_assert(pinholeCamera.isValid());
+
+	const AnyCameraPinhole anyCamera(pinholeCamera);
+
 	// we identify the pose with most valid correspondences within the specified frame ranges
 	// we start at this pose which will receive a default orientation,
 	// we create all 3D object point locations for this pose and go further in both directions until we reach the defined frame ranges
@@ -4494,7 +4498,9 @@ bool Solver3::updateDatabaseToRotationalMotion(Database& database, const Pinhole
 	Index32 poseId = Tracking::Database::invalidId;
 	unsigned int bestCorrespondences = 0u;
 	if (!database.poseWithMostCorrespondences<false, false, true>(lowerFrame, upperFrame, &poseId, &bestCorrespondences, Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue())) || bestCorrespondences < 5u)
+	{
 		return false;
+	}
 
 	Vectors2 imagePoints;
 	Vectors3 objectPoints;
@@ -4524,9 +4530,13 @@ bool Solver3::updateDatabaseToRotationalMotion(Database& database, const Pinhole
 		for (unsigned int i = 0u; i < 2u; ++i)
 		{
 			if (i == 0u && leftFrame > lowerFrame)
+			{
 				frameIndex = --leftFrame;
+			}
 			else if (i == 1u && rightFrame < upperFrame)
+			{
 				frameIndex = ++rightFrame;
+			}
 
 			HomogenousMatrix4 pose;
 			if (frameIndex != (unsigned int)(-1) && database.hasPose<false>(frameIndex, &pose) && pose.isValid())
@@ -4544,22 +4554,26 @@ bool Solver3::updateDatabaseToRotationalMotion(Database& database, const Pinhole
 				for (unsigned int n = 0; n < objectPointIds.size(); ++n)
 				{
 					if (relocatedObjectPointIdSet.find(objectPointIds[n]) != relocatedObjectPointIdSet.end())
+					{
 						relocatedIndices.push_back(n);
+					}
 					else
+					{
 						pendingIndices.push_back(n);
+					}
 				}
 
 				const ConstArraySubsetAccessor<Vector3, unsigned int> relocatedObjectPoints(objectPoints, relocatedIndices);
 				const ConstArraySubsetAccessor<Vector2, unsigned int> relocatedImagePoints(imagePoints, relocatedIndices);
 
 				SquareMatrix3 orientation(true);
-				if (!Geometry::RANSAC::orientation(AnyCameraPinhole(pinholeCamera), relocatedObjectPoints, relocatedImagePoints, randomGenerator, orientation, 3u, 50u, Scalar(10 * 10)))
+				if (!Geometry::RANSAC::orientation(anyCamera, relocatedObjectPoints, relocatedImagePoints, randomGenerator, orientation, 3u, 50u, Scalar(10 * 10)))
 				{
 					ocean_assert(false && "This should never happen - however, we take the default rotation");
 				}
 
 				SquareMatrix3 optimizedOrientation(false);
-				if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(pinholeCamera, orientation, relocatedObjectPoints, relocatedImagePoints, pinholeCamera.hasDistortionParameters(), optimizedOrientation, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5)))
+				if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, orientation, relocatedObjectPoints, relocatedImagePoints, optimizedOrientation, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5)))
 				{
 					ocean_assert(!optimizedOrientation.isSingular());
 
@@ -4572,7 +4586,7 @@ bool Solver3::updateDatabaseToRotationalMotion(Database& database, const Pinhole
 						imagePoints = Subset::subset(imagePoints, pendingIndices);
 						objectPointIds = Subset::subset(objectPointIds, pendingIndices);
 
-						objectPoints = Geometry::Utilities::createObjectPoints(pinholeCamera, HomogenousMatrix4(optimizedOrientation), ConstArrayAccessor<Vector2>(imagePoints), pinholeCamera.hasDistortionParameters(), 1);
+						objectPoints = Geometry::Utilities::createObjectPoints(anyCamera, HomogenousMatrix4(optimizedOrientation), ConstArrayAccessor<Vector2>(imagePoints), Scalar(1));
 
 						database.setObjectPoints<false>(objectPointIds.data(), objectPoints.data(), objectPointIds.size());
 
@@ -4580,18 +4594,24 @@ bool Solver3::updateDatabaseToRotationalMotion(Database& database, const Pinhole
 					}
 				}
 				else
+				{
 					database.setPose<false>(frameIndex, HomogenousMatrix4(false));
+				}
 
 				processedPose = true;
 			}
 		}
 
 		if (!processedPose)
+		{
 			break;
+		}
 	}
 
-	if (relocatedObjectPointIds)
+	if (relocatedObjectPointIds != nullptr)
+	{
 		*relocatedObjectPointIds = std::move(relocatedObjectPointIdSet);
+	}
 
 	return true;
 }

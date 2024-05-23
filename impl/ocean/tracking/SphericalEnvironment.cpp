@@ -488,7 +488,7 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 		}
 		else
 		{
-			if (!Geometry::NonLinearOptimizationOrientation::optimizeOrientation(currentCamera, previousOrientation_, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), true, optimizedOrientation, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
+			if (!Geometry::NonLinearOptimizationOrientation::optimizeOrientation(AnyCameraPinhole(currentCamera), previousOrientation_, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), optimizedOrientation, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
 			{
 				return false;
 			}
@@ -534,7 +534,7 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 		}
 		else
 		{
-			if (!Geometry::NonLinearOptimizationOrientation::optimizeOrientation(currentCamera, currentOrientation, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), true, optimizedOrientation, 50u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
+			if (!Geometry::NonLinearOptimizationOrientation::optimizeOrientation(AnyCameraPinhole(currentCamera), currentOrientation, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), optimizedOrientation, 50u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
 			{
 				return false;
 			}
@@ -599,12 +599,12 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 			return false;
 		}
 
-		if (orientation)
+		if (orientation != nullptr)
 		{
 			*orientation = currentOrientation;
 		}
 
-		if (optimizedCamera)
+		if (optimizedCamera != nullptr)
 		{
 			*optimizedCamera = currentCamera;
 		}
@@ -661,7 +661,7 @@ bool SphericalEnvironment::optimizeOrientation(const PinholeCamera& pinholeCamer
 	}
 	else
 	{
-		if (!Geometry::NonLinearOptimizationOrientation::optimizeOrientation(pinholeCamera, orientation, ConstArrayAccessor<Vector3>(referenceObjectPoints), ConstArrayAccessor<Vector2>(frameImagePoints), true, optimizedOrientation, 20u, estimator, Scalar(0.001), Scalar(10)))
+		if (!Geometry::NonLinearOptimizationOrientation::optimizeOrientation(AnyCameraPinhole(pinholeCamera), orientation, ConstArrayAccessor<Vector3>(referenceObjectPoints), ConstArrayAccessor<Vector2>(frameImagePoints), optimizedOrientation, 20u, estimator, Scalar(0.001), Scalar(10)))
 		{
 			return false;
 		}

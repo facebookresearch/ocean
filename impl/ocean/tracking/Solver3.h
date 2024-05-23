@@ -2265,15 +2265,18 @@ inline SquareMatrix3 Solver3::determineOrientation(const Database& database, con
 
 inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const SquareMatrix3& roughOrientation, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, Indices32* validIndices)
 {
+	ocean_assert(camera.isValid());
 	ocean_assert(objectPoints.size() == imagePoints.size());
 	ocean_assert(minimalValidCorrespondenceRatio >= 0 && minimalValidCorrespondenceRatio <= 1);
+
+	const AnyCameraPinhole anyCamera(camera);
 
 	SquareMatrix3 previousOrientation(roughOrientation);
 
 	Indices32 internalValidIndices;
 	if (previousOrientation.isNull() || minimalValidCorrespondenceRatio < 1)
 	{
-		Geometry::RANSAC::orientation(AnyCameraPinhole(camera), objectPoints, imagePoints, randomGenerator, previousOrientation, 5u, 50u, maximalSqrError, nullptr, &internalValidIndices);
+		Geometry::RANSAC::orientation(anyCamera, objectPoints, imagePoints, randomGenerator, previousOrientation, 5u, 50u, maximalSqrError, nullptr, &internalValidIndices);
 	}
 
 	// check whether we do not receive enough valid correspondences from the RANSAC, however if the difference is 2 we accept the pose as in this case the ratio may provide wrong results
@@ -2285,7 +2288,7 @@ inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, 
 	{
 		if (minimalValidCorrespondenceRatio < 1)
 		{
-			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, previousOrientation, ConstIndexedAccessorSubsetAccessor<Vector3, unsigned int>(objectPoints, internalValidIndices), ConstIndexedAccessorSubsetAccessor<Vector2, unsigned int>(imagePoints, internalValidIndices), camera.hasDistortionParameters(), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
+			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, previousOrientation, ConstIndexedAccessorSubsetAccessor<Vector3, unsigned int>(objectPoints, internalValidIndices), ConstIndexedAccessorSubsetAccessor<Vector2, unsigned int>(imagePoints, internalValidIndices), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
 
 			if (validIndices)
 			{
@@ -2294,7 +2297,7 @@ inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, 
 		}
 		else
 		{
-			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, previousOrientation, objectPoints, imagePoints, camera.hasDistortionParameters(), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
+			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, previousOrientation, objectPoints, imagePoints, currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
 
 			if (validIndices)
 			{
@@ -2308,15 +2311,18 @@ inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, 
 
 inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const size_t priorityCorrespondences, const SquareMatrix3& roughOrientation, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError)
 {
+	ocean_assert(camera.isValid());
 	ocean_assert(objectPoints.size() == imagePoints.size());
 	ocean_assert(minimalValidCorrespondenceRatio >= 0 && minimalValidCorrespondenceRatio <= 1);
+
+	const AnyCameraPinhole anyCamera(camera);
 
 	SquareMatrix3 previousOrientation(roughOrientation);
 
 	Indices32 validIndices;
 	if (previousOrientation.isNull() || minimalValidCorrespondenceRatio < 1)
 	{
-		Geometry::RANSAC::orientation(AnyCameraPinhole(camera), objectPoints, imagePoints, randomGenerator, previousOrientation, 5u, 50u, maximalSqrError, nullptr, &validIndices);
+		Geometry::RANSAC::orientation(anyCamera, objectPoints, imagePoints, randomGenerator, previousOrientation, 5u, 50u, maximalSqrError, nullptr, &validIndices);
 	}
 
 	// check whether we do not receive enough valid correspondences from the RANSAC, however if the difference is 2 we accept the pose as in this case the ratio may provide wrong results
@@ -2367,7 +2373,7 @@ inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, 
 				subsetImagePoints.push_back(imagePoints[index]);
 			}
 
-			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, previousOrientation, ConstArrayAccessor<Vector3>(subsetObjectPoints), ConstArrayAccessor<Vector2>(subsetImagePoints), camera.hasDistortionParameters(), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
+			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, previousOrientation, ConstArrayAccessor<Vector3>(subsetObjectPoints), ConstArrayAccessor<Vector2>(subsetImagePoints), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
 		}
 		else
 		{
@@ -2383,7 +2389,7 @@ inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, 
 				remainingInvertedCovariance.copyElements(invertedCovariances[2 * n], false);
 			}
 
-			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, previousOrientation, objectPoints, imagePoints, camera.hasDistortionParameters(), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
+			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, previousOrientation, objectPoints, imagePoints, currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
 		}
 	}
 

@@ -27,19 +27,17 @@ class NonLinearOptimizationOrientation::OrientationOptimizationProvider : public
 
 		/**
 		 * Creates a new optimization provider object.
-		 * @param pinholeCamera The pinhole camera object to be used
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param flippedCamera_R_world Initial inverted and flipped orientation that has to be optimized
 		 * @param objectPoints 3D object points that are projected into the camera frame
 		 * @param imagePoints 2D observation image points, each point corresponds to one object point
-		 * @param distortImagePoints True, to apply the distortion parameters of the camera
 		 */
-		inline OrientationOptimizationProvider(const PinholeCamera& pinholeCamera, SquareMatrix3& flippedCamera_R_world, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const bool distortImagePoints) :
-			camera_(pinholeCamera),
+		inline OrientationOptimizationProvider(const AnyCamera& camera, SquareMatrix3& flippedCamera_R_world, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints) :
+			camera_(camera),
 			flippedCamera_R_world_(flippedCamera_R_world),
 			candidateFlippedCamera_R_world_(flippedCamera_R_world),
 			objectPoints_(objectPoints),
-			imagePoints_(imagePoints),
-			distortImagePoints_(distortImagePoints)
+			imagePoints_(imagePoints)
 		{
 			ocean_assert(objectPoints_.size() >= 3);
 			ocean_assert(objectPoints_.size() == imagePoints_.size());
@@ -82,7 +80,7 @@ class NonLinearOptimizationOrientation::OrientationOptimizationProvider : public
 
 			jacobian.resize(objectPoints_.size() * 2, 3u);
 
-			Jacobian::calculateOrientationJacobianRodrigues2nx3(jacobian.data(), camera_, Pose(Rotation(flippedCamera_R_world_)), objectPoints_, distortImagePoints_);
+			Jacobian::calculateOrientationJacobianRodrigues2nx3IF(jacobian.data(), camera_, ExponentialMap(flippedCamera_R_world_), objectPoints_);
 		}
 
 		/**
@@ -123,7 +121,7 @@ class NonLinearOptimizationOrientation::OrientationOptimizationProvider : public
 				ocean_assert(!weightVector);
 
 				// return the averaged square error
-				Scalar sqrError = Error::determinePoseErrorIF<ConstIndexedAccessor<ObjectPoint>, ConstIndexedAccessor<ImagePoint>, true, true, false>(HomogenousMatrix4(candidateFlippedCamera_R_world_), camera_, objectPoints_, imagePoints_, distortImagePoints_, Scalar(1), weightedErrors);
+				Scalar sqrError = Error::determinePoseErrorIF<ConstIndexedAccessor<ObjectPoint>, ConstIndexedAccessor<ImagePoint>, true, false>(HomogenousMatrix4(candidateFlippedCamera_R_world_), camera_, objectPoints_, imagePoints_, weightedErrors);
 
 				if (transposedInvertedCovariances != nullptr)
 				{
@@ -144,7 +142,7 @@ class NonLinearOptimizationOrientation::OrientationOptimizationProvider : public
 				weightVector.resize(2 * objectPoints_.size(), 1);
 
 				Scalars sqrErrors(objectPoints_.size());
-				Error::determinePoseErrorIF<ConstIndexedAccessor<ObjectPoint>, ConstIndexedAccessor<ImagePoint>, true, true, true>(HomogenousMatrix4(candidateFlippedCamera_R_world_), camera_, objectPoints_, imagePoints_, distortImagePoints_, Scalar(1), weightedErrors, sqrErrors.data());
+				Error::determinePoseErrorIF<ConstIndexedAccessor<ObjectPoint>, ConstIndexedAccessor<ImagePoint>, true, true>(HomogenousMatrix4(candidateFlippedCamera_R_world_), camera_, objectPoints_, imagePoints_, weightedErrors, sqrErrors.data());
 				return sqrErrors2robustErrors2<tEstimator>(sqrErrors, 3, weightedErrors, (Vector2*)weightVector.data(), transposedInvertedCovariances);
 			}
 		}
@@ -160,7 +158,7 @@ class NonLinearOptimizationOrientation::OrientationOptimizationProvider : public
 	protected:
 
 		/// The camera object.
-		const PinholeCamera& camera_;
+		const AnyCamera& camera_;
 
 		/// Inverted and flipped pose that will be optimized.
 		SquareMatrix3& flippedCamera_R_world_;
@@ -173,19 +171,18 @@ class NonLinearOptimizationOrientation::OrientationOptimizationProvider : public
 
 		/// The observed 2D image points.
 		const ConstIndexedAccessor<ImagePoint>& imagePoints_;
-
-		/// True, to use the camera distortion parameters.
-		const bool distortImagePoints_;
 };
 
-bool NonLinearOptimizationOrientation::optimizeOrientationIF(const PinholeCamera& pinholeCamera, const SquareMatrix3& flippedCamera_R_world, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const bool distortImagePoints, SquareMatrix3& optimizedFlippedCamera_R_world, const unsigned int iterations, const Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances, Scalars* intermediateErrors)
+bool NonLinearOptimizationOrientation::optimizeOrientationIF(const AnyCamera& camera, const SquareMatrix3& flippedCamera_R_world, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, SquareMatrix3& optimizedFlippedCamera_R_world, const unsigned int iterations, const Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances, Scalars* intermediateErrors)
 {
-	ocean_assert(pinholeCamera.isValid() && !flippedCamera_R_world.isSingular());
+	ocean_assert(camera.isValid());
+	ocean_assert(!flippedCamera_R_world.isSingular());
 	ocean_assert(&flippedCamera_R_world != &optimizedFlippedCamera_R_world);
 
 	optimizedFlippedCamera_R_world = flippedCamera_R_world;
 
-	OrientationOptimizationProvider provider(pinholeCamera, optimizedFlippedCamera_R_world, objectPoints, imagePoints, distortImagePoints);
+	OrientationOptimizationProvider provider(camera, optimizedFlippedCamera_R_world, objectPoints, imagePoints);
+
 	return denseOptimization<OrientationOptimizationProvider>(provider, iterations, estimator, lambda, lambdaFactor, initialError, finalError, invertedCovariances, intermediateErrors);
 }
 

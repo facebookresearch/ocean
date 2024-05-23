@@ -260,7 +260,7 @@ bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigne
 
 				SquareMatrix3 optimizedOrientation;
 				Scalar initialError, finalError;
-				if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera.actualCamera(), world_R_roughCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), camera.actualCamera().hasDistortionParameters(), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError))
+				if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, world_R_roughCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError))
 				{
 					initialErrors.push_back(initialError);
 					optimizedErrors.push_back(finalError);
@@ -279,7 +279,7 @@ bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigne
 				{
 					SquareMatrix3 optimizedOrientation;
 					Scalar initialError, finalError;
-					if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera.actualCamera(), world_T_ransacCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, usedIndices), camera.actualCamera().hasDistortionParameters(), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError))
+					if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, world_T_ransacCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, usedIndices), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError))
 					{
 						initialErrors.push_back(initialError);
 						optimizedErrors.push_back(finalError);
