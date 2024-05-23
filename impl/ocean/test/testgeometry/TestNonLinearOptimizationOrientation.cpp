@@ -16,6 +16,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -48,169 +50,319 @@ bool TestNonLinearOptimizationOrientation::test(const double testDuration, Worke
 	return allSucceeded;
 }
 
+#ifdef OCEAN_USE_GTEST
+
+TEST(TestNonLinearOptimizationOrientation, OptimizeOrientation_50Correspondences_NoOutliers_NoNoise)
+{
+	constexpr unsigned int numberCorrespondences = 50u;
+
+	constexpr Scalar noise = Scalar(0);
+	constexpr unsigned int percentOutliers = 0u;
+
+	for (const bool useRoughOrientation : {false, true})
+	{
+		for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+		{
+			EXPECT_TRUE(TestNonLinearOptimizationOrientation::testOptimizeOrientation(numberCorrespondences, GTEST_TEST_DURATION, estimatorType, noise, numberCorrespondences * percentOutliers / 100u, useRoughOrientation));
+		}
+	}
+}
+
+TEST(TestNonLinearOptimizationOrientation, OptimizeOrientation_50Correspondences_Outliers_NoNoise)
+{
+	constexpr unsigned int numberCorrespondences = 50u;
+
+	constexpr Scalar noise = Scalar(0);
+	constexpr unsigned int percentOutliers = 10u;
+
+	for (const bool useRoughOrientation : {false, true})
+	{
+		for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+		{
+			EXPECT_TRUE(TestNonLinearOptimizationOrientation::testOptimizeOrientation(numberCorrespondences, GTEST_TEST_DURATION, estimatorType, noise, numberCorrespondences * percentOutliers / 100u, useRoughOrientation));
+		}
+	}
+}
+
+TEST(TestNonLinearOptimizationOrientation, OptimizeOrientation_50Correspondences_NoOutliers_Noise)
+{
+	constexpr unsigned int numberCorrespondences = 50u;
+
+	constexpr Scalar noise = Scalar(1);
+	constexpr unsigned int percentOutliers = 0u;
+
+	for (const bool useRoughOrientation : {false, true})
+	{
+		for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+		{
+			EXPECT_TRUE(TestNonLinearOptimizationOrientation::testOptimizeOrientation(numberCorrespondences, GTEST_TEST_DURATION, estimatorType, noise, numberCorrespondences * percentOutliers / 100u, useRoughOrientation));
+		}
+	}
+}
+
+TEST(TestNonLinearOptimizationOrientation, OptimizeOrientation_50Correspondences_Outliers_Noise)
+{
+	constexpr unsigned int numberCorrespondences = 50u;
+
+	constexpr Scalar noise = Scalar(1);
+	constexpr unsigned int percentOutliers = 10u;
+
+	for (const bool useRoughOrientation : {false, true})
+	{
+		for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+		{
+			EXPECT_TRUE(TestNonLinearOptimizationOrientation::testOptimizeOrientation(numberCorrespondences, GTEST_TEST_DURATION, estimatorType, noise, numberCorrespondences * percentOutliers / 100u, useRoughOrientation));
+		}
+	}
+}
+
+#endif // OCEAN_USE_GTEST
+
 bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const double testDuration)
 {
 	ocean_assert(testDuration > 0);
 
-	Log::info() << "Optimization of 3DOF camera orientation:";
+	Log::info() << "Optimization of 3-DOF camera orientation:";
 	Log::info() << " ";
 
 	bool allSucceeded = true;
 
-	allSucceeded = testOptimizeOrientation(10u, testDuration, Geometry::Estimator::ET_SQUARE, 0, 0u, true) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizeOrientation(20u, testDuration, Geometry::Estimator::ET_SQUARE, 0, 0u, true) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizeOrientation(50u, testDuration, Geometry::Estimator::ET_SQUARE, 0, 0u, true) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizeOrientation(500u, testDuration, Geometry::Estimator::ET_SQUARE, 0, 0u, true) && allSucceeded;
+	for (const bool useRoughOrientation : {true, false})
+	{
+		Log::info().newLine();
+		Log::info().newLine();
 
-	Log::info() << " ";
-	Log::info() << " ";
+		if (useRoughOrientation)
+		{
+			Log::info() << "... with rough orientation";
+		}
+		else
+		{
+			Log::info() << "... without rough orientation";
+		}
 
-	allSucceeded = testOptimizeOrientation(10u, testDuration, Geometry::Estimator::ET_TUKEY, 0, 1u, true) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizeOrientation(20u, testDuration, Geometry::Estimator::ET_TUKEY, 0, 3u, true) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizeOrientation(50u, testDuration, Geometry::Estimator::ET_TUKEY, 0, 15u, true) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizeOrientation(500u, testDuration, Geometry::Estimator::ET_TUKEY, 0, 100u, true) && allSucceeded;
+		for (const unsigned int outlier : {0u, 10u})
+		{
+			for (const Scalar noise : {Scalar(0), Scalar(1)})
+			{
+				Log::info().newLine();
+				Log::info().newLine();
 
-	Log::info() << " ";
-	Log::info() << " ";
+				Log::info() << "Samples with Gaussian noise " << String::toAString(noise, 1u) << "px and " << outlier << "% outliers:";
+				Log::info() << " ";
 
-	allSucceeded = testOptimizeOrientation(10u, testDuration, Geometry::Estimator::ET_SQUARE, 0, 1u, false) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizeOrientation(20u, testDuration, Geometry::Estimator::ET_SQUARE, 0, 3u, false) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizeOrientation(50u, testDuration, Geometry::Estimator::ET_SQUARE, 0, 15u, false) && allSucceeded;
-	Log::info() << " ";
-	allSucceeded = testOptimizeOrientation(500u, testDuration, Geometry::Estimator::ET_SQUARE, 0, 100u, false) && allSucceeded;
+				for (const unsigned int correspondences : {10u, 20u, 50u, 500u})
+				{
+					if (correspondences != 10u)
+					{
+						Log::info() << " ";
+					}
+
+					Log::info() << "With " << correspondences << " correspondences";
+
+					for (Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
+					{
+						Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
+
+						allSucceeded = testOptimizeOrientation(correspondences, testDuration, estimatorType, noise, correspondences * outlier / 100u, useRoughOrientation) && allSucceeded;
+					}
+				}
+			}
+		}
+	}
 
 	return allSucceeded;
 }
 
-bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int outliers, const bool roughOrientation)
+bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigned int correspondences, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int numberOutliers, const bool useRoughOrientation)
 {
 	ocean_assert(testDuration > 0);
-	ocean_assert(outliers <= correspondences);
+	ocean_assert(numberOutliers <= correspondences);
 
-	Log::info() << "Testing " << correspondences << " points with " << String::toAString(standardDeviation, 1u) << " px noise and " << outliers << " outliers and using estimator " << Geometry::Estimator::translateEstimatorType(type) << ":";
-
-	Scalar averageInitialError = 0;
-	Scalar averageOptimizedError = 0;
-
-	Scalars medianInitialErrors;
-	Scalars medianOptimizedErrors;
-
-	unsigned long long iterations = 0ull;
+	Scalars initialErrors;
+	Scalars optimizedErrors;
 
 	HighPerformanceStatistic performance;
 
-	const Timestamp startTimestamp(true);
+	enum DistortionType : uint32_t
+	{
+		DT_NO_DISTORTION = 0u,
+		DT_RADIAL_DISTORTION = 1u << 0u | DT_NO_DISTORTION,
+		DT_FULL_DISTORTION = (1u << 1u) | DT_RADIAL_DISTORTION
+	};
 
 	const PinholeCamera patternCamera(1280, 720, Numeric::deg2rad(60));
+
 	RandomGenerator randomGenerator;
 
-	const Timestamp now(true);
+	ValidationPrecision validation(0.99, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
 	do
 	{
-		// create a distorted camera
-		const PinholeCamera pinholeCamera(Utilities::distortedCamera(patternCamera, true, false, false));// iterations % 3ull == 1ull || iterations % 3ull == 2ull, iterations % 3ull == 2ull));
-
-		const Quaternion orientation(Random::quaternion());
-
-		const HomogenousMatrix4 pose(orientation);
-		const HomogenousMatrix4 poseIF(PinholeCamera::standard2InvertedFlipped(pose));
-
-		Geometry::ImagePoints imagePoints;
-		Geometry::ImagePoints perfectImagePoints;
-		Geometry::ObjectPoints objectPoints;
-
-		for (unsigned int n = 0u; n < correspondences; ++n)
+		for (const DistortionType distortionType : {DT_NO_DISTORTION, DT_RADIAL_DISTORTION, DT_FULL_DISTORTION})
 		{
-			Vector2 imagePoint(Random::scalar(40, Scalar(pinholeCamera.width() - 41)), Random::scalar(40, Scalar(pinholeCamera.height() - 41)));
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Line3 ray(pinholeCamera.ray(imagePoint, pose));
-			const Vector3 objectPoint(ray.point(Random::scalar(Scalar(0.9), Scalar(1.1))));
+			const AnyCameraPinhole camera(Utilities::distortedCamera(patternCamera, true, (distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION, (distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION));
 
-			imagePoint = pinholeCamera.projectToImageIF<true>(poseIF, objectPoint, pinholeCamera.hasDistortionParameters());
+			const Quaternion world_R_camera(Random::quaternion(randomGenerator));
 
-			Vector2 imagePointNoise(0, 0);
-			if (standardDeviation > 0)
-				imagePointNoise = Vector2(Random::gaussianNoise(standardDeviation), Random::gaussianNoise(standardDeviation));
+			const HomogenousMatrix4 world_T_camera(world_R_camera);
 
-			perfectImagePoints.push_back(imagePoint);
-			imagePoints.push_back(imagePoint + imagePointNoise);
-			objectPoints.push_back(objectPoint);
-		}
+			Vectors2 perfectImagePoints;
+			Vectors3 objectPoints;
 
-		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1, outliers));
-		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
-		{
-			const Vector2 outlierNoise(Random::gaussianNoise(100), Random::gaussianNoise(100));
-			imagePoints[*i] += outlierNoise;
-		}
-
-		performance.start();
-
-		SquareMatrix3 startOrientation(false);
-
-		if (roughOrientation)
-		{
-			const Euler faultyEuler(Random::euler(Numeric::deg2rad(20)));
-			startOrientation = SquareMatrix3(orientation * Quaternion(faultyEuler));
-
-			SquareMatrix3 optimizedOrientation;
-			Scalar initialError, finalError;
-			if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(pinholeCamera, startOrientation, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), pinholeCamera.hasDistortionParameters(), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError))
+			for (unsigned int n = 0u; n < correspondences; ++n)
 			{
-				performance.stop();
+				constexpr Scalar cameraBorder = Scalar(20);
 
-				averageInitialError += initialError;
-				averageOptimizedError += finalError;
+				const Vector2 imagePoint = Random::vector2(randomGenerator, cameraBorder, Scalar(camera.width()) - cameraBorder, cameraBorder, Scalar(camera.height()) - cameraBorder);
 
-				medianInitialErrors.push_back(initialError);
-				medianOptimizedErrors.push_back(finalError);
+				const Line3 ray(camera.ray(imagePoint, world_T_camera));
+				const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, Scalar(0.9), Scalar(1.1))));
+
+				perfectImagePoints.push_back(imagePoint);
+				objectPoints.push_back(objectPoint);
 			}
-			else
-				performance.skip();
-		}
-		else
-		{
-			Indices32 usedIndices;
-			if (Geometry::RANSAC::orientation(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pinholeCamera.hasDistortionParameters(), startOrientation, 3u, 50u, Scalar(5 * 5), nullptr, &usedIndices))
+
+			Vectors2 imagePoints(perfectImagePoints);
+
+			if (standardDeviation > 0)
 			{
+				for (Vector2& imagePoint : imagePoints)
+				{
+					imagePoint += Random::gaussianNoiseVector2(randomGenerator, standardDeviation, standardDeviation);
+				}
+			}
+
+			UnorderedIndexSet32 outlierSet;
+
+			while (outlierSet.size() < numberOutliers)
+			{
+				const unsigned int index = RandomI::random(randomGenerator, correspondences - 1u);
+
+				if (outlierSet.emplace(index).second)
+				{
+					const Scalar sign = Random::sign(randomGenerator);
+
+					imagePoints[index] += Random::vector2(randomGenerator, Scalar(10), Scalar(100)) * sign;
+				}
+			}
+
+			performance.start();
+
+			if (useRoughOrientation)
+			{
+				const Euler faultyEuler(Random::euler(randomGenerator, Numeric::deg2rad(20)));
+				const SquareMatrix3 world_R_roughCamera = SquareMatrix3(world_R_camera * Quaternion(faultyEuler));
+
 				SquareMatrix3 optimizedOrientation;
 				Scalar initialError, finalError;
-				if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(pinholeCamera, startOrientation, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, usedIndices), pinholeCamera.hasDistortionParameters(), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError))
+				if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera.actualCamera(), world_R_roughCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), camera.actualCamera().hasDistortionParameters(), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError))
 				{
-					performance.stop();
-
-					averageInitialError += initialError;
-					averageOptimizedError += finalError;
-
-					medianInitialErrors.push_back(initialError);
-					medianOptimizedErrors.push_back(finalError);
+					initialErrors.push_back(initialError);
+					optimizedErrors.push_back(finalError);
 				}
 				else
-					performance.skip();
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
+			else
+			{
+				SquareMatrix3 world_T_ransacCamera(false);
+
+				Indices32 usedIndices;
+				if (Geometry::RANSAC::orientation(camera.actualCamera(), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, camera.actualCamera().hasDistortionParameters(), world_T_ransacCamera, 3u, 50u, Scalar(5 * 5), nullptr, &usedIndices))
+				{
+					SquareMatrix3 optimizedOrientation;
+					Scalar initialError, finalError;
+					if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera.actualCamera(), world_T_ransacCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, usedIndices), camera.actualCamera().hasDistortionParameters(), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError))
+					{
+						initialErrors.push_back(initialError);
+						optimizedErrors.push_back(finalError);
+					}
+					else
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
+			}
+
+			performance.stop();
+		}
+	}
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+
+	std::sort(initialErrors.begin(), initialErrors.end());
+	std::sort(optimizedErrors.begin(), optimizedErrors.end());
+
+	ocean_assert(initialErrors.size() == optimizedErrors.size());
+
+	if (!initialErrors.empty())
+	{
+		Scalar averageInitialError = 0;
+		Scalar averageOptimizedError = 0;
+
+		for (size_t n = 0; n < initialErrors.size(); ++n)
+		{
+			averageInitialError += initialErrors[n];
+			averageOptimizedError += optimizedErrors[n];
 		}
 
-		++iterations;
+		averageInitialError /= Scalar(initialErrors.size());
+		averageOptimizedError /= Scalar(initialErrors.size());
+
+		const Scalar medianIntitialError = initialErrors[initialErrors.size() / 2];
+		const Scalar medianOptimizedError = optimizedErrors[initialErrors.size() / 2];
+
+		Log::info() << "Average error: " << String::toAString(averageInitialError, 1u) << "px -> " << String::toAString(averageOptimizedError, 1u) << "px";
+		Log::info() << "Median error: " << String::toAString(medianIntitialError, 1u) << "px -> " << String::toAString(medianOptimizedError, 1u) << "px";
+
+		if (numberOutliers == 0u)
+		{
+			if (standardDeviation == Scalar(0))
+			{
+				if (useRoughOrientation)
+				{
+					if (medianOptimizedError > Scalar(0.1))
+					{
+						// we have perfect conditions, so we expect perfect results
+						OCEAN_SET_FAILED(validation);
+					}
+				}
+				else
+				{
+					if (optimizedErrors.back() > Scalar(0.1))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+				}
+			}
+			else
+			{
+				if (numberOutliers == 0u)
+				{
+					if (medianOptimizedError > Scalar(10 * 10))
+					{
+						// we have no outliers, so we expect some noisy results
+						OCEAN_SET_FAILED(validation);
+					}
+				}
+			}
+		}
 	}
-	while (now + testDuration > Timestamp(true));
+	else
+	{
+		OCEAN_SET_FAILED(validation);
+	}
 
-	ocean_assert(iterations != 0ull);
-	averageInitialError /= Scalar(iterations);
-	averageOptimizedError /= Scalar(iterations);
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Average error: " << String::toAString(averageInitialError, 1u) << " -> " << String::toAString(averageOptimizedError, 1u);
-	Log::info() << "Median error: " << String::toAString(Median::constMedian(medianInitialErrors.data(), medianInitialErrors.size()), 1u) << " -> " << String::toAString(Median::constMedian(medianOptimizedErrors.data(), medianOptimizedErrors.size()), 1u);
-	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 1u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 1u) << "ms, average: " << String::toAString(performance.averageMseconds(), 1u) << "ms, first: " << String::toAString(performance.firstMseconds(), 1u) << "ms";
-
-	return true;
+	return validation.succeeded();
 }
 
 }

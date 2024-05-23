@@ -3222,9 +3222,9 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 
 			if (standardDeviation > 0)
 			{
-				for (size_t n = 0; n < imagePoints.size(); ++n)
+				for (Vector2& imagePoint : imagePoints)
 				{
-					imagePoints[n] += Vector2(Random::gaussianNoise(randomGenerator, standardDeviation), Random::gaussianNoise(randomGenerator, standardDeviation));
+					imagePoint += Random::gaussianNoiseVector2(randomGenerator, standardDeviation, standardDeviation);
 				}
 			}
 

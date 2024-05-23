@@ -37,8 +37,6 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationOrientation
 		 */
 		static bool test(const double testDuration, Worker* worker);
 
-	private:
-
 		/**
 		 * Tests the non linear optimization function for a 3DOF orientation.
 		 * @param testDuration Number of seconds for each test
@@ -52,11 +50,11 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationOrientation
 		 * @param testDuration Number of seconds for each test
 		 * @param type Estimator type to be used
 		 * @param standardDeviation Optional standard deviation of the Gaussian normal distribution for noised image points, with range [0, infinity)
-		 * @param outliers Number of outlier correspondences
-		 * @param roughOrientation True, to use a rough orientation as start for the optimization; False, to use a RANSAC approach for a initial orientation
+		 * @param numberOutliers Number of outlier correspondences, with range [0, numberPoints]
+		 * @param useRoughOrientation True, to use a rough orientation as start for the optimization; False, to use a RANSAC approach for a initial orientation
 		 * @return True, if succeeded
 		 */
-		static bool testOptimizeOrientation(const unsigned int numberPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation = 0, const unsigned int outliers = 0u, const bool roughOrientation = true);
+		static bool testOptimizeOrientation(const unsigned int numberPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation, const unsigned int numberOutliers, const bool useRoughOrientation);
 };
 
 }
