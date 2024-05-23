@@ -72,6 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\GLESFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\HandGestures.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\HandPoses.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\OpenXR.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\Passthrough.h" />
@@ -79,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\GLESFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\HandGestures.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\HandPoses.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\Passthrough.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\TrackedController.cpp" />

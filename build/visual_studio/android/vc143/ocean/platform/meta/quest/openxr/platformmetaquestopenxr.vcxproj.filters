@@ -24,6 +24,9 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\GLESFramebuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\HandGestures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\HandPoses.cpp">
@@ -36,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\GLESFramebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\openxr\HandGestures.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
