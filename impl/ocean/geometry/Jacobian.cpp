@@ -196,10 +196,11 @@ void Jacobian::calculateRotationRodriguesDerivative(const ExponentialMapT<T>& ro
 template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateRotationRodriguesDerivative(const ExponentialMapT<float>& rotation, SquareMatrixT3<float>& dwx, SquareMatrixT3<float>& dwy, SquareMatrixT3<float>& dwz);
 template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateRotationRodriguesDerivative(const ExponentialMapT<double>& rotation, SquareMatrixT3<double>& dwx, SquareMatrixT3<double>& dwy, SquareMatrixT3<double>& dwz);
 
-void Jacobian::calculateSphericalObjectPointJacobian3x3(Scalar* jx, Scalar* jy, Scalar* jz, const ExponentialMap& sphericalObjectPoint, const Scalar objectPointDistance)
+template <typename T>
+void Jacobian::calculateSphericalObjectPointJacobian3x3(T* jx, T* jy, T* jz, const ExponentialMapT<T>& sphericalObjectPoint, const T objectPointDistance)
 {
-	ocean_assert(jx && jy && jz);
-	ocean_assert(objectPointDistance > Numeric::eps());
+	ocean_assert(jx != nullptr && jy != nullptr && jz != nullptr);
+	ocean_assert(objectPointDistance > NumericT<T>::eps());
 
 	/**
 	 * Rodriguez formula:
@@ -246,10 +247,10 @@ void Jacobian::calculateSphericalObjectPointJacobian3x3(Scalar* jx, Scalar* jy, 
 	 *          | -radius ( -((2 wz^3 (1-Cos[Sqrt[wx^2+wy^2+wz^2]]))/(wx^2+wy^2+wz^2)^2)+(2 wz (1-Cos[Sqrt[wx^2+wy^2+wz^2]]))/(wx^2+wy^2+wz^2)+(wz^3 Sin[Sqrt[wx^2+wy^2+wz^2]])/(wx^2+wy^2+wz^2)^(3/2)-(wz Sin[Sqrt[wx^2+wy^2+wz^2]])/Sqrt[wx^2+wy^2+wz^2] )                                                             |
 	 */
 
-	const Scalar angle = sphericalObjectPoint.angle();
-	const Vector3& axis = sphericalObjectPoint.axis();
+	const T angle = sphericalObjectPoint.angle();
+	const VectorT3<T>& axis = sphericalObjectPoint.axis();
 
-	if (Numeric::isEqualEps(angle))
+	if (NumericT<T>::isEqualEps(angle))
 	{
 		// in the case the angle is zero we have R as the unit matrix and thus, the result is [0, 0, -radius]
 
@@ -263,24 +264,24 @@ void Jacobian::calculateSphericalObjectPointJacobian3x3(Scalar* jx, Scalar* jy, 
 	}
 	else
 	{
-		ocean_assert(Numeric::isNotEqualEps(angle));
+		ocean_assert(NumericT<T>::isNotEqualEps(angle));
 
-		const Scalar iAngle = Scalar(1) / angle;
-		const Scalar iAngle2 = iAngle * iAngle;
-		const Scalar iAngle3 = iAngle2 * iAngle;
-		const Scalar iAngle4 = iAngle3 * iAngle;
+		const T iAngle = T(1) / angle;
+		const T iAngle2 = iAngle * iAngle;
+		const T iAngle3 = iAngle2 * iAngle;
+		const T iAngle4 = iAngle3 * iAngle;
 
-		const Scalar wx = axis.x();
-		const Scalar wy = axis.y();
-		const Scalar wz = axis.z();
+		const T wx = axis.x();
+		const T wy = axis.y();
+		const T wz = axis.z();
 
-		const Scalar s = Numeric::sin(angle);
-		const Scalar c = Numeric::cos(angle);
-		const Scalar c1 = 1 - c;
+		const T s = NumericT<T>::sin(angle);
+		const T c = NumericT<T>::cos(angle);
+		const T c1 = 1 - c;
 
-		const Scalar wx2 = wx * wx;
-		const Scalar wy2 = wy * wy;
-		const Scalar wz2 = wz * wz;
+		const T wx2 = wx * wx;
+		const T wy2 = wy * wy;
+		const T wz2 = wz * wz;
 
 		jx[0] = -objectPointDistance * (-((2 * wx2 * wz * c1) * iAngle4) + (wz * c1) * iAngle2 + (wx * wy * c) * iAngle2 - (wx * wy * s) * iAngle3 + (wx2 * wz * s) * iAngle3);
 		jy[0] =	-objectPointDistance * (-((2 * wx * wy * wz * c1) * iAngle4) - (wx2 * c) * iAngle2 + (wx2 * s) * iAngle3 + (wx * wy * wz * s) * iAngle3 - s * iAngle);
@@ -295,6 +296,9 @@ void Jacobian::calculateSphericalObjectPointJacobian3x3(Scalar* jx, Scalar* jy, 
 		jz[2] = -objectPointDistance * (-((2 * wz2 * wz * c1) * iAngle4) + (2 * wz * c1) * iAngle2 + (wz2 * wz * s) * iAngle3 - (wz * s) * iAngle);
 	}
 }
+
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateSphericalObjectPointJacobian3x3(float* jx, float* jy, float* jz, const ExponentialMapT<float>& sphericalObjectPoint, const float objectPointDistance);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateSphericalObjectPointJacobian3x3(double* jx, double* jy, double* jz, const ExponentialMapT<double>& sphericalObjectPoint, const double objectPointDistance);
 
 void Jacobian::calculateSphericalObjectPointOrientationJacobian2x3(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const SquareMatrix3& invertedFlippedOrientation, const ExponentialMap& sphericalObjectPoint, const Scalar objectPointDistance, const bool distortImagePoint)
 {
@@ -312,7 +316,7 @@ void Jacobian::calculateSphericalObjectPointOrientationJacobian2x3(Scalar* jx, S
 		 * | dfx / dwx, dfx / dwy, dfx / dwz |
 		 * | dfy / dwx, dfy / dwy, dfy / dwz |
 		 *
-		 * jDeh (2x3) the jacobian for the dehomogenization:                                        | U |
+		 * jDeh (2x3) the jacobian for the de-homogenization:                                        | U |
 		 * | du / dU, du / dV, du / dW |   | 1 / W       0         -U / W^2 |   | u |   | U / W |   | V |
 		 * | dv / dU, dv / dV, dv / dW | = |   0       1 / W       -V / W^2 |,  | v | = | V / W | = | W |
 		 *
@@ -488,6 +492,72 @@ void Jacobian::calculateSphericalObjectPointOrientationJacobian2x3(Scalar* jx, S
 		jy[2] = finalJacobian[5];
 	}
 }
+
+template <typename T>
+void Jacobian::calculateSphericalObjectPointOrientationJacobian2x3IF(T* jx, T* jy, const AnyCameraT<T>& camera, const SquareMatrixT3<T>& flippedCamera_R_world, const ExponentialMapT<T>& sphericalObjectPoint, const T objectPointDistance)
+{
+	ocean_assert(jx != nullptr && jy != nullptr);
+	ocean_assert(camera.isValid());
+	ocean_assert(!flippedCamera_R_world.isSingular());
+	ocean_assert(objectPointDistance > NumericT<T>::eps());
+
+	/**
+		* This functions uses four concatenated jacobian matrix to receive one final jacobian matrix with size 2x3.
+		* The final jacobian is defined by: j = jFocal_Dist * jDeh * jTrans * jO;
+		*
+		* jFocal_Dist(u, v) = [Fx * (u * rad_factor + tan_factor_u) + mx, Fy * (v * rad_factor + tan_factor_v) + my]
+		*
+		* j (2x2) the final jacobian:
+		* | dfx / dwx, dfx / dwz |
+		* | dfy / dwx, dfy / dwz |
+		*
+		* jFocal_Dist (2x2) the jacobian for the focal projection and distortion correction:
+		* | du' / du, du' / dv |   | ...  ... |
+		* | dv' / du, dv' / dv | = | ...  ... |
+		*
+		* jDeh (2x3) the jacobian for the de-homogenization:                                        | U |
+		* | du / dU, du / dV, du / dW |   | 1 / W       0         -U / W^2 |   | u |   | U / W |   | V |
+		* | dv / dU, dv / dV, dv / dW | = |   0       1 / W       -V / W^2 |,  | v | = | V / W | = | W |
+		*
+		* jTrans (3x3) the jacobian for the transformation:
+		* | dfx / dox, dfx / doy, dfx / doz |   | Rxx Ryx Rzx |
+		* | dfy / dox, dfy / doy, dfy / doz | = | Rxy Ryy Rzy |
+		* | dfz / dox, dfz / doy, dfz / doz |   | Rxz Ryz Rzz |
+		*
+		* jO (3x3) the jacobian for the object point:
+		* | dfx / dwx, dfx / dwy, dfx / dwz |
+		* | dfy / dwx, dfy / dwy, dfy / dwz |
+		* | dfz / dwx, dfy / dwy, dfz / dwz |
+		*/
+
+	const VectorT3<T> objectPoint(sphericalObjectPoint.quaternion() * VectorT3<T>(0, 0, -objectPointDistance));
+
+	ocean_assert(AnyCameraT<T>::isObjectPointInFrontIF(flippedCamera_R_world, objectPoint));
+
+	const VectorT3<T> flippedCameraObjectPoint(flippedCamera_R_world * objectPoint);
+
+	StaticMatrix<T, 3, 3> jacobianObjectPoint;
+	calculateSphericalObjectPointJacobian3x3(jacobianObjectPoint.row(0), jacobianObjectPoint.row(1), jacobianObjectPoint.row(2), sphericalObjectPoint, objectPointDistance);
+
+	const StaticMatrix<T, 3, 3> jacobianTransformation(flippedCamera_R_world.data(), false);
+
+	StaticMatrix<T, 2, 3> jacobianProjection; // jFocal_Dist * jDeh
+
+	camera.pointJacobian2x3IF(flippedCameraObjectPoint, jacobianProjection.row(0), jacobianProjection.row(1));
+
+	const StaticMatrix<T, 2, 3> finalJacobian((jacobianProjection * jacobianTransformation) * jacobianObjectPoint);
+
+	jx[0] = finalJacobian[0];
+	jx[1] = finalJacobian[1];
+	jx[2] = finalJacobian[2];
+
+	jy[0] = finalJacobian[3];
+	jy[1] = finalJacobian[4];
+	jy[2] = finalJacobian[5];
+}
+
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateSphericalObjectPointOrientationJacobian2x3IF(float* jx, float* jy, const AnyCameraT<float>& camera, const SquareMatrixT3<float>& flippedCamera_R_world, const ExponentialMapT<float>& sphericalObjectPoint, const float objectPointDistance);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateSphericalObjectPointOrientationJacobian2x3IF(double* jx, double* jy, const AnyCameraT<double>& camera, const SquareMatrixT3<double>& flippedCamera_R_world, const ExponentialMapT<double>& sphericalObjectPoint, const double objectPointDistance);
 
 void Jacobian::calculateOrientationJacobianRodrigues2nx3(Scalar* jacobian, const PinholeCamera& pinholeCamera, const Pose& flippedCamera_P_world, const ConstIndexedAccessor<Vector3>& objectPoints, const bool distortImagePoints)
 {

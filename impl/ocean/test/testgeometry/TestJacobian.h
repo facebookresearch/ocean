@@ -139,11 +139,22 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		static bool testSphericalObjectPoint3x3(const double testDuration);
 
 		/**
+		 * Deprecated.
+		 *
 		 * Tests the Jacobian for an exponential map representing a 3D object point which is projected into the camera frame.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testSphericalObjectPointOrientation2x3(const double testDuration);
+
+		/**
+		 * Tests the Jacobian for an exponential map representing a 3D object point which is projected into the camera frame.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T the data type of the scalar to be used, either 'float' or 'double'
+		 */
+		template <typename T>
+		static bool testSphericalObjectPointOrientation2x3IF(const double testDuration);
 
 		/**
 		 * Tests the Jacobian for the radial and tangential distortion camera parameters.

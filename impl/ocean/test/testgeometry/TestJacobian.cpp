@@ -125,6 +125,14 @@ bool TestJacobian::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testSphericalObjectPointOrientation2x3IF<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testSphericalObjectPointOrientation2x3IF<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testCameraDistortionJacobian2x4(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -296,6 +304,18 @@ TEST(TestJacobian, SphericalObjectPointOrientation2x3)
 {
 	EXPECT_TRUE(TestJacobian::testSphericalObjectPointOrientation2x3(GTEST_TEST_DURATION));
 }
+
+
+TEST(TestJacobian, SphericalObjectPointOrientation2x3IF_float)
+{
+	EXPECT_TRUE(TestJacobian::testSphericalObjectPointOrientation2x3IF<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestJacobian, SphericalObjectPointOrientation2x3IF_double)
+{
+	EXPECT_TRUE(TestJacobian::testSphericalObjectPointOrientation2x3IF<double>(GTEST_TEST_DURATION));
+}
+
 
 TEST(TestJacobian, CameraDistortionJacobian2x4)
 {
@@ -4153,7 +4173,7 @@ bool TestJacobian::testSphericalObjectPointOrientation2x3(const double testDurat
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing spherical object point and camera orientation jacobian 2x3:";
+	Log::info() << "Testing spherical object point and camera orientation jacobian 2x3 for pinhole camera:";
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
@@ -4328,6 +4348,165 @@ bool TestJacobian::testSphericalObjectPointOrientation2x3(const double testDurat
 		{
 			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
 			return true;
+		}
+	}
+
+	return allSucceeded;
+}
+
+template <typename T>
+bool TestJacobian::testSphericalObjectPointOrientation2x3IF(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing spherical object point and camera orientation jacobian 2x3 with " << sizeof(T) * 8 << "-bit precision:";
+
+	const std::vector<double> epsilons = {NumericD::weakEps(), NumericD::weakEps() / 10.0, NumericD::weakEps() * 10.0, NumericD::weakEps() / 100.0, NumericD::weakEps() * 100.0};
+
+	const VectorT3<T> defaultRotationDirection(0, 0, -1);
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	bool firstCameraIteration = true;
+
+	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
+	{
+		Log::info().newLine(!firstCameraIteration);
+		firstCameraIteration = false;
+
+		const SharedAnyCameraT<T> sharedAnyCamera = Utilities::realisticAnyCamera<T>(anyCameraType, RandomI::random(randomGenerator, 1u));
+		ocean_assert(sharedAnyCamera);
+
+		const AnyCameraT<T>& camera = *sharedAnyCamera;
+
+		Log::info() << "Camera name: " << camera.name();
+
+		constexpr double threshold = std::is_same<float, T>::value ? 0.95 : 0.99;
+
+		ValidationPrecision validation(threshold, randomGenerator);
+
+		const Timestamp startTimestamp(true);
+
+		do
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const T radius = std::is_same<T, double>::value ? RandomT<T>::scalar(T(0.001), T(100)) : RandomT<T>::scalar(T(0.1), T(10));
+			const VectorT3<T> defaultObjectPoint(defaultRotationDirection * radius);
+
+			const SquareMatrixT3<T> world_R_camera(RandomT<T>::rotation());
+			const SquareMatrixT3<T> flippedCamera_R_world(AnyCamera::standard2InvertedFlipped(world_R_camera));
+
+			const VectorT2<T> testImagePoint = RandomT<T>::vector2(randomGenerator, T(5), T(camera.width() - 5u), T(5), T(camera.height() - 5u));
+
+			const VectorT3<T> rotationDirection(camera.ray(testImagePoint, HomogenousMatrixT4<T>(world_R_camera)).direction());
+			ocean_assert(NumericT<T>::isEqual(rotationDirection.length(), 1));
+
+			const ExponentialMapT<T> sphericalObjectPoint(RotationT<T>(defaultRotationDirection, rotationDirection));
+
+			/**
+			 * jacobian x: | dfx / dwx, dfx / dwz |
+			 * jacobian y: | dfy / dwx, dfy / dwz |
+			 */
+			T jacobianX[3];
+			T jacobianY[3];
+
+			Geometry::Jacobian::calculateSphericalObjectPointOrientationJacobian2x3IF(jacobianX, jacobianY, camera, flippedCamera_R_world, sphericalObjectPoint, radius);
+
+			const HomogenousMatrixD4 flippedCamera_T_worldD = HomogenousMatrixD4(SquareMatrixD3(flippedCamera_R_world));
+
+			const SharedAnyCameraD cameraD = camera.cloneToDouble();
+			ocean_assert(cameraD);
+
+			const VectorD2 imagePoint(cameraD->projectToImageIF(flippedCamera_T_worldD, ExponentialMapD(sphericalObjectPoint).rotation() * VectorD3(defaultObjectPoint)));
+
+			{
+				bool localAccuracy = false;
+
+				for (const double epsilon : epsilons)
+				{
+					// df / dwx
+					ExponentialMapD rotationWx(sphericalObjectPoint);
+					rotationWx[0] += epsilon;
+
+					const VectorD3 objectPointWx(rotationWx.rotation() * VectorD3(defaultObjectPoint));
+
+					const VectorD2 imagePointWx(cameraD->projectToImageIF(flippedCamera_T_worldD, objectPointWx));
+
+					if (checkAccuracy(imagePoint, imagePointWx, epsilon, jacobianX[0], jacobianY[0]))
+					{
+						localAccuracy = true;
+						break;
+					}
+				}
+
+				if (!localAccuracy)
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+
+			{
+				bool localAccuracy = false;
+
+				for (const double epsilon : epsilons)
+				{
+					// df / dwy
+					ExponentialMapD rotationWy(sphericalObjectPoint);
+					rotationWy[1] += epsilon;
+
+					const VectorD3 objectPointWy(rotationWy.rotation() * VectorD3(defaultObjectPoint));
+
+					const VectorD2 imagePointWy(cameraD->projectToImageIF(flippedCamera_T_worldD, objectPointWy));
+
+					if (checkAccuracy(imagePoint, imagePointWy, epsilon, jacobianX[1], jacobianY[1]))
+					{
+						localAccuracy = true;
+						break;
+					}
+				}
+
+				if (!localAccuracy)
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+
+			{
+				bool localAccuracy = false;
+
+				for (const double epsilon : epsilons)
+				{
+					// df / dwz
+					ExponentialMapD rotationWz(sphericalObjectPoint);
+					rotationWz[2] += epsilon;
+
+					const VectorD3 objectPointWz(rotationWz.rotation() * VectorD3(defaultObjectPoint));
+
+					const VectorD2 imagePointWz(cameraD->projectToImageIF(flippedCamera_T_worldD, objectPointWz));
+
+					if (checkAccuracy(imagePoint, imagePointWz, epsilon, jacobianX[2], jacobianY[2]))
+					{
+						localAccuracy = true;
+						break;
+					}
+				}
+
+				if (!localAccuracy)
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+		}
+		while (startTimestamp + testDuration > Timestamp(true));
+
+		Log::info() << "Validation: " << validation;
+
+		if (!validation.succeeded())
+		{
+			allSucceeded = false;
 		}
 	}
 
