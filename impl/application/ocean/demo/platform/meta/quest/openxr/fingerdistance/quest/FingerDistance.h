@@ -36,12 +36,6 @@ class FingerDistance final : public VRNativeApplicationAdvanced
 	protected:
 
 		/**
-		 * Returns the application's base space.
-		 * @see VRNativeApplication::baseSpace().
-		 */
-		XrSpace baseSpace() const override;
-
-		/**
 		 * Event function called after the framebuffer has been initialized.
 		 * @see VRApplication::onFramebufferInitialized().
 		 */

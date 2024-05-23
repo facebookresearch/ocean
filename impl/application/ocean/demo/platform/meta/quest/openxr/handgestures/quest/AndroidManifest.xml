@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		package="com.meta.ocean.app.demo.platform.meta.quest.openxr.fingerdistance.android"
+		package="com.meta.ocean.app.demo.platform.meta.quest.openxr.handgestures.android"
 		android:versionCode="2"
 		android:versionName="1.0" android:installLocation="auto" >
 
@@ -11,10 +11,10 @@
 	<uses-feature android:name="oculus.software.handtracking" android:required="true" />
 	<uses-permission android:name="com.oculus.permission.HAND_TRACKING" />
 
-	<application android:allowBackup="false" android:label="OceanOpenXRFingerDistance" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
+	<application android:allowBackup="false" android:label="OceanOpenXRHandGestures" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
 		<meta-data android:name="com.samsung.android.vr.application.mode" android:value="vr_only"/>
 		<activity
-				android:name="com.meta.ocean.app.demo.platform.meta.quest.openxr.fingerdistance.android.FingerDistanceActivity"
+				android:name="com.meta.ocean.app.demo.platform.meta.quest.openxr.handgestures.android.HandGesturesActivity"
 				android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
 				android:launchMode="singleTask"
 				android:screenOrientation="landscape"
@@ -22,7 +22,7 @@
 				android:configChanges="screenSize|screenLayout|orientation|keyboardHidden|keyboard|navigation|uiMode|density"
 				android:resizeableActivity="false"
 				android:exported="true">
-			<meta-data android:name="android.app.lib_name" android:value="OceanDemoPlatformMetaQuestOpenXRFingerDistance" />
+			<meta-data android:name="android.app.lib_name" android:value="OceanDemoPlatformMetaQuestOpenXRHandGestures" />
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />

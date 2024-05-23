@@ -19,13 +19,6 @@ FingerDistance::FingerDistance(struct android_app* androidApp) :
 	// nothing to do here
 }
 
-XrSpace FingerDistance::baseSpace() const
-{
-	// we want to render something always in relation to the user's local coordinate system
-
-	return xrSpaceLocal_.object();
-}
-
 void FingerDistance::onFramebufferInitialized()
 {
 	VRNativeApplicationAdvanced::onFramebufferInitialized();
@@ -127,7 +120,7 @@ void FingerDistance::onPreRender(const XrTime& xrPredictedDisplayTime, const Tim
 	}
 	else
 	{
-		Log::info() << "Could not detect both finger";
+		Log::info() << "Could not detect both fingers";
 	}
 
 	renderingGroup_->setVisible(showGroup);

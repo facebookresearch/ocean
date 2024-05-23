@@ -23,7 +23,6 @@
 #include "ocean/platform/openxr/Utilities.h"
 
 #include "ocean/rendering/Engine.h"
-#include "ocean/rendering/Framebuffer.h"
 #include "ocean/rendering/StereoView.h"
 
 #include "ocean/rendering/glescenegraph/quest/openxr/GLESWindowFramebuffer.h"
