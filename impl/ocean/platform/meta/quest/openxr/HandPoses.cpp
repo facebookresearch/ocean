@@ -165,14 +165,14 @@ bool HandPoses::Mesh::initialize(const XrHandTrackerEXT& xrHandTrackerEXT, const
 }
 
 template <typename T>
-bool HandPoses::Pose::jointPositions(VectorsT3<T>& baseSpace_T_jointPositions, const XrSpaceLocationFlags xrSpaceLocationFlags) const
+bool HandPoses::Pose::jointPositions(VectorsT3<T>& baseSpaceJointPositions, const XrSpaceLocationFlags xrSpaceLocationFlags) const
 {
 	if (xrBaseSpace_ == XR_NULL_HANDLE)
 	{
 		return false;
 	}
 
-	baseSpace_T_jointPositions.reserve(XR_HAND_JOINT_COUNT_EXT);
+	baseSpaceJointPositions.reserve(XR_HAND_JOINT_COUNT_EXT);
 
 	for (size_t jointIndex = 0; jointIndex < XR_HAND_JOINT_COUNT_EXT; ++jointIndex)
 	{
@@ -180,7 +180,7 @@ bool HandPoses::Pose::jointPositions(VectorsT3<T>& baseSpace_T_jointPositions, c
 
 		if ((xrHandJointLocationEXT.locationFlags & xrSpaceLocationFlags) == xrSpaceLocationFlags)
 		{
-			baseSpace_T_jointPositions.emplace_back(Utilities::toVector3<T>(xrHandJointLocationEXT.pose.position));
+			baseSpaceJointPositions.emplace_back(Utilities::toVector3<T>(xrHandJointLocationEXT.pose.position));
 		}
 		else
 		{
@@ -260,7 +260,7 @@ template bool OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses::Pose::jointTran
 template bool OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses::Pose::jointTransformations<double>(const Mesh&, HomogenousMatricesT4<double>&, const XrSpaceLocationFlags) const;
 
 template <typename T>
-bool HandPoses::Pose::meshVertices(const Mesh& mesh, VectorsT3<T>& baseSpace_T_meshVertices, const XrSpaceLocationFlags xrSpaceLocationFlags) const
+bool HandPoses::Pose::meshVertices(const Mesh& mesh, VectorsT3<T>& baseSpaceMeshVertices, const XrSpaceLocationFlags xrSpaceLocationFlags) const
 {
 	ocean_assert(mesh.isValid());
 
@@ -280,7 +280,7 @@ bool HandPoses::Pose::meshVertices(const Mesh& mesh, VectorsT3<T>& baseSpace_T_m
 
 	ocean_assert(baseSpace_T_joints.size() == XR_HAND_JOINT_COUNT_EXT);
 
-	baseSpace_T_meshVertices.reserve(mesh.vertexPositions_.size());
+	baseSpaceMeshVertices.reserve(mesh.vertexPositions_.size());
 
 	for (size_t vertexIndex = 0; vertexIndex < mesh.vertexPositions_.size(); ++vertexIndex)
 	{
@@ -300,7 +300,7 @@ bool HandPoses::Pose::meshVertices(const Mesh& mesh, VectorsT3<T>& baseSpace_T_m
 		const VectorF3 position2 = baseSpace_T_joints[vertexBlendIndex.z] * vertexPosition;
 		const VectorF3 position3 = baseSpace_T_joints[vertexBlendIndex.w] * vertexPosition;
 
-		baseSpace_T_meshVertices.emplace_back(position0 * vertexBlendWeight.x + position1 * vertexBlendWeight.y + position2 * vertexBlendWeight.z + position3 * vertexBlendWeight.w);
+		baseSpaceMeshVertices.emplace_back(position0 * vertexBlendWeight.x + position1 * vertexBlendWeight.y + position2 * vertexBlendWeight.z + position3 * vertexBlendWeight.w);
 	}
 
 	return true;
@@ -467,9 +467,31 @@ bool HandPoses::update(const XrSpace& xrBaseSpace, const XrTime& predictedDispla
 			ocean_assert(false && "This should never happen!");
 			return false;
 		}
+
+		baseSpaceJointPositions_[handIndex].clear();
 	}
 
 	return true;
+}
+
+const Vectors3& HandPoses::jointPositions(const size_t handIndex) const
+{
+	ocean_assert(handIndex < numberHands_);
+	if (handIndex >= numberHands_)
+	{
+		return invalidResultVectors_;
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	Vectors3& baseSpaceJointPositions = baseSpaceJointPositions_[handIndex];
+
+	if (baseSpaceJointPositions.empty())
+	{
+		pose(handIndex).jointPositions(baseSpaceJointPositions);
+	}
+
+	return baseSpaceJointPositions;
 }
 
 HandPoses& HandPoses::operator=(HandPoses&& handPoses)

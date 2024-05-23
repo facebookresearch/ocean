@@ -187,17 +187,17 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 
 				/**
 				 * Returns the 3D positions of the hand joints in relation to the hand pose's base space.
-				 * @param baseSpace_T_jointPositions The resulting joint locations, either XR_HAND_JOINT_COUNT_EXT or zero
+				 * @param baseSpaceJointPositions The resulting joint locations defined in the base space, either XR_HAND_JOINT_COUNT_EXT or zero
 				 * @param xrSpaceLocationFlags The location flags all hand joints must satisfy
 				 * @return True, if succeeded; False, if e.g., some hand joints don't satisfy the specified location flags
 				 * @tparam T The data type of the scalar to be used either 'float' or 'double'
 				 */
 				template <typename T = Scalar>
-				bool jointPositions(VectorsT3<T>& baseSpace_T_jointPositions, const XrSpaceLocationFlags xrSpaceLocationFlags = defaultLocationFlags_) const;
+				bool jointPositions(VectorsT3<T>& baseSpaceJointPositions, const XrSpaceLocationFlags xrSpaceLocationFlags = defaultLocationFlags_) const;
 
 				/**
 				 * Returns the 6DOF transformations of the hand joints in relation to the hand pose's base space.
-				 * The resulting transformations do not incooperate the mesh's joint bind poses.
+				 * The resulting transformations do not incorporate the mesh's joint bind poses.
 				 * @param baseSpace_T_joints The resulting joint transformations, either XR_HAND_JOINT_COUNT_EXT or zero
 				 * @param xrSpaceLocationFlags The location flags all hand joints must satisfy
 				 * @return True, if succeeded; False, if e.g., some hand joints don't satisfy the specified location flags
@@ -208,7 +208,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 
 				/**
 				 * Returns the 6DOF transformations of the hand joints in relation to the hand pose's base space.
-				 * The resulting transformations incooperate the mesh's joint bind poses and thus can be used to e.g., render a hand mesh.
+				 * The resulting transformations incorporate the mesh's joint bind poses and thus can be used to e.g., render a hand mesh.
 				 * @param mesh The hand mesh providing the joint bind poses, must be valid
 				 * @param baseSpace_T_joints The resulting joint transformations, either XR_HAND_JOINT_COUNT_EXT or zero
 				 * @param xrSpaceLocationFlags The location flags all hand joints must satisfy
@@ -220,15 +220,15 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 
 				/**
 				 * Returns the vertices of the hand mesh in relation to the hand pose's base space.
-				 * The resulting vertices incooperate the mesh's joint bind poses and thus can be used to e.g., render a hand mesh without any further transformations.
+				 * The resulting vertices incorporate the mesh's joint bind poses and thus can be used to e.g., render a hand mesh without any further transformations.
 				 * @param mesh The hand mesh providing the joint bind poses, must be valid
-				 * @param baseSpace_T_meshVertices The resulting hand mesh vertices
+				 * @param baseSpaceMeshVertices The resulting hand mesh vertices defined in the base space
 				 * @param xrSpaceLocationFlags The location flags all hand joints must satisfy
 				 * @return True, if succeeded; False, if e.g., some hand joints don't satisfy the specified location flags
 				 * @tparam T The data type of the scalar to be used either 'float' or 'double'
 				 */
 				template <typename T = Scalar>
-				bool meshVertices(const Mesh& mesh, VectorsT3<T>& baseSpace_T_meshVertices, const XrSpaceLocationFlags xrSpaceLocationFlags = defaultLocationFlags_) const;
+				bool meshVertices(const Mesh& mesh, VectorsT3<T>& baseSpaceMeshVertices, const XrSpaceLocationFlags xrSpaceLocationFlags = defaultLocationFlags_) const;
 
 				/**
 				 * Returns the OpenXR space in which relation the hand pose is determined.
@@ -281,7 +281,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 		HandPoses() = default;
 
 		/**
-		 * Movey constructor.
+		 * Move constructor.
 		 * @param handPoses Object to be moved
 		 */
 		HandPoses(HandPoses&& handPoses);
@@ -334,6 +334,14 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 		 * @see lock(), update().
 		 */
 		inline const Pose& pose(const size_t handIndex) const;
+
+		/**
+		 * Returns the 3D positions of the joints of one hand in relation to the hand pose's base space.
+		 * The resulting positions are valid until the next 'update()' call.
+		 * @param handIndex The index of the hand for which the pose will be returned, with range [0, numberHands_ - 1]
+		 * @return The resulting joint locations define in the baseSpace, XR_HAND_JOINT_COUNT_EXT joint positions if succeeded
+		 */
+		const Vectors3& jointPositions(const size_t handIndex) const;
 
 		/**
 		 * Returns the lock of the hand poses.
@@ -409,6 +417,12 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 
 		/// The poses for both hands.
 		Pose poses_[numberHands_];
+
+		/// The cached positions of the joints of both hands.
+		mutable Vectors3 baseSpaceJointPositions_[numberHands_];
+
+		/// An empty vector with 3D vectors.
+		const Vectors3 invalidResultVectors_;
 
 		/// The lock of this object.
 		mutable Lock lock_;
