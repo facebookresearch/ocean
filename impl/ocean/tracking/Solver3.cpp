@@ -1562,8 +1562,10 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 	return !abort || !*abort;
 }
 
-bool Solver3::determineUnknownObjectPoints(const Database& database, const PinholeCamera& pinholeCamera, const unsigned int lowerFrame, const unsigned int upperFrame, Vectors3& newObjectPoints, Indices32& newObjectPointIds, const unsigned int minimalKeyFrames, const unsigned int maximalKeyFrames, const Scalar maximalSqrError, Worker* worker, bool* abort)
+bool Solver3::determineUnknownObjectPoints(const Database& database, const AnyCamera& camera, const unsigned int lowerFrame, const unsigned int upperFrame, Vectors3& newObjectPoints, Indices32& newObjectPointIds, const unsigned int minimalKeyFrames, const unsigned int maximalKeyFrames, const Scalar maximalSqrError, Worker* worker, bool* abort)
 {
+	ocean_assert(camera.isValid());
+
 	ocean_assert(lowerFrame <= upperFrame);
 	ocean_assert(minimalKeyFrames <= maximalKeyFrames);
 	ocean_assert(minimalKeyFrames >= 2);
@@ -1636,17 +1638,17 @@ bool Solver3::determineUnknownObjectPoints(const Database& database, const Pinho
 	if (worker != nullptr)
 	{
 		Lock lock;
-		worker->executeFunction(Worker::Function::createStatic(determineUnknownObjectPointsSubset, &pinholeCamera, &database, &objectPointData, &randomGenerator, maximalSqrError, abort, &lock, &newObjectPoints, &newObjectPointIds, 0u, 0u), 0u, (unsigned int)objectPointData.size());
+		worker->executeFunction(Worker::Function::createStatic(determineUnknownObjectPointsSubset, &camera, &database, &objectPointData, &randomGenerator, maximalSqrError, abort, &lock, &newObjectPoints, &newObjectPointIds, 0u, 0u), 0u, (unsigned int)(objectPointData.size()));
 	}
 	else
 	{
-		determineUnknownObjectPointsSubset(&pinholeCamera, &database, &objectPointData, &randomGenerator, maximalSqrError, abort, nullptr, &newObjectPoints, &newObjectPointIds, 0u, (unsigned int)objectPointData.size());
+		determineUnknownObjectPointsSubset(&camera, &database, &objectPointData, &randomGenerator, maximalSqrError, abort, nullptr, &newObjectPoints, &newObjectPointIds, 0u, (unsigned int)(objectPointData.size()));
 	}
 
 	return abort == nullptr || !*abort;
 }
 
-bool Solver3::determineUnknownObjectPoints(const Database& database, const PinholeCamera& pinholeCamera, const CameraMotion cameraMotion, const Indices32& unknownObjectPointIds, Vectors3& newObjectPoints, Indices32& newObjectPointIds, RandomGenerator& randomGenerator, Indices32* newObjectPointObservations, const unsigned int minimalObservations, const bool useAllObservations, const Geometry::Estimator::EstimatorType estimator, const Scalar ransacMaximalSqrError, const Scalar averageRobustError, const Scalar maximalSqrError, Worker* worker, bool* abort)
+bool Solver3::determineUnknownObjectPoints(const Database& database, const AnyCamera& camera, const CameraMotion cameraMotion, const Indices32& unknownObjectPointIds, Vectors3& newObjectPoints, Indices32& newObjectPointIds, RandomGenerator& randomGenerator, Indices32* newObjectPointObservations, const unsigned int minimalObservations, const bool useAllObservations, const Geometry::Estimator::EstimatorType estimator, const Scalar ransacMaximalSqrError, const Scalar averageRobustError, const Scalar maximalSqrError, Worker* worker, bool* abort)
 {
 	ocean_assert(cameraMotion != CM_INVALID);
 	ocean_assert(newObjectPoints.empty() && newObjectPointIds.empty() && (!newObjectPointObservations || newObjectPointObservations->empty()));
@@ -1659,14 +1661,14 @@ bool Solver3::determineUnknownObjectPoints(const Database& database, const Pinho
 		newObjectPointObservations->clear();
 	}
 
-	if (worker)
+	if (worker != nullptr)
 	{
 		Lock lock;
-		worker->executeFunction(Worker::Function::createStatic(determineUnknownObjectPointsSubset, &database, &pinholeCamera, cameraMotion, unknownObjectPointIds.data(), &newObjectPoints, &newObjectPointIds, newObjectPointObservations, &randomGenerator, minimalObservations, useAllObservations, estimator, ransacMaximalSqrError, averageRobustError, maximalSqrError, &lock, abort, 0u, 0u), 0u, (unsigned int)unknownObjectPointIds.size());
+		worker->executeFunction(Worker::Function::createStatic(determineUnknownObjectPointsSubset, &database, &camera, cameraMotion, unknownObjectPointIds.data(), &newObjectPoints, &newObjectPointIds, newObjectPointObservations, &randomGenerator, minimalObservations, useAllObservations, estimator, ransacMaximalSqrError, averageRobustError, maximalSqrError, &lock, abort, 0u, 0u), 0u, (unsigned int)(unknownObjectPointIds.size()));
 	}
 	else
 	{
-		determineUnknownObjectPointsSubset(&database, &pinholeCamera, cameraMotion, unknownObjectPointIds.data(), &newObjectPoints, &newObjectPointIds, newObjectPointObservations, &randomGenerator, minimalObservations, useAllObservations, estimator, ransacMaximalSqrError, averageRobustError, maximalSqrError, nullptr, abort, 0u, (unsigned int)unknownObjectPointIds.size());
+		determineUnknownObjectPointsSubset(&database, &camera, cameraMotion, unknownObjectPointIds.data(), &newObjectPoints, &newObjectPointIds, newObjectPointObservations, &randomGenerator, minimalObservations, useAllObservations, estimator, ransacMaximalSqrError, averageRobustError, maximalSqrError, nullptr, abort, 0u, (unsigned int)(unknownObjectPointIds.size()));
 	}
 
 	return !abort || !*abort;
@@ -2203,11 +2205,11 @@ bool Solver3::optimizeCameraWithVariableObjectPointsAndPoses(const Database& dat
 	return true;
 }
 
-void Solver3::determineUnknownObjectPointsSubset(const Database* database, const PinholeCamera* pinholeCamera, const CameraMotion cameraMotion, const Index32* objectPointIds, Vectors3* newObjectPoints, Indices32* newObjectPointIds, Indices32* newObjectPointObservations, RandomGenerator* randomGenerator, const unsigned int minimalObservations, const bool useAllObservations, const Geometry::Estimator::EstimatorType estimator, const Scalar ransacMaximalSqrError, const Scalar averageRobustError, const Scalar maximalSqrError, Lock* lock, bool* abort, const unsigned int firstObjectPoint, const unsigned int numberObjectPoints)
+void Solver3::determineUnknownObjectPointsSubset(const Database* database, const AnyCamera* camera, const CameraMotion cameraMotion, const Index32* objectPointIds, Vectors3* newObjectPoints, Indices32* newObjectPointIds, Indices32* newObjectPointObservations, RandomGenerator* randomGenerator, const unsigned int minimalObservations, const bool useAllObservations, const Geometry::Estimator::EstimatorType estimator, const Scalar ransacMaximalSqrError, const Scalar averageRobustError, const Scalar maximalSqrError, Lock* lock, bool* abort, const unsigned int firstObjectPoint, const unsigned int numberObjectPoints)
 {
 	ocean_assert(cameraMotion != CM_INVALID);
-	ocean_assert(database && pinholeCamera && randomGenerator);
-	ocean_assert(objectPointIds && newObjectPoints && newObjectPointIds);
+	ocean_assert(database != nullptr && camera != nullptr && randomGenerator != nullptr);
+	ocean_assert(objectPointIds != nullptr && newObjectPoints != nullptr && newObjectPointIds != nullptr);
 	ocean_assert(minimalObservations >= 2u);
 	ocean_assert(estimator != Geometry::Estimator::ET_INVALID);
 
@@ -2229,8 +2231,6 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 	{
 		localNewObjectPointObservations.reserve(numberObjectPoints);
 	}
-
-	const AnyCameraPinhole camera(PinholeCamera(*pinholeCamera, pinholeCamera->hasDistortionParameters()));
 
 	for (unsigned int n = firstObjectPoint; (!abort || !*abort) && n < firstObjectPoint + numberObjectPoints; ++n)
 	{
@@ -2257,9 +2257,9 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 
 			if (cameraMotion & CM_TRANSLATIONAL)
 			{
-				if (Geometry::RANSAC::objectPoint(*pinholeCamera, ConstArrayAccessor<HomogenousMatrix4>(poses), ConstArrayAccessor<Vector2>(imagePoints), localGenerator, objectPoint, pinholeCamera->hasDistortionParameters(), 20u, ransacMaximalSqrError, min(5u, minimalObservations), true, Geometry::Estimator::ET_INVALID))
+				if (Geometry::RANSAC::objectPoint(*camera, ConstArrayAccessor<HomogenousMatrix4>(poses), ConstArrayAccessor<Vector2>(imagePoints), localGenerator, objectPoint, 20u, ransacMaximalSqrError, min(5u, minimalObservations), true, Geometry::Estimator::ET_INVALID))
 				{
-					if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedPoses(camera, ConstArrayAccessor<HomogenousMatrix4>(poses), objectPoint, ConstArrayAccessor<Vector2>(imagePoints), optimizedObjectPoint, 10u, estimator, Scalar(0.001), Scalar(5), true, nullptr, &finalError))
+					if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedPoses(*camera, ConstArrayAccessor<HomogenousMatrix4>(poses), objectPoint, ConstArrayAccessor<Vector2>(imagePoints), optimizedObjectPoint, 10u, estimator, Scalar(0.001), Scalar(5), true, nullptr, &finalError))
 					{
 						if (finalError < averageRobustError)
 						{
@@ -2267,7 +2267,7 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 
 							if (maximalSqrError > Numeric::eps())
 							{
-								determineProjectionErrors(*pinholeCamera, optimizedObjectPoint, ConstArrayAccessor<HomogenousMatrix4>(poses), ConstArrayAccessor<Vector2>(imagePoints), pinholeCamera->hasDistortionParameters(), nullptr, nullptr, &sqrError);
+								determineProjectionErrors(*camera, optimizedObjectPoint, ConstArrayAccessor<HomogenousMatrix4>(poses), ConstArrayAccessor<Vector2>(imagePoints), nullptr, nullptr, &sqrError);
 							}
 
 							if (sqrError <= maximalSqrError)
@@ -2287,7 +2287,7 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 			else
 			{
 				ocean_assert(!poses.empty() && !imagePoints.empty());
-				objectPoint = (*pinholeCamera).ray(pinholeCamera->hasDistortionParameters() ? pinholeCamera->undistort<true>(imagePoints[0]) : imagePoints[0], poses.front()).direction();
+				objectPoint = camera->ray(imagePoints[0], poses.front()).direction();
 
 				orientationsIF.clear();
 
@@ -2297,7 +2297,7 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 					orientationsIF.push_back(PinholeCamera::standard2InvertedFlipped(poses[i].rotationMatrix()));
 				}
 
-				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(camera, ConstArrayAccessor<SquareMatrix3>(orientationsIF), ConstArrayAccessor<Vector2>(imagePoints), objectPoint, Scalar(1), optimizedObjectPoint, 10u, estimator, Scalar(0.001), Scalar(5), true, nullptr, &finalError)
+				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(*camera, ConstArrayAccessor<SquareMatrix3>(orientationsIF), ConstArrayAccessor<Vector2>(imagePoints), objectPoint, Scalar(1), optimizedObjectPoint, 10u, estimator, Scalar(0.001), Scalar(5), true, nullptr, &finalError)
 						&& finalError < averageRobustError)
 				{
 					ocean_assert(maximalSqrError == Numeric::maxValue());
@@ -2322,14 +2322,14 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 			if (cameraMotion & CM_TRANSLATIONAL)
 			{
 				Indices32 validIndices;
-				if (Geometry::RANSAC::objectPoint(*pinholeCamera, ConstArrayAccessor<HomogenousMatrix4>(poses), ConstArrayAccessor<Vector2>(imagePoints), localGenerator, objectPoint, pinholeCamera->hasDistortionParameters(), 20u, ransacMaximalSqrError, minimalObservations, true, estimator, &finalError, &validIndices)
+				if (Geometry::RANSAC::objectPoint(*camera, ConstArrayAccessor<HomogenousMatrix4>(poses), ConstArrayAccessor<Vector2>(imagePoints), localGenerator, objectPoint, 20u, ransacMaximalSqrError, minimalObservations, true, estimator, &finalError, &validIndices)
 						&& finalError < averageRobustError)
 				{
 					Scalar sqrError = 0;
 
 					if (maximalSqrError > Numeric::eps())
 					{
-						determineProjectionErrors(*pinholeCamera, objectPoint, ConstArraySubsetAccessor<HomogenousMatrix4, unsigned int>(poses, validIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, validIndices), pinholeCamera->hasDistortionParameters(), nullptr, nullptr, &sqrError);
+						determineProjectionErrors(*camera, objectPoint, ConstArraySubsetAccessor<HomogenousMatrix4, unsigned int>(poses, validIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, validIndices), nullptr, nullptr, &sqrError);
 					}
 
 					if (sqrError <= maximalSqrError)
@@ -2354,7 +2354,7 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 					orientations.push_back(poses[i].rotationMatrix());
 				}
 
-				if (Geometry::RANSAC::objectPoint(camera, ConstArrayAccessor<SquareMatrix3>(orientations), ConstArrayAccessor<Vector2>(imagePoints), localGenerator, objectPoint, Scalar(1), 20u, ransacMaximalSqrError, minimalObservations, true, estimator, &finalError)
+				if (Geometry::RANSAC::objectPoint(*camera, ConstArrayAccessor<SquareMatrix3>(orientations), ConstArrayAccessor<Vector2>(imagePoints), localGenerator, objectPoint, Scalar(1), 20u, ransacMaximalSqrError, minimalObservations, true, estimator, &finalError)
 						&& finalError < averageRobustError)
 				{
 					ocean_assert(maximalSqrError == Numeric::maxValue());
@@ -3397,32 +3397,39 @@ Scalars Solver3::determineObjectPointsAccuracy(const Database& database, const P
 	return cosineValues;
 }
 
-void Solver3::determineProjectionErrors(const PinholeCamera& pinholeCamera, const Vector3& objectPoint, const ConstIndexedAccessor<HomogenousMatrix4>& poses, const ConstIndexedAccessor<Vector2>& imagePoints, const bool useDistortionParameters, Scalar* minimalSqrError, Scalar* averageSqrError, Scalar* maximalSqrError)
+void Solver3::determineProjectionErrors(const AnyCamera& camera, const Vector3& objectPoint, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector2>& imagePoints, Scalar* minimalSqrError, Scalar* averageSqrError, Scalar* maximalSqrError)
 {
-	ocean_assert(pinholeCamera.isValid());
-	ocean_assert(poses.size() == imagePoints.size());
+	ocean_assert(camera.isValid());
+	ocean_assert(world_T_cameras.size() == imagePoints.size());
 
 	Scalar minError = Numeric::maxValue();
 	Scalar totalError = 0;
 	Scalar maxError = 0;
 
-	for (size_t n = 0; n < poses.size(); ++n)
+	for (size_t n = 0; n < world_T_cameras.size(); ++n)
 	{
-		const Scalar errorValue = imagePoints[n].sqrDistance(pinholeCamera.projectToImage<true>(poses[n], objectPoint, useDistortionParameters));
+		const Scalar errorValue = imagePoints[n].sqrDistance(camera.projectToImage(world_T_cameras[n], objectPoint));
 
-		minError = min(minError, errorValue);
+		minError = std::min(minError, errorValue);
+		maxError = std::max(maxError, errorValue);
+
 		totalError += errorValue;
-		maxError = max(maxError, errorValue);
 	}
 
-	if (minimalSqrError)
+	if (minimalSqrError != nullptr)
+	{
 		*minimalSqrError = minError;
+	}
 
-	if (poses.size() != 0 && averageSqrError)
-		*averageSqrError = totalError / Scalar(poses.size());
+	if (world_T_cameras.size() != 0 && averageSqrError != nullptr)
+	{
+		*averageSqrError = totalError / Scalar(world_T_cameras.size());
+	}
 
-	if (maximalSqrError)
+	if (maximalSqrError != nullptr)
+	{
 		*maximalSqrError = maxError;
+	}
 }
 
 bool Solver3::determineProjectionError(const Database& database, const PinholeCamera& pinholeCamera, const Index32 poseId, const bool useDistortionParameters, unsigned int* validCorrespondences, Scalar* minimalSqrError, Scalar* averageSqrError, Scalar* maximalSqrError)
@@ -4587,11 +4594,12 @@ bool Solver3::updateDatabaseToRotationalMotion(Database& database, const Pinhole
 	return true;
 }
 
-void Solver3::determineUnknownObjectPointsSubset(const PinholeCamera* pinholeCamera, const Database* database, const Database::PoseImagePointTopologyGroups* objectPointsData, RandomGenerator* randomGenerator, const Scalar maximalSqrError, bool* abort, Lock* lock, Vectors3* newObjectPoints, Indices32* newObjectPointIds, unsigned int firstObjectPoint, unsigned int numberObjectPoints)
+void Solver3::determineUnknownObjectPointsSubset(const AnyCamera* camera, const Database* database, const Database::PoseImagePointTopologyGroups* objectPointsData, RandomGenerator* randomGenerator, const Scalar maximalSqrError, bool* abort, Lock* lock, Vectors3* newObjectPoints, Indices32* newObjectPointIds, unsigned int firstObjectPoint, unsigned int numberObjectPoints)
 {
-	ocean_assert(pinholeCamera && objectPointsData);
-	ocean_assert(newObjectPoints && newObjectPointIds);
-	ocean_assert(randomGenerator);
+	ocean_assert(camera != nullptr && camera->isValid());
+	ocean_assert(database != nullptr && objectPointsData != nullptr);
+	ocean_assert(newObjectPoints != nullptr && newObjectPointIds != nullptr);
+	ocean_assert(randomGenerator != nullptr);
 
 	ocean_assert(firstObjectPoint + numberObjectPoints <= objectPointsData->size());
 
@@ -4609,16 +4617,16 @@ void Solver3::determineUnknownObjectPointsSubset(const PinholeCamera* pinholeCam
 		const Database::PoseImagePointTopology& data = (*objectPointsData)[n].second;
 
 		Vector3 objectPoint;
-		if (Geometry::RANSAC::objectPoint(*pinholeCamera, Database::ConstPoseAccessorTopology<false>(*database, data), Database::ConstImagePointAccessorTopology<false>(*database, data), localGenerator, objectPoint, pinholeCamera->hasDistortionParameters(), 20u, maximalSqrError, max(2, int(data.size()) - 1)))
+		if (Geometry::RANSAC::objectPoint(*camera, Database::ConstPoseAccessorTopology<false>(*database, data), Database::ConstImagePointAccessorTopology<false>(*database, data), localGenerator, objectPoint, 20u, maximalSqrError, max(2, int(data.size()) - 1)))
 		{
 			localNewObjectPoints.push_back(objectPoint);
 			localNewObjectPointIds.push_back(objectPointId);
 		}
 	}
 
-	// if this function is invoked by a worker we need to add the resuls within a critical section, otherwise we can simply move the results
+	// if this function is invoked by a worker we need to add the results within a critical section, otherwise we can simply move the results
 
-	if (lock)
+	if (lock != nullptr)
 	{
 		const ScopedLock scopedLock(*lock);
 
@@ -4638,13 +4646,17 @@ Scalar Solver3::averagePointDistance(const Vector2* points, const size_t size)
 
 	Vector2 centerOfGravity(0, 0);
 	for (size_t n = 0; n < size; ++n)
+	{
 		centerOfGravity += points[n];
+	}
 
 	centerOfGravity /= Scalar(size);
 
 	Scalar distance = 0;
 	for (size_t n = 0; n < size; ++n)
+	{
 		distance += centerOfGravity.distance(points[n]);
+	}
 
 	return distance / Scalar(size);
 }

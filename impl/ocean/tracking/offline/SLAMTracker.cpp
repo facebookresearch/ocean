@@ -1189,7 +1189,7 @@ bool SLAMTracker::extendInitialObjectPoints(const PinholeCamera& pinholeCamera, 
 
 	Vectors3 newObjectPoints;
 	Indices32 newObjectPointIds, newObjectPointObservations;
-	if (!Solver3::determineUnknownObjectPoints(database, pinholeCamera, Solver3::CM_UNKNOWN, unknownObjectPointIds, newObjectPoints, newObjectPointIds, randomGenerator, nullptr, 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort))
+	if (!Solver3::determineUnknownObjectPoints(database, AnyCameraPinhole(pinholeCamera), Solver3::CM_UNKNOWN, unknownObjectPointIds, newObjectPoints, newObjectPointIds, randomGenerator, nullptr, 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort))
 	{
 		return false;
 	}
@@ -1693,7 +1693,7 @@ bool SLAMTracker::addUnknownObjectPointsInRegionOfInterest(const PinholeCamera& 
 
 	Vectors3 newObjectPoints;
 	Indices32 newObjectPointIds;
-	if (!Solver3::determineUnknownObjectPoints(database, pinholeCamera, cameraMotion, objectPointIds, newObjectPoints, newObjectPointIds, randomGenerator, nullptr, 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort))
+	if (!Solver3::determineUnknownObjectPoints(database, AnyCameraPinhole(pinholeCamera), cameraMotion, objectPointIds, newObjectPoints, newObjectPointIds, randomGenerator, nullptr, 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort))
 		return false;
 
 	// we determine the minimal number of correspondences before we add the new object point locations
@@ -1824,7 +1824,7 @@ bool SLAMTracker::addUnknownObjectPointsInPlanarRegionOfInterest(const PinholeCa
 
 	Vectors3 newObjectPoints;
 	Indices32 newObjectPointIds;
-	if (!Solver3::determineUnknownObjectPoints(database, pinholeCamera, cameraMotion, objectPointIds, newObjectPoints, newObjectPointIds, randomGenerator, nullptr, minimalObservations, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort))
+	if (!Solver3::determineUnknownObjectPoints(database, AnyCameraPinhole(pinholeCamera), cameraMotion, objectPointIds, newObjectPoints, newObjectPointIds, randomGenerator, nullptr, minimalObservations, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort))
 	{
 		return false;
 	}
@@ -2592,7 +2592,7 @@ bool SLAMTracker::extendStableObjectPointsFullRotational(const PinholeCamera& pi
 			break;
 		}
 
-		if (Solver3::determineUnknownObjectPoints(database, pinholeCamera, Solver3::CM_ROTATIONAL, newObjectPoints, newObjectPointIds, randomGenerator, nullptr, Scalar(-1), allFrames * minimalObservationPercent / 100u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)
+		if (Solver3::determineUnknownObjectPoints(database, AnyCameraPinhole(pinholeCamera), Solver3::CM_ROTATIONAL, newObjectPoints, newObjectPointIds, randomGenerator, nullptr, Scalar(-1), allFrames * minimalObservationPercent / 100u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)
 				&& !newObjectPoints.empty())
 		{
 			// we do not need to measure the accuracy of the new object points as the accuracy has been measured by the determination function already
@@ -2681,7 +2681,7 @@ bool SLAMTracker::extendStableObjectPointsFullTranslational(const PinholeCamera&
 		newObjectPointCandidates.clear();
 		newObjectPointCandidateIds.clear();
 
-		if (Solver3::determineUnknownObjectPoints(database, pinholeCamera, Solver3::CM_TRANSLATIONAL, newObjectPointCandidates, newObjectPointCandidateIds, randomGenerator, nullptr, Scalar(-1), reliabilityThresholds[iteration].minimalObservations<2u>(allFrames), true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Scalar(7.0 * 7.0), WorkerPool::get().scopedWorker()(), abort)
+		if (Solver3::determineUnknownObjectPoints(database, AnyCameraPinhole(pinholeCamera), Solver3::CM_TRANSLATIONAL, newObjectPointCandidates, newObjectPointCandidateIds, randomGenerator, nullptr, Scalar(-1), reliabilityThresholds[iteration].minimalObservations<2u>(allFrames), true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Scalar(7.0 * 7.0), WorkerPool::get().scopedWorker()(), abort)
 				&& !newObjectPointCandidates.empty())
 		{
 			const Scalar maximalCosine = reliabilityThresholds[iteration].maximalCosine();
@@ -2770,7 +2770,7 @@ bool SLAMTracker::extendStableObjectPointsFullTranslational(const PinholeCamera&
 		newObjectPointCandidates.clear();
 		newObjectPointCandidateIds.clear();
 
-		if (Solver3::determineUnknownObjectPoints(database, pinholeCamera, Solver3::CM_TRANSLATIONAL, newObjectPointCandidates, newObjectPointCandidateIds, randomGenerator, nullptr, Scalar(-1), 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Scalar(7.0 * 7.0), WorkerPool::get().scopedWorker()(), abort)
+		if (Solver3::determineUnknownObjectPoints(database, AnyCameraPinhole(pinholeCamera), Solver3::CM_TRANSLATIONAL, newObjectPointCandidates, newObjectPointCandidateIds, randomGenerator, nullptr, Scalar(-1), 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Scalar(7.0 * 7.0), WorkerPool::get().scopedWorker()(), abort)
 				&& !newObjectPointCandidates.empty())
 		{
 			Log::info() << "Found " << newObjectPointCandidateIds.size() << " new object point candidates with arbitrary visibility";
@@ -2870,6 +2870,8 @@ bool SLAMTracker::extendStableObjectPointsPartiallyRotational(const PinholeCamer
 	unsigned int lowerLookaheadEnd = (unsigned int)(-1);
 	unsigned int upperLookaheadEnd = (unsigned int)(-1);
 
+	const AnyCameraPinhole camera(pinholeCamera);
+
 	while (true)
 	{
 		newLowerObjectPointCandidates.clear();
@@ -2907,7 +2909,7 @@ bool SLAMTracker::extendStableObjectPointsPartiallyRotational(const PinholeCamer
 				const unsigned int lowerObservationFrame = max(int(lowerFrame), int(validLowerFrame) - int(lookahead));
 				const unsigned int upperObservationFrame = min(validLowerFrame + lookahead, validUpperFrame);
 
-				if (!Solver3::determineUnknownObjectPoints<true>(database, pinholeCamera, Solver3::CM_ROTATIONAL, lowerObservationFrame, upperObservationFrame, newLowerObjectPointCandidates, newLowerObjectPointCandidateIds, randomGenerator, &newLowerObjectPointCandidateObservations, Scalar(-1), 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)
+				if (!Solver3::determineUnknownObjectPoints<true>(database, camera, Solver3::CM_ROTATIONAL, lowerObservationFrame, upperObservationFrame, newLowerObjectPointCandidates, newLowerObjectPointCandidateIds, randomGenerator, &newLowerObjectPointCandidateObservations, Scalar(-1), 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)
 						|| newLowerObjectPointCandidates.empty()
 						|| (lookahead > 2u && newLowerObjectPointCandidates.size() < correspondencesLowerFrame * 2u)
 						|| (lookahead > 1u && newLowerObjectPointCandidates.size() < correspondencesLowerFrame))
@@ -2971,7 +2973,7 @@ bool SLAMTracker::extendStableObjectPointsPartiallyRotational(const PinholeCamer
 				const unsigned int lowerObservationFrame = max(int(validLowerFrame), int(validUpperFrame) - int(lookahead));
 				const unsigned int upperObservationFrame = min(validUpperFrame + lookahead, upperFrame);
 
-				if (!Solver3::determineUnknownObjectPoints<true>(database, pinholeCamera, Solver3::CM_ROTATIONAL, lowerObservationFrame, upperObservationFrame, newUpperObjectPointCandidates, newUpperObjectPointCandidateIds, randomGenerator, &newUpperObjectPointCandidateObservations, Scalar(-1), 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)
+				if (!Solver3::determineUnknownObjectPoints<true>(database, camera, Solver3::CM_ROTATIONAL, lowerObservationFrame, upperObservationFrame, newUpperObjectPointCandidates, newUpperObjectPointCandidateIds, randomGenerator, &newUpperObjectPointCandidateObservations, Scalar(-1), 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)
 						|| newUpperObjectPointCandidates.empty()
 						|| (lookahead > 2u && newUpperObjectPointCandidates.size() < correspondencesUpperFrame * 2u)
 						|| (lookahead > 1u && newUpperObjectPointCandidates.size() < correspondencesUpperFrame))
@@ -3138,6 +3140,8 @@ bool SLAMTracker::stabilizeStableObjectPointsPartiallyTranslational(const Pinhol
 
 	Log::info() << "After initial pose update: [" << validLowerFrame << ", " << validUpperFrame << "]";
 
+	const AnyCameraPinhole camera(pinholeCamera);
+
 	for (size_t iteration = 0; (abort == nullptr || !*abort) && iteration < maximalCosines.size(); ++iteration)
 	{
 		newObjectPointCandidates.clear();
@@ -3145,7 +3149,7 @@ bool SLAMTracker::stabilizeStableObjectPointsPartiallyTranslational(const Pinhol
 
 		// we try to determine the locations of unknown object points by application of the already known camera poses
 
-		if (Solver3::determineUnknownObjectPoints<false>(database, pinholeCamera, Solver3::CM_TRANSLATIONAL, lowerFrame, upperFrame, newObjectPointCandidates, newObjectPointCandidateIds, randomGenerator, nullptr, Scalar(-1), 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), WorkerPool::get().scopedWorker()(), abort)
+		if (Solver3::determineUnknownObjectPoints<false>(database, camera, Solver3::CM_TRANSLATIONAL, lowerFrame, upperFrame, newObjectPointCandidates, newObjectPointCandidateIds, randomGenerator, nullptr, Scalar(-1), 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), WorkerPool::get().scopedWorker()(), abort)
 				&& !newObjectPointCandidates.empty())
 		{
 			Log::info() << "Found " << newObjectPointCandidateIds.size() << " new object point candidates";
@@ -3307,6 +3311,8 @@ bool SLAMTracker::extendStableObjectPointsPartiallyTranslational(const PinholeCa
 		Log::info() << "Best pose: " << bestCorrespondencesPoseId << " with " << bestCorrespondences << " correspondences";
 	}
 
+	const AnyCameraPinhole camera(pinholeCamera);
+
 	unsigned int previousValidFrameNumber = validUpperFrame - validLowerFrame + 1u;
 
 	while (true)
@@ -3346,7 +3352,7 @@ bool SLAMTracker::extendStableObjectPointsPartiallyTranslational(const PinholeCa
 				const unsigned int lowerObservationFrame = max(int(lowerFrame), int(validLowerFrame) - int(lookahead));
 				const unsigned int upperObservationFrame = min(validLowerFrame + lookahead, validUpperFrame);
 
-				if (!Solver3::determineUnknownObjectPoints<true>(database, pinholeCamera, Solver3::CM_TRANSLATIONAL, lowerObservationFrame, upperObservationFrame, newLowerObjectPointCandidates, newLowerObjectPointCandidateIds, randomGenerator, &newLowerObjectPointCandidateObservations, Scalar(-1), 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)
+				if (!Solver3::determineUnknownObjectPoints<true>(database, camera, Solver3::CM_TRANSLATIONAL, lowerObservationFrame, upperObservationFrame, newLowerObjectPointCandidates, newLowerObjectPointCandidateIds, randomGenerator, &newLowerObjectPointCandidateObservations, Scalar(-1), 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)
 						|| newLowerObjectPointCandidates.empty()
 						|| (lookahead > 2u && newLowerObjectPointCandidates.size() < correspondencesLowerFrame * 2u)
 						|| (lookahead > 1u && newLowerObjectPointCandidates.size() < correspondencesLowerFrame))
@@ -3408,7 +3414,7 @@ bool SLAMTracker::extendStableObjectPointsPartiallyTranslational(const PinholeCa
 				const unsigned int lowerObservationFrame = max(int(validLowerFrame), int(validUpperFrame) - int(lookahead));
 				const unsigned int upperObservationFrame = min(validUpperFrame + lookahead, upperFrame);
 
-				if (!Solver3::determineUnknownObjectPoints<true>(database, pinholeCamera, Solver3::CM_TRANSLATIONAL, lowerObservationFrame, upperObservationFrame, newUpperObjectPointCandidates, newUpperObjectPointCandidateIds, randomGenerator, &newUpperObjectPointCandidateObservations, Scalar(-1), 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)
+				if (!Solver3::determineUnknownObjectPoints<true>(database, camera, Solver3::CM_TRANSLATIONAL, lowerObservationFrame, upperObservationFrame, newUpperObjectPointCandidates, newUpperObjectPointCandidateIds, randomGenerator, &newUpperObjectPointCandidateObservations, Scalar(-1), 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)
 						|| newUpperObjectPointCandidates.empty()
 						|| (lookahead > 2u && newUpperObjectPointCandidates.size() < correspondencesUpperFrame * 2u)
 						|| (lookahead > 1u && newUpperObjectPointCandidates.size() < correspondencesUpperFrame))

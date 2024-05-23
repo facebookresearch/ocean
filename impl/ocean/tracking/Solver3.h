@@ -635,7 +635,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * This function extracts a subset of representative camera poses and triangulates image points from individual camera poses to determine new 3D object points.<br>
 		 * Object points in the database with valid 3D positions are not investigated.<br>
 		 * @param database The database defining the topology of 3D object points, corresponding 2D image points and corresponding camera poses
-		 * @param pinholeCamera The pinhole camera profile which will be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param lowerFrame The index of the frame defining the lower border of camera poses which will be investigated
 		 * @param upperFrame The index of the frame defining the upper border of camera poses which will be investigated, with range [lowerFrame, infinity)
 		 * @param newObjectPoints The resulting positions of new object points
@@ -647,13 +647,13 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @return True, if succeeded
 		 */
-		static bool determineUnknownObjectPoints(const Database& database, const PinholeCamera& pinholeCamera, const unsigned int lowerFrame, const unsigned int upperFrame, Vectors3& newObjectPoints, Indices32& newObjectPointIds, const unsigned int minimalKeyFrames = 3u, const unsigned int maximalKeyFrames = 10u, const Scalar maximalSqrError = Scalar(3.5 * 3.5), Worker* worker = nullptr, bool* abort = nullptr);
+		static bool determineUnknownObjectPoints(const Database& database, const AnyCamera& camera, const unsigned int lowerFrame, const unsigned int upperFrame, Vectors3& newObjectPoints, Indices32& newObjectPointIds, const unsigned int minimalKeyFrames = 3u, const unsigned int maximalKeyFrames = 10u, const Scalar maximalSqrError = Scalar(3.5 * 3.5), Worker* worker = nullptr, bool* abort = nullptr);
 
 		/**
 		 * Determines the positions of a set of (currently unknown) object points.
 		 * Only camera frames with valid camera pose are used to determined the new object points.<br>
 		 * @param database The database form which the object point, image point and pose information is extracted
-		 * @param pinholeCamera The pinhole camera profile which will be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param cameraMotion The motion of the camera, can be CM_ROTATIONAL or CM_TRANSLATIONAL
 		 * @param unknownObjectPointIds The ids of all (currently unknown) object points for which a 3D position will be determined, must all be valid
 		 * @param newObjectPoints The resulting 3D location of the new object points
@@ -670,7 +670,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @return True, if succeeded and not aborted
 		 */
-		static bool determineUnknownObjectPoints(const Database& database, const PinholeCamera& pinholeCamera, const CameraMotion cameraMotion, const Indices32& unknownObjectPointIds, Vectors3& newObjectPoints, Indices32& newObjectPointIds, RandomGenerator& randomGenerator, Indices32* newObjectPointObservations = nullptr, const unsigned int minimalObservations = 2u, const bool useAllObservations = true, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar ransacMaximalSqrError = Scalar(3.5 * 3.5), const Scalar averageRobustError = Scalar(3.5 * 3.5), const Scalar maximalSqrError = Numeric::maxValue(), Worker* worker = nullptr, bool* abort = nullptr);
+		static bool determineUnknownObjectPoints(const Database& database, const AnyCamera& camera, const CameraMotion cameraMotion, const Indices32& unknownObjectPointIds, Vectors3& newObjectPoints, Indices32& newObjectPointIds, RandomGenerator& randomGenerator, Indices32* newObjectPointObservations = nullptr, const unsigned int minimalObservations = 2u, const bool useAllObservations = true, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar ransacMaximalSqrError = Scalar(3.5 * 3.5), const Scalar averageRobustError = Scalar(3.5 * 3.5), const Scalar maximalSqrError = Numeric::maxValue(), Worker* worker = nullptr, bool* abort = nullptr);
 
 		/**
 		 * Determines the positions of all (currently unknown) object points.
@@ -678,7 +678,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * All unknown object points with more or equal observations (in valid poses) than specified will be handled.<br>
 		 * However, the number of resulting object points with valid 3D position may be smaller than the maximal possible number due to e.g., the defined maximal error parameters.<br>
 		 * @param database The database form which the object point, image point and pose information is extracted
-		 * @param pinholeCamera The pinhole camera profile which will be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param cameraMotion The motion of the camera, can be CM_ROTATIONAL or CM_TRANSLATIONAL
 		 * @param newObjectPoints The resulting 3D location of the new object points
 		 * @param newObjectPointIds The ids of the resulting new object points, one id for each resulting new object point
@@ -695,7 +695,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @return True, if succeeded and not aborted
 		 */
-		static inline bool determineUnknownObjectPoints(const Database& database, const PinholeCamera& pinholeCamera, const CameraMotion cameraMotion, Vectors3& newObjectPoints, Indices32& newObjectPointIds, RandomGenerator& randomGenerator, Indices32* newObjectPointObservations = nullptr, const Scalar minimalObjectPointPriority = Scalar(-1), const unsigned int minimalObservations = 10u, const bool useAllObservations = true, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar ransacMaximalSqrError = Scalar(3.5 * 3.5), const Scalar averageRobustError = Scalar(3.5 * 3.5), const Scalar maximalSqrError = Numeric::maxValue(), Worker* worker = nullptr, bool* abort = nullptr);
+		static inline bool determineUnknownObjectPoints(const Database& database, const AnyCamera& camera, const CameraMotion cameraMotion, Vectors3& newObjectPoints, Indices32& newObjectPointIds, RandomGenerator& randomGenerator, Indices32* newObjectPointObservations = nullptr, const Scalar minimalObjectPointPriority = Scalar(-1), const unsigned int minimalObservations = 10u, const bool useAllObservations = true, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar ransacMaximalSqrError = Scalar(3.5 * 3.5), const Scalar averageRobustError = Scalar(3.5 * 3.5), const Scalar maximalSqrError = Numeric::maxValue(), Worker* worker = nullptr, bool* abort = nullptr);
 
 		/**
 		 * Determines the positions of (currently unknown) object points which are visible in specified poses (the poses are specified by a lower and upper frame range).
@@ -703,7 +703,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * All unknown object points with more or equal observations (in valid poses) than specified will be handled.<br>
 		 * However, the number of resulting object points with valid 3D position may be small than the maximal possible number due to e.g., the defined maximal error parameters.<br>
 		 * @param database The database form which the object point, image point and pose information is extracted
-		 * @param pinholeCamera The pinhole camera profile which will be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param cameraMotion The motion of the camera, can be CM_ROTATIONAL or CM_TRANSLATIONAL
 		 * @param lowerPoseId The lower id of the camera pose in which the unknown object points can/must be visible
 		 * @param upperPoseId The upper id of the camera pose in which the unknown object points can/must be visible, with range [lowerPoseId, infinity)
@@ -724,7 +724,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @tparam tVisibleInAllPoses True, if the object points must be visible in all poses (frames) of the specified pose range; False, if the object point can be visible in any poses (frames) within the specified pose range
 		 */
 		template <bool tVisibleInAllPoses>
-		static inline bool determineUnknownObjectPoints(const Database& database, const PinholeCamera& pinholeCamera, const CameraMotion cameraMotion, const Index32 lowerPoseId, const Index32 upperPoseId, Vectors3& newObjectPoints, Indices32& newObjectPointIds, RandomGenerator& randomGenerator, Indices32* newObjectPointObservations = nullptr, const Scalar minimalObjectPointPriority = Scalar(-1), const unsigned int minimalObservations = 10u, const bool useAllObservations = true, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar ransacMaximalSqrError = Scalar(3.5 * 3.5), const Scalar averageRobustError = Scalar(3.5 * 3.5), const Scalar maximalSqrError = Numeric::maxValue(), Worker* worker = nullptr, bool* abort = nullptr);
+		static inline bool determineUnknownObjectPoints(const Database& database, const AnyCamera& camera, const CameraMotion cameraMotion, const Index32 lowerPoseId, const Index32 upperPoseId, Vectors3& newObjectPoints, Indices32& newObjectPointIds, RandomGenerator& randomGenerator, Indices32* newObjectPointObservations = nullptr, const Scalar minimalObjectPointPriority = Scalar(-1), const unsigned int minimalObservations = 10u, const bool useAllObservations = true, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar ransacMaximalSqrError = Scalar(3.5 * 3.5), const Scalar averageRobustError = Scalar(3.5 * 3.5), const Scalar maximalSqrError = Numeric::maxValue(), Worker* worker = nullptr, bool* abort = nullptr);
 
 		/**
 		 * Optimizes a set of 3D object points (having a quite good accuracy already) without optimizing the camera poses concurrently.
@@ -1347,16 +1347,15 @@ class OCEAN_TRACKING_EXPORT Solver3
 
 		/**
 		 * Determines the projection errors of a 3D object point in combination with a set of camera poses and image points (the projections of the object point).
-		 * @param pinholeCamera The pinhole camera profile which is applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param objectPoint The 3D object point for which the quality will be measured
-		 * @param poses The camera poses in which the object point is visible
+		 * @param world_T_cameras The camera poses in which the object point is visible
 		 * @param imagePoints The individual image points in the individual camera frames
-		 * @param useDistortionParameters True, to apply the distortion parameter of the camera
 		 * @param minimalSqrError Optional resulting minimal (best) projection error for the object point
 		 * @param averageSqrError Optional resulting averaged projection error for the object point
 		 * @param maximalSqrError Optional resulting maximal (worst) projection error for the object point
 		 */
-		static void determineProjectionErrors(const PinholeCamera& pinholeCamera, const Vector3& objectPoint, const ConstIndexedAccessor<HomogenousMatrix4>& poses, const ConstIndexedAccessor<Vector2>& imagePoints, const bool useDistortionParameters, Scalar* minimalSqrError = nullptr, Scalar* averageSqrError = nullptr, Scalar* maximalSqrError = nullptr);
+		static void determineProjectionErrors(const AnyCamera& camera, const Vector3& objectPoint, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector2>& imagePoints, Scalar* minimalSqrError = nullptr, Scalar* averageSqrError = nullptr, Scalar* maximalSqrError = nullptr);
 
 		/**
 		 * Determines the accuracy of a camera pose for all valid object points visible in the frame by measuring the projection error between the projected object points and their corresponding image points.
@@ -1735,7 +1734,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 
 		/**
 		 * Determines the positions of new object points from a database within a specified frame range.
-		 * @param pinholeCamera The pinhole camera profile which will be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param database The database from which the object point and image point correspondences are extracted
 		 * @param objectPointsData The data holding groups of pose ids and image point ids for each individual object point
 		 * @param randomGenerator Random generator object to be used for creating random numbers, must be defined
@@ -1747,12 +1746,12 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param firstObjectPoint The first object point to be handled, with range [0, numberObjectPoints)
 		 * @param numberObjectPoints The number of object points to be handled, with range [0, objectPointData->size()]
 		 */
-		static void determineUnknownObjectPointsSubset(const PinholeCamera* pinholeCamera, const Database* database, const Database::PoseImagePointTopologyGroups* objectPointsData, RandomGenerator* randomGenerator, const Scalar maximalSqrError, bool* abort, Lock* lock, Vectors3* newObjectPoints, Indices32* newObjectPointIds, unsigned int firstObjectPoint, unsigned int numberObjectPoints);
+		static void determineUnknownObjectPointsSubset(const AnyCamera* camera, const Database* database, const Database::PoseImagePointTopologyGroups* objectPointsData, RandomGenerator* randomGenerator, const Scalar maximalSqrError, bool* abort, Lock* lock, Vectors3* newObjectPoints, Indices32* newObjectPointIds, unsigned int firstObjectPoint, unsigned int numberObjectPoints);
 
 		/**
 		 * Determines the positions of a subset of (currently unknown) object points.
 		 * @param database The database form which the object point, image point and pose information is extracted
-		 * @param pinholeCamera The pinhole camera profile which will be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param cameraMotion The motion of the camera, can be CM_ROTATIONAL or CM_TRANSLATIONAL
 		 * @param objectPointIds The ids of all (currently unknown) object points for which a 3D position will be determined, must all be valid
 		 * @param newObjectPoints The resulting 3D location of the new object points
@@ -1770,7 +1769,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param firstObjectPoint First object point to be handled
 		 * @param numberObjectPoints Number of object points to be handled
 		 */
-		static void determineUnknownObjectPointsSubset(const Database* database, const PinholeCamera* pinholeCamera, const CameraMotion cameraMotion, const Index32* objectPointIds, Vectors3* newObjectPoints, Indices32* newObjectPointIds, Indices32* newObjectPointObservations, RandomGenerator* randomGenerator, const unsigned int minimalObservations, const bool useAllObservations, const Geometry::Estimator::EstimatorType estimator, const Scalar ransacMaximalSqrError, const Scalar averageRobustError, const Scalar maximalSqrError, Lock* look, bool* abort, const unsigned int firstObjectPoint, const unsigned int numberObjectPoints);
+		static void determineUnknownObjectPointsSubset(const Database* database, const AnyCamera* camera, const CameraMotion cameraMotion, const Index32* objectPointIds, Vectors3* newObjectPoints, Indices32* newObjectPointIds, Indices32* newObjectPointObservations, RandomGenerator* randomGenerator, const unsigned int minimalObservations, const bool useAllObservations, const Geometry::Estimator::EstimatorType estimator, const Scalar ransacMaximalSqrError, const Scalar averageRobustError, const Scalar maximalSqrError, Lock* look, bool* abort, const unsigned int firstObjectPoint, const unsigned int numberObjectPoints);
 
 		/**
 		 * Optimizes a subset of a set of 3D object points which have a quite good accuracy already without optimizing the camera poses concurrently.
@@ -1979,7 +1978,7 @@ inline Solver3::ObjectPointToPoseIndexImagePointCorrespondenceAccessor& Solver3:
 	return *this;
 }
 
-inline bool Solver3::determineUnknownObjectPoints(const Database& database, const PinholeCamera& camera, const CameraMotion cameraMotion, Vectors3& newObjectPoints, Indices32& newObjectPointIds, RandomGenerator& randomGenerator, Indices32* newObjectPointObservations, const Scalar minimalObjectPointPriority, const unsigned int minimalObservations, const bool useAllObservations, const Geometry::Estimator::EstimatorType estimator, const Scalar ransacMaximalSqrError, const Scalar averageRobustError, const Scalar maximalSqrError, Worker* worker, bool* abort)
+inline bool Solver3::determineUnknownObjectPoints(const Database& database, const AnyCamera& camera, const CameraMotion cameraMotion, Vectors3& newObjectPoints, Indices32& newObjectPointIds, RandomGenerator& randomGenerator, Indices32* newObjectPointObservations, const Scalar minimalObjectPointPriority, const unsigned int minimalObservations, const bool useAllObservations, const Geometry::Estimator::EstimatorType estimator, const Scalar ransacMaximalSqrError, const Scalar averageRobustError, const Scalar maximalSqrError, Worker* worker, bool* abort)
 {
 	ocean_assert(cameraMotion != CM_INVALID);
 
@@ -1989,7 +1988,7 @@ inline bool Solver3::determineUnknownObjectPoints(const Database& database, cons
 }
 
 template <bool tVisibleInAllPoses>
-inline bool Solver3::determineUnknownObjectPoints(const Database& database, const PinholeCamera& camera, const CameraMotion cameraMotion, const Index32 lowerPoseId, const Index32 upperPoseId, Vectors3& newObjectPoints, Indices32& newObjectPointIds, RandomGenerator& randomGenerator, Indices32* newObjectPointObservations, const Scalar minimalObjectPointPriority, const unsigned int minimalObservations, const bool useAllObservations, const Geometry::Estimator::EstimatorType estimator, const Scalar ransacMaximalSqrError, const Scalar averageRobustError, const Scalar maximalSqrError, Worker* worker, bool* abort)
+inline bool Solver3::determineUnknownObjectPoints(const Database& database, const AnyCamera& camera, const CameraMotion cameraMotion, const Index32 lowerPoseId, const Index32 upperPoseId, Vectors3& newObjectPoints, Indices32& newObjectPointIds, RandomGenerator& randomGenerator, Indices32* newObjectPointObservations, const Scalar minimalObjectPointPriority, const unsigned int minimalObservations, const bool useAllObservations, const Geometry::Estimator::EstimatorType estimator, const Scalar ransacMaximalSqrError, const Scalar averageRobustError, const Scalar maximalSqrError, Worker* worker, bool* abort)
 {
 	ocean_assert(cameraMotion != CM_INVALID);
 	ocean_assert(lowerPoseId <= upperPoseId);
