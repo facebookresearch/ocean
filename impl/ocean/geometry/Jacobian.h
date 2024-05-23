@@ -152,13 +152,13 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * The jacobian calculation uses the Rodrigues rotation formula to determine the rotation derivatives.<br>
 		 * @param jacobian First element in the first row of the entire row aligned jacobian matrix, with 2 * objectPoints.size() rows and 6 columns
 		 * @param camera The camera profile defining the projection, must be valid
-		 * @param flippedCamera_P_world Inverted and flipped pose (rotation and translation) to determine the jacobian for, while the rotational part is use only
+		 * @param flippedCamera_R_world Inverted and flipped camera pose to determine the jacobian for
 		 * @param objectPoints The accessor providing the 3D object points to determine the jacobian for
 		 * @tparam T The scalar data type, either 'float' or 'double'
 		 * @see calculateOrientationJacobianRodrigues2x3().
 		 */
 		template <typename T>
-		static void calculateOrientationJacobianRodrigues2nx3IF(T* jacobian, const AnyCameraT<T>& camera, const PoseT<T>& flippedCamera_P_world, const ConstIndexedAccessor<VectorT3<T>>& objectPoints);
+		static void calculateOrientationJacobianRodrigues2nx3IF(T* jacobian, const AnyCameraT<T>& camera, const ExponentialMapT<T>& flippedCamera_R_world, const ConstIndexedAccessor<VectorT3<T>>& objectPoints);
 
 		/**
 		 * Deprecated.

@@ -45,6 +45,14 @@ bool TestJacobian::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testOrientationJacobian2nx3<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testOrientationJacobian2nx3<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testPinholeCameraPoseJacobian2nx6(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -228,6 +236,18 @@ TEST(TestJacobian, OrientationalJacobian2x3_double)
 {
 	EXPECT_TRUE((TestJacobian::testOrientationalJacobian2x3<double>(GTEST_TEST_DURATION)));
 }
+
+
+TEST(TestJacobian, OrientationJacobian2nx3_float)
+{
+	EXPECT_TRUE((TestJacobian::testOrientationJacobian2nx3<float>(GTEST_TEST_DURATION)));
+}
+
+TEST(TestJacobian, OrientationJacobian2nx3_double)
+{
+	EXPECT_TRUE((TestJacobian::testOrientationJacobian2nx3<double>(GTEST_TEST_DURATION)));
+}
+
 
 TEST(TestJacobian, PinholeCameraPoseJacobian2nx6)
 {
@@ -591,6 +611,231 @@ bool TestJacobian::testOrientationalJacobian2x3(const double testDuration)
 						rotationWz[2] += epsilon;
 
 						const VectorD2 imagePointWz(cameraD->projectToImageIF(HomogenousMatrixD4(rotationWz.quaternion()) * HomogenousMatrixD4(VectorD3(translation_T_world)), objectPoint));
+						if (checkAccuracy(imagePoint, imagePointWz, epsilon, jacobianX[2], jacobianY[2]))
+						{
+							localAccuracy = true;
+							break;
+						}
+					}
+
+					if (!localAccuracy)
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
+	Log::info() << "Performance optimized: " << performanceOptimized.averageMseconds() << "ms";
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestJacobian::testOrientationJacobian2nx3(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	constexpr unsigned int numberPoints = 50u;
+
+	Log::info() << "Testing orientation Jacobian rodrigues 2nx3 for " << numberPoints << " points with " << sizeof(T) * 8 << "-bit precision:";
+
+	const std::vector<double> epsilons = {NumericD::weakEps(), NumericD::weakEps() / 10.0, NumericD::weakEps() * 10.0, NumericD::weakEps() / 100.0, NumericD::weakEps() * 100.0};
+
+	RandomGenerator randomGenerator;
+
+	constexpr double threshold = std::is_same<float, T>::value ? 0.95 : 0.99;
+
+	ValidationPrecision validation(threshold, randomGenerator);
+
+	HighPerformanceStatistic performanceNaive;
+	HighPerformanceStatistic performanceOptimized;
+
+	constexpr T cameraBorder = T(50);
+
+	enum DistortionType : uint32_t
+	{
+		DT_NO_DISTORTION = 0u,
+		DT_RADIAL_DISTORTION = 1u << 0u | DT_NO_DISTORTION,
+		DT_FULL_DISTORTION = (1u << 1u) | DT_RADIAL_DISTORTION
+	};
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (const DistortionType distortionType : {DT_NO_DISTORTION, DT_RADIAL_DISTORTION, DT_FULL_DISTORTION})
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			constexpr unsigned int width = 1280u;
+			constexpr unsigned int height = 720u;
+
+			const T width_2 = T(width) * T(0.5);
+			const T height_2 = T(height) * T(0.5);
+
+			const T fovX = RandomT<T>::scalar(randomGenerator, NumericT<T>::deg2rad(40), NumericT<T>::deg2rad(70));
+
+			const T principalX = RandomT<T>::scalar(randomGenerator, width_2 - T(50), width_2 + T(50));
+			const T principalY = RandomT<T>::scalar(randomGenerator, height_2 - T(50), height_2 + T(50));
+
+			const QuaternionT<T> flippedCamera_R_world(RandomT<T>::quaternion(randomGenerator));
+
+			const HomogenousMatrixT4<T> flippedCamera_T_world = HomogenousMatrixT4<T>(flippedCamera_R_world);
+
+			const HomogenousMatrixT4<T> world_T_camera(AnyCamera::invertedFlipped2Standard(flippedCamera_T_world));
+
+			PinholeCameraT<T> pinholeCamera(width, height, fovX, principalX, principalY);
+
+			if ((distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION)
+			{
+				const T k1 = RandomT<T>::scalar(T(-0.5), T(0.5));
+				const T k2 = RandomT<T>::scalar(T(-0.5), T(0.5));
+				pinholeCamera.setRadialDistortion(typename PinholeCameraT<T>::DistortionPair(k1, k2));
+			}
+
+			if ((distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION)
+			{
+				const T p1 = RandomT<T>::scalar(T(-0.01), T(0.01));
+				const T p2 = RandomT<T>::scalar(T(-0.01), T(0.01));
+				pinholeCamera.setTangentialDistortion(typename PinholeCameraT<T>::DistortionPair(p1, p2));
+			}
+
+			const AnyCameraPinholeT<T> camera(pinholeCamera);
+
+			VectorsT3<T> objectPoints;
+			objectPoints.reserve(numberPoints);
+			while (objectPoints.size() < numberPoints)
+			{
+				const VectorT2<T> distortedImagePoint = RandomT<T>::vector2(randomGenerator, cameraBorder, T(camera.width()) - cameraBorder, cameraBorder, T(camera.height()) - cameraBorder);
+
+				const VectorT2<T> undistortedImagePoint = pinholeCamera.template undistort<true>(distortedImagePoint);
+
+				if (!camera.isInside(undistortedImagePoint, cameraBorder))
+				{
+					// we don't use image points which can be close to the camera border
+					continue;
+				}
+
+				const LineT3<T> ray(camera.ray(distortedImagePoint, world_T_camera));
+				const VectorT3<T> objectPoint(ray.point(RandomT<T>::scalar(randomGenerator, 1, 5)));
+
+				objectPoints.push_back(objectPoint);
+			}
+
+			/**
+			 * jacobian for one point
+			 * jacobian x: | dfx / dwx, dfx / dwy, dfx / dwz |
+			 * jacobian y: | dfy / dwx, dfy / dwy, dfy / dwz |
+			 */
+
+			{
+				MatrixT<T> naiveJacobian(2 * objectPoints.size(), 3);
+
+				const HighPerformanceStatistic::ScopedStatistic scope(performanceNaive);
+
+				for (size_t n = 0; n < objectPoints.size(); ++n)
+				{
+					const VectorT3<T> objectPoint = objectPoints[n];
+					const VectorT2<T> imagePoint(camera.projectToImageIF(flippedCamera_T_world, objectPoint));
+
+					for (unsigned int i = 0u; i < 3u; ++i)
+					{
+						ExponentialMapT<T> rotationDelta(flippedCamera_R_world);
+						rotationDelta[i] += NumericT<T>::weakEps();
+
+						const VectorT2<T> imagePointDelta(camera.projectToImageIF(HomogenousMatrixT4<T>(rotationDelta.quaternion()), objectPoint));
+						const VectorT2<T> derivative = (imagePointDelta - imagePoint) / NumericT<T>::weakEps();
+
+						naiveJacobian[n * 2 + 0][i] = derivative.x();
+						naiveJacobian[n * 2 + 1][i] = derivative.y();
+					}
+				}
+			}
+
+			const ExponentialMapT<T> flippedCamera_E_world(flippedCamera_R_world);
+
+			MatrixT<T> jacobian(2 * objectPoints.size(), 3);
+
+			performanceOptimized.start();
+				Geometry::Jacobian::calculateOrientationJacobianRodrigues2nx3IF(jacobian.data(), camera, flippedCamera_E_world, ConstArrayAccessor<VectorT3<T>>(objectPoints));
+			performanceOptimized.stop();
+
+			const SharedAnyCameraD cameraD = camera.cloneToDouble();
+			ocean_assert(cameraD);
+
+			const ExponentialMapD flippedCamera_E_worldD(flippedCamera_E_world);
+
+			const HomogenousMatrixD4 flippedCamera_T_worldD = HomogenousMatrixD4(flippedCamera_E_worldD.rotation());
+
+			for (size_t n = 0; n < objectPoints.size(); ++n)
+			{
+				const VectorD3 objectPoint = VectorD3(objectPoints[n]);
+				const VectorD2 imagePoint(cameraD->projectToImageIF(flippedCamera_T_worldD, objectPoint));
+
+				const T* jacobianX = jacobian[2 * n + 0];
+				const T* jacobianY = jacobian[2 * n + 1];
+
+				{
+					bool localAccuracy = false;
+
+					for (const double epsilon : epsilons)
+					{
+						// df / dwx
+						ExponentialMapD rotationWx = flippedCamera_E_worldD;
+						rotationWx[0] += epsilon;
+
+						const VectorD2 imagePointWx(cameraD->projectToImageIF(HomogenousMatrixD4(rotationWx.quaternion()), objectPoint));
+						if (checkAccuracy(imagePoint, imagePointWx, epsilon, jacobianX[0], jacobianY[0]))
+						{
+							localAccuracy = true;
+							break;
+						}
+					}
+
+					if (!localAccuracy)
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
+
+				{
+					bool localAccuracy = false;
+
+					for (const double epsilon : epsilons)
+					{
+						// df / dwy
+						ExponentialMapD rotationWy = flippedCamera_E_worldD;
+						rotationWy[1] += epsilon;
+
+						const VectorD2 imagePointWy(cameraD->projectToImageIF(HomogenousMatrixD4(rotationWy.quaternion()), objectPoint));
+						if (checkAccuracy(imagePoint, imagePointWy, epsilon, jacobianX[1], jacobianY[1]))
+						{
+							localAccuracy = true;
+							break;
+						}
+					}
+
+					if (!localAccuracy)
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
+
+				{
+					bool localAccuracy = false;
+
+					for (const double epsilon : epsilons)
+					{
+						// df / dwz
+						ExponentialMapD rotationWz = ExponentialMapD(flippedCamera_E_world);
+						rotationWz[2] += epsilon;
+
+						const VectorD2 imagePointWz(cameraD->projectToImageIF(HomogenousMatrixD4(rotationWz.quaternion()), objectPoint));
 						if (checkAccuracy(imagePoint, imagePointWz, epsilon, jacobianX[2], jacobianY[2]))
 						{
 							localAccuracy = true;

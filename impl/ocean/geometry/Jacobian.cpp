@@ -366,6 +366,78 @@ void Jacobian::calculateSphericalObjectPointOrientationJacobian2x3IF(T* jx, T* j
 template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateSphericalObjectPointOrientationJacobian2x3IF(float* jx, float* jy, const AnyCameraT<float>& camera, const SquareMatrixT3<float>& flippedCamera_R_world, const ExponentialMapT<float>& sphericalObjectPoint, const float objectPointDistance);
 template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateSphericalObjectPointOrientationJacobian2x3IF(double* jx, double* jy, const AnyCameraT<double>& camera, const SquareMatrixT3<double>& flippedCamera_R_world, const ExponentialMapT<double>& sphericalObjectPoint, const double objectPointDistance);
 
+template <typename T>
+void Jacobian::calculateOrientationJacobianRodrigues2nx3IF(T* jacobian, const AnyCameraT<T>& camera, const ExponentialMapT<T>& flippedCamera_R_world, const ConstIndexedAccessor<VectorT3<T>>& objectPoints)
+{
+	SquareMatrixT3<T> Rwx, Rwy, Rwz;
+	calculateRotationRodriguesDerivative(flippedCamera_R_world, Rwx, Rwy, Rwz);
+
+	/**
+		* fFocal(fDist(fDeh(fTrans(fFlippedPose))))
+		*
+		* This functions uses three concatenated jacobian matrix for each object point to receive one final jacobian matrix with size 2x3 for each object point.
+		* The final jacobian is defined by: j = jFocal_Dist * jDeh * jTrans;
+		*
+		* j (2x6) the final jacobian:
+		* | dfx / dwx, dfx / dwy, dfx / dwz |
+		* | dfy / dwx, dfy / dwy, dfy / dwz |
+		*
+		* jFocal_Dist (2x2) the jacobian for the focal projection and distortion correction:
+		* | Fx * fdistx / du, Fx * fdistx / dv |   | ...  ... |
+		* | Fy * fdisty / du, Fy * fdisty / dv | = | ...  ... |
+		*
+		* jDeh (2x3) the jacobian for the de-homogenization:                                        | U |
+		* | du / dU, du / dV, du / dW |   | 1 / W       0         -U / W^2 |   | u |   | U / W |   | V |
+		* | dv / dU, dv / dV, dv / dW | = |   0       1 / W       -V / W^2 |,  | v | = | V / W | = | W |
+		*
+		* jTrans (3x3) the jacobian for the transformation:
+		* | dfx / dwx, dfx / dwy, dfx / dwz |
+		* | dfy / dwx, dfy / dwy, dfy / dwz |
+		* | dfz / dwx, dfz / dwy, dfz / dwz |
+		*
+		* Final Jacobian:
+		* | Fx / W * fdistx / du, Fx / W * fdistx / dv, -Fx / W^2 * (U * fdistx / du + V * fdistx / dv) |
+		* | Fy / W * fdisty / du, Fy / W * fdisty / dv, -Fy / W^2 * (U * fdisty / du + V * fdisty / dv) | * | dR(w) / dw |
+		*/
+
+	const HomogenousMatrixT4<T> flippedCamera_T_world(flippedCamera_R_world.quaternion());
+
+	std::array<T, 3> jacobianCameraX;
+	std::array<T, 3> jacobianCameraY;
+
+	for (size_t n = 0; n < objectPoints.size(); ++n)
+	{
+		const VectorT3<T>& worldObjectPoint = objectPoints[n];
+
+		ocean_assert(AnyCameraT<T>::isObjectPointInFrontIF(flippedCamera_T_world, worldObjectPoint));
+
+		const VectorT3<T> flippedCameraObjectPoint(flippedCamera_T_world * worldObjectPoint);
+
+		camera.pointJacobian2x3IF(flippedCameraObjectPoint, jacobianCameraX.data(), jacobianCameraY.data());
+
+		const VectorT3<T> dwx(Rwx * worldObjectPoint);
+		const VectorT3<T> dwy(Rwy * worldObjectPoint);
+		const VectorT3<T> dwz(Rwz * worldObjectPoint);
+
+		T* const jx = jacobian + 0;
+		T* const jy = jacobian + 3;
+
+		// now, we apply the chain rule to determine the left 2x3 sub-matrix
+		jx[0] = jacobianCameraX[0] * dwx[0] + jacobianCameraX[1] * dwx[1] + jacobianCameraX[2] * dwx[2];
+		jx[1] = jacobianCameraX[0] * dwy[0] + jacobianCameraX[1] * dwy[1] + jacobianCameraX[2] * dwy[2];
+		jx[2] = jacobianCameraX[0] * dwz[0] + jacobianCameraX[1] * dwz[1] + jacobianCameraX[2] * dwz[2];
+
+		jy[0] = jacobianCameraY[0] * dwx[0] + jacobianCameraY[1] * dwx[1] + jacobianCameraY[2] * dwx[2];
+		jy[1] = jacobianCameraY[0] * dwy[0] + jacobianCameraY[1] * dwy[1] + jacobianCameraY[2] * dwy[2];
+		jy[2] = jacobianCameraY[0] * dwz[0] + jacobianCameraY[1] * dwz[1] + jacobianCameraY[2] * dwz[2];
+
+		jacobian += 6;
+	}
+}
+
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateOrientationJacobianRodrigues2nx3IF(float* jacobian, const AnyCameraT<float>& camera, const ExponentialMapT<float>& flippedCamera_P_world, const ConstIndexedAccessor<VectorT3<float>>& objectPoints);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateOrientationJacobianRodrigues2nx3IF(double* jacobian, const AnyCameraT<double>& camera, const ExponentialMapT<double>& flippedCamera_P_world, const ConstIndexedAccessor<VectorT3<double>>& objectPoints);
+
 void Jacobian::calculateOrientationJacobianRodrigues2nx3(Scalar* jacobian, const PinholeCamera& pinholeCamera, const Pose& flippedCamera_P_world, const ConstIndexedAccessor<Vector3>& objectPoints, const bool distortImagePoints)
 {
 	SquareMatrix3 Rwx, Rwy, Rwz;

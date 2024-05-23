@@ -49,6 +49,15 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		static bool testOrientationalJacobian2x3(const double testDuration);
 
 		/**
+		 * Tests the Jacobian for the orientation of a camera.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T the data type of the scalar to be used, either 'float' or 'double'
+		 */
+		template <typename T>
+		static bool testOrientationJacobian2nx3(const double testDuration);
+
+		/**
 		 * Deprecated.
 		 *
 		 * Tests the Jacobian for the extrinsic camera parameters and a pinhole camera.
