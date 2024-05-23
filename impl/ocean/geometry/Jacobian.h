@@ -79,31 +79,6 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		static void calculateSphericalObjectPointJacobian3x3(T* jx, T* jy, T* jz, const ExponentialMapT<T>& sphericalObjectPoint, const T objectPointDistance);
 
 		/**
-		 * Deprecated.
-		 *
-		 * Calculates the two jacobian rows for a given exponential rotation map representing the location of a 3D object point projecting into the camera frame with orientational camera pose.
-		 * The rotation map defines the rotation of the vector [0, 0, -objectPointDistance].<br>
-		 * The corresponding function f is given as follows:<br>
-		 * f(w, r) = fproj(fori(fobj(wx, wy, wz, r))) = [x, y]<br>
-		 * Where fobj translates the location of the 3D object point defined in spherical coordinates into a 3D object point defined in the Cartesian coordinate system.
-		 * fproj defines the function which projects (and optional distorts) a 3D object point into the camera,<br>
-		 * and fori defines the function which applies the orientation (rotational pose) of the camera.<br>
-		 * The resulting 2x3 jacobian has the following form:
-		 * <pre>
-		 * | dfx / dwx, dfx / dwy, dfx / dwz |
-		 * | dfy / dwx, dfy / dwy, dfy / dwz |
-		 * </pre>
-		 * @param jx First row of the resulting jacobian, with 3 column entries
-		 * @param jy Second row of the resulting jacobian, with 3 column entries
-		 * @param pinholeCamera The pinhole camera profile defining the projection
-		 * @param invertedFlippedOrientation The inverted and flipped orientation of the camera
-		 * @param sphericalObjectPoint The rotation defining the 3D object point for which the derivatives will be determined
-		 * @param objectPointDistance The distance of the 3D object point, which is the distance to the origin, with range (0, infinity)
-		 * @param distortImagePoint True, to distort the image point
-		 */
-		static void calculateSphericalObjectPointOrientationJacobian2x3(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const SquareMatrix3& invertedFlippedOrientation, const ExponentialMap& sphericalObjectPoint, const Scalar objectPointDistance, const bool distortImagePoint);
-
-		/**
 		 * Calculates the two jacobian rows for a given exponential rotation map representing the location of a 3D object point projecting into the camera frame with orientational camera pose.
 		 * The rotation map defines the rotation of the vector [0, 0, -objectPointDistance].<br>
 		 * The corresponding function f is given as follows:<br>
