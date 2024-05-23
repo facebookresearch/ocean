@@ -3267,7 +3267,7 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 			{
 				Vector3 startObjectPoint;
 				Indices32 usedIndices;
-				if (Geometry::RANSAC::objectPoint(camera.actualCamera(), ConstArrayAccessor<SquareMatrix3>(world_R_cameras), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, startObjectPoint, Scalar(1), camera.actualCamera().hasDistortionParameters(), 50u, Scalar(5 * 5), 3u, true, Geometry::Estimator::ET_INVALID, nullptr, &usedIndices))
+				if (Geometry::RANSAC::objectPoint(camera, ConstArrayAccessor<SquareMatrix3>(world_R_cameras), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, startObjectPoint, Scalar(1), 50u, Scalar(5 * 5), 3u, true, Geometry::Estimator::ET_INVALID, nullptr, &usedIndices))
 				{
 					Vector3 optimizedObjectPoint;
 					Scalar initialError, finalError;

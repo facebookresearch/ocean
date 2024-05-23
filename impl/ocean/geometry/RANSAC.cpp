@@ -584,19 +584,9 @@ bool RANSAC::objectPoint(const FisheyeCamera& fisheyeCamera, const ConstIndexedA
 	return true;
 }
 
-/**
- * Visual Studio 2013 (with Update 4) ends with an internal linker error if optimization for the following function is activated.
- * The deactivation of the optimization is a workaround and should be removed in the future.
- */
-#if defined(OCEAN_COMPILER_MSC) && OCEAN_MSC_VERSION == 1800
-	#ifndef _DEBUG
-		#pragma optimize("g", off)
-	#endif
-#endif
-
-bool RANSAC::objectPoint(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& world_R_cameras, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, ObjectPoint& objectPoint, const Scalar objectPointDistance, const bool distortImagePoints, const unsigned int iterations, const Scalar maximalError, const unsigned int minValidCorrespondences, const bool onlyFrontObjectPoint, const Estimator::EstimatorType refinementEstimator, Scalar* finalError, Indices32* usedIndices)
+bool RANSAC::objectPoint(const AnyCamera& camera, const ConstIndexedAccessor<SquareMatrix3>& world_R_cameras, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, ObjectPoint& objectPoint, const Scalar objectPointDistance, const unsigned int iterations, const Scalar maximalError, const unsigned int minValidCorrespondences, const bool onlyFrontObjectPoint, const Estimator::EstimatorType refinementEstimator, Scalar* finalError, Indices32* usedIndices)
 {
-	ocean_assert(pinholeCamera.isValid());
+	ocean_assert(camera.isValid());
 	ocean_assert(world_R_cameras.size() == imagePoints.size() && world_R_cameras.size() >= 2 && maximalError > 0);
 	ocean_assert(objectPointDistance > Numeric::eps());
 	ocean_assert(iterations >= 1u);
@@ -626,16 +616,16 @@ bool RANSAC::objectPoint(const PinholeCamera& pinholeCamera, const ConstIndexedA
 	{
 		const unsigned int index = RandomI::random(randomGenerator, (unsigned int)(flippedCameras_R_world.size()) - 1u);
 
-		const ObjectPoint candidate(pinholeCamera.ray(distortImagePoints ? pinholeCamera.undistort<true>(imagePoints[index]) : imagePoints[index], HomogenousMatrix4(world_R_cameras[index])).direction() * objectPointDistance);
+		const ObjectPoint candidateObjectPoint(camera.ray(imagePoints[index], HomogenousMatrix4(world_R_cameras[index])).direction() * objectPointDistance);
 
 		Scalar error = 0;
 		indices.clear();
 
 		for (size_t n = 0; n < flippedCameras_R_world.size(); ++n)
 		{
-			if (!onlyFrontObjectPoint || (flippedCameras_R_world[n] * candidate).z() > Numeric::eps())
+			if (!onlyFrontObjectPoint || AnyCamera::isObjectPointInFrontIF(flippedCameras_R_world[n], candidateObjectPoint))
 			{
-				const Scalar localError = imagePoints[n].sqrDistance(pinholeCamera.projectToImageIF<true>(HomogenousMatrix4(flippedCameras_R_world[n]), candidate, distortImagePoints));
+				const Scalar localError = imagePoints[n].sqrDistance(camera.projectToImageIF(HomogenousMatrix4(flippedCameras_R_world[n]), candidateObjectPoint));
 
 				if (localError <= maximalError)
 				{
@@ -647,7 +637,7 @@ bool RANSAC::objectPoint(const PinholeCamera& pinholeCamera, const ConstIndexedA
 
 		if (indices.size() > bestNumber || (indices.size() == bestNumber && error < bestError))
 		{
-			objectPoint = candidate;
+			objectPoint = candidateObjectPoint;
 			bestNumber = indices.size();
 			bestError = error;
 			bestIndices = std::move(indices);
@@ -668,18 +658,16 @@ bool RANSAC::objectPoint(const PinholeCamera& pinholeCamera, const ConstIndexedA
 	{
 		ObjectPoint optimizedObjectPoint;
 
-		const AnyCameraPinhole anyCameraPinhole(PinholeCamera(pinholeCamera, distortImagePoints));
-
 		if (bestIndices.size() == flippedCameras_R_world.size())
 		{
-			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(anyCameraPinhole, ConstArrayAccessor<SquareMatrix3>(flippedCameras_R_world), imagePoints, objectPoint, objectPointDistance, optimizedObjectPoint, 10u, refinementEstimator, Scalar(0.001), Scalar(5), onlyFrontObjectPoint, nullptr, finalError))
+			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(camera, ConstArrayAccessor<SquareMatrix3>(flippedCameras_R_world), imagePoints, objectPoint, objectPointDistance, optimizedObjectPoint, 10u, refinementEstimator, Scalar(0.001), Scalar(5), onlyFrontObjectPoint, nullptr, finalError))
 			{
 				objectPoint = optimizedObjectPoint;
 			}
 		}
 		else
 		{
-			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(anyCameraPinhole, ConstArraySubsetAccessor<SquareMatrix3, unsigned int>(flippedCameras_R_world, bestIndices), ConstIndexedAccessorSubsetAccessor<ImagePoint, unsigned int>(imagePoints, bestIndices), objectPoint, objectPointDistance, optimizedObjectPoint, 10u, refinementEstimator, Scalar(0.001), Scalar(5), onlyFrontObjectPoint, nullptr, finalError))
+			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(camera, ConstArraySubsetAccessor<SquareMatrix3, unsigned int>(flippedCameras_R_world, bestIndices), ConstIndexedAccessorSubsetAccessor<ImagePoint, unsigned int>(imagePoints, bestIndices), objectPoint, objectPointDistance, optimizedObjectPoint, 10u, refinementEstimator, Scalar(0.001), Scalar(5), onlyFrontObjectPoint, nullptr, finalError))
 			{
 				objectPoint = optimizedObjectPoint;
 			}
@@ -693,12 +681,6 @@ bool RANSAC::objectPoint(const PinholeCamera& pinholeCamera, const ConstIndexedA
 
 	return true;
 }
-
-#if defined(OCEAN_COMPILER_MSC) && OCEAN_MSC_VERSION == 1800
-	#ifndef _DEBUG
-		#pragma optimize("g", on)
-	#endif
-#endif
 
 bool RANSAC::plane(const ConstIndexedAccessor<ObjectPoint>& objectPoints, RandomGenerator& randomGenerator, Plane3& plane, const unsigned int iterations, const Scalar medianDistanceFactor, const unsigned int minValidCorrespondences, const Estimator::EstimatorType refinementEstimator, Scalar* finalError, Indices32* usedIndices)
 {

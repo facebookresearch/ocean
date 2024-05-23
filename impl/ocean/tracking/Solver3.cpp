@@ -2225,10 +2225,12 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 	localNewObjectPoints.reserve(numberObjectPoints);
 	localNewObjectPointIds.reserve(numberObjectPoints);
 
-	if (newObjectPointObservations)
+	if (newObjectPointObservations != nullptr)
 	{
 		localNewObjectPointObservations.reserve(numberObjectPoints);
 	}
+
+	const AnyCameraPinhole camera(PinholeCamera(*pinholeCamera, pinholeCamera->hasDistortionParameters()));
 
 	for (unsigned int n = firstObjectPoint; (!abort || !*abort) && n < firstObjectPoint + numberObjectPoints; ++n)
 	{
@@ -2257,9 +2259,7 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 			{
 				if (Geometry::RANSAC::objectPoint(*pinholeCamera, ConstArrayAccessor<HomogenousMatrix4>(poses), ConstArrayAccessor<Vector2>(imagePoints), localGenerator, objectPoint, pinholeCamera->hasDistortionParameters(), 20u, ransacMaximalSqrError, min(5u, minimalObservations), true, Geometry::Estimator::ET_INVALID))
 				{
-					const AnyCameraPinhole anyCamera(PinholeCamera(*pinholeCamera, pinholeCamera->hasDistortionParameters()));
-
-					if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedPoses(anyCamera, ConstArrayAccessor<HomogenousMatrix4>(poses), objectPoint, ConstArrayAccessor<Vector2>(imagePoints), optimizedObjectPoint, 10u, estimator, Scalar(0.001), Scalar(5), true, nullptr, &finalError))
+					if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedPoses(camera, ConstArrayAccessor<HomogenousMatrix4>(poses), objectPoint, ConstArrayAccessor<Vector2>(imagePoints), optimizedObjectPoint, 10u, estimator, Scalar(0.001), Scalar(5), true, nullptr, &finalError))
 					{
 						if (finalError < averageRobustError)
 						{
@@ -2275,7 +2275,7 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 								localNewObjectPoints.push_back(optimizedObjectPoint);
 								localNewObjectPointIds.push_back(objectPointIds[n]);
 
-								if (newObjectPointObservations)
+								if (newObjectPointObservations != nullptr)
 								{
 									localNewObjectPointObservations.emplace_back((unsigned int)(imagePoints.size()));
 								}
@@ -2297,8 +2297,6 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 					orientationsIF.push_back(PinholeCamera::standard2InvertedFlipped(poses[i].rotationMatrix()));
 				}
 
-				const AnyCameraPinhole camera(PinholeCamera(*pinholeCamera, pinholeCamera->hasDistortionParameters()));
-
 				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(camera, ConstArrayAccessor<SquareMatrix3>(orientationsIF), ConstArrayAccessor<Vector2>(imagePoints), objectPoint, Scalar(1), optimizedObjectPoint, 10u, estimator, Scalar(0.001), Scalar(5), true, nullptr, &finalError)
 						&& finalError < averageRobustError)
 				{
@@ -2307,7 +2305,7 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 					localNewObjectPoints.push_back(optimizedObjectPoint);
 					localNewObjectPointIds.push_back(objectPointIds[n]);
 
-					if (newObjectPointObservations)
+					if (newObjectPointObservations != nullptr)
 					{
 						localNewObjectPointObservations.push_back((unsigned int)imagePoints.size());
 					}
@@ -2339,7 +2337,7 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 						localNewObjectPoints.push_back(objectPoint);
 						localNewObjectPointIds.push_back(objectPointIds[n]);
 
-						if (newObjectPointObservations)
+						if (newObjectPointObservations != nullptr)
 						{
 							localNewObjectPointObservations.push_back((unsigned int)imagePoints.size());
 						}
@@ -2356,7 +2354,7 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 					orientations.push_back(poses[i].rotationMatrix());
 				}
 
-				if (Geometry::RANSAC::objectPoint(*pinholeCamera, ConstArrayAccessor<SquareMatrix3>(orientations), ConstArrayAccessor<Vector2>(imagePoints), localGenerator, objectPoint, Scalar(1), pinholeCamera->hasDistortionParameters(), 20u, ransacMaximalSqrError, minimalObservations, true, estimator, &finalError)
+				if (Geometry::RANSAC::objectPoint(camera, ConstArrayAccessor<SquareMatrix3>(orientations), ConstArrayAccessor<Vector2>(imagePoints), localGenerator, objectPoint, Scalar(1), 20u, ransacMaximalSqrError, minimalObservations, true, estimator, &finalError)
 						&& finalError < averageRobustError)
 				{
 					ocean_assert(maximalSqrError == Numeric::maxValue());
@@ -2364,7 +2362,7 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 					localNewObjectPoints.push_back(objectPoint);
 					localNewObjectPointIds.push_back(objectPointIds[n]);
 
-					if (newObjectPointObservations)
+					if (newObjectPointObservations != nullptr)
 					{
 						localNewObjectPointObservations.push_back((unsigned int)imagePoints.size());
 					}
@@ -2373,14 +2371,14 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 		}
 	}
 
-	if (lock)
+	if (lock != nullptr)
 	{
 		const ScopedLock scopedLock(*lock);
 
 		newObjectPoints->insert(newObjectPoints->end(), localNewObjectPoints.begin(), localNewObjectPoints.end());
 		newObjectPointIds->insert(newObjectPointIds->end(), localNewObjectPointIds.begin(), localNewObjectPointIds.end());
 
-		if (newObjectPointObservations)
+		if (newObjectPointObservations != nullptr)
 		{
 			newObjectPointObservations->insert(newObjectPointObservations->end(), localNewObjectPointObservations.begin(), localNewObjectPointObservations.end());
 		}
@@ -2390,7 +2388,7 @@ void Solver3::determineUnknownObjectPointsSubset(const Database* database, const
 		*newObjectPoints = std::move(localNewObjectPoints);
 		*newObjectPointIds = std::move(localNewObjectPointIds);
 
-		if (newObjectPointObservations)
+		if (newObjectPointObservations != nullptr)
 		{
 			*newObjectPointObservations = std::move(localNewObjectPointObservations);
 		}
