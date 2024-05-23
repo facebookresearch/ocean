@@ -44,6 +44,10 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_test
     )
 
+    if (ANDROID)
+        target_link_libraries(${OCEAN_TARGET_NAME} PRIVATE ocean_platform_android)
+    endif()
+
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
             DESTINATION "${CMAKE_INSTALL_LIBDIR}"
