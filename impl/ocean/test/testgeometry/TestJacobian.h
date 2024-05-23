@@ -46,7 +46,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		 * @tparam T the data type of the scalar to be used, either 'float' or 'double'
 		 */
 		template <typename T>
-		static bool testAnyCameraOrientationJacobian2x3(const double testDuration);
+		static bool testOrientationalJacobian2x3(const double testDuration);
 
 		/**
 		 * Deprecated.

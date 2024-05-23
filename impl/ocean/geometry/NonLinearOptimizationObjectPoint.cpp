@@ -3749,7 +3749,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOrientationalPosesProvider :
 
 					const AnyCamera& camera = *cameras_[poseId];
 
-					Jacobian::calculateOrientationJacobianRodrigues2x3IF(camera, candidateFlippedCamera_T_translation, translation_T_world, objectPoint, rotationRodriguesDerivatives[poseId * 3 + 0], rotationRodriguesDerivatives[poseId * 3 + 1], rotationRodriguesDerivatives[poseId * 3 + 2], orientationJacobianX, orientationJacobianY);
+					Jacobian::calculateOrientationalJacobianRodrigues2x3IF(camera, candidateFlippedCamera_T_translation, translation_T_world, objectPoint, rotationRodriguesDerivatives[poseId * 3 + 0], rotationRodriguesDerivatives[poseId * 3 + 1], rotationRodriguesDerivatives[poseId * 3 + 2], orientationJacobianX, orientationJacobianY);
 					Jacobian::calculatePointJacobian2x3IF(camera, candidateFlippedCamera_T_world, objectPoint, pointJacobianX, pointJacobianY);
 
 					StaticMatrix3x3& subMatrixA = matrixA_[poseId];
@@ -3922,7 +3922,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOrientationalPosesProvider :
 						const HomogenousMatrix4& candidateFlippedCamera_T_world = candidateFlippedCameras_T_world_[poseId];
 						const AnyCamera& camera = *cameras_[poseId];
 
-						Jacobian::calculateOrientationJacobianRodrigues2x3IF(camera, candidateFlippedCamera_T_world.rotationMatrix(), translations_T_world_[poseId], objectPoint, rotationRodriguesDerivatives[poseId * 3 + 0], rotationRodriguesDerivatives[poseId * 3 + 1], rotationRodriguesDerivatives[poseId * 3 + 2], poseJacobianBuffer, poseJacobianBuffer + 3);
+						Jacobian::calculateOrientationalJacobianRodrigues2x3IF(camera, candidateFlippedCamera_T_world.rotationMatrix(), translations_T_world_[poseId], objectPoint, rotationRodriguesDerivatives[poseId * 3 + 0], rotationRodriguesDerivatives[poseId * 3 + 1], rotationRodriguesDerivatives[poseId * 3 + 2], poseJacobianBuffer, poseJacobianBuffer + 3);
 
 						for (size_t e = 0; e < 3; ++e)
 						{

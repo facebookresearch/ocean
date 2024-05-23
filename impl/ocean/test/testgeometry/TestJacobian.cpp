@@ -37,9 +37,9 @@ bool TestJacobian::test(const double testDuration)
 
 	Log::info() << " ";
 
-	allSucceeded = testAnyCameraOrientationJacobian2x3<float>(testDuration) && allSucceeded;
+	allSucceeded = testOrientationalJacobian2x3<float>(testDuration) && allSucceeded;
 	Log::info() << " ";
-	allSucceeded = testAnyCameraOrientationJacobian2x3<double>(testDuration) && allSucceeded;
+	allSucceeded = testOrientationalJacobian2x3<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -219,14 +219,14 @@ bool TestJacobian::test(const double testDuration)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestJacobian, AnyCameraOrientationJacobian2x3_float)
+TEST(TestJacobian, OrientationalJacobian2x3_float)
 {
-	EXPECT_TRUE((TestJacobian::testAnyCameraOrientationJacobian2x3<float>(GTEST_TEST_DURATION)));
+	EXPECT_TRUE((TestJacobian::testOrientationalJacobian2x3<float>(GTEST_TEST_DURATION)));
 }
 
-TEST(TestJacobian, AnyCameraOrientationJacobian2x3_double)
+TEST(TestJacobian, OrientationalJacobian2x3_double)
 {
-	EXPECT_TRUE((TestJacobian::testAnyCameraOrientationJacobian2x3<double>(GTEST_TEST_DURATION)));
+	EXPECT_TRUE((TestJacobian::testOrientationalJacobian2x3<double>(GTEST_TEST_DURATION)));
 }
 
 TEST(TestJacobian, PinholeCameraPoseJacobian2nx6)
@@ -374,13 +374,13 @@ TEST(TestJacobian, CalculateFisheyeDistortNormalized2x2_double)
 #endif // OCEAN_USE_GTEST
 
 template <typename T>
-bool TestJacobian::testAnyCameraOrientationJacobian2x3(const double testDuration)
+bool TestJacobian::testOrientationalJacobian2x3(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
 	constexpr unsigned int numberPoints = 50u;
 
-	Log::info() << "Testing any camera orientation Jacobian rodrigues 2x3 for " << numberPoints << " points with " << sizeof(T) * 8 << "-bit precision:";
+	Log::info() << "Testing orientational Jacobian rodrigues 2x3 for " << numberPoints << " points with " << sizeof(T) * 8 << "-bit precision:";
 
 	const std::vector<double> epsilons = {NumericD::weakEps(), NumericD::weakEps() / 10.0, NumericD::weakEps() * 10.0, NumericD::weakEps() / 100.0, NumericD::weakEps() * 100.0};
 
@@ -517,7 +517,7 @@ bool TestJacobian::testAnyCameraOrientationJacobian2x3(const double testDuration
 					T* jacobianX = jacobian[2 * n + 0];
 					T* jacobianY = jacobian[2 * n + 1];
 
-					Geometry::Jacobian::calculateOrientationJacobianRodrigues2x3IF(camera, flippedCamera_R_translation, translation_T_world, objectPoint, dwx, dwy, dwz, jacobianX, jacobianY);
+					Geometry::Jacobian::calculateOrientationalJacobianRodrigues2x3IF(camera, flippedCamera_R_translation, translation_T_world, objectPoint, dwx, dwy, dwz, jacobianX, jacobianY);
 				}
 			performanceOptimized.stop();
 

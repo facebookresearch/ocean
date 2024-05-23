@@ -138,9 +138,31 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * @tparam TRotation The data type of the provided rotation, either 'QuaternionT<T>' or 'SquareMatrixT3<T>'
 		 */
 		template <typename T, typename TRotation>
-		static OCEAN_FORCE_INLINE void calculateOrientationJacobianRodrigues2x3IF(const AnyCameraT<T>& anyCamera, const TRotation& flippedCamera_R_translation, const VectorT3<T>& translation_T_world, const VectorT3<T>& worldObjectPoint, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz, T* jx, T* jy);
+		static OCEAN_FORCE_INLINE void calculateOrientationalJacobianRodrigues2x3IF(const AnyCameraT<T>& anyCamera, const TRotation& flippedCamera_R_translation, const VectorT3<T>& translation_T_world, const VectorT3<T>& worldObjectPoint, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz, T* jx, T* jy);
 
 		/**
+		 * Calculates all 3-DOF orientational jacobian rows for a given (flexible) camera pose and a set of static 3D object points.
+		 * The 3 derivatives are calculated for the orientation part of the 6-DOF pose.<br>
+		 * The resulting jacobian rows have the following form:
+		 * <pre>
+		 * | dfx / dwx, dfx / dwy, dfx / dwz |
+		 * | dfy / dwx, dfy / dwy, dfy / dwz |
+		 * </pre>
+		 * With transformation function f = (fx, fy), exponential map w = (wx, wy, wz).<br>
+		 * The jacobian calculation uses the Rodrigues rotation formula to determine the rotation derivatives.<br>
+		 * @param jacobian First element in the first row of the entire row aligned jacobian matrix, with 2 * objectPoints.size() rows and 6 columns
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param flippedCamera_P_world Inverted and flipped pose (rotation and translation) to determine the jacobian for, while the rotational part is use only
+		 * @param objectPoints The accessor providing the 3D object points to determine the jacobian for
+		 * @tparam T The scalar data type, either 'float' or 'double'
+		 * @see calculateOrientationJacobianRodrigues2x3().
+		 */
+		template <typename T>
+		static void calculateOrientationJacobianRodrigues2nx3IF(T* jacobian, const AnyCameraT<T>& camera, const PoseT<T>& flippedCamera_P_world, const ConstIndexedAccessor<VectorT3<T>>& objectPoints);
+
+		/**
+		 * Deprecated.
+		 *
 		 * Calculates all 3-DOF orientational jacobian rows for a given (flexible) pose and a set of static 3D object points.
 		 * The 3 derivatives are calculated for the orientation part of the 6DOF pose.<br>
 		 * The resulting jacobian rows have the following form:
@@ -883,7 +905,7 @@ inline void Geometry::Jacobian::calculateSimilarityJacobian2x4(Scalar* jx, Scala
 }
 
 template <typename T, typename TRotation>
-OCEAN_FORCE_INLINE void Jacobian::calculateOrientationJacobianRodrigues2x3IF(const AnyCameraT<T>& anyCamera, const TRotation& flippedCamera_R_translation, const VectorT3<T>& translation_T_world, const VectorT3<T>& worldObjectPoint, const SquareMatrixT3<T>& Rwx, const SquareMatrixT3<T>& Rwy, const SquareMatrixT3<T>& Rwz, T* jx, T* jy)
+OCEAN_FORCE_INLINE void Jacobian::calculateOrientationalJacobianRodrigues2x3IF(const AnyCameraT<T>& anyCamera, const TRotation& flippedCamera_R_translation, const VectorT3<T>& translation_T_world, const VectorT3<T>& worldObjectPoint, const SquareMatrixT3<T>& Rwx, const SquareMatrixT3<T>& Rwy, const SquareMatrixT3<T>& Rwz, T* jx, T* jy)
 {
 	static_assert(std::is_same<TRotation, QuaternionT<T>>::value || std::is_same<TRotation, SquareMatrixT3<T>>::value, "Invalid rotation type!");
 
