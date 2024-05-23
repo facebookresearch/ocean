@@ -77,15 +77,6 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestRANSAC
 		static bool testP3P(const AnyCameraType anyCameraType, const size_t correspondences, const double faultyRate, const double testDuration);
 
 		/**
-		 * Deprecated.
-		 *
-		 * Tests the RANSAC implementation of the perspective pose problem for three random points and a pinhole camera.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		static bool testP3PPinholeCamera(const double testDuration);
-
-		/**
 		 * Tests the RANSAC implementation of the perspective pose problem for three random points including unknown zoom factor.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded

@@ -1643,7 +1643,7 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 
 		for (unsigned int n = 0u; n < indexVectorSet.size(); ++n)
 		{
-			functions.emplace_back(Worker::Function::createStatic(&RANSAC::determineCameraCalibrationPlanarIteration, width, height, (const ConstIndexedAccessor<Vectors3>*)&objectPointGroupsAccessor, (const ConstIndexedAccessor<Vectors2>*)&imagePointGroupsAccessor, &indexVectorSet[n], &cameras[n], &sqrAccuracies[n]));
+			functions.emplace_back(Worker::Function::createStatic(&RANSAC::determineCameraCalibrationPlanarIteration, width, height, (const ConstIndexedAccessor<Vectors3>*)(&objectPointGroupsAccessor), (const ConstIndexedAccessor<Vectors2>*)(&imagePointGroupsAccessor), &indexVectorSet[n], &cameras[n], &sqrAccuracies[n]));
 		}
 
 		worker->executeFunctions(functions);
@@ -1691,7 +1691,7 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 		ImagePoints& imagePoints = imagePointGroups[n];
 
 		HomogenousMatrix4 roughPose;
-		const bool result = RANSAC::p3p(finalCamera, ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), randomGenerator, finalCamera.hasDistortionParameters(), roughPose);
+		const bool result = RANSAC::p3p(AnyCameraPinhole(finalCamera), ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), randomGenerator, roughPose);
 
 		ocean_assert(result);
 		if (!result)
@@ -2090,195 +2090,6 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 	return true;
 }
 
-bool RANSAC::p3p(const HomogenousMatrix4* initialPose, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy)
-{
-	ocean_assert(pinholeCamera.isValid());
-	ocean_assert(minValidCorrespondences >= 4u);
-	ocean_assert(objectPointAccessor.size() >= 4);
-	ocean_assert(objectPointAccessor.size() == imagePointAccessor.size());
-	ocean_assert(objectPointAccessor.size() >= minValidCorrespondences);
-
-	if (objectPointAccessor.size() < 4 || objectPointAccessor.size() != imagePointAccessor.size() || objectPointAccessor.size() < minValidCorrespondences)
-	{
-		return false;
-	}
-
-	const ScopedConstMemoryAccessor<Vector3> objectPoints(objectPointAccessor);
-	const ScopedConstMemoryAccessor<Vector2> imagePoints(imagePointAccessor);
-
-	const unsigned int correspondences = (unsigned int)(objectPoints.size());
-
-	Indices32 indices, bestIndices;
-	indices.reserve(correspondences);
-	bestIndices.reserve(correspondences);
-
-	ObjectPoint permutationObjectPoints[3];
-	ImagePoint permutationImagePoints[3];
-	HomogenousMatrix4 poses[4];
-	HomogenousMatrix4 internalPose;
-
-	Scalar bestSqrErrors = Numeric::maxValue();
-
-	// due to numerical stability, we ensure that we always apply at least 4 iterations
-	const unsigned int minimalAdaptiveIterations = std::min(4u, iterations);
-
-	unsigned int adpativeIterations = iterations;
-
-	for (unsigned int i = 0u; i < adpativeIterations; ++i)
-	{
-		unsigned int numberPoses = 0u;
-
-		if (i == 0u && initialPose)
-		{
-			// On the first iteration, we simply try the given initial pose
-			poses[0] = *initialPose;
-			numberPoses = 1u;
-		}
-		else
-		{
-			// On subsequent iterations, or if initialPose is null, we calculate candidate poses from 3 correspondences
-			unsigned int index0, index1, index2;
-			Random::random(randomGenerator, correspondences - 1u, index0, index1, index2);
-
-			ocean_assert(index0 < correspondences);
-			ocean_assert(index1 < correspondences);
-			ocean_assert(index2 < correspondences);
-
-			ocean_assert(index0 != index1 && index1 != index2 && index0 != index2);
-
-			permutationObjectPoints[0] = objectPoints[index0];
-			permutationObjectPoints[1] = objectPoints[index1];
-			permutationObjectPoints[2] = objectPoints[index2];
-
-			if (permutationObjectPoints[0] == permutationObjectPoints[1] || permutationObjectPoints[0] == permutationObjectPoints[2] || permutationObjectPoints[1] == permutationObjectPoints[2])
-			{
-				continue;
-			}
-
-			permutationImagePoints[0] = useDistortionParameters ? pinholeCamera.undistort<true>(imagePoints[index0]) : imagePoints[index0];
-			permutationImagePoints[1] = useDistortionParameters ? pinholeCamera.undistort<true>(imagePoints[index1]) : imagePoints[index1];
-			permutationImagePoints[2] = useDistortionParameters ? pinholeCamera.undistort<true>(imagePoints[index2]) : imagePoints[index2];
-
-			numberPoses = P3P::poses(pinholeCamera, permutationObjectPoints, permutationImagePoints, poses);
-		}
-
-		ocean_assert(numberPoses <= 4u);
-
-		// test which of the (at most four) poses is valid for most remaining point correspondences
-		for (unsigned int n = 0u; n < numberPoses; ++n)
-		{
-			indices.clear();
-
-			if (initialPose && !Error::posesAlmostEqual(*initialPose, poses[n], *maxPositionOffset, *maxOrientationOffset))
-			{
-				continue;
-			}
-
-			Scalar sqrErrors = 0;
-
-			const HomogenousMatrix4 poseIF(PinholeCamera::standard2InvertedFlipped(poses[n]));
-
-			// now we test each 2D/3D point correspondences and check whether the accuracy of the pose is good enough, we can stop if we cannot reach a better configuration than we have already
-			for (unsigned int c = 0u; indices.size() + (correspondences - c) >= bestIndices.size() && c < correspondences; ++c)
-			{
-				// we accept only object points lying in front of the camera
-				if (PinholeCamera::isObjectPointInFrontIF(poseIF, objectPoints[c]))
-				{
-					const Vector2 projectedImagePoint(pinholeCamera.projectToImageIF<true>(poseIF, objectPoints[c], useDistortionParameters));
-					const ImagePoint& imagePoint = imagePoints[c];
-
-					const Scalar sqrError = imagePoint.sqrDistance(projectedImagePoint);
-
-					if (sqrError <= sqrPixelErrorThreshold)
-					{
-						indices.push_back(c);
-						sqrErrors += sqrError;
-					}
-				}
-			}
-
-			if (indices.size() >= minValidCorrespondences)
-			{
-				if (indices.size() > bestIndices.size() || (indices.size() == bestIndices.size() && sqrErrors < bestSqrErrors))
-				{
-					bestSqrErrors = sqrErrors;
-
-					internalPose = poses[n];
-					std::swap(bestIndices, indices);
-
-					constexpr Scalar successProbability = Scalar(0.99);
-					const Scalar faultyRate = Scalar(1) - Scalar(bestIndices.size()) / Scalar(correspondences);
-
-					const unsigned int expectedIterationsForFoundCorrespondences = RANSAC::iterations(3u, successProbability, faultyRate);
-
-					adpativeIterations = minmax(minimalAdaptiveIterations, expectedIterationsForFoundCorrespondences, adpativeIterations);
-				}
-			}
-		}
-	}
-
-	if (bestIndices.size() < minValidCorrespondences)
-	{
-		return false;
-	}
-
-	pose = internalPose;
-
-	if (sqrAccuracy != nullptr)
-	{
-		*sqrAccuracy = bestSqrErrors / Scalar(bestIndices.size());
-	}
-
-	// non linear least square refinement step
-	if (refine)
-	{
-		const size_t bestIndicesBeforeOptimization = bestIndices.size();
-
-		if (!NonLinearOptimizationPose::optimizePose(pinholeCamera, internalPose, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), useDistortionParameters, pose, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy))
-		{
-			return false;
-		}
-
-		// check whether we need to determine the indices for the optimized pose followed by another final optimization step
-		if (usedIndices && bestIndices.size() != correspondences)
-		{
-			const HomogenousMatrix4 poseIF(PinholeCamera::standard2InvertedFlipped(pose));
-
-			bestIndices.clear();
-			for (unsigned int c = 0u; c < correspondences; ++c)
-			{
-				// we accept only object points lying in front of the camera
-				if (PinholeCamera::isObjectPointInFrontIF(poseIF, objectPoints[c]) && imagePoints[c].sqrDistance(pinholeCamera.projectToImageIF<true>(poseIF, objectPoints[c], useDistortionParameters)) <= sqrPixelErrorThreshold)
-				{
-					bestIndices.push_back(c);
-				}
-			}
-
-			if (bestIndices.size() < minValidCorrespondences)
-			{
-				return false;
-			}
-
-			if (bestIndicesBeforeOptimization != bestIndices.size())
-			{
-				internalPose = pose;
-
-				if (!NonLinearOptimizationPose::optimizePose(pinholeCamera, internalPose, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), useDistortionParameters, pose, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy))
-				{
-					return false;
-				}
-			}
-		}
-	}
-
-	if (usedIndices != nullptr)
-	{
-		*usedIndices = std::move(bestIndices);
-	}
-
-	return true;
-}
-
 bool RANSAC::p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& camera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
 {
 	const ScopedConstMemoryAccessor<Vector3> objectPoints(objectPointAccessor);
@@ -2532,7 +2343,7 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 			}
 
 			// now we first have to determine/approximate the rough zoom factor so that we can measure the pixel errors correctly (if we use zoom=1 the pixel errors may be very large even for a 'good' pose)
-			// we find the rough pose by randomly selecting a fourth point correspondence so that we can appliy a non linear optimization
+			// we find the rough pose by randomly selecting a fourth point correspondence so that we can apply a non linear optimization
 			// for each pose we test up to three zoom determination steps (if the number of matching indices does not exceed 3)
 
 			unsigned int zoomIteration = 0u;

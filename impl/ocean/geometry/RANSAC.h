@@ -63,31 +63,6 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		static unsigned int iterations(const unsigned int model, const Scalar successProbability = Scalar(0.99), const Scalar faultyRate = Scalar(0.2), const unsigned int maximalIterations = 1000000u);
 
 		/**
-		 * Deprecated.
-		 *
-		 * Calculates a pose using the perspective pose problem with three point correspondences and a pinhole camera.
-		 * The specified point correspondences should be sorted by strength or stability to enhance the pose determination.<br>
-		 * This function does not used any apriori information (like e.g. a previous pose).<br>
-		 * Beware: There is another p3p() function with almost identical functionality/parameter layout.<br>
-		 * However, this function here does not support 'weights' parameters and thus creates a smaller binary footprint.<br>
-		 * In case binary size matters, try to use this function only, and do not mix the usage of both options.
-		 * @param pinholeCamera The pinhole camera object specifying the projection, must be valid
-		 * @param objectPointAccessor The accessor providing the 3D object points, at least 4
-		 * @param imagePointAccessor The accessor providing the 2D image points, one image point for each object point
-		 * @param randomGenerator A random generator to be used
-		 * @param useDistortionParameters True, if the provided image points are distorted and if the camera's distortion parameters should be applied during the pose determination
-		 * @param world_T_camera The resulting pose transforming camera points to world points
-		 * @param minimalValidCorrespondences Minimal number of valid correspondences
-		 * @param refine Determines whether a not linear least square algorithm is used to increase the pose accuracy after the RANSAC step
-		 * @param iterations Number of maximal RANSAC iterations, with range [1, infinity)
-		 * @param sqrPixelErrorThreshold Square pixel error threshold for valid RANSAC candidates, with range (0, infinity)
-		 * @param usedIndices Optional vector receiving the indices of all valid correspondences
-		 * @param sqrAccuracy Optional resulting average square pixel error
-		 * @return True, if succeeded
-		 */
-		static inline bool p3p(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& world_T_camera, const unsigned int minimalValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr);
-
-		/**
 		 * Calculates a pose using the perspective pose problem with three point correspondences using any camera.
 		 * The specified point correspondences should be sorted by strength or stability to enhance the pose determination.<br>
 		 * @param anyCamera The camera object specifying the projection, must be valid
@@ -643,33 +618,6 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 	private:
 
 		/**
-		 * Calculates a pose using the perspective pose problem with three point correspondences.
-		 * The calculation can use a pose from a previous calculation to increase the robustness.<br>
-		 * The specified point correspondences should be sorted by strength or stability to enhance the pose determination.<br>
-		 * This function may use apriori information (like e.g. a previous pose).<br>
-		 * Beware: There is another p3p() function with almost identical functionality/parameter layout.<br>
-		 * However, this function here does not support 'weights' parameters and thus creates a smaller binary footprint.<br>
-		 * In case binary size matters, try to use this function only, and do not mix the usage of both options.
-		 * @param initialPose Optional rough initial pose to increase determination robustness
-		 * @param pinholeCamera The pinhole camera object specifying the intrinsic camera parameters
-		 * @param objectPointAccessor The accessor providing the 3D object points, each corresponding to one image point, at least four
-		 * @param imagePointAccessor The accessor providing the 2D image points, each corresponding to one object point, at least four
-		 * @param randomGenerator A random generator object
-		 * @param useDistortionParameters True, to use the distortion parameters of the camera profile; False, otherwise
-		 * @param pose Resulting pose
-		 * @param maxPositionOffset Optional maximal position offset between initial and final pose for three axis
-		 * @param maxOrientationOffset Optional maximal orientation offset between initial and final pose in radian angle
-		 * @param minValidCorrespondences Minimal number of valid correspondences
-		 * @param refine Determines whether a not linear least square algorithm is used to increase the pose accuracy after the RANSAC step
-		 * @param iterations Number of maximal RANSAC iterations, with range [1, infinity)
-		 * @param sqrPixelErrorThreshold Square pixel error threshold for valid RANSAC candidates
-		 * @param usedIndices Optional vector receiving the indices of all valid correspondences
-		 * @param sqrAccuracy Optional resulting average square pixel error
-		 * @return True, if succeeded
-		 */
-		static bool p3p(const HomogenousMatrix4* initialPose, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr);
-
-		/**
 		 * Calculates a camera pose using the perspective pose problem with three point correspondences.
 		 * The calculation can use a rough camera pose (e.g., from a previous camera frame) to increase the robustness.
 		 * @param world_T_roughCamera Optional already known rough camera pose, transforming rough camera points to world points, with default camera pointing towards the negative z-space with y-axis upwards, nullptr if unknown
@@ -1063,11 +1011,6 @@ bool RANSAC::homographyMatrixForNonBijectiveCorrespondences(const ImagePoint* le
 	}
 
 	return true;
-}
-
-inline bool RANSAC::p3p(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& world_T_camera, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy)
-{
-	return p3p(nullptr, pinholeCamera, objectPointAccessor, imagePointAccessor, randomGenerator, useDistortionParameters, world_T_camera, nullptr, nullptr, minimalValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy);
 }
 
 inline bool RANSAC::p3p(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
