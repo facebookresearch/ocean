@@ -273,12 +273,11 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 
 		/**
 		 * Determines the 3DOF rotation of a camera pose for a set of given 2D/3D point correspondences by minimizing the projection error between 3D object points and 2D image points.
-		 * @param pinholeCamera The pinhole camera profile defining the projection
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param objectPoints The accessor providing the given 3D object points, at least 2
 		 * @param imagePoints The accessor providing the given 2D image points, one image point for each 3D object point
 		 * @param randomGenerator Random generator object to be used for creating random numbers
-		 * @param useDistortionParameters True, to apply the camera distortion parameters
-		 * @param orientation The resulting orientation
+		 * @param world_R_camera The resulting camera orientation, transforming camera to world, with default camera pointing towards the negative z-space with y-axis upwards
 		 * @param minValidCorrespondences The minimal number of valid correspondences which are necessary for a valid orientation
 		 * @param iterations The number of RANSAC iterations, with range [1, infinity)
 		 * @param maxSqrError The maximal square pixel error between a projected 3D object point and a 2D image point to count as valid correspondence, with range (0, infinity)
@@ -286,7 +285,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param usedIndices Optional resulting indices of all used point correspondences
 		 * @return True, if succeeded
 		 */
-		static bool orientation(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, const bool useDistortionParameters, SquareMatrix3& orientation, const unsigned int minValidCorrespondences = 5u, const unsigned int iterations = 20u, const Scalar maxSqrError = Scalar(5 * 5), Scalar* finalError = nullptr, Indices32* usedIndices = nullptr);
+		static bool orientation(const AnyCamera& camera, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, SquareMatrix3& world_R_camera, const unsigned int minValidCorrespondences = 5u, const unsigned int iterations = 20u, const Scalar maxSqrError = Scalar(5 * 5), Scalar* finalError = nullptr, Indices32* usedIndices = nullptr);
 
 		/**
 		 * Determines the 3D object point for a set of image points observing the same object point under individual camera poses (with rotational and translational camera motion).

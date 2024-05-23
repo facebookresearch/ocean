@@ -50,7 +50,7 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 
 	SquareMatrix3 world_R_camera1(false);
 	Indices32 usedIndices;
-	if (Geometry::RANSAC::orientation(pinholeCamera, ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints1, randomGenerator, pinholeCamera.hasDistortionParameters(), world_R_camera1, 5u, 100u, Scalar(4) * maxRotationalSqrError, nullptr, &usedIndices) // we take a slightly larger maxSqrError as the RANSAC does not apply any optimization
+	if (Geometry::RANSAC::orientation(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints1, randomGenerator, world_R_camera1, 5u, 100u, Scalar(4) * maxRotationalSqrError, nullptr, &usedIndices) // we take a slightly larger maxSqrError as the RANSAC does not apply any optimization
 			&& Scalar(usedIndices.size()) >= Scalar(initialBadObjectPoints.size()) * rotationalMotionMinimalValidCorrespondencesPercent)
 	{
 		ocean_assert(!world_R_camera1.isSingular());

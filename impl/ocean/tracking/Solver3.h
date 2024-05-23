@@ -2272,7 +2272,9 @@ inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, 
 
 	Indices32 internalValidIndices;
 	if (previousOrientation.isNull() || minimalValidCorrespondenceRatio < 1)
-		Geometry::RANSAC::orientation(camera, objectPoints, imagePoints, randomGenerator, camera.hasDistortionParameters(), previousOrientation, 5u, 50u, maximalSqrError, nullptr, &internalValidIndices);
+	{
+		Geometry::RANSAC::orientation(AnyCameraPinhole(camera), objectPoints, imagePoints, randomGenerator, previousOrientation, 5u, 50u, maximalSqrError, nullptr, &internalValidIndices);
+	}
 
 	// check whether we do not receive enough valid correspondences from the RANSAC, however if the difference is 2 we accept the pose as in this case the ratio may provide wrong results
 	if (minimalValidCorrespondenceRatio < 1 && Scalar(internalValidIndices.size()) < Scalar(objectPoints.size()) * minimalValidCorrespondenceRatio && objectPoints.size() - internalValidIndices.size() > 2)
@@ -2313,7 +2315,9 @@ inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, 
 
 	Indices32 validIndices;
 	if (previousOrientation.isNull() || minimalValidCorrespondenceRatio < 1)
-		Geometry::RANSAC::orientation(camera, objectPoints, imagePoints, randomGenerator, camera.hasDistortionParameters(), previousOrientation, 5u, 50u, maximalSqrError, nullptr, &validIndices);
+	{
+		Geometry::RANSAC::orientation(AnyCameraPinhole(camera), objectPoints, imagePoints, randomGenerator, previousOrientation, 5u, 50u, maximalSqrError, nullptr, &validIndices);
+	}
 
 	// check whether we do not receive enough valid correspondences from the RANSAC, however if the difference is 2 we accept the pose as in this case the ratio may provide wrong results
 	if (minimalValidCorrespondenceRatio < 1 && Scalar(validIndices.size()) < Scalar(objectPoints.size()) * minimalValidCorrespondenceRatio && objectPoints.size() - validIndices.size() > 2)

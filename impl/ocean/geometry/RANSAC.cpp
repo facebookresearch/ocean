@@ -1113,9 +1113,9 @@ bool RANSAC::translation(const ConstIndexedAccessor<Vector2>& translations, Rand
 	return true;
 }
 
-bool RANSAC::orientation(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, const bool useDistortionParameters, SquareMatrix3& orientation, const unsigned int minValidCorrespondences, const unsigned int iterations, const Scalar maxSqrError, Scalar* finalError, Indices32* usedIndices)
+bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, SquareMatrix3& orientation, const unsigned int minValidCorrespondences, const unsigned int iterations, const Scalar maxSqrError, Scalar* finalError, Indices32* usedIndices)
 {
-	ocean_assert(pinholeCamera.isValid());
+	ocean_assert(camera.isValid());
 	ocean_assert(objectPoints.size() && imagePoints.size());
 	ocean_assert(objectPoints.size() >= 2);
 
@@ -1130,7 +1130,7 @@ bool RANSAC::orientation(const PinholeCamera& pinholeCamera, const ConstIndexedA
 	{
 		indices.clear();
 
-		RandomI::random(randomGenerator, (unsigned int)objectPoints.size() - 1u, index0, index1);
+		RandomI::random(randomGenerator, (unsigned int)(objectPoints.size()) - 1u, index0, index1);
 
 		// the determination of the orientation is based on two point correspondences
 		// we take two rays (targetVectors) between two individual 3D object points and the camera's point of projection
@@ -1146,26 +1146,24 @@ bool RANSAC::orientation(const PinholeCamera& pinholeCamera, const ConstIndexedA
 			continue;
 		}
 
-		const Vector2 undistortedImagePoint0(useDistortionParameters ? pinholeCamera.undistort<true>(imagePoints[index0]) : imagePoints[index0]);
-		const Vector2 undistortedImagePoint1(useDistortionParameters ? pinholeCamera.undistort<true>(imagePoints[index1]) : imagePoints[index1]);
+		const Vector2 imagePoint0(imagePoints[index0]);
+		const Vector2 imagePoint1(imagePoints[index1]);
 
-		const Vector3 referenceVector0(pinholeCamera.vector(undistortedImagePoint0));
-		const Vector3 referenceVector1(pinholeCamera.vector(undistortedImagePoint1));
+		const Vector3 imageRay0(camera.vector(imagePoint0, true));
+		const Vector3 imageRay1(camera.vector(imagePoint1, true));
 
-		ocean_assert(targetVector0.isUnit());
-		ocean_assert(targetVector1.isUnit());
-		ocean_assert(referenceVector0.isUnit());
-		ocean_assert(referenceVector1.isUnit());
+		ocean_assert(targetVector0.isUnit() && targetVector1.isUnit());
+		ocean_assert(imageRay0.isUnit() && imageRay1.isUnit());
 
 		// we calculate the first rotation which rotates the first reference vector to the first target vector
-		const Rotation rotation0(referenceVector0, targetVector0);
-		ocean_assert((rotation0 * referenceVector0).angle(targetVector0) < Numeric::rad2deg(Scalar(0.001)));
+		const Rotation rotation0(imageRay0, targetVector0);
+		ocean_assert((rotation0 * imageRay0).angle(targetVector0) < Numeric::rad2deg(Scalar(0.001)));
 
 		// now we need to find the second rotation around the first rotated reference vector (= target vector) so that also the second reference vector corresponds with the second target vector
-		const Vector3 rotatedReferenceVector1(rotation0 * referenceVector1);
+		const Vector3 rotatedImageRay1(rotation0 * imageRay1);
 
 		const Vector3 directionA = targetVector1 - targetVector0 * (targetVector0 * targetVector1);
-		const Vector3 directionB = rotatedReferenceVector1 - targetVector0 * (rotatedReferenceVector1 * targetVector0);
+		const Vector3 directionB = rotatedImageRay1 - targetVector0 * (rotatedImageRay1 * targetVector0);
 
 		Rotation rotation(rotation0);
 
@@ -1185,15 +1183,15 @@ bool RANSAC::orientation(const PinholeCamera& pinholeCamera, const ConstIndexedA
 			rotation = Rotation(rotation1 * rotation0);
 		}
 
-		const HomogenousMatrix4 pose(rotation);
-		const HomogenousMatrix4 poseIF(PinholeCamera::standard2InvertedFlipped(pose));
+		const HomogenousMatrix4 world_T_camera(rotation);
+		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
 
 		Scalar error = 0;
 		unsigned int validCorrespondences = 0u;
 
 		for (size_t n = 0; n < objectPoints.size(); ++n)
 		{
-			const Vector2 projectedObjectPoint(pinholeCamera.projectToImageIF<true>(poseIF, objectPoints[n], useDistortionParameters));
+			const Vector2 projectedObjectPoint(camera.projectToImageIF(flippedCamera_T_world, objectPoints[n]));
 
 			const Scalar sqrDistance = imagePoints[n].sqrDistance(projectedObjectPoint);
 
