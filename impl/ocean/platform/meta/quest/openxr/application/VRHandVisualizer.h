@@ -196,19 +196,19 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRHandVisualizer : pub
 		~VRHandVisualizer() override;
 
 		/**
-		 * Shows the controllers.
+		 * Shows the hands.
 		 * @see hide().
 		 */
 		inline void show();
 
 		/**
-		 * Hides the controllers.
+		 * Hides the hands.
 		 * @see show().
 		 */
 		inline void hide();
 
 		/**
-		 * Returns whether the controllers are shown.
+		 * Returns whether the hands are shown.
 		 * @return True, if succeeded
 		 */
 		inline bool isShown() const;
@@ -247,10 +247,9 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRHandVisualizer : pub
 		 * Visualizes the hands in relation to the given HandPoses' base space.
 		 * Note: you need to call `handPoses.update()` before calling this function
 		 * @param handPoses An instance of the hand poses object, must be valid
-		 * @param show True, to show the hands; False, to hide the hands
 		 * @return True, if succeeded
 		 */
-		bool visualizeHands(const HandPoses& handPoses, const bool show = true);
+		bool visualizeHands(const HandPoses& handPoses);
 
 		/**
 		 * Pushes a new configuration state to the stack.
@@ -338,7 +337,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRHandVisualizer : pub
 		/// The transparency which is used to render the hands, with range [0, 1]
 		Scalar transparency_ = ScopedState::defaultTransparency_;
 
-		/// True, if the controllers are visualized; False, if the controllers are hidden.
+		/// True, if the hands are visualized; False, if the hands are hidden.
 		std::atomic<bool> isShown_ = true;
 
 		/// A stack of visualization states.

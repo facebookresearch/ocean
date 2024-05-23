@@ -222,7 +222,7 @@ VRHandVisualizer::RenderMode VRHandVisualizer::renderMode() const
 	return renderMode_;
 }
 
-bool VRHandVisualizer::visualizeHands(const HandPoses& handPoses, const bool show)
+bool VRHandVisualizer::visualizeHands(const HandPoses& handPoses)
 {
 	const ScopedLock scopedLock(lock_);
 
@@ -237,6 +237,8 @@ bool VRHandVisualizer::visualizeHands(const HandPoses& handPoses, const bool sho
 		scene_ = engine_->factory().createScene();
 		framebuffer_->addScene(scene_);
 	}
+
+	scene_->setVisible(isShown_);
 
 	if (transformJoints_)
 	{
