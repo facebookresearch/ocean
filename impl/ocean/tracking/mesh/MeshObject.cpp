@@ -296,7 +296,7 @@ bool MeshObject::determinePoseFromFrameFeatures(const MeshObjectTrackingOptions&
 
 	// Run P3P RANSAC to determine an initial pose.
 	// TODO (jtprice): hardcoded values
-	if (!Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pinholeCamera.hasDistortionParameters(), pose_world_T_camera, 10u, true, options.recognitionRansacIterations, Scalar(15 * 15)))
+	if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pose_world_T_camera, 10u, true, options.recognitionRansacIterations, Scalar(15 * 15)))
 	{
 		return false;
 	}
@@ -314,7 +314,7 @@ bool MeshObject::determinePoseFromFrameFeatures(const MeshObjectTrackingOptions&
 	// Run a second P3P to refine the pose using the guided matches.
 	// TODO (jtprice): hardcoded values
 	Indices32 resultingValidCorrespondences;
-	if (!Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pinholeCamera.hasDistortionParameters(), pose_world_T_camera, 10u, true, options.recognitionRansacIterations, Scalar(5 * 5), &resultingValidCorrespondences))
+	if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pose_world_T_camera, 10u, true, options.recognitionRansacIterations, Scalar(5 * 5), &resultingValidCorrespondences))
 	{
 		return false;
 	}

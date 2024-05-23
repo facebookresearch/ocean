@@ -182,7 +182,7 @@ bool FeatureTracker6DOF::determinePoseWithoutKnowledge(ORBFeatures& features, co
 		const unsigned int minimalValidCorrespondences = 12u;
 		const unsigned int ransacIterations = Geometry::RANSAC::iterations(minimalValidCorrespondences, Scalar(0.99), Scalar(0.2));
 
-		if (Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator_, pinholeCamera.hasDistortionParameters(), resultingPose, minimalValidCorrespondences, true, ransacIterations, 16, &resultingValidCorrespondences))
+		if (Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator_, resultingPose, minimalValidCorrespondences, true, ransacIterations, 16, &resultingValidCorrespondences))
 		{
 			ORBFeatures validImageFeatures, validObjectFeatures;
 			Correspondences::extractCorrespondingFeatures(features, featureMap_.features(), correspondenceCandidates, resultingValidCorrespondences, validImageFeatures, validObjectFeatures);

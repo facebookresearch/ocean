@@ -140,7 +140,7 @@ bool PatternTrackerCore6DOF::Pattern::recognizePattern(const PinholeCamera& pinh
 	const unsigned int ransacIterations = imagePoints.size() <= 50 ? 30u : 50u;
 
 	Indices32 usedIndices;
-	if (!Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pinholeCamera.hasDistortionParameters(), recognitionPose, 5u, true, ransacIterations, Scalar(15 * 15), &usedIndices))
+	if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, recognitionPose, 5u, true, ransacIterations, Scalar(15 * 15), &usedIndices))
 	{
 		return false;
 	}
@@ -1301,7 +1301,7 @@ bool PatternTrackerCore6DOF::determinePoseWithDriftErrors(const PinholeCamera& p
 				RandomGenerator randomGenerator;
 
 				HomogenousMatrix4 pose(false);
-				if (Geometry::RANSAC::p3p(hierarchyCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(currentFeaturePoints), randomGenerator, hierarchyCamera.hasDistortionParameters(), pose, 16u, true, 50u, Scalar(2.5 * 2.5)))
+				if (Geometry::RANSAC::p3p(AnyCameraPinhole(hierarchyCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(currentFeaturePoints), randomGenerator, pose, 16u, true, 50u, Scalar(2.5 * 2.5)))
 				{
 					if ((pose * poseGuess.inverted()).rotation().angle() < Numeric::deg2rad(25))
 					{
@@ -2109,7 +2109,7 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 
 		HomogenousMatrix4 pose;
 
-		if (!Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), trackerRandomGenerator, pinholeCamera.hasDistortionParameters(), pose, 10u, true, options_.recognitionRansacIterations, Scalar(5 * 5)))
+		if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), trackerRandomGenerator, pose, 10u, true, options_.recognitionRansacIterations, Scalar(5 * 5)))
 		{
 			continue;
 		}
@@ -2124,7 +2124,7 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 		ocean_assert(objectPoints.size() == imagePoints.size());
 
 		Indices32 resultingValidCorrespondences;
-		if (!Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), trackerRandomGenerator, pinholeCamera.hasDistortionParameters(), pose, 10u, true, options_.recognitionRansacIterations, Scalar(5 * 5), &resultingValidCorrespondences))
+		if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), trackerRandomGenerator, pose, 10u, true, options_.recognitionRansacIterations, Scalar(5 * 5), &resultingValidCorrespondences))
 		{
 			continue;
 		}

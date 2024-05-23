@@ -25,15 +25,15 @@ namespace Tracking
 namespace Point
 {
 
-bool HomographyTracker::resetRegion(const PinholeCamera& pinholeCamera, const Box2& region)
+bool HomographyTracker::resetRegion(const AnyCamera& camera, const Box2& region)
 {
-	ocean_assert(pinholeCamera.isValid());
+	ocean_assert(camera.isValid());
 	ocean_assert(region.area() >= Scalar(1));
 
-	ocean_assert(pinholeCamera.isInside(region.corner(0)) && pinholeCamera.isInside(region.corner(1)));
-	ocean_assert(pinholeCamera.isInside(region.corner(2)) && pinholeCamera.isInside(region.corner(3)));
+	ocean_assert(camera.isInside(region.corner(0)) && camera.isInside(region.corner(1)));
+	ocean_assert(camera.isInside(region.corner(2)) && camera.isInside(region.corner(3)));
 
-	if (!pinholeCamera.isValid() || region.area() < Scalar(1) || !pinholeCamera.isInside(region.center()))
+	if (!camera.isValid() || region.area() < Scalar(1) || !camera.isInside(region.center()))
 	{
 		return false;
 	}
@@ -47,16 +47,16 @@ bool HomographyTracker::resetRegion(const PinholeCamera& pinholeCamera, const Bo
 	return true;
 }
 
-bool HomographyTracker::resetRegion(const PinholeCamera& pinholeCamera, const Box2& region, const Quaternion& cameraOrientation, const Vector3& planeNormal, HomogenousMatrix4* pose, HomogenousMatrix4* plane)
+bool HomographyTracker::resetRegion(const AnyCamera& camera, const Box2& region, const Quaternion& cameraOrientation, const Vector3& planeNormal, HomogenousMatrix4* pose, HomogenousMatrix4* plane)
 {
-	ocean_assert(pinholeCamera.isValid());
+	ocean_assert(camera.isValid());
 	ocean_assert(region.area() > Scalar(1));
-	ocean_assert(pinholeCamera.isInside(region.center()));
+	ocean_assert(camera.isInside(region.center()));
 	ocean_assert(cameraOrientation.isValid());
 	ocean_assert(Numeric::isEqual(planeNormal.length(), 1));
 
-	if (!pinholeCamera.isValid() || region.area() < Scalar(1) || !cameraOrientation.isValid() || !Numeric::isEqual(planeNormal.length(), 1)
-			|| !pinholeCamera.isInside(region.center()))
+	if (!camera.isValid() || region.area() < Scalar(1) || !cameraOrientation.isValid() || !Numeric::isEqual(planeNormal.length(), 1)
+			|| !camera.isInside(region.center()))
 	{
 		return false;
 	}
@@ -75,7 +75,7 @@ bool HomographyTracker::resetRegion(const PinholeCamera& pinholeCamera, const Bo
 	// the initial camera pose is in the origin of the world coordinate system (identity transformation)
 	const HomogenousMatrix4 cameraPose(true);
 
-	const Line3 ray = pinholeCamera.ray(pinholeCamera.undistortDamped(region.center()), cameraPose);
+	const Line3 ray = camera.ray(region.center(), cameraPose);
 
 	// 3D point with distance 1 to camera (center of projection)
 	const Vector3 pointOnPlane = ray.point(1);
@@ -157,7 +157,7 @@ bool HomographyTracker::resetRegion(const PinholeCamera& pinholeCamera, const Bo
 	return true;
 }
 
-bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, const Frame& yFrame, SquareMatrix3& homography, HomogenousMatrix4* pose, const Quaternion& cameraOrientation, Worker* worker)
+bool HomographyTracker::determineHomography(const AnyCamera& camera, const Frame& yFrame, SquareMatrix3& homography, HomogenousMatrix4* pose, const Quaternion& cameraOrientation, Worker* worker)
 {
 	ocean_assert(FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
 
@@ -167,6 +167,12 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 		|| !FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u)
 		|| (previousFramePyramid_ && previousFramePyramid_.frameType() != FrameType(yFrame, FrameType::genericPixelFormat<FrameType::DT_UNSIGNED_INTEGER_8, 1u>())))
 	{
+		return false;
+	}
+
+	if (camera.anyCameraType() != AnyCameraType::PINHOLE)
+	{
+		ocean_assert(false && "Currently not supported!");
 		return false;
 	}
 
@@ -198,8 +204,16 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 			SquareMatrix3 predictedLocalHomography(false); // cHp: currentPoint = predictedLocalHomography * previousPoint
 			if (previousCameraOrientation_.isValid() && cameraOrientation.isValid())
 			{
+				if (camera.name() != AnyCameraPinhole::WrappedCamera::name())
+				{
+					ocean_assert(false && "Currently not supported!");
+					return false;
+				}
+
+				const AnyCameraPinhole& pinholeCamera = (const AnyCameraPinhole&)(camera);
+
 				// cHp = wTc^-1 * wTp
-				predictedLocalHomography = Geometry::Homography::homographyMatrix(previousCameraOrientation_, cameraOrientation, pinholeCamera, pinholeCamera);
+				predictedLocalHomography = Geometry::Homography::homographyMatrix(previousCameraOrientation_, cameraOrientation, pinholeCamera.actualCamera(), pinholeCamera.actualCamera());
 			}
 
 			if (!addNewFeaturePointsToPyramid(previousFramePyramid_, previousPointsPyramid_, initialPointsPyramid_, region_, globalHomography_, 40u, 80u, worker))
@@ -209,7 +223,7 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 			}
 
 			Vectors2Pyramid currentPointsPyramid;
-			const HomographyQuality homographyQuality = determineHomographyWithPyramid(pinholeCamera, plane_, previousFramePyramid_, currentFramePyramid_, previousPointsPyramid_, currentPointsPyramid, initialPointsPyramid_, globalHomography_, region_, homography, pose, predictedLocalHomography, initialCameraOrientation_, cameraOrientation, randomGenerator_, -1.0f, worker);
+			const HomographyQuality homographyQuality = determineHomographyWithPyramid(camera, plane_, previousFramePyramid_, currentFramePyramid_, previousPointsPyramid_, currentPointsPyramid, initialPointsPyramid_, globalHomography_, region_, homography, pose, predictedLocalHomography, initialCameraOrientation_, cameraOrientation, randomGenerator_, -1.0f, worker);
 
 			if (homographyQuality == HQ_FAILED)
 			{
@@ -253,7 +267,7 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 						{
 							static_assert(numberKeyFrames_ >= 2, "Invalid key frames!");
 
-							if (isRegionVisible(pinholeCamera, globalHomography_, region_))
+							if (isRegionVisible(camera, globalHomography_, region_))
 							{
 								bool needsUpdate = true;
 
@@ -307,8 +321,16 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 					SquareMatrix3 predictedLocalHomography(false); // cHp: currentPoint = predictedLocalHomography * previousPoint
 					if (previousCameraOrientation_.isValid() && cameraOrientation.isValid())
 					{
+						if (camera.name() != AnyCameraPinhole::WrappedCamera::name())
+						{
+							ocean_assert(false && "Currently not supported!");
+							return false;
+						}
+
+						const AnyCameraPinhole& pinholeCamera = (const AnyCameraPinhole&)(camera);
+
 						// cHl = wTc^-1 * wTl
-						predictedLocalHomography = Geometry::Homography::homographyMatrix(globalCameraOrientation_, cameraOrientation, pinholeCamera, pinholeCamera);
+						predictedLocalHomography = Geometry::Homography::homographyMatrix(globalCameraOrientation_, cameraOrientation, pinholeCamera.actualCamera(), pinholeCamera.actualCamera());
 					}
 
 					// cHk = cHl * lHi * kHi^-1
@@ -333,7 +355,7 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 					// cHi = cHk * kHi
 					const SquareMatrix3 cHi = predictedKeyFrameHomography * keyFrame.globalHomography_;
 
-					if (isRegionVisible(pinholeCamera, cHi, region_))
+					if (isRegionVisible(camera, cHi, region_))
 					{
 						copyKeyFramePointsPyramid.resize(keyFrame.pointsPyramid_.size());
 						copyKeyFrameInitialPointsPyramid.resize(keyFrame.pointsPyramid_.size());
@@ -396,7 +418,7 @@ bool HomographyTracker::determineHomography(const PinholeCamera& pinholeCamera, 
 
 					const float explicitMaximalOffsetPercent = 0.10f; // 10 %
 
-					const HomographyQuality homographyQuality = determineHomographyWithPyramid(pinholeCamera, plane_, transformedKeyFramePyramid, currentFramePyramid_, copyKeyFramePointsPyramid, currentPointsPyramid, copyKeyFrameInitialPointsPyramid, keyFrame.globalHomography_, Box2(), homography, pose, predictedKeyFrameHomography, initialCameraOrientation_, cameraOrientation, randomGenerator_, explicitMaximalOffsetPercent, worker);
+					const HomographyQuality homographyQuality = determineHomographyWithPyramid(camera, plane_, transformedKeyFramePyramid, currentFramePyramid_, copyKeyFramePointsPyramid, currentPointsPyramid, copyKeyFrameInitialPointsPyramid, keyFrame.globalHomography_, Box2(), homography, pose, predictedKeyFrameHomography, initialCameraOrientation_, cameraOrientation, randomGenerator_, explicitMaximalOffsetPercent, worker);
 
 					if (homographyQuality == HQ_GOOD)
 					{
@@ -658,7 +680,7 @@ bool HomographyTracker::trackPoints(const CV::FramePyramid& yPreviousFramePyrami
 #endif
 }
 
-HomographyTracker::HomographyQuality HomographyTracker::determineHomographyWithPyramid(const PinholeCamera& pinholeCamera, const Plane3& plane, const CV::FramePyramid& yPreviousFramePyramid, const CV::FramePyramid& yCurrentFramePyramid, Vectors2Pyramid& previousPointsPyramid, Vectors2Pyramid& currentPointsPyramid, Vectors2Pyramid& initialPointsPyramid, const SquareMatrix3& previousHomography, const Box2& region, SquareMatrix3& homography, HomogenousMatrix4* pose, const SquareMatrix3& predictedLocalHomography, const Quaternion& initialCameraOrientation, const Quaternion& currentCameraOrientation, RandomGenerator& randomGenerator, const float explicitMaximalOffsetPercent, Worker* worker)
+HomographyTracker::HomographyQuality HomographyTracker::determineHomographyWithPyramid(const AnyCamera& camera, const Plane3& plane, const CV::FramePyramid& yPreviousFramePyramid, const CV::FramePyramid& yCurrentFramePyramid, Vectors2Pyramid& previousPointsPyramid, Vectors2Pyramid& currentPointsPyramid, Vectors2Pyramid& initialPointsPyramid, const SquareMatrix3& previousHomography, const Box2& region, SquareMatrix3& homography, HomogenousMatrix4* pose, const SquareMatrix3& predictedLocalHomography, const Quaternion& initialCameraOrientation, const Quaternion& currentCameraOrientation, RandomGenerator& randomGenerator, const float explicitMaximalOffsetPercent, Worker* worker)
 {
 	ocean_assert(previousPointsPyramid.size() >= 3);
 	if (previousPointsPyramid.size() < 3)
@@ -716,27 +738,33 @@ HomographyTracker::HomographyQuality HomographyTracker::determineHomographyWithP
 					const Vectors2 trackedPreviousPoints = Subset::subset(previousPointsPyramid[layer], validTrackedPointIndices);
 					const Vectors2 trackedCurrentPoints = Subset::subset(currentPointsPyramid[layer], validTrackedPointIndices);
 
-					if (pinholeCamera.isValid() && plane.isValid())
+					if (camera.isValid() && plane.isValid())
 					{
 						// we know the 3D geometry of the area in the background (the planar area)
 						// therefore, we can use a P3P and 6DOF camera pose optimization approach instead of determining the homography (P3P is faster and more reliable)
 
 						const Vectors2 trackedInitialPoints = Subset::subset(initialPointsPyramid[layer], validTrackedPointIndices);
-						const PinholeCamera  layerCamera(yCurrentFramePyramid[layer].width(), yCurrentFramePyramid[layer].height(), pinholeCamera);
+						const SharedAnyCamera layerCamera = camera.clone(yCurrentFramePyramid[layer].width(), yCurrentFramePyramid[layer].height());
+
+						ocean_assert(layerCamera);
+						if (!layerCamera)
+						{
+							return HQ_FAILED;
+						}
 
 #ifdef OCEAN_DEBUG
 						for (const Vector2& trackedInitialPoint : trackedInitialPoints)
 						{
-							ocean_assert(layerCamera.isInside(trackedInitialPoint));
+							ocean_assert(layerCamera->isInside(trackedInitialPoint));
 						}
 #endif
 
-						const Vectors3 objectPoints = Geometry::Utilities::backProjectImagePoints(layerCamera, HomogenousMatrix4(true), plane, trackedInitialPoints.data(), trackedInitialPoints.size(), true);
+						const Vectors3 objectPoints = Geometry::Utilities::backProjectImagePoints(*layerCamera, HomogenousMatrix4(true), plane, trackedInitialPoints.data(), trackedInitialPoints.size());
 
 						Indices32 validPoseIndices;
 						HomogenousMatrix4 layerPose;
 
-						if (Geometry::RANSAC::p3p(layerCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(trackedCurrentPoints), randomGenerator, true, layerPose, 10u, true, 40u, Scalar(3 * 3), &validPoseIndices))
+						if (Geometry::RANSAC::p3p(*layerCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(trackedCurrentPoints), randomGenerator, layerPose, 10u, true, 40u, Scalar(3 * 3), &validPoseIndices))
 						{
 							const Scalar maximalAngle = Numeric::deg2rad(7.5); // this threshold is quite generous as IMU-based orientations can be quite faulty on Android devices
 
@@ -832,8 +860,8 @@ HomographyTracker::HomographyQuality HomographyTracker::determineHomographyWithP
 #ifdef OCEAN_DEBUG
 		for (size_t n = 0; n < numberImagePoints; ++n)
 		{
-			ocean_assert(pinholeCamera.isInside(initialImagePoints[n]));
-			ocean_assert(pinholeCamera.isInside(currentImagePoints[n]));
+			ocean_assert(camera.isInside(initialImagePoints[n]));
+			ocean_assert(camera.isInside(currentImagePoints[n]));
 		}
 #endif
 
@@ -885,14 +913,14 @@ bool HomographyTracker::isRegionVisible(const Quaternion& wRi, const Quaternion&
 	return cosValue >= Numeric::cos(maximalAngle);
 }
 
-bool HomographyTracker::isRegionVisible(const PinholeCamera& pinholeCamera, const SquareMatrix3& globalHomography, const Box2& initialRegion)
+bool HomographyTracker::isRegionVisible(const AnyCamera& camera, const SquareMatrix3& globalHomography, const Box2& initialRegion)
 {
-	ocean_assert(pinholeCamera.isValid());
+	ocean_assert(camera.isValid());
 	ocean_assert(!globalHomography.isSingular());
 	ocean_assert(initialRegion.area() >= Scalar(1));
 
 	const Box2 transformedRegion = initialRegion * globalHomography;
-	const Box2 cameraBoundingBox(Scalar(0), Scalar(0), Scalar(pinholeCamera.width()), Scalar(pinholeCamera.height()));
+	const Box2 cameraBoundingBox(Scalar(0), Scalar(0), Scalar(camera.width()), Scalar(camera.height()));
 
 	const Box2 intersectedTransformedRegion = cameraBoundingBox.intersection(transformedRegion);
 

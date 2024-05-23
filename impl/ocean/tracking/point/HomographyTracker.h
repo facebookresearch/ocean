@@ -16,8 +16,8 @@
 
 #include "ocean/cv/FramePyramid.h"
 
+#include "ocean/math/AnyCamera.h"
 #include "ocean/math/Box2.h"
-#include "ocean/math/PinholeCamera.h"
 #include "ocean/math/Plane3.h"
 #include "ocean/math/SquareMatrix3.h"
 
@@ -125,29 +125,29 @@ class OCEAN_TRACKING_POINT_EXPORT HomographyTracker
 		/**
 		 * Sets a new region of interest (or resets an existing region of interest).
 		 * The tracker will be set to a new initial state and any resulting homography will be defined in relation to this initial state.
-		 * @param pinholeCamera The pinhole camera profile defining the projection, must be valid
-		 * @param region The region of interest to be set, defined in the coodinate system of the image frames used for tracking, must be valid
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param region The region of interest to be set, defined in the coordinate system of the image frames used for tracking, must be valid
 		 * @return True, if succeeded
 		 */
-		bool resetRegion(const PinholeCamera& pinholeCamera, const Box2& region);
+		bool resetRegion(const AnyCamera& camera, const Box2& region);
 
 		/**
 		 * Sets a new region of interest (or resets an existing region of interest).
 		 * The tracker will be set to a new initial state and any resulting homography will be defined in relation to this initial state.
-		 * @param pinholeCamera The pinhole camera profile defining the projection, must be valid
-		 * @param region The region of interest to be set, defined in the coodinate system of the image frames used for tracking, must be valid
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param region The region of interest to be set, defined in the coordinate system of the image frames used for tracking, must be valid
 		 * @param cameraOrientation The orientation of the camera matching with the given (current) camera frame, defined w.r.t. the world coordinate system (wTc), must be valid
 		 * @param planeNormal Normal the planar background at the region of interest, defined w.r.t. the world coordinate system (wN), must be valid
 		 * @param pose Optional resulting 6DOF camera pose for the initial camera frame, transforming points defined in the coordinate system of the camera to points defined in the world coordinate system (wTc)
 		 * @param plane Optional resulting transformation transforming points defined in the coordinate system of the plane to points defined in the coordinate system of the world coordinate system (wTp)
 		 * @return True, if succeeded
 		 */
-		bool resetRegion(const PinholeCamera& pinholeCamera, const Box2& region, const Quaternion& cameraOrientation, const Vector3& planeNormal, HomogenousMatrix4* pose = nullptr, HomogenousMatrix4* plane = nullptr);
+		bool resetRegion(const AnyCamera& camera, const Box2& region, const Quaternion& cameraOrientation, const Vector3& planeNormal, HomogenousMatrix4* pose = nullptr, HomogenousMatrix4* plane = nullptr);
 
 		/**
 		 * Determines the homography between the current frame and the initial frame.
 		 * The initial frame is the frame given after the region of interest has been (re-)set.
-		 * @param pinholeCamera The pinhole camera profile defining the projection, must be valid
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param yFrame The current image frame for which the homography will be determined (matching with the camera profile), must have a pixel format FORMAT_Y8, must be valid
 		 * @param homography The resulting homography transforming a point defined in the initial frame to a point defined in the current frame (currentPoint = homograph * initialPoint)
 		 * @param pose Optional resulting 6DOF camera pose in case the tracker has been reset with a known 3D plane normal, otherwise an invalid pose
@@ -155,7 +155,7 @@ class OCEAN_TRACKING_POINT_EXPORT HomographyTracker
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if succeeded
 		 */
-		bool determineHomography(const PinholeCamera& pinholeCamera, const Frame& yFrame, SquareMatrix3& homography, HomogenousMatrix4* pose, const Quaternion& cameraOrientation = Quaternion(false), Worker* worker = nullptr);
+		bool determineHomography(const AnyCamera& camera, const Frame& yFrame, SquareMatrix3& homography, HomogenousMatrix4* pose, const Quaternion& cameraOrientation = Quaternion(false), Worker* worker = nullptr);
 
 		/**
 		 * Resets the homography tracker.
@@ -213,7 +213,7 @@ class OCEAN_TRACKING_POINT_EXPORT HomographyTracker
 
 		/**
 		 * Determines the homography between two consecutive camera frames based on known feature points located in the previous frame (pyramid).
-		 * @param pinholeCamera The pinhole camera profile defining the projection, must be valid
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param plane The 3D plane on which the image points (the corresponding 3D object points) are located, must be valid
 		 * @param yPreviousFramePyramid The frame pyramid of the previous camera frame, must have a pixel format FORMAT_Y8, must be valid
 		 * @param yCurrentFramePyramid The frame pyramid of the current camera frame, must have a pixel format FORMAT_Y8, must be valid
@@ -232,7 +232,7 @@ class OCEAN_TRACKING_POINT_EXPORT HomographyTracker
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if succeeded
 		 */
-		static HomographyQuality determineHomographyWithPyramid(const PinholeCamera& pinholeCamera, const Plane3& plane, const CV::FramePyramid& yPreviousFramePyramid, const CV::FramePyramid& yCurrentFramePyramid, Vectors2Pyramid& previousPointsPyramid, Vectors2Pyramid& currentPointsPyramid, Vectors2Pyramid& initialPointsPyramid, const SquareMatrix3& previousHomography, const Box2& region, SquareMatrix3& homography, HomogenousMatrix4* pose, const SquareMatrix3& predictedLocalHomography, const Quaternion& initialCameraOrientation, const Quaternion& currentCameraOrientation, RandomGenerator& randomGenerator, const float explicitMaximalOffsetPercent = -1.0f, Worker* worker = nullptr);
+		static HomographyQuality determineHomographyWithPyramid(const AnyCamera& camera, const Plane3& plane, const CV::FramePyramid& yPreviousFramePyramid, const CV::FramePyramid& yCurrentFramePyramid, Vectors2Pyramid& previousPointsPyramid, Vectors2Pyramid& currentPointsPyramid, Vectors2Pyramid& initialPointsPyramid, const SquareMatrix3& previousHomography, const Box2& region, SquareMatrix3& homography, HomogenousMatrix4* pose, const SquareMatrix3& predictedLocalHomography, const Quaternion& initialCameraOrientation, const Quaternion& currentCameraOrientation, RandomGenerator& randomGenerator, const float explicitMaximalOffsetPercent = -1.0f, Worker* worker = nullptr);
 
 		/**
 		 * Returns whether the region of interest is visible based on a simple angle threshold.
@@ -247,16 +247,16 @@ class OCEAN_TRACKING_POINT_EXPORT HomographyTracker
 
 		/**
 		 * Returns whether the region of interest is visible based on the known homography for the current frame.
-		 * @param pinholeCamera The pinhole camera profile defining the projection, must be valid
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param globalHomography The homography transforming initial image points to current image points: currentImagePoint = globalHomography_ * initialImagePoint, (globalHomography_ = cHi)
 		 * @param initialRegion The initial region of interest, must be valid
 		 * @return True, if so
 		 */
-		static bool isRegionVisible(const PinholeCamera& pinholeCamera, const SquareMatrix3& globalHomography, const Box2& initialRegion);
+		static bool isRegionVisible(const AnyCamera& camera, const SquareMatrix3& globalHomography, const Box2& initialRegion);
 
 		/**
 		 * Returns whether a given homography is plausible in the context of a previous homography.
-		 * Based on a region of interest, the homography is rated based on the angular difference within the transformed region of innterest.<br>
+		 * Based on a region of interest, the homography is rated based on the angular difference within the transformed region of interest.<br>
 		 * In case, the angle between two neighboring edges of the ROI exceeds a given threshold, the homography is rated is invalid.
 		 * @param pHi The homography transforming points defined in the initial camera frame to points defined in the previous camera frame (previousPoint = pHi * initialPoint), must be valid
 		 * @param cHi The homography transforming points defined in the initial camera frame to points defined in the current camera frame (currentPoint = cHi * initialPoint), must be valid

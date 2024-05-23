@@ -388,7 +388,7 @@ bool BlobTracker6DOF::determinePoseWithoutKnowledge(BlobFeatures& features, cons
 			const unsigned int minimalValidCorrespondences = realtimePerformance_ ? 7u : 20u;
 			const unsigned int ransacIterations = realtimePerformance_ ? 80u : 400u;
 
-			if (Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator_, pinholeCamera.hasDistortionParameters(), resultingPose, minimalValidCorrespondences, true, ransacIterations, 25, &resultingValidCorrespondences, &sqrAccuracy))
+			if (Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator_, resultingPose, minimalValidCorrespondences, true, ransacIterations, 25, &resultingValidCorrespondences, &sqrAccuracy))
 			{
 				BlobFeatures validImageFeatures, validObjectFeatures;
 				Correspondences::extractCorrespondingFeatures(features, featureMap_.features(), correspondenceCandidates, resultingValidCorrespondences, validImageFeatures, validObjectFeatures);

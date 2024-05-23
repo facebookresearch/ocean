@@ -127,7 +127,9 @@ bool CameraCalibration::determineCameraCalibrationPlanar(const unsigned int widt
 	Indices32 validHomographIndices;
 
 	if (!determineIntrinsicCameraMatrixPlanar(objectPointGroups, imagePointGroups, intrinsic, &validHomographies, &validHomographIndices))
+	{
 		return false;
+	}
 
 	ocean_assert(validHomographies.size() == validHomographIndices.size());
 
@@ -139,6 +141,7 @@ bool CameraCalibration::determineCameraCalibrationPlanar(const unsigned int widt
 	HomogenousMatrix4 extrinsic;
 
 	for (unsigned int n = 0; n < validHomographies.size(); ++n)
+	{
 		if (Geometry::Homography::extrinsicMatrix(intrinsic, validHomographies[n], extrinsic))
 		{
 			const unsigned int validGroupIndex = validHomographIndices[n];
@@ -149,18 +152,23 @@ bool CameraCalibration::determineCameraCalibrationPlanar(const unsigned int widt
 			Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(extrinsic, PinholeCamera(intrinsic, width, height), ConstTemplateArrayAccessor<Vector3>(objectPointGroups[validGroupIndex]), ConstTemplateArrayAccessor<Vector2>(imagePointGroups[validGroupIndex]), false, averageSqrError, minimalSqrError, maximalSqrError);
 
 			if (averageSqrError > 5 * 5 || maximalSqrError > 10 * 10)
+			{
 				return false;
+			}
 
 			extrinsics.push_back(extrinsic);
 		}
+	}
 
 	// determines the initial distortion parameters
 	Scalar distortion2 = 0;
 	Scalar distortion4 = 0;
 	if (!Geometry::Homography::distortionParameters(ConstArrayAccessor<HomogenousMatrix4>(extrinsics), intrinsic, objectPointGroups, imagePointGroups, distortion2, distortion4))
+	{
 		return false;
+	}
 
-	// define the intial camera
+	// define the initial camera
 	pinholeCamera = PinholeCamera(intrinsic, width, height, PinholeCamera::DistortionPair(distortion2, distortion4), PinholeCamera::DistortionPair());
 
 #ifdef OCEAN_DEBUG
@@ -201,12 +209,16 @@ bool CameraCalibration::determineCameraCalibrationPlanar(const unsigned int widt
 	Scalar finalSqrError = 0;
 
 	if (!NonLinearOptimizationCamera::optimizeCameraPoses(pinholeCamera, ConstArrayAccessor<HomogenousMatrix4>(extrinsics), objectPointGroups, imagePointGroups, optimizedCamera, nullptr, iterations, Estimator::ET_SQUARE, Scalar(0.001), 5, true, &initialSqrError, &finalSqrError))
+	{
 		return false;
+	}
 
 	pinholeCamera = optimizedCamera;
 
-	if (sqrAccuracy)
+	if (sqrAccuracy != nullptr)
+	{
 		*sqrAccuracy = finalSqrError;
+	}
 
 	return true;
 }
@@ -260,7 +272,9 @@ bool CameraCalibration::determineCameraCalibration(const PinholeCamera& roughCam
 	ocean_assert(objectPointGroups.size() >= 1);
 
 	if (objectPointGroups.empty() || objectPointGroups.size() != imagePointGroups.size())
+	{
 		return false;
+	}
 
 	ImagePoints totalNormalizedObjectPoints;
 	totalNormalizedObjectPoints.reserve(objectPointGroups.size() * objectPointGroups.front().size());
@@ -276,10 +290,12 @@ bool CameraCalibration::determineCameraCalibration(const PinholeCamera& roughCam
 		const ImagePoints& imagePoints = imagePointGroups[n];
 
 		HomogenousMatrix4 roughPose;
-		bool result = RANSAC::p3p(roughCamera, ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), randomGenerator, roughCamera.hasDistortionParameters(), roughPose);
+		bool result = RANSAC::p3p(AnyCameraPinhole(roughCamera), ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), randomGenerator, roughPose);
 		ocean_assert(result);
 		if (!result)
+		{
 			continue;
+		}
 
 		HomogenousMatrix4 pose;
 		if (!NonLinearOptimizationPose::optimizePose(roughCamera, roughPose, ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), true, pose))
@@ -319,7 +335,7 @@ bool CameraCalibration::determineCameraCalibration(const PinholeCamera& roughCam
 		return false;
 	}
 
-	// define the intial camera
+	// define the initial camera
 	pinholeCamera = roughCamera;
 
 	HomogenousMatrices4 optimizedPoses;
@@ -328,12 +344,16 @@ bool CameraCalibration::determineCameraCalibration(const PinholeCamera& roughCam
 	Scalar finalSqrError = 0;
 
 	if (!NonLinearOptimizationCamera::optimizeCamera(pinholeCamera, ConstArrayAccessor<Vector2>(totalNormalizedObjectPoints), ConstArrayAccessor<Vector2>(totalImagePoints), PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS, optimizedCamera, 100u, Estimator::ET_HUBER, Scalar(0.001), 10, &initialSqrError, &finalSqrError))
+	{
 		return false;
+	}
 
 	pinholeCamera = optimizedCamera;
 
-	if (sqrAccuracy)
+	if (sqrAccuracy != nullptr)
+	{
 		*sqrAccuracy = finalSqrError;
+	}
 
 	return true;
 }
@@ -341,7 +361,9 @@ bool CameraCalibration::determineCameraCalibration(const PinholeCamera& roughCam
 bool CameraCalibration::createCorrespondences(const Pattern& pattern, const Vector2& boxSize, ObjectPoints& objectPoints, ImagePoints& imagePoints)
 {
 	if (pattern.rows().empty())
+	{
 		return false;
+	}
 
 	const Pattern::PatternRows& rows = pattern.rows();
 
@@ -381,7 +403,9 @@ bool CameraCalibration::determineBestMatchingFovX(const unsigned int width, cons
 	ocean_assert(steps > 0u);
 
 	if (width == 0u || height == 0u || posesAccessor.size() != objectPointGroupAccessor.size() || posesAccessor.size() != imagePointGroupAccessor.size() || lowestFovX <= 0 || highestFovX >= Numeric::pi() || lowestFovX >= highestFovX)
+	{
 		return false;
+	}
 
 	const Scalar fovXStep = (highestFovX - lowestFovX) / Scalar(steps);
 	ocean_assert(fovXStep > 0);
@@ -400,7 +424,9 @@ bool CameraCalibration::determineBestMatchingFovX(const unsigned int width, cons
 		// determine the total number of point correspondences
 		size_t correspondences = 0;
 		for (size_t n = 0; n < objectPointGroupAccessor.size(); ++n)
+		{
 			correspondences += objectPointGroupAccessor[n].size();
+		}
 
 		entireNormalizedImagePoints.resize(correspondences);
 		entireImagePoints.resize(correspondences);
@@ -427,7 +453,9 @@ bool CameraCalibration::determineBestMatchingFovX(const unsigned int width, cons
 			const Vectors2& imagePoints = imagePointGroupAccessor[n];
 
 			if (objectPoints.size() != imagePoints.size())
+			{
 				return false;
+			}
 
 			Scalar finalSqrError = 0;
 			HomogenousMatrix4 optimizedPose;
@@ -458,10 +486,12 @@ bool CameraCalibration::determineBestMatchingFovX(const unsigned int width, cons
 				bestSqrError = sqrError;
 				bestFovX = fovX;
 
-				if (idealPoses)
+				if (idealPoses != nullptr)
 				{
 					for (size_t n = 0; n < posesAccessor.size(); ++n)
+					{
 						(*idealPoses)[n] = individualPoses[n];
+					}
 				}
 			}
 
@@ -509,10 +539,12 @@ bool CameraCalibration::determineBestMatchingFovX(const unsigned int width, cons
 			bestSqrError = sqrError;
 			bestFovX = fovX;
 
-			if (idealPoses)
+			if (idealPoses != nullptr)
 			{
 				for (size_t n = 0; n < posesAccessor.size(); ++n)
+				{
 					(*idealPoses)[n] = individualPoses[n];
+				}
 			}
 		}
 	}

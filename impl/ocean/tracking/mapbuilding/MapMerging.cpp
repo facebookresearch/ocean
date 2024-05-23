@@ -247,7 +247,7 @@ size_t MapMerging::closeLoops(Database& database, FreakMultiDescriptorMap256& fr
 
 		HomogenousMatrix4 world_T_camera;
 		validIndices.clear();
-		if (Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(matchedObjectPoints), ConstArrayAccessor<Vector2>(matchedImagePoints), randomGenerator, true, world_T_camera, minimalNumberValidCorrespondences, true, ransacIterations, Scalar(3 * 3), &validIndices))
+		if (Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(matchedObjectPoints), ConstArrayAccessor<Vector2>(matchedImagePoints), randomGenerator, world_T_camera, minimalNumberValidCorrespondences, true, ransacIterations, Scalar(3 * 3), &validIndices))
 		{
 			ocean_assert(validIndices.size() >= minimalNumberValidCorrespondences);
 

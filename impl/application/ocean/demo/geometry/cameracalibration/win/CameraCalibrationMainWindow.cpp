@@ -206,11 +206,11 @@ void CameraCalibrationMainWindow::onFrame(const Ocean::Frame& frame)
 		}
 
 		HomogenousMatrix4 pose(false);
-		if (Geometry::RANSAC::p3p(calibrationCamera_, ConstArrayAccessor<Vector3>(calibrationPatternObjectPoints_), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator_, calibrationCamera_.hasDistortionParameters(), pose))
+		if (Geometry::RANSAC::p3p(AnyCameraPinhole(calibrationCamera_), ConstArrayAccessor<Vector3>(calibrationPatternObjectPoints_), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator_, pose))
 		{
 			ocean_assert(pose.isValid());
 
-			poseError = Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true, false, false>(pose, calibrationCamera_, ConstTemplateArrayAccessor<Vector3>(calibrationPatternObjectPoints_), ConstTemplateArrayAccessor<Vector2>(imagePoints), calibrationCamera_.hasDistortionParameters());
+			poseError = Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, false, false>(pose, AnyCameraPinhole(calibrationCamera_), ConstTemplateArrayAccessor<Vector3>(calibrationPatternObjectPoints_), ConstTemplateArrayAccessor<Vector2>(imagePoints));
 
 			calibrationPatternImagePointsGroups_.push_back(std::move(imagePoints));
 			calibrationPatternPoses_.push_back(pose);
