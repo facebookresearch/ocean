@@ -178,7 +178,7 @@ bool SLAMTracker::extractPoses(const unsigned int lowerFrameIndex, const unsigne
 	RandomGenerator randomGenerator;
 
 	ShiftVector<HomogenousMatrix4> poses;
-	if (!Solver3::determinePoses(database_, camera_, cameraMotion_, IndexSet32(), false, randomGenerator, lowerFrameIndex, upperFrameIndex, minimalCorrespondences, poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, finalAverageError, worker, abort))
+	if (!Solver3::determinePoses(database_, AnyCameraPinhole(camera_), cameraMotion_, IndexSet32(), false, randomGenerator, lowerFrameIndex, upperFrameIndex, minimalCorrespondences, poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, finalAverageError, worker, abort))
 	{
 		return false;
 	}
@@ -358,7 +358,7 @@ bool SLAMTracker::extractPoses(const unsigned int lowerFrameIndex, const unsigne
 
 		const IndexSet32 regionOptimizedObjectPointIdSet(regionOptimizedObjectPointIds.begin(), regionOptimizedObjectPointIds.end());
 
-		if (!Solver3::determinePoses(regionDatabase, camera_, cameraMotion_, regionOptimizedObjectPointIdSet, false, randomGenerator, lowerFrameIndex, upperFrameIndex, minimalCorrespondences, poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, finalAverageError, worker, abort))
+		if (!Solver3::determinePoses(regionDatabase, AnyCameraPinhole(camera_), cameraMotion_, regionOptimizedObjectPointIdSet, false, randomGenerator, lowerFrameIndex, upperFrameIndex, minimalCorrespondences, poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, finalAverageError, worker, abort))
 		{
 			return false;
 		}
@@ -416,7 +416,7 @@ bool SLAMTracker::extractPoses(const unsigned int lowerFrameIndex, const unsigne
 		// - a re-determination of the locations of all 3D object points not belonging to roi (so that the pose determination still will work if the roi object points disappear)
 		// **TODO**
 
-		if (!Solver3::determinePoses(database_, camera_, cameraMotion_, IndexSet32(), false, randomGenerator, lowerFrameIndex, upperFrameIndex, minimalCorrespondences, poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, finalAverageError, worker, abort))
+		if (!Solver3::determinePoses(database_, AnyCameraPinhole(camera_), cameraMotion_, IndexSet32(), false, randomGenerator, lowerFrameIndex, upperFrameIndex, minimalCorrespondences, poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, finalAverageError, worker, abort))
 		{
 			return false;
 		}
@@ -732,7 +732,9 @@ bool SLAMTracker::applyFrameTracking(const FrameType& frameType)
 
 	Index32 validLowerPoseIndex, validUpperPoseIndex;
 	if (database_.largestValidPoseRange<false>(lowerFrameIndex_, upperFrameIndex_, validLowerPoseIndex, validUpperPoseIndex))
+	{
 		Log::info() << "Final largest valid pose ranges: [" << validLowerPoseIndex << ", " << validUpperPoseIndex << "]";
+	}
 
 	maintenanceSendEnvironment();
 
@@ -755,9 +757,13 @@ bool SLAMTracker::applyFrameTracking(const FrameType& frameType)
 	// now we update the abstract motion of this tracker due to the internal motion type which has been determined during the tracking process
 
 	if (cameraMotion_ & Solver3::CM_TRANSLATIONAL)
+	{
 		abstractMotionType_ = AMT_COMPLEX;
+	}
 	else
+	{
 		abstractMotionType_ = AMT_PURE_ROTATIONAL;
+	}
 
 	// **TODO** **HACK** ->
 
@@ -844,7 +850,7 @@ bool SLAMTracker::applyFrameTracking(const FrameType& frameType)
 
 		Log::info() << "The tracker selection frame is outside the range of valid poses, thus we try to determine an inaccurate pose for the selection frame";
 
-		const HomogenousMatrix4 inaccuratePose = Solver3::determinePose(database_, camera_, randomGenerator, startFrameIndex_, HomogenousMatrix4(false), 5u, Geometry::Estimator::ET_SQUARE, Scalar(1.0), Scalar(20 * 20));
+		const HomogenousMatrix4 inaccuratePose = Solver3::determinePose(database_, AnyCameraPinhole(camera_), randomGenerator, startFrameIndex_, HomogenousMatrix4(false), 5u, Geometry::Estimator::ET_SQUARE, Scalar(1.0), Scalar(20 * 20));
 
 		if (inaccuratePose.isValid())
 		{
@@ -1036,7 +1042,7 @@ bool SLAMTracker::determineInitialObjectPoints(const PinholeCamera& pinholeCamer
 	Vectors3 optimizedObjectPoints;
 	Indices32 optimizedObjectPointIds;
 	Scalar initialSqrError, finalSqrError;
-	if (!Solver3::optimizeInitialObjectPoints(database, pinholeCamera, randomGenerator, lowerFrame, startPoseId, upperFrame, objectPoints, objectPointIds, optimizedObjectPoints, optimizedObjectPointIds, (unsigned int)objectPointIds.size(), minimalKeyframes, maximalKeyframes, Scalar(3.5 * 3.5), &poseIds, &initialSqrError, &finalSqrError, abort))
+	if (!Solver3::optimizeInitialObjectPoints(database, AnyCameraPinhole(pinholeCamera), randomGenerator, lowerFrame, startPoseId, upperFrame, objectPoints, objectPointIds, optimizedObjectPoints, optimizedObjectPointIds, (unsigned int)(objectPointIds.size()), minimalKeyframes, maximalKeyframes, Scalar(3.5 * 3.5), &poseIds, &initialSqrError, &finalSqrError, abort))
 	{
 		return false;
 	}
@@ -1066,7 +1072,7 @@ bool SLAMTracker::determineInitialObjectPoints(const PinholeCamera& pinholeCamer
 	unsigned int lowerValidPose = (unsigned int)(-1), upperValidPose = (unsigned int)(-1);
 
 	// we determine the initial poses
-	if (!Solver3::updatePoses(database, pinholeCamera, Solver3::CM_UNKNOWN, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, Geometry::Estimator::ET_SQUARE, Scalar(1), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), &aveError, &validPoses, WorkerPool::get().scopedWorker()(), abort)
+	if (!Solver3::updatePoses(database, AnyCameraPinhole(pinholeCamera), Solver3::CM_UNKNOWN, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, Geometry::Estimator::ET_SQUARE, Scalar(1), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), &aveError, &validPoses, WorkerPool::get().scopedWorker()(), abort)
 			|| !database.validPoseRange<false>(lowerFrame, poseIds.front(), upperFrame, lowerValidPose, upperValidPose))
 	{
 		return false;
@@ -1112,7 +1118,7 @@ bool SLAMTracker::determineInitialObjectPoints(const PinholeCamera& pinholeCamer
 	timer.start();
 
 	// we determine the initial poses now for the new initial object points
-	if (!Solver3::updatePoses(database, pinholeCamera, Solver3::CM_UNKNOWN, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, Geometry::Estimator::ET_SQUARE, Scalar(1), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), &aveError, &validPoses, WorkerPool::get().scopedWorker()(), abort)
+	if (!Solver3::updatePoses(database, AnyCameraPinhole(pinholeCamera), Solver3::CM_UNKNOWN, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, Geometry::Estimator::ET_SQUARE, Scalar(1), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), &aveError, &validPoses, WorkerPool::get().scopedWorker()(), abort)
 			|| !database.validPoseRange<false>(lowerFrame, poseIds.front(), upperFrame, lowerValidPose, upperValidPose))
 	{
 		return false;
@@ -1225,7 +1231,7 @@ bool SLAMTracker::extendInitialObjectPoints(const PinholeCamera& pinholeCamera, 
 	size_t validPoses;
 	Scalar aveError;
 	unsigned int lowerValidPose, upperValidPose;
-	if (!Solver3::updatePoses(database, pinholeCamera, Solver3::CM_UNKNOWN, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, Geometry::Estimator::ET_SQUARE, Scalar(0.95), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), &aveError, &validPoses, WorkerPool::get().scopedWorker()(), abort))
+	if (!Solver3::updatePoses(database, AnyCameraPinhole(pinholeCamera), Solver3::CM_UNKNOWN, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, Geometry::Estimator::ET_SQUARE, Scalar(0.95), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), &aveError, &validPoses, WorkerPool::get().scopedWorker()(), abort))
 	{
 		return false;
 	}
@@ -1285,7 +1291,7 @@ bool SLAMTracker::extendInitialObjectPoints(const PinholeCamera& pinholeCamera, 
 	minimalCorrespondences = max(min(bestCorrespondences, 20u), bestCorrespondences / 2u);
 
 	timer.start();
-	if (!Solver3::updatePoses(database, pinholeCamera, Solver3::CM_UNKNOWN, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, Geometry::Estimator::ET_SQUARE, Scalar(0.95), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), nullptr, nullptr, WorkerPool::get().scopedWorker()(), abort))
+	if (!Solver3::updatePoses(database, AnyCameraPinhole(pinholeCamera), Solver3::CM_UNKNOWN, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, Geometry::Estimator::ET_SQUARE, Scalar(0.95), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), nullptr, nullptr, WorkerPool::get().scopedWorker()(), abort))
 	{
 		return false;
 	}
@@ -1518,7 +1524,7 @@ bool SLAMTracker::removeInaccurateObjectPoints(const PinholeCamera& pinholeCamer
 		// now we apply one pose update step followed by one object point update step and followed again by a pose update step
 		// we avoid a bundle adjustment due to performance reasons although the quality and accuracy of a bundle adjustment would be better
 
-		if (!Solver3::updatePoses(database, pinholeCamera, cameraMotion, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, Geometry::Estimator::ET_SQUARE, minimalValidCorrespondenceRatio, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), nullptr, nullptr, WorkerPool::get().scopedWorker()(), abort))
+		if (!Solver3::updatePoses(database, AnyCameraPinhole(pinholeCamera), cameraMotion, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, Geometry::Estimator::ET_SQUARE, minimalValidCorrespondenceRatio, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), nullptr, nullptr, WorkerPool::get().scopedWorker()(), abort))
 		{
 			return false;
 		}
@@ -1546,7 +1552,7 @@ bool SLAMTracker::removeInaccurateObjectPoints(const PinholeCamera& pinholeCamer
 			database.setObjectPoints<false>(optimizedObjectPointIds.data(), optimizedObjectPoints.data(), optimizedObjectPointIds.size());
 		}
 
-		if (!Solver3::updatePoses(database, pinholeCamera, cameraMotion, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, Geometry::Estimator::ET_SQUARE, minimalValidCorrespondenceRatio, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), nullptr, nullptr, WorkerPool::get().scopedWorker()(), abort))
+		if (!Solver3::updatePoses(database, AnyCameraPinhole(pinholeCamera), cameraMotion, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, Geometry::Estimator::ET_SQUARE, minimalValidCorrespondenceRatio, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), nullptr, nullptr, WorkerPool::get().scopedWorker()(), abort))
 		{
 			return false;
 		}
@@ -1561,11 +1567,11 @@ bool SLAMTracker::removeInaccurateObjectPoints(const PinholeCamera& pinholeCamer
 	Log::info() << "Identified " << inaccurateObjectPoints << " inaccurate object points (and removed them) within " << iteration - 1u << " iterations: [" << validLowerFrame << ", " << validUpperFrame << "]";
 	Log::info() << " ";
 
-	if (finalLowerValidPoseRange)
+	if (finalLowerValidPoseRange != nullptr)
 	{
 		*finalLowerValidPoseRange = validLowerFrame;
 	}
-	if (finalUpperValidPoseRange)
+	if (finalUpperValidPoseRange != nullptr)
 	{
 		*finalUpperValidPoseRange = validUpperFrame;
 	}
@@ -1588,7 +1594,7 @@ bool SLAMTracker::optimizeObjectPointsAndPosesIndividuallyIteratively(const Pinh
 	if (beginWithPoseUpdate)
 	{
 		// **TODO** thresholds
-		if (!Solver3::updatePoses(database, pinholeCamera, cameraMotion, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, Scalar(3.5 * 3.5), maximalRobustError, &firstError, nullptr, WorkerPool::get().scopedWorker()(), abort))
+		if (!Solver3::updatePoses(database, AnyCameraPinhole(pinholeCamera), cameraMotion, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, Scalar(3.5 * 3.5), maximalRobustError, &firstError, nullptr, WorkerPool::get().scopedWorker()(), abort))
 		{
 			return false;
 		}
@@ -1614,7 +1620,7 @@ bool SLAMTracker::optimizeObjectPointsAndPosesIndividuallyIteratively(const Pinh
 		Scalar localAverageError;
 
 		// **TODO** thresholds
-		if (!Solver3::updatePoses(database, pinholeCamera, cameraMotion, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, Scalar(3.5 * 3.5), maximalRobustError, &localAverageError, nullptr, WorkerPool::get().scopedWorker()(), abort))
+		if (!Solver3::updatePoses(database, AnyCameraPinhole(pinholeCamera), cameraMotion, randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, Scalar(3.5 * 3.5), maximalRobustError, &localAverageError, nullptr, WorkerPool::get().scopedWorker()(), abort))
 		{
 			return false;
 		}
@@ -1640,12 +1646,12 @@ bool SLAMTracker::optimizeObjectPointsAndPosesIndividuallyIteratively(const Pinh
 
 	ocean_assert(firstError >= finalError && finalError != Numeric::maxValue());
 
-	if (initialAverageError)
+	if (initialAverageError != nullptr)
 	{
 		*initialAverageError = firstError;
 	}
 
-	if (finalAverageError)
+	if (finalAverageError != nullptr)
 	{
 		*finalAverageError = finalError;
 	}
@@ -2323,7 +2329,7 @@ bool SLAMTracker::adjustPosesAndPlaneToCamera(const PinholeCamera& oldCamera, co
 
 	// **TODO** as we are sure that all point correspondences are valid we should use a simple optimization approach without RANSAC
 	RandomGenerator randomGenerator1(0u);
-	if (!Solver3::updatePoses(database, newCamera, Solver3::CM_UNKNOWN, randomGenerator1, (unsigned int)oldPoses.firstIndex(), (unsigned int)oldPoses.lastIndex(), 5u, Geometry::Estimator::ET_SQUARE, Scalar(1), Numeric::maxValue(), Numeric::maxValue(), nullptr, nullptr))
+	if (!Solver3::updatePoses(database, AnyCameraPinhole(newCamera), Solver3::CM_UNKNOWN, randomGenerator1, (unsigned int)oldPoses.firstIndex(), (unsigned int)oldPoses.lastIndex(), 5u, Geometry::Estimator::ET_SQUARE, Scalar(1), Numeric::maxValue(), Numeric::maxValue(), nullptr, nullptr))
 	{
 		return false;
 	}
@@ -3128,7 +3134,7 @@ bool SLAMTracker::stabilizeStableObjectPointsPartiallyTranslational(const Pinhol
 	Log::info() << "Stabilizing the stable object points within the pose range [" << validLowerFrame << ", " << validUpperFrame << "]";
 
 	const unsigned int initialMinimalCorrespondences = correspondenceThreshold.threshold(bestCorrespondences);
-	if (!Solver3::updatePoses(database, pinholeCamera, Solver3::CM_TRANSLATIONAL, randomGenerator, lowerFrame, upperFrame, initialMinimalCorrespondences, Geometry::Estimator::ET_SQUARE, Scalar(0.9), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), nullptr, nullptr, WorkerPool::get().scopedWorker()(), abort))
+	if (!Solver3::updatePoses(database, AnyCameraPinhole(pinholeCamera), Solver3::CM_TRANSLATIONAL, randomGenerator, lowerFrame, upperFrame, initialMinimalCorrespondences, Geometry::Estimator::ET_SQUARE, Scalar(0.9), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), nullptr, nullptr, WorkerPool::get().scopedWorker()(), abort))
 	{
 		return false;
 	}

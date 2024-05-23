@@ -608,7 +608,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * The optimization is done by a bundle adjustment between the camera poses of distinct keyframes and the given 3D object points, however the optimized camera poses are not provided.<br>
 		 * This function can optimize a subset of the given initial object points to allow more camera poses (camera frames) to be involved.<br>
 		 * @param database The database defining the topology of 3D object points and corresponding 2D image points
-		 * @param pinholeCamera The pinhole camera profile which will be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param lowerFrame The index of the frame defining the lower border of camera poses which will be investigated
 		 * @param startFrame The index of the frame from which the algorithm will start, in this frame the specified initial object points must all be visible, with range [lowerFrame, upperFrame]
@@ -627,7 +627,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @return True, if succeeded
 		 */
-		static bool optimizeInitialObjectPoints(const Database& database, const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int startFrame, const unsigned int upperFrame, const Vectors3& initialObjectPoints, const Indices32& initialObjectPointIds, Vectors3& optimizedObjectPoints, Indices32& optimizedObjectPointIds, const unsigned int minimalObjectPoints = 5u, const unsigned int minimalKeyFrames = 3u, const unsigned int maximalKeyFrames = 10u, const Scalar maximalSqrError = Scalar(3.5 * 3.5), Indices32* usedPoseIds = nullptr, Scalar* initialSqrError = nullptr, Scalar* finalSqrError = nullptr, bool* abort = nullptr);
+		static bool optimizeInitialObjectPoints(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int startFrame, const unsigned int upperFrame, const Vectors3& initialObjectPoints, const Indices32& initialObjectPointIds, Vectors3& optimizedObjectPoints, Indices32& optimizedObjectPointIds, const unsigned int minimalObjectPoints = 5u, const unsigned int minimalKeyFrames = 3u, const unsigned int maximalKeyFrames = 10u, const Scalar maximalSqrError = Scalar(3.5 * 3.5), Indices32* usedPoseIds = nullptr, Scalar* initialSqrError = nullptr, Scalar* finalSqrError = nullptr, bool* abort = nullptr);
 
 		/**
 		 * Determines the positions of new object points from a database within a specified frame range.
@@ -960,7 +960,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * Poses from successive frames are applied as initial guess for a new frame.<br>
 		 * The resulting poses will have either a sole rotational motion or a rotational and translational motion, this depends on the defined camera motion.<br>
 		 * @param database The database from which the point correspondences are extracted and which receives the determined camera poses
-		 * @param pinholeCamera The pinhole camera profile to be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param cameraMotion The motion of the camera, use CM_UNKNOWN if the motion is unknown so that 6-DOF poses will be determined
 		 * @param randomGenerator Random generator object
 		 * @param lowerFrame The index of the frame defining the lower border of camera poses which will be investigated
@@ -976,7 +976,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @return True, if all poses have been updated (the poses may be invalid)
 		 */
-		static bool updatePoses(Database& database, const PinholeCamera& pinholeCamera, const CameraMotion cameraMotion, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int startFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar ransacMaximalSqrError = Scalar(3.5 * 3.5), const Scalar maximalRobustError = Scalar(3.5 * 3.5), Scalar* finalAverageError = nullptr, size_t* validPoses = nullptr, bool* abort = nullptr);
+		static bool updatePoses(Database& database, const AnyCamera& camera, const CameraMotion cameraMotion, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int startFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar ransacMaximalSqrError = Scalar(3.5 * 3.5), const Scalar maximalRobustError = Scalar(3.5 * 3.5), Scalar* finalAverageError = nullptr, size_t* validPoses = nullptr, bool* abort = nullptr);
 
 		/**
 		 * Updates the camera poses of the database depending on valid 2D/3D points correspondences within a range of camera frames.
@@ -984,7 +984,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * If a worker is provided every pose is determined independently.<br>
 		 * The resulting poses will have either a sole rotational motion or a rotational and translational motion, this depends on the defined camera motion.<br>
 		 * @param database The database from which the point correspondences are extracted and which receives the determined camera poses
-		 * @param pinholeCamera The pinhole camera profile to be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param cameraMotion The motion of the camera, use CM_UNKNOWN if the motion is unknown so that 6-DOF poses will be determined
 		 * @param randomGenerator Random generator object
 		 * @param lowerFrame The index of the frame defining the lower border of camera poses which will be investigated
@@ -1000,14 +1000,14 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @return True, if all poses have been updated (the poses may be invalid)
 		 */
-		static bool updatePoses(Database& database, const PinholeCamera& pinholeCamera, const CameraMotion cameraMotion, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar ransacMaximalSqrError = Scalar(3.5 * 3.5), const Scalar maximalRobustError = Scalar(3.5 * 3.5), Scalar* finalAverageError = nullptr, size_t* validPoses = nullptr, Worker* worker = nullptr, bool* abort = nullptr);
+		static bool updatePoses(Database& database, const AnyCamera& camera, const CameraMotion cameraMotion, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar ransacMaximalSqrError = Scalar(3.5 * 3.5), const Scalar maximalRobustError = Scalar(3.5 * 3.5), Scalar* finalAverageError = nullptr, size_t* validPoses = nullptr, Worker* worker = nullptr, bool* abort = nullptr);
 
 		/**
 		 * Determines the camera poses depending on valid 2D/3D points correspondence within a range of camera frames.
 		 * The camera poses will be set to invalid if no valid pose can be determined (e.g., if not enough valid point correspondences are known for a specific camera frame).<br>
 		 * The resulting poses will have either a sole rotational motion or a rotational and translational motion, this depends on the defined camera motion.<br>
 		 * @param database The database from which the point correspondences are extracted
-		 * @param pinholeCamera The pinhole camera profile to be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param cameraMotion The motion of the camera, use CM_UNKNOWN if the motion is unknown so that 6-DOF poses will be determined
 		 * @param priorityObjectPointIds Optional ids of the object points for which the poses will be optimized with higher priority, may be zero so that all object points are investigated with the same priority
 		 * @param solePriorityPoints True, to apply only the priority object points for pose determination, has no meaning if no priority points are provided
@@ -1025,7 +1025,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @return True, if all poses have been determined (some poses may be invalid)
 		 */
-		static bool determinePoses(const Database& database, const PinholeCamera& pinholeCamera, const CameraMotion cameraMotion, const IndexSet32& priorityObjectPointIds, const bool solePriorityPoints, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, ShiftVector<HomogenousMatrix4>& poses, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar ransacMaximalSqrError = Scalar(3.5 * 3.5), const Scalar maximalRobustError = Scalar(3.5 * 3.5), Scalar* finalAverageError = nullptr, Worker* worker = nullptr, bool* abort = nullptr);
+		static bool determinePoses(const Database& database, const AnyCamera& camera, const CameraMotion cameraMotion, const IndexSet32& priorityObjectPointIds, const bool solePriorityPoints, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, ShiftVector<HomogenousMatrix4>& poses, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar ransacMaximalSqrError = Scalar(3.5 * 3.5), const Scalar maximalRobustError = Scalar(3.5 * 3.5), Scalar* finalAverageError = nullptr, Worker* worker = nullptr, bool* abort = nullptr);
 
 		/**
 		 * This functions tracks image points (defined by their object points) from one frame to the sibling frames as long as the number of tracked points fall below a specified number or as long as a minimal number of sibling frames has been processed.
@@ -1109,7 +1109,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		/**
 		 * Determines the camera 6-DOF pose for a specific camera frame.
 		 * @param database The database from which the object point and image point correspondences are extracted
-		 * @param pinholeCamera The pinhole camera profile which is applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param frameId The id of the frame for which the camera pose will be determined
 		 * @param roughPose Optional a rough camera pose to speedup the computation and accuracy
@@ -1121,12 +1121,12 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param correspondences Optional resulting number of 2D/3D point correspondences which were available
 		 * @return The resulting camera pose, an invalid pose if no pose can be determined
 		 */
-		static inline HomogenousMatrix4 determinePose(const Database& database, const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const unsigned int frameId, const HomogenousMatrix4& roughPose = HomogenousMatrix4(false), const unsigned int minimalCorrespondences = 10u, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr, unsigned int* correspondences = nullptr);
+		static inline HomogenousMatrix4 determinePose(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const HomogenousMatrix4& roughPose = HomogenousMatrix4(false), const unsigned int minimalCorrespondences = 10u, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr, unsigned int* correspondences = nullptr);
 
 		/**
 		 * Determines the camera 6-DOF pose for a specific camera frame.
 		 * @param database The database from which the object point and image point correspondences are extracted
-		 * @param pinholeCamera The pinhole camera profile which is applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param frameId The id of the frame for which the camera pose will be determined
 		 * @param roughPose Optional a rough camera pose to speedup the computation and accuracy
@@ -1140,12 +1140,12 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param correspondences Optional resulting number of 2D/3D point correspondences which were available
 		 * @return The resulting camera pose, an invalid pose if no pose can be determined
 		 */
-		static inline HomogenousMatrix4 determinePose(const Database& database, const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const unsigned int frameId, const IndexSet32& priorityObjectPointIds, const bool solePriorityPoints, const HomogenousMatrix4& roughPose = HomogenousMatrix4(false), const unsigned int minimalCorrespondences = 10u, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr, unsigned int* correspondences = nullptr);
+		static inline HomogenousMatrix4 determinePose(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const IndexSet32& priorityObjectPointIds, const bool solePriorityPoints, const HomogenousMatrix4& roughPose = HomogenousMatrix4(false), const unsigned int minimalCorrespondences = 10u, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr, unsigned int* correspondences = nullptr);
 
 		/**
 		 * Determines the camera 6-DOF pose for a specific camera frame.
 		 * @param database The database from which the image points are extracted
-		 * @param pinholeCamera The pinhole camera profile which is applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param frameId The id of the frame for which the camera pose will be determined
 		 * @param objectPoints The object points which are all visible in the specified frame
@@ -1157,11 +1157,11 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param finalRobustError Optional resulting final average robust error, in relation to the defined estimator
 		 * @return The resulting camera pose, an invalid pose if no pose can be determined
 		 */
-		static inline HomogenousMatrix4 determinePose(const Database& database, const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const unsigned int frameId, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<Index32>& objectPointIds, const HomogenousMatrix4& roughPose = HomogenousMatrix4(false), const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr);
+		static inline HomogenousMatrix4 determinePose(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<Index32>& objectPointIds, const HomogenousMatrix4& roughPose = HomogenousMatrix4(false), const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr);
 
 		/**
 		 * Determines the camera 6-DOF pose for a set of object point and image point correspondences.
-		 * @param pinholeCamera The pinhole camera profile which is applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param objectPoints The object points which are visible in a frame
 		 * @param imagePoints The image points which are projections of the given object points, one image point corresponds to one object point
@@ -1173,12 +1173,12 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param validIndices Optional resulting indices of the valid point correspondences
 		 * @return The resulting camera pose, an invalid pose if no pose can be determined
 		 */
-		static inline HomogenousMatrix4 determinePose(const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const HomogenousMatrix4& roughPose = HomogenousMatrix4(false), const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr, Indices32* validIndices = nullptr);
+		static inline HomogenousMatrix4 determinePose(const AnyCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const HomogenousMatrix4& roughPose = HomogenousMatrix4(false), const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr, Indices32* validIndices = nullptr);
 
 		/**
 		 * Determines the camera 6-DOF pose for a set of object point and image point correspondences.
 		 * The point correspondences are separated to a set of priority correspondences and remaining correspondences ensuring that the pose mainly matches for the priority point correspondences.
-		 * @param pinholeCamera The pinhole camera profile which is applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param objectPoints The object points which are visible in a frame, first all priority object points followed by the remaining object points
 		 * @param imagePoints The image points which are projections of the given object points, one image point corresponds to one object point
@@ -1190,12 +1190,12 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param finalRobustError Optional resulting final average robust error, in relation to the defined estimator
 		 * @return The resulting camera pose, an invalid pose if no pose can be determined
 		 */
-		static inline HomogenousMatrix4 determinePose(const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const size_t priorityCorrespondences, const HomogenousMatrix4& roughPose = HomogenousMatrix4(false), const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr);
+		static inline HomogenousMatrix4 determinePose(const AnyCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const size_t priorityCorrespondences, const HomogenousMatrix4& roughPose = HomogenousMatrix4(false), const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr);
 
 		/**
 		 * Determines the camera 3-DOF orientation (as the camera has rotational motion only) for a specific camera frame.
 		 * @param database The database from which the object point and image point correspondences are extracted
-		 * @param pinholeCamera The pinhole camera profile which is applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param frameId The id of the frame for which the camera orientation will be determined
 		 * @param roughOrientation Optional a rough camera orientation to speedup the computation and accuracy
@@ -1207,12 +1207,12 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param correspondences Optional resulting number of 2D/3D point correspondences which were available
 		 * @return The resulting camera orientation, an invalid orientation if no orientation can be determined
 		 */
-		static inline SquareMatrix3 determineOrientation(const Database& database, const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const unsigned int frameId, const SquareMatrix3& roughOrientation = SquareMatrix3(false), const unsigned int minimalCorrespondences = 10u, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr, unsigned int* correspondences = nullptr);
+		static inline SquareMatrix3 determineOrientation(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const SquareMatrix3& roughOrientation = SquareMatrix3(false), const unsigned int minimalCorrespondences = 10u, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr, unsigned int* correspondences = nullptr);
 
 		/**
 		 * Determines the camera 3-DOF orientation (as the camera has rotational motion only) for a specific camera frame.
 		 * @param database The database from which the object point and image point correspondences are extracted
-		 * @param pinholeCamera The pinhole camera profile which is applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param frameId The id of the frame for which the camera orientation will be determined
 		 * @param priorityObjectPointIds Ids of object points for which the poses will be optimized
@@ -1226,12 +1226,12 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param correspondences Optional resulting number of 2D/3D point correspondences which were available
 		 * @return The resulting camera orientation, an invalid orientation if no orientation can be determined
 		 */
-		static inline SquareMatrix3 determineOrientation(const Database& database, const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const unsigned int frameId, const IndexSet32& priorityObjectPointIds, const bool solePriorityPoints, const SquareMatrix3& roughOrientation = SquareMatrix3(false), const unsigned int minimalCorrespondences = 10u, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr, unsigned int* correspondences = nullptr);
+		static inline SquareMatrix3 determineOrientation(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const IndexSet32& priorityObjectPointIds, const bool solePriorityPoints, const SquareMatrix3& roughOrientation = SquareMatrix3(false), const unsigned int minimalCorrespondences = 10u, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr, unsigned int* correspondences = nullptr);
 
 		/**
 		 * Determines the camera 3-DOF orientation (as the camera has rotational motion only) for a specific camera frame.
 		 * @param database The database from which the image points are extracted
-		 * @param pinholeCamera The pinhole camera profile which is applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param frameId The id of the frame for which the camera orientation will be determined
 		 * @param objectPoints The object points which are all visible in the specified frame
@@ -1244,11 +1244,11 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param finalRobustError Optional resulting final average robust error, in relation to the defined estimator
 		 * @return The resulting camera orientation, an invalid orientation if no orientation can be determined
 		 */
-		static inline SquareMatrix3 determineOrientation(const Database& database, const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const unsigned int frameId, const ObjectPoint* objectPoints, const Index32* objectPointIds, const size_t numberObjectPoints, const SquareMatrix3& roughOrientation = SquareMatrix3(false), const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr);
+		static inline SquareMatrix3 determineOrientation(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const ObjectPoint* objectPoints, const Index32* objectPointIds, const size_t numberObjectPoints, const SquareMatrix3& roughOrientation = SquareMatrix3(false), const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr);
 
 		/**
 		 * Determines the camera 3-DOF orientation for a set of object point and image point correspondences.
-		 * @param pinholeCamera The pinhole camera profile which is applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param objectPoints The object points which are visible in a frame
 		 * @param imagePoints The image points which are projections of the given object points, one image point corresponds to one object point
@@ -1260,11 +1260,11 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param validIndices Optional resulting indices of the valid point correspondences
 		 * @return The resulting camera orientation, an invalid orientation if no orientation can be determined
 		 */
-		static inline SquareMatrix3 determineOrientation(const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const SquareMatrix3& roughOrientation = SquareMatrix3(false), const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr, Indices32* validIndices = nullptr);
+		static inline SquareMatrix3 determineOrientation(const AnyCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const SquareMatrix3& roughOrientation = SquareMatrix3(false), const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr, Indices32* validIndices = nullptr);
 
 		/**
 		 * Determines the camera 3-DOF orientation for a set of object point and image point correspondences.
-		 * @param pinholeCamera The pinhole camera profile which is applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param objectPoints The object points which are visible in a frame, first all priority object points followed by the remaining object points
 		 * @param imagePoints The image points which are projections of the given object points, one image point corresponds to one object point
@@ -1276,12 +1276,12 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param finalRobustError Optional resulting final average robust error, in relation to the defined estimator
 		 * @return The resulting camera orientation, an invalid orientation if no orientation can be determined
 		 */
-		static inline SquareMatrix3 determineOrientation(const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const size_t priorityCorrespondences, const SquareMatrix3& roughOrientation = SquareMatrix3(false), const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr);
+		static inline SquareMatrix3 determineOrientation(const AnyCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const size_t priorityCorrespondences, const SquareMatrix3& roughOrientation = SquareMatrix3(false), const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Scalar* finalRobustError = nullptr);
 
 		/**
 		 * Determines valid poses for a range of camera frames while for each frame a group of image points is given which correspond to the given object points.
 		 * Two individual camera poses must be known within the range of camera frames.<br>
-		 * @param pinholeCamera The pinhole camera profile defining the projection
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param objectPoints The object points with known locations, each object point has a corresponding image point in the groups of image points
 		 * @param imagePointGroups The groups of image points, each set of image points corresponds to the object points, each group of image points represents one camera pose (the observed object points respectively)
 		 * @param randomGenerator Random number generator
@@ -1298,7 +1298,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param totalSqrError Optional resulting sum of square pixel errors for all valid poses
 		 * @return The number of valid poses
 		 */
-		static size_t determineValidPoses(const PinholeCamera& pinholeCamera, const Vectors3& objectPoints, const ImagePointGroups& imagePointGroups, RandomGenerator& randomGenerator, const CameraMotion cameraMotion, const unsigned int firstValidPoseIndex, const HomogenousMatrix4& firstValidPose, const unsigned int secondValidPoseIndex, const HomogenousMatrix4& secondValidPose, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Indices32* validObjectPointIndices = nullptr, HomogenousMatrices4* poses = nullptr, Indices32* poseIds = nullptr, Scalar* totalSqrError = nullptr);
+		static size_t determineValidPoses(const AnyCamera& camera, const Vectors3& objectPoints, const ImagePointGroups& imagePointGroups, RandomGenerator& randomGenerator, const CameraMotion cameraMotion, const unsigned int firstValidPoseIndex, const HomogenousMatrix4& firstValidPose, const unsigned int secondValidPoseIndex, const HomogenousMatrix4& secondValidPose, const Scalar minimalValidCorrespondenceRatio = Scalar(1), const Scalar maximalSqrError = Scalar(3.5 * 3.5), Indices32* validObjectPointIndices = nullptr, HomogenousMatrices4* poses = nullptr, Indices32* poseIds = nullptr, Scalar* totalSqrError = nullptr);
 
 		/**
 		 * Determines the camera motion from the camera poses within a specified frame range covering only valid poses.
@@ -1521,7 +1521,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		/**
 		 * Removes all valid 3D object points (and their corresponding 2D image points) from the database which are at least in one frame not in front of the camera while having an existing 2D image point as observation.
 		 * @param database The database from which the 3D object points will be removed
-		 * @param removedObjectPointIds Optional resulting ids of all object points which have been removed, nullptr if not of iterest
+		 * @param removedObjectPointIds Optional resulting ids of all object points which have been removed, nullptr if not of interest
 		 * @return The number of removed 3D object points
 		 */
 		static size_t removeObjectPointsNotInFrontOfCamera(Database& database, Indices32* removedObjectPointIds = nullptr);
@@ -1530,7 +1530,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * Removes any 3D object point (and it's corresponding 2D image points) from the database with less then a specified number of observations.
 		 * @param database The database from which the 3D object points will be removed
 		 * @param minimalNumberObservations The minimal number of observations a 3D object point must have to stay in the database, with range [1, infinity)
-		 * @param removedObjectPointIds Optional resulting ids of all object points which have been removed, nullptr if not of iterest
+		 * @param removedObjectPointIds Optional resulting ids of all object points which have been removed, nullptr if not of interest
 		 * @return The number of removed 3D object points
 		 */
 		static size_t removeObjectPointsWithoutEnoughObservations(Database& database, const size_t minimalNumberObservations, Indices32* removedObjectPointIds = nullptr);
@@ -1540,7 +1540,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * The bounding box is determined based on the translational parts of the camera poses.
 		 * @param database The database from which the 3D object points will be removed
 		 * @param minimalBoxDiagonal The minimal diagonal of the bounding box of all camera poses of supporting an object point to stay in the database
-		 * @param removedObjectPointIds Optional resulting ids of all object points which have been removed, nullptr if not of iterest
+		 * @param removedObjectPointIds Optional resulting ids of all object points which have been removed, nullptr if not of interest
 		 * @return The number of removed 3D object points
 		 */
 		static size_t removeObjectPointsWithSmallBaseline(Database& database, const Scalar minimalBoxDiagonal, Indices32* removedObjectPointIds = nullptr);
@@ -1576,7 +1576,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param initialObjectPoints The resulting initial 3D positions of object points that could be extracted
 		 * @param initialObjectPointIds The resulting ids of the resulting object points, one id for each resulting object point
 		 * @param initialPoseIds The resulting ids of all camera poses which have been used to determine the resulting initial object points
-		 * @param initialPointDistance The resulting distance between the image points which have been used to determine the initial object points, which is a mesasure for the reliability of the resulting 3D object points
+		 * @param initialPointDistance The resulting distance between the image points which have been used to determine the initial object points, which is a measure for the reliability of the resulting 3D object points
 		 * @param pointsThreshold The threshold of image points which must be visible in each camera frame
 		 * @param minimalKeyFrames The minimal number of keyframes that will be extracted
 		 * @param maximalKeyFrames The maximal number of keyframes that will be extracted
@@ -1624,7 +1624,7 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * Updates a subset of the camera poses depending on valid 2D/3D points correspondences within a range of camera frames.
 		 * The camera poses will be set to invalid if no valid pose can be determined (e.g., if not enough valid point correspondences are known for a specific camera frame).<br>
 		 * @param database The database from which the point correspondences are extracted and which receives the determined camera poses
-		 * @param pinholeCamera The pinhole camera profile to be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param lowerFrame The index of the frame defining the lower border of camera poses which will be investigated
 		 * @param upperFrame The index of the frame defining the upper border of camera poses which will be investigated, with range [lowerFrame, infinity)
@@ -1635,19 +1635,19 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param maximalRobustError The maximal average robust pixel error between image point and projected object points so that a pose counts as valid, with range (0, infinity)
 		 * @param totalError The resulting accumulated total error for all poses
 		 * @param validPoses The resulting number of valid poses
-		 * @param lock Lock object which must be defined if this function is executed in parallel on several individual threads
+		 * @param lock The lock object which must be defined if this function is executed in parallel on several individual threads
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @param numberThreads The overall number of threads which are used in parallel
 		 * @param threadIndex The index of the thread executing this function, with range [0, numberThreads)
 		 * @param numberThreadsOne Must be 1
 		 */
-		static void updatePosesSubset(Database* database, const PinholeCamera* pinholeCamera, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, size_t* validPoses, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne);
+		static void updatePosesSubset(Database* database, const AnyCamera* camera, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, size_t* validPoses, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne);
 
 		/**
 		 * Updates a subset of the camera orientations (as the camera has rotational motion only) depending on valid 2D/3D points correspondences within a range of camera frames.
 		 * The camera orientations (their poses respectively) will be set to invalid if no valid orientation can be determined (e.g., if not enough valid point correspondences are known for a specific camera frame).<br>
 		 * @param database The database from which the point correspondences are extracted and which receives the determined camera orientations (the 6-DOF poses with zero translation)
-		 * @param pinholeCamera The pinhole camera profile to be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param randomGenerator Random generator object
 		 * @param lowerFrame The index of the frame defining the lower border of camera poses which will be investigated
 		 * @param upperFrame The index of the frame defining the upper border of camera poses which will be investigated, with range [lowerFrame, infinity)
@@ -1658,19 +1658,19 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param maximalRobustError The maximal average robust pixel error between image point and projected object points so that a orientation counts as valid, with range (0, infinity)
 		 * @param totalError The resulting accumulated total error for all poses (orientations)
 		 * @param validPoses The resulting number of valid poses (orientations)
-		 * @param lock Lock object which must be defined if this function is executed in parallel on several individual threads
+		 * @param lock The lock object which must be defined if this function is executed in parallel on several individual threads
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @param numberThreads The overall number of threads which are used in parallel
 		 * @param threadIndex The index of the thread executing this function, with range [0, numberThreads)
 		 * @param numberThreadsOne Must be 1
 		 */
-		static void updateOrientationsSubset(Database* database, const PinholeCamera* pinholeCamera, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, size_t* validPoses, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne);
+		static void updateOrientationsSubset(Database* database, const AnyCamera* camera, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, size_t* validPoses, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne);
 
 		/**
 		 * Determines a subset of the camera poses depending on valid 2D/3D points correspondences within a range of camera frames.
 		 * The camera poses will be set to invalid if no valid pose can be determined (e.g., if not enough valid point correspondences are known for a specific camera frame).<br>
 		 * @param database The database from which the point correspondences are extracted and which receives the determined camera poses
-		 * @param pinholeCamera The pinhole camera profile to be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param priorityObjectPointIds Optional ids of the object points for which the poses will be optimized, may be zero so that all object points are investigated with the same priority
 		 * @param solePriorityPoints True, to apply only the priority object points for pose determination
 		 * @param randomGenerator Random generator object
@@ -1683,19 +1683,19 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param minimalValidCorrespondenceRatio The ratio of the minimal number of valid correspondences (the valid correspondences will be determined from a RANSAC iteration), with range [0, 1]
 		 * @param maximalRobustError The maximal average robust pixel error between image point and projected object points so that a pose counts as valid, with range (0, infinity)
 		 * @param totalError The resulting accumulated total error for all poses
-		 * @param lock Lock object which must be defined if this function is executed in parallel on several individual threads
+		 * @param lock The lock object which must be defined if this function is executed in parallel on several individual threads
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @param numberThreads The overall number of threads which are used in parallel
 		 * @param threadIndex The index of the thread executing this function, with range [0, numberThreads)
 		 * @param numberThreadsOne Must be 1
 		 */
-		static void determinePosesSubset(const Database* database, const PinholeCamera* pinholeCamera, const IndexSet32* priorityObjectPointIds, const bool solePriorityPoints, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, ShiftVector<HomogenousMatrix4>* poses, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne);
+		static void determinePosesSubset(const Database* database, const AnyCamera* camera, const IndexSet32* priorityObjectPointIds, const bool solePriorityPoints, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, ShiftVector<HomogenousMatrix4>* poses, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne);
 
 		/**
 		 * Determines a subset of the camera orientations (as the camera has rotational motion only) depending on valid 2D/3D points correspondences within a range of camera frames.
 		 * The camera orientations (their poses respectively) will be set to invalid if no valid orientation can be determined (e.g., if not enough valid point correspondences are known for a specific camera frame).<br>
 		 * @param database The database from which the point correspondences are extracted and which receives the determined camera orientations (the 6-DOF poses with zero translation)
-		 * @param pinholeCamera The pinhole camera profile to be applied
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param priorityObjectPointIds Optional ids of the object points for which the poses will be optimized, may be zero so that all object points are investigated with the same priority
 		 * @param solePriorityPoints True, to apply only the priority object points for pose determination
 		 * @param randomGenerator Random generator object
@@ -1708,13 +1708,13 @@ class OCEAN_TRACKING_EXPORT Solver3
 		 * @param minimalValidCorrespondenceRatio The ratio of the minimal number of valid correspondences (the valid correspondences will be determined from a RANSAC iteration), with range [0, 1]
 		 * @param maximalRobustError The maximal average robust pixel error between image point and projected object points so that a orientation counts as valid, with range (0, infinity)
 		 * @param totalError The resulting accumulated total error for all poses (orientations)
-		 * @param lock Lock object which must be defined if this function is executed in parallel on several individual threads
+		 * @param lock The lock object which must be defined if this function is executed in parallel on several individual threads
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @param numberThreads The overall number of threads which are used in parallel
 		 * @param threadIndex The index of the thread executing this function, with range [0, numberThreads)
 		 * @param numberThreadsOne Must be 1
 		 */
-		static void determineOrientationsSubset(const Database* database, const PinholeCamera* pinholeCamera, const IndexSet32* priorityObjectPointIds, const bool solePriorityPoints, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, ShiftVector<HomogenousMatrix4>* poses, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne);
+		static void determineOrientationsSubset(const Database* database, const AnyCamera* camera, const IndexSet32* priorityObjectPointIds, const bool solePriorityPoints, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, ShiftVector<HomogenousMatrix4>* poses, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne);
 
 		/**
 		 * Determines the semi-precise location of 3D object points and the camera poses for a sole rotational camera motion.
@@ -1998,25 +1998,33 @@ inline bool Solver3::determineUnknownObjectPoints(const Database& database, cons
 	return determineUnknownObjectPoints(database, camera, cameraMotion, invalidObjectPointIds, newObjectPoints, newObjectPointIds, randomGenerator, newObjectPointObservations, minimalObservations, useAllObservations, estimator, ransacMaximalSqrError, averageRobustError, maximalSqrError, worker, abort);
 }
 
-inline HomogenousMatrix4 Solver3::determinePose(const Database& database, const PinholeCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const HomogenousMatrix4& roughPose, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, unsigned int* correspondences)
+inline HomogenousMatrix4 Solver3::determinePose(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const HomogenousMatrix4& roughPose, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, unsigned int* correspondences)
 {
+	ocean_assert(camera.isValid());
+
 	Vectors2 imagePoints;
 	Vectors3 objectPoints;
 	database.imagePointsObjectPoints<false, false>(frameId, imagePoints, objectPoints, Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()));
 	ocean_assert(imagePoints.size() == objectPoints.size());
 
-	if (correspondences)
+	if (correspondences != nullptr)
+	{
 		*correspondences = (unsigned int)imagePoints.size();
+	}
 
 	// check whether enough points correspondences could be found
 	if (imagePoints.size() < minimalCorrespondences)
+	{
 		return HomogenousMatrix4(false);
+	}
 
 	return determinePose(camera, randomGenerator, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), roughPose, estimator, minimalValidCorrespondenceRatio, maximalSqrError, finalRobustError);
 }
 
-inline HomogenousMatrix4 Solver3::determinePose(const Database& database, const PinholeCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const IndexSet32& priorityObjectPointIds, const bool solePriorityPoints, const HomogenousMatrix4& roughPose, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, unsigned int* correspondences)
+inline HomogenousMatrix4 Solver3::determinePose(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const IndexSet32& priorityObjectPointIds, const bool solePriorityPoints, const HomogenousMatrix4& roughPose, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, unsigned int* correspondences)
 {
+	ocean_assert(camera.isValid());
+
 	ocean_assert(!priorityObjectPointIds.empty());
 
 	Vectors2 priorityImagePoints, remainingImagePoints;
@@ -2027,22 +2035,30 @@ inline HomogenousMatrix4 Solver3::determinePose(const Database& database, const 
 
 	if (solePriorityPoints)
 	{
-		if (correspondences)
+		if (correspondences != nullptr)
+		{
 			*correspondences = (unsigned int)priorityImagePoints.size();
+		}
 
 		if (priorityImagePoints.size() < minimalCorrespondences)
+		{
 			return HomogenousMatrix4(false);
+		}
 
 		return determinePose(camera, randomGenerator, ConstArrayAccessor<Vector3>(priorityObjectPoints), ConstArrayAccessor<Vector2>(priorityImagePoints), roughPose, estimator, minimalValidCorrespondenceRatio, maximalSqrError, finalRobustError);
 	}
 	else
 	{
-		if (correspondences)
+		if (correspondences != nullptr)
+		{
 			*correspondences = (unsigned int)(priorityImagePoints.size() + remainingImagePoints.size());
+		}
 
 		// check whether enough points correspondences could be found
 		if (priorityImagePoints.size() + remainingImagePoints.size() < minimalCorrespondences)
+		{
 			return HomogenousMatrix4(false);
+		}
 
 		const size_t priorityCorrespondences = priorityImagePoints.size();
 
@@ -2053,7 +2069,7 @@ inline HomogenousMatrix4 Solver3::determinePose(const Database& database, const 
 	}
 }
 
-inline HomogenousMatrix4 Solver3::determinePose(const Database& database, const PinholeCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<Index32>& objectPointIds, const HomogenousMatrix4& roughPose, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError)
+inline HomogenousMatrix4 Solver3::determinePose(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<Index32>& objectPointIds, const HomogenousMatrix4& roughPose, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError)
 {
 	const ScopedConstMemoryAccessor<Index32> scopedObjectPointIdMemoryAccessor(objectPointIds);
 
@@ -2064,8 +2080,9 @@ inline HomogenousMatrix4 Solver3::determinePose(const Database& database, const 
 	return determinePose(camera, randomGenerator, objectPoints, ConstArrayAccessor<ImagePoint>(imagePoints), roughPose, estimator, minimalValidCorrespondenceRatio, maximalSqrError, finalRobustError);
 }
 
-inline HomogenousMatrix4 Solver3::determinePose(const PinholeCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const HomogenousMatrix4& roughPose, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, Indices32* validIndices)
+inline HomogenousMatrix4 Solver3::determinePose(const AnyCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const HomogenousMatrix4& roughPose, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, Indices32* validIndices)
 {
+	ocean_assert(camera.isValid());
 	ocean_assert(objectPoints.size() == imagePoints.size());
 	ocean_assert(minimalValidCorrespondenceRatio >= 0 && minimalValidCorrespondenceRatio <= 1);
 
@@ -2075,7 +2092,9 @@ inline HomogenousMatrix4 Solver3::determinePose(const PinholeCamera& camera, Ran
 
 	Indices32 internalValidIndices;
 	if (!previousPose.isValid() || minimalValidCorrespondenceRatio < 1)
-		Geometry::RANSAC::p3p(camera, objectPoints, imagePoints, randomGenerator, camera.hasDistortionParameters(), previousPose, 5u, true, 50u, maximalSqrError, &internalValidIndices);
+	{
+		Geometry::RANSAC::p3p(camera, objectPoints, imagePoints, randomGenerator, previousPose, 5u, true, 50u, maximalSqrError, &internalValidIndices);
+	}
 
 	// check whether we did not receive enough valid correspondences from the RANSAC, however if the difference is 2 we accept the pose as in this case the ratio may provide wrong results
 	if (minimalValidCorrespondenceRatio < 1 && Scalar(internalValidIndices.size()) < Scalar(objectPoints.size()) * minimalValidCorrespondenceRatio && objectPoints.size() - internalValidIndices.size() > 2)
@@ -2088,7 +2107,7 @@ inline HomogenousMatrix4 Solver3::determinePose(const PinholeCamera& camera, Ran
 	{
 		if (minimalValidCorrespondenceRatio < 1 && internalValidIndices.size() != objectPoints.size())
 		{
-			Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, ConstIndexedAccessorSubsetAccessor<Vector3, Index32>(objectPoints, internalValidIndices), ConstIndexedAccessorSubsetAccessor<Vector2, Index32>(imagePoints, internalValidIndices), camera.hasDistortionParameters(), currentPose, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
+			Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, ConstIndexedAccessorSubsetAccessor<Vector3, Index32>(objectPoints, internalValidIndices), ConstIndexedAccessorSubsetAccessor<Vector2, Index32>(imagePoints, internalValidIndices),currentPose, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
 
 			if (validIndices)
 			{
@@ -2097,7 +2116,7 @@ inline HomogenousMatrix4 Solver3::determinePose(const PinholeCamera& camera, Ran
 		}
 		else
 		{
-			Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, objectPoints, imagePoints, camera.hasDistortionParameters(), currentPose, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
+			Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, objectPoints, imagePoints, currentPose, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
 
 			if (validIndices)
 			{
@@ -2109,8 +2128,9 @@ inline HomogenousMatrix4 Solver3::determinePose(const PinholeCamera& camera, Ran
 	return currentPose;
 }
 
-inline HomogenousMatrix4 Solver3::determinePose(const PinholeCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const size_t priorityCorrespondences, const HomogenousMatrix4& roughPose, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError)
+inline HomogenousMatrix4 Solver3::determinePose(const AnyCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const size_t priorityCorrespondences, const HomogenousMatrix4& roughPose, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError)
 {
+	ocean_assert(camera.isValid());
 	ocean_assert(objectPoints.size() == imagePoints.size());
 	ocean_assert(minimalValidCorrespondenceRatio >= 0 && minimalValidCorrespondenceRatio <= 1);
 
@@ -2121,7 +2141,7 @@ inline HomogenousMatrix4 Solver3::determinePose(const PinholeCamera& camera, Ran
 	Indices32 validIndices;
 	if (!previousPose.isValid() || minimalValidCorrespondenceRatio < 1)
 	{
-		Geometry::RANSAC::p3p(camera, objectPoints, imagePoints, randomGenerator, camera.hasDistortionParameters(), previousPose, 5u, true, 50u, maximalSqrError, &validIndices);
+		Geometry::RANSAC::p3p(camera, objectPoints, imagePoints, randomGenerator, previousPose, 5u, true, 50u, maximalSqrError, &validIndices);
 	}
 
 	// check whether we did not receive enough valid correspondences from the RANSAC, however if the difference is 2 we accept the pose as in this case the ratio may provide wrong results
@@ -2163,7 +2183,7 @@ inline HomogenousMatrix4 Solver3::determinePose(const PinholeCamera& camera, Ran
 				}
 			}
 
-			Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, ConstIndexedAccessorSubsetAccessor<Vector3, Index32>(objectPoints, validIndices), ConstIndexedAccessorSubsetAccessor<Vector2, Index32>(imagePoints, validIndices), camera.hasDistortionParameters(), currentPose, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
+			Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, ConstIndexedAccessorSubsetAccessor<Vector3, Index32>(objectPoints, validIndices), ConstIndexedAccessorSubsetAccessor<Vector2, Index32>(imagePoints, validIndices), currentPose, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
 		}
 		else
 		{
@@ -2179,21 +2199,23 @@ inline HomogenousMatrix4 Solver3::determinePose(const PinholeCamera& camera, Ran
 				remainingInvertedCovariance.copyElements(invertedCovariances[2 * n], false);
 			}
 
-			Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, objectPoints, imagePoints, camera.hasDistortionParameters(), currentPose, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
+			Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, objectPoints, imagePoints, currentPose, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
 		}
 	}
 
 	return currentPose;
 }
 
-inline SquareMatrix3 Solver3::determineOrientation(const Database& database, const PinholeCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const SquareMatrix3& roughOrientation, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, unsigned int* correspondences)
+inline SquareMatrix3 Solver3::determineOrientation(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const SquareMatrix3& roughOrientation, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, unsigned int* correspondences)
 {
+	ocean_assert(camera.isValid());
+
 	Vectors2 imagePoints;
 	Vectors3 objectPoints;
 	database.imagePointsObjectPoints<false, false>(frameId, imagePoints, objectPoints, Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()));
 	ocean_assert(imagePoints.size() == objectPoints.size());
 
-	if (correspondences)
+	if (correspondences != nullptr)
 	{
 		*correspondences = (unsigned int)imagePoints.size();
 	}
@@ -2207,8 +2229,9 @@ inline SquareMatrix3 Solver3::determineOrientation(const Database& database, con
 	return determineOrientation(camera, randomGenerator, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), roughOrientation, estimator, minimalValidCorrespondenceRatio, maximalSqrError, finalRobustError);
 }
 
-inline SquareMatrix3 Solver3::determineOrientation(const Database& database, const PinholeCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const IndexSet32& priorityObjectPointIds, const bool solePriorityPoints, const SquareMatrix3& roughOrientation, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, unsigned int* correspondences)
+inline SquareMatrix3 Solver3::determineOrientation(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const IndexSet32& priorityObjectPointIds, const bool solePriorityPoints, const SquareMatrix3& roughOrientation, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, unsigned int* correspondences)
 {
+	ocean_assert(camera.isValid());
 	ocean_assert(!priorityObjectPointIds.empty());
 
 	Vectors2 priorityImagePoints, remainingImagePoints;
@@ -2219,7 +2242,7 @@ inline SquareMatrix3 Solver3::determineOrientation(const Database& database, con
 
 	if (solePriorityPoints)
 	{
-		if (correspondences)
+		if (correspondences != nullptr)
 		{
 			*correspondences = (unsigned int)priorityImagePoints.size();
 		}
@@ -2234,7 +2257,7 @@ inline SquareMatrix3 Solver3::determineOrientation(const Database& database, con
 	}
 	else
 	{
-		if (correspondences)
+		if (correspondences != nullptr)
 		{
 			*correspondences = (unsigned int)(priorityImagePoints.size() + remainingImagePoints.size());
 		}
@@ -2254,8 +2277,10 @@ inline SquareMatrix3 Solver3::determineOrientation(const Database& database, con
 	}
 }
 
-inline SquareMatrix3 Solver3::determineOrientation(const Database& database, const PinholeCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const ObjectPoint* objectPoints, const Index32* objectPointIds, const size_t numberObjectPoints, const SquareMatrix3& roughOrientation, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError)
+inline SquareMatrix3 Solver3::determineOrientation(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int frameId, const ObjectPoint* objectPoints, const Index32* objectPointIds, const size_t numberObjectPoints, const SquareMatrix3& roughOrientation, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError)
 {
+	ocean_assert(camera.isValid());
+
 	Indices32 validIndices;
 	const Vectors2 imagePoints = database.imagePointsFromObjectPoints<false>(frameId, objectPointIds, numberObjectPoints, validIndices);
 	ocean_assert(numberObjectPoints == validIndices.size());
@@ -2263,43 +2288,43 @@ inline SquareMatrix3 Solver3::determineOrientation(const Database& database, con
 	return determineOrientation(camera, randomGenerator, ConstArrayAccessor<Vector3>(objectPoints, numberObjectPoints), ConstArrayAccessor<Vector2>(imagePoints), roughOrientation, estimator, minimalValidCorrespondenceRatio, maximalSqrError, finalRobustError);
 }
 
-inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const SquareMatrix3& roughOrientation, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, Indices32* validIndices)
+inline SquareMatrix3 Solver3::determineOrientation(const AnyCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const SquareMatrix3& roughOrientation, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError, Indices32* validIndices)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(objectPoints.size() == imagePoints.size());
 	ocean_assert(minimalValidCorrespondenceRatio >= 0 && minimalValidCorrespondenceRatio <= 1);
-
-	const AnyCameraPinhole anyCamera(camera);
 
 	SquareMatrix3 previousOrientation(roughOrientation);
 
 	Indices32 internalValidIndices;
 	if (previousOrientation.isNull() || minimalValidCorrespondenceRatio < 1)
 	{
-		Geometry::RANSAC::orientation(anyCamera, objectPoints, imagePoints, randomGenerator, previousOrientation, 5u, 50u, maximalSqrError, nullptr, &internalValidIndices);
+		Geometry::RANSAC::orientation(camera, objectPoints, imagePoints, randomGenerator, previousOrientation, 5u, 50u, maximalSqrError, nullptr, &internalValidIndices);
 	}
 
 	// check whether we do not receive enough valid correspondences from the RANSAC, however if the difference is 2 we accept the pose as in this case the ratio may provide wrong results
 	if (minimalValidCorrespondenceRatio < 1 && Scalar(internalValidIndices.size()) < Scalar(objectPoints.size()) * minimalValidCorrespondenceRatio && objectPoints.size() - internalValidIndices.size() > 2)
+	{
 		return SquareMatrix3(false);
+	}
 
 	SquareMatrix3 currentOrientation(false);
 	if (!previousOrientation.isNull())
 	{
 		if (minimalValidCorrespondenceRatio < 1)
 		{
-			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, previousOrientation, ConstIndexedAccessorSubsetAccessor<Vector3, unsigned int>(objectPoints, internalValidIndices), ConstIndexedAccessorSubsetAccessor<Vector2, unsigned int>(imagePoints, internalValidIndices), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
+			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, previousOrientation, ConstIndexedAccessorSubsetAccessor<Vector3, unsigned int>(objectPoints, internalValidIndices), ConstIndexedAccessorSubsetAccessor<Vector2, unsigned int>(imagePoints, internalValidIndices), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
 
-			if (validIndices)
+			if (validIndices != nullptr)
 			{
 				*validIndices = std::move(internalValidIndices);
 			}
 		}
 		else
 		{
-			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, previousOrientation, objectPoints, imagePoints, currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
+			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, previousOrientation, objectPoints, imagePoints, currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
 
-			if (validIndices)
+			if (validIndices != nullptr)
 			{
 				*validIndices = createIndices(objectPoints.size(), 0u);
 			}
@@ -2309,20 +2334,18 @@ inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, 
 	return currentOrientation;
 }
 
-inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const size_t priorityCorrespondences, const SquareMatrix3& roughOrientation, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError)
+inline SquareMatrix3 Solver3::determineOrientation(const AnyCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const size_t priorityCorrespondences, const SquareMatrix3& roughOrientation, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(objectPoints.size() == imagePoints.size());
 	ocean_assert(minimalValidCorrespondenceRatio >= 0 && minimalValidCorrespondenceRatio <= 1);
-
-	const AnyCameraPinhole anyCamera(camera);
 
 	SquareMatrix3 previousOrientation(roughOrientation);
 
 	Indices32 validIndices;
 	if (previousOrientation.isNull() || minimalValidCorrespondenceRatio < 1)
 	{
-		Geometry::RANSAC::orientation(anyCamera, objectPoints, imagePoints, randomGenerator, previousOrientation, 5u, 50u, maximalSqrError, nullptr, &validIndices);
+		Geometry::RANSAC::orientation(camera, objectPoints, imagePoints, randomGenerator, previousOrientation, 5u, 50u, maximalSqrError, nullptr, &validIndices);
 	}
 
 	// check whether we do not receive enough valid correspondences from the RANSAC, however if the difference is 2 we accept the pose as in this case the ratio may provide wrong results
@@ -2373,7 +2396,7 @@ inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, 
 				subsetImagePoints.push_back(imagePoints[index]);
 			}
 
-			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, previousOrientation, ConstArrayAccessor<Vector3>(subsetObjectPoints), ConstArrayAccessor<Vector2>(subsetImagePoints), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
+			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, previousOrientation, ConstArrayAccessor<Vector3>(subsetObjectPoints), ConstArrayAccessor<Vector2>(subsetImagePoints), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
 		}
 		else
 		{
@@ -2389,7 +2412,7 @@ inline SquareMatrix3 Solver3::determineOrientation(const PinholeCamera& camera, 
 				remainingInvertedCovariance.copyElements(invertedCovariances[2 * n], false);
 			}
 
-			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, previousOrientation, objectPoints, imagePoints, currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
+			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, previousOrientation, objectPoints, imagePoints, currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
 		}
 	}
 

@@ -58,7 +58,7 @@ bool MapMerging::bundleAdjustment(Database& database, const PinholeCamera& pinho
 	{
 		if (optimizedPoseIdSet.find(poseId) == optimizedPoseIdSet.cend())
 		{
-			const HomogenousMatrix4 world_T_camera = Tracking::Solver3::determinePose(database, pinholeCamera, randomGenerator, poseId, database.pose<false>(poseId), 10u, Geometry::Estimator::ET_HUBER);
+			const HomogenousMatrix4 world_T_camera = Tracking::Solver3::determinePose(database, AnyCameraPinhole(pinholeCamera), randomGenerator, poseId, database.pose<false>(poseId), 10u, Geometry::Estimator::ET_HUBER);
 
 			database.setPose<false>(poseId, world_T_camera);
 		}

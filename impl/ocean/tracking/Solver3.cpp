@@ -854,8 +854,10 @@ bool Solver3::determineInitialObjectPointsFromSparseKeyFramesRANSAC(const Pinhol
 						for (unsigned int poseId = poseIds.front() + 1u; (!abort || !*abort) && allPosesValid && poseId < poseIds.back(); ++poseId)
 						{
 							Scalar finalSqrError = Numeric::maxValue();
-							if (determinePose(*database, pinholeCamera, randomGenerator, poseId, ConstArrayAccessor<Vector3>(iterationObjectPoints), ConstArrayAccessor<Index32>(iterationObjectPointIds), HomogenousMatrix4(false), Geometry::Estimator::ET_SQUARE, Scalar(0.9), maximalSqrError, &finalSqrError).isNull() || finalSqrError * 2 > maximalSqrError)
+							if (determinePose(*database, AnyCameraPinhole(pinholeCamera), randomGenerator, poseId, ConstArrayAccessor<Vector3>(iterationObjectPoints), ConstArrayAccessor<Index32>(iterationObjectPointIds), HomogenousMatrix4(false), Geometry::Estimator::ET_SQUARE, Scalar(0.9), maximalSqrError, &finalSqrError).isNull() || finalSqrError * 2 > maximalSqrError)
+							{
 								allPosesValid = false;
+							}
 						}
 					}
 
@@ -1016,7 +1018,8 @@ bool Solver3::determineInitialObjectPointsFromSparseKeyFrames(const PinholeCamer
 		{
 			Indices32 subsetValidObjectPointIndices;
 			HomogenousMatrix4 pose;
-			if (Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(validObjectPoints), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePointGroups[index], validCorrespondenceIndices), randomGenerator, pinholeCamera.hasDistortionParameters(), pose, 5u, true, 50u, maximalSqrError, &subsetValidObjectPointIndices))
+
+			if (Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(validObjectPoints), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePointGroups[index], validCorrespondenceIndices), randomGenerator, pose, 5u, true, 50u, maximalSqrError, &subsetValidObjectPointIndices))
 			{
 				if (subsetValidObjectPointIndices.size() < absoluteMinimalValidObjectPoints)
 				{
@@ -1150,7 +1153,9 @@ bool Solver3::determineInitialObjectPointsFromDenseFrames(const PinholeCamera& p
 		ocean_assert(imagePointGroups[n].size() == imagePointGroups.front().size());
 
 		for (size_t i = 0; i < imagePointGroups[n].size(); ++i)
+		{
 			ocean_assert(pinholeCamera.isInside(imagePointGroups[n][i]));
+		}
 	}
 #endif
 
@@ -1161,20 +1166,28 @@ bool Solver3::determineInitialObjectPointsFromDenseFrames(const PinholeCamera& p
 	ocean_assert(minimalValidObjectPoints.lowerBoundary() >= 5u);
 
 	if (points0.size() < min(5u, minimalValidObjectPoints.lowerBoundary()))
+	{
 		return false;
+	}
 
 	HomogenousMatrix4 secondPose(false);
 	if (!Geometry::StereoscopicGeometry::cameraPose(pinholeCamera, ConstArrayAccessor<Vector2>(points0), ConstArrayAccessor<Vector2>(points1), randomGenerator, secondPose, &objectPoints, &validObjectPointIndices, Scalar(1.5 * 1.5), Scalar(3.5 * 3.5), 100u, Scalar(0.9)))
+	{
 		return false;
+	}
 
 	ocean_assert(objectPoints.size() == validObjectPointIndices.size());
 
 	unsigned int absoluteMinimalValidObjectPoints;
 	if (!minimalValidObjectPoints.hasValidThreshold<5u>((unsigned int)points0.size(), &absoluteMinimalValidObjectPoints))
+	{
 		return false;
+	}
 
 	if (objectPoints.size() < absoluteMinimalValidObjectPoints)
+	{
 		return false;
+	}
 
 	// now we check the number of poses which are valid for the found object points
 
@@ -1185,13 +1198,15 @@ bool Solver3::determineInitialObjectPointsFromDenseFrames(const PinholeCamera& p
 		ImagePointGroups subsetImagePointGroups(imagePointGroups.firstIndex(), imagePointGroups.size());
 
 		for (ImagePointGroups::Index n = imagePointGroups.firstIndex(); n <= imagePointGroups.lastIndex(); ++n)
+		{
 			subsetImagePointGroups[n] = Subset::subset(imagePointGroups[n], validObjectPointIndices);
+		}
 
-		determineValidPoses(pinholeCamera, objectPoints, subsetImagePointGroups, randomGenerator, Solver3::CM_UNKNOWN, firstGroupIndex, HomogenousMatrix4(true), secondGroupIndex, secondPose, Scalar(0.5), maximalSqrError * 2, &validSubsetIndices, &validPoses, &validPoseIds, &totalSqrError);
+		determineValidPoses(AnyCameraPinhole(pinholeCamera), objectPoints, subsetImagePointGroups, randomGenerator, Solver3::CM_UNKNOWN, firstGroupIndex, HomogenousMatrix4(true), secondGroupIndex, secondPose, Scalar(0.5), maximalSqrError * 2, &validSubsetIndices, &validPoses, &validPoseIds, &totalSqrError);
 	}
 	else
 	{
-		determineValidPoses(pinholeCamera, objectPoints, imagePointGroups, randomGenerator, Solver3::CM_UNKNOWN, firstGroupIndex, HomogenousMatrix4(true), secondGroupIndex, secondPose, Scalar(0.5), maximalSqrError * 2, &validSubsetIndices, &validPoses, &validPoseIds, &totalSqrError);
+		determineValidPoses(AnyCameraPinhole(pinholeCamera), objectPoints, imagePointGroups, randomGenerator, Solver3::CM_UNKNOWN, firstGroupIndex, HomogenousMatrix4(true), secondGroupIndex, secondPose, Scalar(0.5), maximalSqrError * 2, &validSubsetIndices, &validPoses, &validPoseIds, &totalSqrError);
 	}
 
 	objectPoints = Subset::subset(objectPoints, validSubsetIndices);
@@ -1200,9 +1215,9 @@ bool Solver3::determineInitialObjectPointsFromDenseFrames(const PinholeCamera& p
 	return true;
 }
 
-bool Solver3::optimizeInitialObjectPoints(const Database& database, const PinholeCamera& pinholeCamera, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int startFrame, const unsigned int upperFrame, const Vectors3& initialObjectPoints, const Indices32& initialObjectPointIds, Vectors3& optimizedObjectPoints, Indices32& optimizedObjectPointIds, const unsigned int minimalObjectPoints, const unsigned int minimalKeyFrames, const unsigned int maximalKeyFrames, const Scalar maximalSqrError, Indices32* usedPoseIds, Scalar* initialSqrError, Scalar* finalSqrError, bool* abort)
+bool Solver3::optimizeInitialObjectPoints(const Database& database, const AnyCamera& camera, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int startFrame, const unsigned int upperFrame, const Vectors3& initialObjectPoints, const Indices32& initialObjectPointIds, Vectors3& optimizedObjectPoints, Indices32& optimizedObjectPointIds, const unsigned int minimalObjectPoints, const unsigned int minimalKeyFrames, const unsigned int maximalKeyFrames, const Scalar maximalSqrError, Indices32* usedPoseIds, Scalar* initialSqrError, Scalar* finalSqrError, bool* abort)
 {
-	ocean_assert(pinholeCamera.isValid());
+	ocean_assert(camera.isValid());
 	ocean_assert(lowerFrame < upperFrame);
 	ocean_assert(lowerFrame <= startFrame && startFrame <= upperFrame);
 
@@ -1212,8 +1227,10 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 	ocean_assert(minimalObjectPoints >= 5u);
 	ocean_assert(initialObjectPoints.size() == initialObjectPointIds.size());
 
-	if ((abort && *abort) || !pinholeCamera.isValid() || initialObjectPoints.size() != initialObjectPointIds.size() || minimalObjectPoints > initialObjectPoints.size())
+	if ((abort != nullptr && *abort) || !camera.isValid() || initialObjectPoints.size() != initialObjectPointIds.size() || minimalObjectPoints > initialObjectPoints.size())
+	{
 		return false;
+	}
 
 	// first we track the already known (rough) 3D object points from frame to frame
 
@@ -1221,13 +1238,17 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 	ImagePointGroups imagePointGroups;
 	Indices32 validIndices;
 	if (!trackObjectPoints(database, initialObjectPointIds, lowerFrame, startFrame, upperFrame, minimalObjectPoints, 0u, (unsigned int)initialObjectPointIds.size(), objectPointIds, imagePointGroups, &validIndices, abort))
+	{
 		return false;
+	}
 
 	ocean_assert(imagePointGroups.isValidIndex(startFrame));
 
 	// ensure that we have enough keyframes
 	if (imagePointGroups.size() < minimalKeyFrames)
+	{
 		return false;
+	}
 
 	ocean_assert(imagePointGroups.isValidIndex(startFrame));
 	ocean_assert(imagePointGroups.firstIndex() >= ImagePointGroups::Index(lowerFrame) && imagePointGroups.lastIndex() <= ImagePointGroups::Index(upperFrame));
@@ -1240,9 +1261,11 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 	ShiftVector<HomogenousMatrix4> poseMatrices(imagePointGroups.firstIndex(), imagePointGroups.size());
 
 	HomogenousMatrix4 initialPose;
-	if (!Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePointGroups[startFrame]), randomGenerator, pinholeCamera.hasDistortionParameters(), initialPose, 5u, false)
-			|| !Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, initialPose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePointGroups[startFrame]), pinholeCamera.hasDistortionParameters(), poseMatrices[startFrame], 20u, Geometry::Estimator::ET_SQUARE))
+	if (!Geometry::RANSAC::p3p(camera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePointGroups[startFrame]), randomGenerator, initialPose, 5u, false)
+			|| !Geometry::NonLinearOptimizationPose::optimizePose(camera, initialPose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePointGroups[startFrame]), poseMatrices[startFrame], 20u, Geometry::Estimator::ET_SQUARE))
+	{
 		return false;
+	}
 
 	// forward steps
 	for (ImagePointGroups::Index n = startFrame + 1; n < imagePointGroups.endIndex(); ++n)
@@ -1250,8 +1273,10 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 		ocean_assert(objectPoints.size() == imagePointGroups[n].size());
 
 		ocean_assert(poseMatrices[n - 1].isValid());
-		if (!Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, poseMatrices[n - 1], ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePointGroups[n]), pinholeCamera.hasDistortionParameters(), poseMatrices[n], 20u, Geometry::Estimator::ET_SQUARE))
+		if (!Geometry::NonLinearOptimizationPose::optimizePose(camera, poseMatrices[n - 1], ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePointGroups[n]), poseMatrices[n], 20u, Geometry::Estimator::ET_SQUARE))
+		{
 			return false;
+		}
 	}
 
 	// backward steps
@@ -1260,15 +1285,17 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 		ocean_assert(objectPoints.size() == imagePointGroups[n].size());
 
 		ocean_assert(poseMatrices[n + 1].isValid());
-		if (!Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, poseMatrices[n + 1], ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePointGroups[n]), pinholeCamera.hasDistortionParameters(), poseMatrices[n], 20u, Geometry::Estimator::ET_SQUARE))
+		if (!Geometry::NonLinearOptimizationPose::optimizePose(camera, poseMatrices[n + 1], ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePointGroups[n]), poseMatrices[n], 20u, Geometry::Estimator::ET_SQUARE))
+		{
 			return false;
+		}
 	}
 
 #ifdef OCEAN_DEBUG
 	for (ImagePointGroups::Index n = imagePointGroups.firstIndex(); n < imagePointGroups.endIndex(); ++n)
 	{
 		Scalar sqrAverage = Numeric::maxValue(), sqrMinimal = Numeric::maxValue(), sqrMaximal = Numeric::maxValue();
-		Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(poseMatrices[n], pinholeCamera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePointGroups[n]), pinholeCamera.hasDistortionParameters(), sqrAverage, sqrMinimal, sqrMaximal);
+		Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>>(poseMatrices[n], camera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePointGroups[n]), sqrAverage, sqrMinimal, sqrMaximal);
 		ocean_assert(sqrAverage < Scalar(9 * 9));
 	}
 #endif // OCEAN_DEBUG
@@ -1287,7 +1314,7 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 	optimizedObjectPoints.resize(objectPoints.size());
 	NonconstArrayAccessor<Vector3> optimizedObjectPointAccessor(optimizedObjectPoints);
 
-	if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(AnyCameraPinhole(pinholeCamera), ConstArraySubsetAccessor<HomogenousMatrix4, unsigned int>(poseMatricesBlock, keyframeIndicesBlock), ConstArrayAccessor<Vector3>(objectPoints), ObjectPointToPoseIndexImagePointCorrespondenceAccessor(imagePointGroups, keyframeIndicesBlock), &optimizedPosesAccessor, &optimizedObjectPointAccessor, 50u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, initialSqrError, finalSqrError))
+	if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(camera, ConstArraySubsetAccessor<HomogenousMatrix4, unsigned int>(poseMatricesBlock, keyframeIndicesBlock), ConstArrayAccessor<Vector3>(objectPoints), ObjectPointToPoseIndexImagePointCorrespondenceAccessor(imagePointGroups, keyframeIndicesBlock), &optimizedPosesAccessor, &optimizedObjectPointAccessor, 50u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, initialSqrError, finalSqrError))
 	{
 		return false;
 	}
@@ -1300,7 +1327,7 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 		const Index32 poseId = (unsigned int)poseMatrices.firstIndex() + keyframeIndicesBlock[n];
 
 		Scalar sqrAverage = Numeric::maxValue(), sqrMinimal = Numeric::maxValue(), sqrMaximal = Numeric::maxValue();
-		Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(optimizedPoses[n], pinholeCamera, ConstTemplateArrayAccessor<Vector3>(optimizedObjectPoints), ConstTemplateArrayAccessor<Vector2>(imagePointGroups[poseId]), pinholeCamera.hasDistortionParameters(), sqrAverage, sqrMinimal, sqrMaximal);
+		Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>>(optimizedPoses[n], camera, ConstTemplateArrayAccessor<Vector3>(optimizedObjectPoints), ConstTemplateArrayAccessor<Vector2>(imagePointGroups[poseId]), sqrAverage, sqrMinimal, sqrMaximal);
 		ocean_assert(sqrAverage < Scalar(9 * 9));
 	}
 #endif
@@ -1312,15 +1339,16 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 
 	for (size_t n = 0; n < optimizedPoses.size(); ++n)
 	{
-		const HomogenousMatrix4 poseIF(PinholeCamera::standard2InvertedFlipped(optimizedPoses[n]));
+		const HomogenousMatrix4 flippedCamera_T_world(AnyCamera::standard2InvertedFlipped(optimizedPoses[n]));
 
 		const Vectors2& imagePoints = imagePointGroups[imagePointGroups.firstIndex() + keyframeIndicesBlock[n]];
 		ocean_assert(imagePoints.size() == optimizedObjectPoints.size());
 
 		for (size_t i = 0; i < optimizedObjectPoints.size(); ++i)
+		{
 			if (invalidObjectPoints[i] == 0u)
 			{
-				const Vector2 projectedObjectPoint(pinholeCamera.projectToImageIF<true>(poseIF, optimizedObjectPoints[i], pinholeCamera.hasDistortionParameters()));
+				const Vector2 projectedObjectPoint(camera.projectToImageIF(flippedCamera_T_world, optimizedObjectPoints[i]));
 				const Scalar sqrError = projectedObjectPoint.sqrDistance(imagePoints[i]);
 
 				if (sqrError > maximalSqrError)
@@ -1329,6 +1357,7 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 					invalidObjectPointCounter++;
 				}
 			}
+		}
 	}
 
 	if (invalidObjectPointCounter != 0u)
@@ -1338,14 +1367,20 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 		// now we optimized the remaining object points if enough object points are left
 
 		if (objectPoints.size() - invalidObjectPointCounter < 5u)
+		{
 			return false;
+		}
 
 		Indices32 objectPointsSubset;
 		objectPointsSubset.reserve(objectPoints.size() - invalidObjectPointCounter);
 
 		for (unsigned int n = 0; n < invalidObjectPoints.size(); ++n)
+		{
 			if (invalidObjectPoints[n] == 0u)
+			{
 				objectPointsSubset.push_back(n);
+			}
+		}
 
 		objectPoints = optimizedObjectPoints;
 
@@ -1353,7 +1388,7 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 		for (unsigned int p = 0u; p < keyframeIndicesBlock.size(); ++p)
 		{
 			const Index32 poseId = (unsigned int)imagePointGroups.firstIndex() + keyframeIndicesBlock[p];
-			const HomogenousMatrix4& pose = optimizedPoses[p];
+			const HomogenousMatrix4& world_T_camera = optimizedPoses[p];
 
 			for (unsigned int i = 0u; i < objectPointsSubset.size(); ++i)
 			{
@@ -1361,7 +1396,7 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 				const Vector2& imagePoint = imagePoints[objectPointsSubset[i]];
 				const Vector3& objectPoint = objectPoints[objectPointsSubset[i]];
 
-				const Vector2 projectedObjectPoint = pinholeCamera.projectToImage<false>(pose, objectPoint, pinholeCamera.hasDistortionParameters());
+				const Vector2 projectedObjectPoint = camera.projectToImage(world_T_camera, objectPoint);
 				const Scalar sqrDistance = imagePoint.sqrDistance(projectedObjectPoint);
 
 				ocean_assert(sqrDistance <= maximalSqrError);
@@ -1375,7 +1410,7 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 		optimizedObjectPoints.resize(objectPointsSubset.size());
 		NonconstArrayAccessor<Vector3> subsetOptimizedObjectPointAccessor(optimizedObjectPoints);
 
-		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<HomogenousMatrix4>(optimizedPoses), ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, objectPointsSubset), ObjectPointToPoseIndexImagePointCorrespondenceAccessor(imagePointGroups, keyframeIndicesBlock, objectPointsSubset), &subsetOptimizedPosesAccessor, &subsetOptimizedObjectPointAccessor, 50u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, initialSqrError, finalSqrError))
+		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(camera, ConstArrayAccessor<HomogenousMatrix4>(optimizedPoses), ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, objectPointsSubset), ObjectPointToPoseIndexImagePointCorrespondenceAccessor(imagePointGroups, keyframeIndicesBlock, objectPointsSubset), &subsetOptimizedPosesAccessor, &subsetOptimizedObjectPointAccessor, 50u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, initialSqrError, finalSqrError))
 		{
 			return false;
 		}
@@ -1396,8 +1431,8 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 		{
 			const unsigned int poseId = (unsigned int)poseMatrices.firstIndex() + keyframeIndicesBlock[p];
 
-			const HomogenousMatrix4& pose = optimizedPoses[p];
-			const Vector2 projectedImagePoint(pinholeCamera.projectToImage<true>(pose, objectPoint, pinholeCamera.hasDistortionParameters()));
+			const HomogenousMatrix4& world_T_camera = optimizedPoses[p];
+			const Vector2 projectedImagePoint(camera.projectToImage(world_T_camera, objectPoint));
 
 			Vector2 imagePoint;
 			ocean_assert(database.hasObservation<false>(poseId, objectPointId, &imagePoint));
@@ -1427,12 +1462,14 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 		ocean_assert(imagePoints.size() == optimizedObjectPoints.size());
 
 		if (!previousPose.isValid())
-			Geometry::RANSAC::p3p(pinholeCamera, ConstArrayAccessor<Vector3>(optimizedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pinholeCamera.hasDistortionParameters(), previousPose, 5u, false);
+		{
+			Geometry::RANSAC::p3p(camera, ConstArrayAccessor<Vector3>(optimizedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, previousPose, 5u, false);
+		}
 
 		// we must initialize these variable to avoid an compiler warning
 		HomogenousMatrix4 currentPose(false);
 		Scalar currentError = Numeric::minValue();
-		if (!previousPose.isValid() || !Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, previousPose, ConstArrayAccessor<Vector3>(optimizedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints), pinholeCamera.hasDistortionParameters(), currentPose, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(10), nullptr, &currentError))
+		if (!previousPose.isValid() || !Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, ConstArrayAccessor<Vector3>(optimizedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints), currentPose, 20u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(10), nullptr, &currentError))
 		{
 			validFinalOptimization = false;
 			break;
@@ -1452,7 +1489,7 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 		const Index32 poseId = (unsigned int)poseMatrices.firstIndex() + keyframeIndicesBlock[n];
 
 		Scalar sqrAverage = Numeric::maxValue(), sqrMinimal = Numeric::maxValue(), sqrMaximal = Numeric::maxValue();
-		Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(poseMatrices[poseId], pinholeCamera, ConstTemplateArrayAccessor<Vector3>(optimizedObjectPoints), ConstTemplateArrayAccessor<Vector2>(optimizedImagePointGroups[poseId]), pinholeCamera.hasDistortionParameters(), sqrAverage, sqrMinimal, sqrMaximal);
+		Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>>(poseMatrices[poseId], camera, ConstTemplateArrayAccessor<Vector3>(optimizedObjectPoints), ConstTemplateArrayAccessor<Vector2>(optimizedImagePointGroups[poseId]), sqrAverage, sqrMinimal, sqrMaximal);
 		ocean_assert(sqrAverage < Scalar(9 * 9));
 	}
 #endif
@@ -1473,9 +1510,13 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 			const unsigned int poseId = n + (unsigned int)poseMatrices.firstIndex();
 
 			if (keyframeIndicesBlockSet.find(n) != keyframeIndicesBlockSet.end())
+			{
 				maxAverageSqrError = max(maxAverageSqrError, optimizedErrors[poseId]);
+			}
 			else
+			{
 				remainingErrors.push_back(PoseErrorPair(n, optimizedErrors[poseId])); // we take the index and not the id as the index is needed later
+			}
 		}
 
 		// now we identify all poses which should also be used for optimization (we add a representative subset of all inaccurate poses)
@@ -1487,7 +1528,9 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 		for (PoseErrorPairs::const_iterator i = remainingErrors.begin(); i != remainingErrors.end(); ++i)
 		{
 			if (i->second < maxAverageSqrError * 2)
+			{
 				break;
+			}
 
 			inaccuratePoses.push_back(poseMatrices[i->first + (unsigned int)poseMatrices.firstIndex()]);
 		}
@@ -1515,7 +1558,7 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 			objectPoints = optimizedObjectPoints;
 			NonconstArrayAccessor<Vector3> subsetOptimizedObjectPointAccessor(optimizedObjectPoints);
 
-			if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<HomogenousMatrix4>(optimizedPoses), ConstArrayAccessor<Vector3>(objectPoints), ObjectPointToPoseIndexImagePointCorrespondenceAccessor(optimizedImagePointGroups, newKeyframeIndicesBlock), &subsetOptimizedPosesAccessor, &subsetOptimizedObjectPointAccessor, 50u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, initialSqrError, finalSqrError))
+			if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(camera, ConstArrayAccessor<HomogenousMatrix4>(optimizedPoses), ConstArrayAccessor<Vector3>(objectPoints), ObjectPointToPoseIndexImagePointCorrespondenceAccessor(optimizedImagePointGroups, newKeyframeIndicesBlock), &subsetOptimizedPosesAccessor, &subsetOptimizedObjectPointAccessor, 50u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, initialSqrError, finalSqrError))
 			{
 				return false;
 			}
@@ -1535,8 +1578,8 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 			{
 				const unsigned int poseId = (unsigned int)poseMatrices.firstIndex() + newKeyframeIndicesBlock[p];
 
-				const HomogenousMatrix4& pose = optimizedPoses[p];
-				const Vector2 projectedImagePoint(pinholeCamera.projectToImage<true>(pose, objectPoint, pinholeCamera.hasDistortionParameters()));
+				const HomogenousMatrix4& world_T_camera = optimizedPoses[p];
+				const Vector2 projectedImagePoint(camera.projectToImage(world_T_camera, objectPoint));
 
 				Vector2 imagePoint;
 				ocean_assert(database.hasObservation<false>(poseId, objectPointId, &imagePoint));
@@ -1550,16 +1593,18 @@ bool Solver3::optimizeInitialObjectPoints(const Database& database, const Pinhol
 		keyframeIndicesBlock = std::move(newKeyframeIndicesBlock);
 	}
 
-	if (usedPoseIds)
+	if (usedPoseIds != nullptr)
 	{
 		usedPoseIds->clear();
 
 		ocean_assert(poseMatrices.firstIndex() >= 0);
 		for (Indices32::const_iterator i = keyframeIndicesBlock.begin(); i != keyframeIndicesBlock.end(); ++i)
+		{
 			usedPoseIds->push_back((unsigned int)poseMatrices.firstIndex() + *i);
+		}
 	}
 
-	return !abort || !*abort;
+	return abort == nullptr || !*abort;
 }
 
 bool Solver3::determineUnknownObjectPoints(const Database& database, const AnyCamera& camera, const unsigned int lowerFrame, const unsigned int upperFrame, Vectors3& newObjectPoints, Indices32& newObjectPointIds, const unsigned int minimalKeyFrames, const unsigned int maximalKeyFrames, const Scalar maximalSqrError, Worker* worker, bool* abort)
@@ -1813,14 +1858,18 @@ bool Solver3::supposeRotationalCameraMotion(const Database& database, const Pinh
 	IndexSet32 relocatedObjectPointIdSet;
 	RandomGenerator randomGenerator;
 	if (!updateDatabaseToRotationalMotion(rotationalDatabase, pinholeCamera, randomGenerator, lowerFrame, upperFrame, minimalObservations, &relocatedObjectPointIdSet))
+	{
 		return false;
+	}
 
 	// now we determine a subset of frame poses best representing the entire set of poses
 
 	Indices32 keyframePoseIds(determineRepresentativePoses(rotationalDatabase, lowerFrame, upperFrame, maximalKeyframes));
 
 	if (keyframePoseIds.size() < minimalKeyframes)
+	{
 		return false;
+	}
 
 	Indices32 relocatedObjectPointIds(relocatedObjectPointIdSet.begin(), relocatedObjectPointIdSet.end());
 
@@ -1841,12 +1890,18 @@ bool Solver3::supposeRotationalCameraMotion(const Database& database, const Pinh
 
 		NonconstArrayAccessor<SquareMatrix3> optimizedOrientationAccessorFoV(optimizedKeyframeOrientationsFoV);
 		if (!Geometry::NonLinearOptimizationCamera::findInitialFieldOfView(pinholeCamera, ConstArrayAccessor<SquareMatrix3>(keyframeOrientations), orientationToObjectPointIdImagePointCorrespondenceAccessor, optimizedCameraFoV, &optimizedOrientationAccessorFoV, lowerFovX, upperFovX, 8u, 3u, true, &significantResult, nullptr, WorkerPool::get().scopedWorker()(), abort))
+		{
 			return false;
+		}
 
 		if (significantResult)
+		{
 			Log::info() << "Rotational camera field of view: " << Numeric::rad2deg(optimizedCameraFoV.fovX()) << "deg (significant)";
+		}
 		else
+		{
 			Log::info() << "Rotational camera field of view: " << Numeric::rad2deg(optimizedCameraFoV.fovX()) << "deg (NOT SIGNIFICANT)";
+		}
 
 		// we reset the determined parameters if the result is not significant as the result may not be the correct one
 		if (!significantResult)
@@ -1870,19 +1925,25 @@ bool Solver3::supposeRotationalCameraMotion(const Database& database, const Pinh
 		const Vectors3 objectPoints = rotationalDatabase.objectPoints<false>(objectPointIds);
 
 		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOrientations(optimizedCameraFoV, ConstArrayAccessor<SquareMatrix3>(optimizedKeyframeOrientationsFoV), ConstArrayAccessor<Vector3>(objectPoints), objectPointToPoseImagePointCorrespondenceAccessor, Scalar(1), nullptr, nullptr, 50u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, nullptr, &finalError))
+		{
 			return false;
+		}
 	}
 	else
 	{
 		if (!Geometry::NonLinearOptimizationCamera::optimizeCameraOrientations(optimizedCameraFoV, ConstArrayAccessor<SquareMatrix3>(optimizedKeyframeOrientationsFoV), orientationToObjectPointIdImagePointCorrespondenceAccessor, optimizationStrategy, optimizedCameraDistortion, nullptr, 50u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, nullptr, &finalError))
+		{
 			return false;
+		}
 	}
 
 	// check whether the final error is higher than the defined threshold so that we cannot expect to have a sole rotational camera motion
 	if (finalError > maximalSqrError)
 	{
-		if (finalMeanSqrError)
+		if (finalMeanSqrError != nullptr)
+		{
 			*finalMeanSqrError = finalError;
+		}
 
 		return false;
 	}
@@ -1892,14 +1953,18 @@ bool Solver3::supposeRotationalCameraMotion(const Database& database, const Pinh
 
 	relocatedObjectPointIdSet.clear();
 	if (!updateDatabaseToRotationalMotion(rotationalDatabase, optimizedCameraDistortion, randomGenerator, lowerFrame, upperFrame, 0u, &relocatedObjectPointIdSet))
+	{
 		return false;
+	}
 
 	// now we apply a bundle adjustment to receive highly optimized results
 
 	keyframePoseIds = determineRepresentativePoses(rotationalDatabase, lowerFrame, upperFrame, maximalKeyframes);
 
 	if (keyframePoseIds.size() < minimalKeyframes)
+	{
 		return false;
+	}
 
 	relocatedObjectPointIds = Indices32(relocatedObjectPointIdSet.begin(), relocatedObjectPointIdSet.end());
 
@@ -1914,7 +1979,9 @@ bool Solver3::supposeRotationalCameraMotion(const Database& database, const Pinh
 	Vectors3 optimizedObjectPoints(objectPoints.size());
 	NonconstArrayAccessor<Vector3> optimizedObjectPointAccessor(optimizedObjectPoints);
 	if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOrientations(optimizedCameraDistortion, ConstArrayAccessor<SquareMatrix3>(keyframeOrientations), ConstArrayAccessor<Vector3>(objectPoints), objectPointToPoseImagePointCorrespondenceAccessor, Scalar(1), nullptr, &optimizedObjectPointAccessor, 50u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5)))
+	{
 		return false;
+	}
 
 	rotationalDatabase.setObjectPoints<false>();
 	rotationalDatabase.setObjectPoints<false>(relocatedObjectPointIds.data(), optimizedObjectPoints.data(), relocatedObjectPointIds.size());
@@ -1927,15 +1994,21 @@ bool Solver3::supposeRotationalCameraMotion(const Database& database, const Pinh
 #endif
 
 	Scalar finalAverageError = Numeric::maxValue();
-	if (!updatePoses(rotationalDatabase, optimizedCameraDistortion, CM_ROTATIONAL, randomGenerator, lowerFrame, upperFrame, 5u, Geometry::Estimator::ET_SQUARE, Scalar(1), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), &finalAverageError, nullptr, worker, abort))
+	if (!updatePoses(rotationalDatabase, AnyCameraPinhole(optimizedCameraDistortion), CM_ROTATIONAL, randomGenerator, lowerFrame, upperFrame, 5u, Geometry::Estimator::ET_SQUARE, Scalar(1), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), &finalAverageError, nullptr, worker, abort))
+	{
 		return false;
+	}
 
 	// **TODO** is the average a good choice?
 	if (finalAverageError > maximalSqrError)
+	{
 		return false;
+	}
 
-	if (finalMeanSqrError)
+	if (finalMeanSqrError != nullptr)
+	{
 		*finalMeanSqrError = finalAverageError;
+	}
 
 	optimizedCamera = optimizedCameraDistortion;
 	optimizedDatabase = std::move(rotationalDatabase);
@@ -1956,7 +2029,9 @@ bool Solver3::optimizeCamera(const Database& database, const PinholeCamera& pinh
 	const Indices32 keyFramePoseIds(determineRepresentativePoses(database, lowerFrame, upperFrame, maximalKeyframes));
 
 	if (keyFramePoseIds.size() < minimalKeyframes)
+	{
 		return false;
+	}
 
 	HomogenousMatrices4 keyFramePoses = database.poses<false>(keyFramePoseIds.data(), keyFramePoseIds.size());
 
@@ -1985,7 +2060,9 @@ bool Solver3::optimizeCamera(const Database& database, const PinholeCamera& pinh
 			ObjectPointToPoseImagePointCorrespondenceAccessor newAccessor(database, keyFramePoseIds, objectPointIds, iterationMinimalObservationsInKeyframes, &validIndices);
 
 			if (validIndices.size() < 100)
+			{
 				break;
+			}
 
 			fovValidObjectPointIndices = std::move(validIndices);
 			fovAccessor = std::move(newAccessor);
@@ -2041,7 +2118,9 @@ bool Solver3::optimizeCamera(const Database& database, const PinholeCamera& pinh
 				optimizedCamera = optimizedCameraFoV;
 			}
 			else
+			{
 				Log::info() << "Translational camera field of view: " << Numeric::rad2deg(optimizedCameraFoV.fovX()) << "deg (NOT SIGNIFICANT)";
+			}
 		}
 		else
 		{
@@ -2085,7 +2164,9 @@ bool Solver3::optimizeCamera(const Database& database, const PinholeCamera& pinh
 		Scalar initialError, finalError;
 		PinholeCamera optimizedCameraDistortion;
 		if (!Geometry::NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(optimizedCamera, ConstArrayAccessor<HomogenousMatrix4>(keyFramePoses), ConstArrayAccessor<Vector3>(objectPoints), objectPointToPoseImagePointCorrespondenceAccessor, optimizationStrategy, optimizedCameraDistortion, nullptr, &optimizedObjectPointAccessor, 50u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, &initialError, &finalError))
+		{
 			return false;
+		}
 
 		Log::info() << "Bundle adjustment (including camera profile) improvement: " << initialError << " -> " << finalError;
 
@@ -2106,8 +2187,10 @@ bool Solver3::optimizeCamera(const Database& database, const PinholeCamera& pinh
 	// now finally we update all poses !within! the specified frame range
 
 	RandomGenerator randomGenerator;
-	if (!updatePoses(optimizedDatabase, optimizedCamera, CM_UNKNOWN, randomGenerator, lowerFrame, upperFrame, 5u, Geometry::Estimator::ET_SQUARE, Scalar(1), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), finalMeanSqrError, nullptr, worker, abort))
+	if (!updatePoses(optimizedDatabase, AnyCameraPinhole(optimizedCamera), CM_UNKNOWN, randomGenerator, lowerFrame, upperFrame, 5u, Geometry::Estimator::ET_SQUARE, Scalar(1), Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), finalMeanSqrError, nullptr, worker, abort))
+	{
 		return false;
+	}
 
 	return !abort || !*abort;
 }
@@ -2481,9 +2564,9 @@ void Solver3::optimizeObjectPointsWithFixedPosesSubset(const Database* database,
 	}
 }
 
-bool Solver3::updatePoses(Database& database, const PinholeCamera& pinholeCamera, const CameraMotion cameraMotion, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int startFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* finalAverageError, size_t* validPoses, bool* abort)
+bool Solver3::updatePoses(Database& database, const AnyCamera& camera, const CameraMotion cameraMotion, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int startFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* finalAverageError, size_t* validPoses, bool* abort)
 {
-	ocean_assert(pinholeCamera.isValid());
+	ocean_assert(camera.isValid());
 	ocean_assert(cameraMotion != CM_INVALID);
 	ocean_assert(lowerFrame <= startFrame && startFrame <= upperFrame);
 	ocean_assert(minimalCorrespondences >= 5u);
@@ -2499,11 +2582,13 @@ bool Solver3::updatePoses(Database& database, const PinholeCamera& pinholeCamera
 		for (unsigned int n = startFrame; (!abort || !*abort) && n <= upperFrame; ++n)
 		{
 			Scalar errorValue = Numeric::maxValue();
-			HomogenousMatrix4 currentPose(determinePose(database, pinholeCamera, randomGenerator, n, previousPose, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue));
+			HomogenousMatrix4 currentPose(determinePose(database, camera, randomGenerator, n, previousPose, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue));
 
 			// check whether the resulting pose is not accurate enough
 			if (errorValue != Numeric::maxValue() && errorValue > maximalRobustError)
+			{
 				currentPose.toNull();
+			}
 
 			database.setPose<false>(n, currentPose);
 			previousPose = currentPose;
@@ -2522,11 +2607,13 @@ bool Solver3::updatePoses(Database& database, const PinholeCamera& pinholeCamera
 		{
 			ocean_assert(n >= 0);
 			Scalar errorValue = Numeric::maxValue();
-			HomogenousMatrix4 currentPose(determinePose(database, pinholeCamera, randomGenerator, (unsigned int)n, previousPose, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue));
+			HomogenousMatrix4 currentPose(determinePose(database, camera, randomGenerator, (unsigned int)n, previousPose, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue));
 
 			// check whether the resulting pose is not accurate enough
 			if (errorValue != Numeric::maxValue() && errorValue > maximalRobustError)
+			{
 				currentPose.toNull();
+			}
 
 			database.setPose<false>(n, currentPose);
 			previousPose = currentPose;
@@ -2546,16 +2633,22 @@ bool Solver3::updatePoses(Database& database, const PinholeCamera& pinholeCamera
 		for (unsigned int n = startFrame; (!abort || !*abort) && n <= upperFrame; ++n)
 		{
 			Scalar errorValue = Numeric::maxValue();
-			SquareMatrix3 currentOrientation(determineOrientation(database, pinholeCamera, randomGenerator, n, previousOrientation, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue));
+			SquareMatrix3 currentOrientation(determineOrientation(database, camera, randomGenerator, n, previousOrientation, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue));
 
 			// check whether the resulting orientation is not accurate enough
 			if (errorValue != Numeric::maxValue() && errorValue > maximalRobustError)
+			{
 				currentOrientation.toNull();
+			}
 
 			if (currentOrientation.isNull())
+			{
 				database.setPose<false>(n, HomogenousMatrix4(false));
+			}
 			else
+			{
 				database.setPose<false>(n, HomogenousMatrix4(currentOrientation));
+			}
 
 			previousOrientation = currentOrientation;
 
@@ -2573,16 +2666,22 @@ bool Solver3::updatePoses(Database& database, const PinholeCamera& pinholeCamera
 		{
 			ocean_assert(n >= 0);
 			Scalar errorValue = Numeric::maxValue();
-			SquareMatrix3 currentOrientation(determineOrientation(database, pinholeCamera, randomGenerator, (unsigned int)n, previousOrientation, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue));
+			SquareMatrix3 currentOrientation(determineOrientation(database, camera, randomGenerator, (unsigned int)n, previousOrientation, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue));
 
 			// check whether the resulting orientation is not accurate enough
 			if (errorValue != Numeric::maxValue() && errorValue > maximalRobustError)
+			{
 				currentOrientation.toNull();
+			}
 
 			if (currentOrientation.isNull())
+			{
 				database.setPose<false>(n, HomogenousMatrix4(false));
+			}
 			else
+			{
 				database.setPose<false>(n, HomogenousMatrix4(currentOrientation));
+			}
 
 			previousOrientation = currentOrientation;
 
@@ -2594,20 +2693,24 @@ bool Solver3::updatePoses(Database& database, const PinholeCamera& pinholeCamera
 		}
 	}
 
-	if (finalAverageError && numberPoses != 0)
+	if (finalAverageError != nullptr && numberPoses != 0)
+	{
 		*finalAverageError = totalError / Scalar(numberPoses);
+	}
 
-	if (validPoses)
+	if (validPoses != nullptr)
+	{
 		*validPoses = numberPoses;
+	}
 
-	return !abort || !*abort;
+	return abort == nullptr || !*abort;
 }
 
-bool Solver3::updatePoses(Database& database, const PinholeCamera& pinholeCamera, const CameraMotion cameraMotion, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* finalAverageError, size_t* validPoses, Worker* worker, bool* abort)
+bool Solver3::updatePoses(Database& database, const AnyCamera& camera, const CameraMotion cameraMotion, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* finalAverageError, size_t* validPoses, Worker* worker, bool* abort)
 {
 	ocean_assert(cameraMotion != CM_INVALID);
 
-	if (worker)
+	if (worker != nullptr)
 	{
 		Scalar totalError = 0;
 		size_t poses = 0;
@@ -2615,51 +2718,69 @@ bool Solver3::updatePoses(Database& database, const PinholeCamera& pinholeCamera
 		Lock lock;
 
 		if (cameraMotion & CM_TRANSLATIONAL)
-			worker->executeFunction(Worker::Function::createStatic(&updatePosesSubset, &database, &pinholeCamera, &randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, &totalError, &poses, &lock, abort, worker->threads(), 0u, 0u), 0u, worker->threads());
+		{
+			worker->executeFunction(Worker::Function::createStatic(&updatePosesSubset, &database, &camera, &randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, &totalError, &poses, &lock, abort, worker->threads(), 0u, 0u), 0u, worker->threads());
+		}
 		else
-			worker->executeFunction(Worker::Function::createStatic(&updateOrientationsSubset, &database, &pinholeCamera, &randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, &totalError, &poses, &lock, abort, worker->threads(), 0u, 0u), 0u, worker->threads());
+		{
+			worker->executeFunction(Worker::Function::createStatic(&updateOrientationsSubset, &database, &camera, &randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, &totalError, &poses, &lock, abort, worker->threads(), 0u, 0u), 0u, worker->threads());
+		}
 
-		if (finalAverageError && poses != 0)
+		if (finalAverageError != nullptr && poses != 0)
+		{
 			*finalAverageError = totalError / Scalar(poses);
+		}
 
-		if (validPoses)
+		if (validPoses != nullptr)
+		{
 			*validPoses = poses;
+		}
 
-		return !abort || !*abort;
+		return abort == nullptr || !*abort;
 	}
 	else
 	{
-		return updatePoses(database, pinholeCamera, cameraMotion, randomGenerator, lowerFrame, lowerFrame, upperFrame, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, finalAverageError, validPoses, abort);
+		return updatePoses(database, camera, cameraMotion, randomGenerator, lowerFrame, lowerFrame, upperFrame, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, finalAverageError, validPoses, abort);
 	}
 }
 
-bool Solver3::determinePoses(const Database& database, const PinholeCamera& pinholeCamera, const CameraMotion cameraMotion, const IndexSet32& priorityObjectPointIds, const bool solePriorityPoints, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, ShiftVector<HomogenousMatrix4>& poses, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* finalAverageError, Worker* worker, bool* abort)
+bool Solver3::determinePoses(const Database& database, const AnyCamera& camera, const CameraMotion cameraMotion, const IndexSet32& priorityObjectPointIds, const bool solePriorityPoints, RandomGenerator& randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, ShiftVector<HomogenousMatrix4>& poses, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* finalAverageError, Worker* worker, bool* abort)
 {
 	poses = ShiftVector<HomogenousMatrix4>(lowerFrame, upperFrame - lowerFrame + 1u);
 
 	Scalar totalError = 0;
 
-	if (worker)
+	if (worker != nullptr)
 	{
 		Lock lock;
 
 		if (cameraMotion & CM_TRANSLATIONAL)
-			worker->executeFunction(Worker::Function::createStatic(&determinePosesSubset, &database, &pinholeCamera, &priorityObjectPointIds, solePriorityPoints, &randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, &poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, &totalError, &lock, abort, worker->threads(), 0u, 0u), 0u, worker->threads());
+		{
+			worker->executeFunction(Worker::Function::createStatic(&determinePosesSubset, &database, &camera, &priorityObjectPointIds, solePriorityPoints, &randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, &poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, &totalError, &lock, abort, worker->threads(), 0u, 0u), 0u, worker->threads());
+		}
 		else
-			worker->executeFunction(Worker::Function::createStatic(&determineOrientationsSubset, &database, &pinholeCamera, &priorityObjectPointIds, solePriorityPoints, &randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, &poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, &totalError, &lock, abort, worker->threads(), 0u, 0u), 0u, worker->threads());
+		{
+			worker->executeFunction(Worker::Function::createStatic(&determineOrientationsSubset, &database, &camera, &priorityObjectPointIds, solePriorityPoints, &randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, &poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError, &totalError, &lock, abort, worker->threads(), 0u, 0u), 0u, worker->threads());
+		}
 	}
 	else
 	{
 		if (cameraMotion & CM_TRANSLATIONAL)
-			determinePosesSubset(&database, &pinholeCamera, &priorityObjectPointIds, solePriorityPoints, &randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, &poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError,  &totalError, nullptr, abort, 1u, 0u, 0u);
+		{
+			determinePosesSubset(&database, &camera, &priorityObjectPointIds, solePriorityPoints, &randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, &poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError,  &totalError, nullptr, abort, 1u, 0u, 0u);
+		}
 		else
-			determineOrientationsSubset(&database, &pinholeCamera, &priorityObjectPointIds, solePriorityPoints, &randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, &poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError,  &totalError, nullptr, abort, 1u, 0u, 0u);
+		{
+			determineOrientationsSubset(&database, &camera, &priorityObjectPointIds, solePriorityPoints, &randomGenerator, lowerFrame, upperFrame, minimalCorrespondences, &poses, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, maximalRobustError,  &totalError, nullptr, abort, 1u, 0u, 0u);
+		}
 	}
 
-	if (finalAverageError && poses.size() != 0)
+	if (finalAverageError != nullptr && poses.size() != 0)
+	{
 		*finalAverageError = totalError / Scalar(poses.size());
+	}
 
-	return !abort || !*abort;
+	return abort == nullptr || !*abort;
 }
 
 bool Solver3::trackObjectPoints(const Database& database, const Indices32& objectPointIds, const unsigned int lowerFrame, const unsigned int startFrame, const unsigned int upperFrame, const unsigned int minimalTrackedObjectPoints, const unsigned int minimalTrackedFrames, const unsigned int maximalTrackedObjectPoints, Indices32& trackedObjectPointIds, ImagePointGroups& trackedImagePointGroups, Indices32* trackedValidIndices, bool* abort)
@@ -2677,8 +2798,10 @@ bool Solver3::trackObjectPoints(const Database& database, const Indices32& objec
 	ocean_assert(trackedImagePointGroups.isEmpty());
 	trackedImagePointGroups.clear();
 
-	if (abort && *abort)
+	if (abort != nullptr && *abort)
+	{
 		return false;
+	}
 
 	// the number of object points which must not be exceeded due to the tracking (this threshold is used if the termination condition is based on the minimal number of frames and is set the first time the minimal number of frames are reached)
 	unsigned int fixedNumberObjectPoints = 0u;
@@ -2692,7 +2815,9 @@ bool Solver3::trackObjectPoints(const Database& database, const Indices32& objec
 
 	ocean_assert(minimalTrackedObjectPoints <= validIndices.size());
 	if (validIndices.size() < minimalTrackedObjectPoints)
+	{
 		return false;
+	}
 
 	trackedObjectPointIds = Subset::subset(objectPointIds, validIndices);
 
@@ -2753,7 +2878,9 @@ bool Solver3::trackObjectPoints(const Database& database, const Indices32& objec
 
 				// check whether we cannot added a new frame with same number of object points as defined in the moment the minimal number of frames has been reached
 				if (validForwardObjectPointIndices.size() < fixedNumberObjectPoints && validBackwardObjectPointIndices.size() < fixedNumberObjectPoints)
+				{
 					break;
+				}
 			}
 		}
 
@@ -2819,7 +2946,9 @@ bool Solver3::trackObjectPoints(const Database& database, const Indices32& objec
 #ifdef OCEAN_DEBUG
 		const IndexSet32 trackedObjectPointIdSet(trackedObjectPointIds.begin(), trackedObjectPointIds.end());
 		for (Indices32::const_iterator i = validIndices.begin(); i != validIndices.end(); ++i)
+		{
 			ocean_assert(trackedObjectPointIdSet.find(objectPointIds[*i]) != trackedObjectPointIdSet.end());
+		}
 #endif
 
 		*trackedValidIndices = std::move(validIndices);
@@ -2841,8 +2970,10 @@ bool Solver3::trackObjectPoints(const Database& database, const Indices32& objec
 
 		trackedObjectPointIds = Subset::subset(trackedObjectPointIds, subsetIndices);
 
-		if (trackedValidIndices)
+		if (trackedValidIndices != nullptr)
+		{
 			*trackedValidIndices = Subset::subset(*trackedValidIndices, subsetIndices);
+		}
 	}
 
 	return true;
@@ -2866,15 +2997,19 @@ bool Solver3::trackObjectPoints(const Database& database, const Indices32& prior
 	}
 #endif
 
-	if (abort && *abort)
+	if (abort != nullptr && *abort)
+	{
 		return false;
+	}
 
 	// first we track the priority points to receive the tracking borders
 
 	Indices32 trackedPriorityObjectPointIds;
 	ImagePointGroups trackedPriorityImagePointGroups;
 	if (!trackObjectPoints(database, priorityObjectPointIds, lowerFrame, startFrame, upperFrame, minimalTrackedPriorityObjectPoints, 0u, maximalTrackedPriorityObjectPoints, trackedPriorityObjectPointIds, trackedPriorityImagePointGroups, trackedValidPriorityIndices, abort))
+	{
 		return false;
+	}
 
 	ocean_assert(trackedValidPriorityIndices == nullptr || trackedValidPriorityIndices->size() == trackedPriorityObjectPointIds.size());
 
@@ -2894,12 +3029,16 @@ bool Solver3::trackObjectPoints(const Database& database, const Indices32& prior
 	Indices32 trackedRemainingObjectPointIds;
 	ImagePointGroups trackedRemainingImagePointGroups;
 	if (!trackObjectPoints(database, remainingObjectPointIds, validLowerFrame, startFrame, validUpperFrame, 0u, minimalTrackedRemainingFrames, maximalTrackedRemainingObjectPoints, trackedRemainingObjectPointIds, trackedRemainingImagePointGroups, trackedValidRemainingIndices, abort))
+	{
 		return false;
+	}
 
 	ocean_assert(trackedValidRemainingIndices == nullptr || trackedValidRemainingIndices->size() == trackedRemainingObjectPointIds.size());
 
 	if (trackedRemainingImagePointGroups.isEmpty())
+	{
 		return false;
+	}
 
 	// now we join the priority tracking results and the remaining tracking results
 
@@ -3009,9 +3148,9 @@ Indices32 Solver3::determineRepresentativePoses(const Database& database, const 
 	return Subset::subset(poseIds, Pose::representativePoses(poses, numberRepresentative));
 }
 
-size_t Solver3::determineValidPoses(const PinholeCamera& pinholeCamera, const Vectors3& objectPoints, const ImagePointGroups& imagePointGroups, RandomGenerator& randomGenerator, const CameraMotion cameraMotion, const unsigned int firstValidPoseIndex, const HomogenousMatrix4& firstValidPose, const unsigned int secondValidPoseIndex, const HomogenousMatrix4& secondValidPose, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Indices32* validObjectPointIndices, HomogenousMatrices4* poses, Indices32* poseIds, Scalar* totalSqrError)
+size_t Solver3::determineValidPoses(const AnyCamera& camera, const Vectors3& objectPoints, const ImagePointGroups& imagePointGroups, RandomGenerator& randomGenerator, const CameraMotion cameraMotion, const unsigned int firstValidPoseIndex, const HomogenousMatrix4& firstValidPose, const unsigned int secondValidPoseIndex, const HomogenousMatrix4& secondValidPose, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Indices32* validObjectPointIndices, HomogenousMatrices4* poses, Indices32* poseIds, Scalar* totalSqrError)
 {
-	ocean_assert(pinholeCamera.isValid());
+	ocean_assert(camera.isValid());
 	ocean_assert(objectPoints.size() >= 5);
 	ocean_assert(imagePointGroups.size() >= 2);
 	ocean_assert(objectPoints.size() == imagePointGroups.front().size());
@@ -3080,7 +3219,7 @@ size_t Solver3::determineValidPoses(const PinholeCamera& pinholeCamera, const Ve
 
 		if (cameraMotion & CM_TRANSLATIONAL)
 		{
-			const HomogenousMatrix4 pose(determinePose(pinholeCamera, randomGenerator, ConstArraySubsetAccessor<Vector3, Index32>(objectPoints, internalValidObjectPointIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePointGroups[index], internalValidObjectPointIndices), *previousPose, Geometry::Estimator::ET_SQUARE, minimalValidCorrespondenceRatio, maximalSqrError, &finalError, &iterationValidIndices));
+			const HomogenousMatrix4 pose(determinePose(camera, randomGenerator, ConstArraySubsetAccessor<Vector3, Index32>(objectPoints, internalValidObjectPointIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePointGroups[index], internalValidObjectPointIndices), *previousPose, Geometry::Estimator::ET_SQUARE, minimalValidCorrespondenceRatio, maximalSqrError, &finalError, &iterationValidIndices));
 
 			if (!pose.isValid() || iterationValidIndices.size() < minimalValidCorrespondences)
 			{
@@ -3092,7 +3231,7 @@ size_t Solver3::determineValidPoses(const PinholeCamera& pinholeCamera, const Ve
 		}
 		else
 		{
-			const SquareMatrix3 orientation(determineOrientation(pinholeCamera, randomGenerator, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, internalValidObjectPointIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePointGroups[index], internalValidObjectPointIndices), previousPose->rotationMatrix(), Geometry::Estimator::ET_SQUARE, minimalValidCorrespondenceRatio, maximalSqrError, &finalError, &iterationValidIndices));
+			const SquareMatrix3 orientation(determineOrientation(camera, randomGenerator, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, internalValidObjectPointIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePointGroups[index], internalValidObjectPointIndices), previousPose->rotationMatrix(), Geometry::Estimator::ET_SQUARE, minimalValidCorrespondenceRatio, maximalSqrError, &finalError, &iterationValidIndices));
 
 			if (orientation.isNull() || iterationValidIndices.size() < minimalValidCorrespondences)
 			{
@@ -3153,7 +3292,7 @@ size_t Solver3::determineValidPoses(const PinholeCamera& pinholeCamera, const Ve
 
 			if (cameraMotion & CM_TRANSLATIONAL)
 			{
-				const HomogenousMatrix4 pose(determinePose(pinholeCamera, randomGenerator, ConstArraySubsetAccessor<Vector3, Index32>(objectPoints, internalValidObjectPointIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePointGroups[index], internalValidObjectPointIndices), *previousPose, Geometry::Estimator::ET_SQUARE, minimalValidCorrespondenceRatio, maximalSqrError, &finalError, &iterationValidIndices));
+				const HomogenousMatrix4 pose(determinePose(camera, randomGenerator, ConstArraySubsetAccessor<Vector3, Index32>(objectPoints, internalValidObjectPointIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePointGroups[index], internalValidObjectPointIndices), *previousPose, Geometry::Estimator::ET_SQUARE, minimalValidCorrespondenceRatio, maximalSqrError, &finalError, &iterationValidIndices));
 
 				if (!pose.isValid() || iterationValidIndices.size() < minimalValidCorrespondences)
 				{
@@ -3165,7 +3304,7 @@ size_t Solver3::determineValidPoses(const PinholeCamera& pinholeCamera, const Ve
 			}
 			else
 			{
-				const SquareMatrix3 orientation(determineOrientation(pinholeCamera, randomGenerator, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, internalValidObjectPointIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePointGroups[index], internalValidObjectPointIndices), previousPose->rotationMatrix(), Geometry::Estimator::ET_SQUARE, minimalValidCorrespondenceRatio, maximalSqrError, &finalError, &iterationValidIndices));
+				const SquareMatrix3 orientation(determineOrientation(camera, randomGenerator, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, internalValidObjectPointIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePointGroups[index], internalValidObjectPointIndices), previousPose->rotationMatrix(), Geometry::Estimator::ET_SQUARE, minimalValidCorrespondenceRatio, maximalSqrError, &finalError, &iterationValidIndices));
 
 				if (orientation.isNull() || iterationValidIndices.size() < minimalValidCorrespondences)
 				{
@@ -4246,13 +4385,14 @@ void Solver3::determineInitialObjectPointsFromDenseFramesRANSACSubset(const Pinh
 	}
 }
 
-void Solver3::updatePosesSubset(Database* database, const PinholeCamera* pinholeCamera, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, size_t* validPoses, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne)
+void Solver3::updatePosesSubset(Database* database, const AnyCamera* camera, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, size_t* validPoses, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne)
 {
-	ocean_assert(database && pinholeCamera && pinholeCamera->isValid());
+	ocean_assert(database != nullptr);
+	ocean_assert(camera != nullptr && camera->isValid());
 	ocean_assert(lowerFrame <=  upperFrame);
 	ocean_assert(minimalCorrespondences >= 5u);
 	ocean_assert_and_suppress_unused(numberThreadsOne == 1u, numberThreadsOne);
-	ocean_assert(randomGenerator);
+	ocean_assert(randomGenerator != nullptr);
 
 	RandomGenerator localRandomGenerator(*randomGenerator);
 
@@ -4274,11 +4414,13 @@ void Solver3::updatePosesSubset(Database* database, const PinholeCamera* pinhole
 		const HomogenousMatrix4& oldPose = database->pose<false>(frameIndex);
 
 		unsigned int correspondences;
-		HomogenousMatrix4 currentPose(determinePose(*database, *pinholeCamera, localRandomGenerator, frameIndex, oldPose.isValid() ? oldPose : previousPose, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue, &correspondences));
+		HomogenousMatrix4 currentPose(determinePose(*database, *camera, localRandomGenerator, frameIndex, oldPose.isValid() ? oldPose : previousPose, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue, &correspondences));
 
 		// check whether the resulting pose is not accurate enough
 		if (errorValue != Numeric::maxValue() && errorValue > maximalRobustError)
+		{
 			currentPose.toNull();
+		}
 
 		database->setPose<false>(frameIndex, currentPose);
 		previousPose = currentPose;
@@ -4296,13 +4438,14 @@ void Solver3::updatePosesSubset(Database* database, const PinholeCamera* pinhole
 	*validPoses += localValidPoses;
 }
 
-void Solver3::updateOrientationsSubset(Database* database, const PinholeCamera* pinholeCamera, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, size_t* validPoses, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne)
+void Solver3::updateOrientationsSubset(Database* database, const AnyCamera* camera, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, size_t* validPoses, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne)
 {
-	ocean_assert(database && pinholeCamera && pinholeCamera->isValid());
+	ocean_assert(database != nullptr);
+	ocean_assert(camera != nullptr && camera->isValid());
 	ocean_assert(lowerFrame <=  upperFrame);
 	ocean_assert(minimalCorrespondences >= 5u);
 	ocean_assert_and_suppress_unused(numberThreadsOne == 1u, numberThreadsOne);
-	ocean_assert(randomGenerator);
+	ocean_assert(randomGenerator != nullptr);
 
 	RandomGenerator localRandomGenerator(*randomGenerator);
 
@@ -4326,16 +4469,22 @@ void Solver3::updateOrientationsSubset(Database* database, const PinholeCamera* 
 		const SquareMatrix3 oldOrientation = oldPose.isValid() ? oldPose.rotationMatrix() : SquareMatrix3(false);
 
 		unsigned int correspondences;
-		SquareMatrix3 currentOrientation(determineOrientation(*database, *pinholeCamera, localRandomGenerator, frameIndex, oldOrientation.isNull() ? previousOrientation : oldOrientation, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue, &correspondences));
+		SquareMatrix3 currentOrientation(determineOrientation(*database, *camera, localRandomGenerator, frameIndex, oldOrientation.isNull() ? previousOrientation : oldOrientation, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue, &correspondences));
 
 		// check whether the resulting pose is not accurate enough
 		if (errorValue != Numeric::maxValue() && errorValue > maximalRobustError)
+		{
 			currentOrientation.toNull();
+		}
 
 		if (currentOrientation.isNull())
+		{
 			database->setPose<false>(frameIndex, HomogenousMatrix4(false));
+		}
 		else
+		{
 			database->setPose<false>(frameIndex, HomogenousMatrix4(currentOrientation));
+		}
 
 		previousOrientation = currentOrientation;
 
@@ -4352,14 +4501,15 @@ void Solver3::updateOrientationsSubset(Database* database, const PinholeCamera* 
 	*validPoses += localValidPoses;
 }
 
-void Solver3::determinePosesSubset(const Database* database, const PinholeCamera* pinholeCamera, const IndexSet32* priorityObjectPointIds, const bool solePriorityPoints, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, ShiftVector<HomogenousMatrix4>* poses, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne)
+void Solver3::determinePosesSubset(const Database* database, const AnyCamera* camera, const IndexSet32* priorityObjectPointIds, const bool solePriorityPoints, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, ShiftVector<HomogenousMatrix4>* poses, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne)
 {
-	ocean_assert(database && pinholeCamera && pinholeCamera->isValid());
+	ocean_assert(database != nullptr);
+	ocean_assert(camera != nullptr && camera->isValid());
 	ocean_assert(lowerFrame <=  upperFrame);
 	ocean_assert(minimalCorrespondences >= 5u);
 	ocean_assert_and_suppress_unused(numberThreadsOne == 1u, numberThreadsOne);
 	ocean_assert(priorityObjectPointIds && poses);
-	ocean_assert(randomGenerator);
+	ocean_assert(randomGenerator != nullptr);
 
 	RandomGenerator localRandomGenerator(*randomGenerator);
 
@@ -4373,6 +4523,7 @@ void Solver3::determinePosesSubset(const Database* database, const PinholeCamera
 		{
 			(*poses)[frameIndex].toNull();
 			previousPose.toNull();
+
 			continue;
 		}
 
@@ -4385,11 +4536,11 @@ void Solver3::determinePosesSubset(const Database* database, const PinholeCamera
 
 		if (priorityObjectPointIds->empty())
 		{
-			currentPose = determinePose(*database, *pinholeCamera, localRandomGenerator, frameIndex, oldPose.isValid() ? oldPose : previousPose, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue, &correspondences);
+			currentPose = determinePose(*database, *camera, localRandomGenerator, frameIndex, oldPose.isValid() ? oldPose : previousPose, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue, &correspondences);
 		}
 		else
 		{
-			currentPose = determinePose(*database, *pinholeCamera, localRandomGenerator, frameIndex, *priorityObjectPointIds, solePriorityPoints, oldPose.isValid() ? oldPose : previousPose, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue, &correspondences);
+			currentPose = determinePose(*database, *camera, localRandomGenerator, frameIndex, *priorityObjectPointIds, solePriorityPoints, oldPose.isValid() ? oldPose : previousPose, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue, &correspondences);
 		}
 
 		// check whether the resulting pose is not accurate enough
@@ -4414,14 +4565,15 @@ void Solver3::determinePosesSubset(const Database* database, const PinholeCamera
 	*totalError += localTotalError;
 }
 
-void Solver3::determineOrientationsSubset(const Database* database, const PinholeCamera* pinholeCamera, const IndexSet32* priorityObjectPointIds, const bool solePriorityPoints, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, ShiftVector<HomogenousMatrix4>* poses, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne)
+void Solver3::determineOrientationsSubset(const Database* database, const AnyCamera* camera, const IndexSet32* priorityObjectPointIds, const bool solePriorityPoints, RandomGenerator* randomGenerator, const unsigned int lowerFrame, const unsigned int upperFrame, const unsigned int minimalCorrespondences, ShiftVector<HomogenousMatrix4>* poses, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar ransacMaximalSqrError, const Scalar maximalRobustError, Scalar* totalError, Lock* lock, bool* abort, const unsigned int numberThreads, const unsigned int threadIndex, const unsigned int numberThreadsOne)
 {
-	ocean_assert(database && pinholeCamera && pinholeCamera->isValid());
+	ocean_assert(database != nullptr);
+	ocean_assert(camera != nullptr && camera->isValid());
 	ocean_assert(lowerFrame <=  upperFrame);
 	ocean_assert(minimalCorrespondences >= 5u);
 	ocean_assert_and_suppress_unused(numberThreadsOne == 1u, numberThreadsOne);
 	ocean_assert(priorityObjectPointIds && poses);
-	ocean_assert(randomGenerator);
+	ocean_assert(randomGenerator != nullptr);
 
 	RandomGenerator localRandomGenerator(*randomGenerator);
 
@@ -4435,6 +4587,7 @@ void Solver3::determineOrientationsSubset(const Database* database, const Pinhol
 		{
 			(*poses)[frameIndex].toNull();
 			previousOrientation.toNull();
+
 			continue;
 		}
 
@@ -4447,11 +4600,11 @@ void Solver3::determineOrientationsSubset(const Database* database, const Pinhol
 
 		if (priorityObjectPointIds->empty())
 		{
-			currentOrientation = determineOrientation(*database, *pinholeCamera, localRandomGenerator, frameIndex, oldOrientation.isNull() ? previousOrientation : oldOrientation, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue, &correspondences);
+			currentOrientation = determineOrientation(*database, *camera, localRandomGenerator, frameIndex, oldOrientation.isNull() ? previousOrientation : oldOrientation, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue, &correspondences);
 		}
 		else
 		{
-			currentOrientation = determineOrientation(*database, *pinholeCamera, localRandomGenerator, frameIndex, *priorityObjectPointIds, solePriorityPoints, oldOrientation.isNull() ? previousOrientation : oldOrientation, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue, &correspondences);
+			currentOrientation = determineOrientation(*database, *camera, localRandomGenerator, frameIndex, *priorityObjectPointIds, solePriorityPoints, oldOrientation.isNull() ? previousOrientation : oldOrientation, minimalCorrespondences, estimator, minimalValidCorrespondenceRatio, ransacMaximalSqrError, &errorValue, &correspondences);
 		}
 
 		// check whether the resulting pose is not accurate enough
