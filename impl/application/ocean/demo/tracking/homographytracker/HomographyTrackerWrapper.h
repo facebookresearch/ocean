@@ -16,7 +16,6 @@
 #include "ocean/devices/OrientationTracker3DOF.h"
 
 #include "ocean/math/Box2.h"
-#include "ocean/math/PinholeCamera.h"
 #include "ocean/math/Vector2.h"
 
 #include "ocean/media/FrameMedium.h"
@@ -122,9 +121,6 @@ class HomographyTrackerWrapper
 
 		/// The 3DOF orientation tracker which is used to support the homography tracker.
 		Devices::OrientationTracker3DOFRef orientationTracker3DOF_;
-
-		/// The camera profile of the medium.
-		PinholeCamera camera_;
 };
 
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_TRACKING_HOMOGRAPHYTRACKER_HOMOGRAPHY_TRACKER_WRAPPER_H

@@ -18,8 +18,6 @@
 
 #include "ocean/geometry/Homography.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
-
 #include "ocean/media/FiniteMedium.h"
 #include "ocean/media/ImageSequence.h"
 #include "ocean/media/Manager.h"
@@ -126,7 +124,7 @@ HomographyTrackerWrapper::HomographyTrackerWrapper(const std::vector<std::wstrin
 
 	if (frameMedium_.isNull())
 	{
-		// if the user did not specify a medium, first we try to get a live video with id 1 (often an external web cam - not the builtin camera of a laptop)
+		// if the user did not specify a medium, first we try to get a live video with id 1 (often an external web cam - not the built-in camera of a laptop)
 		frameMedium_ = Media::Manager::get().newMedium("LiveVideoId:1");
 	}
 
@@ -152,13 +150,21 @@ HomographyTrackerWrapper::HomographyTrackerWrapper(const std::vector<std::wstrin
 		const std::string dimension = String::toAString(commandArguments[1]);
 
 		if (dimension == "320x240")
+		{
 			frameMedium_->setPreferredFrameDimension(320u, 240u);
+		}
 		else if (dimension == "640x480")
+		{
 			frameMedium_->setPreferredFrameDimension(640u, 480u);
+		}
 		else if (dimension == "1280x720")
+		{
 			frameMedium_->setPreferredFrameDimension(1280u, 720u);
+		}
 		else if (dimension == "1920x1080")
+		{
 			frameMedium_->setPreferredFrameDimension(1920u, 1080u);
+		}
 	}
 
 	if (Media::FiniteMediumRef finiteMedium = frameMedium_)
@@ -226,7 +232,8 @@ bool HomographyTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 
 	// we request the most recent frame from our input medium
 
-	const FrameRef currentFrameRef = frameMedium_->frame();
+	SharedAnyCamera camera;
+	const FrameRef currentFrameRef = frameMedium_->frame(&camera);
 
 	if (currentFrameRef.isNull())
 	{
@@ -242,9 +249,11 @@ bool HomographyTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 
 	const Frame& currentFrame = *currentFrameRef;
 
-	if (camera_.width() != currentFrame.width() || camera_.height() != currentFrame.height())
+	if (!camera)
 	{
-		camera_ = IO::CameraCalibrationManager::get().camera(frameMedium_->url(), currentFrame.width(), currentFrame.height());
+		Log::warning() << "Unknown camera profile, using default profile instead";
+
+		camera = std::make_shared<AnyCameraPinhole>(PinholeCamera(currentFrame.width(), currentFrame.height(), Numeric::deg2rad(60)));
 	}
 
 	frameTimestamp_ = currentFrame.timestamp();
@@ -257,7 +266,7 @@ bool HomographyTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 		if (sample && sample->orientations().size() == 1)
 		{
 			// the negative z-axis of the world coordinate system of the IMU (of the device) is pointing towards the ground (is identical with the gravity vector)
-			// although the HomographyTracker does not expcit a specific coordinate system, we provide a coordinate system with negative y-axis pointing towards the ground
+			// although the HomographyTracker does not explicit a specific coordinate system, we provide a coordinate system with negative y-axis pointing towards the ground
 
 			const Quaternion& flippedWorld_Q_device = sample->orientations().front();
 
@@ -279,7 +288,9 @@ bool HomographyTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 	}
 
 	if (performance_.measurements() % 20u == 0u)
+	{
 		performance_.reset();
+	}
 
 	Frame trackingFrame;
 	if (!CV::FrameConverter::Comfort::convert(currentFrame, trackingPixelFormat_, FrameType::ORIGIN_UPPER_LEFT, trackingFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, scopedWorker()))
@@ -300,11 +311,11 @@ bool HomographyTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 		{
 			const Vector3 groundPlaneNormal(0, 1, 0);
 
-			homographyTracker_.resetRegion(camera_, trackerRegion_, world_Q_camera, groundPlaneNormal);
+			homographyTracker_.resetRegion(*camera, trackerRegion_, world_Q_camera, groundPlaneNormal);
 		}
 		else
 		{
-			homographyTracker_.resetRegion(camera_, trackerRegion_);
+			homographyTracker_.resetRegion(*camera, trackerRegion_);
 		}
 	}
 
@@ -314,7 +325,7 @@ bool HomographyTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 
 		SquareMatrix3 homography;
 
-		if (homographyTracker_.determineHomography(camera_, trackingFrame, homography, nullptr, world_Q_camera, scopedWorker()))
+		if (homographyTracker_.determineHomography(*camera, trackingFrame, homography, nullptr, world_Q_camera, scopedWorker()))
 		{
 			scopedPerformance.release();
 
