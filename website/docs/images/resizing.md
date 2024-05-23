@@ -1,12 +1,12 @@
 ---
-title: Image Resizing
-sidebar_position: 4
+title: Resizing and Scaling
+sidebar_position: 6
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from '/docs/docs.css';
 
-Ocean provides several functions to resize images. Each function comes with a difference execution performance and image quality.
+Ocean provides several functions to resize or scale images. Each function comes with a difference execution performance and image quality.
 ​
 The simplest solution to resize/down-sample an image is by usage of [`CV::FrameInterpolator::resize()`](https://github.com/facebookresearch/ocean/blob/main/impl/ocean/cv/FrameInterpolator.h#L86-L95). This function allows to specified the desired resize algorithm via a function parameter.
 ​
@@ -21,7 +21,7 @@ A simple nearest neighbor lookup is commonly significantly faster than a two-ste
 ​
 Below, you can find a comparison of the individual resize methods.
 ​
-<img src={useBaseUrl('img/docs/image-resizing/original.png')} alt="Original image, size: 3000px x 3000px" width="700" className="center-image"/>
+<img src={useBaseUrl('img/docs/image-resizing/original.png')} alt="Image: Original image, size: 3000px x 3000px" width="700" className="center-image"/>
 ​
 The following table shows the resized image for a variety of resolutions and resize methods:
 ​

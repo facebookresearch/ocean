@@ -1,6 +1,6 @@
 ---
-title: Examples
-sidebar_position: 6
+title: Code Examples
+sidebar_position: 7
 ---
 
 ## Creating images
@@ -223,7 +223,7 @@ Frame resizedFrame(resizedFrameType);
 CV::FrameInterpolator::resize(sourceFrame, resizedFrame);
 ```
 
-For more details and a visual comparisons of the available image resizing methods, see [Image Resizing](../image-resizing.md).
+For more details and a visual comparisons of the available image resizing methods, see [Image Resizing](resizing.md).
 
 ## Reading and writing images
 
