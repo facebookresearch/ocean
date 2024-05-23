@@ -308,12 +308,11 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 
 		/**
 		 * Optimizes the locations of one 3D object point visible in individual (fixed) camera poses all located at the origin with individual orientations by minimizing the projection error between the 3D object point and the 2D image points.
-		 * @param pinholeCamera The pinhole camera profile defining the projection
-		 * @param orientations The accessor for the orientations of the individual camera frames
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param world_R_cameras The accessor for the orientations of the individual cameras, with default camera pointing towards the negative z-space with y-axis upwards, at least two
 		 * @param imagePoints The accessor for the image points which are projections of the 3D object points, one image point for each orientation
 		 * @param objectPoint The rough object point location to optimize
 		 * @param objectPointDistance The distance between the origin and the 3D object points, with range (0, infinity)
-		 * @param distortImagePoints True, to apply the distortion parameters of the camera profile
 		 * @param optimizedObjectPoint The resulting optimized 3D object points locations
 		 * @param iterations Number of iterations to be applied at most, if no convergence can be reached, with range [1, infinity)
 		 * @param estimator Robust error estimator to be used
@@ -326,16 +325,15 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 		 * @return True, if succeeded
 		 * @see optimizeObjectPointForFixedOrientationsIF().
 		 */
-		static inline bool optimizeObjectPointForFixedOrientations(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& orientations, const ConstIndexedAccessor<Vector2>& imagePoints, const Vector3& objectPoint, const Scalar objectPointDistance, const bool distortImagePoints, Vector3& optimizedObjectPoint, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoint = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static inline bool optimizeObjectPointForFixedOrientations(const AnyCamera& camera, const ConstIndexedAccessor<SquareMatrix3>& world_R_cameras, const ConstIndexedAccessor<Vector2>& imagePoints, const Vector3& objectPoint, const Scalar objectPointDistance, Vector3& optimizedObjectPoint, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoint = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Optimizes the locations of one 3D object point visible in individual (fixed) camera poses all located at the origin with individual orientations by minimizing the projection error between the 3D object point and the 2D image points.
-		 * @param pinholeCamera The pinhole camera profile defining the projection
-		 * @param invertedFlippedOrientations The accessor for the inverted and flipped orientations of the individual camera frames
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param flippedCameras_R_world The accessor for the inverted and flipped orientations of the individual cameras, with default flipped camera pointing towards the positive z-space with y-axis downwards, at least two
 		 * @param imagePoints The accessor for the image points which are projections of the 3D object points, one image point for each orientation
 		 * @param objectPoint The rough object point location to optimize
 		 * @param objectPointDistance The distance between the origin and the 3D object points, with range (0, infinity)
-		 * @param distortImagePoints True, to apply the distortion parameters of the camera profile
 		 * @param optimizedObjectPoint The resulting optimized 3D object points locations
 		 * @param iterations Number of iterations to be applied at most, if no convergence can be reached, with range [1, infinity)
 		 * @param estimator Robust error estimator to be used
@@ -348,7 +346,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 		 * @return True, if succeeded
 		 * @see optimizeObjectPointForFixedOrientations().
 		 */
-		static bool optimizeObjectPointForFixedOrientationsIF(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& invertedFlippedOrientations, const ConstIndexedAccessor<Vector2>& imagePoints, const Vector3& objectPoint, const Scalar objectPointDistance, const bool distortImagePoints, Vector3& optimizedObjectPoint, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoint = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeObjectPointForFixedOrientationsIF(const AnyCamera& camera, const ConstIndexedAccessor<SquareMatrix3>& flippedCameras_R_world, const ConstIndexedAccessor<Vector2>& imagePoints, const Vector3& objectPoint, const Scalar objectPointDistance, Vector3& optimizedObjectPoint, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoint = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Optimizes the locations of 3D object points visible in individual camera poses all located at the origin with individual orientations by minimizing the projection error between the 3D object points and the 2D image points.
@@ -800,13 +798,17 @@ inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsForFixedPoses(
 	return optimizeObjectPointsForFixedPosesIF(pinholeCamera, ConstArrayAccessor<HomogenousMatrix4>(invertedFlippedPoses), objectPoints, correspondenceGroups, distortImagePoints, optimizedObjectPoints, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, worker);
 }
 
-inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientations(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& orientations, const ConstIndexedAccessor<Vector2>& imagePoints, const Vector3& objectPoint, const Scalar objectPointDistance, const bool distortImagePoints, Vector3& optimizedObjectPoint, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoint, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientations(const AnyCamera& camera, const ConstIndexedAccessor<SquareMatrix3>& world_R_cameras, const ConstIndexedAccessor<Vector2>& imagePoints, const Vector3& objectPoint, const Scalar objectPointDistance, Vector3& optimizedObjectPoint, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoint, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
-	SquareMatrices3 invertedFlippedOrientations(orientations.size());
-	for (size_t n = 0; n < orientations.size(); ++n)
-		invertedFlippedOrientations[n] = PinholeCamera::standard2InvertedFlipped(orientations[n]);
+	SquareMatrices3 flippedCameras_R_world;
+	flippedCameras_R_world.reserve(world_R_cameras.size());
 
-	return optimizeObjectPointForFixedOrientationsIF(pinholeCamera, ConstArrayAccessor<SquareMatrix3>(invertedFlippedOrientations), imagePoints, objectPoint, objectPointDistance, distortImagePoints, optimizedObjectPoint, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoint, initialError, finalError, intermediateErrors);
+	for (size_t n = 0; n < world_R_cameras.size(); ++n)
+	{
+		flippedCameras_R_world.emplace_back(AnyCamera::standard2InvertedFlipped(world_R_cameras[n]));
+	}
+
+	return optimizeObjectPointForFixedOrientationsIF(camera, ConstArrayAccessor<SquareMatrix3>(flippedCameras_R_world), imagePoints, objectPoint, objectPointDistance, optimizedObjectPoint, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoint, initialError, finalError, intermediateErrors);
 }
 
 inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& firstPose, const HomogenousMatrix4& secondPose, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, const bool useDistortionParameters, HomogenousMatrix4* optimizedSecondPose, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)

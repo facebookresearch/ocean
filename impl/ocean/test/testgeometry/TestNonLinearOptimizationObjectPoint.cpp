@@ -3253,17 +3253,13 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 				Scalar initialError = Numeric::maxValue();
 				Scalar finalError = Numeric::maxValue();
 
-				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientations(camera.actualCamera(), ConstArrayAccessor<SquareMatrix3>(world_R_cameras), ConstArrayAccessor<Vector2>(imagePoints), startObjectPoint, Scalar(1), camera.actualCamera().hasDistortionParameters(), optimizedObjectPoint, 20u, type, Scalar(0.001), Scalar(5), true, &initialError, &finalError))
+				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientations(camera, ConstArrayAccessor<SquareMatrix3>(world_R_cameras), ConstArrayAccessor<Vector2>(imagePoints), startObjectPoint, Scalar(1), optimizedObjectPoint, 20u, type, Scalar(0.001), Scalar(5), true, &initialError, &finalError))
 				{
-					performance.stop();
-
 					initialErrors.push_back(initialError);
 					optimizedErrors.push_back(finalError);
 				}
 				else
 				{
-					performance.skip();
-
 					scopedIteration.setInaccurate();
 				}
 			}
@@ -3275,21 +3271,19 @@ bool TestNonLinearOptimizationObjectPoint::testOptimizeObjectPointRotationalPose
 				{
 					Vector3 optimizedObjectPoint;
 					Scalar initialError, finalError;
-					if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientations(camera.actualCamera(), ConstArraySubsetAccessor<SquareMatrix3, unsigned int>(world_R_cameras, usedIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, usedIndices), startObjectPoint, Scalar(1), camera.actualCamera().hasDistortionParameters(), optimizedObjectPoint, 20u, type, Scalar(0.001), Scalar(5), true, &initialError, &finalError))
+					if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientations(camera, ConstArraySubsetAccessor<SquareMatrix3, unsigned int>(world_R_cameras, usedIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, usedIndices), startObjectPoint, Scalar(1), optimizedObjectPoint, 20u, type, Scalar(0.001), Scalar(5), true, &initialError, &finalError))
 					{
-						performance.stop();
-
 						initialErrors.push_back(initialError);
 						optimizedErrors.push_back(finalError);
 					}
 					else
 					{
-						performance.skip();
-
 						scopedIteration.setInaccurate();
 					}
 				}
 			}
+
+			performance.stop();
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));

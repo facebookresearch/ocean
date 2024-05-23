@@ -369,7 +369,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * Determines the 3D object point for a set of image points observing the same object point under individual camera poses (with rotational camera motion only).
 		 * The center position of each camera is located at the origin of the coordinate system.
 		 * @param pinholeCamera The pinhole camera profile for all camera frames and poses
-		 * @param orientations The camera orientations of the camera frames in which the image points are located
+		 * @param world_R_cameras The camera orientations of the camera frames in which the image points are located, at least two
 		 * @param imagePoints The image points observing the 3D object point, one image point for each pose
 		 * @param randomGenerator Random generator object to be used for creating random numbers
 		 * @param objectPoint Resulting 3D object point
@@ -384,7 +384,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param usedIndices Optional resulting indices of valid image points
 		 * @return True, if succeeded
 		 */
-		static bool objectPoint(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& orientations, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, ObjectPoint& objectPoint, const Scalar objectPointDistance, const bool distortImagePoints, const unsigned int iterations = 20u, const Scalar maximalError = Scalar(3 * 3), const unsigned int minValidCorrespondences = 2u, const bool onlyFrontObjectPoint = true, const Estimator::EstimatorType refinementEstimator = Estimator::ET_SQUARE, Scalar* finalError = nullptr, Indices32* usedIndices = nullptr);
+		static bool objectPoint(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& world_R_cameras, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, ObjectPoint& objectPoint, const Scalar objectPointDistance, const bool distortImagePoints, const unsigned int iterations = 20u, const Scalar maximalError = Scalar(3 * 3), const unsigned int minValidCorrespondences = 2u, const bool onlyFrontObjectPoint = true, const Estimator::EstimatorType refinementEstimator = Estimator::ET_SQUARE, Scalar* finalError = nullptr, Indices32* usedIndices = nullptr);
 
 		/**
 		 * Determines a 3D plane best matching to a set of given 3D object points.

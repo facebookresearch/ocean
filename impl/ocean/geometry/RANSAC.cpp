@@ -594,47 +594,53 @@ bool RANSAC::objectPoint(const FisheyeCamera& fisheyeCamera, const ConstIndexedA
 	#endif
 #endif
 
-bool RANSAC::objectPoint(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& orientations, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, ObjectPoint& objectPoint, const Scalar objectPointDistance, const bool distortImagePoints, const unsigned int iterations, const Scalar maximalError, const unsigned int minValidCorrespondences, const bool onlyFrontObjectPoint, const Estimator::EstimatorType refinementEstimator, Scalar* finalError, Indices32* usedIndices)
+bool RANSAC::objectPoint(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& world_R_cameras, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, ObjectPoint& objectPoint, const Scalar objectPointDistance, const bool distortImagePoints, const unsigned int iterations, const Scalar maximalError, const unsigned int minValidCorrespondences, const bool onlyFrontObjectPoint, const Estimator::EstimatorType refinementEstimator, Scalar* finalError, Indices32* usedIndices)
 {
 	ocean_assert(pinholeCamera.isValid());
-	ocean_assert(orientations.size() == imagePoints.size() && orientations.size() >= 2 && maximalError > 0);
+	ocean_assert(world_R_cameras.size() == imagePoints.size() && world_R_cameras.size() >= 2 && maximalError > 0);
 	ocean_assert(objectPointDistance > Numeric::eps());
 	ocean_assert(iterations >= 1u);
 
-	if (orientations.size() <= 1)
+	if (world_R_cameras.size() <= 1)
+	{
 		return false;
+	}
 
-	SquareMatrices3 orientationsIF(orientations.size());
-	for (size_t n = 0; n < orientations.size(); ++n)
-		orientationsIF[n] = PinholeCamera::standard2InvertedFlipped(orientations[n]);
+	SquareMatrices3 flippedCameras_R_world;
+	flippedCameras_R_world.reserve(world_R_cameras.size());
+
+	for (size_t n = 0; n < world_R_cameras.size(); ++n)
+	{
+		flippedCameras_R_world.emplace_back(PinholeCamera::standard2InvertedFlipped(world_R_cameras[n]));
+	}
 
 	Scalar bestError = Numeric::maxValue();
-	size_t bestNumber = min(size_t(minValidCorrespondences), orientations.size());
+	size_t bestNumber = std::min(size_t(minValidCorrespondences), world_R_cameras.size());
 
 	Indices32 bestIndices;
 
 	Indices32 indices;
-	indices.reserve(orientationsIF.size());
+	indices.reserve(flippedCameras_R_world.size());
 
 	for (unsigned int i = 0u; i < iterations; ++i)
 	{
-		const unsigned int index = RandomI::random(randomGenerator, (unsigned int)orientationsIF.size() - 1u);
+		const unsigned int index = RandomI::random(randomGenerator, (unsigned int)(flippedCameras_R_world.size()) - 1u);
 
-		const ObjectPoint candidate(pinholeCamera.ray(distortImagePoints ? pinholeCamera.undistort<true>(imagePoints[index]) : imagePoints[index], HomogenousMatrix4(orientations[index])).direction() * objectPointDistance);
+		const ObjectPoint candidate(pinholeCamera.ray(distortImagePoints ? pinholeCamera.undistort<true>(imagePoints[index]) : imagePoints[index], HomogenousMatrix4(world_R_cameras[index])).direction() * objectPointDistance);
 
 		Scalar error = 0;
 		indices.clear();
 
-		for (size_t n = 0; n < orientationsIF.size(); ++n)
+		for (size_t n = 0; n < flippedCameras_R_world.size(); ++n)
 		{
-			if (!onlyFrontObjectPoint || (orientationsIF[n] * candidate).z() > Numeric::eps())
+			if (!onlyFrontObjectPoint || (flippedCameras_R_world[n] * candidate).z() > Numeric::eps())
 			{
-				const Scalar localError = imagePoints[n].sqrDistance(pinholeCamera.projectToImageIF<true>(HomogenousMatrix4(orientationsIF[n]), candidate, distortImagePoints));
+				const Scalar localError = imagePoints[n].sqrDistance(pinholeCamera.projectToImageIF<true>(HomogenousMatrix4(flippedCameras_R_world[n]), candidate, distortImagePoints));
 
 				if (localError <= maximalError)
 				{
 					error += localError;
-					indices.push_back((unsigned int)n);
+					indices.push_back(Index32(n));
 				}
 			}
 		}
@@ -653,7 +659,7 @@ bool RANSAC::objectPoint(const PinholeCamera& pinholeCamera, const ConstIndexedA
 		return false;
 	}
 
-	if (finalError)
+	if (finalError != nullptr)
 	{
 		*finalError = bestError;
 	}
@@ -662,19 +668,25 @@ bool RANSAC::objectPoint(const PinholeCamera& pinholeCamera, const ConstIndexedA
 	{
 		ObjectPoint optimizedObjectPoint;
 
-		if (bestIndices.size() == orientationsIF.size())
+		const AnyCameraPinhole anyCameraPinhole(PinholeCamera(pinholeCamera, distortImagePoints));
+
+		if (bestIndices.size() == flippedCameras_R_world.size())
 		{
-			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(pinholeCamera, ConstArrayAccessor<SquareMatrix3>(orientationsIF), imagePoints, objectPoint, objectPointDistance, distortImagePoints, optimizedObjectPoint, 10u, refinementEstimator, Scalar(0.001), Scalar(5), onlyFrontObjectPoint, nullptr, finalError))
+			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(anyCameraPinhole, ConstArrayAccessor<SquareMatrix3>(flippedCameras_R_world), imagePoints, objectPoint, objectPointDistance, optimizedObjectPoint, 10u, refinementEstimator, Scalar(0.001), Scalar(5), onlyFrontObjectPoint, nullptr, finalError))
+			{
 				objectPoint = optimizedObjectPoint;
+			}
 		}
 		else
 		{
-			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(pinholeCamera, ConstArraySubsetAccessor<SquareMatrix3, unsigned int>(orientationsIF, bestIndices), ConstIndexedAccessorSubsetAccessor<ImagePoint, unsigned int>(imagePoints, bestIndices), objectPoint, objectPointDistance, distortImagePoints, optimizedObjectPoint, 10u, refinementEstimator, Scalar(0.001), Scalar(5), onlyFrontObjectPoint, nullptr, finalError))
+			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(anyCameraPinhole, ConstArraySubsetAccessor<SquareMatrix3, unsigned int>(flippedCameras_R_world, bestIndices), ConstIndexedAccessorSubsetAccessor<ImagePoint, unsigned int>(imagePoints, bestIndices), objectPoint, objectPointDistance, optimizedObjectPoint, 10u, refinementEstimator, Scalar(0.001), Scalar(5), onlyFrontObjectPoint, nullptr, finalError))
+			{
 				objectPoint = optimizedObjectPoint;
+			}
 		}
 	}
 
-	if (usedIndices)
+	if (usedIndices != nullptr)
 	{
 		*usedIndices = std::move(bestIndices);
 	}

@@ -689,26 +689,25 @@ class NonLinearOptimizationObjectPoint::SphericalObjectPointProvider : public No
 
 		/**
 		 * Creates a new optimization provider object.
-		 * @param pinholeCamera The pinhole camera object to be used
-		 * @param invertedFlippedOrientations The inverted and flipped poses (orientation) of the individual camera frames
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param flippedCameras_R_world The inverted and flipped poses (orientation) of the individual camera frames
 		 * @param imagePoints The 2D observation image points, each point corresponds to one camera orientation
 		 * @param objectPoint Spherical 3D object point for which the position has to be optimized
 		 * @param objectPointDistance The distance (radius) between the origin of the camera poses and the 3D object point location
 		 * @param distortImagePoints True, to apply the distortion parameters of the camera
 		 * @param onlyFrontObjectPoint True, to avoid that the optimized 3D position lies behind any camera
 		 */
-		inline SphericalObjectPointProvider(const PinholeCamera& camera, const ConstIndexedAccessor<SquareMatrix3>& invertedFlippedOrientations, const ConstIndexedAccessor<ImagePoint>& imagePoints, ExponentialMap& objectPoint, const Scalar objectPointDistance, const bool distortImagePoints, const bool onlyFrontObjectPoint) :
+		inline SphericalObjectPointProvider(const AnyCamera& camera, const ConstIndexedAccessor<SquareMatrix3>& flippedCameras_R_world, const ConstIndexedAccessor<ImagePoint>& imagePoints, ExponentialMap& objectPoint, const Scalar objectPointDistance, const bool onlyFrontObjectPoint) :
 			camera_(camera),
-			flippedCamera_T_orientations_(invertedFlippedOrientations),
+			flippedCamera_R_world_(flippedCameras_R_world),
 			providerImagePoints(imagePoints),
 			objectPoint_(objectPoint),
 			candidateObjectPoint_(objectPoint),
 			objectPointDistance_(objectPointDistance),
-			distortImagePoints_(distortImagePoints),
 			onlyFrontObjectPoint_(onlyFrontObjectPoint)
 		{
-			ocean_assert(flippedCamera_T_orientations_.size() > 1);
-			ocean_assert(flippedCamera_T_orientations_.size() == providerImagePoints.size());
+			ocean_assert(flippedCamera_R_world_.size() > 1);
+			ocean_assert(flippedCamera_R_world_.size() == providerImagePoints.size());
 		};
 
 		/**
@@ -717,11 +716,11 @@ class NonLinearOptimizationObjectPoint::SphericalObjectPointProvider : public No
 		 */
 		void determineJacobian(Matrix& jacobian) const
 		{
-			jacobian.resize(2 * flippedCamera_T_orientations_.size(), 3);
+			jacobian.resize(2 * flippedCamera_R_world_.size(), 3);
 
-			for (size_t n = 0; n < flippedCamera_T_orientations_.size(); ++n)
+			for (size_t n = 0; n < flippedCamera_R_world_.size(); ++n)
 			{
-				Jacobian::calculateSphericalObjectPointOrientationJacobian2x3(jacobian[n * 2 + 0], jacobian[n * 2 + 1], camera_, flippedCamera_T_orientations_[n], objectPoint_, objectPointDistance_, distortImagePoints_);
+				Jacobian::calculateSphericalObjectPointOrientationJacobian2x3IF(jacobian[n * 2 + 0], jacobian[n * 2 + 1], camera_, flippedCamera_R_world_[n], objectPoint_, objectPointDistance_);
 			}
 		}
 
@@ -751,7 +750,7 @@ class NonLinearOptimizationObjectPoint::SphericalObjectPointProvider : public No
 			ocean_assert(invertedCovariances == nullptr);
 
 			// set the correct size of the resulting error vector
-			weightedErrorVector.resize(2 * flippedCamera_T_orientations_.size(), 1);
+			weightedErrorVector.resize(2 * flippedCamera_R_world_.size(), 1);
 
 			Vector2* const weightedErrors = (Vector2*)(weightedErrorVector.data());
 			const SquareMatrix2* transposedInvertedCovariances = invertedCovariances ? (SquareMatrix2*)invertedCovariances->data() : nullptr;
@@ -763,14 +762,14 @@ class NonLinearOptimizationObjectPoint::SphericalObjectPointProvider : public No
 			}
 
 			Scalar sqrErrorSum = 0;
-			Scalars sqrErrors(flippedCamera_T_orientations_.size());
+			Scalars sqrErrors(flippedCamera_R_world_.size());
 
 			const Vector3 candidateObjectPoint(candidateObjectPoint_.rotation() * Vector3(0, 0, -objectPointDistance_));
 
 			// determine projective errors
-			for (size_t n = 0u; n < flippedCamera_T_orientations_.size(); ++n)
+			for (size_t n = 0u; n < flippedCamera_R_world_.size(); ++n)
 			{
-				const ImagePoint imagePoint(camera_.projectToImageIF<true>(HomogenousMatrix4(flippedCamera_T_orientations_[n]), candidateObjectPoint, distortImagePoints_));
+				const ImagePoint imagePoint(camera_.projectToImageIF(HomogenousMatrix4(flippedCamera_R_world_[n]), candidateObjectPoint));
 				const ImagePoint& realImagePoint = providerImagePoints[n];
 
 				const Vector2 difference(imagePoint - realImagePoint);
@@ -792,12 +791,12 @@ class NonLinearOptimizationObjectPoint::SphericalObjectPointProvider : public No
 				ocean_assert(!weightVector);
 
 				// return the averaged square error
-				return sqrErrorSum / Scalar(flippedCamera_T_orientations_.size());
+				return sqrErrorSum / Scalar(flippedCamera_R_world_.size());
 			}
 			else
 			{
 				// now we need the weight vector
-				weightVector.resize(2 * flippedCamera_T_orientations_.size(), 1);
+				weightVector.resize(2 * flippedCamera_R_world_.size(), 1);
 
 				return sqrErrors2robustErrors2<tEstimator>(sqrErrors, 2, weightedErrors, (Vector2*)(weightVector.data()), transposedInvertedCovariances);
 			}
@@ -821,9 +820,9 @@ class NonLinearOptimizationObjectPoint::SphericalObjectPointProvider : public No
 		{
 			const Vector3 candidateObjectPoint(candidateObjectPoint_.rotation() * Vector3(0, 0, -objectPointDistance_));
 
-			for (size_t n = 0; n < flippedCamera_T_orientations_.size(); ++n)
+			for (size_t n = 0; n < flippedCamera_R_world_.size(); ++n)
 			{
-				if (!PinholeCamera::isObjectPointInFrontIF(flippedCamera_T_orientations_[n], candidateObjectPoint))
+				if (!PinholeCamera::isObjectPointInFrontIF(flippedCamera_R_world_[n], candidateObjectPoint))
 				{
 					return false;
 				}
@@ -834,11 +833,11 @@ class NonLinearOptimizationObjectPoint::SphericalObjectPointProvider : public No
 
 	protected:
 
-		/// The camera object.
-		const PinholeCamera& camera_;
+		/// The camera profile.
+		const AnyCamera& camera_;
 
-		/// Inverted and flipped poses of all cameras.
-		const ConstIndexedAccessor<SquareMatrix3>& flippedCamera_T_orientations_;
+		/// The rotations transforming world to flipped camera.
+		const ConstIndexedAccessor<SquareMatrix3>& flippedCamera_R_world_;
 
 		/// The 2D observation positions in the individual camera frames.
 		const ConstIndexedAccessor<ImagePoint>& providerImagePoints;
@@ -852,17 +851,14 @@ class NonLinearOptimizationObjectPoint::SphericalObjectPointProvider : public No
 		/// The distance (radius) between the origin of the camera poses and the 3D object point location.
 		const Scalar objectPointDistance_;
 
-		/// True, to use the camera distortion parameters.
-		const bool distortImagePoints_;
-
 		/// True, forces the object point to stay in front of the camera.s
 		const bool onlyFrontObjectPoint_;
 };
 
-bool NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(const PinholeCamera& camera, const ConstIndexedAccessor<SquareMatrix3>& invertedFlippedOrientations, const ConstIndexedAccessor<Vector2>& imagePoints, const Vector3& objectPoint, const Scalar objectPointDistance, const bool distortImagePoints, Vector3& optimizedObjectPoint, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoint, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+bool NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(const AnyCamera& camera, const ConstIndexedAccessor<SquareMatrix3>& flippedCameras_R_world, const ConstIndexedAccessor<Vector2>& imagePoints, const Vector3& objectPoint, const Scalar objectPointDistance, Vector3& optimizedObjectPoint, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoint, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
 	ocean_assert(camera.isValid());
-	ocean_assert(invertedFlippedOrientations.size() == imagePoints.size());
+	ocean_assert(flippedCameras_R_world.size() == imagePoints.size());
 	ocean_assert(&objectPoint != &optimizedObjectPoint);
 	ocean_assert(objectPointDistance > Numeric::eps());
 	ocean_assert(!objectPoint.isNull());
@@ -877,9 +873,9 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF
 	const Vector3 objectPointDirection(objectPoint.normalized());
 
 #ifdef OCEAN_DEBUG
-	for (size_t n = 0; n < invertedFlippedOrientations.size(); ++n)
+	for (size_t n = 0; n < flippedCameras_R_world.size(); ++n)
 	{
-		ocean_assert(PinholeCamera::isObjectPointInFrontIF(invertedFlippedOrientations[n], objectPoint));
+		ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCameras_R_world[n], objectPoint));
 	}
 #endif
 
@@ -888,38 +884,13 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF
 
 	Scalar intermediateFinalError = Numeric::maxValue();
 
-	SphericalObjectPointProvider provider(camera, invertedFlippedOrientations, imagePoints, sphericalObjectPoint, objectPointDistance, distortImagePoints, onlyFrontObjectPoint);
-	if (!denseOptimization<SphericalObjectPointProvider>(provider, iterations, estimator, lambda, lambdaFactor, initialError, &intermediateFinalError, nullptr, intermediateErrors) || (distortImagePoints && camera.hasDistortionParameters() && intermediateFinalError > Scalar(10 * 10)))
+	SphericalObjectPointProvider provider(camera, flippedCameras_R_world, imagePoints, sphericalObjectPoint, objectPointDistance, onlyFrontObjectPoint);
+	if (!denseOptimization<SphericalObjectPointProvider>(provider, iterations, estimator, lambda, lambdaFactor, initialError, &intermediateFinalError, nullptr, intermediateErrors))
 	{
-		// the used model for the 3D object points (the 3D exponential map) seems to be not the perfect choice for our problem
-		// for camera profiles with distortion parameters the optimization can fail very seldomly (e.g., in less then 0.1% cases)
-		// however, we can undistort the image points to determine an intermediate result
-
-		Vectors2 undistortedImagePoints;
-		undistortedImagePoints.reserve(imagePoints.size());
-
-		for (size_t n = 0; n < imagePoints.size(); ++n)
-		{
-			undistortedImagePoints.push_back(camera.undistort<true>(imagePoints[n]));
-		}
-
-		const ConstArrayAccessor<Vector2> undistortedImagePointAccessor(undistortedImagePoints);
-		SphericalObjectPointProvider distortionFreeProvider(camera, invertedFlippedOrientations, undistortedImagePointAccessor, sphericalObjectPoint, objectPointDistance, false, onlyFrontObjectPoint);
-		if (!denseOptimization<SphericalObjectPointProvider>(distortionFreeProvider, iterations, estimator, lambda, lambdaFactor, initialError, &intermediateFinalError, nullptr, intermediateErrors))
-		{
-			return false;
-		}
-
-		// now we can apply the provided camera profile as we should be close enough to the solution
-
-		SphericalObjectPointProvider secondProvider(camera, invertedFlippedOrientations, imagePoints, sphericalObjectPoint, objectPointDistance, distortImagePoints, onlyFrontObjectPoint);
-		if (!denseOptimization<SphericalObjectPointProvider>(secondProvider, iterations, estimator, lambda, lambdaFactor, initialError, &intermediateFinalError, nullptr, intermediateErrors))
-		{
-			return false;
-		}
+		return false;
 	}
 
-	if (finalError)
+	if (finalError != nullptr)
 	{
 		*finalError = intermediateFinalError;
 	}
