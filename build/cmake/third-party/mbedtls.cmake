@@ -13,6 +13,7 @@ set(MBEDTLS_FATAL_WARNINGS OFF)
 if(BUILD_SHARED_LIBS)
     set(USE_SHARED_MBEDTLS_LIBRARY ON)
     set(USE_STATIC_MBEDTLS_LIBRARY OFF)
+    add_definitions(-DOCEAN_RUNTIME_SHARED)
 else()
     set(USE_SHARED_MBEDTLS_LIBRARY OFF)
     set(USE_STATIC_MBEDTLS_LIBRARY ON)
@@ -23,7 +24,7 @@ find_package(Git REQUIRED)
 CPMAddPackage(
   NAME           mbedtls
   GIT_REPOSITORY https://github.com/Mbed-TLS/mbedtls.git
-  GIT_TAG        v3.5.2
+  GIT_TAG        v3.6.0
   PATCH_COMMAND  ${GIT_EXECUTABLE} apply "${CMAKE_CURRENT_SOURCE_DIR}/mbedtls/mbedtls.patch"
 )
 
