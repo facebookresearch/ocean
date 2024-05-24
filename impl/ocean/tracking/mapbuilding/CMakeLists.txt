@@ -34,17 +34,21 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
         PUBLIC
             ocean_base
             ocean_cv
-            ocean_cv_advanced
             ocean_cv_detector
-            ocean_cv_segmentation
             ocean_devices
-            # ocean_devices_vrs  # Not yet available
             ocean_geometry
             ocean_io
             ocean_math
-            ocean_media
             ocean_tracking
+        PRIVATE
+            ocean_cv_advanced
+            # ocean_devices_vrs  # Not yet available
+            ocean_media
     )
+
+    if (WIN32)
+        target_link_libraries(${OCEAN_TARGET_NAME} PRIVATE ocean_platform_win)
+    endif()
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}

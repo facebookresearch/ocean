@@ -11,6 +11,8 @@ add_subdirectory(qrcodes)
 
 if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
+    find_package(Eigen3 REQUIRED)
+
     set(OCEAN_TARGET_NAME "ocean_cv_detector")
 
     # Source files
@@ -37,6 +39,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_cv
             ocean_geometry
             ocean_math
+            Eigen3::Eigen
     )
 
     # Installation

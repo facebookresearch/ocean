@@ -33,11 +33,10 @@ if (MACOS OR LINUX)
 
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
-        PUBLIC
+        PRIVATE
             ocean_base
             ocean_platform
             ocean_system
-            ocean_test_testcv
             ocean_test_testcv_testopencv
     )
 

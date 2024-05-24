@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if (MACOS OR ANDROID OR LINUX OR WIN32)
+if (MACOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_cv_testcv_testdetector_testqrcodes")
 
@@ -28,18 +28,11 @@ if (MACOS OR ANDROID OR LINUX OR WIN32)
 
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
-        PUBLIC
+        PRIVATE
             ocean_base
-            ocean_cv
-            ocean_cv_detector
-            ocean_cv_detector_qrcodes
-            ocean_io
             ocean_math
-            ocean_media
-            ocean_media_openimagelibraries
+            ocean_platform
             ocean_system
-            ocean_test_testcv
-            ocean_test_testcv_testdetector
             ocean_test_testcv_testdetector_testqrcodes
     )
 
@@ -76,7 +69,6 @@ if (ANDROID)
         PUBLIC
             ocean_base
             ocean_base_jni
-            ocean_math
             ocean_platform_android
             ocean_test_testcv_testdetector_testqrcodes
     )

@@ -62,30 +62,16 @@ if (MACOS OR ANDROID OR IOS OR LINUX)
         PUBLIC
             ocean_base
             ocean_cv
-            ocean_geometry
             ocean_math
-            ocean_platform
-            ocean_system
             ocean_test_testcv
             ${OpenCV_LIBS}
+        PRIVATE
+            ocean_geometry
+            ocean_system
     )
 
     if (ANDROID)
         target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_android)
-    endif()
-
-    if (IOS OR MACOS)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_apple)
-    endif()
-
-    if (IOS)
-        target_link_libraries(${OCEAN_TARGET_NAME}
-            PUBLIC
-                ${AVFOUNDATION_LIB}
-                ${COREGRAPHICS_LIB}
-                ${OPENGLES_LIB}
-                ${QUARTZCORE_LIB}
-        )
     endif()
 
     # Installation

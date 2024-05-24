@@ -37,9 +37,10 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
-            ocean_system
             ocean_math
             ocean_test
+        PRIVATE
+            ocean_system
     )
 
     if (ANDROID)

@@ -44,10 +44,11 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
         PUBLIC
             ocean_base
             ocean_cv
-            ocean_geometry
             ocean_math
-            ocean_system
             ocean_test
+        PRIVATE
+            ocean_geometry
+            ocean_system
     )
 
     if (ANDROID)
