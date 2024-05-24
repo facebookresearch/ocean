@@ -1,0 +1,1073 @@
+#X3D V3.0 utf8
+
+#
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+#
+
+NavigationInfo
+{
+	# using sun's point light only
+	headlight FALSE
+}
+
+# Sun
+# Diameter: 1392 * 10^3 km
+# Rotation around axis: 25.38 days
+DEF SUN_AROUND_AXIS Transform
+{
+	children Shape
+	{
+		appearance Appearance
+		{
+			material Material
+			{
+				diffuseColor 1 1 0
+				emissiveColor 1 1 0
+				shininess 1.0
+				ambientIntensity 1
+			}
+
+			texture ImageTexture
+			{
+				url "sun.jpg"
+			}
+		}
+
+		geometry Sphere
+		{
+			radius 0.75
+		}
+	}
+}
+
+# Point light in center of the sun
+PointLight
+{
+	color 1 1 1
+	ambientIntensity 0.3
+}
+
+DEF ORIENTATION_INTERPOLATOR_SUN_AROUND_AXIS OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF TIMER_SENSOR_SUN_AROUND_AXIS TimeSensor
+{
+	cycleInterval 100
+	loop TRUE
+}
+
+
+
+
+
+# Mercury
+# Diameter: 4.88 * 10^3 km
+# Distance to sun: 57.9 * 10^6 km
+# Rotation around sun: 88 days
+# Rotation around axis: 58.625 days
+# Axis tilt: 0.034 degree
+DEF TRANSFORM_MERCURY_AROUND_SUN Transform
+{
+	children Transform
+	{
+		translation 1.5 0 0
+
+		children
+		[
+			DEF TRANSFORM_MERCURY_AROUND_AXIS Transform
+			{
+				children Shape
+				{
+					appearance Appearance
+					{
+						material Material
+						{
+							ambientIntensity 0.2
+						}
+
+						texture ImageTexture
+						{
+							url "mercury.jpg"
+						}
+					}
+
+					geometry Sphere
+					{
+						radius 0.03
+					}
+				}
+			}
+		]
+	}
+}
+
+DEF ORIENTATION_INTERPOLATOR_MERCURY_AROUND_SUN OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF ORIENTATION_INTERPOLATOR_MERCURY_AROUND_AXIS OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF TIME_SENSOR_MERCURY_AROUND_SUN TimeSensor
+{
+	cycleInterval 10
+	loop TRUE
+}
+
+DEF TIME_SENSOR_MERCURY_AROUND_AXIS TimeSensor
+{
+	cycleInterval 6
+	loop TRUE
+}
+
+
+
+
+
+# Venus
+# Diameter: 12.1 * 10^3 km
+# Distance to sun: 108 * 10^6 km
+# Rotation around sun: 224.7 days
+# Rotation around axis: 243 days
+# Axis tilt: 3 degree
+DEF TRANSFORM_VENUS_AROUND_SUN Transform
+{
+	children Transform
+	{
+		translation 2.0 0 0
+
+		children Transform
+		{
+			# axis tilt: 3 degree
+			rotation 0 0 1 0.052359
+
+			children
+			[
+				DEF TRANSFORM_VENUS_AROUND_AXIS Transform
+				{
+					children Shape
+					{
+						appearance Appearance
+						{
+							material Material
+							{
+								ambientIntensity 0.2
+							}
+
+							texture ImageTexture
+							{
+								url "venus.jpg"
+							}
+						}
+
+						geometry Sphere
+						{
+							radius 0.045
+						}
+					}
+				}
+			]
+		}
+	}
+}
+
+DEF ORIENTATION_INTERPOLATOR_VENUS_AROUND_SUN OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF ORIENTATION_INTERPOLATOR_VENUS_AROUND_AXIS OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF TIME_SENSOR_VENUS_AROUND_SUN TimeSensor
+{
+	cycleInterval 25
+	loop TRUE
+}
+
+DEF TIME_SENSOR_VENUS_AROUND_AXIS TimeSensor
+{
+	cycleInterval 25
+	loop TRUE
+}
+
+
+
+
+
+# Earth:
+# Diameter: 12.6 * 10^3 km
+# Distance to sun: 150 * 10^6 km
+# Rotation around sun: 365.25 days
+# Rotation around axis: 23.93 hours
+# Axis tilt: 23.5 degree
+#
+# Moon:
+# Diameter: 3.5 * 10^3 km
+# Distance to earth: 384 * 10^3 km
+# Rotation around earth: 27 days
+DEF TRANSFORM_EARTH_AROUND_SUN Transform
+{
+	children DEF TRANSFORM_EARTH_STATIONARY Transform
+	{
+		# distance between sun and earth
+		translation 2.5 0 0
+
+		children
+		[
+			Transform
+			{
+				# axis tilt: 23.5 degree
+				rotation 0 0 1 0.41015
+
+				children
+				[
+					DEF TRANSFORM_EARTH_AROUND_AXIS Transform
+					{
+						children Shape
+						{
+							geometry Sphere
+							{
+								radius 0.1
+							}
+
+							appearance Appearance
+							{
+								material Material
+								{
+									ambientIntensity 0.2
+								}
+
+								texture ImageTexture
+								{
+									url "earth.jpg"
+
+									textureProperties TextureProperties
+									{
+										minificationFilter "AVG_PIXEL_NEAREST_MIPMAP"
+										generateMipMaps TRUE
+									}
+								}
+							}
+						}
+					}
+
+					DEF TRANSFORM_EARTH_AROUND_AXIS_CLOUDS Transform
+					{
+						children Shape
+						{
+							geometry Sphere
+							{
+								radius 0.105
+							}
+
+							appearance Appearance
+							{
+								material Material
+								{
+									ambientIntensity 0.2
+								}
+
+								texture ImageTexture
+								{
+									url "earth_clouds.png"
+
+									textureProperties TextureProperties
+									{
+										minificationFilter "AVG_PIXEL_NEAREST_MIPMAP"
+										generateMipMaps TRUE
+									}
+								}
+							}
+						}
+					}
+				]
+			}
+
+			Transform
+			{
+				# lunar orbit plane inclination: 5.14 deg
+				rotation 1 0 0 0.0897
+
+				children DEF TRANSFORM_MOON_AROUND_EARTH Transform
+				{
+					children Transform
+					{
+						translation 0 0 0.25
+
+						children Transform
+						{
+							children Shape
+							{
+								appearance Appearance
+								{
+									material Material
+									{
+										ambientIntensity 0.2
+									}
+
+									texture ImageTexture
+									{
+										url "moon.jpg"
+									}
+								}
+
+								geometry Sphere
+								{
+									radius 0.02
+								}
+							}
+						}
+					}
+				}
+			}
+
+			DEF PROXIMITY_SENSOR_EARTH ProximitySensor
+			{
+				size 1 1 1
+			}
+		]
+	}
+}
+
+DEF ORIENTATION_INTERPOLATOR_EARTH_AROUND_SUN OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF ORIENTATION_INTERPOLATOR_EARTH_AROUND_SUN_INVERTED OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 -1 0 0
+		0 -1 0 1.570796
+		0 -1 0 3.141592
+		0 -1 0 4.712388
+		0 -1 0 0
+	]
+}
+
+DEF ORIENTATION_INTERPOLATOR_EARTH_AROUND_AXIS OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF ORIENTATION_INTERPOLATOR_EARTH_AROUND_AXIS_CLOUDS OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF ORIENTATION_INTERPOLATOR_MOON_AROUND_EARTH OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF TIME_SENSOR_EARTH_AROUND_SUN TimeSensor
+{
+	cycleInterval 45
+	loop TRUE
+}
+
+DEF TIME_SENSOR_EARTH_AROUND_AXIS TimeSensor
+{
+	cycleInterval 3
+	loop TRUE
+}
+
+DEF TIME_SENSOR_EARTH_AROUND_AXIS_CLOUDS TimeSensor
+{
+	cycleInterval 4
+	loop TRUE
+}
+
+DEF TIME_SENSOR_MOON_AROUND_EARTH TimeSensor
+{
+	cycleInterval 8
+	loop TRUE
+}
+
+# Audio for facts about earth
+DEF AUDIO_CLIP_EARTH AudioClip
+{
+	url "facts_about_earth.mp3"
+	loop FALSE
+	startTime 0.0
+	stopTime 0.01 # disabled by default
+}
+
+
+
+
+# Mars
+# Diameter: 6.79 * 10^3 km
+# Distance to sun: 228 * 10^6 km
+# Rotation around sun: 687 days
+# Rotation around axis: 24.62 hours
+# Axis tilt: 24 degree
+DEF TRANSFORM_MARS_AROUND_EARTH Transform
+{
+	children Transform
+	{
+		translation 3.5 0 0
+
+		children Transform
+		{
+			# axis tilt: 24 degree
+			rotation 1 0 0 0.418879
+
+			children DEF TRANSFORM_MARS_AROUND_AXIS Transform
+			{
+				children Shape
+				{
+					appearance Appearance
+					{
+						material Material
+						{
+							ambientIntensity 0.2
+						}
+
+						texture ImageTexture
+						{
+							url "mars.jpg"
+						}
+					}
+
+					geometry Sphere
+					{
+						radius 0.05
+					}
+				}
+			}
+		}
+	}
+}
+
+DEF ORIENTATION_INTERPOLATOR_MARS_AROUND_SUN OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF TIME_SENSOR_MARS_AROUND_SUN TimeSensor
+{
+	cycleInterval 65
+	loop TRUE
+}
+
+DEF ORIENTATION_INTERPOLATOR_MARS_AROUND_AXIS OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF TIME_SENSOR_MARS_AROUND_AXIS TimeSensor
+{
+	cycleInterval 2.5
+	loop TRUE
+}
+
+
+
+
+
+# Jupiter
+# Diameter: 143 * 10^3 km
+# Distance to sun: 778.5 * 10^6 km
+# Rotation around sun: 11.863 years
+# Axis tilt: 3 degree
+DEF TRANSFORM_JUPITER_AROUND_SUN Transform
+{
+	children Transform
+	{
+		translation 4.5 0 0
+
+		children Shape
+		{
+			appearance Appearance
+			{
+				material Material
+				{
+					ambientIntensity 0.2
+				}
+
+				texture ImageTexture
+				{
+					url "jupiter.jpg"
+
+					textureProperties TextureProperties
+					{
+						minificationFilter "AVG_PIXEL_NEAREST_MIPMAP"
+						generateMipMaps TRUE
+					}
+				}
+			}
+
+			geometry Sphere
+			{
+				radius 0.16
+			}
+		}
+	}
+}
+
+DEF ORIENTATION_INTERPOLATOR_JUPITER_AROUND_SUN OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF TIMER_JUPITER_AROUND_SUN TimeSensor
+{
+	cycleInterval 120
+	loop TRUE
+}
+
+
+
+
+
+# Saturn
+# Diameter: 120.5 * 10^3 km
+# Distance to sun: 1433 * 10^6 km
+# Rotation around sun: 29.45 years
+# Axis tilt: 27 degree
+DEF TRANSFORM_SATURN_AROUND_SUN Transform
+{
+	children Transform
+	{
+		translation 6 0 0
+
+		children
+		[
+			Transform
+			{
+				# axis tilt: 27 degree
+				rotation 0 0 1 0.47124
+
+				children
+				[
+					Shape
+					{
+						appearance Appearance
+						{
+							material Material
+							{
+								ambientIntensity 0.2
+							}
+
+							texture ImageTexture
+							{
+								url "saturn.jpg"
+							}
+						}
+
+						geometry Sphere
+						{
+							radius 0.15
+						}
+					}
+
+					Shape
+					{
+						appearance Appearance
+						{
+							material Material
+							{
+								diffuseColor 1 1 1
+							}
+
+							texture ImageTexture
+							{
+								url "saturn_rings.png"
+
+								textureProperties TextureProperties
+								{
+									minificationFilter "AVG_PIXEL_NEAREST_MIPMAP"
+									generateMipMaps TRUE
+								}
+							}
+						}
+
+						geometry Box
+						{
+							size 0.75 0.0 0.75
+						}
+					}
+				]
+			}
+		]
+	}
+}
+
+DEF ORIENTATION_INTERPOLATOR_SATURN_AROUND_SUN OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF TIME_SENSOR_SATURN_AROUND_SUN TimeSensor
+{
+	cycleInterval 240
+	loop TRUE
+}
+
+
+
+
+
+# Uranus
+# Diameter: 51.1 * 10^3 km
+# Distance to sun: 2872 * 10^6 km
+# Rotation around sun: 84 yeras
+# Axis tilt: 98 degree
+DEF TRANSFORM_URANUS_AROUND_SUN Transform
+{
+	children Transform
+	{
+		translation 10 0 0
+
+		children Transform
+		{
+			# axis tilt: 98 degree
+			rotation 1 0 0 1.71042
+
+			children
+			[
+				Shape
+				{
+					appearance Appearance
+					{
+						material Material
+						{
+							ambientIntensity 0.2
+						}
+
+						texture ImageTexture
+						{
+							url "uranus.jpg"
+						}
+					}
+
+					geometry Sphere
+					{
+						radius 0.15
+					}
+				}
+			]
+		}
+	}
+}
+
+DEF ORIENTATION_INTERPOLATOR_URANUS_AROUND_SUN OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF TIME_SENSOR_URANUS_AROUND_SUN TimeSensor
+{
+	cycleInterval 320
+	loop TRUE
+}
+
+
+
+
+
+# Neptune
+# Diameter: 49.5 * 10^3 km
+# Distance to sun: 4495 * 10^6 km
+# Rotation around sun: 164.8 years
+# Axis tilt: 28.5
+DEF TRANSFORM_NEPTUNE_AROUND_SUN Transform
+{
+	children Transform
+	{
+		translation 20 0 0
+
+		children
+		[
+			Transform
+			{
+				# axis tilt: 28.5 degree
+				rotation 1 0 0 0.49742
+
+				children
+				[
+					Shape
+					{
+						appearance Appearance
+						{
+							material Material
+							{
+								ambientIntensity 0.2
+							}
+
+							texture ImageTexture
+							{
+								url "neptun.jpg"
+							}
+						}
+
+						geometry Sphere
+						{
+							radius 0.12
+						}
+					}
+				]
+			}
+		]
+	}
+}
+
+DEF ORIENTATION_INTERPOLATOR_NEPTUNE_AROUND_SUN OrientationInterpolator
+{
+	key
+	[
+		0.0
+		0.25
+		0.5
+		0.75
+		1.0
+	]
+
+	keyValue
+	[
+		0 1 0 0
+		0 1 0 1.570796
+		0 1 0 3.141592
+		0 1 0 4.712388
+		0 1 0 0
+	]
+}
+
+DEF TIME_SENSOR_NEPTUNE_AROUND_SUN TimeSensor
+{
+	cycleInterval 460
+	loop TRUE
+}
+
+
+
+
+
+# Stars background
+Shape
+{
+	appearance Appearance
+	{
+		texture ImageTexture
+		{
+			url "stars.jpg"
+		}
+	}
+
+	geometry Sphere
+	{
+		radius 75.0
+		solid FALSE # visible from inside
+	}
+}
+
+# Audio for introduction
+AudioClip
+{
+	url "introduction.mp3"
+	stopTime 0.0
+	startTime 0.1
+	loop FALSE
+}
+
+# Audio for background noise
+AudioClip
+{
+	url "space_sound.mp3"
+	loop TRUE
+}
+
+
+
+ROUTE TIMER_SENSOR_SUN_AROUND_AXIS.fraction_changed TO ORIENTATION_INTERPOLATOR_SUN_AROUND_AXIS.set_fraction
+ROUTE ORIENTATION_INTERPOLATOR_SUN_AROUND_AXIS.value_changed TO SUN_AROUND_AXIS.rotation
+
+ROUTE TIME_SENSOR_MERCURY_AROUND_SUN.fraction_changed TO ORIENTATION_INTERPOLATOR_MERCURY_AROUND_SUN.set_fraction
+ROUTE TIME_SENSOR_MERCURY_AROUND_AXIS.fraction_changed TO ORIENTATION_INTERPOLATOR_MERCURY_AROUND_AXIS.set_fraction
+ROUTE ORIENTATION_INTERPOLATOR_MERCURY_AROUND_SUN.value_changed TO TRANSFORM_MERCURY_AROUND_SUN.rotation
+ROUTE ORIENTATION_INTERPOLATOR_MERCURY_AROUND_AXIS.value_changed TO TRANSFORM_MERCURY_AROUND_AXIS.rotation
+
+ROUTE TIME_SENSOR_VENUS_AROUND_SUN.fraction_changed TO ORIENTATION_INTERPOLATOR_VENUS_AROUND_SUN.set_fraction
+ROUTE TIME_SENSOR_VENUS_AROUND_AXIS.fraction_changed TO ORIENTATION_INTERPOLATOR_VENUS_AROUND_AXIS.set_fraction
+ROUTE ORIENTATION_INTERPOLATOR_VENUS_AROUND_SUN.value_changed TO TRANSFORM_VENUS_AROUND_SUN.rotation
+ROUTE ORIENTATION_INTERPOLATOR_VENUS_AROUND_AXIS.value_changed TO TRANSFORM_VENUS_AROUND_AXIS.rotation
+
+ROUTE TIME_SENSOR_EARTH_AROUND_SUN.fraction_changed TO ORIENTATION_INTERPOLATOR_EARTH_AROUND_SUN.set_fraction
+ROUTE TIME_SENSOR_EARTH_AROUND_SUN.fraction_changed TO ORIENTATION_INTERPOLATOR_EARTH_AROUND_SUN_INVERTED.set_fraction
+ROUTE TIME_SENSOR_EARTH_AROUND_AXIS.fraction_changed TO ORIENTATION_INTERPOLATOR_EARTH_AROUND_AXIS.set_fraction
+ROUTE TIME_SENSOR_EARTH_AROUND_AXIS_CLOUDS.fraction_changed TO ORIENTATION_INTERPOLATOR_EARTH_AROUND_AXIS_CLOUDS.set_fraction
+ROUTE TIME_SENSOR_MOON_AROUND_EARTH.fraction_changed TO ORIENTATION_INTERPOLATOR_MOON_AROUND_EARTH.set_fraction
+
+ROUTE ORIENTATION_INTERPOLATOR_EARTH_AROUND_SUN.value_changed TO TRANSFORM_EARTH_AROUND_SUN.rotation
+ROUTE ORIENTATION_INTERPOLATOR_EARTH_AROUND_SUN_INVERTED.value_changed TO TRANSFORM_EARTH_STATIONARY.rotation
+ROUTE ORIENTATION_INTERPOLATOR_EARTH_AROUND_AXIS.value_changed TO TRANSFORM_EARTH_AROUND_AXIS.rotation
+ROUTE ORIENTATION_INTERPOLATOR_EARTH_AROUND_AXIS_CLOUDS.value_changed TO TRANSFORM_EARTH_AROUND_AXIS_CLOUDS.rotation
+ROUTE ORIENTATION_INTERPOLATOR_MOON_AROUND_EARTH.value_changed TO TRANSFORM_MOON_AROUND_EARTH.rotation
+
+ROUTE TIME_SENSOR_MARS_AROUND_SUN.fraction_changed TO ORIENTATION_INTERPOLATOR_MARS_AROUND_SUN.set_fraction
+ROUTE TIME_SENSOR_MARS_AROUND_AXIS.fraction_changed TO ORIENTATION_INTERPOLATOR_MARS_AROUND_AXIS.set_fraction
+ROUTE ORIENTATION_INTERPOLATOR_MARS_AROUND_SUN.value_changed TO TRANSFORM_MARS_AROUND_EARTH.rotation
+ROUTE ORIENTATION_INTERPOLATOR_MARS_AROUND_AXIS.value_changed TO TRANSFORM_MARS_AROUND_AXIS.rotation
+
+ROUTE TIMER_JUPITER_AROUND_SUN.fraction_changed TO ORIENTATION_INTERPOLATOR_JUPITER_AROUND_SUN.set_fraction
+ROUTE ORIENTATION_INTERPOLATOR_JUPITER_AROUND_SUN.value_changed TO TRANSFORM_JUPITER_AROUND_SUN.rotation
+
+ROUTE TIME_SENSOR_SATURN_AROUND_SUN.fraction_changed TO ORIENTATION_INTERPOLATOR_SATURN_AROUND_SUN.set_fraction
+ROUTE ORIENTATION_INTERPOLATOR_SATURN_AROUND_SUN.value_changed TO TRANSFORM_SATURN_AROUND_SUN.rotation
+
+ROUTE TIME_SENSOR_URANUS_AROUND_SUN.fraction_changed TO ORIENTATION_INTERPOLATOR_URANUS_AROUND_SUN.set_fraction
+ROUTE ORIENTATION_INTERPOLATOR_URANUS_AROUND_SUN.value_changed TO TRANSFORM_URANUS_AROUND_SUN.rotation
+
+ROUTE TIME_SENSOR_NEPTUNE_AROUND_SUN.fraction_changed TO ORIENTATION_INTERPOLATOR_NEPTUNE_AROUND_SUN.set_fraction
+ROUTE ORIENTATION_INTERPOLATOR_NEPTUNE_AROUND_SUN.value_changed TO TRANSFORM_NEPTUNE_AROUND_SUN.rotation
+
+ROUTE PROXIMITY_SENSOR_EARTH.enterTime TO TIME_SENSOR_EARTH_AROUND_SUN.pauseTime
+ROUTE PROXIMITY_SENSOR_EARTH.exitTime TO TIME_SENSOR_EARTH_AROUND_SUN.resumeTime
+
+ROUTE PROXIMITY_SENSOR_EARTH.enterTime TO AUDIO_CLIP_EARTH.startTime

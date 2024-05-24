@@ -1,0 +1,72 @@
+=== Texture Credits ===
+
+https://www.solarsystemscope.com/
+https://creativecommons.org/licenses/by/4.0/
+
+earth_clouds.png
+https://www.solarsystemscope.com/textures/download/2k_earth_clouds.jpg
+(converted graycale to alpha channel, re-compressed)
+
+earth.jpg
+https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg
+(re-compressed)
+
+jupiter.jpg:
+https://www.solarsystemscope.com/textures/download/8k_jupiter.jpg
+(re-compressed)
+
+mars.jpg
+https://www.solarsystemscope.com/textures/download/2k_mars.jpg
+(re-compressed)
+
+mercury.jpg
+https://www.solarsystemscope.com/textures/download/2k_mercury.jpg
+(resized, re-compressed)
+
+moon.jpg
+https://www.solarsystemscope.com/textures/download/2k_moon.jpg
+(resized, re-compressed)
+
+neptun.jpg
+https://www.solarsystemscope.com/textures/download/2k_neptune.jpg
+(resized, re-compressed)
+
+saturn.jpg
+https://www.solarsystemscope.com/textures/download/8k_saturn.jpg
+(re-compressed)
+
+stars.jpg
+https://www.solarsystemscope.com/textures/download/8k_stars_milky_way.jpg
+(resized, re-compressed)
+
+sun.jpg
+https://www.solarsystemscope.com/textures/download/2k_sun.jpg
+(re-compressed)
+
+uranus.jpg
+https://www.solarsystemscope.com/textures/download/2k_uranus.jpg
+(resized, re-compressed)
+
+venus.jpg
+https://www.solarsystemscope.com/textures/download/2k_venus_atmosphere.jpg
+(resized, re-compressed)
+
+
+=== Sound Credits ===
+
+https://freesound.org
+
+space_sound.mp3
+Spaceship Ambience by PotatokingXII -- https://freesound.org/s/443499/ -- License: Creative Commons 0
+
+
+=== Other content ===
+
+saturn_rings.png
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+introduction.mp3
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+facts_about_earth.mp3
+Copyright (c) Meta Platforms, Inc. and affiliates.
