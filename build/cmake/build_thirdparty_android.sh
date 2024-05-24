@@ -79,22 +79,24 @@ function run_build_for_android {
     echo " "
 }
 
+# Shared builds are currently unused.  Android app builds use a single shared library created from linking static builds of Ocean and third-party libraries.
+
 run_build_for_android armeabi-v7a android-32 Debug static
 run_build_for_android arm64-v8a   android-32 Debug static
 run_build_for_android x86         android-32 Debug static
 run_build_for_android x86_64      android-32 Debug static
 
-run_build_for_android armeabi-v7a android-32 Debug shared
-run_build_for_android arm64-v8a   android-32 Debug shared
-run_build_for_android x86         android-32 Debug shared
-run_build_for_android x86_64      android-32 Debug shared
+# run_build_for_android armeabi-v7a android-32 Debug shared
+# run_build_for_android arm64-v8a   android-32 Debug shared
+# run_build_for_android x86         android-32 Debug shared
+# run_build_for_android x86_64      android-32 Debug shared
 
 run_build_for_android armeabi-v7a android-32 Release static
 run_build_for_android arm64-v8a   android-32 Release static
 run_build_for_android x86         android-32 Release static
 run_build_for_android x86_64      android-32 Release static
 
-run_build_for_android armeabi-v7a android-32 Release shared
-run_build_for_android arm64-v8a   android-32 Release shared
-run_build_for_android x86         android-32 Release shared
-run_build_for_android x86_64      android-32 Release shared
+# run_build_for_android armeabi-v7a android-32 Release shared
+# run_build_for_android arm64-v8a   android-32 Release shared
+# run_build_for_android x86         android-32 Release shared
+# run_build_for_android x86_64      android-32 Release shared
