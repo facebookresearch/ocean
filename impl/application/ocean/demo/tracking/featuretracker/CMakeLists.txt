@@ -223,3 +223,80 @@ endif()
 #    install(TARGETS ${OCEAN_TARGET_NAME} DESTINATION bin)
 #
 #endif()
+
+
+if (IOS)
+
+    set(OCEAN_TARGET_NAME "application_ocean_tracking_featuretracker_ios")
+
+    find_library(UIKIT_LIB UiKit)
+
+    file(GLOB OCEAN_TARGET_HEADER_FILES
+        "${CMAKE_CURRENT_LIST_DIR}/*.h"
+        "${CMAKE_CURRENT_LIST_DIR}/ios/*.h"
+    )
+    file(GLOB OCEAN_TARGET_SOURCE_FILES
+        "${CMAKE_CURRENT_LIST_DIR}/*.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/ios/*.mm"
+    )
+
+    file(GLOB OCEAN_TARGET_STORYBOARDS "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/ios/*.xib")
+    file(GLOB OCEAN_TARGET_IMAGE_RESOURCES
+        "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.bmp"
+        "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.obj"
+        "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.png"
+        "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.txt"
+    )
+
+    add_executable(${OCEAN_TARGET_NAME}
+        ${OCEAN_TARGET_HEADER_FILES}
+        ${OCEAN_TARGET_SOURCE_FILES}
+        ${OCEAN_TARGET_STORYBOARDS}
+        ${OCEAN_TARGET_IMAGE_RESOURCES}
+    )
+
+    set_source_files_properties(${OCEAN_TARGET_STORYBOARDS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    set_source_files_properties(${OCEAN_TARGET_IMAGE_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+    set(ALL_APP_RESOURCES
+        ${OCEAN_TARGET_STORYBOARDS}
+        ${OCEAN_TARGET_IMAGE_RESOURCES}
+    )
+
+    set_target_properties(${OCEAN_TARGET_NAME}
+        PROPERTIES
+            RESOURCE "${ALL_APP_RESOURCES}"
+            MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_LIST_DIR}/ios/Info.plist"
+    )
+
+    set_xcode_property(${OCEAN_TARGET_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.meta.ocean.app.demo.tracking.featuretracker.ios" All)
+
+    target_include_directories(${OCEAN_TARGET_NAME}
+        PUBLIC
+            ${OCEAN_IMPL_DIR}
+        PRIVATE
+            ${CMAKE_CURRENT_LIST_DIR}
+    )
+
+    target_link_libraries(${OCEAN_TARGET_NAME}
+        PUBLIC
+            ocean_base
+            ocean_devices
+            ocean_devices_ios
+            ocean_io
+            ocean_math
+            ocean_media
+            ocean_media_avfoundation
+            ocean_media_imageio
+            ocean_platform
+            ocean_platform_apple
+            ocean_platform_apple_ios
+            ocean_rendering_glescenegraph_apple
+            ocean_tracking
+            ocean_tracking_blob
+            ocean_tracking_orb
+            ocean_tracking_pattern
+            ocean_tracking_uvtexturemapping
+            ${UIKIT_LIB}
+    )
+endif()
