@@ -6,11 +6,10 @@
 cmake_minimum_required(VERSION 3.26)
 
 add_subdirectory(application)
-add_subdirectory(openxr)
 
 if (ANDROID)
 
-    set(OCEAN_TARGET_NAME "ocean_platform_meta_quest")
+    set(OCEAN_TARGET_NAME "ocean_platform_meta_quest_openxr")
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -27,8 +26,12 @@ if (ANDROID)
 
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
-        PRIVATE
-            ocean_platform_android
+        PUBLIC
+            ocean_base
+            ocean_math
+            ocean_platform_gles
+            ocean_platform_meta_quest
+            ocean_platform_openxr
     )
 
     # Installation
@@ -38,7 +41,7 @@ if (ANDROID)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/platform/meta/quest
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/platform/meta/quest/openxr
             COMPONENT include
     )
 
