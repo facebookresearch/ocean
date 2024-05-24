@@ -151,7 +151,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT NativeApplication
 		virtual void applicationLoop();
 
 		/**
-		 * Processes all pending Android events via ALooper_pollAll.
+		 * Processes all pending Android events via ALooper_pollOnce.
 		 */
 		virtual void processAndroidEvents();
 

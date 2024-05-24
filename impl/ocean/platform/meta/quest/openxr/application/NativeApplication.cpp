@@ -265,8 +265,17 @@ void NativeApplication::processAndroidEvents()
 
 		int events = 0;
 		struct android_poll_source* eventSource = nullptr;
-		if (ALooper_pollAll(timeoutMilliseconds, nullptr, &events, (void**)(&eventSource)) < 0)
+
+		int pollResult;
+		do
 		{
+			pollResult = ALooper_pollOnce(timeoutMilliseconds, nullptr, &events, (void**)(&eventSource));
+		}
+		while (ALOOPER_POLL_CALLBACK == pollResult);
+
+		if (pollResult < 0)
+		{
+			// No event data needs to be processed or error occurred (pollResult == ALOOPER_POLL_ERROR)
 			break;
 		}
 
