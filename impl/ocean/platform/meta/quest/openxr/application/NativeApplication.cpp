@@ -99,8 +99,8 @@ bool NativeApplication::run()
 
 	ocean_assert(androidApp_ != nullptr);
 
-	JNIEnv* jniEnv = nullptr;
-	androidApp_->activity->vm->AttachCurrentThread(&jniEnv, nullptr);
+	ocean_assert(jniEnv_ == nullptr);
+	androidApp_->activity->vm->AttachCurrentThread(&jniEnv_, nullptr);
 
 	PFN_xrInitializeLoaderKHR xrInitializeLoaderKHR = nullptr;
 	XrResult xrResult = xrGetInstanceProcAddr(XR_NULL_HANDLE, "xrInitializeLoaderKHR", (PFN_xrVoidFunction*)(&xrInitializeLoaderKHR));

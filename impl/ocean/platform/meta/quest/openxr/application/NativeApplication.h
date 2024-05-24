@@ -315,6 +315,9 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT NativeApplication
 
 #ifdef OCEAN_PLATFORM_BUILD_ANDROID
 
+		/// The Java native interface envrionment.
+		JNIEnv* jniEnv_ = nullptr;
+
 		// The android app object as provided in the main function of the native activity.
 		struct android_app* androidApp_ = nullptr;
 
