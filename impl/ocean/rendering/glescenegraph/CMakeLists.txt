@@ -9,6 +9,7 @@ add_subdirectory(android)
 add_subdirectory(apple)
 add_subdirectory(jni)
 add_subdirectory(qt)
+add_subdirectory(quest)
 add_subdirectory(windows)
 
 if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
