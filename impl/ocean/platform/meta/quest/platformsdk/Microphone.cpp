@@ -6,6 +6,7 @@
  */
 
 #include "ocean/platform/meta/quest/platformsdk/Microphone.h"
+#include "ocean/platform/meta/quest/platformsdk/Manager.h"
 
 #include <OVR_Microphone.h>
 
@@ -31,6 +32,12 @@ Microphone::ScopedSubscription Microphone::start(SampleCallback sampleCallback)
 	if (sampleCallbackMap_.empty())
 	{
 		ocean_assert(microphoneHandle_ == nullptr);
+
+		if (!Manager::get().isInitialized())
+		{
+			Log::error() << "Microphone::start() failed, Platform SDK is not initialized";
+			return Microphone::ScopedSubscription();
+		}
 
 		microphoneHandle_ = ovr_Microphone_Create();
 

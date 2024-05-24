@@ -73,12 +73,14 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Manager :
 
 		/**
 		 * Updates the manager and the underlying PlatformSDK functionalities.
+		 * This function can be called even if the manager is not yet initialized.
 		 * @param timestamp The current timestamp, with range (-infinity, infinity)
 		 */
 		void update(const double timestamp);
 
 		/**
 		 * Returns whether the manager has been fully initialized.
+		 * Call update() before calling this function.
 		 * @return True, if so
 		 */
 		inline bool isInitialized() const;
