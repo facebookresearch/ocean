@@ -40,8 +40,9 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
-            ocean_system
-            Eigen3::Eigen)
+        PRIVATE
+            Eigen3::Eigen
+    )
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}

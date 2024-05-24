@@ -40,6 +40,8 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_geometry
             ocean_math
             ocean_test
+        PRIVATE
+            ocean_system
     )
 
     if (ANDROID)

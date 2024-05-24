@@ -14,6 +14,8 @@ add_subdirectory(synthesis)
 
 if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
+    find_package(Eigen3 REQUIRED)
+
     set(OCEAN_TARGET_NAME "ocean_cv")
 
     # Source files
@@ -38,6 +40,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
         PUBLIC
             ocean_base
             ocean_math
+            Eigen3::Eigen
     )
 
     # Installation
