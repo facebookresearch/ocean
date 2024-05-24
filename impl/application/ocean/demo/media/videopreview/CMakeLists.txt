@@ -146,7 +146,7 @@ if (IOS)
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/ios/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/ios/*.mm")
 
-    file(GLOB OCEAN_TARGET_STORYBOARDS "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/media/videopreview/ios/*.storyboard")
+    file(GLOB OCEAN_TARGET_STORYBOARDS "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/media/videopreview/ios/*.xib")
 
     add_executable(${OCEAN_TARGET_NAME}
         ${OCEAN_TARGET_HEADER_FILES}
@@ -157,7 +157,7 @@ if (IOS)
     set_source_files_properties(${OCEAN_TARGET_STORYBOARDS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
     set(ALL_APP_RESOURCES
-        ${STORYBOARDS}
+        ${OCEAN_TARGET_STORYBOARDS}
     )
 
     set_target_properties(${OCEAN_TARGET_NAME}

@@ -109,7 +109,7 @@ if (IOS)
     set_source_files_properties(${OCEAN_TARGET_STORYBOARDS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
     set(ALL_APP_RESOURCES
-        ${STORYBOARDS}
+        ${OCEAN_TARGET_STORYBOARDS}
     )
 
     set_target_properties(${OCEAN_TARGET_NAME}
