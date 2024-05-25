@@ -160,6 +160,9 @@ void MicrophoneApplication::updateMicrophoneSpectrum()
 
 	reusableColorsPerVertex_.clear();
 
+	const HSVAColor hsvaBlue(RGBAColor(0.0f, 0.0f, 1.0f));
+	const HSVAColor hsvaRed(RGBAColor(1.0f, 0.0f, 0.0f));
+
 	for (size_t s = 0; s < validSamples; ++s)
 	{
 		const int sampleIndex = modulo(int(histortyIndex) - int(s), int(historySize_));
@@ -175,9 +178,8 @@ void MicrophoneApplication::updateMicrophoneSpectrum()
 			reusableVertices_.emplace_back(x, y, z);
 
 			const float factor = std::min(frequencies[n], 1.0f);
-			const RGBAColor color = RGBAColor(factor, 0.0f, 1.0f - factor);
 
-			reusableColorsPerVertex_.emplace_back(color);
+			reusableColorsPerVertex_.emplace_back(hsvaBlue.interpolate(hsvaRed, factor));
 		}
 	}
 
