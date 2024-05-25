@@ -9,11 +9,12 @@
 
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/math/HSVAColor.h"
 #include "ocean/math/Numeric.h"
 #include "ocean/math/Random.h"
 #include "ocean/math/RGBAColor.h"
 
-#include <array>
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -54,6 +55,12 @@ bool TestRGBAColor::test(const double testDuration)
 	allSucceeded = testAccessors(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testConversionHSVA(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -87,6 +94,11 @@ TEST(TestRGBAColor, IsEqual)
 TEST(TestRGBAColor, Accessors)
 {
 	EXPECT_TRUE(TestRGBAColor::testAccessors(GTEST_TEST_DURATION));
+}
+
+TEST(TestRGBAColor, ConversionHSVA)
+{
+	EXPECT_TRUE(TestRGBAColor::testConversionHSVA(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -382,6 +394,74 @@ bool TestRGBAColor::testAccessors(const double testDuration)
 	}
 
 	return allSucceeded;
+}
+
+bool TestRGBAColor::testConversionHSVA(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Conversion with HSVA test:";
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	{
+		// testing hard-coded values
+
+		// black
+		OCEAN_EXPECT_EQUAL(validation, HSVAColor(RGBAColor(0.0f, 0.0f, 0.0f)), HSVAColor(0.0f, 0.0f, 0.0f));
+
+		// white
+		OCEAN_EXPECT_EQUAL(validation, HSVAColor(RGBAColor(1.0f, 1.0f, 1.0f)), HSVAColor(0.0f, 0.0f, 1.0f));
+
+		// red
+		OCEAN_EXPECT_EQUAL(validation, HSVAColor(RGBAColor(1.0f, 0.0f, 0.0f)), HSVAColor(0.0f, 1.0f, 1.0f));
+
+		// green
+		OCEAN_EXPECT_EQUAL(validation, HSVAColor(RGBAColor(0.0f, 1.0f, 0.0f)), HSVAColor(NumericF::deg2rad(120), 1.0f, 1.0f));
+
+		// blue
+		OCEAN_EXPECT_EQUAL(validation, HSVAColor(RGBAColor(0.0f, 0.0f, 1.0f)), HSVAColor(NumericF::deg2rad(240), 1.0f, 1.0f));
+
+		// yellow
+		OCEAN_EXPECT_EQUAL(validation, HSVAColor(RGBAColor(1.0f, 1.0f, 0.0f)), HSVAColor(NumericF::deg2rad(60), 1.0f, 1.0f));
+
+		// cyan
+		OCEAN_EXPECT_EQUAL(validation, HSVAColor(RGBAColor(0.0f, 1.0f, 1.0f)), HSVAColor(NumericF::deg2rad(180), 1.0f, 1.0f));
+
+		// magenta
+		OCEAN_EXPECT_EQUAL(validation, HSVAColor(RGBAColor(1.0f, 0.0f, 1.0f)), HSVAColor(NumericF::deg2rad(300), 1.0f, 1.0f));
+	}
+
+	Timestamp startTimestamp(true);
+
+	do
+	{
+		const float red = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
+		const float green = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
+		const float blue = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
+		const float alpha = RandomF::scalar(randomGenerator, 0.0f, 1.0f);
+
+		const RGBAColor inputColor(red, green, blue, alpha);
+
+		const HSVAColor hsvaColor(inputColor);
+
+		const RGBAColor outputColor(hsvaColor);
+
+		constexpr float threshold = 0.01f;
+
+		OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(inputColor.red(), outputColor.red(), threshold));
+		OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(inputColor.green(), outputColor.green(), threshold));
+		OCEAN_EXPECT_TRUE(validation, NumericF::isEqual(inputColor.blue(), outputColor.blue(), threshold));
+
+		OCEAN_EXPECT_EQUAL(validation, inputColor.alpha(), outputColor.alpha());
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 }

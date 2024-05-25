@@ -60,6 +60,13 @@ class OCEAN_TEST_MATH_EXPORT TestRGBAColor
 		 * @return True, if succeeded
 		 */
 		static bool testAccessors(const double testDuration);
+
+		/**
+		 * Tests the conversion between RGBA and HSVA.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testConversionHSVA(const double testDuration);
 };
 
 }
