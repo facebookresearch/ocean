@@ -31,7 +31,7 @@ typedef std::vector<HSVAColor> HSVAColors;
  * The color space is cone with hue as angle, saturation as radius and value as height,
  * the alpha parameter is the fourth dimension.<br>
  * Hue must be in the range [0, 2Pi).<br>
- * Saturation, value and alpha must be in the range [0.0, 1.0].<br>
+ * Saturation, value, and alpha must be in the range [0.0, 1.0].<br>
  * An alpha value 1 means fully opaque, 0 means fully transparent. Therefore the alpha value specifies the amount of opaqueness.<br>
  * The internal element order is: hue, saturation, value, alpha.
  * @ingroup math

@@ -67,19 +67,17 @@ HSVAColor::HSVAColor(const RGBAColor& color)
 	}
 	else
 	{
-		const float invDiffValue = 1.0f / diffValue;
-
 		if (maxValue == color.red())
 		{
-			values_[0] = NumericF::pi_3() * (color.green() - color.blue()) * invDiffValue;
+			values_[0] = NumericF::pi_3() * (color.green() - color.blue()) / diffValue;
 		}
 		else if (maxValue == color.green())
 		{
-			values_[0] = NumericF::pi_3() * (2.0f + color.blue() - color.red()) * invDiffValue;
+			values_[0] = NumericF::pi_3() * (2.0f + (color.blue() - color.red()) / diffValue);
 		}
 		else if (maxValue == color.blue())
 		{
-			values_[0] = NumericF::pi_3() * (4.0f + color.red() - color.green()) * invDiffValue;
+			values_[0] = NumericF::pi_3() * (4.0f + (color.red() - color.green()) / diffValue);
 		}
 
 		values_[0] = NumericF::fmod(values_[0], NumericF::pi2());
@@ -197,7 +195,7 @@ HSVAColor HSVAColor::interpolate(const HSVAColor& color, const float factor) con
 		}
 	}
 
-	return HSVAColor(minmax<float>(0.0f, interpolatedHue, 1.0f),
+	return HSVAColor(NumericF::angleAdjustPositive(interpolatedHue),
 						minmax<float>(0.0f, values_[1] * factor1 + color.values_[1] * factor, 1.0f),
 						minmax<float>(0.0f, values_[2] * factor1 + color.values_[2] * factor, 1.0f),
 						minmax<float>(0.0f, values_[3] * factor1 + color.values_[3] * factor, 1.0f));
