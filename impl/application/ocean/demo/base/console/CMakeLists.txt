@@ -71,9 +71,11 @@ if (ANDROID)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
-            ocean_base_jni
             ocean_math
             ocean_platform_android
+            "-Wl,--whole-archive"
+            ocean_base_jni
+            "-Wl,--no-whole-archive"
     )
 
     # Installation

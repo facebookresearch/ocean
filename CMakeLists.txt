@@ -79,9 +79,9 @@ if (ANDROID)
     # libraries that are required. This is provided by Gradle.
     if (OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE)
         if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-            set(CMAKE_FIND_ROOT_PATH ${OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE}/${ANDROID_ABI}_shared_Debug)
+            set(CMAKE_FIND_ROOT_PATH ${OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE}/${ANDROID_ABI}_static_Debug)
         else()
-            set(CMAKE_FIND_ROOT_PATH ${OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE}/${ANDROID_ABI}_shared_Release)
+            set(CMAKE_FIND_ROOT_PATH ${OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE}/${ANDROID_ABI}_static_Release)
         endif()
 
         message(STATUS "OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE = ${OCEAN_THIRD_PARTY_ROOT_FROM_GRADLE}")
