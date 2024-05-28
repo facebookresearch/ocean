@@ -13,9 +13,13 @@ Please read the [contribution guidelines](CONTRIBUTING.md) before submitting any
 - Define an environment variable `OCEAN_DEVELOPMENT_PATH` that points to the local directory containing this repository
 - Ocean requires C++20
 
-## Android
+## Building
 
-Please refer to the instruction in [this document](building_for_android.md).
+Please refer to the platform-specific instructions when building Ocean:
+
+* [Android](building_for_android.md)
+* [iOS](building_for_ios.md)
+* [macOS](building_for_macos.md)
 
 # License
 
