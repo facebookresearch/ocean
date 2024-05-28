@@ -9,6 +9,12 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_test_testplatform")
 
+    if (IOS)
+        find_library(APPLE_APP_OR_UI_LIB UiKit)
+    elseif(MACOS)
+        find_library(APPLE_APP_OR_UI_LIB AppKit)
+    endif()
+
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
 
@@ -45,13 +51,14 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
-            ocean_cv
             ocean_platform
             ocean_test
+        PRIVATE
+            ocean_system
     )
 
     if (MACOS OR IOS)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_apple)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_apple ${APPLE_APP_OR_UI_LIB})
     endif()
 
     if (ANDROID)
