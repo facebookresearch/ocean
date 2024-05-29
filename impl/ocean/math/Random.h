@@ -224,6 +224,19 @@ class RandomT : public RandomI
 		static VectorT3<T> vector3(RandomGenerator& randomGenerator, const VectorT3<T>& range);
 
 		/**
+		 * Returns a random 3D vector with coordinates in a given range using an explicit random generator.
+		 * @param randomGenerator The random generator to be used
+		 * @param xMin Minimum coordinate value for x-axis, with range (-infinity, infinity)
+		 * @param xMax Maximum coordinate value for x-axis, with range [xMin, infinity)
+		 * @param yMin Minimum coordinate value for y-axis, with range (-infinity, infinity)
+		 * @param yMax Maximum coordinate value for y-axis, with range [yMin, infinity)
+		 * @param zMin Minimum coordinate value for z-axis, with range (-infinity, infinity)
+		 * @param zMax Maximum coordinate value for z-axis, with range [zMin, infinity)
+		 * @return Random 3D vector with random length
+		 */
+		static VectorT3<T> vector3(RandomGenerator& randomGenerator, const T xMin, const T xMax, const T yMin, const T yMax, const T zMin, const T zMax);
+
+		/**
 		 * Returns a random 4D vector with length 1 which is equal distributed within a hyper sphere.
 		 * @return The resulting random 4D vector, with vector4().length() == 1
 		 */
@@ -592,6 +605,16 @@ VectorT3<T> RandomT<T>::vector3(RandomGenerator& randomGenerator, const T min, c
 	const T x = scalar(randomGenerator, min, max);
 	const T y = scalar(randomGenerator, min, max);
 	const T z = scalar(randomGenerator, min, max);
+
+	return VectorT3<T>(x, y, z);
+}
+
+template <typename T>
+VectorT3<T> RandomT<T>::vector3(RandomGenerator& randomGenerator, const T xMin, const T xMax, const T yMin, const T yMax, const T zMin, const T zMax)
+{
+	const T x = scalar(randomGenerator, xMin, xMax);
+	const T y = scalar(randomGenerator, yMin, yMax);
+	const T z = scalar(randomGenerator, zMin, zMax);
 
 	return VectorT3<T>(x, y, z);
 }
