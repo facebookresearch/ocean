@@ -125,19 +125,19 @@ class SquareMatrixT3
 
 		/**
 		 * Creates a new SquareMatrixT3 rotation matrix by a given Euler rotation.
-		 * @param euler Euler rotation to create a rotation matrix from
+		 * @param euler Euler rotation to create a rotation matrix from, must be valid
 		 */
 		explicit SquareMatrixT3(const EulerT<T>& euler);
 
 		/**
 		 * Creates a new 3x3 matrix object by a given angle-axis rotation.
-		 * @param rotation Rotation to create a matrix from
+		 * @param rotation The angle-axis rotation to create a matrix from, must be valid
 		 */
 		explicit SquareMatrixT3(const RotationT<T>& rotation);
 
 		/**
 		 * Creates a new 3x3 matrix object by a given quaternion rotation.
-		 * @param quaternion Quaternion rotation to create a matrix from
+		 * @param quaternion The quaternion rotation to create a matrix from, must be valid
 		 */
 		explicit SquareMatrixT3(const QuaternionT<T>& quaternion);
 
@@ -151,7 +151,7 @@ class SquareMatrixT3
 
 		/**
 		 * Creates a new SquareMatrixT3 object by a given diagonal vector.
-		 * @param diagonal Diagonal vector for the new matrix
+		 * @param diagonal The diagonal vector for the new matrix
 		 */
 		explicit SquareMatrixT3(const VectorT3<T>& diagonal);
 
@@ -186,14 +186,14 @@ class SquareMatrixT3
 		SquareMatrixT3(const T* arrayValues, const bool valuesRowAligned);
 
 		/**
-		 * Creates a 3x3 rotation matrix by a given 4x4 homogenous transformation.
-		 * @param transformation Transformation to create a 3x3 rotation matrix from
+		 * Creates a 3x3 rotation matrix by a given 4x4 homogeneous transformation.
+		 * @param transformation The transformation to create a 3x3 rotation matrix from
 		 */
 		explicit SquareMatrixT3(const HomogenousMatrixT4<T>& transformation);
 
 		/**
 		 * Creates a 3x3 square matrix by a given 4x4 square transformation.
-		 * @param transformation Transformation to create a 3x3 square matrix from
+		 * @param transformation The transformation to create a 3x3 square matrix from
 		 */
 		explicit SquareMatrixT3(const SquareMatrixT4<T>& transformation);
 
@@ -449,7 +449,7 @@ class SquareMatrixT3
 		 * | v2     0   -v0 |
 		 * | -v1   v0     0 |
 		 * </pre>
-		 * @param vector Vector for which the skew symmetric matrix will be created
+		 * @param vector The vector for which the skew symmetric matrix will be created
 		 * @return Resulting matrix
 		 */
 		static inline SquareMatrixT3<T> skewSymmetricMatrix(const VectorT3<T>& vector);
@@ -458,10 +458,10 @@ class SquareMatrixT3
 		 * Multiplies a 2D vector with this matrix (from the right).
 		 * The 2D vector is interpreted as a 3D vector with third component equal to 1.<br>
 		 * This function is equivalent with the corresponding multiplication operator but returns False if the dot product between the augmented vector and the last row is zero.<br>
-		 * The multiplication result will be dehomogenizated to provide a 2D vector result, if possible.<br>
+		 * The multiplication result will be de-homogenized to provide a 2D vector result, if possible.<br>
 		 * Actually this function does:
 		 * @param vector The vector to be multiplied/transformed
-		 * @param result The dehomogenizated resulting 2D vector, if this function succeeds
+		 * @param result The de-homogenized resulting 2D vector, if this function succeeds
 		 * @return True, if the dot product between the augmented vector and the last row is non-zero; False, otherwise
 		 * @see operator*(const VectorT2<T>& vector).
 		 */
@@ -482,14 +482,14 @@ class SquareMatrixT3
 		SquareMatrixT3<T>& operator=(const SquareMatrixT3<T>&) = default;
 
 		/**
-		 * Returns whether two matrices are identical up to a smal epsilon.
+		 * Returns whether two matrices are identical up to a small epsilon.
 		 * @param matrix Right operand
 		 * @return True, if so
 		 */
 		bool operator==(const SquareMatrixT3<T>& matrix) const;
 
 		/**
-		 * Returns whether two matrices are not identical up to a smal epsilon.
+		 * Returns whether two matrices are not identical up to a small epsilon.
 		 * @param matrix Right operand
 		 * @return True, if so
 		 */
@@ -546,7 +546,7 @@ class SquareMatrixT3
 		/**
 		 * Multiply operator for a 2D vector.
 		 * The 2D vector is interpreted as a 3D vector with third component equal to 1.<br>
-		 * The final result will be dehomogenizated to provide a 2D vector result.<br>
+		 * The final result will be de-homogenized to provide a 2D vector result.<br>
 		 * Beware the dot product between the last row and the (augmented) vector must not be zero!
 		 * @param vector Right operand, vector to be multiplied from the right
 		 * @return Resulting 2D vector
@@ -578,7 +578,7 @@ class SquareMatrixT3
 		/**
 		 * Element operator.
 		 * Beware: No range check will be done!
-		 * @param index Index of the element to return [0, 8]
+		 * @param index The index of the element to return [0, 8]
 		 * @return Specified element
 		 */
 		inline T operator[](const unsigned int index) const;
@@ -586,7 +586,7 @@ class SquareMatrixT3
 		/**
 		 * Element operator.
 		 * Beware: No range check will be done!
-		 * @param index Index of the element to return [0, 8]
+		 * @param index The index of the element to return [0, 8]
 		 * @return Specified element
 		 */
 		inline T& operator[](const unsigned int index);
@@ -594,8 +594,8 @@ class SquareMatrixT3
 		/**
 		 * Element operator.
 		 * Beware: No range check will be done!
-		 * @param row Row of the element to return [0, 2]
-		 * @param column Column of the element to return [0, 2]
+		 * @param row The row of the element to return [0, 2]
+		 * @param column The column of the element to return [0, 2]
 		 * @return Specified element
 		 */
 		inline T operator()(const unsigned int row, const unsigned int column) const;
@@ -603,8 +603,8 @@ class SquareMatrixT3
 		/**
 		 * Element operator.
 		 * Beware: No range check will be done!
-		 * @param row Row of the element to return [0, 2]
-		 * @param column Column of the element to return [0, 2]
+		 * @param row The row of the element to return [0, 2]
+		 * @param column The column of the element to return [0, 2]
 		 * @return Specified element
 		 */
 		inline T& operator()(const unsigned int row, const unsigned int column);
@@ -612,7 +612,7 @@ class SquareMatrixT3
 		/**
 		 * Element operator.
 		 * Beware: No range check will be done!
-		 * @param index Index of the element to return [0, 8]
+		 * @param index The index of the element to return [0, 8]
 		 * @return Specified element
 		 */
 		inline T operator()(const unsigned int index) const;
@@ -620,7 +620,7 @@ class SquareMatrixT3
 		/**
 		 * Element operator.
 		 * Beware: No range check will be done!
-		 * @param index Index of the element to return [0, 8]
+		 * @param index The index of the element to return [0, 8]
 		 * @return Specified element
 		 */
 		inline T& operator()(const unsigned int index);
@@ -677,7 +677,7 @@ class SquareMatrixT3
 		 * @tparam U The element data type of the matrices to convert
 		 */
 		template <typename U>
-		static inline std::vector< SquareMatrixT3<T> > matrices2matrices(const std::vector< SquareMatrixT3<U> >& matrices);
+		static inline SquareMatricesT3<T> matrices2matrices(const SquareMatricesT3<U>& matrices);
 
 		/**
 		 * Converts matrices with specific data type to matrices with different data type.
@@ -687,12 +687,12 @@ class SquareMatrixT3
 		 * @tparam U The element data type of the matrices to convert
 		 */
 		template <typename U>
-		static inline std::vector< SquareMatrixT3<T> > matrices2matrices(const SquareMatrixT3<U>* matrices, const size_t size);
+		static inline SquareMatricesT3<T> matrices2matrices(const SquareMatrixT3<U>* matrices, const size_t size);
 
 	protected:
 
 		/// The nine values of the matrix.
-		T values[9];
+		T values_[9];
 };
 
 template <typename T>
@@ -705,15 +705,15 @@ template <typename T>
 template <typename U>
 inline SquareMatrixT3<T>::SquareMatrixT3(const SquareMatrixT3<U>& matrix)
 {
-	values[ 0] = T(matrix.values[ 0]);
-	values[ 1] = T(matrix.values[ 1]);
-	values[ 2] = T(matrix.values[ 2]);
-	values[ 3] = T(matrix.values[ 3]);
-	values[ 4] = T(matrix.values[ 4]);
-	values[ 5] = T(matrix.values[ 5]);
-	values[ 6] = T(matrix.values[ 6]);
-	values[ 7] = T(matrix.values[ 7]);
-	values[ 8] = T(matrix.values[ 8]);
+	values_[0] = T(matrix.values_[0]);
+	values_[1] = T(matrix.values_[1]);
+	values_[2] = T(matrix.values_[2]);
+	values_[3] = T(matrix.values_[3]);
+	values_[4] = T(matrix.values_[4]);
+	values_[5] = T(matrix.values_[5]);
+	values_[6] = T(matrix.values_[6]);
+	values_[7] = T(matrix.values_[7]);
+	values_[8] = T(matrix.values_[8]);
 }
 
 template <typename T>
@@ -721,27 +721,27 @@ SquareMatrixT3<T>::SquareMatrixT3(const bool setToIdentity)
 {
 	if (setToIdentity)
 	{
-		values[0] = T(1.0);
-		values[1] = T(0.0);
-		values[2] = T(0.0);
-		values[3] = T(0.0);
-		values[4] = T(1.0);
-		values[5] = T(0.0);
-		values[6] = T(0.0);
-		values[7] = T(0.0);
-		values[8] = T(1.0);
+		values_[0] = T(1.0);
+		values_[1] = T(0.0);
+		values_[2] = T(0.0);
+		values_[3] = T(0.0);
+		values_[4] = T(1.0);
+		values_[5] = T(0.0);
+		values_[6] = T(0.0);
+		values_[7] = T(0.0);
+		values_[8] = T(1.0);
 	}
 	else
 	{
-		values[0] = T(0.0);
-		values[1] = T(0.0);
-		values[2] = T(0.0);
-		values[3] = T(0.0);
-		values[4] = T(0.0);
-		values[5] = T(0.0);
-		values[6] = T(0.0);
-		values[7] = T(0.0);
-		values[8] = T(0.0);
+		values_[0] = T(0.0);
+		values_[1] = T(0.0);
+		values_[2] = T(0.0);
+		values_[3] = T(0.0);
+		values_[4] = T(0.0);
+		values_[5] = T(0.0);
+		values_[6] = T(0.0);
+		values_[7] = T(0.0);
+		values_[8] = T(0.0);
 	}
 }
 
@@ -785,15 +785,15 @@ SquareMatrixT3<T>::SquareMatrixT3(const EulerT<T>& euler)
 	const T cz = NumericT<T>::cos(euler.roll());
 	const T sz = NumericT<T>::sin(euler.roll());
 
-	values[0] = cy * cz + sx * sy * sz;
-	values[1] = cx * sz;
-	values[2] = -cz * sy + cy * sx * sz;
-	values[3] = cz * sx * sy - cy * sz;
-	values[4] = cx * cz;
-	values[5] = cy * cz * sx + sy * sz;
-	values[6] = cx * sy;
-	values[7] = -sx;
-	values[8] = cx * cy;
+	values_[0] = cy * cz + sx * sy * sz;
+	values_[1] = cx * sz;
+	values_[2] = -cz * sy + cy * sx * sz;
+	values_[3] = cz * sx * sy - cy * sz;
+	values_[4] = cx * cz;
+	values_[5] = cy * cz * sx + sy * sz;
+	values_[6] = cx * sy;
+	values_[7] = -sx;
+	values_[8] = cx * cy;
 
 	ocean_assert(NumericT<T>::isEqual(determinant(), T(1.0)));
 }
@@ -822,17 +822,17 @@ SquareMatrixT3<T>::SquareMatrixT3(const RotationT<T>& rotation)
 	const T ny = axis.y() * sinValue;
 	const T nz = axis.z() * sinValue;
 
-	values[0] = xx + cosValue;
-	values[1] = xy + nz;
-	values[2] = xz - ny;
+	values_[0] = xx + cosValue;
+	values_[1] = xy + nz;
+	values_[2] = xz - ny;
 
-	values[3] = xy - nz;
-	values[4] = yy + cosValue;
-	values[5] = yz + nx;
+	values_[3] = xy - nz;
+	values_[4] = yy + cosValue;
+	values_[5] = yz + nx;
 
-	values[6] = xz + ny;
-	values[7] = yz - nx;
-	values[8] = zz + cosValue;
+	values_[6] = xz + ny;
+	values_[7] = yz - nx;
+	values_[8] = zz + cosValue;
 
 	ocean_assert(NumericT<T>::isEqual(determinant(), T(1.0)));
 }
@@ -853,17 +853,17 @@ SquareMatrixT3<T>::SquareMatrixT3(const QuaternionT<T>& quaternion)
 	const T xz = quaternion.x() * quaternion.z();
 	const T yz = quaternion.y() * quaternion.z();
 
-	values[0] = T(1.0) - T(2.0) * (yy + zz);
-	values[1] = T(2.0) * (wz + xy);
-	values[2] = T(2.0) * (xz - wy);
+	values_[0] = T(1.0) - T(2.0) * (yy + zz);
+	values_[1] = T(2.0) * (wz + xy);
+	values_[2] = T(2.0) * (xz - wy);
 
-	values[3] = T(2.0) * (xy - wz);
-	values[4] = T(1.0) - T(2.0) * (xx + zz);
-	values[5] = T(2.0) * (wx + yz);
+	values_[3] = T(2.0) * (xy - wz);
+	values_[4] = T(1.0) - T(2.0) * (xx + zz);
+	values_[5] = T(2.0) * (wx + yz);
 
-	values[6] = T(2.0) * (wy + xz);
-	values[7] = T(2.0) * (yz - wx);
-	values[8] = T(1.0) - T(2.0) * (xx + yy);
+	values_[6] = T(2.0) * (wy + xz);
+	values_[7] = T(2.0) * (yz - wx);
+	values_[8] = T(1.0) - T(2.0) * (xx + yy);
 
 	ocean_assert(NumericT<T>::isWeakEqual(determinant(), T(1.0)) && "the quaternion is not normalized");
 }
@@ -871,39 +871,39 @@ SquareMatrixT3<T>::SquareMatrixT3(const QuaternionT<T>& quaternion)
 template <typename T>
 SquareMatrixT3<T>::SquareMatrixT3(const T& m00, const T& m10, const T& m20, const T& m01, const T& m11, const T& m21, const T& m02, const T& m12, const T& m22)
 {
-	values[0] = m00;
-	values[1] = m10;
-	values[2] = m20;
+	values_[0] = m00;
+	values_[1] = m10;
+	values_[2] = m20;
 
-	values[3] = m01;
-	values[4] = m11;
-	values[5] = m21;
+	values_[3] = m01;
+	values_[4] = m11;
+	values_[5] = m21;
 
-	values[6] = m02;
-	values[7] = m12;
-	values[8] = m22;
+	values_[6] = m02;
+	values_[7] = m12;
+	values_[8] = m22;
 }
 
 template <typename T>
 SquareMatrixT3<T>::SquareMatrixT3(const VectorT3<T>& xAxis, const VectorT3<T>& yAxis, const VectorT3<T>& zAxis)
 {
-	memcpy(values, xAxis(), sizeof(T) * 3);
-	memcpy(values + 3, yAxis(), sizeof(T) * 3);
-	memcpy(values + 6, zAxis(), sizeof(T) * 3);
+	memcpy(values_, xAxis(), sizeof(T) * 3);
+	memcpy(values_ + 3, yAxis(), sizeof(T) * 3);
+	memcpy(values_ + 6, zAxis(), sizeof(T) * 3);
 }
 
 template <typename T>
 SquareMatrixT3<T>::SquareMatrixT3(const VectorT3<T>& diagonal)
 {
-	values[0] = diagonal[0];
-	values[1] = T(0.0);
-	values[2] = T(0.0);
-	values[3] = T(0.0);
-	values[4] = diagonal[1];
-	values[5] = T(0.0);
-	values[6] = T(0.0);
-	values[7] = T(0.0);
-	values[8] = diagonal[2];
+	values_[0] = diagonal[0];
+	values_[1] = T(0.0);
+	values_[2] = T(0.0);
+	values_[3] = T(0.0);
+	values_[4] = diagonal[1];
+	values_[5] = T(0.0);
+	values_[6] = T(0.0);
+	values_[7] = T(0.0);
+	values_[8] = diagonal[2];
 }
 
 template <typename T>
@@ -914,7 +914,7 @@ SquareMatrixT3<T>::SquareMatrixT3(const U* arrayValues)
 
 	for (unsigned int n = 0u; n < 9u; ++n)
 	{
-		values[n] = T(arrayValues[n]);
+		values_[n] = T(arrayValues[n]);
 	}
 }
 
@@ -922,7 +922,7 @@ template <typename T>
 SquareMatrixT3<T>::SquareMatrixT3(const T* arrayValues)
 {
 	ocean_assert(arrayValues);
-	memcpy(values, arrayValues, sizeof(T) * 9);
+	memcpy(values_, arrayValues, sizeof(T) * 9);
 }
 
 template <typename T>
@@ -933,22 +933,22 @@ SquareMatrixT3<T>::SquareMatrixT3(const U* arrayValues, const bool valuesRowAlig
 
 	if (valuesRowAligned)
 	{
-		values[0] = T(arrayValues[0]);
-		values[1] = T(arrayValues[3]);
-		values[2] = T(arrayValues[6]);
-		values[3] = T(arrayValues[1]);
-		values[4] = T(arrayValues[4]);
-		values[5] = T(arrayValues[7]);
-		values[6] = T(arrayValues[2]);
-		values[7] = T(arrayValues[5]);
-		values[8] = T(arrayValues[8]);
+		values_[0] = T(arrayValues[0]);
+		values_[1] = T(arrayValues[3]);
+		values_[2] = T(arrayValues[6]);
+		values_[3] = T(arrayValues[1]);
+		values_[4] = T(arrayValues[4]);
+		values_[5] = T(arrayValues[7]);
+		values_[6] = T(arrayValues[2]);
+		values_[7] = T(arrayValues[5]);
+		values_[8] = T(arrayValues[8]);
 
 	}
 	else
 	{
 		for (unsigned int n = 0u; n < 9u; ++n)
 		{
-			values[n] = T(arrayValues[n]);
+			values_[n] = T(arrayValues[n]);
 		}
 	}
 }
@@ -960,36 +960,36 @@ SquareMatrixT3<T>::SquareMatrixT3(const T* arrayValues, const bool valuesRowAlig
 
 	if (valuesRowAligned)
 	{
-		values[0] = arrayValues[0];
-		values[1] = arrayValues[3];
-		values[2] = arrayValues[6];
-		values[3] = arrayValues[1];
-		values[4] = arrayValues[4];
-		values[5] = arrayValues[7];
-		values[6] = arrayValues[2];
-		values[7] = arrayValues[5];
-		values[8] = arrayValues[8];
+		values_[0] = arrayValues[0];
+		values_[1] = arrayValues[3];
+		values_[2] = arrayValues[6];
+		values_[3] = arrayValues[1];
+		values_[4] = arrayValues[4];
+		values_[5] = arrayValues[7];
+		values_[6] = arrayValues[2];
+		values_[7] = arrayValues[5];
+		values_[8] = arrayValues[8];
 	}
 	else
 	{
-		memcpy(values, arrayValues, sizeof(T) * 9);
+		memcpy(values_, arrayValues, sizeof(T) * 9);
 	}
 }
 
 template <typename T>
 SquareMatrixT3<T>::SquareMatrixT3(const HomogenousMatrixT4<T>& transformation)
 {
-	memcpy(values, transformation(), sizeof(T) * 3);
-	memcpy(values + 3, transformation() + 4, sizeof(T) * 3);
-	memcpy(values + 6, transformation() + 8, sizeof(T) * 3);
+	memcpy(values_, transformation(), sizeof(T) * 3);
+	memcpy(values_ + 3, transformation() + 4, sizeof(T) * 3);
+	memcpy(values_ + 6, transformation() + 8, sizeof(T) * 3);
 }
 
 template <typename T>
 SquareMatrixT3<T>::SquareMatrixT3(const SquareMatrixT4<T>& transformation)
 {
-	memcpy(values, transformation(), sizeof(T) * 3);
-	memcpy(values + 3, transformation() + 4, sizeof(T) * 3);
-	memcpy(values + 6, transformation() + 8, sizeof(T) * 3);
+	memcpy(values_, transformation(), sizeof(T) * 3);
+	memcpy(values_ + 3, transformation() + 4, sizeof(T) * 3);
+	memcpy(values_ + 6, transformation() + 8, sizeof(T) * 3);
 }
 
 template<typename T>
@@ -1014,9 +1014,9 @@ inline bool SquareMatrixT3<T>::solve(const VectorT3<T>& b, VectorT3<T>& x) const
 
 	if (NumericT<T>::isNotEqualEps(d))
 	{
-		const T d0 =      b[0] * (values[4] * values[8] - values[5] * values[7]) +      b[1] * (values[5] * values[6] - values[3] * values[8]) +      b[2] * (values[3] * values[7] - values[4] * values[6]);
-		const T d1 = values[0] * (     b[1] * values[8] -      b[2] * values[7]) + values[1] * (     b[2] * values[6] -      b[0] * values[8]) + values[2] * (     b[0] * values[7] -      b[1] * values[6]);
-		const T d2 = values[0] * (values[4] *      b[2] - values[5] *      b[1]) + values[1] * (values[5] *      b[0] - values[3] *      b[2]) + values[2] * (values[3] *      b[1] - values[4] *      b[0]);
+		const T d0 =      b[0] * (values_[4] * values_[8] - values_[5] * values_[7]) +      b[1] * (values_[5] * values_[6] - values_[3] * values_[8]) +      b[2] * (values_[3] * values_[7] - values_[4] * values_[6]);
+		const T d1 = values_[0] * (     b[1] * values_[8] -      b[2] * values_[7]) + values_[1] * (     b[2] * values_[6] -      b[0] * values_[8]) + values_[2] * (     b[0] * values_[7] -      b[1] * values_[6]);
+		const T d2 = values_[0] * (values_[4] *      b[2] - values_[5] *      b[1]) + values_[1] * (values_[5] *      b[0] - values_[3] *      b[2]) + values_[2] * (values_[3] *      b[1] - values_[4] *      b[0]);
 
 		const T invD = T(1) / d;
 
@@ -1033,25 +1033,25 @@ inline bool SquareMatrixT3<T>::solve(const VectorT3<T>& b, VectorT3<T>& x) const
 template<typename T>
 inline T SquareMatrixT3<T>::absSum() const
 {
-	return (NumericT<T>::abs(values[0]) + NumericT<T>::abs(values[1]) + NumericT<T>::abs(values[2]) + NumericT<T>::abs(values[3]) + NumericT<T>::abs(values[4]) + NumericT<T>::abs(values[5]) + NumericT<T>::abs(values[6]) + NumericT<T>::abs(values[7]) + NumericT<T>::abs(values[8]));
+	return (NumericT<T>::abs(values_[0]) + NumericT<T>::abs(values_[1]) + NumericT<T>::abs(values_[2]) + NumericT<T>::abs(values_[3]) + NumericT<T>::abs(values_[4]) + NumericT<T>::abs(values_[5]) + NumericT<T>::abs(values_[6]) + NumericT<T>::abs(values_[7]) + NumericT<T>::abs(values_[8]));
 }
 
 template<typename T>
 inline T SquareMatrixT3<T>::sum() const
 {
-	return (values[0] + values[1] + values[2] + values[3] + values[4] + values[5] + values[6] + values[7] + values[8]);
+	return (values_[0] + values_[1] + values_[2] + values_[3] + values_[4] + values_[5] + values_[6] + values_[7] + values_[8]);
 }
 
 template <typename T>
 inline const T* SquareMatrixT3<T>::data() const
 {
-	return values;
+	return values_;
 }
 
 template <typename T>
 inline T* SquareMatrixT3<T>::data()
 {
-	return values;
+	return values_;
 }
 
 template <typename T>
@@ -1071,64 +1071,64 @@ template <typename T>
 inline T SquareMatrixT3<T>::operator[](const unsigned int index) const
 {
 	ocean_assert(index < 9u);
-	return values[index];
+	return values_[index];
 }
 
 template <typename T>
 inline T& SquareMatrixT3<T>::operator[](const unsigned int index)
 {
 	ocean_assert(index < 9u);
-	return values[index];
+	return values_[index];
 }
 
 template <typename T>
 inline T SquareMatrixT3<T>::operator()(const unsigned int row, const unsigned int column) const
 {
 	ocean_assert(row < 3u && column < 3u);
-	return values[column * 3 + row];
+	return values_[column * 3 + row];
 }
 
 template <typename T>
 inline T& SquareMatrixT3<T>::operator()(const unsigned int row, const unsigned int column)
 {
 	ocean_assert(row < 3u && column < 3u);
-	return values[column * 3 + row];
+	return values_[column * 3 + row];
 }
 
 template <typename T>
 inline T SquareMatrixT3<T>::operator()(const unsigned int index) const
 {
 	ocean_assert(index < 9u);
-	return values[index];
+	return values_[index];
 }
 
 template <typename T>
 inline T& SquareMatrixT3<T>::operator()(const unsigned int index)
 {
 	ocean_assert(index < 9u);
-	return values[index];
+	return values_[index];
 }
 
 template <typename T>
 inline const T* SquareMatrixT3<T>::operator()() const
 {
-	return values;
+	return values_;
 }
 
 template <typename T>
 inline T* SquareMatrixT3<T>::operator()()
 {
-	return values;
+	return values_;
 }
 
 template <typename T>
 inline size_t SquareMatrixT3<T>::operator()(const SquareMatrixT3<T>& matrix) const
 {
-	size_t seed = std::hash<T>{}(matrix.values[0]);
+	size_t seed = std::hash<T>{}(matrix.values_[0]);
 
 	for (unsigned int n = 1u; n < 9u; ++n)
 	{
-		seed ^= std::hash<T>{}(matrix.values[n]) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+		seed ^= std::hash<T>{}(matrix.values_[n]) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 	}
 
 	return seed;
@@ -1145,14 +1145,14 @@ SquareMatrixT3<T> SquareMatrixT3<T>::transposed() const
 {
 	SquareMatrixT3<T> result(*this);
 
-	result.values[1] = values[3];
-	result.values[3] = values[1];
+	result.values_[1] = values_[3];
+	result.values_[3] = values_[1];
 
-	result.values[2] = values[6];
-	result.values[6] = values[2];
+	result.values_[2] = values_[6];
+	result.values_[6] = values_[2];
 
-	result.values[5] = values[7];
-	result.values[7] = values[5];
+	result.values_[5] = values_[7];
+	result.values_[7] = values_[5];
 
 	return result;
 }
@@ -1162,14 +1162,14 @@ void SquareMatrixT3<T>::transpose()
 {
 	SquareMatrixT3<T> tmp(*this);
 
-	values[3] = tmp.values[1];
-	values[1] = tmp.values[3];
+	values_[3] = tmp.values_[1];
+	values_[1] = tmp.values_[3];
 
-	values[6] = tmp.values[2];
-	values[2] = tmp.values[6];
+	values_[6] = tmp.values_[2];
+	values_[2] = tmp.values_[6];
 
-	values[7] = tmp.values[5];
-	values[5] = tmp.values[7];
+	values_[7] = tmp.values_[5];
+	values_[5] = tmp.values_[7];
 }
 
 template <typename T>
@@ -1205,18 +1205,18 @@ template <typename T>
 bool SquareMatrixT3<T>::invert(SquareMatrixT3<T>& invertedMatrix) const
 {
 	// calculate determinant
-	const T v48 = values[4] * values[8];
-	const T v57 = values[5] * values[7];
-	const T v56 = values[5] * values[6];
-	const T v38 = values[3] * values[8];
-	const T v37 = values[3] * values[7];
-	const T v46 = values[4] * values[6];
+	const T v48 = values_[4] * values_[8];
+	const T v57 = values_[5] * values_[7];
+	const T v56 = values_[5] * values_[6];
+	const T v38 = values_[3] * values_[8];
+	const T v37 = values_[3] * values_[7];
+	const T v46 = values_[4] * values_[6];
 
 	const T v48_57 = v48 - v57;
 	const T v56_38 = v56 - v38;
 	const T v37_46 = v37 - v46;
 
-	const T det = values[0] * v48_57 + values[1] * v56_38 + values[2] * v37_46;
+	const T det = values_[0] * v48_57 + values_[1] * v56_38 + values_[2] * v37_46;
 
 	if (NumericT<T>::isEqualEps(det))
 	{
@@ -1225,17 +1225,17 @@ bool SquareMatrixT3<T>::invert(SquareMatrixT3<T>& invertedMatrix) const
 
 	const T factor = T(1.0) / det;
 
-	invertedMatrix.values[0] = (v48_57) * factor;
-	invertedMatrix.values[1] = (values[2] * values[7] - values[1] * values[8]) * factor;
-	invertedMatrix.values[2] = (values[1] * values[5] - values[2] * values[4]) * factor;
+	invertedMatrix.values_[0] = (v48_57) * factor;
+	invertedMatrix.values_[1] = (values_[2] * values_[7] - values_[1] * values_[8]) * factor;
+	invertedMatrix.values_[2] = (values_[1] * values_[5] - values_[2] * values_[4]) * factor;
 
-	invertedMatrix.values[3] = (v56_38) * factor;
-	invertedMatrix.values[4] = (values[0] * values[8] - values[2] * values[6]) * factor;
-	invertedMatrix.values[5] = (values[2] * values[3] - values[0] * values[5]) * factor;
+	invertedMatrix.values_[3] = (v56_38) * factor;
+	invertedMatrix.values_[4] = (values_[0] * values_[8] - values_[2] * values_[6]) * factor;
+	invertedMatrix.values_[5] = (values_[2] * values_[3] - values_[0] * values_[5]) * factor;
 
-	invertedMatrix.values[6] = (v37_46) * factor;
-	invertedMatrix.values[7] = (values[1] * values[6] - values[0] * values[7]) * factor;
-	invertedMatrix.values[8] = (values[0] * values[4] - values[1] * values[3]) * factor;
+	invertedMatrix.values_[6] = (v37_46) * factor;
+	invertedMatrix.values_[7] = (values_[1] * values_[6] - values_[0] * values_[7]) * factor;
+	invertedMatrix.values_[8] = (values_[0] * values_[4] - values_[1] * values_[3]) * factor;
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	if (!std::is_same<T, float>::value)
@@ -1245,14 +1245,20 @@ bool SquareMatrixT3<T>::invert(SquareMatrixT3<T>& invertedMatrix) const
 
 		T sqrDistance = T(0);
 		for (unsigned int n = 0; n < 9u; ++n)
+		{
 			sqrDistance += NumericT<T>::sqr(test[n] - entity[n]);
+		}
+
 		const T distance = NumericT<T>::sqrt(sqrDistance * T(0.111111111111111111)); // 1 / 9
 
 		if (NumericT<T>::isWeakEqualEps(distance) == false)
 		{
 			T absolusteAverageEnergy = 0;
 			for (unsigned int n = 0u; n < 9u; ++n)
+			{
 				absolusteAverageEnergy += NumericT<T>::abs(values[n]);
+			}
+
 			absolusteAverageEnergy *= T(0.111111111111111111); // 1 / 9
 
 			// we expect/accept for each magnitude (larger than 1) a zero-inaccuracy of one magnitude (and we again comare it with the weak eps)
@@ -1276,59 +1282,59 @@ bool SquareMatrixT3<T>::invert(SquareMatrixT3<T>& invertedMatrix) const
 template <typename T>
 T SquareMatrixT3<T>::determinant() const
 {
-	return values[0] * (values[4] * values[8] - values[5] * values[7])
-			+ values[1] * (values[5] * values[6] - values[3] * values[8])
-			+ values[2] * (values[3] * values[7] - values[4] * values[6]);
+	return values_[0] * (values_[4] * values_[8] - values_[5] * values_[7])
+			+ values_[1] * (values_[5] * values_[6] - values_[3] * values_[8])
+			+ values_[2] * (values_[3] * values_[7] - values_[4] * values_[6]);
 }
 
 template <typename T>
 T SquareMatrixT3<T>::trace() const
 {
-	return values[0] + values[4] + values[8];
+	return values_[0] + values_[4] + values_[8];
 }
 
 template <typename T>
 inline void SquareMatrixT3<T>::toIdentity()
 {
-	values[0] = T(1.0);
-	values[1] = T(0.0);
-	values[2] = T(0.0);
-	values[3] = T(0.0);
-	values[4] = T(1.0);
-	values[5] = T(0.0);
-	values[6] = T(0.0);
-	values[7] = T(0.0);
-	values[8] = T(1.0);
+	values_[0] = T(1.0);
+	values_[1] = T(0.0);
+	values_[2] = T(0.0);
+	values_[3] = T(0.0);
+	values_[4] = T(1.0);
+	values_[5] = T(0.0);
+	values_[6] = T(0.0);
+	values_[7] = T(0.0);
+	values_[8] = T(1.0);
 }
 
 template <typename T>
 inline void SquareMatrixT3<T>::toNull()
 {
-	values[0] = T(0.0);
-	values[1] = T(0.0);
-	values[2] = T(0.0);
-	values[3] = T(0.0);
-	values[4] = T(0.0);
-	values[5] = T(0.0);
-	values[6] = T(0.0);
-	values[7] = T(0.0);
-	values[8] = T(0.0);
+	values_[0] = T(0.0);
+	values_[1] = T(0.0);
+	values_[2] = T(0.0);
+	values_[3] = T(0.0);
+	values_[4] = T(0.0);
+	values_[5] = T(0.0);
+	values_[6] = T(0.0);
+	values_[7] = T(0.0);
+	values_[8] = T(0.0);
 }
 
 template <typename T>
 bool SquareMatrixT3<T>::isIdentity() const
 {
-	return NumericT<T>::isEqual(values[0], 1) && NumericT<T>::isEqualEps(values[1]) && NumericT<T>::isEqualEps(values[2])
-				&& NumericT<T>::isEqualEps(values[3]) && NumericT<T>::isEqual(values[4], 1) && NumericT<T>::isEqualEps(values[5])
-				&& NumericT<T>::isEqualEps(values[6]) && NumericT<T>::isEqualEps(values[7]) && NumericT<T>::isEqual(values[8], 1);
+	return NumericT<T>::isEqual(values_[0], 1) && NumericT<T>::isEqualEps(values_[1]) && NumericT<T>::isEqualEps(values_[2])
+				&& NumericT<T>::isEqualEps(values_[3]) && NumericT<T>::isEqual(values_[4], 1) && NumericT<T>::isEqualEps(values_[5])
+				&& NumericT<T>::isEqualEps(values_[6]) && NumericT<T>::isEqualEps(values_[7]) && NumericT<T>::isEqual(values_[8], 1);
 }
 
 template <typename T>
 bool SquareMatrixT3<T>::isNull() const
 {
-	return NumericT<T>::isEqualEps(values[0]) && NumericT<T>::isEqualEps(values[1]) && NumericT<T>::isEqualEps(values[2])
-				&& NumericT<T>::isEqualEps(values[3]) && NumericT<T>::isEqualEps(values[4]) && NumericT<T>::isEqualEps(values[5])
-				&& NumericT<T>::isEqualEps(values[6]) && NumericT<T>::isEqualEps(values[7]) && NumericT<T>::isEqualEps(values[8]);
+	return NumericT<T>::isEqualEps(values_[0]) && NumericT<T>::isEqualEps(values_[1]) && NumericT<T>::isEqualEps(values_[2])
+				&& NumericT<T>::isEqualEps(values_[3]) && NumericT<T>::isEqualEps(values_[4]) && NumericT<T>::isEqualEps(values_[5])
+				&& NumericT<T>::isEqualEps(values_[6]) && NumericT<T>::isEqualEps(values_[7]) && NumericT<T>::isEqualEps(values_[8]);
 }
 
 template <typename T>
@@ -1340,19 +1346,19 @@ inline bool SquareMatrixT3<T>::isSingular() const
 template <typename T>
 inline bool SquareMatrixT3<T>::isSimilarity() const
 {
-	return NumericT<T>::isEqual(values[0], values[4]) && NumericT<T>::isEqual(values[1], -values[3]) && NumericT<T>::isEqualEps(values[2]) && NumericT<T>::isEqualEps(values[5]) && NumericT<T>::isEqual(values[8], 1) && !isSingular();
+	return NumericT<T>::isEqual(values_[0], values_[4]) && NumericT<T>::isEqual(values_[1], -values_[3]) && NumericT<T>::isEqualEps(values_[2]) && NumericT<T>::isEqualEps(values_[5]) && NumericT<T>::isEqual(values_[8], 1) && !isSingular();
 }
 
 template <typename T>
 inline bool SquareMatrixT3<T>::isAffine() const
 {
-	return NumericT<T>::isEqualEps(values[2]) && NumericT<T>::isEqualEps(values[5]) && NumericT<T>::isEqual(values[8], 1) && !isSingular();
+	return NumericT<T>::isEqualEps(values_[2]) && NumericT<T>::isEqualEps(values_[5]) && NumericT<T>::isEqual(values_[8], 1) && !isSingular();
 }
 
 template <typename T>
 inline bool SquareMatrixT3<T>::isHomography() const
 {
-	return NumericT<T>::isNotEqualEps(values[8]) && !isSingular();
+	return NumericT<T>::isNotEqualEps(values_[8]) && !isSingular();
 }
 
 template <typename T>
@@ -1360,9 +1366,9 @@ bool SquareMatrixT3<T>::isOrthonormal(const T epsilon) const
 {
 	ocean_assert(epsilon >= 0);
 
-	const VectorT3<T> xAxis(values);
-	const VectorT3<T> yAxis(values + 3);
-	const VectorT3<T> zAxis(values + 6);
+	const VectorT3<T> xAxis(values_);
+	const VectorT3<T> yAxis(values_ + 3);
+	const VectorT3<T> zAxis(values_ + 6);
 
 	return NumericT<T>::isEqual(xAxis * yAxis, 0, epsilon) && NumericT<T>::isEqual(xAxis * zAxis, 0, epsilon) && NumericT<T>::isEqual(yAxis * zAxis, 0, epsilon)
 			&& NumericT<T>::isEqual(xAxis.length(), 1, epsilon) && NumericT<T>::isEqual(yAxis.length(), 1, epsilon) && NumericT<T>::isEqual(zAxis.length(), 1, epsilon);
@@ -1373,35 +1379,35 @@ bool SquareMatrixT3<T>::isSymmetric(const T epsilon) const
 {
 	ocean_assert(epsilon >= T(0));
 
-	return NumericT<T>::isEqual(values[1], values[3], epsilon) && NumericT<T>::isEqual(values[2], values[6], epsilon) && NumericT<T>::isEqual(values[5], values[7], epsilon);
+	return NumericT<T>::isEqual(values_[1], values_[3], epsilon) && NumericT<T>::isEqual(values_[2], values_[6], epsilon) && NumericT<T>::isEqual(values_[5], values_[7], epsilon);
 }
 
 template <typename T>
 inline bool SquareMatrixT3<T>::isEqual(const SquareMatrixT3<T>& matrix, const T eps) const
 {
-	return NumericT<T>::isEqual(values[0], matrix.values[0], eps) && NumericT<T>::isEqual(values[1], matrix.values[1], eps)
-			&& NumericT<T>::isEqual(values[2], matrix.values[2], eps) && NumericT<T>::isEqual(values[3], matrix.values[3], eps)
-			&& NumericT<T>::isEqual(values[4], matrix.values[4], eps) && NumericT<T>::isEqual(values[5], matrix.values[5], eps)
-			&& NumericT<T>::isEqual(values[6], matrix.values[6], eps) && NumericT<T>::isEqual(values[7], matrix.values[7], eps)
-			&& NumericT<T>::isEqual(values[8], matrix.values[8], eps);
+	return NumericT<T>::isEqual(values_[0], matrix.values_[0], eps) && NumericT<T>::isEqual(values_[1], matrix.values_[1], eps)
+			&& NumericT<T>::isEqual(values_[2], matrix.values_[2], eps) && NumericT<T>::isEqual(values_[3], matrix.values_[3], eps)
+			&& NumericT<T>::isEqual(values_[4], matrix.values_[4], eps) && NumericT<T>::isEqual(values_[5], matrix.values_[5], eps)
+			&& NumericT<T>::isEqual(values_[6], matrix.values_[6], eps) && NumericT<T>::isEqual(values_[7], matrix.values_[7], eps)
+			&& NumericT<T>::isEqual(values_[8], matrix.values_[8], eps);
 }
 
 template <typename T>
 VectorT3<T> SquareMatrixT3<T>::xAxis() const
 {
-	return VectorT3<T>(values);
+	return VectorT3<T>(values_);
 }
 
 template <typename T>
 VectorT3<T> SquareMatrixT3<T>::yAxis() const
 {
-	return VectorT3<T>(values + 3);
+	return VectorT3<T>(values_ + 3);
 }
 
 template <typename T>
 VectorT3<T> SquareMatrixT3<T>::zAxis() const
 {
-	return VectorT3<T>(values + 6);
+	return VectorT3<T>(values_ + 6);
 }
 
 template <typename T>
@@ -1409,9 +1415,9 @@ SquareMatrixT3<T> SquareMatrixT3<T>::orthonormalMatrix() const
 {
 	ocean_assert(!isSingular());
 
-	VectorT3<T> xAxis(values);
-	VectorT3<T> yAxis(values + 3);
-	VectorT3<T> zAxis(values + 6);
+	VectorT3<T> xAxis(values_);
+	VectorT3<T> yAxis(values_ + 3);
+	VectorT3<T> zAxis(values_ + 6);
 
 	// X scale factor
 	const T xScale = xAxis.length();
@@ -1484,17 +1490,17 @@ bool SquareMatrixT3<T>::eigenValues(T* eigenValues) const
 	 * </pre>
 	 */
 
-	const T a = values[0];
-	const T d = values[1];
-	const T g = values[2];
+	const T a = values_[0];
+	const T d = values_[1];
+	const T g = values_[2];
 
-	const T b = values[3];
-	const T e = values[4];
-	const T h = values[5];
+	const T b = values_[3];
+	const T e = values_[4];
+	const T h = values_[5];
 
-	const T c = values[6];
-	const T f = values[7];
-	const T i = values[8];
+	const T c = values_[6];
+	const T f = values_[7];
+	const T i = values_[8];
 
 	const T a1 = T(1.0);
 	const T a2 = -(a + e + i);
@@ -1536,17 +1542,17 @@ bool SquareMatrixT3<T>::eigenSystem(T* eigenValues, VectorT3<T>* eigenVectors) c
 	 * </pre>
 	 */
 
-	const T a = values[0];
-	const T d = values[1];
-	const T g = values[2];
+	const T a = values_[0];
+	const T d = values_[1];
+	const T g = values_[2];
 
-	const T b = values[3];
-	const T e = values[4];
-	const T h = values[5];
+	const T b = values_[3];
+	const T e = values_[4];
+	const T h = values_[5];
 
-	const T c = values[6];
-	const T f = values[7];
-	const T i = values[8];
+	const T c = values_[6];
+	const T f = values_[7];
+	const T i = values_[8];
 
 	const T a1 = T(1.0);
 	const T a2 = -(a + e + i);
@@ -1618,7 +1624,7 @@ bool SquareMatrixT3<T>::eigenSystem(T* eigenValues, VectorT3<T>* eigenVectors) c
 template <typename T>
 VectorT3<T> SquareMatrixT3<T>::diagonal() const
 {
-	return VectorT3<T>(values[0], values[4], values[8]);
+	return VectorT3<T>(values_[0], values_[4], values_[8]);
 }
 
 template <typename T>
@@ -1632,32 +1638,32 @@ void SquareMatrixT3<T>::copyElements(U* arrayValues, const bool valuesRowAligned
 		// this matrix and the provided array are both column aligned
 		// thus, we can simply copy the data
 
-		arrayValues[0] = U(values[0]);
-		arrayValues[1] = U(values[3]);
-		arrayValues[2] = U(values[6]);
+		arrayValues[0] = U(values_[0]);
+		arrayValues[1] = U(values_[3]);
+		arrayValues[2] = U(values_[6]);
 
-		arrayValues[3] = U(values[1]);
-		arrayValues[4] = U(values[4]);
-		arrayValues[5] = U(values[7]);
+		arrayValues[3] = U(values_[1]);
+		arrayValues[4] = U(values_[4]);
+		arrayValues[5] = U(values_[7]);
 
-		arrayValues[6] = U(values[2]);
-		arrayValues[7] = U(values[5]);
-		arrayValues[8] = U(values[8]);
+		arrayValues[6] = U(values_[2]);
+		arrayValues[7] = U(values_[5]);
+		arrayValues[8] = U(values_[8]);
 	}
 	else
 	{
 		// this matrix and the provided array are both column aligned
 		// thus, we can simply copy the data
 
-		arrayValues[0] = U(values[0]);
-		arrayValues[1] = U(values[1]);
-		arrayValues[2] = U(values[2]);
-		arrayValues[3] = U(values[3]);
-		arrayValues[4] = U(values[4]);
-		arrayValues[5] = U(values[5]);
-		arrayValues[6] = U(values[6]);
-		arrayValues[7] = U(values[7]);
-		arrayValues[8] = U(values[8]);
+		arrayValues[0] = U(values_[0]);
+		arrayValues[1] = U(values_[1]);
+		arrayValues[2] = U(values_[2]);
+		arrayValues[3] = U(values_[3]);
+		arrayValues[4] = U(values_[4]);
+		arrayValues[5] = U(values_[5]);
+		arrayValues[6] = U(values_[6]);
+		arrayValues[7] = U(values_[7]);
+		arrayValues[8] = U(values_[8]);
 	}
 }
 
@@ -1671,24 +1677,24 @@ void SquareMatrixT3<T>::copyElements(T* arrayValues, const bool valuesRowAligned
 		// this matrix and the provided array are both column aligned
 		// thus, we can simply copy the data
 
-		arrayValues[0] = values[0];
-		arrayValues[1] = values[3];
-		arrayValues[2] = values[6];
+		arrayValues[0] = values_[0];
+		arrayValues[1] = values_[3];
+		arrayValues[2] = values_[6];
 
-		arrayValues[3] = values[1];
-		arrayValues[4] = values[4];
-		arrayValues[5] = values[7];
+		arrayValues[3] = values_[1];
+		arrayValues[4] = values_[4];
+		arrayValues[5] = values_[7];
 
-		arrayValues[6] = values[2];
-		arrayValues[7] = values[5];
-		arrayValues[8] = values[8];
+		arrayValues[6] = values_[2];
+		arrayValues[7] = values_[5];
+		arrayValues[8] = values_[8];
 	}
 	else
 	{
 		// this matrix and the provided array are both column aligned
 		// thus, we can simply copy the data
 
-		memcpy(arrayValues, values, sizeof(T) * 9);
+		memcpy(arrayValues, values_, sizeof(T) * 9);
 	}
 }
 
@@ -1707,14 +1713,14 @@ inline bool SquareMatrixT3<T>::multiply(const VectorT2<T>& vector, VectorT2<T>& 
 	 * | 1  |   | 2 5 8 |   | 1 |
 	 */
 
-	const T z = values[2] * vector[0] + values[5] * vector[1] + values[8];
+	const T z = values_[2] * vector[0] + values_[5] * vector[1] + values_[8];
 
 	if (NumericT<T>::isNotEqualEps(z))
 	{
 		const T factor = T(1) / z;
 
-		result = VectorT2<T>((values[0] * vector[0] + values[3] * vector[1] + values[6]) * factor,
-								(values[1] * vector[0] + values[4] * vector[1] + values[7]) * factor);
+		result = VectorT2<T>((values_[0] * vector[0] + values_[3] * vector[1] + values_[6]) * factor,
+								(values_[1] * vector[0] + values_[4] * vector[1] + values_[7]) * factor);
 
 		return true;
 	}
@@ -1727,15 +1733,15 @@ SquareMatrixT3<T> SquareMatrixT3<T>::transposedMultiply(const SquareMatrixT3<T>&
 {
 	SquareMatrixT3<T> result;
 
-	result.values[0] = values[0] * matrix.values[0] + values[1] * matrix.values[1] + values[2] * matrix.values[2];
-	result.values[1] = values[3] * matrix.values[0] + values[4] * matrix.values[1] + values[5] * matrix.values[2];
-	result.values[2] = values[6] * matrix.values[0] + values[7] * matrix.values[1] + values[8] * matrix.values[2];
-	result.values[3] = values[0] * matrix.values[3] + values[1] * matrix.values[4] + values[2] * matrix.values[5];
-	result.values[4] = values[3] * matrix.values[3] + values[4] * matrix.values[4] + values[5] * matrix.values[5];
-	result.values[5] = values[6] * matrix.values[3] + values[7] * matrix.values[4] + values[8] * matrix.values[5];
-	result.values[6] = values[0] * matrix.values[6] + values[1] * matrix.values[7] + values[2] * matrix.values[8];
-	result.values[7] = values[3] * matrix.values[6] + values[4] * matrix.values[7] + values[5] * matrix.values[8];
-	result.values[8] = values[6] * matrix.values[6] + values[7] * matrix.values[7] + values[8] * matrix.values[8];
+	result.values_[0] = values_[0] * matrix.values_[0] + values_[1] * matrix.values_[1] + values_[2] * matrix.values_[2];
+	result.values_[1] = values_[3] * matrix.values_[0] + values_[4] * matrix.values_[1] + values_[5] * matrix.values_[2];
+	result.values_[2] = values_[6] * matrix.values_[0] + values_[7] * matrix.values_[1] + values_[8] * matrix.values_[2];
+	result.values_[3] = values_[0] * matrix.values_[3] + values_[1] * matrix.values_[4] + values_[2] * matrix.values_[5];
+	result.values_[4] = values_[3] * matrix.values_[3] + values_[4] * matrix.values_[4] + values_[5] * matrix.values_[5];
+	result.values_[5] = values_[6] * matrix.values_[3] + values_[7] * matrix.values_[4] + values_[8] * matrix.values_[5];
+	result.values_[6] = values_[0] * matrix.values_[6] + values_[1] * matrix.values_[7] + values_[2] * matrix.values_[8];
+	result.values_[7] = values_[3] * matrix.values_[6] + values_[4] * matrix.values_[7] + values_[5] * matrix.values_[8];
+	result.values_[8] = values_[6] * matrix.values_[6] + values_[7] * matrix.values_[7] + values_[8] * matrix.values_[8];
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	const SquareMatrixT3<T> debugMatrix(transposed() * matrix);
@@ -1756,15 +1762,15 @@ SquareMatrixT3<T> SquareMatrixT3<T>::operator+(const SquareMatrixT3<T>& matrix) 
 {
 	SquareMatrixT3<T> result(*this);
 
-	result.values[0] += matrix.values[0];
-	result.values[1] += matrix.values[1];
-	result.values[2] += matrix.values[2];
-	result.values[3] += matrix.values[3];
-	result.values[4] += matrix.values[4];
-	result.values[5] += matrix.values[5];
-	result.values[6] += matrix.values[6];
-	result.values[7] += matrix.values[7];
-	result.values[8] += matrix.values[8];
+	result.values_[0] += matrix.values_[0];
+	result.values_[1] += matrix.values_[1];
+	result.values_[2] += matrix.values_[2];
+	result.values_[3] += matrix.values_[3];
+	result.values_[4] += matrix.values_[4];
+	result.values_[5] += matrix.values_[5];
+	result.values_[6] += matrix.values_[6];
+	result.values_[7] += matrix.values_[7];
+	result.values_[8] += matrix.values_[8];
 
 	return result;
 }
@@ -1772,15 +1778,15 @@ SquareMatrixT3<T> SquareMatrixT3<T>::operator+(const SquareMatrixT3<T>& matrix) 
 template <typename T>
 SquareMatrixT3<T>& SquareMatrixT3<T>::operator+=(const SquareMatrixT3<T>& matrix)
 {
-	values[0] += matrix.values[0];
-	values[1] += matrix.values[1];
-	values[2] += matrix.values[2];
-	values[3] += matrix.values[3];
-	values[4] += matrix.values[4];
-	values[5] += matrix.values[5];
-	values[6] += matrix.values[6];
-	values[7] += matrix.values[7];
-	values[8] += matrix.values[8];
+	values_[0] += matrix.values_[0];
+	values_[1] += matrix.values_[1];
+	values_[2] += matrix.values_[2];
+	values_[3] += matrix.values_[3];
+	values_[4] += matrix.values_[4];
+	values_[5] += matrix.values_[5];
+	values_[6] += matrix.values_[6];
+	values_[7] += matrix.values_[7];
+	values_[8] += matrix.values_[8];
 
 	return *this;
 }
@@ -1790,15 +1796,15 @@ SquareMatrixT3<T> SquareMatrixT3<T>::operator-(const SquareMatrixT3<T>& matrix) 
 {
 	SquareMatrixT3<T> result(*this);
 
-	result.values[0] -= matrix.values[0];
-	result.values[1] -= matrix.values[1];
-	result.values[2] -= matrix.values[2];
-	result.values[3] -= matrix.values[3];
-	result.values[4] -= matrix.values[4];
-	result.values[5] -= matrix.values[5];
-	result.values[6] -= matrix.values[6];
-	result.values[7] -= matrix.values[7];
-	result.values[8] -= matrix.values[8];
+	result.values_[0] -= matrix.values_[0];
+	result.values_[1] -= matrix.values_[1];
+	result.values_[2] -= matrix.values_[2];
+	result.values_[3] -= matrix.values_[3];
+	result.values_[4] -= matrix.values_[4];
+	result.values_[5] -= matrix.values_[5];
+	result.values_[6] -= matrix.values_[6];
+	result.values_[7] -= matrix.values_[7];
+	result.values_[8] -= matrix.values_[8];
 
 	return result;
 }
@@ -1806,15 +1812,15 @@ SquareMatrixT3<T> SquareMatrixT3<T>::operator-(const SquareMatrixT3<T>& matrix) 
 template <typename T>
 SquareMatrixT3<T>& SquareMatrixT3<T>::operator-=(const SquareMatrixT3<T>& matrix)
 {
-	values[0] -= matrix.values[0];
-	values[1] -= matrix.values[1];
-	values[2] -= matrix.values[2];
-	values[3] -= matrix.values[3];
-	values[4] -= matrix.values[4];
-	values[5] -= matrix.values[5];
-	values[6] -= matrix.values[6];
-	values[7] -= matrix.values[7];
-	values[8] -= matrix.values[8];
+	values_[0] -= matrix.values_[0];
+	values_[1] -= matrix.values_[1];
+	values_[2] -= matrix.values_[2];
+	values_[3] -= matrix.values_[3];
+	values_[4] -= matrix.values_[4];
+	values_[5] -= matrix.values_[5];
+	values_[6] -= matrix.values_[6];
+	values_[7] -= matrix.values_[7];
+	values_[8] -= matrix.values_[8];
 
 	return *this;
 }
@@ -1824,15 +1830,15 @@ inline SquareMatrixT3<T> SquareMatrixT3<T>::operator-() const
 {
 	SquareMatrixT3<T> result;
 
-	result.values[0] = -values[0];
-	result.values[1] = -values[1];
-	result.values[2] = -values[2];
-	result.values[3] = -values[3];
-	result.values[4] = -values[4];
-	result.values[5] = -values[5];
-	result.values[6] = -values[6];
-	result.values[7] = -values[7];
-	result.values[8] = -values[8];
+	result.values_[0] = -values_[0];
+	result.values_[1] = -values_[1];
+	result.values_[2] = -values_[2];
+	result.values_[3] = -values_[3];
+	result.values_[4] = -values_[4];
+	result.values_[5] = -values_[5];
+	result.values_[6] = -values_[6];
+	result.values_[7] = -values_[7];
+	result.values_[8] = -values_[8];
 
 	return result;
 }
@@ -1842,15 +1848,15 @@ OCEAN_FORCE_INLINE SquareMatrixT3<T> SquareMatrixT3<T>::operator*(const SquareMa
 {
 	SquareMatrixT3<T> result;
 
-	result.values[0] = values[0] * matrix.values[0] + values[3] * matrix.values[1] + values[6] * matrix.values[2];
-	result.values[1] = values[1] * matrix.values[0] + values[4] * matrix.values[1] + values[7] * matrix.values[2];
-	result.values[2] = values[2] * matrix.values[0] + values[5] * matrix.values[1] + values[8] * matrix.values[2];
-	result.values[3] = values[0] * matrix.values[3] + values[3] * matrix.values[4] + values[6] * matrix.values[5];
-	result.values[4] = values[1] * matrix.values[3] + values[4] * matrix.values[4] + values[7] * matrix.values[5];
-	result.values[5] = values[2] * matrix.values[3] + values[5] * matrix.values[4] + values[8] * matrix.values[5];
-	result.values[6] = values[0] * matrix.values[6] + values[3] * matrix.values[7] + values[6] * matrix.values[8];
-	result.values[7] = values[1] * matrix.values[6] + values[4] * matrix.values[7] + values[7] * matrix.values[8];
-	result.values[8] = values[2] * matrix.values[6] + values[5] * matrix.values[7] + values[8] * matrix.values[8];
+	result.values_[0] = values_[0] * matrix.values_[0] + values_[3] * matrix.values_[1] + values_[6] * matrix.values_[2];
+	result.values_[1] = values_[1] * matrix.values_[0] + values_[4] * matrix.values_[1] + values_[7] * matrix.values_[2];
+	result.values_[2] = values_[2] * matrix.values_[0] + values_[5] * matrix.values_[1] + values_[8] * matrix.values_[2];
+	result.values_[3] = values_[0] * matrix.values_[3] + values_[3] * matrix.values_[4] + values_[6] * matrix.values_[5];
+	result.values_[4] = values_[1] * matrix.values_[3] + values_[4] * matrix.values_[4] + values_[7] * matrix.values_[5];
+	result.values_[5] = values_[2] * matrix.values_[3] + values_[5] * matrix.values_[4] + values_[8] * matrix.values_[5];
+	result.values_[6] = values_[0] * matrix.values_[6] + values_[3] * matrix.values_[7] + values_[6] * matrix.values_[8];
+	result.values_[7] = values_[1] * matrix.values_[6] + values_[4] * matrix.values_[7] + values_[7] * matrix.values_[8];
+	result.values_[8] = values_[2] * matrix.values_[6] + values_[5] * matrix.values_[7] + values_[8] * matrix.values_[8];
 
 	return result;
 }
@@ -1864,21 +1870,21 @@ OCEAN_FORCE_INLINE VectorT2<T> SquareMatrixT3<T>::operator*(const VectorT2<T>& v
 	 * | 1  |   | 2 5 8 |   | 1 |
 	 */
 
-	const T z = values[2] * vector[0] + values[5] * vector[1] + values[8];
+	const T z = values_[2] * vector[0] + values_[5] * vector[1] + values_[8];
 	ocean_assert(NumericT<T>::isNotEqualEps(z) && "Division by zero!");
 
 	const T factor = T(1) / z;
 
-	return VectorT2<T>((values[0] * vector[0] + values[3] * vector[1] + values[6]) * factor,
-						(values[1] * vector[0] + values[4] * vector[1] + values[7]) * factor);
+	return VectorT2<T>((values_[0] * vector[0] + values_[3] * vector[1] + values_[6]) * factor,
+						(values_[1] * vector[0] + values_[4] * vector[1] + values_[7]) * factor);
 }
 
 template <typename T>
 OCEAN_FORCE_INLINE VectorT3<T> SquareMatrixT3<T>::operator*(const VectorT3<T>& vector) const
 {
-	return VectorT3<T>(values[0] * vector[0] + values[3] * vector[1] + values[6] * vector[2],
-						values[1] * vector[0] + values[4] * vector[1] + values[7] * vector[2],
-						values[2] * vector[0] + values[5] * vector[1] + values[8] * vector[2]);
+	return VectorT3<T>(values_[0] * vector[0] + values_[3] * vector[1] + values_[6] * vector[2],
+						values_[1] * vector[0] + values_[4] * vector[1] + values_[7] * vector[2],
+						values_[2] * vector[0] + values_[5] * vector[1] + values_[8] * vector[2]);
 }
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 20
@@ -1898,43 +1904,44 @@ OCEAN_FORCE_INLINE VectorT3<double> SquareMatrixT3<double>::operator*(const Vect
 
 	// we use the following strategy:
 	// the values of the matrix are column aligned so that we normally would need to transpose the matrix before we can apply simple SIMD instructions
-	// however, we do not transpose the matrix (we avoid the shuffle instructions) and instead mulitply the matrix column-wise:
+	// however, we do not transpose the matrix (we avoid the shuffle instructions) and instead multiply the matrix column-wise:
 	// finally we sum the four columns and have the result, compared to the transpose-based approach this approach is approx. two times faster
 	//
 	// A D G     a     Aa  +  Db  +  Gc
 	// B E H     b     Ba  +  Eb  +  Hc
 	// C F I  *  c  =  Ca  +  Fb  +  Ic
 
+	const double* const vectorValues = vector.data();
 
 	// first we load the first vector element in all 64bit elements of the 128 bit register, so that we receive [a, a]
-	__m128d v0 = _mm_load1_pd(vector.data() + 0);
+	const __m128d v0 = _mm_load1_pd(vectorValues + 0);
 
-	__m128d c0 = _mm_loadu_pd(values + 0);
+	const __m128d c0 = _mm_loadu_pd(values_ + 0);
 
 	// now we multiply the 128 bit register [A, B] * [a, a] = [Aa, Ba]
-	__m128d r0 = _mm_mul_pd(c0, v0);
+	const __m128d r0 = _mm_mul_pd(c0, v0);
 
 
 	// now we proceed with the second column
-	__m128d v1 = _mm_load1_pd(vector.data() + 1);
-	__m128d c1 = _mm_loadu_pd(values + 3);
-	__m128d r1 = _mm_mul_pd(c1, v1);
+	const __m128d v1 = _mm_load1_pd(vectorValues + 1);
+	const __m128d c1 = _mm_loadu_pd(values_ + 3);
+	const __m128d r1 = _mm_mul_pd(c1, v1);
 
 	// and we sum the result of the first column with the result of the second column
-	r0 = _mm_add_pd(r0, r1);
+	__m128d result_f64x2 = _mm_add_pd(r0, r1);
 
 
 	// now we proceed with the third column
-	__m128d v2 = _mm_load1_pd(vector.data() + 2);
-	__m128d c2 = _mm_loadu_pd(values + 6);
-	__m128d r2 = _mm_mul_pd(c2, v2);
+	const __m128d v2 = _mm_load1_pd(vectorValues + 2);
+	const __m128d c2 = _mm_loadu_pd(values_ + 6);
+	const __m128d r2 = _mm_mul_pd(c2, v2);
 
 	// we sum the results
-	r0 = _mm_add_pd(r0, r2);
+	result_f64x2 = _mm_add_pd(result_f64x2, r2);
 
 	VectorT3<double> result;
-	result[2] = values[2] * vector[0] + values[5] * vector[1] + values[8] * vector[2];
-	_mm_storeu_pd(result.data(), r0);
+	result[2] = values_[2] * vector[0] + values_[5] * vector[1] + values_[8] * vector[2];
+	_mm_storeu_pd(result.data(), result_f64x2);
 
 	return result;
 }
@@ -1959,7 +1966,7 @@ OCEAN_FORCE_INLINE VectorT3<float> SquareMatrixT3<float>::operator*(const Vector
 
 	// we use the following strategy:
 	// the values of the matrix are column aligned so that we normally would need to transpose the matrix before we can apply simple SIMD instructions
-	// however, we do not transpose the matrix (we avoid the shuffle instructions) and instead mulitply the matrix column-wise:
+	// however, we do not transpose the matrix (we avoid the shuffle instructions) and instead multiply the matrix column-wise:
 	// finally we sum the four columns and have the result, compared to the transpose-based approach this approach is approx. two times faster
 	//
 	// A D G     a     Aa  +  Db  +  Gc
@@ -1968,37 +1975,37 @@ OCEAN_FORCE_INLINE VectorT3<float> SquareMatrixT3<float>::operator*(const Vector
 
 
 	// first we load the first vector element in all 32bit elements of the 128 bit register, so that we receive [a, a, a, a]
-	__m128 v0 = _mm_load1_ps(vector.data() + 0);
+	const __m128 v0 = _mm_load1_ps(vector.data() + 0);
 
-	// now we load the first column to receive: [A, B, C, D], beware: D will be unsued
-	__m128 c0 = _mm_loadu_ps(values + 0);
+	// now we load the first column to receive: [A, B, C, D], beware: D will be unused
+	const __m128 c0 = _mm_loadu_ps(values_ + 0);
 
 	// now we multiply the 128 bit register [A, B, C, D] * [a, a, a, a] = [Aa, Ba, Ca, Da]
-	__m128 r0 = _mm_mul_ps(c0, v0);
+	const __m128 r0 = _mm_mul_ps(c0, v0);
 
 
 	// now we proceed with the second column
-	__m128 v1 = _mm_load1_ps(vector.data() + 1);
-	__m128 c1 = _mm_loadu_ps(values + 3);
-	__m128 r1 = _mm_mul_ps(c1, v1);
+	const __m128 v1 = _mm_load1_ps(vector.data() + 1);
+	const __m128 c1 = _mm_loadu_ps(values_ + 3);
+	const __m128 r1 = _mm_mul_ps(c1, v1);
 
 	// and we sum the result of the first column with the result of the second column
-	r0 = _mm_add_ps(r0, r1);
+	__m128 result_f32x4 = _mm_add_ps(r0, r1);
 
 
 	// now we proceed with the third column, this time we have to load [F, G, H, I] and we shift the values
-	__m128 v2 = _mm_load1_ps(vector.data() + 2);
-	__m128 c2 = _mm_loadu_ps(values + 5);
+	const __m128 v2 = _mm_load1_ps(vector.data() + 2);
+	__m128 c2 = _mm_loadu_ps(values_ + 5);
 	c2 = _mm_castsi128_ps(_mm_srli_si128(_mm_castps_si128(c2), 4)); // shift the 128 bit register by 4 bytes to the right to receive [G H I 0]
-	__m128 r2 = _mm_mul_ps(c2, v2);
+	const __m128 r2 = _mm_mul_ps(c2, v2);
 
 	// we sum the results
-	r0 = _mm_add_ps(r0, r2);
+	result_f32x4 = _mm_add_ps(result_f32x4, r2);
 
 	float resultValues[4];
-	_mm_storeu_ps(resultValues, r0);
+	_mm_storeu_ps(resultValues, result_f32x4);
 
-	// and finnally we store the results back to the vector
+	// and finally we store the results back to the vector
 	return VectorT3<float>(resultValues);
 }
 
@@ -2008,15 +2015,15 @@ template <typename T>
 SquareMatrixT3<T> SquareMatrixT3<T>::operator*(const T value) const
 {
 	SquareMatrixT3<T> result(*this);
-	result.values[0] *= value;
-	result.values[1] *= value;
-	result.values[2] *= value;
-	result.values[3] *= value;
-	result.values[4] *= value;
-	result.values[5] *= value;
-	result.values[6] *= value;
-	result.values[7] *= value;
-	result.values[8] *= value;
+	result.values_[0] *= value;
+	result.values_[1] *= value;
+	result.values_[2] *= value;
+	result.values_[3] *= value;
+	result.values_[4] *= value;
+	result.values_[5] *= value;
+	result.values_[6] *= value;
+	result.values_[7] *= value;
+	result.values_[8] *= value;
 
 	return result;
 }
@@ -2024,15 +2031,15 @@ SquareMatrixT3<T> SquareMatrixT3<T>::operator*(const T value) const
 template <typename T>
 SquareMatrixT3<T>& SquareMatrixT3<T>::operator*=(const T value)
 {
-	values[0] *= value;
-	values[1] *= value;
-	values[2] *= value;
-	values[3] *= value;
-	values[4] *= value;
-	values[5] *= value;
-	values[6] *= value;
-	values[7] *= value;
-	values[8] *= value;
+	values_[0] *= value;
+	values_[1] *= value;
+	values_[2] *= value;
+	values_[3] *= value;
+	values_[4] *= value;
+	values_[5] *= value;
+	values_[6] *= value;
+	values_[7] *= value;
+	values_[8] *= value;
 
 	return *this;
 }
@@ -2079,47 +2086,47 @@ inline void SquareMatrixT3<float>::multiply(const SquareMatrixT3<float>& matrix,
 	// _mm_castsi128_ps
 
 	// now we load the three columns (and ignore the last entry)
-	__m128 c0 = _mm_loadu_ps(matrix.values + 0);
-	__m128 c1 = _mm_loadu_ps(matrix.values + 3);
-	__m128 c2 = _mm_loadu_ps(matrix.values + 5);
+	const __m128 c0 = _mm_loadu_ps(matrix.values_ + 0);
+	const __m128 c1 = _mm_loadu_ps(matrix.values_ + 3);
+	__m128 c2 = _mm_loadu_ps(matrix.values_ + 5);
 	c2 = _mm_castsi128_ps(_mm_srli_si128(_mm_castps_si128(c2), 4)); // shift the 128 bit register by 4 bytes to the right to receive [G H I 0]
 
 	for (size_t n = 0u; n < number - 1; ++n)
 	{
-		__m128 v0 = _mm_load1_ps(vectors[n].data() + 0);
-		__m128 v1 = _mm_load1_ps(vectors[n].data() + 1);
-		__m128 v2 = _mm_load1_ps(vectors[n].data() + 2);
+		const __m128 v0 = _mm_load1_ps(vectors[n].data() + 0);
+		const __m128 v1 = _mm_load1_ps(vectors[n].data() + 1);
+		const __m128 v2 = _mm_load1_ps(vectors[n].data() + 2);
 
-		__m128 r0 = _mm_mul_ps(c0, v0);
-		__m128 r1 = _mm_mul_ps(c1, v1);
+		const __m128 r0 = _mm_mul_ps(c0, v0);
+		const __m128 r1 = _mm_mul_ps(c1, v1);
 
-		r0 = _mm_add_ps(r0, r1);
+		__m128 result_f32x4= _mm_add_ps(r0, r1);
 
-		__m128 r2 = _mm_mul_ps(c2, v2);
+		const __m128 r2 = _mm_mul_ps(c2, v2);
 
-		r0 = _mm_add_ps(r0, r2);
+		result_f32x4 = _mm_add_ps(result_f32x4, r2);
 
-		// now we write all four values (althoug the target vector holds 3 elements - we can due that as there is still one 3D vector target vector left)
-		_mm_storeu_ps(results[n].data(), r0);
+		// now we write all four values (although the target vector holds 3 elements - we can due that as there is still one 3D vector target vector left)
+		_mm_storeu_ps(results[n].data(), result_f32x4);
 	}
 
 	// now we handle the last vector explicitly
 
-	__m128 v0 = _mm_load1_ps(vectors[number - 1].data() + 0);
-	__m128 v1 = _mm_load1_ps(vectors[number - 1].data() + 1);
-	__m128 v2 = _mm_load1_ps(vectors[number - 1].data() + 2);
+	const __m128 v0 = _mm_load1_ps(vectors[number - 1].data() + 0);
+	const __m128 v1 = _mm_load1_ps(vectors[number - 1].data() + 1);
+	const __m128 v2 = _mm_load1_ps(vectors[number - 1].data() + 2);
 
-	__m128 r0 = _mm_mul_ps(c0, v0);
-	__m128 r1 = _mm_mul_ps(c1, v1);
+	const __m128 r0 = _mm_mul_ps(c0, v0);
+	const __m128 r1 = _mm_mul_ps(c1, v1);
 
-	r0 = _mm_add_ps(r0, r1);
+	__m128 result_f32x4 = _mm_add_ps(r0, r1);
 
-	__m128 r2 = _mm_mul_ps(c2, v2);
+	const __m128 r2 = _mm_mul_ps(c2, v2);
 
-	r0 = _mm_add_ps(r0, r2);
+	result_f32x4 = _mm_add_ps(result_f32x4, r2);
 
 	float resultValues[4];
-	_mm_storeu_ps(resultValues, r0);
+	_mm_storeu_ps(resultValues, result_f32x4);
 
 	results[number - 1] = VectorT3<float>(resultValues);
 }
@@ -2128,14 +2135,14 @@ inline void SquareMatrixT3<float>::multiply(const SquareMatrixT3<float>& matrix,
 
 template <typename T>
 template <typename U>
-inline std::vector< SquareMatrixT3<T> > SquareMatrixT3<T>::matrices2matrices(const std::vector< SquareMatrixT3<U> >& matrices)
+inline SquareMatricesT3<T> SquareMatrixT3<T>::matrices2matrices(const SquareMatricesT3<U>& matrices)
 {
-	std::vector< SquareMatrixT3<T> > result;
+	SquareMatricesT3<T> result;
 	result.reserve(matrices.size());
 
-	for (typename std::vector< SquareMatrixT3<U> >::const_iterator i = matrices.begin(); i != matrices.end(); ++i)
+	for (const SquareMatrixT3<U>& matrix : matrices)
 	{
-		result.push_back(SquareMatrixT3<T>(*i));
+		result.emplace_back(matrix);
 	}
 
 	return result;
@@ -2164,7 +2171,7 @@ inline std::vector< SquareMatrixT3<T> > SquareMatrixT3<T>::matrices2matrices(con
 
 	for (size_t n = 0; n < size; ++n)
 	{
-		result.push_back(SquareMatrixT3<T>(matrices[n]));
+		result.emplace_back(matrices[n]);
 	}
 
 	return result;
