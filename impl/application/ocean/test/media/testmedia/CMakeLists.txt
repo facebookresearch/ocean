@@ -9,10 +9,6 @@ if (MACOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_media_testmedia")
 
-    if (MACOS OR IOS)
-        find_library(FOUNDATION_LIB Foundation)
-    endif()
-
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
@@ -34,14 +30,9 @@ if (MACOS OR LINUX OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
-            ocean_math
             ocean_system
             ocean_test_testmedia
     )
-
-    if (MACOS OR IOS)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${FOUNDATION_LIB})
-    endif()
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME} DESTINATION bin)
@@ -75,8 +66,10 @@ if (ANDROID)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
+            "-Wl,--whole-archive"
             ocean_base_jni
-            ocean_media
+            "-Wl,--no-whole-archive"
+        PRIVATE
             ocean_platform_android
             ocean_test_testmedia
     )
