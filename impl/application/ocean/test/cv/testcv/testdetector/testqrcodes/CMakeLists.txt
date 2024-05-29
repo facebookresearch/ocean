@@ -68,7 +68,10 @@ if (ANDROID)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
+            "-Wl,--whole-archive"
             ocean_base_jni
+            "-Wl,--no-whole-archive"
+        PRIVATE
             ocean_platform_android
             ocean_test_testcv_testdetector_testqrcodes
     )
