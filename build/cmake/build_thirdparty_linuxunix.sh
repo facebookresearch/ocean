@@ -25,6 +25,8 @@ OTP_BUILD_CONFIG="release"
 OTP_VALID_LINKING_TYPES="static,shared"
 OTP_LINKING_TYPES="static"
 
+OTP_ARCHIVE=""
+
 # Collection of builds that have errors that will be listed at the end of the script
 OTP_FAILED_BUILDS=()
 
@@ -34,7 +36,7 @@ display_help()
     echo "Script to build Ocean (${OCEAN_PLATFORM}):"
     echo ""
     echo "  $(basename "$0") [-h|--help] [-i|--install INSTALL_DIR] [-b|--build BUILD_DIR] [-c|--config BUILD_CONFIG]"
-    echo "                   [-l|--link LINKING_TYPE]"
+    echo "                   [-l|--link LINKING_TYPE] [-a | --archive ARCHIVE]"
     echo ""
     echo "Arguments:"
     echo ""
@@ -57,6 +59,9 @@ display_help()
     done
     echo "                Multiple values must be separated by commas. Default value if nothing is"
     echo "                specified: \"${OTP_VALID_LINKING_TYPES}\""
+    echo ""
+    echo " -a | --archive ARCHIVE: If specified, this will copy the contents of INSTALL_DIR after the build"
+    echo "                into a ZIP archive; the path to this archive must exist."
     echo ""
     echo "  -h | --help : This summary"
     echo ""
@@ -144,6 +149,11 @@ while [[ $# -gt 0 ]]; do
         shift # past argument
         shift # past value
         ;;
+        -a|--archive)
+        OTP_ARCHIVE="$2"
+        shift # past argument
+        shift # past value
+        ;;
         *)
         echo "ERROR: Unknown value \"$1\"." >&2
         exit 1
@@ -213,6 +223,20 @@ if [ "${#OTP_FAILED_BUILDS[@]}" -eq 0 ]; then
     OTP_BUILD_SUCCESSFUL=1
 else
     OTP_BUILD_SUCCESSFUL=0
+fi
+
+# Copy the build artifacts into the specified archive, if applicable
+if [ "${OTP_ARCHIVE}" != "" ]; then
+    if [[ ${OTP_BUILD_SUCCESSFUL} == 1 && -d ${OTP_INSTALL_DIR} ]]; then
+        echo "Creating \"${OTP_ARCHIVE}\" ..."
+        OTP_CURRENT_DIRECTORY="${PWD}"
+        cd  "${OTP_INSTALL_DIR}" && zip -rv "${OTP_ARCHIVE}" .
+        cd "${OTP_CURRENT_DIRECTORY}"
+        echo "done."
+        echo ""
+    else
+        echo "WARNING: Failed to create \"${OTP_ARCHIVE}\"."
+    fi
 fi
 
 if [ ${OTP_BUILD_SUCCESSFUL} ]; then
