@@ -16,6 +16,10 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     find_package(OpenSSL QUIET)
     find_package(tinyxml2 QUIET)
 
+    if (MACOS)
+        find_library(FOUNDATION_LIB Foundation)
+    endif()
+
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
 
@@ -63,6 +67,10 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     if (tinyxml2_FOUND)
         target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC tinyxml2::tinyxml2)
+    endif()
+
+    if (MACOS)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${FOUNDATION_LIB})
     endif()
 
     # Installation
