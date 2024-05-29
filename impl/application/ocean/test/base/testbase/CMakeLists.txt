@@ -26,12 +26,6 @@ if (MACOS OR LINUX OR WIN32)
         target_compile_options(${OCEAN_TARGET_NAME} PRIVATE "-fexceptions")
     endif()
 
-    if (BUILD_SHARED_LIBS)
-        if (MACOS OR LINUX)
-            set_property(TARGET ${OCEAN_TARGET_NAME} APPEND PROPERTY INSTALL_RPATH "${CMAKE_INSTALL_LIBDIR}")
-        endif()
-    endif()
-
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
@@ -71,8 +65,11 @@ if (ANDROID)
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
+            ocean_base
+            "-Wl,--whole-archive"
             ocean_base_jni
-            ocean_math
+            "-Wl,--no-whole-archive"
+        PRIVATE
             ocean_platform_android
             ocean_test_testbase
     )
