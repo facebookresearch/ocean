@@ -31,10 +31,8 @@ if (MACOS OR LINUX OR WIN32)
         PUBLIC
             ocean_base
             ocean_cv
-            ocean_cv_segmentation
             ocean_math
             ocean_system
-            ocean_test_testcv
             ocean_test_testcv_testsegmentation
     )
 
@@ -70,11 +68,11 @@ if (ANDROID)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
+            "-Wl,--whole-archive"
             ocean_base_jni
-            ocean_cv
-            ocean_cv_segmentation
+            "-Wl,--no-whole-archive"
+        PRIVATE
             ocean_platform_android
-            ocean_test_testcv
             ocean_test_testcv_testsegmentation
     )
 
