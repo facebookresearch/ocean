@@ -11,10 +11,6 @@ if (LINUX OR MACOS OR WIN32)
 
     set(OCEAN_TARGET_NAME "application_ocean_test_tracking_testtracking")
 
-    if (MACOS)
-        find_library(FOUNDATION_LIB Foundation)
-    endif()
-
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
@@ -32,17 +28,9 @@ if (LINUX OR MACOS OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PRIVATE
             ocean_base
-            ocean_math
             ocean_system
             ocean_test_testtracking
     )
-
-    if (MACOS)
-        target_link_libraries(${OCEAN_TARGET_NAME}
-            PRIVATE
-                ${FOUNDATION_LIB}
-        )
-    endif()
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME} DESTINATION bin)
@@ -51,7 +39,7 @@ endif()
 
 if (ANDROID)
 
-    set(OCEAN_TARGET_NAME "application_ocean_test_cv_testtracking_android_native")
+    set(OCEAN_TARGET_NAME "application_ocean_test_tracking_testtracking_android_native")
 
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/android/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/android/*.cpp")
@@ -76,10 +64,12 @@ if (ANDROID)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
+            "-Wl,--whole-archive"
             ocean_base_jni
+            "-Wl,--no-whole-archive"
+        PRIVATE
             ocean_platform_android
             ocean_test_testtracking
-            ocean_tracking
     )
 
     # Installation
