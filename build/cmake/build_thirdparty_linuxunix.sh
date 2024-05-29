@@ -4,10 +4,14 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-echo "Building the third-party libraries required for Ocean ...:"
-echo ""
-
-OCEAN_PLATFORM="macos"
+if [[ $(uname -s) == "Darwin" ]]; then
+  OCEAN_PLATFORM="macos"
+elif [[ $(uname -s) == "Linux" ]]; then
+  OCEAN_PLATFORM="linux"
+else
+  echo "ERROR: Unsupported operating system: $(uname -s)" >&2
+  exit 1
+fi
 
 # OTP = OCEAN_THIRD_PARTY
 OTP_SOURCE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd third-party && pwd )
@@ -16,10 +20,10 @@ OTP_BUILD_DIR="/tmp/ocean/build/${OCEAN_PLATFORM}"
 OTP_INSTALL_DIR="/tmp/ocean/install/${OCEAN_PLATFORM}"
 
 OTP_VALID_BUILD_CONFIGS="debug,release"
-OTP_BUILD_CONFIG="${OTP_VALID_BUILD_CONFIGS}"
+OTP_BUILD_CONFIG="release"
 
 OTP_VALID_LINKING_TYPES="static,shared"
-OTP_LINKING_TYPES="${OTP_VALID_LINKING_TYPES}"
+OTP_LINKING_TYPES="static"
 
 # Collection of builds that have errors that will be listed at the end of the script
 OTP_FAILED_BUILDS=()
@@ -27,7 +31,7 @@ OTP_FAILED_BUILDS=()
 # Displays the supported parameters of this script
 display_help()
 {
-    echo "Script to build Ocean:"
+    echo "Script to build Ocean (${OCEAN_PLATFORM}):"
     echo ""
     echo "  $(basename "$0") [-h|--help] [-i|--install INSTALL_DIR] [-b|--build BUILD_DIR] [-c|--config BUILD_CONFIG]"
     echo "                   [-l|--link LINKING_TYPE]"
@@ -44,13 +48,15 @@ display_help()
     for type in $(echo "${OTP_VALID_BUILD_CONFIGS}" | tr ',' '\n'); do
         echo "                  ${type}"
     done
-    echo "                Multiple values must be separated by commas. If not specified, both will be built and installed."
+    echo "                Multiple values must be separated by commas. Default value if nothing is"
+    echo "                specified: \"${OTP_VALID_BUILD_CONFIGS}\""
     echo ""
     echo "  -l | -link LINKING_TYPE : The optional linking type for which will be built; valid values are:"
     for type in $(echo "${OTP_VALID_LINKING_TYPES}" | tr ',' '\n'); do
         echo "                  ${type}"
     done
-    echo "                Multiple values must be separated by commas. If not specified, both will be built and installed."
+    echo "                Multiple values must be separated by commas. Default value if nothing is"
+    echo "                specified: \"${OTP_VALID_LINKING_TYPES}\""
     echo ""
     echo "  -h | --help : This summary"
     echo ""
@@ -145,6 +151,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+echo "Building the third-party libraries required for Ocean (${OCEAN_PLATFORM}) ...:"
 echo ""
 
 if [ "${OTP_BUILD_CONFIG}" == "" ]; then
@@ -194,13 +201,21 @@ echo ""
 echo ""
 echo ""
 
+# Build
 for build_config in ${OTP_BUILD_CONFIG[@]}; do
     for link_type in ${OTP_LINKING_TYPES[@]}; do
         run_build "${build_config}" "${link_type}"
     done
 done
 
+# Determine if all of the above builds were successful.
 if [ "${#OTP_FAILED_BUILDS[@]}" -eq 0 ]; then
+    OTP_BUILD_SUCCESSFUL=1
+else
+    OTP_BUILD_SUCCESSFUL=0
+fi
+
+if [ ${OTP_BUILD_SUCCESSFUL} ]; then
     echo "All builds were successful."
 else
     echo "Some builds have failed." >&2
@@ -209,6 +224,6 @@ else
     done
 fi
 
-if [ "${#OTP_FAILED_BUILDS[@]}" -gt 0 ]; then
+if [ "${OTP_BUILD_SUCCESSFUL}" -eq "0" ]; then
     exit 1
 fi
