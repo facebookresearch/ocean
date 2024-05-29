@@ -4,17 +4,26 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+if [[ $(uname -s) == "Darwin" ]]; then
+  OCEAN_PLATFORM="macos"
+elif [[ $(uname -s) == "Linux" ]]; then
+  OCEAN_PLATFORM="linux"
+else
+  echo "ERROR: Unsupported operating system: $(uname -s)" >&2
+  exit 1
+fi
+
 echo "Building Ocean ...:"
 echo " "
 
 OCEAN_SOURCE_DIRECTORY=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../.. && pwd )
-OCEAN_BUILD_ROOT_DIRECTORY="/tmp/ocean/build/macos"
-OCEAN_INSTALL_ROOT_DIRECTORY="/tmp/ocean/install/macos"
+OCEAN_BUILD_ROOT_DIRECTORY="/tmp/ocean/build/${OCEAN_PLATFORM}"
+OCEAN_INSTALL_ROOT_DIRECTORY="/tmp/ocean/install/${OCEAN_PLATFORM}"
 
 # Displays the supported parameters of this script
 display_help()
 {
-    echo "Script to build Ocean:"
+    echo "Script to build Ocean (${OCEAN_PLATFORM}):"
     echo ""
     echo "  $(basename "$0") [-h|--help] [THIRD_PARTY_ROOT_DIRECTORY]"
     echo ""
