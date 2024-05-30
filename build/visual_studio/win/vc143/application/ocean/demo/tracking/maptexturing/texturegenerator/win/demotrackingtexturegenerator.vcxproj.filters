@@ -11,8 +11,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\demo\tracking\maptexturing\texturegenerator\TextureGeneratorMain.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\tracking\maptexturing\texturegenerator\TextureGeneratorMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\tracking\maptexturing\texturegenerator\TextureGeneratorMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
