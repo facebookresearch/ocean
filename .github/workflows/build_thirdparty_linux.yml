@@ -10,11 +10,11 @@ on:
 env:
   OCEAN_BUILD_TYPE: release
   OCEAN_LINK_TYPE: static
-  OCEAN_BUILD_PATH: ocean_build
+  OCEAN_BUILD_PATH: ${{ github.workspace }}/ocean_build
 
-  OCEAN_INSTALL_PATH: ocean_install
+  OCEAN_INSTALL_PATH: ${{ github.workspace }}/ocean_install
 
-  OCEAN_THIRDPARTY_ARCHIVE: ocean_thirdparty.zip
+  OCEAN_THIRDPARTY_ARCHIVE: ${{ github.workspace }}/ocean_thirdparty.zip
 
 jobs:
   build:
@@ -40,6 +40,14 @@ jobs:
 
       - name: Upload archive containing third-party libraries
         uses: actions/upload-artifact@v4
+        id: ocean-thirdparty-upload-step
         with:
           name: ${{ env.OCEAN_THIRDPARTY_ARCHIVE }}
           path: ${{ env.OCEAN_THIRDPARTY_ARCHIVE }}
+          if-no-files-found: error
+          overwrite: true
+
+      - name: Output artifact ID and URL
+        run: |
+          echo 'Artifact ID: ${{ steps.ocean-thirdparty-upload-step.outputs.artifact-id }}'
+          echo 'Artifact URL: ${{ steps.ocean-thirdparty-upload-step.outputs.artifact-url }}'
