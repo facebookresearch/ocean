@@ -2672,7 +2672,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demogeometrymultiviewcalibr
 		{D8E4E2C4-0E09-4457-AB50-1A9E01D9FC2A} = {D8E4E2C4-0E09-4457-AB50-1A9E01D9FC2A}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demorenderinggroundtruthdepth", "application\ocean\demo\rendering\groundtruthdepth\win\demorenderinggroundtruthdepth.vcxproj", "{2A25C84E-7B94-4644-8E8D-1F2E96D5FE5A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demorenderinggroundtruthdepth", "..\..\metaonly\win\vc143\application\ocean\demo\rendering\groundtruthdepth\win\demorenderinggroundtruthdepth.vcxproj", "{2A25C84E-7B94-4644-8E8D-1F2E96D5FE5A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{251868AD-8F88-4F09-A338-D7D2B52FC6FF} = {251868AD-8F88-4F09-A338-D7D2B52FC6FF}
 		{29326726-1FF7-40D3-B2F2-C2717AC43465} = {29326726-1FF7-40D3-B2F2-C2717AC43465}
