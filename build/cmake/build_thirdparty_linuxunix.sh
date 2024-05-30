@@ -33,7 +33,7 @@ OTP_FAILED_BUILDS=()
 # Displays the supported parameters of this script
 display_help()
 {
-    echo "Script to build Ocean (${OCEAN_PLATFORM}):"
+    echo "Script to build the third-party libraries required by Ocean (${OCEAN_PLATFORM}):"
     echo ""
     echo "  $(basename "$0") [-h|--help] [-i|--install INSTALL_DIR] [-b|--build BUILD_DIR] [-c|--config BUILD_CONFIG]"
     echo "                   [-l|--link LINKING_TYPE] [-a | --archive ARCHIVE]"
@@ -219,10 +219,10 @@ for build_config in ${OTP_BUILD_CONFIG[@]}; do
 done
 
 # Determine if all of the above builds were successful.
+OTP_BUILD_SUCCESSFUL=0
+
 if [ "${#OTP_FAILED_BUILDS[@]}" -eq 0 ]; then
     OTP_BUILD_SUCCESSFUL=1
-else
-    OTP_BUILD_SUCCESSFUL=0
 fi
 
 # Copy the build artifacts into the specified archive, if applicable
@@ -246,8 +246,6 @@ else
     for config in "${OTP_FAILED_BUILDS[@]}"; do
         echo "- $config" >&2
     done
-fi
 
-if [ "${OTP_BUILD_SUCCESSFUL}" -eq "0" ]; then
     exit 1
 fi
