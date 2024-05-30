@@ -19,7 +19,7 @@ env:
 
 jobs:
   build:
-    name: Build Ocean on Linux (${{ matrix.build_config }}, static)
+    name: Linux (${{ matrix.build_config }}, static)
     runs-on: ubuntu-latest
     strategy:
       matrix:
