@@ -73,17 +73,15 @@ class OCEAN_GEOMETRY_EXPORT Homography
 
 		/**
 		 * Calculates the homography between two images transforming the projected planar object points between the two images.
-		 * The extrinsic matrix of the left camera is expected to be the identity transformation.<br>
-		 * Further, the given plane must be defined in relation to the left camera coordinate system.<br>
-		 * The given extrinsic camera matrix for the right camera transforming points defined in the right coordinate system into points defined in the left coordinate system.<br>
-		 * The resulting homography transforms image points defined in the left image to image points defined in the right image (rightPoint = H * leftPoint).<br>
-		 * @param transformation Offset pose between the left and right camera (left_T_right)
-		 * @param leftCamera Left camera profile
-		 * @param rightCamera Right camera profile
-		 * @param plane The plane defined in the coordinate system of the left camera
-		 * @return Resulting homography
+		 * The left camera is expected to be in the world origin (an identity camera pose).<br>
+		 * Further, the given plane must be defined in relation to the world.
+		 * @param world_T_rightCamera The camera pose of the right camera, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
+		 * @param leftCamera The camera profile defining the projection of the left camera, must be valid
+		 * @param rightCamera The camera profile defining the projection of the right camera, must be valid
+		 * @param plane The plane defined in world, must be valid
+		 * @return The resulting homography transforming points in the left image to points in the right image (right_H_left)
 		 */
-		static SquareMatrix3 homographyMatrix(const HomogenousMatrix4& transformation, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Plane3& plane);
+		static SquareMatrix3 homographyMatrix(const HomogenousMatrix4& world_T_rightCamera, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Plane3& plane);
 
 		/**
 		 * Calculates the homography between two images transforming the projected planar object points between the two images.
@@ -271,41 +269,38 @@ class OCEAN_GEOMETRY_EXPORT Homography
 
 		/**
 		 * Factorizes a planar homography into translation and rotation of the camera.
-		 * Beware: The resulting translation is the real translation vector divided by the distance of the plane.<br>
-		 * The resulting factorization provides the extrinsic camera matrix for the right camera while the left camera has the identity extrinsic camera matrix.<br>
-		 * Thus, the resulting transformation transforms points defined inside the right camera coordinate system into point defined inside the left camera coordinate system.<br>
-		 * Further, a plane normal is provided that is defined in relation to the left camera coordinate system.<br>
-		 * Two individual transformations and normals are provided as the factorization cannot be determined uniquely.<br>
-		 * @param homography Planar homography that will be factorized
-		 * @param leftCamera Profile of the left camera object
-		 * @param rightCamera Profile of the right camera object
-		 * @param leftImagePoints Image points in the left camera frame (projected 3D plane object points) that have been used to determine the homography
-		 * @param rightImagePoints Image points in the right camera frame, each point corresponds to one point in the left camera frame
-		 * @param correspondences Number of image point correspondences
-		 * @param transformations Two resulting transformations defining the offset between the left and right camera pose
+		 * The resulting factorization provides the camera pose for the right camera while the left camera has the identity camera pose.<br>
+		 * Further, a plane normal is provided which is defined in relation to the left camera coordinate system.<br>
+		 * Two individual camera poses and normals are provided as the factorization cannot be determined uniquely.
+		 * @param right_H_left The homography transforming left points to right points, must be valid
+		 * @param leftCamera The camera profile defining the projection of the left camera, must be valid
+		 * @param rightCamera The camera profile defining the projection of the right camera, must be valid
+		 * @param leftImagePoints The image points in the left camera frame (projected 3D plane object points) that have been used to determine the homography
+		 * @param rightImagePoints The image points in the right camera frame, each point corresponds to one point in the left camera frame
+		 * @param correspondences The number of image point correspondences, with range [2, infinity)
+		 * @param world_T_rightCameras Two resulting camera poses for the right cameras, with default camera pointing towards the negative z-space with y-axis upwards
 		 * @param normals Two resulting plane normals (one for each transformation), the normals are defined in relation to the left camera coordinate system
 		 * @return True, if succeeded
 		 */
-		static bool factorizeHomographyMatrix(const SquareMatrix3& homography, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4 transformations[2], Vector3 normals[2]);
+		static bool factorizeHomographyMatrix(const SquareMatrix3& right_H_left, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4 world_T_rightCameras[2], Vector3 normals[2]);
 
 		/**
 		 * Factorizes a planar homography into translation and rotation of the camera.
-		 * Beware: The resulting translation is the real translation vector divided by the distance of the plane.<br>
-		 * The resulting factorization provides the extrinsic camera matrix for the right camera while the left camera pose is used.<br>
-		 * Further, a plane normal is provided that is defined in relation to the left camera coordinate system.<br>
-		 * Two individual transformations and normals are provided as the factorization cannot be determined uniquely.<br>
-		 * @param homography Planar homography that will be factorized
-		 * @param leftPose Pose of the left camera that transforms points defined in the left camera coordinate system into points defined in the world coordinate system
-		 * @param leftCamera Profile of the left camera object
-		 * @param rightCamera Profile of the right camera object
+		 * The resulting factorization provides the camera pose for the right camera.<br>
+		 * Further, a plane normal is provided which is defined in relation to the left camera coordinate system.<br>
+		 * Two individual camera poses and normals are provided as the factorization cannot be determined uniquely.
+		 * @param right_H_left The homography transforming left points to right points, must be valid
+		 * @param world_T_leftCamera The camera pose of the left camera, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
+		 * @param leftCamera The camera profile defining the projection of the left camera, must be valid
+		 * @param rightCamera The camera profile defining the projection of the right camera, must be valid
 		 * @param leftImagePoints Image points in the left camera frame (projected 3D plane object points) that have been used to determine the homography
 		 * @param rightImagePoints Image points in the right camera frame, each point corresponds to one point in the left camera frame
-		 * @param correspondences Number of image point correspondences
-		 * @param rightPoses Two resulting camera poses transforming points defined in the right camera coordinate system into points defined in the world coordinate system
+		 * @param correspondences The number of image point correspondences, with range [2, infinity)
+		 * @param world_T_rightCameras Two resulting camera poses for the right cameras, with default camera pointing towards the negative z-space with y-axis upwards
 		 * @param normals Two resulting plane normals (one for each transformation), the normals are defined in relation to the world coordinate system
 		 * @return True, if succeeded
 		 */
-		static bool factorizeHomographyMatrix(const SquareMatrix3& homography, const HomogenousMatrix4& leftPose, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4 rightPoses[2], Vector3 normals[2]);
+		static bool factorizeHomographyMatrix(const SquareMatrix3& right_H_left, const HomogenousMatrix4& world_T_leftCamera, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4 world_T_rightCameras[2], Vector3 normals[2]);
 
 		/**
 		 * Calculates the homography for given 3D object points lying on the Z == 0 plane and corresponding 2D image points.

@@ -80,9 +80,9 @@ SquareMatrix3 Homography::homographyMatrix(const Quaternion& world_R_left, const
 	return homographyMatrix(world_R_right, leftCamera, rightCamera) * homographyMatrix(world_R_left, leftCamera, leftCamera).inverted();
 }
 
-SquareMatrix3 Homography::homographyMatrix(const HomogenousMatrix4& transformation, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Plane3& plane)
+SquareMatrix3 Homography::homographyMatrix(const HomogenousMatrix4& world_T_rightCamera, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Plane3& plane)
 {
-	ocean_assert(transformation.isValid());
+	ocean_assert(world_T_rightCamera.isValid());
 	ocean_assert(plane.isValid());
 
 	ocean_assert(leftCamera && rightCamera);
@@ -91,14 +91,14 @@ SquareMatrix3 Homography::homographyMatrix(const HomogenousMatrix4& transformati
 
 	// the plane must lie in front of both cameras
 	const Line3 rayLeft(Vector3(0, 0, 0), Vector3(0, 0, -1));
-	const Line3 rayRight(transformation.translation(), transformation.rotationMatrix() * Vector3(0, 0, -1));
+	const Line3 rayRight(world_T_rightCamera.translation(), world_T_rightCamera.rotationMatrix() * Vector3(0, 0, -1));
 
 	Vector3 objectPointLeft, objectPointRight;
 	ocean_assert(plane.intersection(rayLeft, objectPointLeft));
 	ocean_assert(plane.intersection(rayRight, objectPointRight));
 
 	ocean_assert(objectPointLeft.z() < 0);
-	ocean_assert((transformation.inverted() * objectPointRight).z() < 0);
+	ocean_assert((world_T_rightCamera.inverted() * objectPointRight).z() < 0);
 
 #endif // OCEAN_DEBUG
 
@@ -131,10 +131,10 @@ SquareMatrix3 Homography::homographyMatrix(const HomogenousMatrix4& transformati
 	 * Further, a flipping has to be applied around the "internal" homography matrix so that the standard viewing transformation (along the negative z-axis can be used).
 	 */
 
-	const HomogenousMatrix4 iTransformation(transformation.inverted());
+	const HomogenousMatrix4 rightCamera_T_world(world_T_rightCamera.inverted());
 
-	const Vector3 translation(iTransformation.translation());
-	const SquareMatrix3 rotation(iTransformation.rotationMatrix());
+	const Vector3 translation(rightCamera_T_world.translation());
+	const SquareMatrix3 rotation(rightCamera_T_world.rotationMatrix());
 
 	ocean_assert(Numeric::isNotEqualEps(plane.distance()));
 	const Vector3 scaledNormal(plane.normal() * (Scalar(1) / plane.distance()));
@@ -1262,21 +1262,30 @@ SquareMatrix3 Homography::factorizeHomographyMatrix(const SquareMatrix3& homogra
 	return (PinholeCamera::flipMatrix3() * rightCamera.invertedIntrinsic() * homography * leftCamera.intrinsic() * PinholeCamera::flipMatrix3()).inverted();
 }
 
-bool Homography::factorizeHomographyMatrix(const SquareMatrix3& homography, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4 transformations[2], Vector3 normals[2])
+bool Homography::factorizeHomographyMatrix(const SquareMatrix3& right_H_left, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4 world_T_rightCameras[2], Vector3 normals[2])
 {
 	// See: An Invitation to 3D Vision, Y. Ma, S. Soatto, J. Kosecka, S. Sastry for details
 
-	const SquareMatrix3 cameraFreeHomography(rightCamera.invertedIntrinsic() * homography * leftCamera.intrinsic());
+	ocean_assert(right_H_left.isHomography());
+	ocean_assert(leftCamera.isValid());
+	ocean_assert(rightCamera.isValid());
+	ocean_assert(leftImagePoints != nullptr);
+	ocean_assert(rightImagePoints != nullptr);
+	ocean_assert(correspondences >= 2u);
+
+	const SquareMatrix3 cameraFreeHomography(rightCamera.invertedIntrinsic() * right_H_left * leftCamera.intrinsic());
 	const Matrix notNormalizedHomography(3u, 3u, cameraFreeHomography.transposed().data());
 
 	Matrix u, w, v;
 	if (!notNormalizedHomography.singularValueDecomposition(u, w, v))
+	{
 		return false;
+	}
 
 	ocean_assert(w(0) >= w(1) && w(1) >= w(2));
 
 	ocean_assert(Numeric::isNotEqualEps(w(1)));
-	SquareMatrix3 normalizedHomography(cameraFreeHomography * (1 / w(1)));
+	SquareMatrix3 normalizedHomography(cameraFreeHomography * (Scalar(1) / w(1)));
 
 	// check whether the sign of the homography has to be flipped
 	size_t positives = 0;
@@ -1285,12 +1294,18 @@ bool Homography::factorizeHomographyMatrix(const SquareMatrix3& homography, cons
 		const Vector2 normalizedLeft = leftCamera.invertedIntrinsic() * leftImagePoints[n];
 		const Vector2 normalizedRight = rightCamera.invertedIntrinsic() * rightImagePoints[n];
 
-		if (Vector3(normalizedRight, 1) * (normalizedHomography * Vector3(normalizedLeft, 1)) > 0)
-			positives++;
+		if (Vector3(normalizedRight, 1) * (normalizedHomography * Vector3(normalizedLeft, 1)) > Scalar(0))
+		{
+			++positives;
+		}
 	}
 
-	if (positives < (correspondences >> 1))
+	const size_t correspondences_2 = correspondences / 2;
+
+	if (positives < correspondences_2)
+	{
 		normalizedHomography = -normalizedHomography;
+	}
 
 
 	const SquareMatrix3 hTh(normalizedHomography.transposed() * normalizedHomography);
@@ -1298,7 +1313,9 @@ bool Homography::factorizeHomographyMatrix(const SquareMatrix3& homography, cons
 
 	//Matrix u, w, v;
 	if (!matrix.singularValueDecomposition(u, w, v))
+	{
 		return false;
+	}
 
 	ocean_assert(u.isEqual(v, Numeric::weakEps()));
 
@@ -1318,7 +1335,9 @@ bool Homography::factorizeHomographyMatrix(const SquareMatrix3& homography, cons
 
 	const Scalar denominator = Numeric::sqrt(s1 - s3);
 	if (Numeric::isEqualEps(denominator))
+	{
 		return false;
+	}
 
 	const Vector3 u1((v1 * Numeric::sqrt(1 - s3) + v3 * Numeric::sqrt(s1 - 1)) / denominator);
 	const Vector3 u2((v1 * Numeric::sqrt(1 - s3) - v3 * Numeric::sqrt(s1 - 1)) / denominator);
@@ -1376,7 +1395,9 @@ bool Homography::factorizeHomographyMatrix(const SquareMatrix3& homography, cons
 		const Scalar factor = homographies[n][0] / normalizedHomography[0];
 
 		for (unsigned int i = 1u; i < 9u; ++i)
+		{
 			ocean_assert((std::is_same<Scalar, float>::value) || Numeric::isEqual(homographies[n][i], normalizedHomography[i] * factor));
+		}
 	}
 
 #endif // OCEAN_DEBUG
@@ -1389,17 +1410,17 @@ bool Homography::factorizeHomographyMatrix(const SquareMatrix3& homography, cons
 
 		if (number > best[0])
 		{
-			transformations[1] = transformations[0];
+			world_T_rightCameras[1] = world_T_rightCameras[0];
 			normals[1] = normals[0];
 			best[1] = best[0];
 
-			transformations[0] = transformationCandidates[n];
+			world_T_rightCameras[0] = transformationCandidates[n];
 			normals[0] = normalCandidates[n];
 			best[0] = number;
 		}
 		else if (number > best[1])
 		{
-			transformations[1] = transformationCandidates[n];
+			world_T_rightCameras[1] = transformationCandidates[n];
 			normals[1] = normalCandidates[n];
 			best[1] = number;
 		}
@@ -1416,17 +1437,19 @@ bool Homography::factorizeHomographyMatrix(const SquareMatrix3& homography, cons
 	return best[0] != 0 && best[1] != 0;
 }
 
-bool Homography::factorizeHomographyMatrix(const SquareMatrix3& homography, const HomogenousMatrix4& leftPose, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4 rightPoses[2], Vector3 normals[2])
+bool Homography::factorizeHomographyMatrix(const SquareMatrix3& right_H_left, const HomogenousMatrix4& world_T_leftCamera, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4 world_T_rightCameras[2], Vector3 normals[2])
 {
-	ocean_assert(leftPose.rotationMatrix() == leftPose.orthonormalRotationMatrix());
+	ocean_assert(world_T_leftCamera.rotationMatrix().isOrthonormal());
 
-	if (!factorizeHomographyMatrix(homography, leftCamera, rightCamera, leftImagePoints, rightImagePoints, correspondences, rightPoses, normals))
+	if (!factorizeHomographyMatrix(right_H_left, leftCamera, rightCamera, leftImagePoints, rightImagePoints, correspondences, world_T_rightCameras, normals))
+	{
 		return false;
+	}
 
 	for (unsigned int n = 0u; n < 2u; ++n)
 	{
-		rightPoses[n] = leftPose * rightPoses[n];
-		normals[n] = leftPose.rotationMatrix(normals[n]);
+		world_T_rightCameras[n] = world_T_leftCamera * world_T_rightCameras[n];
+		normals[n] = world_T_leftCamera.rotationMatrix(normals[n]);
 	}
 
 	return true;
