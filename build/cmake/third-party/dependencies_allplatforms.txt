@@ -1,4 +1,5 @@
 libjpeg
+googletest
 gl
 zlib
 eigen
