@@ -8,7 +8,6 @@
 #include "ocean/media/directshow/DSLibrary.h"
 #include "ocean/media/directshow/DSAudio.h"
 #include "ocean/media/directshow/DSDeviceEnumerator.h"
-#include "ocean/media/directshow/DSLiveAudio.h"
 #include "ocean/media/directshow/DSLiveVideo.h"
 #include "ocean/media/directshow/DSMovie.h"
 #include "ocean/media/directshow/DSMovieRecorder.h"
@@ -72,11 +71,6 @@ MediumRef DSLibrary::newMedium(const std::string& url, bool useExclusive)
 		medium = newLiveVideo(url, useExclusive);
 	}
 
-	if (medium.isNull())
-	{
-		medium = newLiveAudio(url, useExclusive);
-	}
-
 	return medium;
 }
 
@@ -113,11 +107,6 @@ MediumRef DSLibrary::newMedium(const std::string& url, const Medium::Type type, 
 		case Medium::LIVE_MEDIUM:
 		{
 			MediumRef medium(newLiveVideo(url, useExclusive));
-
-			if (medium.isNull())
-			{
-				medium = newLiveAudio(url, useExclusive);
-			}
 		}
 
 		case Medium::SOUND_MEDIUM:
@@ -127,11 +116,6 @@ MediumRef DSLibrary::newMedium(const std::string& url, const Medium::Type type, 
 			if (medium.isNull())
 			{
 				medium = newAudio(url, useExclusive);
-			}
-
-			if (medium.isNull())
-			{
-				medium = newLiveAudio(url, useExclusive);
 			}
 
 			return medium;
@@ -229,46 +213,6 @@ LibraryRef DSLibrary::create()
 MediumRef DSLibrary::newAudio(const std::string& url, bool useExclusive)
 {
 	DSAudio* medium = new DSAudio(url);
-	if (medium->isValid() == false)
-	{
-		delete medium;
-		return MediumRef();
-	}
-
-	if (useExclusive)
-	{
-		return MediumRef(medium);
-	}
-
-	return MediumRefManager::get().registerMedium(medium);
-}
-
-MediumRef DSLibrary::newLiveAudio(const std::string& url, bool useExclusive)
-{
-	std::string newUrl(url);
-
-	if (newUrl.find("LiveAudioId:") == 0)
-	{
-		unsigned int index = atoi(newUrl.substr(12).c_str());
-
-		DSDeviceEnumerator& enumerator = DSEnumerators::get().enumerator(CLSID_AudioInputDeviceCategory);
-		DSDeviceEnumerator::Names names(enumerator.names());
-
-		if (index < names.size())
-			newUrl = names[index];
-	}
-
-	if (!useExclusive)
-	{
-		MediumRef mediumRef(MediumRefManager::get().medium(newUrl, nameDirectShowLibrary(), Medium::LIVE_AUDIO));
-
-		if (mediumRef)
-		{
-			return mediumRef;
-		}
-	}
-
-	DSLiveAudio* medium = new DSLiveAudio(newUrl);
 	if (medium->isValid() == false)
 	{
 		delete medium;

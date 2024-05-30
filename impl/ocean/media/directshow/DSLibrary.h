@@ -123,14 +123,6 @@ class OCEAN_MEDIA_DS_EXPORT DSLibrary : public Library
 		static MediumRef newLiveVideo(const std::string& url, bool useExclusive);
 
 		/**
-		 * Creates a new live audio medium.
-		 * @param url Url of the live audio medium to create
-		 * @param useExclusive Determines whether the caller would like to use this medium exclusively
-		 * @return Reference of the new medium
-		 */
-		static MediumRef newLiveAudio(const std::string& url, bool useExclusive);
-
-		/**
 		 * Creates a new movie medium.
 		 * @param url Url of the movie medium to create
 		 * @param useExclusive Determines whether the caller would like to use this medium exclusively

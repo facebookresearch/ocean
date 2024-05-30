@@ -191,7 +191,6 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSFrameRecorder.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSGraphObject.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSLibrary.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSLiveAudio.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSLiveMedium.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSLiveVideo.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSMediaType.cpp" />
@@ -216,7 +215,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSFrameRecorder.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSGraphObject.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSLibrary.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSLiveAudio.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSLiveMedium.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSLiveVideo.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\directshow\DSMediaType.h" />
