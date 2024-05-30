@@ -261,7 +261,7 @@ if [ "${#OCEAN_FAILED_BUILDS[@]}" -eq 0 ]; then
     OCEAN_BUILD_SUCCESSFUL=1
 fi
 
-if [ ${OCEAN_BUILD_SUCCESSFUL} ]; then
+if [ ${OCEAN_BUILD_SUCCESSFUL} -eq 1 ]; then
     echo "All builds were successful."
 else
     echo "Some builds have failed." >&2
