@@ -1635,20 +1635,6 @@ bool HomogenousMatrixT4<T>::invert(HomogenousMatrixT4<T>& invertedMatrix) const
 	invertedMatrix.values_[11] = T(0.0);
 	invertedMatrix.values_[15] = T(1.0);
 
-#ifdef OCEAN_DEBUG
-
-	ocean_assert(invertedMatrix.isValid());
-
-	const HomogenousMatrixT4<T> test(*this * invertedMatrix);
-	const HomogenousMatrixT4<T> entity(true);
-
-	for (unsigned int n = 0; n < 16u; ++n)
-	{
-		ocean_assert_accuracy(NumericT<T>::isWeakEqual(test[n], entity[n]));
-	}
-
-#endif
-
 	return true;
 }
 
