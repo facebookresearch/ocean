@@ -1889,7 +1889,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "support", "support", "{5C31
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tracking", "tracking", "{3024847D-FD4F-4036-8409-4282A0535F4C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "supporttrackingpanoramastitcher", "application\ocean\support\tracking\panoramastitcher\supporttrackingpanoramastitcher.vcxproj", "{A9EE6F55-184B-4C76-96AC-25DC2704B91E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "supporttrackingpanoramastitcher", "..\..\metaonly\win\vc143\application\ocean\support\tracking\panoramastitcher\supporttrackingpanoramastitcher.vcxproj", "{A9EE6F55-184B-4C76-96AC-25DC2704B91E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{29CD7FA7-E204-44D4-8AD4-F61DD7A89984} = {29CD7FA7-E204-44D4-8AD4-F61DD7A89984}
 		{33CE8F7A-E671-4580-ACBA-AD70E4FDA794} = {33CE8F7A-E671-4580-ACBA-AD70E4FDA794}
