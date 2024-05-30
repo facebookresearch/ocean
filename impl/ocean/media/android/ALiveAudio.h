@@ -43,19 +43,19 @@ class OCEAN_MEDIA_A_EXPORT ALiveAudio final :
 	protected:
 
 		/// The number of OpenSL buffers.
-		static constexpr SLuint32 numberBuffers_ = 5u;
+		static constexpr SLuint32 numberBuffers_ = 2u;
 
 		/**
 		 * This class implements a manager for sample chunks.
 		 */
 		class ChunkManager
 		{
-			public:
+			protected:
 
 				/**
 				 * Definition of a chunk holding stereo samples.
 				 */
-				typedef std::vector<int16_t> StereoChunk;
+				using StereoChunk = std::vector<int16_t>;
 
 				/**
 				 * Returns the size of one stereo chunk in elements.
@@ -63,17 +63,20 @@ class OCEAN_MEDIA_A_EXPORT ALiveAudio final :
 				 */
 				static constexpr size_t stereoChunkSize();
 
-			protected:
+				/**
+				 * Definition of shared pointer holding a stereo chunk.
+				 */
+				using SharedStereoChunk = std::shared_ptr<StereoChunk>;
 
 				/**
 				 * Definition of a vector holding stereo chunks.
 				 */
-				typedef std::vector<std::shared_ptr<StereoChunk>> StereoChunks;
+				typedef std::vector<SharedStereoChunk> StereoChunks;
 
 				/**
 				 * Definition of a queue holding stereo chunks.
 				 */
-				typedef std::queue<std::shared_ptr<StereoChunk>> StereoChunkQueue;
+				typedef std::queue<SharedStereoChunk> StereoChunkQueue;
 
 			public:
 
@@ -87,40 +90,42 @@ class OCEAN_MEDIA_A_EXPORT ALiveAudio final :
 				 * @param sampleType The type of the given samples, must be valid
 				 * @param data The samples to add, must be valid
 				 * @param size The size of the given samples, in bytes, with range [1, infinity)
+				 * @param bufferQueueInterface The interface of the OpenSL buffer queue, must be valid
 				 */
-				bool addSamples(const SampleType sampleType, const void* data, const size_t size);
+				bool addSamples(const SampleType sampleType, const void* data, const size_t size, SLAndroidSimpleBufferQueueItf bufferQueueInterface);
 
 				/**
-				 * Enqueues the next available chunk into OpenSL buffer.
+				 * Returns whether new samples need to be added (because the queue is running out of samples).
+				 * @return True, if so
+				 */
+				inline bool needNewSamples() const;
+
+				/**
+				 * Enqueues the next pending chunk into OpenSL buffer.
 				 * @param bufferQueueInterface The interface of the buffer queue in which the chunk will be queued, must be valid
 				 * @return True, if succeeded; False, if there was no pending chunk
 				 */
-				bool enqueue(SLAndroidSimpleBufferQueueItf bufferQueueInterface);
-
-				/**
-				 * Unqueues a previously queued chunk as it has been read by OpenSL.
-				 */
-				void unqueue();
+				bool enqueueNextPendingChunk(SLAndroidSimpleBufferQueueItf bufferQueueInterface);
 
 			protected:
 
-				/// The queue with stereo chunks which have been queued in OpenSL.
-				StereoChunkQueue stereoChunkQueue_;
+				/// The queue with stereo chunks which have been queued in OpenSL (OpenSL is working on these chunks).
+				StereoChunkQueue openslStereoChunkQueue_;
 
-				/// Pending stereo chunks which be queued in OpenSL.
+				/// Pending stereo chunks which need to be queued in OpenSL (but OpenSL does not have a free buffer left).
 				StereoChunkQueue pendingStereoChunks_;
 
 				/// Free stereo chunks which can be queued again.
 				StereoChunks freeStereoChunks_;
 
 				/// The stereo chunk which is currently filled.
-				std::shared_ptr<StereoChunk> fillingStereoChunk_ = std::make_shared<StereoChunk>(stereoChunkSize());
+				SharedStereoChunk fillingStereoChunk_;
 
 				/// The position within the current (not yet entirely filled) stereo chunk.
-				size_t positionInWriteChunk_ = size_t(0);
+				size_t positionInFillingChunk_ = size_t(0);
 
 				/// The lock for the chunks.
-				Lock lock_;
+				mutable Lock lock_;
 		};
 
 	public:
@@ -136,6 +141,12 @@ class OCEAN_MEDIA_A_EXPORT ALiveAudio final :
 		 * @see LiveAudio::addSample().
 		 */
 		bool addSamples(const SampleType sampleType, const void* data, const size_t size) override;
+
+		/**
+		 * Returns whether a new sample needs to be added.
+		 * @see LiveAudio::needNewSamples().
+		 */
+		bool needNewSamples() const override;
 
 		/**
 		 * Starts the medium.
@@ -285,6 +296,13 @@ constexpr size_t ALiveAudio::ChunkManager::stereoChunkSize()
 	constexpr size_t samplesPerSecondStereo = samplesPerSecondMono * 2;
 
 	return samplesPerSecondStereo / 50; // 20ms
+}
+
+inline bool ALiveAudio::ChunkManager::needNewSamples() const
+{
+	const ScopedLock scopedLock(lock_);
+
+	return pendingStereoChunks_.empty();
 }
 
 }

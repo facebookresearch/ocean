@@ -64,6 +64,12 @@ class OCEAN_MEDIA_EXPORT LiveAudio :
 		virtual bool addSamples(const SampleType sampleType, const void* data, const size_t size);
 
 		/**
+		 * Returns whether a new samples needs to be added.
+		 * @return True, if so
+		 */
+		virtual bool needNewSamples() const = 0;
+
+		/**
 		 * Writes a WAV file with given sample data.
 		 * @param filename The name of the WAV file to create, must be valid
 		 * @param sampleType The type of the samples, must be valid

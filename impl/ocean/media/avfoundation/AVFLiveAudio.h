@@ -45,6 +45,12 @@ class AVFLiveAudio :
 		bool addSamples(const SampleType sampleType, const void* data, const size_t size) override;
 
 		/**
+		 * Returns whether a new sample needs to be added.
+		 * @see LiveAudio::needNewSamples().
+		 */
+		bool needNewSamples() const override;
+
+		/**
 		 * Returns the volume of the sound in db.
 		 * @see SoundMedium::soundVolume().
 		 */
@@ -119,21 +125,24 @@ class AVFLiveAudio :
 
 		/// The audio format of the audio player node.
 		AVAudioFormat* avAudioFormat_ = nullptr;
-	
+
 		/// Optional convert from external audio format to internal audio format.
 		AVAudioConverter* avAudioConverter_ = nullptr;
-	
+
 		/// Optional audio format for int16 samples.
 		AVAudioFormat* avAudioFormatInternalInt16_ = nullptr;
 
 		/// Optional audio buffer for int16 samples.
 		AVAudioPCMBuffer* avAudioPCMBufferInternalInt16_ = nullptr;
-	
+
 		/// The previous volume before the medium was muted; -1 if the medium is not muted.
 		float previousVolume_ = -1.0f;
 
 		/// True, if the audio session was started.
 		bool audioSessionStarted_ = false;
+
+		/// True, if the audio object needs a new samples.
+		std::atomic_bool needNewSamples_ = false;
 };
 
 }

@@ -129,9 +129,22 @@ bool AVFLiveAudio::addSamples(const SampleType sampleType, const void* data, con
 		return false;
 	}
 
-	[avAudioPlayerNode_ scheduleBuffer:avAudioPCMBuffer completionHandler:nullptr];
+	needNewSamples_ = false;
+
+	[avAudioPlayerNode_ scheduleBuffer:avAudioPCMBuffer completionCallbackType:AVAudioPlayerNodeCompletionDataConsumed completionHandler:^(AVAudioPlayerNodeCompletionCallbackType callbackType)
+	{
+		if (callbackType == AVAudioPlayerNodeCompletionDataConsumed)
+		{
+			needNewSamples_ = true;
+		}
+	}];
 
 	return true;
+}
+
+bool AVFLiveAudio::needNewSamples() const
+{
+	return needNewSamples_;
 }
 
 float AVFLiveAudio::soundVolume() const
