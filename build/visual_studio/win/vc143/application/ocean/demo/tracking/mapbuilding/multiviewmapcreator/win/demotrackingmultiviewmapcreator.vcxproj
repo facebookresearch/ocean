@@ -51,7 +51,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\metaonly\application\ocean\demo\tracking\mapbuilding\multiviewmapcreator\MapCreatorMain.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\tracking\mapbuilding\multiviewmapcreator\MapCreatorMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\tracking\mapbuilding\multiviewmapcreator\MapCreatorMain.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{413C538A-95F9-43E3-BC22-615D3E1555BB}</ProjectGuid>
