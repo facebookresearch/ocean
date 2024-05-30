@@ -2660,7 +2660,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "supportcvdepth", "applicati
 		{FEA50A96-F160-4C9D-8313-7479649D0B2D} = {FEA50A96-F160-4C9D-8313-7479649D0B2D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvframerectifier", "application\ocean\demo\cv\framerectifier\win\democvframerectifier.vcxproj", "{BF0D071C-42B9-4215-90B3-4FF9725C0413}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvframerectifier", "..\..\metaonly\win\vc143\application\ocean\demo\cv\framerectifier\win\democvframerectifier.vcxproj", "{BF0D071C-42B9-4215-90B3-4FF9725C0413}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4AE7CF68-8CD1-478F-B2CD-E8C6B509E7A5} = {4AE7CF68-8CD1-478F-B2CD-E8C6B509E7A5}
 		{7EF9186B-5F2C-47B0-8077-5D60AF030B68} = {7EF9186B-5F2C-47B0-8077-5D60AF030B68}
