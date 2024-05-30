@@ -49,7 +49,9 @@ bool TestP3P::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testP3PWithPoints(testDuration) && allSucceeded;
+	allSucceeded = testP3PWithPoints<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testP3PWithPoints<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -96,9 +98,15 @@ TEST(TestP3P, P3PWithPointsPinholeCamera)
 	EXPECT_TRUE(TestP3P::testP3PWithPointsPinholeCamera(GTEST_TEST_DURATION));
 }
 
-TEST(TestP3P, P3PWithPoints)
+
+TEST(TestP3P, P3PWithPoints_float)
 {
-	EXPECT_TRUE(TestP3P::testP3PWithPoints(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestP3P::testP3PWithPoints<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestP3P, P3PWithPoints_double)
+{
+	EXPECT_TRUE(TestP3P::testP3PWithPoints<double>(GTEST_TEST_DURATION));
 }
 
 
@@ -296,22 +304,23 @@ bool TestP3P::testP3PWithPointsPinholeCamera(const double testDuration)
 	return allSucceeded;
 }
 
+template <typename T>
 bool TestP3P::testP3PWithPoints(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing P3P for 2D image points:";
+	Log::info() << "Testing P3P for 2D image points for '" << TypeNamer::name<T>() << "':";
 	Log::info() << " ";
 
 	bool allSucceeded = true;
 
-	constexpr double successThreshold = std::is_same<Scalar, float>::value ? 0.75 : 0.95;
+	constexpr double successThreshold = std::is_same<T, float>::value ? 0.75 : 0.95;
 
 	RandomGenerator randomGenerator;
 
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
-		const std::shared_ptr<AnyCamera> anyCamera(Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u)));
+		const SharedAnyCameraT<T> anyCamera(Utilities::realisticAnyCamera<T>(anyCameraType, RandomI::random(1u)));
 		ocean_assert(anyCamera);
 
 		ValidationPrecision validation(successThreshold, randomGenerator);
@@ -324,19 +333,21 @@ bool TestP3P::testP3PWithPoints(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const HomogenousMatrix4 world_T_camera(Random::vector3(-5, 5), Random::quaternion());
+			const VectorT3<T> translation = RandomT<T>::vector3(-5, 5);
+			const QuaternionT<T> rotation = RandomT<T>::quaternion();
+			const HomogenousMatrixT4<T> world_T_camera(translation, rotation);
 
-			Vectors3 objectPoints(3);
-			Vectors2 imagePoints(3);
+			VectorsT3<T> objectPoints(3);
+			VectorsT2<T> imagePoints(3);
 
 			while (true)
 			{
 				for (unsigned int n = 0u; n < 3u; ++n)
 				{
-					constexpr Scalar cameraBorder = Scalar(5);
+					constexpr T cameraBorder = T(5);
 
-					imagePoints[n] = Random::vector2(randomGenerator, cameraBorder, Scalar(anyCamera->width()) - cameraBorder, cameraBorder, Scalar(anyCamera->height()) - cameraBorder);
-					objectPoints[n] = anyCamera->ray(imagePoints[n], world_T_camera).point(Random::scalar(randomGenerator, Scalar(0.5), 5));
+					imagePoints[n] = RandomT<T>::vector2(randomGenerator, cameraBorder, T(anyCamera->width()) - cameraBorder, cameraBorder, T(anyCamera->height()) - cameraBorder);
+					objectPoints[n] = anyCamera->ray(imagePoints[n], world_T_camera).point(RandomT<T>::scalar(randomGenerator, T(0.5), 5));
 				}
 
 				if (imagePoints[0].isEqual(imagePoints[1], 5) || imagePoints[0].isEqual(imagePoints[2], 5) || imagePoints[1].isEqual(imagePoints[2], 5))
@@ -344,10 +355,10 @@ bool TestP3P::testP3PWithPoints(const double testDuration)
 					continue;
 				}
 
-				const Plane3 plane(world_T_camera.translation(), objectPoints[0], objectPoints[1]);
-				ocean_assert(plane);
+				const PlaneT3<T> plane(world_T_camera.translation(), objectPoints[0], objectPoints[1]);
+				ocean_assert(plane.isValid());
 
-				if (Numeric::abs(plane.signedDistance(objectPoints[2])) <= Scalar(0.25))
+				if (NumericT<T>::abs(plane.signedDistance(objectPoints[2])) <= T(0.25))
 				{
 					continue;
 				}
@@ -355,7 +366,7 @@ bool TestP3P::testP3PWithPoints(const double testDuration)
 				break;
 			}
 
-			HomogenousMatrix4 world_T_cameraCandidates[4];
+			HomogenousMatrixT4<T> world_T_cameraCandidates[4];
 
 			performance.start();
 				const unsigned int numberPoses = Geometry::P3P::poses(*anyCamera, objectPoints.data(), imagePoints.data(), world_T_cameraCandidates);
@@ -368,49 +379,49 @@ bool TestP3P::testP3PWithPoints(const double testDuration)
 
 				for (unsigned int n = 0u; n < numberPoses; ++n)
 				{
-					const HomogenousMatrix4& world_T_cameraCandidate = world_T_cameraCandidates[n];
+					const HomogenousMatrixT4<T>& world_T_cameraCandidate = world_T_cameraCandidates[n];
 
-					const HomogenousMatrix4 flippedCameraCandidate_T_world(AnyCamera::standard2InvertedFlipped(world_T_cameraCandidate));
+					const HomogenousMatrixT4<T> flippedCameraCandidate_T_world(AnyCamera::standard2InvertedFlipped(world_T_cameraCandidate));
 
 					// all object points must lie in front of the candidate camera
-					for (const Vector3& objectPoint : objectPoints)
+					for (const VectorT3<T>& objectPoint : objectPoints)
 					{
-						if (!AnyCamera::isObjectPointInFrontIF(flippedCameraCandidate_T_world, objectPoint))
+						if (!AnyCameraT<T>::isObjectPointInFrontIF(flippedCameraCandidate_T_world, objectPoint))
 						{
 							OCEAN_SET_FAILED(validation);
 						}
 					}
 
-					Scalar maximalError = 0;
+					T maximalError = 0;
 					for (unsigned int i = 0u; i < 3u; ++i)
 					{
 						maximalError = max(maximalError, imagePoints[i].distance(anyCamera->projectToImage(world_T_cameraCandidate, objectPoints[i])));
 					}
 
-					const Scalar pixelErrorThreshold = std::is_same<Scalar, double>::value ? Scalar(0.9) : Scalar(5);
+					const T pixelErrorThreshold = std::is_same<T, double>::value ? T(0.9) : T(5);
 
 					if (maximalError >= pixelErrorThreshold)
 					{
 						scopedIteration.setInaccurate();
 					}
 
-					if (std::is_same<Scalar, double>::value)
+					if (std::is_same<T, double>::value)
 					{
-						const Scalar translationError = world_T_camera.translation().distance(world_T_cameraCandidate.translation());
-						const Euler rotationError(world_T_camera * world_T_cameraCandidate.inverted());
+						const T translationError = world_T_camera.translation().distance(world_T_cameraCandidate.translation());
+						const EulerT<T> rotationError(world_T_camera * world_T_cameraCandidate.inverted());
 
-						const Scalar absYawDeg = Numeric::rad2deg(Numeric::abs(rotationError.yaw()));
-						const Scalar absPitchDeg = Numeric::rad2deg(Numeric::abs(rotationError.pitch()));
-						const Scalar absRollDeg = Numeric::rad2deg(Numeric::abs(rotationError.roll()));
+						const T absYawDeg = NumericT<T>::rad2deg(NumericT<T>::abs(rotationError.yaw()));
+						const T absPitchDeg = NumericT<T>::rad2deg(NumericT<T>::abs(rotationError.pitch()));
+						const T absRollDeg = NumericT<T>::rad2deg(NumericT<T>::abs(rotationError.roll()));
 
-						if (translationError <= Scalar(0.005) && absYawDeg <= Scalar(0.01) && absPitchDeg <= Scalar(0.01) && absRollDeg <= Scalar(0.01))
+						if (translationError <= T(0.005) && absYawDeg <= T(0.01) && absPitchDeg <= T(0.01) && absRollDeg <= T(0.01))
 						{
 							onePoseIsAccuate = true;
 						}
 					}
 				}
 
-				if (std::is_same<Scalar, double>::value)
+				if (std::is_same<T, double>::value)
 				{
 					if (!onePoseIsAccuate)
 					{
