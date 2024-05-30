@@ -49,12 +49,6 @@ bool TestP3P::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testP3PWithPointsFisheyeCamera(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
 	allSucceeded = testP3PWithPoints(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -100,11 +94,6 @@ bool TestP3P::test(const double testDuration)
 TEST(TestP3P, P3PWithPointsPinholeCamera)
 {
 	EXPECT_TRUE(TestP3P::testP3PWithPointsPinholeCamera(GTEST_TEST_DURATION));
-}
-
-TEST(TestP3P, P3PWithPointsFisheyeCamera)
-{
-	EXPECT_TRUE(TestP3P::testP3PWithPointsFisheyeCamera(GTEST_TEST_DURATION));
 }
 
 TEST(TestP3P, P3PWithPoints)
@@ -265,137 +254,6 @@ bool TestP3P::testP3PWithPointsPinholeCamera(const double testDuration)
 				{
 					const Scalar translationError = perfectPose.translation().distance(poses[n].translation());
 					const Euler rotationError(perfectPose * poses[n].inverted());
-
-					const Scalar absYawDeg = Numeric::rad2deg(Numeric::abs(rotationError.yaw()));
-					const Scalar absPitchDeg = Numeric::rad2deg(Numeric::abs(rotationError.pitch()));
-					const Scalar absRollDeg = Numeric::rad2deg(Numeric::abs(rotationError.roll()));
-
-					if (translationError < Scalar(0.005) && absYawDeg < Scalar(0.01) && absPitchDeg < Scalar(0.01) && absRollDeg < Scalar(0.01))
-					{
-						localPoseAccurate = true;
-					}
-				}
-			}
-
-			if (localProjectionAccurate && localPoseAccurate)
-			{
-				++validIterations;
-			}
-		}
-		else
-		{
-			performance.skip();
-		}
-
-		++iterations;
-	}
-	while (iterations == 0u || startTimestamp + testDuration > Timestamp(true));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
-
-	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 4u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 4u) << "ms, average: " << String::toAString(performance.averageMseconds(), 4u) << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	const double threshold = std::is_same<Scalar, float>::value ? 0.75 : 0.95;
-
-	if (percent < threshold)
-	{
-		allSucceeded = false;
-	}
-
-	return allSucceeded;
-}
-
-bool TestP3P::testP3PWithPointsFisheyeCamera(const double testDuration)
-{
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "Testing P3P for 2D image points and fisheye camera:";
-
-	const unsigned int width = 640u;
-	const unsigned int height = 480u;
-
-	const Scalar focalLength = Scalar(191.787);
-
-	const Scalar principalX = Scalar(314.304);
-	const Scalar principalY = Scalar(243.711);
-
-	const Scalars radialDistortions = {Scalar(0.29192), Scalar(0.00329052), Scalar(-0.151158), Scalar(0.0952214), Scalar(-0.0230753), Scalar(0.00194645)};
-	const Scalars tangentialDistortions = {Scalar(0.0003358), Scalar(-0.000474032)};
-
-	const FisheyeCamera fisheyeCamera(width, height,  focalLength, focalLength, principalX, principalY, radialDistortions.data(), tangentialDistortions.data());
-
-	bool allSucceeded = true;
-
-	Vectors3 objectPoints(3);
-	Vectors2 imagePoints(3);
-
-	HighPerformanceStatistic performance;
-
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
-
-	const Timestamp startTimestamp(true);
-	do
-	{
-		const HomogenousMatrix4 world_T_camera(Random::vector3(-5, 5), Random::quaternion());
-
-		while (true)
-		{
-			for (unsigned int n = 0u; n < 3u; ++n)
-			{
-				imagePoints[n] = Random::vector2(Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u));
-				objectPoints[n] = fisheyeCamera.ray(imagePoints[n], world_T_camera).point(Random::scalar(Scalar(0.5), 5));
-			}
-
-			if (imagePoints[0].isEqual(imagePoints[1], 5) || imagePoints[0].isEqual(imagePoints[2], 5) || imagePoints[1].isEqual(imagePoints[2], 5))
-			{
-				continue;
-			}
-
-			const Plane3 plane(world_T_camera.translation(), objectPoints[0], objectPoints[1]);
-			ocean_assert(plane);
-
-			if (Numeric::abs(plane.signedDistance(objectPoints[2])) <= Scalar(0.25))
-			{
-				continue;
-			}
-
-			break;
-		}
-
-		HomogenousMatrix4 poses[4];
-
-		performance.start();
-		const unsigned int numberPoses = Geometry::P3P::poses(fisheyeCamera, objectPoints.data(), imagePoints.data(), poses);
-
-		if (numberPoses != 0u)
-		{
-			performance.stop();
-
-			bool localProjectionAccurate = true;
-			bool localPoseAccurate = std::is_same<Scalar, float>::value ? true : false; // we apply the test for 64 bit floating point values only
-
-			for (unsigned int n = 0u; n < numberPoses; ++n)
-			{
-				Scalar maximalError = 0;
-				for (unsigned int i = 0u; i < 3u; ++i)
-				{
-					maximalError = max(maximalError, imagePoints[i].distance(fisheyeCamera.projectToImage(poses[n], objectPoints[i])));
-				}
-
-				const Scalar pixelErrorThreshold = std::is_same<Scalar, double>::value ? Scalar(0.9) : Scalar(5);
-
-				if (maximalError >= pixelErrorThreshold)
-				{
-					localProjectionAccurate = false;
-				}
-
-				if (std::is_same<Scalar, double>::value)
-				{
-					const Scalar translationError = world_T_camera.translation().distance(poses[n].translation());
-					const Euler rotationError(world_T_camera * poses[n].inverted());
 
 					const Scalar absYawDeg = Numeric::rad2deg(Numeric::abs(rotationError.yaw()));
 					const Scalar absPitchDeg = Numeric::rad2deg(Numeric::abs(rotationError.pitch()));

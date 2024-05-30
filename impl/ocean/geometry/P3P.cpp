@@ -77,60 +77,6 @@ unsigned int P3P::poses(const PinholeCamera& pinholeCamera, const Vector3* objec
 	return resultNumberPoses;
 }
 
-unsigned int P3P::poses(const FisheyeCamera& fisheyeCamera, const Vector3* objectPoints, const Vector2* imagePoints, HomogenousMatrix4* world_T_cameras)
-{
-	/// p3p algorithm from original RANSAC paper
-
-	ocean_assert(objectPoints != nullptr && imagePoints != nullptr && world_T_cameras != nullptr);
-
-	const Scalar minimalSqrDistance = Scalar(2 * 2);
-
-	if (imagePoints[0].sqrDistance(imagePoints[1]) < minimalSqrDistance || imagePoints[0].sqrDistance(imagePoints[2]) < minimalSqrDistance || imagePoints[1].sqrDistance(imagePoints[2]) < minimalSqrDistance)
-	{
-		return 0u;
-	}
-
-	const Vector3 imageRays[3] =
-	{
-		fisheyeCamera.vector(imagePoints[0]),
-		fisheyeCamera.vector(imagePoints[1]),
-		fisheyeCamera.vector(imagePoints[2])
-	};
-
-	const unsigned int resultNumberPoses = poses(objectPoints, imageRays, world_T_cameras);
-
-#ifdef OCEAN_INTENSIVE_DEBUG
-	if (std::is_same<Scalar, double>::value)
-	{
-		const Scalar debugEpsilon = Scalar(5 * 5);
-
-		const Scalar cos_ab = fisheyeCamera.vector(imagePoints[0]) * fisheyeCamera.vector(imagePoints[1]);
-		const Scalar cos_ac = fisheyeCamera.vector(imagePoints[0]) * fisheyeCamera.vector(imagePoints[2]);
-		const Scalar cos_bc = fisheyeCamera.vector(imagePoints[1]) * fisheyeCamera.vector(imagePoints[2]);
-
-		const Scalar debugAngle01 = Numeric::rad2deg(Numeric::acos(cos_ab));
-		const Scalar debugAngle02 = Numeric::rad2deg(Numeric::acos(cos_ac));
-		const Scalar debugAngle12 = Numeric::rad2deg(Numeric::acos(cos_bc));
-
-		for (unsigned int n = 0u; n < resultNumberPoses; ++n)
-		{
-			const HomogenousMatrix4& world_T_camera = world_T_cameras[n];
-
-			const Scalar sqrDistance0 = fisheyeCamera.projectToImage(world_T_camera, objectPoints[0]).sqrDistance(imagePoints[0]);
-			const Scalar sqrDistance1 = fisheyeCamera.projectToImage(world_T_camera, objectPoints[1]).sqrDistance(imagePoints[1]);
-			const Scalar sqrDistance2 = fisheyeCamera.projectToImage(world_T_camera, objectPoints[2]).sqrDistance(imagePoints[2]);
-
-			if (debugAngle01 > Scalar(5) && debugAngle12 > Scalar(5) && debugAngle02 > Scalar(5))
-			{
-				ocean_assert(sqrDistance0 <= debugEpsilon && sqrDistance1 <= debugEpsilon && sqrDistance2 <= debugEpsilon);
-			}
-		}
-	}
-#endif
-
-	return resultNumberPoses;
-}
-
 template <typename TCamera, typename TPoint>
 unsigned int P3P::poses(const AnyCameraT<TCamera>& anyCamera, const VectorT3<TPoint>* objectPoints, const VectorT2<TPoint>* imagePoints, HomogenousMatrixT4<TPoint>* world_T_cameras)
 {
