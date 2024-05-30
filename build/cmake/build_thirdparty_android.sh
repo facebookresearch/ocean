@@ -68,7 +68,7 @@ function run_build_for_android {
         "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" \
         "-DANDROID_ABI=${ANDROID_ABI}" \
         "-DANDROID_PLATFORM=${ANDROID_SDK_VERSION}" \
-        "-DCMAKE_ANDROID_STL=c++_static" \
+        "-DCMAKE_ANDROID_STL_TYPE=c++_static" \
         "-DCMAKE_ANDROID_NDK=${ANDROID_NDK}" \
         "-DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake" \
         "-DCMAKE_INSTALL_PREFIX=${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
