@@ -375,37 +375,39 @@ bool TestHomography::testRotationalHomographyOnePose(const double testDuration)
 
 	Log::info() << "Rotational homography determination for one pose test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
+
+	constexpr double successThreshold = 0.99;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int leftWidth = RandomI::random(600u, 800u);
-		const unsigned int leftHeight = RandomI::random(400u, 600u);
-		const PinholeCamera leftCamera(leftWidth, leftHeight, Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(80)));
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const unsigned int rightWidth = RandomI::random(600u, 800u);
-		const unsigned int rightHeight = RandomI::random(400u, 600u);
-		const PinholeCamera rightCamera(rightWidth, rightHeight, Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(80)));
+		const unsigned int leftWidth = RandomI::random(randomGenerator, 600u, 800u);
+		const unsigned int leftHeight = RandomI::random(randomGenerator, 400u, 600u);
+		const PinholeCamera leftCamera(leftWidth, leftHeight, Random::scalar(randomGenerator,  Numeric::deg2rad(40), Numeric::deg2rad(80)));
 
-		const Euler euler(Random::euler(Numeric::deg2rad(5), Numeric::deg2rad(15)));
+		const unsigned int rightWidth = RandomI::random(randomGenerator, 600u, 800u);
+		const unsigned int rightHeight = RandomI::random(randomGenerator, 400u, 600u);
+		const PinholeCamera rightCamera(rightWidth, rightHeight, Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(80)));
+
+		const Euler euler(Random::euler(randomGenerator, Numeric::deg2rad(5), Numeric::deg2rad(15)));
 		const Quaternion quaternion(euler);
 		const HomogenousMatrix4 transformation(quaternion);
 
 		const SquareMatrix3 homography(Geometry::Homography::homographyMatrix(transformation.rotation(), leftCamera, rightCamera));
 		ocean_assert(transformation.rotationMatrix() == Geometry::Homography::factorizeHomographyMatrix(homography, leftCamera, rightCamera));
 
-		bool localSucceeded = true;
-
 		for (unsigned int n = 0; n < 1000u; ++n)
 		{
-			const Vector2 leftImagePoint(Random::scalar(Scalar(0u), Scalar(leftCamera.width() - 1u)), Random::scalar(Scalar(0u), Scalar(leftCamera.height() - 1u)));
+			const Vector2 leftImagePoint(Random::vector2(randomGenerator, Scalar(0), Scalar(leftCamera.width() - 1u), Scalar(0), Scalar(leftCamera.height() - 1u)));
 			const Line3 ray(leftCamera.ray(leftImagePoint, HomogenousMatrix4(true)));
 
 			// we determine any arbitrary object point lying on the ray in front of the camera
-			const Vector3 objectPoint = ray.point(Random::scalar(1, 10));
+			const Vector3 objectPoint = ray.point(Random::scalar(randomGenerator, Scalar(1), Scalar(10)));
 			ocean_assert(leftCamera.projectToImage<true>(HomogenousMatrix4(true), objectPoint, false).isEqual(leftImagePoint, Numeric::weakEps()));
 
 			const Vector2 rightImagePoint(rightCamera.projectToImage<true>(transformation, objectPoint, false));
@@ -414,25 +416,16 @@ bool TestHomography::testRotationalHomographyOnePose(const double testDuration)
 
 			if (testRightPoint.sqrDistance(rightImagePoint) > Scalar(0.01 * 0.01))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
+				break;
 			}
 		}
-
-		if (localSucceeded)
-		{
-			++succeeded;
-		}
-
-		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestHomography::testRotationalHomographyTwoPoses(const double testDuration)
@@ -441,8 +434,10 @@ bool TestHomography::testRotationalHomographyTwoPoses(const double testDuration)
 
 	Log::info() << "Rotational homography determination for two poses test:";
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
+
+	constexpr double successThreshold = 0.95;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const Scalar eps = Scalar(0.01);
 
@@ -450,34 +445,34 @@ bool TestHomography::testRotationalHomographyTwoPoses(const double testDuration)
 
 	do
 	{
-		const unsigned int leftWidth = RandomI::random(600u, 800u);
-		const unsigned int leftHeight = RandomI::random(400u, 600u);
-		const PinholeCamera leftCamera(leftWidth, leftHeight, Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(80)));
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const Quaternion leftQuaternion(Random::quaternion());
-		const Vector3 leftTranslation(Random::vector3(-10, 10));
+		const unsigned int leftWidth = RandomI::random(randomGenerator, 600u, 800u);
+		const unsigned int leftHeight = RandomI::random(randomGenerator, 400u, 600u);
+		const PinholeCamera leftCamera(leftWidth, leftHeight, Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(80)));
+
+		const Quaternion leftQuaternion(Random::quaternion(randomGenerator));
+		const Vector3 leftTranslation(Random::vector3(randomGenerator, -10, 10));
 		const HomogenousMatrix4 leftTransformation(leftTranslation, leftQuaternion);
 
-		const unsigned int rightWidth = RandomI::random(600u, 800u);
-		const unsigned int rightHeight = RandomI::random(400u, 600u);
-		const PinholeCamera rightCamera(rightWidth, rightHeight, Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(80)));
+		const unsigned int rightWidth = RandomI::random(randomGenerator, 600u, 800u);
+		const unsigned int rightHeight = RandomI::random(randomGenerator, 400u, 600u);
+		const PinholeCamera rightCamera(rightWidth, rightHeight, Random::scalar(randomGenerator, Numeric::deg2rad(40), Numeric::deg2rad(80)));
 
-		const Euler rightEuler(Random::euler(Numeric::deg2rad(5), Numeric::deg2rad(15)));
+		const Euler rightEuler(Random::euler(randomGenerator, Numeric::deg2rad(5), Numeric::deg2rad(15)));
 		const Quaternion rightQuaternion(leftQuaternion * Quaternion(rightEuler));
 		const Vector3& rightTranslation = leftTranslation;
 		const HomogenousMatrix4 rightTransformation(rightTranslation, rightQuaternion);
 
 		const SquareMatrix3 homography(Geometry::Homography::homographyMatrix(leftTransformation.rotation(), rightTransformation.rotation(), leftCamera, rightCamera));
 
-		bool localSucceeded = true;
-
 		for (unsigned int n = 0; n < 1000u; ++n)
 		{
-			const Vector2 leftImagePoint(Random::scalar(Scalar(0u), Scalar(leftCamera.width() - 1u)), Random::scalar(Scalar(0u), Scalar(leftCamera.height() - 1u)));
+			const Vector2 leftImagePoint(Random::vector2(randomGenerator, Scalar(0), Scalar(leftCamera.width() - 1u), Scalar(0u), Scalar(leftCamera.height() - 1u)));
 			const Line3 ray(leftCamera.ray(leftImagePoint, leftTransformation));
 
 			// we determine any arbitrary object point lying on the ray in front of the camera
-			const Vector3 objectPoint = ray.point(Random::scalar(1, 10));
+			const Vector3 objectPoint = ray.point(Random::scalar(randomGenerator, Scalar(1), Scalar(10)));
 
 			if constexpr (std::is_same<double, Scalar>::value)
 			{
@@ -490,25 +485,16 @@ bool TestHomography::testRotationalHomographyTwoPoses(const double testDuration)
 
 			if (testRightPoint.sqrDistance(rightImagePoint) > Numeric::sqr(eps))
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
+				break;
 			}
 		}
-
-		if (localSucceeded)
-		{
-			++succeeded;
-		}
-
-		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestHomography::testPlanarHomographyOnePose(const double testDuration)
@@ -522,32 +508,33 @@ bool TestHomography::testPlanarHomographyOnePose(const double testDuration)
 
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
+
+	constexpr double successThreshold = 0.99;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		// we take the identity transformation for the left camera
 		const HomogenousMatrix4 transformationLeft(true);
 
-		const Vector3 translationRight(Random::vector3() * Scalar(0.25));
-		const Quaternion quaternionRight(Random::euler(Numeric::deg2rad(30)));
+		const Vector3 translationRight(Random::vector3(randomGenerator) * Scalar(0.25));
+		const Quaternion quaternionRight(Random::euler(randomGenerator, Numeric::deg2rad(30)));
 		const HomogenousMatrix4 transformationRight(translationRight, quaternionRight);
 
-
 		// created a random normal for the plane, defined in the left coordinate system
-		const Vector3 normal(Quaternion(Random::euler(Numeric::deg2rad(30))) * Vector3(0, 0, 1));
-		const Plane3 plane(normal, Random::scalar(Scalar(-5), Scalar(-1)));
+		const Vector3 normal(Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(30))) * Vector3(0, 0, 1));
+		const Plane3 plane(normal, Random::scalar(randomGenerator, Scalar(-5), Scalar(-1)));
 
 		const SquareMatrix3 homography(Geometry::Homography::homographyMatrix(transformationRight, pinholeCamera, pinholeCamera, plane));
 
-		bool localSucceeded = true;
-
 		for (unsigned int n = 0; n < 100u; ++n)
 		{
-			const Vector2 leftImagePoint(Random::scalar(Scalar(0u), Scalar(pinholeCamera.width() - 1u)), Random::scalar(Scalar(0u), Scalar(pinholeCamera.height() - 1u)));
+			const Vector2 leftImagePoint(Random::vector2(randomGenerator, Scalar(0), Scalar(pinholeCamera.width() - 1u), Scalar(0), Scalar(pinholeCamera.height() - 1u)));
 			const Line3 ray(pinholeCamera.ray(leftImagePoint, transformationLeft));
 
 			Vector3 objectPoint;
@@ -560,26 +547,17 @@ bool TestHomography::testPlanarHomographyOnePose(const double testDuration)
 
 				if (testRightPoint.sqrDistance(rightImagePoint) > Scalar(0.01 * 0.01))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
+					break;
 				}
 			}
 		}
-
-		if (localSucceeded)
-		{
-			++succeeded;
-		}
-
-		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestHomography::testPlanarHomographyTwoPoses(const double testDuration)
@@ -595,25 +573,27 @@ bool TestHomography::testPlanarHomographyTwoPoses(const double testDuration)
 
 	const Box2 largeCameraBoundingBox(Scalar(pinholeCamera.width()) * Scalar(-5), Scalar(pinholeCamera.height()) * Scalar(-5), Scalar(pinholeCamera.width() * 6), Scalar(pinholeCamera.height() * 6));
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
+
+	constexpr double successThreshold = 0.95;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const Vector3 translationLeft(Random::vector3() * Scalar(0.25));
-		const Quaternion quaternionLeft(Random::euler(Numeric::deg2rad(30)));
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+		const Vector3 translationLeft(Random::vector3(randomGenerator) * Scalar(0.25));
+		const Quaternion quaternionLeft(Random::euler(randomGenerator, Numeric::deg2rad(30)));
 		const HomogenousMatrix4 transformationLeft(translationLeft, quaternionLeft);
 
-		const Vector3 normal(Quaternion(Random::euler(Numeric::deg2rad(30))) * Vector3(0, 0, 1));
-		const Plane3 plane(normal, Random::scalar(Scalar(-5), Scalar(-1)));
-
-		bool localSucceeded = true;
+		const Vector3 normal(Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(30))) * Vector3(0, 0, 1));
+		const Plane3 plane(normal, Random::scalar(randomGenerator, Scalar(-5), Scalar(-1)));
 
 		for (unsigned int n = 0; n < 100u; ++n)
 		{
-			const Vector2 leftImagePoint(Random::scalar(Scalar(0u), Scalar(pinholeCamera.width() - 1u)), Random::scalar(Scalar(0u), Scalar(pinholeCamera.height() - 1u)));
+			const Vector2 leftImagePoint(Random::vector2(randomGenerator, Scalar(0), Scalar(pinholeCamera.width() - 1u), Scalar(0), Scalar(pinholeCamera.height() - 1u)));
 			const Line3 ray(pinholeCamera.ray(leftImagePoint, transformationLeft));
 
 			Vector3 objectPoint;
@@ -624,8 +604,8 @@ bool TestHomography::testPlanarHomographyTwoPoses(const double testDuration)
 
 				while (true)
 				{
-					const Vector3 translationRight(Random::vector3() * Scalar(0.25));
-					const Quaternion quaternionRight(Random::euler(Numeric::deg2rad(30)));
+					const Vector3 translationRight(Random::vector3(randomGenerator) * Scalar(0.25));
+					const Quaternion quaternionRight(Random::euler(randomGenerator, Numeric::deg2rad(30)));
 					transformationRight = HomogenousMatrix4(translationRight, quaternionRight);
 
 					if (transformationRight.translation().distance(objectPoint) > Numeric::weakEps())
@@ -646,36 +626,27 @@ bool TestHomography::testPlanarHomographyTwoPoses(const double testDuration)
 
 				if (testRightPoint.sqrDistance(rightImagePoint) > Scalar(0.01 * 0.01))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
+					break;
 				}
 			}
 		}
-
-		if (localSucceeded)
-		{
-			++succeeded;
-		}
-
-		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestHomography::testFactorizationPlanarHomographyOnePose(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Planar homography determination for one pose test:";
+	Log::info() << "Homography factorization for one pose test:";
 
-	constexpr unsigned int width = 640u;
-	constexpr unsigned int height = 480u;
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
 
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
@@ -683,23 +654,27 @@ bool TestHomography::testFactorizationPlanarHomographyOnePose(const double testD
 
 	constexpr unsigned int correspondences = 50;
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
+
+	constexpr double successThreshold = 0.95;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		// we take the identity transformation for the left camera
-		const HomogenousMatrix4 transformationLeft(true);
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const Vector3 translationRight(Random::vector3() * Scalar(0.25));
-		const Quaternion quaternionRight(Random::euler(Numeric::deg2rad(30)));
-		const HomogenousMatrix4 transformationRight(translationRight, quaternionRight);
+		// we take the identity transformation for the left camera
+		const HomogenousMatrix4 world_T_leftCamera(true);
+
+		const Vector3 translationRight(Random::vector3(randomGenerator) * Scalar(0.25));
+		const Quaternion quaternionRight(Random::euler(randomGenerator, Numeric::deg2rad(30)));
+		const HomogenousMatrix4 world_T_rightCamera(translationRight, quaternionRight);
 
 		// created a random normal for the plane, defined in the left coordinate system
-		const Vector3 normal(Quaternion(Random::euler(Numeric::deg2rad(30))) * Vector3(0, 0, 1));
-		const Plane3 plane(normal, Random::scalar(Scalar(-5), Scalar(-1)));
+		const Vector3 normal(Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(30))) * Vector3(0, 0, 1));
+		const Plane3 plane(normal, Random::scalar(randomGenerator, Scalar(-5), Scalar(-1)));
 
 		Vectors2 imagePointsLeft, imagePointsRight;
 		imagePointsLeft.reserve(correspondences);
@@ -707,101 +682,100 @@ bool TestHomography::testFactorizationPlanarHomographyOnePose(const double testD
 
 		for (unsigned int n = 0u; n < correspondences; ++n)
 		{
-			imagePointsLeft.emplace_back(Random::scalar(0, Scalar(pinholeCamera.width())), Random::scalar(0, Scalar(pinholeCamera.height())));
+			imagePointsLeft.emplace_back(Random::vector2(randomGenerator, Scalar(0), Scalar(pinholeCamera.width()), Scalar(0), Scalar(pinholeCamera.height())));
 		}
 
-		const Vectors3 objectPoints(Geometry::Utilities::backProjectImagePoints(pinholeCamera, transformationLeft, plane, imagePointsLeft.data(), imagePointsLeft.size(), false));
+		const Vectors3 objectPoints(Geometry::Utilities::backProjectImagePoints(pinholeCamera, world_T_leftCamera, plane, imagePointsLeft.data(), imagePointsLeft.size(), false));
 
 		for (unsigned int n = 0u; n < objectPoints.size(); ++n)
 		{
-			imagePointsRight.emplace_back(pinholeCamera.projectToImage<true>(transformationRight, objectPoints[n], false));
+			imagePointsRight.emplace_back(pinholeCamera.projectToImage<true>(world_T_rightCamera, objectPoints[n], false));
 		}
 
-		const HomogenousMatrix4 transformationLeftIF(PinholeCamera::standard2InvertedFlipped(transformationLeft));
-		const HomogenousMatrix4 transformationRightIF(PinholeCamera::standard2InvertedFlipped(transformationRight));
-
-		// ensure that all object points lie in front of both cameras
-		for (unsigned int n = 0u; n < correspondences; ++n)
+#ifdef OCEAN_DEBUG
 		{
-			ocean_assert_and_suppress_unused(PinholeCamera::isObjectPointInFrontIF(transformationLeftIF, objectPoints[n]), transformationLeftIF);
-			ocean_assert_and_suppress_unused(PinholeCamera::isObjectPointInFrontIF(transformationRightIF, objectPoints[n]), transformationRightIF);
-		}
+			const HomogenousMatrix4 flippedLeftCamera_T_world = PinholeCamera::standard2InvertedFlipped(world_T_leftCamera);
+			const HomogenousMatrix4 flippedRightCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_rightCamera));
 
-		SquareMatrix3 homographies[2];
+			// ensure that all object points lie in front of both cameras
+			for (unsigned int n = 0u; n < correspondences; ++n)
+			{
+				ocean_assert(PinholeCamera::isObjectPointInFrontIF(flippedLeftCamera_T_world, objectPoints[n]));
+				ocean_assert(PinholeCamera::isObjectPointInFrontIF(flippedRightCamera_T_world, objectPoints[n]));
+			}
+		}
+#endif // OCEAN_DEBUG
+
+		SquareMatrix3 right_H_left[2];
 
 		// create a planar homography from the pose
-		homographies[0] = Geometry::Homography::homographyMatrix(transformationRight, pinholeCamera, pinholeCamera, plane);
+		right_H_left[0] = Geometry::Homography::homographyMatrix(world_T_rightCamera, pinholeCamera, pinholeCamera, plane);
 
 		// create a planar homography from the point correspondences
-		const bool result = Geometry::Homography::homographyMatrix(imagePointsLeft.data(), imagePointsRight.data(), objectPoints.size(), homographies[1]);
-		ocean_assert_and_suppress_unused(result, result);
+		bool result = Geometry::Homography::homographyMatrix(imagePointsLeft.data(), imagePointsRight.data(), objectPoints.size(), right_H_left[1]);
 
-		// ensure that both homography matrices provide the same mapping
-		for (unsigned int n = 0u; n < imagePointsLeft.size(); ++n)
+		if (!result)
 		{
-			Vector2 right = homographies[0] * imagePointsLeft[n];
-			ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right, Numeric::weakEps()));
-
-			Vector2 right2 = homographies[1] * imagePointsLeft[n];
-			ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right2, Numeric::weakEps()));
-
-			right = -homographies[0] * imagePointsLeft[n];
-			ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right, Numeric::weakEps()));
-
-			right2 = -homographies[1] * imagePointsLeft[n];
-			ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right2, Numeric::weakEps()));
+			OCEAN_SET_FAILED(validation);
 		}
 
-		bool localSucceeded = true;
+#ifdef OCEAN_DEBUG
+		{
+			// ensure that both homography matrices provide the same mapping
+			for (unsigned int n = 0u; n < imagePointsLeft.size(); ++n)
+			{
+				Vector2 right = right_H_left[0] * imagePointsLeft[n];
+				ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right, Numeric::weakEps()));
+
+				Vector2 right2 = right_H_left[1] * imagePointsLeft[n];
+				ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right2, Numeric::weakEps()));
+
+				right = -right_H_left[0] * imagePointsLeft[n];
+				ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right, Numeric::weakEps()));
+
+				right2 = -right_H_left[1] * imagePointsLeft[n];
+				ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right2, Numeric::weakEps()));
+			}
+		}
+#endif // OCEAN_DEBUG
 
 		// we take the transformation with normalized translation vector as the factorization has a translation scaling uncertainty
-		const HomogenousMatrix4 depthCorrectedTransformationRight(transformationRight.translation() / Numeric::abs(plane.distance()), transformationRight.rotationMatrix());
+		const HomogenousMatrix4 world_T_normalizedRightCamera(world_T_rightCamera.translation() / Numeric::abs(plane.distance()), world_T_rightCamera.rotationMatrix());
 
 		for (unsigned int n = 0u; n < 2u; ++n)
 		{
-			HomogenousMatrix4 transformations[2];
+			HomogenousMatrix4 world_T_rightCameras[2];
 			Vector3 normals[2];
 
 			performance.start();
-
-			if (!Geometry::Homography::factorizeHomographyMatrix(homographies[n], pinholeCamera, pinholeCamera, imagePointsLeft.data(), imagePointsRight.data(), imagePointsLeft.size(), transformations, normals))
-			{
-				localSucceeded = false;
-			}
-
+				result = Geometry::Homography::factorizeHomographyMatrix(right_H_left[n], pinholeCamera, pinholeCamera, imagePointsLeft.data(), imagePointsRight.data(), imagePointsLeft.size(), world_T_rightCameras, normals);
 			performance.stop();
 
-			if (localSucceeded)
+			if (result)
 			{
-				if (!Geometry::Error::posesAlmostEqual(depthCorrectedTransformationRight, transformations[0], Vector3(Scalar(0.001), Scalar(0.001), Scalar(0.001)), Numeric::deg2rad(Scalar(0.1)))
-					&& !Geometry::Error::posesAlmostEqual(depthCorrectedTransformationRight, transformations[1], Vector3(Scalar(0.001), Scalar(0.001), Scalar(0.001)), Numeric::deg2rad(Scalar(0.1))))
+				if (!Geometry::Error::posesAlmostEqual(world_T_normalizedRightCamera, world_T_rightCameras[0], Vector3(Scalar(0.001), Scalar(0.001), Scalar(0.001)), Numeric::deg2rad(Scalar(0.1)))
+					&& !Geometry::Error::posesAlmostEqual(world_T_normalizedRightCamera, world_T_rightCameras[1], Vector3(Scalar(0.001), Scalar(0.001), Scalar(0.001)), Numeric::deg2rad(Scalar(0.1))))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (plane.normal().angle(normals[0]) < Numeric::deg2rad(Scalar(0.1)) && plane.normal().angle(normals[1]) < Numeric::deg2rad(Scalar(0.1)))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
+			else
+			{
+				OCEAN_SET_FAILED(validation);
+			}
 		}
-
-		if (localSucceeded)
-		{
-			++succeeded;
-		}
-
-		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestHomography::testFactorizationPlanarHomographyTwoPoses(const double testDuration)
@@ -810,8 +784,8 @@ bool TestHomography::testFactorizationPlanarHomographyTwoPoses(const double test
 
 	Log::info() << "Homography factorization for two poses test:";
 
-	constexpr unsigned int width = 640u;
-	constexpr unsigned int height = 480u;
+	constexpr unsigned int width = 1280u;
+	constexpr unsigned int height = 720u;
 
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
@@ -819,25 +793,28 @@ bool TestHomography::testFactorizationPlanarHomographyTwoPoses(const double test
 
 	constexpr unsigned int correspondences = 50u;
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
+
+	constexpr double successThreshold = 0.95;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const Vector3 translationLeft(Random::vector3() * Scalar(0.25));
-		const Quaternion quaternionLeft(Random::euler(Numeric::deg2rad(15)));
-		const HomogenousMatrix4 transformationLeft(translationLeft, quaternionLeft);
-		const HomogenousMatrix4 iTransformationLeft(transformationLeft.inverted());
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		const Vector3 translationRight(Random::vector3() * Scalar(0.25));
-		const Quaternion quaternionRight(Random::euler(Numeric::deg2rad(15)));
-		const HomogenousMatrix4 transformationRight(translationRight, quaternionRight);
+		const Vector3 translationLeft(Random::vector3(randomGenerator) * Scalar(0.25));
+		const Quaternion quaternionLeft(Random::euler(randomGenerator, Numeric::deg2rad(15)));
+		const HomogenousMatrix4 world_T_leftCamera(translationLeft, quaternionLeft);
+
+		const Vector3 translationRight(Random::vector3(randomGenerator) * Scalar(0.25));
+		const Quaternion quaternionRight(Random::euler(randomGenerator, Numeric::deg2rad(15)));
+		const HomogenousMatrix4 world_T_right(translationRight, quaternionRight);
 
 		// created a random normal for the plane, defined in the left coordinate system
-		const Vector3 normal(Quaternion(Random::euler(Numeric::deg2rad(5))) * Vector3(0, 0, 1));
-		const Plane3 plane(normal, Random::scalar(Scalar(-5), Scalar(-1)));
+		const Vector3 normal(Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(5))) * Vector3(0, 0, 1));
+		const Plane3 plane(normal, Random::scalar(randomGenerator, Scalar(-5), Scalar(-1)));
 
 		Vectors2 imagePointsLeft, imagePointsRight;
 		imagePointsLeft.reserve(correspondences);
@@ -845,104 +822,105 @@ bool TestHomography::testFactorizationPlanarHomographyTwoPoses(const double test
 
 		for (unsigned int n = 0u; n < correspondences; ++n)
 		{
-			imagePointsLeft.emplace_back(Random::scalar(0, Scalar(pinholeCamera.width())), Random::scalar(0, Scalar(pinholeCamera.height())));
+			imagePointsLeft.emplace_back(Random::vector2(randomGenerator, Scalar(0), Scalar(pinholeCamera.width()), Scalar(0), Scalar(pinholeCamera.height())));
 		}
 
-		const Vectors3 objectPoints(Geometry::Utilities::backProjectImagePoints(pinholeCamera, transformationLeft, plane, imagePointsLeft.data(), imagePointsLeft.size(), false));
+		const Vectors3 objectPoints(Geometry::Utilities::backProjectImagePoints(pinholeCamera, world_T_leftCamera, plane, imagePointsLeft.data(), imagePointsLeft.size(), false));
 
 		for (unsigned int n = 0u; n < objectPoints.size(); ++n)
 		{
-			imagePointsRight.emplace_back(pinholeCamera.projectToImage<true>(transformationRight, objectPoints[n], false));
+			imagePointsRight.emplace_back(pinholeCamera.projectToImage<true>(world_T_right, objectPoints[n], false));
 		}
 
-		const HomogenousMatrix4 transformationLeftIF(PinholeCamera::standard2InvertedFlipped(transformationLeft));
-		const HomogenousMatrix4 transformationRightIF(PinholeCamera::standard2InvertedFlipped(transformationRight));
-
-		// ensure that all object points lie in front of both cameras
-		for (unsigned int n = 0u; n < correspondences; ++n)
+#ifdef OCEAN_DEBUG
 		{
-			ocean_assert_and_suppress_unused(PinholeCamera::isObjectPointInFrontIF(transformationLeftIF, objectPoints[n]), transformationLeftIF);
-			ocean_assert_and_suppress_unused(PinholeCamera::isObjectPointInFrontIF(transformationRightIF, objectPoints[n]), transformationRightIF);
-		}
+			const HomogenousMatrix4 flippedLeftCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_leftCamera));
+			const HomogenousMatrix4 flippedRightCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_right));
 
-		SquareMatrix3 homographies[2];
+			// ensure that all object points lie in front of both cameras
+			for (unsigned int n = 0u; n < correspondences; ++n)
+			{
+				ocean_assert(PinholeCamera::isObjectPointInFrontIF(flippedLeftCamera_T_world, objectPoints[n]));
+				ocean_assert(PinholeCamera::isObjectPointInFrontIF(flippedRightCamera_T_world, objectPoints[n]));
+			}
+		}
+#endif // OCEAN_DEBUG
+
+		SquareMatrix3 right_H_left[2];
 
 		// create a planar homography from the pose
-		homographies[0] = Geometry::Homography::homographyMatrix(transformationLeft, transformationRight, pinholeCamera, pinholeCamera, plane);
+		right_H_left[0] = Geometry::Homography::homographyMatrix(world_T_leftCamera, world_T_right, pinholeCamera, pinholeCamera, plane);
 
 		// create a planar homography from the point correspondences
-		const bool result = Geometry::Homography::homographyMatrix(imagePointsLeft.data(), imagePointsRight.data(), objectPoints.size(), homographies[1]);
-		ocean_assert_and_suppress_unused(result, result);
+		bool result = Geometry::Homography::homographyMatrix(imagePointsLeft.data(), imagePointsRight.data(), objectPoints.size(), right_H_left[1]);
 
-		// ensure that both homography matrices provide the same mapping
-		for (unsigned int n = 0u; n < imagePointsLeft.size(); ++n)
+		if (!result)
 		{
-			Vector2 right = homographies[0] * imagePointsLeft[n];
-			ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right, Numeric::weakEps()));
-
-			Vector2 right2 = homographies[1] * imagePointsLeft[n];
-			ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right2, Numeric::weakEps()));
-
-			right = -homographies[0] * imagePointsLeft[n];
-			ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right, Numeric::weakEps()));
-
-			right2 = -homographies[1] * imagePointsLeft[n];
-			ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right2, Numeric::weakEps()));
+			OCEAN_SET_FAILED(validation);
 		}
 
-		bool localSucceeded = true;
+#ifdef OCEAN_DEBUG
+		{
+			// ensure that both homography matrices provide the same mapping
+			for (unsigned int n = 0u; n < imagePointsLeft.size(); ++n)
+			{
+				Vector2 right = right_H_left[0] * imagePointsLeft[n];
+				ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right, Numeric::weakEps()));
+
+				Vector2 right2 = right_H_left[1] * imagePointsLeft[n];
+				ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right2, Numeric::weakEps()));
+
+				right = -right_H_left[0] * imagePointsLeft[n];
+				ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right, Numeric::weakEps()));
+
+				right2 = -right_H_left[1] * imagePointsLeft[n];
+				ocean_assert((std::is_same<Scalar, float>::value) || imagePointsRight[n].isEqual(right2, Numeric::weakEps()));
+			}
+		}
+#endif // OCEAN_DEBUG
+
+		const HomogenousMatrix4 leftCamera_T_world(world_T_leftCamera.inverted());
 
 		// we take the transformation with normalized translation vector as the factorization has a translation scaling uncertainty
-		const HomogenousMatrix4 transformationOffset(iTransformationLeft * transformationRight);
-		const Plane3 planeLeft = plane.transform(iTransformationLeft);
-		const HomogenousMatrix4 depthCorrectedTransformationOffset(transformationOffset.translation() / Numeric::abs(planeLeft.distance()), transformationOffset.rotationMatrix());
-		const HomogenousMatrix4 unitTransformationRight(transformationLeft * depthCorrectedTransformationOffset);
+		const HomogenousMatrix4 leftCamera_T_rightCamera = leftCamera_T_world * world_T_right;
+		const Plane3 planeLeft = plane.transform(leftCamera_T_world);
+		const HomogenousMatrix4 depthCorrectedTransformationOffset(leftCamera_T_rightCamera.translation() / Numeric::abs(planeLeft.distance()), leftCamera_T_rightCamera.rotationMatrix());
+		const HomogenousMatrix4 world_T_normalizedRightCamera = world_T_leftCamera * depthCorrectedTransformationOffset;
 
 		for (unsigned int n = 0u; n < 2u; ++n)
 		{
-			HomogenousMatrix4 transformations[2];
+			HomogenousMatrix4 world_T_rightCameras[2];
 			Vector3 normals[2];
 
 			performance.start();
-
-			if (!Geometry::Homography::factorizeHomographyMatrix(homographies[n], transformationLeft, pinholeCamera, pinholeCamera, imagePointsLeft.data(), imagePointsRight.data(), imagePointsLeft.size(), transformations, normals))
-			{
-				localSucceeded = false;
-			}
-
+				result = Geometry::Homography::factorizeHomographyMatrix(right_H_left[n], world_T_leftCamera, pinholeCamera, pinholeCamera, imagePointsLeft.data(), imagePointsRight.data(), imagePointsLeft.size(), world_T_rightCameras, normals);
 			performance.stop();
 
-			if (localSucceeded)
+			if (result)
 			{
-				if (!Geometry::Error::posesAlmostEqual(unitTransformationRight, transformations[0], Vector3(Scalar(0.001), Scalar(0.001), Scalar(0.001)), Numeric::deg2rad(Scalar(0.1)))
-						&& !Geometry::Error::posesAlmostEqual(unitTransformationRight, transformations[1], Vector3(Scalar(0.001), Scalar(0.001), Scalar(0.001)), Numeric::deg2rad(Scalar(0.1))))
+				if (!Geometry::Error::posesAlmostEqual(world_T_normalizedRightCamera, world_T_rightCameras[0], Vector3(Scalar(0.001), Scalar(0.001), Scalar(0.001)), Numeric::deg2rad(Scalar(0.1)))
+						&& !Geometry::Error::posesAlmostEqual(world_T_normalizedRightCamera, world_T_rightCameras[1], Vector3(Scalar(0.001), Scalar(0.001), Scalar(0.001)), Numeric::deg2rad(Scalar(0.1))))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 
 				if (plane.normal().angle(normals[0]) < Numeric::deg2rad(Scalar(0.1)) && plane.normal().angle(normals[1]) < Numeric::deg2rad(Scalar(0.1)))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
+			else
+			{
+				OCEAN_SET_FAILED(validation);
+			}
 		}
-
-		if (localSucceeded)
-		{
-			++succeeded;
-		}
-
-		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestHomography::testFaultlessPlanarHomography2D(const double testDuration)
@@ -957,21 +935,27 @@ bool TestHomography::testFaultlessPlanarHomography2D(const double testDuration)
 
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	for (const unsigned int correspondences : {4u, 10u, 20u, 30u, 100u})
 	{
 		Log::info() << "... with " << correspondences << " correspondences:";
 
-		uint64_t iterations = 0ull;
-		uint64_t succeeded = 0ull;
+		constexpr double successThreshold = 0.99;
+
+		ValidationPrecision validation(successThreshold, randomGenerator);
 
 		const Timestamp startTimestamp(true);
 
 		do
 		{
-			const Vector3 translation(Random::vector3());
-			const Euler euler(Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)));
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const Vector3 translation(Random::vector3(randomGenerator));
+			const Euler euler = Random::euler(randomGenerator, Numeric::deg2rad(30));;
+
 			const Quaternion quaternion(euler);
 			const HomogenousMatrix4 transformation(translation, quaternion);
 
@@ -980,11 +964,9 @@ bool TestHomography::testFaultlessPlanarHomography2D(const double testDuration)
 			Vectors2 leftImagePoints, rightImagePoints;
 			Vectors3 objectPoints;
 
-			bool localSucceeded = true;
-
 			for (unsigned int n = 0u; n < correspondences; ++n)
 			{
-				const Vector2 leftImagePoint(Random::scalar(Scalar(0u), Scalar(pinholeCamera.width() - 1u)), Random::scalar(Scalar(0u), Scalar(pinholeCamera.height() - 1u)));
+				const Vector2 leftImagePoint(Random::vector2(randomGenerator, Scalar(0), Scalar(pinholeCamera.width() - 1u), Scalar(0), Scalar(pinholeCamera.height() - 1u)));
 				const Line3 ray(pinholeCamera.ray(leftImagePoint, HomogenousMatrix4(true)));
 
 				Vector3 objectPoint;
@@ -1015,35 +997,28 @@ bool TestHomography::testFaultlessPlanarHomography2D(const double testDuration)
 
 						if (testRightPoint.sqrDistance(rightImagePoint) > Scalar(0.01 * 0.01))
 						{
-							localSucceeded = false;
+							scopedIteration.setInaccurate();
 						}
 					}
 				}
 				else
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 			else
 			{
-				localSucceeded = false;
+				scopedIteration.setInaccurate();
 			}
-
-			if (localSucceeded)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
 
-		ocean_assert(iterations != 0ull);
-		const double percent = double(succeeded) / double(iterations);
+		Log::info() << "Validation: " << validation;
 
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-		allSucceeded = percent >= 0.99 && allSucceeded;
+		if (!validation.succeeded())
+		{
+			allSucceeded = false;
+		}
 	}
 
 	Log::info() << " ";
@@ -1072,79 +1047,93 @@ bool TestHomography::testFaultlessNoisedPlanarHomography2D(const double testDura
 
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	for (const unsigned int correspondences : {4u, 10u, 20u, 30u, 100u})
 	{
 		Log::info() << "... with " << correspondences << " correspondences:";
 
-		uint64_t iterations = 0ull;
-		uint64_t succeeded = 0ull;
+		constexpr double successThreshold = 0.90;
+		ValidationPrecision validation(successThreshold, randomGenerator);
 
 		Timestamp startTimestamp(true);
 
 		do
 		{
-			const Vector3 translation(Random::vector3());
-			const Euler euler(Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)));
-			const Quaternion quaternion(euler);
-			const HomogenousMatrix4 transformation(translation, quaternion);
-
-			const Plane3 plane(Vector3(0, -5, 0), Vector3(Scalar(0.1), 1, Scalar(0.2)).normalized());
-
-			Vectors2 leftImagePoints, rightImagePoints;
-			Vectors3 objectPoints;
-
-			for (unsigned int n = 0u; n < correspondences; ++n)
+			while (true)
 			{
-				const Vector2 leftImagePoint(Random::scalar(Scalar(0u), Scalar(pinholeCamera.width() - 1u)), Random::scalar(Scalar(0u), Scalar(pinholeCamera.height() - 1u)));
-				const Line3 ray(pinholeCamera.ray(leftImagePoint, HomogenousMatrix4(true)));
+				const Vector3 translation(Random::vector3(randomGenerator));
+				const Euler euler = Random::euler(randomGenerator, Numeric::deg2rad(30));
+				const HomogenousMatrix4 transformation(translation, euler);
 
-				Vector3 objectPoint;
-				if (plane.intersection(ray, objectPoint))
+				const Plane3 plane(Vector3(0, -5, 0), Vector3(Scalar(0.1), 1, Scalar(0.2)).normalized());
+
+				Vectors2 leftImagePoints;
+				Vectors2 rightImagePoints;
+				Vectors3 objectPoints;
+
+				for (unsigned int n = 0u; n < correspondences; ++n)
 				{
-					const Vector2 rightImagePoint(pinholeCamera.projectToImage<true>(transformation, objectPoint, false));
-					const Vector2 leftNoise(Random::gaussianNoise(1), Random::gaussianNoise(1));
+					const Vector2 leftImagePoint(Random::vector2(randomGenerator, Scalar(0), Scalar(pinholeCamera.width() - 1u), Scalar(0), Scalar(pinholeCamera.height() - 1u)));
+					const Line3 ray(pinholeCamera.ray(leftImagePoint, HomogenousMatrix4(true)));
 
-					leftImagePoints.push_back(leftImagePoint + leftNoise);
-					rightImagePoints.push_back(rightImagePoint);
-					objectPoints.push_back(objectPoint);
+					Vector3 objectPoint;
+					if (plane.intersection(ray, objectPoint))
+					{
+						const Vector2 rightImagePoint(pinholeCamera.projectToImage<true>(transformation, objectPoint, false));
+						const Vector2 leftNoise(Random::gaussianNoiseVector2(randomGenerator, Scalar(1), Scalar(1)));
+
+						leftImagePoints.push_back(leftImagePoint + leftNoise);
+						rightImagePoints.push_back(rightImagePoint);
+						objectPoints.push_back(objectPoint);
+					}
 				}
-			}
 
-			ocean_assert(leftImagePoints.size() == rightImagePoints.size());
-			ocean_assert(leftImagePoints.size() == objectPoints.size());
+				ocean_assert(leftImagePoints.size() == rightImagePoints.size());
+				ocean_assert(leftImagePoints.size() == objectPoints.size());
 
-			if (leftImagePoints.size() == correspondences)
-			{
+				if (leftImagePoints.size() != correspondences)
+				{
+					// the test data is not good enough
+					continue;
+				}
+
 				SquareMatrix3 homography;
 				if (Geometry::Homography::homographyMatrix(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), homography))
 				{
 					for (size_t n = 0; n < leftImagePoints.size(); ++n)
 					{
+						ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 						const Vector2& leftImagePoint = leftImagePoints[n];
 						const Vector2& rightImagePoint = rightImagePoints[n];
 
 						const Vector2 testRightPoint(homography * leftImagePoint);
 
-						if (testRightPoint.sqrDistance(rightImagePoint) <= Scalar(3.5 * 3.5))
+						if (testRightPoint.sqrDistance(rightImagePoint) > Scalar(3.5 * 3.5))
 						{
-							++succeeded;
+							scopedIteration.setInaccurate();
 						}
 					}
 				}
+				else
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				break;
 			}
-
-			iterations += uint64_t(leftImagePoints.size());
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-		ocean_assert(iterations != 0ull);
-		const double percent = double(succeeded) / double(iterations);
+		Log::info() << "Validation: " << validation;
 
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-		allSucceeded = percent >= 0.90 && allSucceeded;
+		if (!validation.succeeded())
+		{
+			allSucceeded = false;
+		}
 	}
 
 	Log::info() << " ";
@@ -1173,6 +1162,8 @@ bool TestHomography::testFaultlessHomography(const double testDuration)
 
 	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
 
+	RandomGenerator randomGenerator;
+
 	const Plane3 zPlane(Vector3(0, 0, 0), Vector3(0, 0, 1));
 
 	bool allSucceeded = true;
@@ -1181,15 +1172,21 @@ bool TestHomography::testFaultlessHomography(const double testDuration)
 	{
 		Log::info() << "... with " << correspondences << " points:";
 
-		uint64_t iterations = 0ull;
-		uint64_t succeeded = 0ull;
+		constexpr double successThreshold = 0.90;
+		ValidationPrecision validation(successThreshold, randomGenerator);
 
 		Timestamp startTimestamp(true);
 
 		do
 		{
-			const Vector3 translation(Random::scalar(-10, 10), Random::scalar(-10, 10), Random::scalar(Scalar(0.1), 10));
-			const Euler euler(Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)));
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const Scalar xTranslation = Random::scalar(randomGenerator, Scalar(-10), Scalar(10));
+			const Scalar yTranslation = Random::scalar(randomGenerator, Scalar(-10), Scalar(10));
+			const Scalar zTranslation = Random::scalar(randomGenerator, Scalar(0.1), Scalar(10));
+
+			const Vector3 translation = Vector3(xTranslation, yTranslation, zTranslation);
+			const Euler euler = Random::euler(randomGenerator, Numeric::deg2rad(30));
 			const Quaternion quaternion(euler);
 
 			const HomogenousMatrix4 extrinsic(translation, quaternion);
@@ -1199,7 +1196,7 @@ bool TestHomography::testFaultlessHomography(const double testDuration)
 
 			for (unsigned int n = 0u; n < correspondences; ++n)
 			{
-				const Vector2 imagePoint(Scalar(Random::random(width - 1u)), Scalar(Random::random(height - 1u)));
+				const Vector2 imagePoint(Random::vector2(randomGenerator, Scalar(0), Scalar(width - 1u), Scalar(0), Scalar(height - 1u)));
 				const Line3 ray = pinholeCamera.ray(imagePoint, extrinsic);
 
 				Vector3 objectPoint(0, 0, 0);
@@ -1228,22 +1225,20 @@ bool TestHomography::testFaultlessHomography(const double testDuration)
 
 				const Scalar averageError = totalError / Scalar(correspondences);
 
-				if (averageError < 5)
+				if (averageError > 5)
 				{
-					++succeeded;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			++iterations;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-		ocean_assert(iterations != 0ull);
-		const double percent = double(succeeded) / double(iterations);
+		Log::info() << "Validation: " << validation;
 
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-		allSucceeded = allSucceeded && percent >= 0.95;
+		if (!validation.succeeded())
+		{
+			allSucceeded = false;
+		}
 	}
 
 	Log::info() << " ";
@@ -1272,23 +1267,33 @@ bool TestHomography::testFaultlessNoisedHomography(const double testDuration)
 
 	const Plane3 zPlane(Vector3(0, 0, 0), Vector3(0, 0, 1));
 
+	RandomGenerator randomGenerator;
+
 	bool allSucceeded = true;
 
 	for (const unsigned int correspondences : {10, 20, 30, 100})
 	{
 		Log::info() << "... with " << correspondences << " points:";
 
-		uint64_t iterations = 0ull;
-		uint64_t succeeded = 0ull;
+		constexpr double successThreshold = 0.90;
+		ValidationPrecision validation(successThreshold, randomGenerator);
 
 		Timestamp startTimestamp(true);
 
 		do
 		{
-			const PinholeCamera pinholeCamera(width, height, Random::scalar(524, 526), Random::scalar(524, 526), Random::scalar(width * Scalar(0.5) - Scalar(20), width * Scalar(0.5) + Scalar(20)), Random::scalar(height * Scalar(0.5) - Scalar(20), height * Scalar(0.5) + Scalar(20)));
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 translation(Random::scalar(-10, 10), Random::scalar(-10, 10), Random::scalar(Scalar(0.1), 10));
-			const Euler euler(Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)));
+			const Scalar focalX = Random::scalar(randomGenerator, 524, 526);
+			const Scalar focalY = Random::scalar(randomGenerator, 524, 526);
+
+			const Scalar principalX = Random::scalar(randomGenerator, width * Scalar(0.5) - Scalar(20), width * Scalar(0.5) + Scalar(20));
+			const Scalar principalY = Random::scalar(randomGenerator, height * Scalar(0.5) - Scalar(20), height * Scalar(0.5) + Scalar(20));
+
+			const PinholeCamera pinholeCamera(width, height, focalX, focalY, principalX, principalY);
+
+			const Vector3 translation = Random::vector3(randomGenerator, Scalar(-10), Scalar(10), Scalar(-10), Scalar(10), Scalar(0.1), Scalar(10));
+			const Euler euler = Random::euler(randomGenerator, Numeric::deg2rad(30));
 			const Quaternion quaternion(euler);
 
 			const HomogenousMatrix4 extrinsic(translation, quaternion);
@@ -1298,7 +1303,7 @@ bool TestHomography::testFaultlessNoisedHomography(const double testDuration)
 
 			for (unsigned int n = 0; n < correspondences; ++n)
 			{
-				const Vector2 imagePoint(Scalar(Random::random(width - 1)), Scalar(Random::random(height - 1)));
+				const Vector2 imagePoint = Random::vector2(randomGenerator, Scalar(0), Scalar(width - 1u), Scalar(0), Scalar(height - 1u));
 				const Line3 ray = pinholeCamera.ray(imagePoint, extrinsic);
 
 				Vector3 objectPoint(0, 0, 0);
@@ -1312,7 +1317,7 @@ bool TestHomography::testFaultlessNoisedHomography(const double testDuration)
 
 			for (unsigned int n = 0; n < correspondences; ++n)
 			{
-				const Vector2 noise(Random::gaussianNoise(2), Random::gaussianNoise(2));
+				const Vector2 noise = Random::gaussianNoiseVector2(randomGenerator, Scalar(2), Scalar(2));
 				imagePoints[n] += noise;
 			}
 
@@ -1334,22 +1339,20 @@ bool TestHomography::testFaultlessNoisedHomography(const double testDuration)
 				ocean_assert(correspondences != 0u);
 				const Scalar averageError = totalError / Scalar(correspondences);
 
-				if (averageError < 5)
+				if (averageError > 5)
 				{
-					++succeeded;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			++iterations;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-		ocean_assert(iterations != 0ull);
-		const double percent = double(succeeded) / double(iterations);
+		Log::info() << "Validation: " << validation;
 
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-		allSucceeded = allSucceeded && percent >= 0.95;
+		if (!validation.succeeded())
+		{
+			allSucceeded = false;
+		}
 	}
 
 	Log::info() << " ";
@@ -1382,8 +1385,7 @@ bool TestHomography::testIntrinsic(const double testDuration)
 
 	const unsigned int correspondences = 20u;
 
-	typedef std::vector<SquareMatrix3> Homographies;
-	typedef std::vector<HomogenousMatrix4> Extrinsics;
+	RandomGenerator randomGenerator;
 
 	bool allSucceeded = true;
 
@@ -1391,22 +1393,24 @@ bool TestHomography::testIntrinsic(const double testDuration)
 	{
 		Log::info() << "... with " << images << " homographies:";
 
-		uint64_t iterations = 0ull;
-		uint64_t succeeded = 0ull;
+		constexpr double successThreshold = 0.90;
+		ValidationPrecision validation(successThreshold, randomGenerator);
 
 		Timestamp startTimestamp(true);
 
 		do
 		{
-			Homographies homographies;
-			Extrinsics extrinsics;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			SquareMatrices3 homographies;
+			HomogenousMatrices4 extrinsics;
 
 			Geometry::ObjectPointGroups objectPointGroups;
 			Geometry::ImagePointGroups imagePointGroups;
 
 			for (unsigned int i = 0u; i < images; ++i)
 			{
-				const Vector3 translation(Random::scalar(-10, 10), Random::scalar(-10, 10), Random::scalar(Scalar(0.1), 10));
+				const Vector3 translation = Random::vector3(randomGenerator, Scalar(-10), Scalar(10), Scalar(-10), Scalar(10), Scalar(0.1), Scalar(10));
 				const Euler euler(Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)), Random::scalar(Numeric::deg2rad(-30), Numeric::deg2rad(30)));
 				const Quaternion quaternion(euler);
 
@@ -1446,7 +1450,7 @@ bool TestHomography::testIntrinsic(const double testDuration)
 					ocean_assert(distance <= 1);
 					if (distance > 1)
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 
@@ -1462,8 +1466,6 @@ bool TestHomography::testIntrinsic(const double testDuration)
 						&& Numeric::isEqual(intrinsic(0, 2), pinholeCamera.intrinsic()(0, 2), 1) // mx parameter
 						&& Numeric::isEqual(intrinsic(1, 2), pinholeCamera.intrinsic()(1, 2), 1)) // my parameter
 				{
-					bool failed = false;
-
 					for (unsigned int n = 0; n < images; ++n)
 					{
 						HomogenousMatrix4 extrinsic;
@@ -1483,39 +1485,38 @@ bool TestHomography::testIntrinsic(const double testDuration)
 								const Vector2 realImagePoint = imagePoints[i];
 
 								const Vector2 difference = imagePoint - realImagePoint;
-								const Scalar length = difference.length();
+								const Scalar distance = difference.length();
 
-								if (length > 2)
+								if (distance > 2)
 								{
-									failed = true;
+									scopedIteration.setInaccurate();
 								}
 							}
 						}
 					}
 
-					if (!failed)
-					{
-						Scalar distortion2 = 0;
-						Scalar distortion4 = 0;
+					Scalar distortion2 = 0;
+					Scalar distortion4 = 0;
 
-						if (Geometry::Homography::distortionParameters(ConstArrayAccessor<HomogenousMatrix4>(extrinsics), pinholeCamera.intrinsic(), ConstArrayAccessor<Vectors3>(objectPointGroups), ConstArrayAccessor<Vectors2>(imagePointGroups), distortion2, distortion4))
-						{
-							++succeeded;
-						}
+					if (!Geometry::Homography::distortionParameters(ConstArrayAccessor<HomogenousMatrix4>(extrinsics), pinholeCamera.intrinsic(), ConstArrayAccessor<Vectors3>(objectPointGroups), ConstArrayAccessor<Vectors2>(imagePointGroups), distortion2, distortion4))
+					{
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
-
-			++iterations;
+			else
+			{
+				OCEAN_SET_FAILED(validation);
+			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-		ocean_assert(iterations != 0ull);
-		const double percent = double(succeeded) / double(iterations);
+		Log::info() << "Validation: " << validation;
 
-		Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-		allSucceeded = allSucceeded && percent >= 0.95;
+		if (!validation.succeeded())
+		{
+			allSucceeded = false;
+		}
 	}
 
 	Log::info() << " ";
@@ -1654,7 +1655,7 @@ bool TestHomography::testHomotheticMatrix(const double testDuration, const size_
 			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -1779,7 +1780,7 @@ bool TestHomography::testSimilarityMatrix(const double testDuration, const size_
 			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -1893,7 +1894,7 @@ bool TestHomography::testAffineMatrix(const double testDuration, const size_t po
 			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -2054,7 +2055,7 @@ bool TestHomography::testHomographyMatrix(const double testDuration, const size_
 			scopedIteration.setInaccurate();
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -2075,14 +2076,16 @@ bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double test
 
 	RandomGenerator randomGenerator;
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	constexpr double successThreshold = 0.99;
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	HighPerformanceStatistic performance;
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		// we create a realistic homography based on two camera poses and a 3D plane in front of both cameras
 
 		const Plane3 plane(Vector3(0, 0, -4), Vector3(0, 0, 1));
@@ -2098,7 +2101,7 @@ bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double test
 
 		for (size_t n = 0; n < correspondences; ++n)
 		{
-			if (RandomI::random(randomGenerator, 1u) == 0u)
+			if (RandomI::boolean(randomGenerator))
 			{
 				// we add a new point
 
@@ -2148,10 +2151,10 @@ bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double test
 		SquareMatrix3 right_H_left(false);
 
 		performance.start();
-			bool localSucceeded = Geometry::Homography::homographyMatrixFromPointsAndLinesSVD(pointsLeft.data(), pointsRight.data(), pointsLeft.size(), linesLeft.data(), linesRight.data(), linesLeft.size(), right_H_left);
+			const bool result = Geometry::Homography::homographyMatrixFromPointsAndLinesSVD(pointsLeft.data(), pointsRight.data(), pointsLeft.size(), linesLeft.data(), linesRight.data(), linesLeft.size(), right_H_left);
 		performance.stop();
 
-		if (localSucceeded)
+		if (result)
 		{
 			constexpr Scalar posEpsilon = 1;
 			const Scalar angleCosEpsilon = Numeric::cos(Numeric::deg2rad(5));
@@ -2161,7 +2164,8 @@ bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double test
 				const Vector2 transformedPoint = right_H_left * pointsLeft[n];
 				if (!transformedPoint.isEqual(pointsRight[n], posEpsilon))
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
+					break;
 				}
 			}
 
@@ -2172,7 +2176,8 @@ bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double test
 				const Vector2 pointOnLineRight = right_H_left * pointOnLineLine;
 				if (linesRight[n].distance(pointOnLineRight) > posEpsilon)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
+					break;
 				}
 			}
 
@@ -2192,32 +2197,28 @@ bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double test
 
 				if (lineRight.xy() * transformedLine.xy() < angleCosEpsilon)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
+					break;
 				}
 
 				if (Numeric::abs(lineRight.z() - transformedLine.z()) > posEpsilon)
 				{
-					localSucceeded = false;
+					scopedIteration.setInaccurate();
+					break;
 				}
 			}
-
-			if (localSucceeded)
-			{
-				++validIterations;
-			}
 		}
-
-		++iterations;
+		else
+		{
+			OCEAN_SET_FAILED(validation);
+		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << " ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << " % succeeded.";
-
-	const bool succeeded = percent >= 0.99;
+	const bool succeeded = validation.succeeded();
 
 	if (!succeeded && std::is_same<Scalar, float>::value)
 	{
