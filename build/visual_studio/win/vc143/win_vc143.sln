@@ -2666,7 +2666,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvframerectifier", "..\
 		{7EF9186B-5F2C-47B0-8077-5D60AF030B68} = {7EF9186B-5F2C-47B0-8077-5D60AF030B68}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demogeometrymultiviewcalibration", "application\ocean\demo\geometry\multiviewcalibration\win\demogeometrymultiviewcalibration.vcxproj", "{F71DD922-CBC5-4670-9CAC-76123E1FD8F1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demogeometrymultiviewcalibration", "..\..\metaonly\win\vc143\application\ocean\demo\geometry\multiviewcalibration\win\demogeometrymultiviewcalibration.vcxproj", "{F71DD922-CBC5-4670-9CAC-76123E1FD8F1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7EF9186B-5F2C-47B0-8077-5D60AF030B68} = {7EF9186B-5F2C-47B0-8077-5D60AF030B68}
 		{D8E4E2C4-0E09-4457-AB50-1A9E01D9FC2A} = {D8E4E2C4-0E09-4457-AB50-1A9E01D9FC2A}
