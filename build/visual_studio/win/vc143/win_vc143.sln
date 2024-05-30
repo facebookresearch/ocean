@@ -2649,7 +2649,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cvdepth", "ocean\cv\depth\c
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cv", "cv", "{D45DE5E4-82F4-48A3-BB90-2A022B56C6F6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "supportcvdepth", "application\ocean\support\cv\depth\supportcvdepth.vcxproj", "{4AE7CF68-8CD1-478F-B2CD-E8C6B509E7A5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "supportcvdepth", "..\..\metaonly\win\vc143\application\ocean\support\cv\depth\supportcvdepth.vcxproj", "{4AE7CF68-8CD1-478F-B2CD-E8C6B509E7A5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{47116FE7-0473-4F2A-BF5B-5901FE2AC8D3} = {47116FE7-0473-4F2A-BF5B-5901FE2AC8D3}
 		{62B07B61-578F-4E96-AB3B-D725D99BA918} = {62B07B61-578F-4E96-AB3B-D725D99BA918}
