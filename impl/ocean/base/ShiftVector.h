@@ -17,8 +17,8 @@ namespace Ocean
 
 /**
  * This class implements a vector with shifted elements.
- * The elements are shifted by an shift offset index so that the elements can be accessed by adding this shift offset to the normal element index.<br>
- * The shift offset can either be positive or negative.<br>
+ * The elements are shifted by a shift offset index so that the elements can be accessed by adding this shift offset to the normal element index.<br>
+ * The shift offset can either be positive or negative.
  * @tparam T Data type of the elements that are stored
  * @ingroup base
  */
@@ -52,7 +52,7 @@ class ShiftVector
 		/**
 		 * Creates a new shift vector object.
 		 */
-		ShiftVector();
+		ShiftVector() = default;
 
 		/**
 		 * Copy constructor.
@@ -90,7 +90,7 @@ class ShiftVector
 		/**
 		 * Creates a new shift vector object and copies a specified number of elements.
 		 * @param firstIndex The index of the first element of this vector
-		 * @param elements Elements to be copied
+		 * @param elements The elements to be copied
 		 * @param size Number of elements to be copied
 		 */
 		ShiftVector(const Index firstIndex, const T* elements, const size_t size);
@@ -119,7 +119,7 @@ class ShiftVector
 		/**
 		 * Sets the index of the first element of this vector.
 		 * The elements of this vector will be untouched, however the individual elements receive a new index due to the new shift offset.
-		 * @param index Index of the first element
+		 * @param index The index of the first element
 		 */
 		inline void setFirstIndex(const Index index);
 
@@ -221,8 +221,8 @@ class ShiftVector
 		 * If the position is outside the current range of the vector (in negative or positive direction) than this vector will be extended accordingly.<br>
 		 * Whenever the vector will be extended, all intermediate elements (elements at new indices not equal to the given index) are initialized with the default constructor of the data type of this vector.<br>
 		 * Beware: If elements have to be added at the front, than the index of the first element will also be adjusted.<br>
-		 * @param index Index of the element
-		 * @param element Element to be inserted at the given index
+		 * @param index The index of the element
+		 * @param element The element to be inserted at the given index
 		 */
 		inline void insert(const Index index, const T& element);
 
@@ -231,8 +231,8 @@ class ShiftVector
 		 * If the position is outside the current range of the vector (in negative or positive direction) than this vector will be extended accordingly.<br>
 		 * Whenever the vector will be extended, all intermediate elements (elements at new indices not equal to the given index) are initialized with the given intermediate element instance.<br>
 		 * Beware: If elements have to be added at the front, than the index of the first element will also be adjusted.<br>
-		 * @param index Index of the element
-		 * @param element Element to be inserted at the given index
+		 * @param index The index of the element
+		 * @param element The element to be inserted at the given index
 		 * @param intermediateElement The element that is copied to all intermediate elements (elements at new indices not equal to the given index)
 		 */
 		inline void insert(const Index index, const T& element, const T& intermediateElement);
@@ -242,8 +242,8 @@ class ShiftVector
 		 * If the position is outside the current range of the vector (in negative or positive direction) than this vector will be extended accordingly.<br>
 		 * Whenever the vector will be extended, all intermediate elements (elements at new indices not equal to the given index) are initialized with the default constructor of the data type of this vector.<br>
 		 * Beware: If elements have to be added at the front, than the index of the first element will also be adjusted.<br>
-		 * @param index Index of the element
-		 * @param element Element to be inserted at the given index
+		 * @param index The index of the element
+		 * @param element The element to be inserted at the given index
 		 */
 		inline void insert(const Index index, T&& element);
 
@@ -252,15 +252,15 @@ class ShiftVector
 		 * If the position is outside the current range of the vector (in negative or positive direction) than this vector will be extended accordingly.<br>
 		 * Whenever the vector will be extended, all intermediate elements (elements at new indices not equal to the given index) are initialized with the given intermediate element instance.<br>
 		 * Beware: If elements have to be added at the front, than the index of the first element will also be adjusted.<br>
-		 * @param index Index of the element
-		 * @param element Element to be inserted at the given index
+		 * @param index The index of the element
+		 * @param element The element to be inserted at the given index
 		 * @param intermediateElement The element that is copied to all intermediate elements (elements at new indices not equal to the given index)
 		 */
 		inline void insert(const Index index, T&& element, const T& intermediateElement);
 
 		/**
 		 * Returns whether a specific index is valid for this vector and matches to the current offset layout.
-		 * @param index Index to be checked
+		 * @param index The index to be checked
 		 * @return True, if succeeded
 		 */
 		inline bool isValidIndex(const Index index) const;
@@ -322,14 +322,14 @@ class ShiftVector
 
 		/**
 		 * Returns one element of this object.
-		 * @param index Index of the element to be returned, with range [firstIndex(), lastIndex()]
+		 * @param index The index of the element to be returned, with range [firstIndex(), lastIndex()]
 		 * @return Requested element
 		 */
 		inline const T& operator[](const Index index) const;
 
 		/**
 		 * Returns one element of this object.
-		 * @param index Index of the element to be returned, with range [firstIndex(), lastIndex()]
+		 * @param index The index of the element to be returned, with range [firstIndex(), lastIndex()]
 		 * @return Requested element
 		 */
 		inline T& operator[](const Index index);
@@ -358,233 +358,238 @@ class ShiftVector
 	protected:
 
 		/// The index of the first element.
-		Index vectorFirstIndex;
+		Index firstIndex_ = Index(0);
 
 		/// Elements of this object.
-		std::deque<T> vectorElements;
+		std::deque<T> elements_;
 };
 
 template <typename T>
-ShiftVector<T>::ShiftVector() :
-	vectorFirstIndex(0)
-{
-	// nothing to do here
-}
-
-template <typename T>
 ShiftVector<T>::ShiftVector(const ShiftVector& object) :
-	vectorFirstIndex(object.vectorFirstIndex),
-	vectorElements(object.vectorElements)
+	firstIndex_(object.firstIndex_),
+	elements_(object.elements_)
 {
 	// nothing to do here
 }
 
 template <typename T>
-ShiftVector<T>::ShiftVector(ShiftVector&& object) noexcept :
-	vectorFirstIndex(object.vectorFirstIndex),
-	vectorElements(std::move(object.vectorElements))
+ShiftVector<T>::ShiftVector(ShiftVector&& object) noexcept
 {
-	object.vectorFirstIndex = 0;
+	*this = std::move(object);
 }
 
 template <typename T>
 ShiftVector<T>::ShiftVector(const Index firstIndex) :
-	vectorFirstIndex(firstIndex)
+	firstIndex_(firstIndex)
 {
 	// nothing to do here
 }
 
 template <typename T>
 ShiftVector<T>::ShiftVector(const Index firstIndex, const size_t size) :
-	vectorFirstIndex(firstIndex),
-	vectorElements(size)
+	firstIndex_(firstIndex),
+	elements_(size)
 {
 	// nothing to do here
 }
 
 template <typename T>
 ShiftVector<T>::ShiftVector(const Index firstIndex, const size_t size, const T& element) :
-	vectorFirstIndex(firstIndex),
-	vectorElements(size, element)
+	firstIndex_(firstIndex),
+	elements_(size, element)
 {
 	// nothing to do here
 }
 
 template <typename T>
 ShiftVector<T>::ShiftVector(const Index firstIndex, const T* elements, const size_t size) :
-	vectorFirstIndex(firstIndex),
-	vectorElements(size)
+	firstIndex_(firstIndex),
+	elements_(size)
 {
 	for (size_t n = 0; n < size; ++n)
-		vectorElements[n] = elements[n];
+	{
+		elements_[n] = elements[n];
+	}
 }
 
 template <typename T>
 inline typename ShiftVector<T>::Index ShiftVector<T>::firstIndex() const
 {
-	return vectorFirstIndex;
+	return firstIndex_;
 }
 
 template <typename T>
 inline typename ShiftVector<T>::Index ShiftVector<T>::lastIndex() const
 {
-	ocean_assert(!vectorElements.empty());
+	ocean_assert(!elements_.empty());
 
-	if (vectorElements.empty())
-		return vectorFirstIndex - 1;
+	if (elements_.empty())
+	{
+		return firstIndex_ - 1;
+	}
 
-	return vectorFirstIndex + Index(vectorElements.size()) - 1;
+	return firstIndex_ + Index(elements_.size()) - 1;
 }
 
 template <typename T>
 inline typename ShiftVector<T>::Index ShiftVector<T>::endIndex() const
 {
-	ocean_assert(!vectorElements.empty());
+	ocean_assert(!elements_.empty());
 
-	if (vectorElements.empty())
-		return vectorFirstIndex;
+	if (elements_.empty())
+	{
+		return firstIndex_;
+	}
 
-	return vectorFirstIndex + Index(vectorElements.size());
+	return firstIndex_ + Index(elements_.size());
 }
 
 template <typename T>
 inline void ShiftVector<T>::setFirstIndex(const Index index)
 {
-	vectorFirstIndex = index;
+	firstIndex_ = index;
 }
 
 template <typename T>
 inline const T& ShiftVector<T>::front() const
 {
-	ocean_assert(!vectorElements.empty());
-	ocean_assert((*this)[firstIndex()] == vectorElements.front());
+	ocean_assert(!elements_.empty());
+	ocean_assert((*this)[firstIndex()] == elements_.front());
 
-	return vectorElements.front();
+	return elements_.front();
 }
 
 template <typename T>
 inline T& ShiftVector<T>::front()
 {
-	ocean_assert(!vectorElements.empty());
-	ocean_assert((*this)[firstIndex()] == vectorElements.front());
+	ocean_assert(!elements_.empty());
+	ocean_assert((*this)[firstIndex()] == elements_.front());
 
-	return vectorElements.front();
+	return elements_.front();
 }
 
 template <typename T>
 inline const T& ShiftVector<T>::back() const
 {
-	ocean_assert(!vectorElements.empty());
-	ocean_assert((*this)[lastIndex()] == vectorElements.back());
+	ocean_assert(!elements_.empty());
+	ocean_assert((*this)[lastIndex()] == elements_.back());
 
-	return vectorElements.back();
+	return elements_.back();
 }
 
 template <typename T>
 inline T& ShiftVector<T>::back()
 {
-	ocean_assert(!vectorElements.empty());
-	ocean_assert((*this)[lastIndex()] == vectorElements.back());
+	ocean_assert(!elements_.empty());
+	ocean_assert((*this)[lastIndex()] == elements_.back());
 
-	return vectorElements.back();
+	return elements_.back();
 }
 
 template <typename T>
 inline size_t ShiftVector<T>::size() const
 {
-	return vectorElements.size();
+	return elements_.size();
 }
 
 template <typename T>
 inline void ShiftVector<T>::resize(const size_t size)
 {
-	vectorElements.resize(size);
+	elements_.resize(size);
 }
 
 template <typename T>
 inline void ShiftVector<T>::resize(const size_t size, const T& element)
 {
-	vectorElements.resize(size, element);
+	elements_.resize(size, element);
 }
 
 template <typename T>
 inline void ShiftVector<T>::pushBack(const T& element)
 {
-	vectorElements.push_back(element);
+	elements_.push_back(element);
 }
 
 template <typename T>
 inline void ShiftVector<T>::pushBack(T&& element)
 {
-	vectorElements.push_back(element);
+	elements_.push_back(element);
 }
 
 template <typename T>
 inline void ShiftVector<T>::pushFront(const T& element)
 {
-	vectorElements.push_front(element);
-	vectorFirstIndex--;
+	elements_.push_front(element);
+	firstIndex_--;
 }
 
 template <typename T>
 inline void ShiftVector<T>::pushFront(T&& element)
 {
-	vectorElements.push_front(element);
-	vectorFirstIndex--;
+	elements_.push_front(element);
+	firstIndex_--;
 }
 
 template <typename T>
 inline void ShiftVector<T>::popBack()
 {
-	ocean_assert(!vectorElements.empty());
-	vectorElements.pop_back();
+	ocean_assert(!elements_.empty());
+	elements_.pop_back();
 }
 
 template <typename T>
 inline void ShiftVector<T>::popFront()
 {
-	ocean_assert(!vectorElements.empty());
-	vectorElements.pop_front();
-	vectorFirstIndex++;
+	ocean_assert(!elements_.empty());
+	elements_.pop_front();
+	firstIndex_++;
 }
 
 template <typename T>
 inline void ShiftVector<T>::insert(const Index index, const T& element)
 {
-	if (index < vectorFirstIndex)
+	if (index < firstIndex_)
 	{
 		// add default objects
-		while (index + 1 < vectorFirstIndex)
+		while (index + 1 < firstIndex_)
+		{
 			pushFront(T());
+		}
 
 		pushFront(element);
 	}
 	else
 	{
-		if (index >= (Index)(vectorFirstIndex + vectorElements.size()))
-			vectorElements.resize(index - vectorFirstIndex + 1);
+		if (index >= (Index)(firstIndex_ + elements_.size()))
+		{
+			elements_.resize(index - firstIndex_ + 1);
+		}
 
-		vectorElements[index - vectorFirstIndex] = element;
+		elements_[index - firstIndex_] = element;
 	}
 }
 
 template <typename T>
 inline void ShiftVector<T>::insert(const Index index, const T& element, const T& intermediateElement)
 {
-	if (index < vectorFirstIndex)
+	if (index < firstIndex_)
 	{
 		// add default objects
-		while (index + 1 < vectorFirstIndex)
+		while (index + 1 < firstIndex_)
+		{
 			pushFront(intermediateElement);
+		}
 
 		pushFront(element);
 	}
 	else
 	{
-		if (index >= (Index)(vectorFirstIndex + vectorElements.size()))
-			vectorElements.resize(index - vectorFirstIndex + 1, intermediateElement);
+		if (index >= (Index)(firstIndex_ + elements_.size()))
+		{
+			elements_.resize(index - firstIndex_ + 1, intermediateElement);
+		}
 
-		vectorElements[index - vectorFirstIndex] = element;
+		elements_[index - firstIndex_] = element;
 	}
 }
 
@@ -592,96 +597,104 @@ inline void ShiftVector<T>::insert(const Index index, const T& element, const T&
 template <typename T>
 inline void ShiftVector<T>::insert(const Index index, T&& element)
 {
-	if (index < vectorFirstIndex)
+	if (index < firstIndex_)
 	{
 		// add default objects
-		while (index + 1 < vectorFirstIndex)
+		while (index + 1 < firstIndex_)
+		{
 			pushFront(T());
+		}
 
 		pushFront(element);
 	}
 	else
 	{
-		if (index >= (Index)(vectorFirstIndex + vectorElements.size()))
-			vectorElements.resize(index - vectorFirstIndex + 1);
+		if (index >= (Index)(firstIndex_ + elements_.size()))
+		{
+			elements_.resize(index - firstIndex_ + 1);
+		}
 
-		vectorElements[index - vectorFirstIndex] = std::move(element);
+		elements_[index - firstIndex_] = std::move(element);
 	}
 }
 
 template <typename T>
 inline void ShiftVector<T>::insert(const Index index, T&& element, const T& intermediateElement)
 {
-	if (index < vectorFirstIndex)
+	if (index < firstIndex_)
 	{
 		// add default objects
-		while (index + 1 < vectorFirstIndex)
+		while (index + 1 < firstIndex_)
+		{
 			pushFront(intermediateElement);
+		}
 
 		pushFront(element);
 	}
 	else
 	{
-		if (index >= (Index)(vectorFirstIndex + vectorElements.size()))
-			vectorElements.resize(index - vectorFirstIndex + 1, intermediateElement);
+		if (index >= (Index)(firstIndex_ + elements_.size()))
+		{
+			elements_.resize(index - firstIndex_ + 1, intermediateElement);
+		}
 
-		vectorElements[index - vectorFirstIndex] = element;
+		elements_[index - firstIndex_] = element;
 	}
 }
 
 template <typename T>
 inline bool ShiftVector<T>::isValidIndex(const Index index) const
 {
-	return index >= vectorFirstIndex  && index < Index(vectorFirstIndex + vectorElements.size());
+	return index >= firstIndex_  && index < Index(firstIndex_ + elements_.size());
 }
 
 template <typename T>
 inline bool ShiftVector<T>::isEmpty() const
 {
-	return vectorElements.empty();
+	return elements_.empty();
 }
 
 template <typename T>
 inline void ShiftVector<T>::clear()
 {
-	vectorElements.clear();
+	elements_.clear();
 }
 
 template <typename T>
 std::vector<T> ShiftVector<T>::data() const
 {
-	return std::vector<T>(vectorElements.begin(), vectorElements.end());
+	return std::vector<T>(elements_.begin(), elements_.end());
 }
 
 template <typename T>
 inline typename ShiftVector<T>::Iterator ShiftVector<T>::begin()
 {
-	return vectorElements.begin();
+	return elements_.begin();
 }
 
 template <typename T>
 inline typename ShiftVector<T>::ConstIterator ShiftVector<T>::begin() const
 {
-	return vectorElements.begin();
+	return elements_.begin();
 }
 
 template <typename T>
 inline typename ShiftVector<T>::Iterator ShiftVector<T>::end()
 {
-	return vectorElements.end();
+	return elements_.end();
 }
 
 template <typename T>
 inline typename ShiftVector<T>::ConstIterator ShiftVector<T>::end() const
 {
-	return vectorElements.end();
+	return elements_.end();
 }
 
 template <typename T>
 ShiftVector<T>& ShiftVector<T>::operator=(const ShiftVector<T>& object)
 {
-	vectorFirstIndex = object.vectorFirstIndex;
-	vectorElements = object.vectorElements;
+	firstIndex_ = object.firstIndex_;
+	elements_ = object.elements_;
 
 	return *this;
 }
@@ -691,9 +704,10 @@ ShiftVector<T>& ShiftVector<T>::operator=(ShiftVector<T>&& object) noexcept
 {
 	if (this != &object)
 	{
-		vectorFirstIndex = object.vectorFirstIndex;
-		vectorElements = std::move(object.vectorElements);
-		object.vectorFirstIndex = 0;
+		firstIndex_ = object.firstIndex_;
+		object.firstIndex_ = 0;
+
+		elements_ = std::move(object.elements_);
 	}
 
 	return *this;
@@ -706,7 +720,7 @@ inline const T& ShiftVector<T>::operator[](const Index index) const
 	ocean_assert(isValidIndex(index));
 	ocean_assert(index >= firstIndex() && index <= lastIndex());
 
-	return vectorElements[index - vectorFirstIndex];
+	return elements_[index - firstIndex_];
 }
 
 template <typename T>
@@ -716,19 +730,19 @@ inline T& ShiftVector<T>::operator[](const Index index)
 	ocean_assert(isValidIndex(index));
 	ocean_assert(index >= firstIndex() && index <= lastIndex());
 
-	return vectorElements[index - vectorFirstIndex];
+	return elements_[index - firstIndex_];
 }
 
 template <typename T>
 inline ShiftVector<T>::operator bool() const
 {
-	return !vectorElements.empty();
+	return !elements_.empty();
 }
 
 template <typename T>
 bool ShiftVector<T>::operator==(const ShiftVector<T>& object) const
 {
-	return vectorFirstIndex == object.vectorFirstIndex && vectorElements == object.vectorElements;
+	return firstIndex_ == object.firstIndex_ && elements_ == object.elements_;
 }
 
 template <typename T>
