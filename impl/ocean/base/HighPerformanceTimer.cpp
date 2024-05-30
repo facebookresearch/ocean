@@ -313,7 +313,7 @@ std::string HighPerformanceStatistic::toString(const unsigned int precision) con
 		unit = "ms";
 	}
 
-	return "Performance: Best: " + String::toAString(performanceBest * unitFactor, precision) + unit + ", "
+	return "Best: " + String::toAString(performanceBest * unitFactor, precision) + unit + ", "
 				+ "average: " + String::toAString(performanceAverage * unitFactor, precision) + unit + ", "
 				+ "median: " + String::toAString(performanceMedian * unitFactor, precision) + unit + ", "
 				+ "worst: " + String::toAString(performanceWorst * unitFactor, precision) + unit;
