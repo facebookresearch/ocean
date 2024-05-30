@@ -51,14 +51,14 @@ display_help()
         echo "                  ${type}"
     done
     echo "                Multiple values must be separated by commas. Default value if nothing is"
-    echo "                specified: \"${OTP_VALID_BUILD_CONFIGS}\""
+    echo "                specified: \"${OTP_BUILD_CONFIG}\""
     echo ""
     echo "  -l | -link LINKING_TYPE : The optional linking type for which will be built; valid values are:"
     for type in $(echo "${OTP_VALID_LINKING_TYPES}" | tr ',' '\n'); do
         echo "                  ${type}"
     done
     echo "                Multiple values must be separated by commas. Default value if nothing is"
-    echo "                specified: \"${OTP_VALID_LINKING_TYPES}\""
+    echo "                specified: \"${OTP_LINKING_TYPES}\""
     echo ""
     echo " -a | --archive ARCHIVE: If specified, this will copy the contents of INSTALL_DIR after the build"
     echo "                into a ZIP archive; the path to this archive must exist."

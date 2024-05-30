@@ -55,14 +55,14 @@ display_help()
         echo "                  ${type}"
     done
     echo "                Multiple values must be separated by commas. Default value if nothing is"
-    echo "                specified: \"${OCEAN_VALID_BUILD_CONFIGS}\""
+    echo "                specified: \"${OCEAN_BUILD_CONFIGS}\""
     echo ""
     echo "  -l | -link LINKING_TYPE : The optional linking type for which will be built; valid values are:"
     for type in $(echo "${OCEAN_VALID_LINKING_TYPES}" | tr ',' '\n'); do
         echo "                  ${type}"
     done
     echo "                Multiple values must be separated by commas. Default value if nothing is"
-    echo "                specified: \"${OCEAN_VALID_LINKING_TYPES}\""
+    echo "                specified: \"${OCEAN_LINKING_TYPES}\""
     echo ""
     echo "  -h | --help : This summary"
     echo ""
