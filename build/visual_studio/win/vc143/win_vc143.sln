@@ -2740,7 +2740,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cv", "cv", "{D0997119-92AD-
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tracking", "tracking", "{912718ED-2413-410B-8633-2EE393EADE50}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "supportcvcalibration", "application\ocean\support\cv\calibration\supportcvcalibration.vcxproj", "{D8E4E2C4-0E09-4457-AB50-1A9E01D9FC2A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "supportcvcalibration", "..\..\metaonly\win\vc143\application\ocean\support\cv\calibration\supportcvcalibration.vcxproj", "{D8E4E2C4-0E09-4457-AB50-1A9E01D9FC2A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{47116FE7-0473-4F2A-BF5B-5901FE2AC8D3} = {47116FE7-0473-4F2A-BF5B-5901FE2AC8D3}
 		{4ACA5022-EA21-4578-835A-9F96D3123A12} = {4ACA5022-EA21-4578-835A-9F96D3123A12}
