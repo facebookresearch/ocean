@@ -62,7 +62,7 @@ class OCEAN_IO_EXPORT Signature
 
 #endif
 
-#if defined(_WINDOWS) || defined(__APPLE__) && TARGET_IPHONE_SIMULATOR != 1 && TARGET_OS_IPHONE != 1
+#if defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS) || defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 
 		/**
 		 * Evaluates if the code signature of the specified file exists and is trusted by the platform-specfic certificate store.
@@ -70,15 +70,42 @@ class OCEAN_IO_EXPORT Signature
 		 * @param filePath File path to signed code file
 		 * @param trustedCodeSignature Receives true if the code signature of the file is valid and trusted; otherwise false is returned.
 		 * @param subjectName Optional parameter that receives the subject name
-		 * @return Ture if signature evaluation and subject name determination succeeded; otherwise, false is returned.
+		 * @return True if signature evaluation and subject name determination succeeded; otherwise, false is returned.
+		 * @sa evaluateCodeSignatureAppleMacos(), evaluateCodeSignatureWindows()
 		 */
-		static bool evaluateCodeSignature(const std::wstring& filePath, bool& trustedCodeSignature, std::wstring* subjectName);
+		static inline bool evaluateCodeSignature(const std::wstring& filePath, bool& trustedCodeSignature, std::wstring* subjectName);
 
 #endif
 
-#ifdef _WINDOWS
-
 	private:
+
+#ifdef OCEAN_PLATFORM_BUILD_APPLE_MACOS
+
+		/**
+		 * Evaluates if the code signature of the specified file exists and is trusted by the certificate store on macOS.
+		 * The subject name may contain a team identifier code (e.g., subject (ABCDEFG))
+		 * @param filePath File path to signed code file
+		 * @param trustedCodeSignature Receives true if the code signature of the file is valid and trusted; otherwise false is returned.
+		 * @param subjectName Optional parameter that receives the subject name
+		 * @return Ture if signature evaluation and subject name determination succeeded; otherwise, false is returned.
+		 * @sa evaluateCodeSignature()
+		 */
+		static bool evaluateCodeSignatureAppleMacos(const std::wstring& filePath, bool& trustedCodeSignature, std::wstring* subjectName);
+
+#endif
+
+#ifdef OCEAN_PLATFORM_BUILD_WINDOWS
+
+		/**
+		 * Evaluates if the code signature of the specified file exists and is trusted by the certificate store on Windows.
+		 * On Apple platforms the subject name may contain a team identifier code (e.g., subject (ABCDEFG))
+		 * @param filePath File path to signed code file
+		 * @param trustedCodeSignature Receives true if the code signature of the file is valid and trusted; otherwise false is returned.
+		 * @param subjectName Optional parameter that receives the subject name
+		 * @return True if signature evaluation and subject name determination succeeded; otherwise, false is returned.
+		 * @sa evaluateCodeSignatureAppleMacos()
+		 */
+		static bool evaluateCodeSignatureWindows(const std::wstring& filePath, bool& trustedCodeSignature, std::wstring* subjectName);
 
 		/**
 		 * Returns the subject name of the digital signature for the specified file.
@@ -92,6 +119,23 @@ class OCEAN_IO_EXPORT Signature
 #endif
 
 };
+
+#if defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS) || defined(OCEAN_PLATFORM_BUILD_WINDOWS)
+
+inline bool Signature::evaluateCodeSignature(const std::wstring& filePath, bool& trustedCodeSignature, std::wstring* subjectName)
+{
+#ifdef OCEAN_PLATFORM_BUILD_WINDOWS
+
+	return Signature::evaluateCodeSignatureWindows(filePath, trustedCodeSignature, subjectName);
+
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE_MACOS)
+
+	return Signature::evaluateCodeSignatureAppleMacos(filePath, trustedCodeSignature, subjectName);
+
+#endif
+}
+
+#endif
 
 }
 
