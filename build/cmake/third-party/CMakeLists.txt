@@ -5,6 +5,8 @@
 
 cmake_minimum_required(VERSION 3.26)
 
+include(findNMake.cmake)
+
 project(ocean_third_party)
 
 include(${CMAKE_CURRENT_LIST_DIR}/../ocean_utilities.cmake)

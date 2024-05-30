@@ -7,14 +7,39 @@
 
 setlocal
 
-set OCEAN_THIRD_PARTY_SOURCE_DIR=%1
-set BUILD_DIRECTORY_BASE=%2
-set INSTALL_DIRECTORY=%3
-set BUILD_TYPE=%4
-set BUILD_SHARED_LIBS=%5
+set PLATFORM=%1
+set OCEAN_THIRD_PARTY_SOURCE_DIR=%2
+set BUILD_DIRECTORY_BASE=%3
+set EXTRA_BUILD_FLAGS=%4
 
-for /F "eol=# usebackq delims=" %%d in (%OCEAN_THIRD_PARTY_SOURCE_DIR%\dependencies_allplatforms.txt %OCEAN_THIRD_PARTY_SOURCE_DIR%\dependencies_windows.txt) do (
+shift
+shift
+shift
+shift
+
+set a1=%1
+set a2=%2
+set a3=%3
+set a4=%4
+set a5=%5
+set a6=%6
+set a7=%7
+set a8=%8
+set a9=%9
+
+shift
+shift
+shift
+shift
+shift
+shift
+shift
+shift
+shift
+
+
+for /F "eol=# usebackq delims=" %%d in (%OCEAN_THIRD_PARTY_SOURCE_DIR%\dependencies_allplatforms.txt %OCEAN_THIRD_PARTY_SOURCE_DIR%\dependencies_%PLATFORM%.txt) do (
     echo %%d
-    cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY_BASE%\%%d -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% -DINCLUDED_DEP_NAME=%%d
-    cmake --build %BUILD_DIRECTORY_BASE%\%%d --config %BUILD_TYPE% --target install -- /m:16
+    cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY_BASE%\%%d -DINCLUDED_DEP_NAME=%%d %a1% %a2% %a3% %a4% %a5% %a6% %a7% %a8% %a9% %1 %2 %3 %4 %5 %6 %7 %8 %9
+    cmake --build %BUILD_DIRECTORY_BASE%\%%d --config %BUILD_TYPE% --target install -- %EXTRA_BUILD_FLAGS%
 )
