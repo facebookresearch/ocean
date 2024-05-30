@@ -15,6 +15,8 @@
 #include "ocean/math/Rotation.h"
 #include "ocean/math/SquareMatrix4.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -37,37 +39,49 @@ bool TestHomogenousMatrix4::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testConstructor(testDuration) && allSucceeded;
+	allSucceeded = testConstructor<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testConstructor<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testElementConstructor(testDuration) && allSucceeded;
+	allSucceeded = testElementConstructor<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testElementConstructor<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testInvert(testDuration) && allSucceeded;
+	allSucceeded = testInvert<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testInvert<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testDecomposition(testDuration) && allSucceeded;
+	allSucceeded = testDecomposition<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testDecomposition<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testVectorConversion(testDuration) && allSucceeded;
+	allSucceeded = testVectorConversion<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testVectorConversion<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testCopyElements(testDuration) && allSucceeded;
+	allSucceeded = testCopyElements<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testCopyElements<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -90,34 +104,70 @@ TEST(TestHomogenousMatrix4, WriteToMessenger)
 	EXPECT_TRUE(TestHomogenousMatrix4::testWriteToMessenger());
 }
 
+
+TEST(TestHomogenousMatrix4, Constructor_float)
+{
+	EXPECT_TRUE(TestHomogenousMatrix4::testConstructor<float>(GTEST_TEST_DURATION));
+}
+
 TEST(TestHomogenousMatrix4, Constructor)
 {
-	EXPECT_TRUE(TestHomogenousMatrix4::testConstructor(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestHomogenousMatrix4::testConstructor<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestHomogenousMatrix4, ElementConstructor)
+
+TEST(TestHomogenousMatrix4, ElementConstructor_float)
 {
-	EXPECT_TRUE(TestHomogenousMatrix4::testElementConstructor(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestHomogenousMatrix4::testElementConstructor<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestHomogenousMatrix4, Invert)
+TEST(TestHomogenousMatrix4, ElementConstructor_double)
 {
-	EXPECT_TRUE(TestHomogenousMatrix4::testInvert(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestHomogenousMatrix4::testElementConstructor<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestHomogenousMatrix4, Decomposition)
+
+TEST(TestHomogenousMatrix4, Invert_float)
 {
-	EXPECT_TRUE(TestHomogenousMatrix4::testDecomposition(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestHomogenousMatrix4::testInvert<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestHomogenousMatrix4, VectorConversion)
+TEST(TestHomogenousMatrix4, Invert_double)
 {
-	EXPECT_TRUE(TestHomogenousMatrix4::testVectorConversion(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestHomogenousMatrix4::testInvert<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestHomogenousMatrix4, CopyElements)
+
+TEST(TestHomogenousMatrix4, Decomposition_float)
 {
-	EXPECT_TRUE(TestHomogenousMatrix4::testCopyElements(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestHomogenousMatrix4::testDecomposition<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestHomogenousMatrix4, Decomposition_double)
+{
+	EXPECT_TRUE(TestHomogenousMatrix4::testDecomposition<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestHomogenousMatrix4, VectorConversion_float)
+{
+	EXPECT_TRUE(TestHomogenousMatrix4::testVectorConversion<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestHomogenousMatrix4, VectorConversion_double)
+{
+	EXPECT_TRUE(TestHomogenousMatrix4::testVectorConversion<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestHomogenousMatrix4, CopyElements_float)
+{
+	EXPECT_TRUE(TestHomogenousMatrix4::testCopyElements<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestHomogenousMatrix4, CopyElements_double)
+{
+	EXPECT_TRUE(TestHomogenousMatrix4::testCopyElements<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -142,84 +192,84 @@ bool TestHomogenousMatrix4::testWriteToMessenger()
 	return true;
 }
 
+template <typename T>
 bool TestHomogenousMatrix4::testConstructor(const double testDuration)
 {
-	const size_t size = 1000000;
+	constexpr size_t size = 1000000;
 
-	Log::info() << "Constructor test for " << String::insertCharacter(String::toAString(size), ',', 3, false) << " matrices:";
+	Log::info() << "Constructor test for " << String::insertCharacter(String::toAString(size), ',', 3, false) << " matrices for " << TypeNamer::name<T>() << ":";
 
-	HomogenousMatrices4 matrices0(size);
-	HomogenousMatrices4 matrices1(size);
-	HomogenousMatrices4 matrices2(size);
+	HomogenousMatricesT4<T> matrices0(size);
+	HomogenousMatricesT4<T> matrices1(size);
+	HomogenousMatricesT4<T> matrices2(size);
 
-	HighPerformanceStatistic performanceNormal, performanceOne, performanceZero;
+	HighPerformanceStatistic performanceDefault;
+	HighPerformanceStatistic performanceOne;
+	HighPerformanceStatistic performanceZero;
 
-	Timestamp startTimestamp(true);
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
 	do
 	{
-		performanceNormal.start();
-		for (HomogenousMatrices4::iterator i = matrices0.begin(); i != matrices0.end(); ++i)
-			*i = HomogenousMatrix4();
-		performanceNormal.stop();
+		performanceDefault.start();
+			const HomogenousMatricesT4<T> matricesDefault(size);
+		performanceDefault.stop();
+
+		OCEAN_EXPECT_EQUAL(validation, matricesDefault.size(), size);
 
 		performanceOne.start();
-		for (HomogenousMatrices4::iterator i = matrices1.begin(); i != matrices1.end(); ++i)
-			*i = HomogenousMatrix4(true);
+			const HomogenousMatricesT4<T> matricesOne(size, HomogenousMatrixT4<T>(true));
 		performanceOne.stop();
 
+		OCEAN_EXPECT_EQUAL(validation, matricesOne.size(), size);
+
 		performanceZero.start();
-		for (HomogenousMatrices4::iterator i = matrices2.begin(); i != matrices2.end(); ++i)
-			*i = HomogenousMatrix4(false);
+			const HomogenousMatricesT4<T> matricesZero(size, HomogenousMatrixT4<T>(false));
 		performanceZero.stop();
+
+		OCEAN_EXPECT_EQUAL(validation, matricesZero.size(), size);
+
+		{
+			// testing identity
+
+			const VectorT3<T> random(RandomT<T>::vector3(-1000, 1000));
+			const VectorT3<T> result(HomogenousMatrixT4<T>(true) * random);
+
+			OCEAN_EXPECT_EQUAL(validation, random, result);
+		}
+
+		{
+			const VectorT3<T> random(RandomT<T>::vector3(-1000, 1000));
+			const VectorT3<T> result(HomogenousMatrixT4<T>(VectorT3<T>(0, 0, 0), SquareMatrixT3<T>(false)) * random);
+
+			OCEAN_EXPECT_TRUE(validation, result.isNull());
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	Log::info() << "Uninitialized performance: " << performanceNormal.bestMseconds() << "ms - " << performanceNormal.worstMseconds() << "ms";
-	Log::info() << "Identity matrix performance: " << performanceOne.bestMseconds() << "ms - " << performanceOne.worstMseconds() << "ms";
-	Log::info() << "Zero matrix performance: " << performanceZero.bestMseconds() << "ms - " << performanceZero.worstMseconds() << "ms";
+	Log::info() << "Uninitialized performance: " << performanceDefault;
+	Log::info() << "Identity matrix performance: " << performanceOne;
+	Log::info() << "Zero matrix performance: " << performanceZero;
 
-	bool allSucceeded = true;
+	Log::info() << "Validation: " << validation;
 
-	startTimestamp.toNow();
-	do
-	{
-		const Vector3 random(Random::vector3(-1000, 1000));
-		const Vector3 result(HomogenousMatrix4(true) * random);
-
-		if (random != result)
-			allSucceeded = false;
-	}
-	while (startTimestamp + testDuration > Timestamp(true));
-
-	startTimestamp.toNow();
-	do
-	{
-		const Vector3 random(Random::vector3(-1000, 1000));
-		const Vector3 result(HomogenousMatrix4(Vector3(0, 0, 0), SquareMatrix3(false)) * random);
-
-		if (!result.isNull())
-			allSucceeded = false;
-	}
-	while (startTimestamp + testDuration > Timestamp(true));
-
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
+template <typename T>
 bool TestHomogenousMatrix4::testElementConstructor(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Element-based constructor test:";
+	Log::info() << "Element-based constructor test for " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
 	RandomGenerator randomGenerator;
 
-	const double epsilon = 0.0001;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -227,330 +277,395 @@ bool TestHomogenousMatrix4::testElementConstructor(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			float floatValues[16];
 			double doubleValues[16];
+			float floatValues[16];
 			Scalar scalarValues[16];
 
 			for (unsigned int i = 0u; i < 16u; ++i)
 			{
-				doubleValues[i] = RandomT<double>::scalar(randomGenerator, -100, 100);
+				doubleValues[i] = RandomD::scalar(randomGenerator, -100, 100);
 				floatValues[i] = float(doubleValues[i]);
 				scalarValues[i] = Scalar(doubleValues[i]);
 			}
 
-			const HomogenousMatrixT4<float> floatMatrixA(floatValues);
-			const HomogenousMatrixT4<float> floatMatrixB(floatValues, false);
-			const HomogenousMatrixT4<float> floatMatrixBTransposed(floatValues, true);
+			const HomogenousMatrixT4<T> aMatrixFromDouble(doubleValues);
+			const HomogenousMatrixT4<T> bMatrixFromDouble(doubleValues, false);
+			const HomogenousMatrixT4<T> bMatrixFromDoubleTransposed(doubleValues, true);
 
-			const HomogenousMatrixT4<float> floatMatrixC(doubleValues);
-			const HomogenousMatrixT4<float> floatMatrixD(doubleValues, false);
-			const HomogenousMatrixT4<float> floatMatrixDTransposed(doubleValues, true);
+			const HomogenousMatrixT4<T> aMatrixFromFloat(floatValues);
+			const HomogenousMatrixT4<T> bMatrixFromFloat(floatValues, false);
+			const HomogenousMatrixT4<T> bMatrixFromFloatTransposed(floatValues, true);
 
+			const HomogenousMatrixT4<T> aMatrixFromScalar(scalarValues);
+			const HomogenousMatrixT4<T> bMatrixFromScalar(scalarValues, false);
+			const HomogenousMatrixT4<T> bMatrixFromScalarTransposed(scalarValues, true);
 
-			const HomogenousMatrixT4<double> doubleMatrixA(floatValues);
-			const HomogenousMatrixT4<double> doubleMatrixB(floatValues, false);
-			const HomogenousMatrixT4<double> doubleMatrixBTransposed(floatValues, true);
-
-			const HomogenousMatrixT4<double> doubleMatrixC(doubleValues);
-			const HomogenousMatrixT4<double> doubleMatrixD(doubleValues, false);
-			const HomogenousMatrixT4<double> doubleMatrixDTransposed(doubleValues, true);
-
-
-			const HomogenousMatrix4 scalarMatrixA(floatValues);
-			const HomogenousMatrix4 scalarMatrixB(floatValues, false);
-			const HomogenousMatrix4 scalarMatrixBTransposed(floatValues, true);
-
-			const HomogenousMatrix4 scalarMatrixC(doubleValues);
-			const HomogenousMatrix4 scalarMatrixD(doubleValues, false);
-			const HomogenousMatrix4 scalarMatrixDTransposed(doubleValues, true);
-
-
-			HomogenousMatrixT4<float> floatTest, floatTestTransposed;
-			HomogenousMatrixT4<double> doubleTest, doubleTestTransposed;
-			HomogenousMatrix4 scalarTest, scalarTestTransposed;
+			HomogenousMatrixF4 floatTest;
+			HomogenousMatrixF4 floatTestTransposed;
+			HomogenousMatrixD4 doubleTest;
+			HomogenousMatrixD4 doubleTestTransposed;
+			HomogenousMatrix4 scalarTest;
+			HomogenousMatrix4 scalarTestTransposed;
 
 			unsigned int index = 0u;
-			for (unsigned int c = 0u; c < 4u; ++c)
-				for (unsigned int r = 0u; r < 4u; ++r)
+
+			for (unsigned int column = 0u; column < 4u; ++column)
+			{
+				for (unsigned int row = 0u; row < 4u; ++row)
 				{
-					floatTest(r, c) = floatValues[index];
-					doubleTest(r, c) = doubleValues[index];
-					scalarTest(r, c) = scalarValues[index];
+					floatTest(row, column) = floatValues[index];
+					doubleTest(row, column) = doubleValues[index];
+					scalarTest(row, column) = scalarValues[index];
 
-					floatTestTransposed(c, r) = floatValues[index];
-					doubleTestTransposed(c, r) = doubleValues[index];
-					scalarTestTransposed(c, r) = scalarValues[index];
+					floatTestTransposed(column, row) = floatValues[index];
+					doubleTestTransposed(column, row) = doubleValues[index];
+					scalarTestTransposed(column, row) = scalarValues[index];
 
-					index++;
+					++index;
 				}
+			}
 
 			ocean_assert(index == 16u);
 
-			if (!floatMatrixA.isEqual(floatTest, float(epsilon)))
-				allSucceeded = false;
-			if (!floatMatrixB.isEqual(floatTest, float(epsilon)))
-				allSucceeded = false;
-			if (!floatMatrixBTransposed.isEqual(floatTestTransposed, float(epsilon)))
-				allSucceeded = false;
+			constexpr T eps = T(0.0001);
 
-			if (!floatMatrixC.isEqual(floatTest, float(epsilon)))
-				allSucceeded = false;
-			if (!floatMatrixD.isEqual(floatTest, float(epsilon)))
-				allSucceeded = false;
-			if (!floatMatrixDTransposed.isEqual(floatTestTransposed, float(epsilon)))
-				allSucceeded = false;
-
-
-			if (!doubleMatrixA.isEqual(doubleTest, double(epsilon)))
-				allSucceeded = false;
-			if (!doubleMatrixB.isEqual(doubleTest, double(epsilon)))
-				allSucceeded = false;
-			if (!doubleMatrixBTransposed.isEqual(doubleTestTransposed, double(epsilon)))
-				allSucceeded = false;
-
-			if (!doubleMatrixC.isEqual(doubleTest, double(epsilon)))
-				allSucceeded = false;
-			if (!doubleMatrixD.isEqual(doubleTest, double(epsilon)))
-				allSucceeded = false;
-			if (!doubleMatrixDTransposed.isEqual(doubleTestTransposed, double(epsilon)))
-				allSucceeded = false;
-
-
-			if (!scalarMatrixA.isEqual(scalarTest, Scalar(epsilon)))
-				allSucceeded = false;
-			if (!scalarMatrixB.isEqual(scalarTest, Scalar(epsilon)))
-				allSucceeded = false;
-			if (!scalarMatrixBTransposed.isEqual(scalarTestTransposed, Scalar(epsilon)))
-				allSucceeded = false;
-
-			if (!scalarMatrixC.isEqual(scalarTest, Scalar(epsilon)))
-				allSucceeded = false;
-			if (!scalarMatrixD.isEqual(scalarTest, Scalar(epsilon)))
-				allSucceeded = false;
-			if (!scalarMatrixDTransposed.isEqual(scalarTestTransposed, Scalar(epsilon)))
-				allSucceeded = false;
-		}
-	}
-	while (startTimestamp + testDuration > Timestamp(true));
-
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
-
-	return allSucceeded;
-}
-
-bool TestHomogenousMatrix4::testInvert(const double testDuration)
-{
-	const size_t size = 1000000;
-
-	Log::info() << "Invert test for " << String::insertCharacter(String::toAString(size), ',', 3, false) << " matrices:";
-
-	HomogenousMatrices4 matrices(size, HomogenousMatrix4(true));
-
-	HighPerformanceStatistic performance;
-
-	Timestamp startTimestamp(true);
-	do
-	{
-		performance.start();
-		for (HomogenousMatrices4::iterator i = matrices.begin(); i != matrices.end(); ++i)
-			i->invert();
-		performance.stop();
-	}
-	while (startTimestamp + testDuration > Timestamp(true));
-
-	Log::info() << "Performance: " << performance.bestMseconds() << "ms - " << performance.firstMseconds() << "ms";
-
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
-
-	const HomogenousMatrix4 entity(true);
-
-	startTimestamp.toNow();
-	do
-	{
-		bool localSucceeded = true;
-
-		const Vector3 translation(Random::vector3(-100, 100));
-		const Rotation rotation(Random::rotation());
-		const Vector3 scale(Random::vector3(Scalar(0.001), 100));
-
-		const HomogenousMatrix4 transform(translation, rotation, scale);
-
-		{
-			const HomogenousMatrix4 invertedTransform(transform.inverted());
-
-			const HomogenousMatrix4 result0(transform * invertedTransform);
-			const HomogenousMatrix4 result1(invertedTransform * transform);
-
-			for (unsigned int n = 0u; n < 16u; ++n)
-				if (!result0.isValid() || !result1.isValid() || Numeric::isNotWeakEqual(entity[n], result0[n]) || Numeric::isNotWeakEqual(entity[n], result1[n]))
-					localSucceeded = false;
-		}
-
-		{
-			HomogenousMatrix4 invertedTransform(transform);
-			invertedTransform.invert();
-
-			const HomogenousMatrix4 result0(transform * invertedTransform);
-			const HomogenousMatrix4 result1(invertedTransform * transform);
-
-			for (unsigned int n = 0u; n < 16u; ++n)
-				if (!result0.isValid() || !result1.isValid() || Numeric::isNotWeakEqual(entity[n], result0[n]) || Numeric::isNotWeakEqual(entity[n], result1[n]))
-					localSucceeded = false;
-		}
-
-		{
-			HomogenousMatrix4 invertedTransform;
-			transform.invert(invertedTransform);
-
-			const HomogenousMatrix4 result0(transform * invertedTransform);
-			const HomogenousMatrix4 result1(invertedTransform * transform);
-
-			for (unsigned int n = 0u; n < 16u; ++n)
-				if (!result0.isValid() || !result1.isValid() || Numeric::isNotWeakEqual(entity[n], result0[n]) || Numeric::isNotWeakEqual(entity[n], result1[n]))
-					localSucceeded = false;
-		}
-
-		iterations++;
-
-		if (localSucceeded)
-			succeeded++;
-	}
-	while (startTimestamp + testDuration > Timestamp(true));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
-
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
-}
-
-bool TestHomogenousMatrix4::testDecomposition(const double testDuration)
-{
-	const size_t size = 1000;
-
-	Log::info() << "Decomposition test for " << String::insertCharacter(String::toAString(size), ',', 3, false) << " matrices:";
-
-	HighPerformanceStatistic performance;
-
-	Timestamp startTimestamp(true);
-	do
-	{
-		HomogenousMatrices4 matrices;
-		matrices.reserve(size);
-
-		for (size_t n = 0; n < size; ++n)
-		{
-			const Vector3 translation(Random::vector3() * 10);
-			const Quaternion rotation(Random::quaternion());
-			const Vector3 scale(Random::vector3(Scalar(0.1), Scalar(5)));
-			const Vector3 shear(Random::vector3(Scalar(0), Scalar(2)));
-
-			const HomogenousMatrix4 matrix(translation, rotation, scale, shear);
-			ocean_assert(matrix.isValid());
-
-			matrices.push_back(matrix);
-		}
-
-		Vector3 dTranslation;
-		Quaternion dRotation;
-		Vector3 dScale;
-		Vector3 dShear;
-
-		performance.start();
-
-		// dummy value to ensure that the code is not optimized
-		Scalar value = 0;
-
-		for (size_t n = 0; n < size; ++n)
-		{
-			matrices[n].decompose(dTranslation, dRotation, dScale, dShear);
-			value += dTranslation[0];
-		}
-
-		if (value == 0)
-			performance.stop();
-		else
-			performance.stop();
-	}
-	while (startTimestamp + testDuration > Timestamp(true));
-
-	Log::info() << "Performance: " << performance.bestMseconds() << "ms - " << performance.firstMseconds() << "ms";
-
-	unsigned long long iterations = 0ull;
-	unsigned long long succeeded = 0ull;
-
-	startTimestamp.toNow();
-	do
-	{
-		const Vector3 translation(Random::vector3() * 10);
-		const Quaternion rotation(Random::quaternion());
-		const Vector3 scale(Random::vector3(Scalar(0.1), Scalar(5)));
-		const Vector3 shear(Random::vector3(Scalar(0), Scalar(2)));
-
-		const HomogenousMatrix4 matrix(translation, rotation, scale, shear);
-		ocean_assert(matrix.isValid());
-
-		Vector3 dTranslation;
-		Quaternion dRotation;
-		Vector3 dScale;
-		Vector3 dShear;
-
-		if (matrix.decompose(dTranslation, dRotation, dScale, dShear))
-		{
-			const bool bTranslation = dTranslation == translation;
-			const bool bRotation = dRotation == rotation;
-			const bool bScale = dScale == scale;
-			const bool bShear = dShear == shear;
-
-			if (bTranslation && bRotation && bScale && bShear)
-				succeeded++;
+			if constexpr (std::is_same<T, float>::value)
+			{
+				OCEAN_EXPECT_EQUAL(validation, aMatrixFromFloat, floatTest);
+				OCEAN_EXPECT_EQUAL(validation, bMatrixFromFloat, floatTest);
+				OCEAN_EXPECT_EQUAL(validation, bMatrixFromFloatTransposed, floatTestTransposed);
+			}
 			else
 			{
-				const HomogenousMatrix4 testMatrix(dTranslation, dRotation, dScale, dShear);
+				OCEAN_EXPECT_TRUE(validation, aMatrixFromFloat.isEqual(doubleTest, eps));
+				OCEAN_EXPECT_TRUE(validation, bMatrixFromFloat.isEqual(doubleTest, eps));
+				OCEAN_EXPECT_TRUE(validation, bMatrixFromFloatTransposed.isEqual(doubleTestTransposed, eps));
+			}
 
-				bool localSucceeded = true;
+			if constexpr (std::is_same<T, double>::value)
+			{
+				OCEAN_EXPECT_EQUAL(validation, aMatrixFromDouble, doubleTest);
+				OCEAN_EXPECT_EQUAL(validation, bMatrixFromDouble, doubleTest);
+				OCEAN_EXPECT_EQUAL(validation, bMatrixFromDoubleTransposed, doubleTestTransposed);
+			}
+			else
+			{
+				OCEAN_EXPECT_TRUE(validation, aMatrixFromDouble.isEqual(floatTest, eps));
+				OCEAN_EXPECT_TRUE(validation, bMatrixFromDouble.isEqual(floatTest, eps));
+				OCEAN_EXPECT_TRUE(validation, bMatrixFromDoubleTransposed.isEqual(floatTestTransposed, eps));
+			}
 
-				for (unsigned int n = 0u; n < 16u; ++n)
-					if (Numeric::isNotWeakEqual(testMatrix[n], matrix[n]))
-						localSucceeded = false;
+			if constexpr (std::is_same<T, double>::value)
+			{
+				OCEAN_EXPECT_EQUAL(validation, aMatrixFromScalar, doubleTest);
+				OCEAN_EXPECT_EQUAL(validation, bMatrixFromScalar, doubleTest);
+				OCEAN_EXPECT_EQUAL(validation, bMatrixFromScalarTransposed, doubleTestTransposed);
+			}
+			else
+			{
+				OCEAN_EXPECT_TRUE(validation, aMatrixFromScalar.isEqual(floatTest, eps));
+				OCEAN_EXPECT_TRUE(validation, bMatrixFromScalar.isEqual(floatTest, eps));
+				OCEAN_EXPECT_TRUE(validation, bMatrixFromScalarTransposed.isEqual(floatTestTransposed, eps));
+			}
 
-				if (localSucceeded)
-					succeeded++;
+			if constexpr (std::is_same<T, Scalar>::value)
+			{
+				OCEAN_EXPECT_TRUE(validation, aMatrixFromScalar.isEqual(scalarTest, eps));
+				OCEAN_EXPECT_TRUE(validation, bMatrixFromScalar.isEqual(scalarTest, eps));
+				OCEAN_EXPECT_TRUE(validation, bMatrixFromScalarTransposed.isEqual(scalarTestTransposed, eps));
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestHomogenousMatrix4::testInvert(const double testDuration)
+{
+	constexpr size_t size = 1000000;
+
+	Log::info() << "Invert test for " << String::insertCharacter(String::toAString(size), ',', 3, false) << " matrices for " << TypeNamer::name<T>() << ":";
+
+	HighPerformanceStatistic performanceInverted;
+	HighPerformanceStatistic performanceInvert;
+	HighPerformanceStatistic performanceInvertTo;
+
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(0.99, randomGenerator);
+
+	const HomogenousMatrixT4<T> identity(true);
+
+	const Timestamp startTimestamp(true);
+
+	constexpr T identityThreshold = std::is_same<T, float>::value ? NumericT<T>::eps() * T(100) : NumericT<T>::eps();
+
+	do
+	{
+		HomogenousMatricesT4<T> matrices(size);
+
+		for (size_t n = 0; n < size; ++n)
+		{
+			const VectorT3<T> translation(RandomT<T>::vector3(randomGenerator, -100, 100));
+			const RotationT<T> rotation(RandomT<T>::rotation(randomGenerator));
+			const VectorT3<T> scale(RandomT<T>::vector3(randomGenerator, T(0.01), 100));
+
+			matrices[n] = HomogenousMatrixT4<T>(translation, rotation, scale);
+		}
+
+		{
+			// testing inverted() function
+
+			HomogenousMatricesT4<T> targetMatrices(size);
+
+			performanceInverted.start();
+				for (size_t n = 0; n < size; ++n)
+				{
+					targetMatrices[n] = matrices[n].inverted();
+				}
+			performanceInverted.stop();
+
+			for (size_t n = 0; n < size; ++n)
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				const HomogenousMatrixT4<T> result0(matrices[n] * targetMatrices[n]);
+
+				if (!result0.isValid())
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (!result0.isEqual(identity, identityThreshold))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				const HomogenousMatrixT4<T> result1(targetMatrices[n] * matrices[n]);
+
+				if (!result1.isValid())
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (!result1.isEqual(identity, identityThreshold))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 		}
 
-		iterations++;
+		{
+			// testing invert() function
+
+			HomogenousMatricesT4<T> targetMatrices(size);
+
+			performanceInvert.start();
+				for (size_t n = 0; n < size; ++n)
+				{
+					targetMatrices[n] = matrices[n];
+					targetMatrices[n].invert();
+				}
+			performanceInvert.stop();
+
+			for (size_t n = 0; n < size; ++n)
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				const HomogenousMatrixT4<T> result0(matrices[n] * targetMatrices[n]);
+
+				if (!result0.isValid())
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (!result0.isEqual(identity, identityThreshold))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				const HomogenousMatrixT4<T> result1(targetMatrices[n] * matrices[n]);
+
+				if (!result1.isValid())
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (!result1.isEqual(identity, identityThreshold))
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+		}
+
+		{
+			// testing invert(target) function
+
+			HomogenousMatricesT4<T> targetMatrices(size);
+
+			performanceInvertTo.start();
+				for (size_t n = 0; n < size; ++n)
+				{
+					matrices[n].invert(targetMatrices[n]);
+				}
+			performanceInvertTo.stop();
+
+			for (size_t n = 0; n < size; ++n)
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				const HomogenousMatrixT4<T> result0(matrices[n] * targetMatrices[n]);
+
+				if (!result0.isValid())
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (!result0.isEqual(identity, identityThreshold))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				const HomogenousMatrixT4<T> result1(targetMatrices[n] * matrices[n]);
+
+				if (!result1.isValid())
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (!result1.isEqual(identity, identityThreshold))
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Performance inverted(): " << performanceInverted;
+	Log::info() << "Performance invert(): " << performanceInvert;
+	Log::info() << "Performance invert(target): " << performanceInvertTo;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
+template <typename T>
+bool TestHomogenousMatrix4::testDecomposition(const double testDuration)
+{
+	constexpr size_t size = 1000;
+
+	Log::info() << "Decomposition test for " << String::insertCharacter(String::toAString(size), ',', 3, false) << " matrices for " << TypeNamer::name<T>() << ":";
+
+	HighPerformanceStatistic performance;
+
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(0.99, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		VectorsT3<T> translations;
+		QuaternionsT<T> rotations;
+		VectorsT3<T> scales;
+		VectorsT3<T> shears;
+
+		HomogenousMatricesT4<T> matrices;
+
+		for (size_t n = 0; n < size; ++n)
+		{
+			const VectorT3<T> translation = RandomT<T>::vector3(randomGenerator) * T(10);
+			const QuaternionT<T> rotation = RandomT<T>::quaternion(randomGenerator);
+			const VectorT3<T> scale = RandomT<T>::vector3(randomGenerator, T(0.1), T(5));
+			const VectorT3<T> shear = RandomT<T>::vector3(randomGenerator, T(0), T(2));
+
+			matrices.emplace_back(translation, rotation, scale, shear);
+
+			translations.push_back(translation);
+			rotations.push_back(rotation);
+			scales.push_back(scale);
+			shears.push_back(shear);
+		}
+
+		VectorsT3<T> decomposedTranslations(size);
+		QuaternionsT<T> decomposedRotations(size);
+		VectorsT3<T> decomposedScales(size);
+		VectorsT3<T> decomposedShears(size);
+
+		std::vector<uint8_t> results(size, 0x00u);
+
+		performance.start();
+
+			for (size_t n = 0; n < size; ++n)
+			{
+				results[n] = matrices[n].decompose(decomposedTranslations[n], decomposedRotations[n], decomposedScales[n], decomposedShears[n]) ? 0xFFu : 0x00u;
+			}
+
+		performance.stop();
+
+		for (size_t n = 0; n < size; ++n)
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			if (results[n] != 0xFFu)
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+
+			const VectorT3<T>& translation = translations[n];
+			const QuaternionT<T>& rotation = rotations[n];
+			const VectorT3<T>& scale = scales[n];
+			const VectorT3<T>& shear = shears[n];
+
+			const VectorT3<T>& decomposedTranslation = decomposedTranslations[n];
+			const QuaternionT<T>& decomposedRotation = decomposedRotations[n];
+			const VectorT3<T>& decomposedScale = decomposedScales[n];
+			const VectorT3<T>& decomposedShear = decomposedShears[n];
+
+			if (translation != decomposedTranslation || rotation != decomposedRotation || scale != decomposedScale || shear != decomposedShear)
+			{
+				const HomogenousMatrixT4<T> decomposedMatrix(decomposedTranslation, decomposedRotation, decomposedScale, decomposedShear);
+
+				if (!matrices[n].isEqual(decomposedMatrix, NumericT<T>::weakEps()))
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
 bool TestHomogenousMatrix4::testVectorConversion(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "HomogenousMatrix4::matrices2matrices() test:";
+	Log::info() << "HomogenousMatrix4::matrices2matrices() test for " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
+
 	do
 	{
-		const unsigned int size = RandomI::random(1000u);
+		const unsigned int size = RandomI::random(randomGenerator, 1u, 1000u);
 
-		std::vector<HomogenousMatrixD4> matricesD;
-		std::vector<HomogenousMatrixF4> matricesF;
+		HomogenousMatricesD4 matricesD;
+		HomogenousMatricesF4 matricesF;
 
 		for (size_t n = 0; n < size; ++n)
 		{
@@ -559,246 +674,175 @@ bool TestHomogenousMatrix4::testVectorConversion(const double testDuration)
 
 			for (unsigned int i = 0u; i < 16u; ++i)
 			{
-				matrixD[i] = RandomD::scalar(-10, 10);
-				matrixF[i] = RandomF::scalar(-10, 10);
+				const double value = RandomD::scalar(randomGenerator, -10, 10);
+
+				matrixD[i] = value;
+				matrixF[i] = float(value);
 			}
 
 			matricesD.push_back(matrixD);
 			matricesF.push_back(matrixF);
 		}
 
-		const std::vector<HomogenousMatrixD4> convertedD2D_0(HomogenousMatrixD4::matrices2matrices(matricesD));
-		const std::vector<HomogenousMatrixD4> convertedD2D_1(HomogenousMatrixD4::matrices2matrices(matricesD.data(), matricesD.size()));
+		const HomogenousMatricesT4<T> convertedFromDouble0(HomogenousMatrixT4<T>::matrices2matrices(matricesD));
+		const HomogenousMatricesT4<T> convertedFromDouble1(HomogenousMatrixT4<T>::matrices2matrices(matricesD.data(), matricesD.size()));
 
-		const std::vector<HomogenousMatrixF4> convertedD2F_0(HomogenousMatrixF4::matrices2matrices(matricesD));
-		const std::vector<HomogenousMatrixF4> convertedD2F_1(HomogenousMatrixF4::matrices2matrices(matricesD.data(), matricesD.size()));
+		const HomogenousMatricesT4<T> convertedFromFloat0(HomogenousMatrixT4<T>::matrices2matrices(matricesF));
+		const HomogenousMatricesT4<T> convertedFromFloat1(HomogenousMatrixT4<T>::matrices2matrices(matricesF.data(), matricesF.size()));
 
-		const std::vector<HomogenousMatrixD4> convertedF2D_0(HomogenousMatrixD4::matrices2matrices(matricesF));
-		const std::vector<HomogenousMatrixD4> convertedF2D_1(HomogenousMatrixD4::matrices2matrices(matricesF.data(), matricesF.size()));
-
-		const std::vector<HomogenousMatrixF4> convertedF2F_0(HomogenousMatrixF4::matrices2matrices(matricesF));
-		const std::vector<HomogenousMatrixF4> convertedF2F_1(HomogenousMatrixF4::matrices2matrices(matricesF.data(), matricesF.size()));
-
-		for (size_t n = 0; n < size; ++n)
+		if constexpr (std::is_same<T, float>::value)
 		{
-			for (unsigned int i = 0u; i < 16u; ++i)
+			for (size_t n = 0; n < size; ++n)
 			{
-				if (NumericD::isNotWeakEqual(matricesD[n][i], convertedD2D_0[n][i]))
-					allSucceeded = false;
+				const HomogenousMatrixF4& matrix = matricesF[n];
 
-				if (NumericD::isNotWeakEqual(matricesD[n][i], convertedD2D_1[n][i]))
-					allSucceeded = false;
+				for (unsigned int i = 0u; i < 16u; ++i)
+				{
+					OCEAN_EXPECT_TRUE(validation, convertedFromDouble0[n].isEqual(matrix, NumericF::weakEps()));
+					OCEAN_EXPECT_TRUE(validation, convertedFromDouble1[n].isEqual(matrix, NumericF::weakEps()));
 
-				if (NumericD::isNotWeakEqual(matricesD[n][i], double(convertedD2F_0[n][i])))
-					allSucceeded = false;
+					OCEAN_EXPECT_EQUAL(validation, convertedFromFloat0[n], matrix);
+					OCEAN_EXPECT_EQUAL(validation, convertedFromFloat1[n], matrix);
+				}
+			}
+		}
+		else
+		{
+			for (size_t n = 0; n < size; ++n)
+			{
+				const HomogenousMatrixD4& matrix = matricesD[n];
 
-				if (NumericD::isNotWeakEqual(matricesD[n][i], double(convertedD2F_1[n][i])))
-					allSucceeded = false;
+				for (unsigned int i = 0u; i < 16u; ++i)
+				{
+					OCEAN_EXPECT_EQUAL(validation, convertedFromDouble0[n], matrix);
+					OCEAN_EXPECT_EQUAL(validation, convertedFromDouble1[n], matrix);
 
-
-				if (NumericF::isNotWeakEqual(matricesF[n][i], convertedF2F_0[n][i]))
-					allSucceeded = false;
-
-				if (NumericF::isNotWeakEqual(matricesF[n][i], convertedF2F_1[n][i]))
-					allSucceeded = false;
-
-				if (NumericF::isNotWeakEqual(matricesF[n][i], float(convertedF2D_0[n][i])))
-					allSucceeded = false;
-
-				if (NumericF::isNotWeakEqual(matricesF[n][i], float(convertedF2D_1[n][i])))
-					allSucceeded = false;
+					OCEAN_EXPECT_TRUE(validation, convertedFromFloat0[n].isEqual(matrix, NumericD::weakEps()));
+					OCEAN_EXPECT_TRUE(validation, convertedFromFloat1[n].isEqual(matrix, NumericD::weakEps()));
+				}
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
+template <typename T>
 bool TestHomogenousMatrix4::testCopyElements(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "HomogenousMatrix4::copyElements() test:";
+	Log::info() << "HomogenousMatrix4::copyElements() test for " << TypeNamer::name<T>() << ":";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
+
 	do
 	{
-		HomogenousMatrix4 matrix(true);
-		HomogenousMatrixF4 matrixF(true);
-		HomogenousMatrixD4 matrixD(true);
+		HomogenousMatrixT4<T> matrix;
 
-		for (unsigned int r = 0u; r < 3u; ++r)
+		for (unsigned n = 0u; n < 16u; ++n)
 		{
-			for (unsigned int c = 0u; c < 4u; ++c)
-			{
-				const float value = RandomF::scalar(-10, 10);
-
-				matrix(r, c) = Scalar(value);
-				matrixF(r, c) = value;
-				matrixD(r, c) = double(value);
-			}
+			matrix[n] = RandomT<T>::scalar(randomGenerator, -10, 10);
 		}
 
 		{
-			// testing copyElements() of matrix (based on Scalar):
+			// column aligned
 
-			Scalar columnAlignedData[16];
-			float columnAlignedDataF[16];
-			double columnAlignedDataD[16];
-			matrix.copyElements(columnAlignedData);
-			matrix.copyElements(columnAlignedDataF);
-			matrix.copyElements(columnAlignedDataD);
+			Scalar columnAlignedValues[16];
+			float columnAlignedValuesF[16];
+			double columnAlignedValuesD[16];
 
-			if (HomogenousMatrix4(columnAlignedData) != matrix)
+			matrix.copyElements(columnAlignedValues);
+			matrix.copyElements(columnAlignedValuesF);
+			matrix.copyElements(columnAlignedValuesD);
+
+			for (unsigned int n = 0u; n < 16u; ++n)
 			{
-				return false;
+				if constexpr (std::is_same<T, float>::value)
+				{
+					OCEAN_EXPECT_EQUAL(validation, matrix[n], columnAlignedValuesF[n]);
+
+					OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(matrix[n], T(columnAlignedValuesD[n])));
+				}
+				else
+				{
+					OCEAN_EXPECT_EQUAL(validation, matrix[n], columnAlignedValuesD[n]);
+
+					OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(matrix[n], T(columnAlignedValuesF[n])));
+				}
+
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(matrix[n], T(columnAlignedValues[n])));
 			}
 
-			if (HomogenousMatrixF4(columnAlignedDataF) != matrixF)
-			{
-				return false;
-			}
-
-			if (HomogenousMatrixD4(columnAlignedDataD) != matrixD)
-			{
-				return false;
-			}
-
-			Scalar rowAlignedData[16];
-			float rowAlignedDataF[16];
-			double rowAlignedDataD[16];
-			matrix.copyElements(rowAlignedData, true);
-			matrix.copyElements(rowAlignedDataF, true);
-			matrix.copyElements(rowAlignedDataD, true);
-
-			if (SquareMatrix4(rowAlignedData).transposed() != SquareMatrix4(matrix))
-			{
-				return false;
-			}
-
-			if (SquareMatrixF4(rowAlignedDataF).transposed() != SquareMatrixF4(matrixF))
-			{
-				return false;
-			}
-
-			if (SquareMatrixD4(rowAlignedDataD).transposed() != SquareMatrixD4(matrixD))
-			{
-				return false;
-			}
+			OCEAN_EXPECT_TRUE(validation, HomogenousMatrixT4<T>(columnAlignedValues).isEqual(matrix, NumericT<T>::weakEps()));
+			OCEAN_EXPECT_TRUE(validation, HomogenousMatrixT4<T>(columnAlignedValuesF).isEqual(matrix, NumericT<T>::weakEps()));
+			OCEAN_EXPECT_TRUE(validation, HomogenousMatrixT4<T>(columnAlignedValuesD).isEqual(matrix, NumericT<T>::weakEps()));
 		}
 
 		{
-			// testing copyElements() of matrixF (based on float):
+			// row aligned
 
-			Scalar columnAlignedData[16];
-			float columnAlignedDataF[16];
-			double columnAlignedDataD[16];
-			matrixF.copyElements(columnAlignedData);
-			matrixF.copyElements(columnAlignedDataF);
-			matrixF.copyElements(columnAlignedDataD);
+			Scalar rowAlignedValues[16];
+			float rowAlignedValuesF[16];
+			double rowAlignedValuesD[16];
 
-			if (HomogenousMatrix4(columnAlignedData) != matrix)
+			matrix.copyElements(rowAlignedValues, true);
+			matrix.copyElements(rowAlignedValuesF, true);
+			matrix.copyElements(rowAlignedValuesD, true);
+
+			for (unsigned int n = 0u; n < 16u; ++n)
 			{
-				return false;
+				constexpr std::array<unsigned int, 16u> lookup =
+				{
+					0u, 4u,  8u, 12u,
+					1u, 5u,  9u, 13u,
+					2u, 6u, 10u, 14u,
+					3u, 7u, 11u, 15u
+				};
+
+				const unsigned int nTransposed = lookup[n];
+
+				if constexpr (std::is_same<T, float>::value)
+				{
+					OCEAN_EXPECT_EQUAL(validation, matrix[n], rowAlignedValuesF[nTransposed]);
+
+					OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(matrix[n], T(rowAlignedValuesD[nTransposed])));
+				}
+				else
+				{
+					OCEAN_EXPECT_EQUAL(validation, matrix[n], rowAlignedValuesD[nTransposed]);
+
+					OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(matrix[n], T(rowAlignedValuesF[nTransposed])));
+				}
+
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(matrix[n], T(rowAlignedValues[nTransposed])));
 			}
 
-			if (HomogenousMatrixF4(columnAlignedDataF) != matrixF)
-			{
-				return false;
-			}
+			OCEAN_EXPECT_TRUE(validation, HomogenousMatrixT4<T>(rowAlignedValues, true).isEqual(matrix, NumericT<T>::weakEps()));
+			OCEAN_EXPECT_TRUE(validation, HomogenousMatrixT4<T>(rowAlignedValuesF, true).isEqual(matrix, NumericT<T>::weakEps()));
+			OCEAN_EXPECT_TRUE(validation, HomogenousMatrixT4<T>(rowAlignedValuesD, true).isEqual(matrix, NumericT<T>::weakEps()));
 
-			if (HomogenousMatrixD4(columnAlignedDataD) != matrixD)
-			{
-				return false;
-			}
+			OCEAN_EXPECT_TRUE(validation, SquareMatrixT4<T>(rowAlignedValues).isEqual(SquareMatrixT4<T>(matrix).transposed(), NumericT<T>::weakEps()));
+			OCEAN_EXPECT_TRUE(validation, SquareMatrixT4<T>(rowAlignedValuesF).isEqual(SquareMatrixT4<T>(matrix).transposed(), NumericT<T>::weakEps()));
+			OCEAN_EXPECT_TRUE(validation, SquareMatrixT4<T>(rowAlignedValuesD).isEqual(SquareMatrixT4<T>(matrix).transposed(), NumericT<T>::weakEps()));
 
-			Scalar rowAlignedData[16];
-			float rowAlignedDataF[16];
-			double rowAlignedDataD[16];
-			matrixF.copyElements(rowAlignedData, true);
-			matrixF.copyElements(rowAlignedDataF, true);
-			matrixF.copyElements(rowAlignedDataD, true);
-
-			if (SquareMatrix4(rowAlignedData).transposed() != SquareMatrix4(matrix))
-			{
-				return false;
-			}
-
-			if (SquareMatrixF4(rowAlignedDataF).transposed() != SquareMatrixF4(matrixF))
-			{
-				return false;
-			}
-
-			if (SquareMatrixD4(rowAlignedDataD).transposed() != SquareMatrixD4(matrixD))
-			{
-				return false;
-			}
-		}
-
-		{
-			// testing copyElements() of matrixD (based on double):
-
-			Scalar columnAlignedData[16];
-			float columnAlignedDataF[16];
-			double columnAlignedDataD[16];
-			matrixD.copyElements(columnAlignedData);
-			matrixD.copyElements(columnAlignedDataF);
-			matrixD.copyElements(columnAlignedDataD);
-
-			if (HomogenousMatrix4(columnAlignedData) != matrix)
-			{
-				return false;
-			}
-
-			if (HomogenousMatrixF4(columnAlignedDataF) != matrixF)
-			{
-				return false;
-			}
-
-			if (HomogenousMatrixD4(columnAlignedDataD) != matrixD)
-			{
-				return false;
-			}
-
-			Scalar rowAlignedData[16];
-			float rowAlignedDataF[16];
-			double rowAlignedDataD[16];
-			matrixD.copyElements(rowAlignedData, true);
-			matrixD.copyElements(rowAlignedDataF, true);
-			matrixD.copyElements(rowAlignedDataD, true);
-
-			if (SquareMatrix4(rowAlignedData).transposed() != SquareMatrix4(matrix))
-			{
-				return false;
-			}
-
-			if (SquareMatrixF4(rowAlignedDataF).transposed() != SquareMatrixF4(matrixF))
-			{
-				return false;
-			}
-
-			if (SquareMatrixD4(rowAlignedDataD).transposed() != SquareMatrixD4(matrixD))
-			{
-				return false;
-			}
+			OCEAN_EXPECT_TRUE(validation, SquareMatrixT4<T>(HomogenousMatrixT4<T>(rowAlignedValues)).transposed().isEqual(SquareMatrixT4<T>(matrix), NumericT<T>::weakEps()));
+			OCEAN_EXPECT_TRUE(validation, SquareMatrixT4<T>(HomogenousMatrixT4<T>(rowAlignedValuesF)).transposed().isEqual(SquareMatrixT4<T>(matrix), NumericT<T>::weakEps()));
+			OCEAN_EXPECT_TRUE(validation, SquareMatrixT4<T>(HomogenousMatrixT4<T>(rowAlignedValuesD)).transposed().isEqual(SquareMatrixT4<T>(matrix), NumericT<T>::weakEps()));
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
