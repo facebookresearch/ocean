@@ -1868,7 +1868,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demotrackinghomographyimage
 		{FEA50A96-F160-4C9D-8313-7479649D0B2D} = {FEA50A96-F160-4C9D-8313-7479649D0B2D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demotrackingpanoramastitcher", "application\ocean\demo\tracking\panoramastitcher\win\demotrackingpanoramastitcher.vcxproj", "{EBB24061-3F87-49DB-9C79-916C23368D3B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demotrackingpanoramastitcher", "..\..\metaonly\win\vc143\application\ocean\demo\tracking\panoramastitcher\win\demotrackingpanoramastitcher.vcxproj", "{EBB24061-3F87-49DB-9C79-916C23368D3B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1E355C9E-F8E4-496A-8EF8-EF20E2945E76} = {1E355C9E-F8E4-496A-8EF8-EF20E2945E76}
 		{29326726-1FF7-40D3-B2F2-C2717AC43465} = {29326726-1FF7-40D3-B2F2-C2717AC43465}
