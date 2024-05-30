@@ -2059,7 +2059,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "supporttrackingtargetar", "
 		{FEA50A96-F160-4C9D-8313-7479649D0B2D} = {FEA50A96-F160-4C9D-8313-7479649D0B2D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demotrackingpatternrecognizer", "application\ocean\demo\tracking\patternrecognizer\win\demotrackingpatternrecognizer.vcxproj", "{9215C884-5C34-4F78-80E6-3138CA19298C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demotrackingpatternrecognizer", "..\..\metaonly\win\vc143\application\ocean\demo\tracking\patternrecognizer\win\demotrackingpatternrecognizer.vcxproj", "{9215C884-5C34-4F78-80E6-3138CA19298C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1DE8F85F-8278-40BC-AEBC-CB9D448DA28E} = {1DE8F85F-8278-40BC-AEBC-CB9D448DA28E}
 		{1E355C9E-F8E4-496A-8EF8-EF20E2945E76} = {1E355C9E-F8E4-496A-8EF8-EF20E2945E76}
