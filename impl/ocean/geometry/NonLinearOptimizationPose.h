@@ -12,7 +12,6 @@
 #include "ocean/geometry/NonLinearOptimization.h"
 
 #include "ocean/math/AnyCamera.h"
-#include "ocean/math/FisheyeCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
 #include "ocean/math/PinholeCamera.h"
 
@@ -39,11 +38,6 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		 * Forward declaration of a class implementing an advanced provider allowing to optimize a pinhole camera pose.
 		 */
 		class AdvancedPinholeCameraPoseOptimizationProvider;
-
-		/**
-		 * Forward declaration of a class implementing an advanced provider allowing to optimize a fisheye camera pose.
-		 */
-		class AdvancedFisheyeCameraPoseOptimizationProvider;
 
 		/**
 		 * Forward declaration of a class implementing an advanced provider allowing to optimize any camera pose.

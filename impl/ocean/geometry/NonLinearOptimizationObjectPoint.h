@@ -12,7 +12,6 @@
 #include "ocean/geometry/NonLinearOptimization.h"
 
 #include "ocean/math/AnyCamera.h"
-#include "ocean/math/FisheyeCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
 #include "ocean/math/PinholeCamera.h"
 #include "ocean/math/SquareMatrix3.h"

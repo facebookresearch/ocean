@@ -741,7 +741,7 @@ class NonLinearOptimizationPose::AdvancedAnyCameraPoseOptimizationProvider : pub
 
 		/**
 		 * Creates a new advanced optimization provider object.
-		 * @param fisheyeCamera Fisheye camera object to be used
+		 * @param anyCamera The camera profile defining the projection, must be valid
 		 * @param flippedCamera_P_world Initial inverted and flipped pose that has to be optimized
 		 * @param objectPoints 3D object points that are projected into the camera frame
 		 * @param imagePoints 2D observation image points, each point corresponds to one object point

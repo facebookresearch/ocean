@@ -15,13 +15,10 @@
 
 #include "ocean/math/AnyCamera.h"
 #include "ocean/math/PinholeCamera.h"
-#include "ocean/math/FisheyeCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
 #include "ocean/math/SquareMatrix3.h"
 
 #include <algorithm>
-#include <set>
-#include <vector>
 
 namespace Ocean
 {
@@ -369,25 +366,6 @@ class OCEAN_GEOMETRY_EXPORT Error
 		 */
 		template <typename TAccessorObjectPoints, typename TAccessorImagePoints, bool tUseBorderDistortionIfOutside, bool tResultingErrors, bool tResultingSqrErrors>
 		static Scalar determinePoseErrorIF(const HomogenousMatrix4& flippedCamera_T_world, const PinholeCamera& pinholeCamera, const TAccessorObjectPoints& objectPointAccessor, const TAccessorImagePoints& imagePointAccessor, const bool useDistortionParameters, const Scalar zoom = Scalar(1), Vector2* errors = nullptr, Scalar* sqrErrors = nullptr);
-
-		/**
-		 * Determines the accuracy of the camera pose based on 2D/3D correspondences.
-		 * The accuracy is determined based on the projection errors between projected 3D points and their corresponding 2D image points.
-		 * @param flippedCamera_T_world Inverted and flipped extrinsic camera matrix, must be valid
-		 * @param fisheyeCamera Fisheye camera defining the projection, must be valid
-		 * @param objectPointAccessor The accessor providing the 3D object points corresponding to the given pose
-		 * @param imagePointAccessor The accessor providing the 2D image points corresponding to the image points, one image point for each object point
-		 * @param errors Optional resulting error values individually for each given point correspondence
-		 * @param sqrErrors Optional resulting squared error values individually for each given point correspondence
-		 * @return Returns the average squared projection pixel error
-		 * @tparam TAccessorObjectPoints The template type of the accessor for the object points
-		 * @tparam TAccessorImagePoints The template type of the accessor for the image points
-		 * @tparam tUseBorderDistortionIfOutside True, to apply the camera distortion from the nearest point lying on the frame border if the point lies outside the visible camera area; False, to apply the distortion from the given position
-		 * @tparam tResultingErrors True, if errors is defined
-		 * @tparam tResultingSqrErrors True, if sqrErrors is defined
-		 */
-		template <typename TAccessorObjectPoints, typename TAccessorImagePoints, bool tUseBorderDistortionIfOutside, bool tResultingErrors, bool tResultingSqrErrors>
-		static Scalar determinePoseErrorIF(const HomogenousMatrix4& flippedCamera_T_world, const FisheyeCamera& fisheyeCamera, const TAccessorObjectPoints& objectPointAccessor, const TAccessorImagePoints& imagePointAccessor, Vector2* errors = nullptr, Scalar* sqrErrors = nullptr);
 
 		/**
 		 * Determines the accuracy of the camera pose based on 2D/3D correspondences.
@@ -885,48 +863,6 @@ Scalar Error::determinePoseErrorIF(const HomogenousMatrix4& flippedCamera_T_worl
 			{
 				sqrErrors[n] = sqrPixelError;
 			}
-		}
-	}
-
-	ocean_assert(objectPointAccessor.size() != 0);
-	return sqrAveragePixelError / Scalar(objectPointAccessor.size());
-}
-
-template <typename TAccessorObjectPoints, typename TAccessorImagePoints, bool tUseBorderDistortionIfOutside, bool tResultingErrors, bool tResultingSqrErrors>
-Scalar Error::determinePoseErrorIF(const HomogenousMatrix4& flippedCamera_T_world, const FisheyeCamera& fisheyeCamera, const TAccessorObjectPoints& objectPointAccessor, const TAccessorImagePoints& imagePointAccessor, Vector2* errors, Scalar* sqrErrors)
-{
-	ocean_assert(flippedCamera_T_world.isValid() && fisheyeCamera.isValid());
-	ocean_assert(objectPointAccessor.size() == imagePointAccessor.size());
-
-	ocean_assert((tResultingErrors && errors != nullptr) || (!tResultingErrors && errors == nullptr));
-	ocean_assert((tResultingSqrErrors && sqrErrors != nullptr) || (!tResultingSqrErrors && sqrErrors == nullptr));
-
-	if (objectPointAccessor.isEmpty())
-	{
-		return 0;
-	}
-
-	Scalar sqrAveragePixelError = 0;
-
-	for (size_t n = 0; n < objectPointAccessor.size(); ++n)
-	{
-		const Vector2 imagePoint = fisheyeCamera.projectToImageIF(flippedCamera_T_world, objectPointAccessor[n]);
-
-		const Vector2& measuredImagePoint = imagePointAccessor[n];
-
-		const Vector2 difference(imagePoint - measuredImagePoint);
-		const Scalar sqrPixelError = difference.sqr();
-
-		sqrAveragePixelError += sqrPixelError;
-
-		if constexpr (tResultingErrors)
-		{
-			errors[n] = difference;
-		}
-
-		if constexpr (tResultingSqrErrors)
-		{
-			sqrErrors[n] = sqrPixelError;
 		}
 	}
 
