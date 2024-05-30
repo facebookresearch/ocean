@@ -849,21 +849,29 @@ bool RANSAC::homographyMatrix(const ImagePoint* leftImagePoints, const ImagePoin
 	unsigned int maxValidCorrespondences = testCandidates - 1u;
 	Scalar minSquareErrors = Numeric::maxValue();
 
-	if (worker)
+	if (worker != nullptr)
 	{
 		Lock lock;
 
 		if constexpr (tUseSVD)
-			worker->executeFunction(Worker::Function::createStatic(&geometricTransformSubset, Homography::homographyMatrixSVD, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &homography, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, (Lock*)&lock, 0u, 0u), 0u, iterations, 12u, 13u, 5u);
+		{
+			worker->executeFunction(Worker::Function::createStatic(&geometricTransformSubset, Homography::homographyMatrixSVD, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &homography, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, (Lock*)(&lock), 0u, 0u), 0u, iterations, 12u, 13u, 5u);
+		}
 		else
-			worker->executeFunction(Worker::Function::createStatic(&geometricTransformSubset, Homography::homographyMatrixLinearWithoutOptimations, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &homography, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, (Lock*)&lock, 0u, 0u), 0u, iterations, 12u, 13u, 5u);
+		{
+			worker->executeFunction(Worker::Function::createStatic(&geometricTransformSubset, Homography::homographyMatrixLinearWithoutOptimations, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &homography, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, (Lock*)(&lock), 0u, 0u), 0u, iterations, 12u, 13u, 5u);
+		}
 	}
 	else
 	{
 		if constexpr (tUseSVD)
+		{
 			geometricTransformSubset(Homography::homographyMatrixSVD, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &homography, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, nullptr, 0u, iterations);
+		}
 		else
+		{
 			geometricTransformSubset(Homography::homographyMatrixLinearWithoutOptimations, leftImagePoints, rightImagePoints, correspondences, &randomGenerator, &homography, testCandidates, squarePixelErrorThreshold, indices, &maxValidCorrespondences, &minSquareErrors, nullptr, 0u, iterations);
+		}
 	}
 
 	if (maxValidCorrespondences < testCandidates || homography.isSingular())
@@ -893,14 +901,14 @@ bool RANSAC::homographyMatrix(const ImagePoint* leftImagePoints, const ImagePoin
 				{
 					if (rightImagePoints[n].sqrDistance(homography * leftImagePoints[n]) <= squarePixelErrorThreshold)
 					{
-						indices->push_back((unsigned int)n);
+						indices->emplace_back(Index32(n));
 					}
 				}
 			}
 		}
 	}
 
-	if (usedIndices)
+	if (usedIndices != nullptr)
 	{
 		*usedIndices = std::move(tmpIndices);
 	}
@@ -927,7 +935,7 @@ bool RANSAC::homographyMatrixForNonBijectiveCorrespondences(const ImagePoint* le
 	unsigned int maxValidCorrespondences = testCandidates - 1u;
 	Scalar minSquareErrors = Numeric::maxValue();
 
-	if (worker)
+	if (worker != nullptr)
 	{
 		Lock lock;
 
@@ -1005,7 +1013,7 @@ bool RANSAC::homographyMatrixForNonBijectiveCorrespondences(const ImagePoint* le
 		}
 	}
 
-	if (usedIndices)
+	if (usedIndices != nullptr)
 	{
 		*usedIndices = std::move(tmpIndices);
 	}

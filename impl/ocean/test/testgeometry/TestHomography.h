@@ -190,48 +190,6 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestHomography
 		 * @return True, if succeeded
 		 */
 		static bool testHomographyMatrixFromPointsAndLinesSVD(const double testDuration, const size_t correspondences);
-
-		/**
-		 * Tests the RANSAC-based function determining the homography matrix.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param refine True, to apply an successive non-linear optimization step; False, to keep the internal RANSAC result
-		 * @param useSVD True, to use the slower SVD approach (i.e., homographyMatrixSVD); False, to use the two-step approach (i.e., homographyMatrixLinear)
-		 * @param worker The worker object to distribute the computation
-		 * @return True, if succeeded
-		 */
-		static bool testHomographyMatrixRANSAC(const double testDuration, const bool refine, const bool useSVD, Worker& worker);
-
-		/**
-		 * Tests the RANSAC-based function determining the homography matrix with a specified number of point correspondences.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param points The number of point correspondences to be used, with range [4, infinity)
-		 * @param refine True, to apply an successive non-linear optimization step; False, to keep the internal RANSAC result
-		 * @param useSVD True, to use the slower SVD approach (i.e., homographyMatrixSVD); False, to use the two-step approach (i.e., homographyMatrixLinear)
-		 * @param worker The worker object to distribute the computation
-		 * @return True, if succeeded
-		 */
-		static bool testHomographyMatrixRANSAC(const double testDuration, const size_t points, const bool refine, const bool useSVD, Worker& worker);
-
-		/**
-		 * Tests the RANSAC-based function determining the homography matrix for non-bijective correspondences.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param refine True, to apply an successive non-linear optimization step; False, to keep the internal RANSAC result
-		 * @param useSVD True, to use the slower SVD approach (i.e., homographyMatrixSVD); False, to use the two-step approach (i.e., homographyMatrixLinear)
-		 * @param worker The worker object to distribute the computation
-		 * @return True, if succeeded
-		 */
-		static bool testHomographyMatrixRANSACForNonBijectiveCorrespondences(const double testDuration, const bool refine, const bool useSVD, Worker& worker);
-
-		/**
-		 * Tests the RANSAC-based function determining the homography matrix with a specified number of non-bijective point correspondences.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param points The number of point correspondences to be used, with range [4, infinity)
-		 * @param refine True, to apply an successive non-linear optimization step; False, to keep the internal RANSAC result
-		 * @param useSVD True, to use the slower SVD approach (i.e., homographyMatrixSVD); False, to use the two-step approach (i.e., homographyMatrixLinear)
-		 * @param worker The worker object to distribute the computation
-		 * @return True, if succeeded
-		 */
-		static bool testHomographyMatrixRANSACForNonBijectiveCorrespondences(const double testDuration, const size_t points, const bool refine, const bool useSVD, Worker& worker);
 };
 
 }

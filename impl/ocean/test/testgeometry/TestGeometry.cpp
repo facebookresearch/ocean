@@ -174,7 +174,7 @@ bool testGeometry(const double testDuration, Worker& worker, const std::string& 
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestRANSAC::test(testDuration, &worker) && allSucceeded;
+		allSucceeded = TestRANSAC::test(testDuration, worker) && allSucceeded;
 	}
 
 	if (testSet.empty() || testSet.find("nonlinearoptimizationcamera") != testSet.end() || testSet.find("nonlinearoptimization*") != testSet.end())

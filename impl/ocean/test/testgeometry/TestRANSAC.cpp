@@ -28,7 +28,7 @@ namespace Test
 namespace TestGeometry
 {
 
-bool TestRANSAC::test(const double testDuration, Worker* /*worker*/)
+bool TestRANSAC::test(const double testDuration, Worker& worker)
 {
 	Log::info() << "---   RANSAC test:   ---";
 	Log::info() << " ";
@@ -54,6 +54,18 @@ bool TestRANSAC::test(const double testDuration, Worker* /*worker*/)
 	Log::info() << " ";
 
 	allSucceeded = testObjectTransformationStereoAnyCamera(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testHomographyMatrix(testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testHomographyMatrixForNonBijectiveCorrespondences(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -190,6 +202,56 @@ TEST(TestRANSAC, P3PZoom)
 TEST(TestRANSAC, ObjectTransformationStereoAnyCamera)
 {
 	EXPECT_TRUE(TestRANSAC::testObjectTransformationStereoAnyCamera(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestRANSAC, HomographyMatrixNoRefinementLinear)
+{
+	Worker worker;
+	EXPECT_TRUE(TestRANSAC::testHomographyMatrix(GTEST_TEST_DURATION, false, false, worker));
+}
+
+TEST(TestRANSAC, HomographyMatrixNoRefinementSVD)
+{
+	Worker worker;
+	EXPECT_TRUE(TestRANSAC::testHomographyMatrix(GTEST_TEST_DURATION, false, true, worker));
+}
+
+TEST(TestRANSAC, HomographyMatrixWithRefinementLinear)
+{
+	Worker worker;
+	EXPECT_TRUE(TestRANSAC::testHomographyMatrix(GTEST_TEST_DURATION, true, false, worker));
+}
+
+TEST(TestRANSAC, HomographyMatrixWithRefinementSVD)
+{
+	Worker worker;
+	EXPECT_TRUE(TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(GTEST_TEST_DURATION, true, true, worker));
+}
+
+
+TEST(TestRANSAC, HomographyMatrixForNonBijectiveCorrespondencesNoRefinementLinear)
+{
+	Worker worker;
+	EXPECT_TRUE(TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(GTEST_TEST_DURATION, false, false, worker));
+}
+
+TEST(TestRANSAC, HomographyMatrixForNonBijectiveCorrespondencesNoRefinementSVD)
+{
+	Worker worker;
+	EXPECT_TRUE(TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(GTEST_TEST_DURATION, false, true, worker));
+}
+
+TEST(TestRANSAC, HomographyMatrixForNonBijectiveCorrespondencesWithRefinementLinear)
+{
+	Worker worker;
+	EXPECT_TRUE(TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(GTEST_TEST_DURATION, true, false, worker));
+}
+
+TEST(TestRANSAC, HomographyMatrixForNonBijectiveCorrespondencesWithRefinementSVD)
+{
+	Worker worker;
+	EXPECT_TRUE(TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(GTEST_TEST_DURATION, true, true, worker));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -769,6 +831,396 @@ bool TestRANSAC::testObjectTransformationStereoAnyCamera(const double testDurati
 		}
 		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
+		Log::info() << "Validation: " << validation;
+
+		if (!validation.succeeded())
+		{
+			allSucceeded = false;
+		}
+	}
+
+	return allSucceeded;
+}
+
+bool TestRANSAC::testHomographyMatrix(const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing determination of homography matrix with RANSAC for " << sizeof(Scalar) * 8 << "bit floating point precision:";
+
+	bool allSucceeded = true;
+
+	for (const bool useSVD : {false, true})
+	{
+		for (const bool refine : {false, true})
+		{
+			Log::info() << " ";
+			Log::info() << " ";
+			Log::info() << (useSVD ? "Using SVD " : "Linear ") << (refine ? "with refinement" : "without refinement");
+
+			allSucceeded = testHomographyMatrix(testDuration, refine, useSVD, worker) && allSucceeded;
+		}
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Homography RANSAC validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Homography RANSAC validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestRANSAC::testHomographyMatrix(const double testDuration, const bool refine, const bool useSVD, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	constexpr unsigned int width = 1920u;
+	constexpr unsigned int height = 1080u;
+
+	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
+
+	bool allSucceeded = true;
+
+	for (const size_t correspondences : {20, 50, 100, 200})
+	{
+		Log::info() << " ";
+		Log::info() << "... with " << correspondences << " correspondences:";
+
+		RandomGenerator randomGenerator;
+
+		constexpr double successThreshold = 0.95;
+		ValidationPrecision validation(successThreshold, randomGenerator);
+
+		HighPerformanceStatistic performanceSinglecore;
+		HighPerformanceStatistic performanceMulticore;
+
+		const Timestamp startTimestamp(true);
+
+		do
+		{
+			for (const bool useWorker : {false, true})
+			{
+				HighPerformanceStatistic& performance = useWorker ? performanceMulticore : performanceSinglecore;
+
+				// we create a realistic homography based on two camera poses and a 3D plane in front of both cameras
+
+				const Plane3 plane(Vector3(0, 0, -4), Vector3(0, 0, 1));
+
+				const HomogenousMatrix4 world_leftCamera(Random::vector3(randomGenerator, Scalar(-0.2), Scalar(0.2)), Random::euler(randomGenerator, 0, Numeric::deg2rad(10)));
+				const HomogenousMatrix4 world_rightCamera(Random::vector3(randomGenerator, Scalar(-0.2), Scalar(0.2)), Random::euler(randomGenerator, 0, Numeric::deg2rad(10)));
+
+				const SquareMatrix3 left_T_right = Geometry::Homography::homographyMatrix(world_leftCamera, world_rightCamera, pinholeCamera, pinholeCamera, plane);
+				ocean_assert_and_suppress_unused(!left_T_right.isSingular(), left_T_right);
+
+				Vectors2 pointsLeft(correspondences);
+				Vectors2 pointsRight(correspondences);
+				Vectors2 pointsRightNoisedAndFaulty(correspondences);
+
+				for (size_t n = 0; n < correspondences; ++n)
+				{
+					pointsLeft[n] = Random::vector2(randomGenerator, Scalar(0), Scalar(width), Scalar(0), Scalar(height));
+
+					Vector3 objectPoint(Numeric::minValue(), Numeric::minValue(), Numeric::minValue());
+					if (!plane.intersection(pinholeCamera.ray(pointsLeft[n], world_leftCamera), objectPoint))
+					{
+						ocean_assert(false && "This should never happen!");
+					}
+
+					ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_leftCamera), objectPoint));
+					ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_rightCamera), objectPoint));
+
+					pointsRight[n] = pinholeCamera.projectToImage<false>(world_rightCamera, objectPoint, false);
+
+					pointsRightNoisedAndFaulty[n] = pointsRight[n] + Random::vector2(randomGenerator, Scalar(-0.5), Scalar(0.5), Scalar(-0.5), Scalar(0.5));
+				}
+
+				constexpr double faultyRate = 0.2;
+
+				UnorderedIndexSet32 faultySet;
+				while (faultySet.size() < size_t(double(correspondences) * faultyRate))
+				{
+					const Index32 index = RandomI::random(randomGenerator, (unsigned int)(correspondences - 1));
+
+					if (faultySet.emplace(index).second)
+					{
+						Scalar xOffset = Random::scalar(randomGenerator, Scalar(10), Scalar(50));
+						xOffset *= Random::sign(randomGenerator);
+
+						Scalar yOffset = Random::scalar(randomGenerator, Scalar(10), Scalar(50));
+						yOffset *= Random::sign(randomGenerator);
+
+						pointsRightNoisedAndFaulty[index] += Vector2(xOffset, yOffset);
+					}
+				}
+
+				SquareMatrix3 right_H_left;
+
+				unsigned int testCandidates = 4u;
+
+				if (correspondences > 50)
+				{
+					testCandidates = RandomI::random(randomGenerator, 4u, 8u);
+				}
+
+				Indices32 dummyIndices;
+				Indices32* usedIndices = RandomI::boolean(randomGenerator) ? &dummyIndices : nullptr;
+
+				performance.start();
+					const bool result = Geometry::RANSAC::homographyMatrix(pointsLeft.data(), pointsRightNoisedAndFaulty.data(), correspondences, randomGenerator, right_H_left, testCandidates, refine, 80u, Scalar(1.5 * 1.5), usedIndices, useWorker ? &worker : nullptr, useSVD);
+				performance.stop();
+
+				if (result)
+				{
+					for (size_t n = 0; n < correspondences; ++n)
+					{
+						ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+						const Vector2 transformedPoint = right_H_left * pointsLeft[n];
+
+						if (!transformedPoint.isEqual(pointsRight[n], 4))
+						{
+							scopedIteration.setInaccurate();
+						}
+					}
+				}
+				else
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+		}
+		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+
+		Log::info() << "Performance single-core: " << performanceSinglecore;
+		Log::info() << "Performance multi-core: " << performanceMulticore;
+		Log::info() << "Multi-core boost factor: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1u) << "x (median)";
+		Log::info() << "Validation: " << validation;
+
+		if (!validation.succeeded())
+		{
+			allSucceeded = false;
+		}
+	}
+
+	return allSucceeded;
+}
+
+bool TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(const double testDuration, Worker& worker)
+{
+	Log::info() << "Testing determination of non-bijective homography matrix with RANSAC for " << sizeof(Scalar) * 8 << "bit floating point precision:";
+
+	bool allSucceeded = true;
+
+	for (const bool useSVD : {false, true})
+	{
+		for (const bool refine : {false, true})
+		{
+			Log::info() << " ";
+			Log::info() << " ";
+			Log::info() << (useSVD ? "Using SVD " : "Linear ") << (refine ? "with refinement" : "without refinement");
+
+			allSucceeded = testHomographyMatrixForNonBijectiveCorrespondences(testDuration, refine, useSVD, worker) && allSucceeded;
+		}
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Non-bijective homography RANSAC validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Non-bijective homography RANSAC validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(const double testDuration, const bool refine, const bool useSVD, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+
+	constexpr unsigned int width = 1920u;
+	constexpr unsigned int height = 1080u;
+
+	const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
+
+	bool allSucceeded = true;
+
+	for (const size_t correspondences : {20, 50, 100, 200})
+	{
+		Log::info() << " ";
+		Log::info() << "... with " << correspondences << " correspondences:";
+
+		Vectors2 pointsLeft;
+		Vectors2 pointsRight;
+		Vectors2 pointsRightNoised;
+		IndexPairs32 nonBijectiveCorrespondences;
+		IndexPairs32 nonBijectiveCorrespondencesFaulty;
+
+		RandomGenerator randomGenerator;
+
+		constexpr double successThreshold = 0.95;
+		ValidationPrecision validation(successThreshold, randomGenerator);
+
+		HighPerformanceStatistic performanceSinglecore;
+		HighPerformanceStatistic performanceMulticore;
+
+		const Timestamp startTimestamp(true);
+
+		do
+		{
+			for (const bool useWorker : {false, true})
+			{
+				HighPerformanceStatistic& performance = useWorker ? performanceMulticore : performanceSinglecore;
+
+				pointsLeft.clear();
+				pointsRight.clear();
+				pointsRightNoised.clear();
+
+				nonBijectiveCorrespondences.clear();
+				nonBijectiveCorrespondencesFaulty.clear();
+
+				// we create a realistic homography based on two camera poses and a 3D plane in front of both cameras
+
+				const Plane3 plane(Vector3(0, 0, -4), Vector3(0, 0, 1));
+
+				const Vector3 leftTranslation = Random::vector3(randomGenerator, Scalar(-0.2), Scalar(0.2));
+				const Vector3 rightTranslation = Random::vector3(randomGenerator, Scalar(-0.2), Scalar(0.2));
+
+				const Euler leftRotation = Random::euler(randomGenerator, 0, Numeric::deg2rad(10));
+				const Euler rightRotation = Random::euler(randomGenerator, 0, Numeric::deg2rad(10));
+
+				const HomogenousMatrix4 leftPose(leftTranslation, leftRotation);
+				const HomogenousMatrix4 rightPose(rightTranslation, rightRotation);
+
+				const SquareMatrix3 left_T_right = Geometry::Homography::homographyMatrix(leftPose, rightPose, pinholeCamera, pinholeCamera, plane);
+				ocean_assert_and_suppress_unused(!left_T_right.isSingular(), left_T_right);
+
+				for (size_t n = 0; n < correspondences; ++n)
+				{
+					const Vector2 pointLeft(Random::vector2(randomGenerator, 0, Scalar(width), 0, Scalar(height)));
+
+					Vector3 objectPoint(Numeric::minValue(), Numeric::minValue(), Numeric::minValue());
+					if (!plane.intersection(pinholeCamera.ray(pointLeft, leftPose), objectPoint))
+					{
+						ocean_assert(false && "This should never happen!");
+					}
+
+					ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(leftPose), objectPoint));
+					ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(rightPose), objectPoint));
+
+					const Vector2 pointRight = pinholeCamera.projectToImage<false>(rightPose, objectPoint, false);
+
+					// lefts randomly add unused points to the set of left points
+					if (RandomI::random(randomGenerator, 5u) == 0u)
+					{
+						pointsLeft.push_back(Random::vector2(randomGenerator, 0, Scalar(width), 0, Scalar(height)));
+					}
+
+					// lefts randomly add unused points to the set of right points
+					if (RandomI::random(randomGenerator, 5u) == 0u)
+					{
+						pointsRight.push_back(Random::vector2(randomGenerator, 0, Scalar(width), 0, Scalar(height)));
+						pointsRightNoised.push_back(pointsRight.back() + Random::vector2(randomGenerator, Scalar(-0.5), Scalar(0.5)));
+					}
+
+					const IndexPair32 correspondence = IndexPair32((unsigned int)pointsLeft.size(), (unsigned int)pointsRight.size());
+
+					nonBijectiveCorrespondences.push_back(correspondence);
+					nonBijectiveCorrespondencesFaulty.push_back(correspondence);
+
+					pointsLeft.push_back(pointLeft);
+					pointsRight.push_back(pointRight);
+					pointsRightNoised.push_back(pointRight + Random::vector2(randomGenerator, Scalar(-0.5), Scalar(0.5)));
+				}
+
+				ocean_assert(nonBijectiveCorrespondences.size() == correspondences);
+				ocean_assert(pointsLeft.size() >= correspondences);
+				ocean_assert(pointsRight.size() >= correspondences);
+				ocean_assert(pointsRight.size() == pointsRightNoised.size());
+
+				IndexSet32 faultySetLeft;
+				while (faultySetLeft.size() < 10 * correspondences / 100)
+				{
+					faultySetLeft.insert(RandomI::random(randomGenerator, (unsigned int)(nonBijectiveCorrespondences.size() - 1)));
+				}
+
+				IndexSet32 faultySetRight;
+				while (faultySetRight.size() < 10 * correspondences / 100)
+				{
+					faultySetRight.insert(RandomI::random(randomGenerator, (unsigned int)(nonBijectiveCorrespondences.size() - 1)));
+				}
+
+				for (const Index32& index : faultySetLeft)
+				{
+					const unsigned int oldValue = nonBijectiveCorrespondencesFaulty[index].first;
+
+					while (nonBijectiveCorrespondencesFaulty[index].first == oldValue)
+					{
+						nonBijectiveCorrespondencesFaulty[index].first = RandomI::random(randomGenerator, (unsigned int)(pointsLeft.size()) - 1u);
+					}
+				}
+
+				for (const Index32& index : faultySetRight)
+				{
+					const unsigned int oldValue = nonBijectiveCorrespondencesFaulty[index].second;
+
+					while (nonBijectiveCorrespondencesFaulty[index].second == oldValue)
+					{
+						nonBijectiveCorrespondencesFaulty[index].second = RandomI::random(randomGenerator, (unsigned int)(pointsRight.size()) - 1u);
+					}
+				}
+
+				SquareMatrix3 right_H_left;
+
+				unsigned int testCandidates = 4u;
+
+				if (correspondences > 50)
+				{
+					testCandidates = RandomI::random(randomGenerator, 4u, 8u);
+				}
+
+				Indices32 dummyIndices;
+				Indices32* usedIndices = RandomI::boolean(randomGenerator) ? &dummyIndices : nullptr;
+
+				performance.start();
+					const bool result = Geometry::RANSAC::homographyMatrixForNonBijectiveCorrespondences(pointsLeft.data(), pointsLeft.size(), pointsRightNoised.data(), pointsRightNoised.size(), nonBijectiveCorrespondencesFaulty.data(), nonBijectiveCorrespondencesFaulty.size(), randomGenerator, right_H_left, testCandidates, refine, 80u, Scalar(1.5 * 1.5), usedIndices, useWorker ? &worker : nullptr, useSVD);
+				performance.stop();
+
+				if (result)
+				{
+					for (const IndexPair32& correspondence : nonBijectiveCorrespondences)
+					{
+						ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+						ocean_assert(correspondence.first < pointsLeft.size());
+						ocean_assert(correspondence.second < pointsRight.size());
+
+						const Vector2& pointLeft = pointsLeft[correspondence.first];
+						const Vector2& pointRight = pointsRight[correspondence.second];
+
+						const Vector2 transformedPoint = right_H_left * pointLeft;
+						if (!transformedPoint.isEqual(pointRight, 4))
+						{
+							scopedIteration.setInaccurate();
+						}
+					}
+				}
+				else
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+		}
+		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+
+		Log::info() << "Performance single-core: " << performanceSinglecore;
+		Log::info() << "Performance multi-core: " << performanceMulticore;
+		Log::info() << "Multi-core boost factor: " << String::toAString(performanceSinglecore.median() / performanceMulticore.median(), 1u) << "x (median)";
 		Log::info() << "Validation: " << validation;
 
 		if (!validation.succeeded())
