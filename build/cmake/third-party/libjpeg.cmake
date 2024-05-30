@@ -6,6 +6,8 @@
 message(CHECK_START "libjpeg")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 CPMAddPackage(
   NAME           libjpeg
   GIT_REPOSITORY https://github.com/daviddrysdale/libjpeg.git
