@@ -118,6 +118,14 @@ class ValidationPrecision
 		inline void addIteration(const bool accureate);
 
 		/**
+		 * Explicitly adds new iterations for which the amount of accurate iterations is known.
+		 * @param accurateIterations The number of accurate iterations, with range [0, iterations]
+		 * @param iterations The number of new iterations, with range [1, infinity)
+		 * @see ScopedIteration.
+		 */
+		inline void addIterations(const size_t accurateIterations, const size_t iterations);
+
+		/**
 		 * Explicitly sets the validation to be failed.
 		 * Setting this validation to be failed will result in a failed validation even if all iteration were precise enough.
 		 * @see succeeded().
@@ -269,7 +277,7 @@ inline ValidationPrecision::ValidationPrecision(const double threshold)
 	}
 	else
 	{
-		succeeded_ = false;
+		setSucceededFalse();
 	}
 }
 
@@ -294,6 +302,20 @@ inline void ValidationPrecision::addIteration(const bool accurate)
 	{
 		++accurateIterations_;
 	}
+}
+
+inline void ValidationPrecision::addIterations(const size_t accurateIterations, const size_t iterations)
+{
+	ocean_assert(accurateIterations <= iterations);
+	ocean_assert(iterations >= 1);
+
+	if (accurateIterations > iterations)
+	{
+		setSucceededFalse();
+	}
+
+	accurateIterations_ += accurateIterations;
+	iterations_ += iterations;
 }
 
 inline void ValidationPrecision::setFailed()
