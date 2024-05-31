@@ -363,7 +363,6 @@ class OCEAN_GEOMETRY_EXPORT Homography
 
 		/**
 		 * Calculates the intrinsic camera matrix for a set of given homographies transforming 3D object points from the z=0 plane to the image plane.
-		 * Beware: This function is very sensitive regarding the precision of the used floating point values, 64 bit is highly recommended.
 		 * @param homographies Set of given homographies
 		 * @param number The number of given homographies with range [3, infinity)
 		 * @param intrinsic Resulting intrinsic camera matrix
@@ -375,10 +374,10 @@ class OCEAN_GEOMETRY_EXPORT Homography
 		 * Calculates the extrinsic camera matrix for a given intrinsic camera matrix and a corresponding homography transforming 3D object points from the z=0 plane to the image plane.
 		 * @param intrinsic The intrinsic camera matrix to return the extrinsic camera matrix for
 		 * @param homography The homography corresponding to the intrinsic camera matrix
-		 * @param extrinsic Resulting extrinsic camera matrix
+		 * @param world_T_camera The resulting extrinsic camera matrix (the camera pose), with default camera pointing towards the negative z-space with y-axis upwards
 		 * @return True, if succeeded
 		 */
-		static bool extrinsicMatrix(const SquareMatrix3& intrinsic, const SquareMatrix3& homography, HomogenousMatrix4& extrinsic);
+		static bool extrinsicMatrix(const SquareMatrix3& intrinsic, const SquareMatrix3& homography, HomogenousMatrix4& world_T_camera);
 
 		/**
 		 * Calculates the first two radial distortion parameter.

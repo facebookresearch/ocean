@@ -1639,25 +1639,29 @@ bool Homography::isHomographyPlausible(unsigned int leftImageWidth, unsigned int
 
 bool Homography::intrinsicMatrix(const SquareMatrix3* homographies, const size_t number, SquareMatrix3& intrinsic)
 {
-	ocean_assert(homographies && number >= 3);
+	ocean_assert(homographies != nullptr && number >= 3);
 
 	if (number < 3)
+	{
 		return false;
+	}
 
 	/**
 	 * Solution by Zhengyou Zhang, A Flexible New Technique for Camera Calibration.
 	 */
 
-	Matrix matrix(2 * number, 6);
+	MatrixD matrix(2 * number, 6);
 
-	for (unsigned int n = 0; n < number; ++n)
+	for (size_t n = 0; n < number; ++n)
 	{
-		const Scalar& h11 = homographies[n](0, 0);
-		const Scalar& h12 = homographies[n](1, 0);
-		const Scalar& h13 = homographies[n](2, 0);
-		const Scalar& h21 = homographies[n](0, 1);
-		const Scalar& h22 = homographies[n](1, 1);
-		const Scalar& h23 = homographies[n](2, 1);
+		const SquareMatrix3& homography = homographies[n];
+
+		const double h11 = double(homography(0, 0));
+		const double h12 = double(homography(1, 0));
+		const double h13 = double(homography(2, 0));
+		const double h21 = double(homography(0, 1));
+		const double h22 = double(homography(1, 1));
+		const double h23 = double(homography(2, 1));
 
 		/**
 		 * v12:
@@ -1668,7 +1672,7 @@ bool Homography::intrinsicMatrix(const SquareMatrix3* homographies, const size_t
 		 * h13 * h22 + h12 * h23
 		 * h13 * h23
 		 */
-		Scalar* row = matrix[2 * n];
+		double* row = matrix[2 * n];
 		row[0] = h11 * h21;
 		row[1] = h11 * h22 + h12 * h21;
 		row[2] = h12 * h22;
@@ -1702,72 +1706,103 @@ bool Homography::intrinsicMatrix(const SquareMatrix3* homographies, const size_t
 		row[5] = (h13 * h13) - (h23 * h23);
 	}
 
-	Matrix u, w, v;
+	MatrixD u, w, v;
 	if (!matrix.singularValueDecomposition(u, w, v))
+	{
 		return false;
+	}
 
 	unsigned int lowestSingularValueIndex = (unsigned int)(-1);
 
 	for (size_t n = 0; n < w.rows(); ++n)
-		if (Numeric::isEqualEps(w(n)))
+	{
+		const double singularValue = w(n);
+
+		if (NumericD::isEqualEps(singularValue))
 		{
-			lowestSingularValueIndex = (unsigned int)n;
+			lowestSingularValueIndex = (unsigned int)(n);
 			break;
 		}
+	}
 
 	lowestSingularValueIndex = min(lowestSingularValueIndex, (unsigned int)v.columns() - 1u);
 
-	const Scalar& b11 = v(0, lowestSingularValueIndex);
-	const Scalar& b12 = v(1, lowestSingularValueIndex);
-	const Scalar& b22 = v(2, lowestSingularValueIndex);
-	const Scalar& b13 = v(3, lowestSingularValueIndex);
-	const Scalar& b23 = v(4, lowestSingularValueIndex);
-	const Scalar& b33 = v(5, lowestSingularValueIndex);
+	const double b11 = v(0, lowestSingularValueIndex);
+	const double b12 = v(1, lowestSingularValueIndex);
+	const double b22 = v(2, lowestSingularValueIndex);
+	const double b13 = v(3, lowestSingularValueIndex);
+	const double b23 = v(4, lowestSingularValueIndex);
+	const double b33 = v(5, lowestSingularValueIndex);
 
-	const Scalar denominator1 = b11 * b22 - b12 * b12;
-	if (Numeric::isEqualEps(denominator1))
+	const double denominator1 = b11 * b22 - b12 * b12;
+	if (NumericD::isEqualEps(denominator1))
+	{
 		return false;
+	}
 
-	const Scalar my = (b12 * b13 - b11 * b23) / denominator1;
+	const double my = (b12 * b13 - b11 * b23) / denominator1;
 
-	const Scalar denominator2 = b12 * b13 - b11 * b23;
-	if (Numeric::isEqualEps(denominator2) || Numeric::isEqualEps(b11))
+	const double denominator2 = b12 * b13 - b11 * b23;
+	if (NumericD::isEqualEps(denominator2) || NumericD::isEqualEps(b11))
+	{
 		return false;
+	}
 
-	const Scalar scale = b33 - (b13 * b13 + my * denominator2) / b11;
-	if (Numeric::isEqualEps(scale))
+	const double scale = b33 - (b13 * b13 + my * denominator2) / b11;
+	if (NumericD::isEqualEps(scale))
+	{
 		return false;
+	}
 
-	const Scalar fxSqrt = scale / b11;
-	const Scalar fySqrt = scale * b11 / denominator1;
+	const double fxSqrt = scale / b11;
+	const double fySqrt = scale * b11 / denominator1;
 
-	if (fxSqrt < 0 || fySqrt < 0)
+	if (fxSqrt < 0.0 || fySqrt < 0.0)
+	{
 		return false;
+	}
 
-	const Scalar fx = Numeric::sqrt(fxSqrt);
-	const Scalar fy = Numeric::sqrt(fySqrt);
+	const double fx = NumericD::sqrt(fxSqrt);
+	const double fy = NumericD::sqrt(fySqrt);
 
-	const Scalar s = -b12 * fx * fx * fy / scale;
-	const Scalar mx = s * my / fy - b13 * fx * fx / scale;
+	const double s = -b12 * fx * fx * fy / scale;
+	const double mx = s * my / fy - b13 * fx * fx / scale;
 
-	intrinsic = SquareMatrix3(fx, 0, 0, s, fy, 0, mx, my, 1);
+	intrinsic = SquareMatrix3(SquareMatrixD3(fx, 0.0, 0.0, s, fy, 0.0, mx, my, 1.0));
 	return true;
 }
 
-bool Homography::extrinsicMatrix(const SquareMatrix3& intrinsic, const SquareMatrix3& homography, HomogenousMatrix4& extrinsic)
+bool Homography::extrinsicMatrix(const SquareMatrix3& intrinsic, const SquareMatrix3& homography, HomogenousMatrix4& world_T_camera)
 {
-	const SquareMatrix3 invIntrinsic(intrinsic.inverted());
+	SquareMatrixD3 invIntrinsic(intrinsic);
 
-	const Scalar scale = (Scalar(0.5) / (invIntrinsic * homography.xAxis()).length())
-							+ (Scalar(0.5) / (invIntrinsic * homography.yAxis()).length());
+	if (!invIntrinsic.invert())
+	{
+		return false;
+	}
 
-	const Vector3 translation(invIntrinsic * homography.zAxis() * scale);
+	VectorD3 xAxis(homography.xAxis());
+	VectorD3 yAxis(homography.yAxis());
 
-	const Vector3 xAxis(invIntrinsic * homography.xAxis() * scale);
-	const Vector3 yAxis(invIntrinsic * homography.yAxis() * scale);
-	const Vector3 zAxis = xAxis.cross(yAxis);
+	const double xLength = (invIntrinsic * xAxis).length();
+	const double yLength = (invIntrinsic * yAxis).length();
 
-	Matrix matrix(3, 3);
+	if (NumericD::isEqualEps(xLength) || NumericD::isEqualEps(yLength))
+	{
+		return false;
+	}
+
+	VectorD3 zAxis(homography.zAxis());
+
+	const double scale = (0.5 / xLength) + (0.5 / yLength);
+
+	const VectorD3 translation(invIntrinsic * zAxis * scale);
+
+	xAxis = invIntrinsic * xAxis * scale;
+	yAxis = invIntrinsic * yAxis * scale;
+	zAxis = xAxis.cross(yAxis);
+
+	MatrixD matrix(3, 3);
 	matrix(0, 0) = xAxis(0);
 	matrix(1, 0) = xAxis(1);
 	matrix(2, 0) = xAxis(2);
@@ -1778,21 +1813,22 @@ bool Homography::extrinsicMatrix(const SquareMatrix3& intrinsic, const SquareMat
 	matrix(1, 2) = zAxis(1);
 	matrix(2, 2) = zAxis(2);
 
-	Matrix u, w, v;
+	MatrixD u, w, v;
 	if (!matrix.singularValueDecomposition(u, w, v))
+	{
 		return false;
+	}
 
-	const Matrix rotationMatrix = u * v.transposed();
+	const MatrixD rotationMatrix = u * v.transposed();
 	ocean_assert(rotationMatrix.rows() == 3 && rotationMatrix.columns() == 3);
 
-	const SquareMatrix3 rotation(rotationMatrix.transposed().data());
-	ocean_assert(Numeric::isEqual(rotation.determinant(), 1));
+	const SquareMatrixD3 rotation(rotationMatrix.transposed().data());
+	ocean_assert(NumericD::isEqual(rotation.determinant(), 1.0));
 
-	const HomogenousMatrix4 fcTw(translation, rotation);
-	const HomogenousMatrix4 wTfc(fcTw.inverted());
-	const HomogenousMatrix4 wtc(wTfc * PinholeCamera::flipMatrix4());
+	const HomogenousMatrixD4 flippedCamera_T_world(translation, rotation);
 
-	extrinsic = wtc;
+	world_T_camera = HomogenousMatrix4(AnyCameraD::invertedFlipped2Standard(flippedCamera_T_world));
+
 	return true;
 }
 
