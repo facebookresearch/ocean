@@ -3,10 +3,12 @@
 name: Build Ocean on Linux (static)
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    # Execute this workflow:
+    # Mon-Sun, every 24 hours at 6 am (UTC)
+    - cron: '0 6 * * *'
 
 env:
   OCEAN_LINK_TYPE: static
