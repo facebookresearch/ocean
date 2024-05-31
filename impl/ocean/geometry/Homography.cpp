@@ -1406,7 +1406,7 @@ bool Homography::factorizeHomographyMatrix(const SquareMatrix3& right_H_left, co
 
 	for (unsigned int n = 0u; n < 4u; ++n)
 	{
-		size_t number = Utilities::countFrontObjectPoints(leftCamera, rightCamera, HomogenousMatrix4(true), transformationCandidates[n], leftImagePoints, rightImagePoints, correspondences);
+		const size_t number = Utilities::countFrontObjectPoints(leftCamera, rightCamera, HomogenousMatrix4(true), transformationCandidates[n], leftImagePoints, rightImagePoints, correspondences);
 
 		if (number > best[0])
 		{
