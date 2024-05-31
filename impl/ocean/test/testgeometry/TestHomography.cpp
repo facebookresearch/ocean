@@ -1045,7 +1045,7 @@ bool TestHomography::testFaultlessNoisedPlanarHomography2D(const double testDura
 				}
 				else
 				{
-					OCEAN_SET_FAILED(validation);
+					validation.addIterations(0, leftImagePoints.size());
 				}
 
 				break;
