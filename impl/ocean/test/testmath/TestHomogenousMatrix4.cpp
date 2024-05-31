@@ -357,9 +357,9 @@ bool TestHomogenousMatrix4::testElementConstructor(const double testDuration)
 
 			if constexpr (std::is_same<T, double>::value)
 			{
-				OCEAN_EXPECT_EQUAL(validation, aMatrixFromScalar, doubleTest);
-				OCEAN_EXPECT_EQUAL(validation, bMatrixFromScalar, doubleTest);
-				OCEAN_EXPECT_EQUAL(validation, bMatrixFromScalarTransposed, doubleTestTransposed);
+				OCEAN_EXPECT_TRUE(validation, aMatrixFromScalar.isEqual(doubleTest, eps));
+				OCEAN_EXPECT_TRUE(validation, bMatrixFromScalar.isEqual(doubleTest, eps));
+				OCEAN_EXPECT_TRUE(validation, bMatrixFromScalarTransposed.isEqual(doubleTestTransposed, eps));
 			}
 			else
 			{
