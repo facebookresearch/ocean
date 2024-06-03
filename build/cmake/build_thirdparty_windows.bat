@@ -15,29 +15,29 @@ set BUILD_FAILURES=
 @REM Static, debug
 set BUILD_TYPE=Debug
 set BUILD_SHARED_LIBS=OFF
-set BUILD_DIRECTORY=C:\tmp\ocean\build\third-party\static_%BUILD_TYPE%
-set INSTALL_DIRECTORY=C:\tmp\ocean\install\static_%BUILD_TYPE%
+set BUILD_DIRECTORY=C:\tmp\ocean\build\win\3P\static_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\win\static_%BUILD_TYPE%
 call :run_build
 
 @REM Static, release
 set BUILD_TYPE=Release
 set BUILD_SHARED_LIBS=OFF
-set BUILD_DIRECTORY=C:\tmp\ocean\build\third-party\static_%BUILD_TYPE%
-set INSTALL_DIRECTORY=C:\tmp\ocean\install\static_%BUILD_TYPE%
+set BUILD_DIRECTORY=C:\tmp\ocean\build\win\3P\static_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\win\static_%BUILD_TYPE%
 call :run_build
 
 @REM Shared, debug
 set BUILD_TYPE=Debug
 set BUILD_SHARED_LIBS=ON
-set BUILD_DIRECTORY=C:\tmp\ocean\build\third-party\shared_%BUILD_TYPE%
-set INSTALL_DIRECTORY=C:\tmp\ocean\install\shared_%BUILD_TYPE%
+set BUILD_DIRECTORY=C:\tmp\ocean\build\win\3P\shared_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\win\shared_%BUILD_TYPE%
 call :run_build
 
 @REM Shared, release
 set BUILD_TYPE=Release
 set BUILD_SHARED_LIBS=ON
-set BUILD_DIRECTORY=C:\tmp\ocean\build\third-party\shared_%BUILD_TYPE%
-set INSTALL_DIRECTORY=C:\tmp\ocean\install\shared_%BUILD_TYPE%
+set BUILD_DIRECTORY=C:\tmp\ocean\build\win\3P\shared_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\win\shared_%BUILD_TYPE%
 call :run_build
 
 if "%BUILD_FAILURES%" == "" (

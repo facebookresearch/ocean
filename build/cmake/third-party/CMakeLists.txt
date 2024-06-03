@@ -5,7 +5,10 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-include(findNMake.cmake)
+if(${CMAKE_SYSTEM_NAME} STREQUAL Android AND
+   ${CMAKE_HOST_SYSTEM_NAME} STREQUAL Windows)
+  include(findNMake.cmake)
+endif()
 
 project(ocean_third_party)
 

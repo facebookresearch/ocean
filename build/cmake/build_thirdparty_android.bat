@@ -39,15 +39,15 @@ set ANDROID_ABI=arm64-v8a
 @REM Static, debug
 set BUILD_TYPE=Debug
 set BUILD_SHARED_LIBS=OFF
-set BUILD_DIRECTORY=C:\tmp\ocean\build\android\third-party\%ANDROID_ABI%_static_%BUILD_TYPE%
-set INSTALL_DIRECTORY=C:\tmp\ocean\install\android\%ANDROID_ABI%_static_%BUILD_TYPE%
+set BUILD_DIRECTORY=C:\tmp\ocean\build\and\3P\%ANDROID_ABI%_static_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\and\%ANDROID_ABI%_static_%BUILD_TYPE%
 call :run_build
 
 @REM Static, release
 set BUILD_TYPE=Release
 set BUILD_SHARED_LIBS=OFF
-set BUILD_DIRECTORY=C:\tmp\ocean\build\android\third-party\%ANDROID_ABI%_static_%BUILD_TYPE%
-set INSTALL_DIRECTORY=C:\tmp\ocean\install\android\%ANDROID_ABI%_static_%BUILD_TYPE%
+set BUILD_DIRECTORY=C:\tmp\ocean\build\and\3P\%ANDROID_ABI%_static_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\and\%ANDROID_ABI%_static_%BUILD_TYPE%
 call :run_build
 
 @REM
@@ -60,15 +60,15 @@ set ANDROID_ABI=armeabi-v7a
 @REM Static, debug
 set BUILD_TYPE=Debug
 set BUILD_SHARED_LIBS=OFF
-set BUILD_DIRECTORY=C:\tmp\ocean\build\android\third-party\%ANDROID_ABI%_static_%BUILD_TYPE%
-set INSTALL_DIRECTORY=C:\tmp\ocean\install\android\%ANDROID_ABI%_static_%BUILD_TYPE%
+set BUILD_DIRECTORY=C:\tmp\ocean\build\and\3P\%ANDROID_ABI%_static_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\and\%ANDROID_ABI%_static_%BUILD_TYPE%
 call :run_build
 
 @REM Static, release
 set BUILD_TYPE=Release
 set BUILD_SHARED_LIBS=OFF
-set BUILD_DIRECTORY=C:\tmp\ocean\build\android\third-party\%ANDROID_ABI%_static_%BUILD_TYPE%
-set INSTALL_DIRECTORY=C:\tmp\ocean\install\android\%ANDROID_ABI%_static_%BUILD_TYPE%
+set BUILD_DIRECTORY=C:\tmp\ocean\build\and\3P\%ANDROID_ABI%_static_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\and\%ANDROID_ABI%_static_%BUILD_TYPE%
 call :run_build
 
 @REM
@@ -81,15 +81,15 @@ set ANDROID_ABI=x86_64
 @REM Static, debug
 set BUILD_TYPE=Debug
 set BUILD_SHARED_LIBS=OFF
-set BUILD_DIRECTORY=C:\tmp\ocean\build\android\third-party\%ANDROID_ABI%_static_%BUILD_TYPE%
-set INSTALL_DIRECTORY=C:\tmp\ocean\install\android\%ANDROID_ABI%_static_%BUILD_TYPE%
+set BUILD_DIRECTORY=C:\tmp\ocean\build\and\3P\%ANDROID_ABI%_static_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\and\%ANDROID_ABI%_static_%BUILD_TYPE%
 call :run_build
 
 @REM Static, release
 set BUILD_TYPE=Release
 set BUILD_SHARED_LIBS=OFF
-set BUILD_DIRECTORY=C:\tmp\ocean\build\android\third-party\%ANDROID_ABI%_static_%BUILD_TYPE%
-set INSTALL_DIRECTORY=C:\tmp\ocean\install\android\%ANDROID_ABI%_static_%BUILD_TYPE%
+set BUILD_DIRECTORY=C:\tmp\ocean\build\and\3P\%ANDROID_ABI%_static_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\and\%ANDROID_ABI%_static_%BUILD_TYPE%
 call :run_build
 
 @REM
@@ -102,15 +102,15 @@ set ANDROID_ABI=x86
 @REM Static, debug
 set BUILD_TYPE=Debug
 set BUILD_SHARED_LIBS=OFF
-set BUILD_DIRECTORY=C:\tmp\ocean\build\android\third-party\%ANDROID_ABI%_static_%BUILD_TYPE%
-set INSTALL_DIRECTORY=C:\tmp\ocean\install\android\%ANDROID_ABI%_static_%BUILD_TYPE%
+set BUILD_DIRECTORY=C:\tmp\ocean\build\and\3P\%ANDROID_ABI%_static_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\and\%ANDROID_ABI%_static_%BUILD_TYPE%
 call :run_build
 
 @REM Static, release
 set BUILD_TYPE=Release
 set BUILD_SHARED_LIBS=OFF
-set BUILD_DIRECTORY=C:\tmp\ocean\build\android\third-party\%ANDROID_ABI%_static_%BUILD_TYPE%
-set INSTALL_DIRECTORY=C:\tmp\ocean\install\android\%ANDROID_ABI%_static_%BUILD_TYPE%
+set BUILD_DIRECTORY=C:\tmp\ocean\build\and\3P\%ANDROID_ABI%_static_%BUILD_TYPE%
+set INSTALL_DIRECTORY=C:\tmp\ocean\install\and\%ANDROID_ABI%_static_%BUILD_TYPE%
 call :run_build
 
 

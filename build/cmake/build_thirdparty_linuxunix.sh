@@ -94,7 +94,7 @@ function run_build {
         exit 1
     fi
 
-    OTP_BUILD_DIRECTORY="${OTP_BUILD_DIR}/third-party_${LINKING_TYPE}_${BUILD_CONFIG}"
+    OTP_BUILD_DIRECTORY="${OTP_BUILD_DIR}/third-party/${LINKING_TYPE}_${BUILD_CONFIG}"
     OTP_INSTALL_DIRECTORY="${OTP_INSTALL_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
 
     echo ""
