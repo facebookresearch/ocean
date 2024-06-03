@@ -9,3 +9,19 @@
     display: block;
     margin: 0 auto;
   }
+
+ .icon-container {
+    text-align: center; /* Centers the icons horizontally */
+  }
+
+ .center-icon {
+    display: inline-block; /* Makes the icons sit next to each other */
+    margin-right: 10px; /* Adds some space between the icons */
+    vertical-align: middle; /* Aligns the icons vertically if they are different sizes */
+    height: 32px; /* Adjust based on the size of your icons */
+  }
+
+ .right-aligned-icon {
+    float: right; /* Aligns the icon to the right */
+    margin-left: 10px; /* Adds space between the text and the icon */
+  }
