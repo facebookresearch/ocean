@@ -23,11 +23,18 @@ if (MACOS OR LINUX OR WIN32)
     # Target definition
     add_library(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
 
-    target_include_directories(${OCEAN_TARGET_NAME}
-        PUBLIC
-            "${OCEAN_IMPL_DIR}"
-            ${wxWidgets_INCLUDE_DIRS}
-    )
+    if(CMAKE_VERSION VERSION_LESS "3.27")
+        target_include_directories(${OCEAN_TARGET_NAME}
+            PUBLIC
+                "${OCEAN_IMPL_DIR}"
+                ${wxWidgets_INCLUDE_DIRS}
+        )
+    else()
+        target_include_directories(${OCEAN_TARGET_NAME}
+            PUBLIC
+                "${OCEAN_IMPL_DIR}"
+        )
+    endif()
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
     if (BUILD_SHARED_LIBS)
@@ -54,11 +61,17 @@ if (MACOS OR LINUX OR WIN32)
             ocean_platform
     )
 
-    target_link_libraries(${OCEAN_TARGET_NAME}
-        PRIVATE
-            #wxWidgets::wxWidgets
+    if(CMAKE_VERSION VERSION_LESS "3.27")
+        target_link_libraries(${OCEAN_TARGET_NAME}
+            PRIVATE
             ${wxWidgets_LIBRARIES}
-    )
+        )
+    else()
+        target_link_libraries(${OCEAN_TARGET_NAME}
+            PRIVATE
+            wxWidgets::wxWidgets
+        )
+    endif()
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
