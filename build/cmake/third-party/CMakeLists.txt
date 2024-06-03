@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL Android AND
+if(_"${CMAKE_SYSTEM_NAME}" STREQUAL _Android AND
    ${CMAKE_HOST_SYSTEM_NAME} STREQUAL Windows)
   include(findNMake.cmake)
 endif()
