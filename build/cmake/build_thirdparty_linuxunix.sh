@@ -113,7 +113,7 @@ function run_build {
           "-DCMAKE_INSTALL_PREFIX=${OTP_INSTALL_DIRECTORY}" \
           "-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}" \
           "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}"
-    if [ $? != 0 ]; then
+    if [ "$?" != 0 ]; then
         OTP_FAILED_BUILDS+=("${LINKING_TYPE} + ${BUILD_CONFIG}")
     fi
 
@@ -239,7 +239,7 @@ if [ "${OTP_ARCHIVE}" != "" ]; then
     fi
 fi
 
-if [ ${OTP_BUILD_SUCCESSFUL} ]; then
+if [ ${OTP_BUILD_SUCCESSFUL} == 1 ]; then
     echo "All builds were successful."
 else
     echo "Some builds have failed." >&2
