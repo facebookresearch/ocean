@@ -30,9 +30,10 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     endif()
 
     if (NOT OpenSSL_FOUND)
-        message(STATUS "Excluding 'ocean/io/Signature.{cpp, h}' because OpenSSL hasn't been found.")
+        message(STATUS "Excluding 'ocean/io/Signature.{cpp, h, mm}' because OpenSSL hasn't been found.")
         list(REMOVE_ITEM OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/Signature.h")
         list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/Signature.cpp")
+        list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/Signature.mm")
     endif()
 
     if (NOT tinyxml2_FOUND)
