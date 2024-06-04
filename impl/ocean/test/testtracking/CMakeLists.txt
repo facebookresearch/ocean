@@ -118,7 +118,9 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_tracking_point
     )
 
-    include(GoogleTest)
-    gtest_discover_tests(${OCEAN_TARGET_NAME} WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)
+    if (LINUX OR MACOS OR WIN32)
+        include(GoogleTest)
+        gtest_discover_tests(${OCEAN_TARGET_NAME} WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)
+    endif()
 
 endif()
