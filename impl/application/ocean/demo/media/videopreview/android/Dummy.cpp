@@ -5,4 +5,4 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// Intentionally empty; required to force Buck to generate a build artifact.
+// Intentionally empty; may be required to force generating build artifact.
