@@ -86,6 +86,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
     list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestTracking.cpp")
+    list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestPatternTracker.cpp")
 
     # Target definition
     add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
@@ -118,9 +119,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_tracking_point
     )
 
-    if (LINUX OR MACOS OR WIN32)
-        include(GoogleTest)
-        gtest_discover_tests(${OCEAN_TARGET_NAME} WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)
-    endif()
+    include(GoogleTest)
+    gtest_add_tests(${OCEAN_TARGET_NAME} SOURCES ${OCEAN_TARGET_SOURCE_FILES})
 
 endif()
