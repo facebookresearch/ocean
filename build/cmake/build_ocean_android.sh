@@ -59,6 +59,8 @@ else
     fi
 fi
 
+retval=0
+
 # Builds Ocean for Android with a specific build config
 #
 # ANDROID_ABI: The identifier of the Android ABI for which the build will be configured, cf. https://developer.android.com/ndk/guides/abis
@@ -127,7 +129,9 @@ function run_build_for_android {
     echo "CMAKE_CONFIGURE_COMMAND = ${CMAKE_CONFIGURE_COMMAND}"
     eval "${CMAKE_CONFIGURE_COMMAND}"
 
-    cmake --build "${OCEAN_BUILD_DIRECTORY}" --target install -- -j16
+    if ! cmake --build "${OCEAN_BUILD_DIRECTORY}" --target install -- -j16; then
+        retval=1
+    fi
 
     echo " "
     echo " "
@@ -155,3 +159,11 @@ run_build_for_android x86_64      android-32 Release static
 # run_build_for_android arm64-v8a   android-32 Release shared
 # run_build_for_android x86         android-32 Release shared
 # run_build_for_android x86_64      android-32 Release shared
+
+if [ $retval == 0 ]; then
+    echo "All builds succeeded"
+else
+    echo "Some builds failed"
+fi
+
+exit $retval
