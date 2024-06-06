@@ -27,6 +27,8 @@ if (ANDROID)
 
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
+        PUBLIC
+            ocean_platform
         PRIVATE
             ocean_platform_android
     )

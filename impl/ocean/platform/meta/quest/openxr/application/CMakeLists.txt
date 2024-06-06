@@ -12,6 +12,7 @@ if (ANDROID)
 
     set(OCEAN_TARGET_NAME "ocean_platform_meta_quest_openxr_application")
 
+    find_package(AndroidNativeAppGlue REQUIRED)
     find_package(OpenXR REQUIRED)
 
     # Source files
@@ -21,9 +22,7 @@ if (ANDROID)
     list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${APPLICATION_ADVANCED_SOURCE_FILE}")
 
     # Target definition
-    add_library(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
-
-    target_include_directories(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_IMPL_DIR}" "${CMAKE_ANDROID_NDK}/sources/android/native_app_glue")
+    add_library(${OCEAN_TARGET_NAME} STATIC ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS} "-DOCEAN_RENDERING_GLES_QUEST_PLATFORM_OPENXR")
 
@@ -40,6 +39,7 @@ if (ANDROID)
             ocean_platform_openxr
             ocean_rendering
             ocean_rendering_glescenegraph_quest_openxr
+            AndroidNativeAppGlue::AndroidNativeAppGlue
             OpenXR::openxr_loader
         PRIVATE
             ocean_base
@@ -48,6 +48,9 @@ if (ANDROID)
             ocean_platform_linux
             ocean_rendering_glescenegraph
     )
+
+    # Prevent 'ANativeActivity_onCreate()' from being stripped out as an unused sympol by linker.  It is called by Android's native activity framework.
+    target_link_options(${OCEAN_TARGET_NAME} PUBLIC  "LINKER:--undefined=ANativeActivity_onCreate")
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
@@ -63,7 +66,7 @@ if (ANDROID)
     set(OCEAN_TARGET_NAME "ocean_platform_meta_quest_openxr_application_advanced")
 
     # Target definition
-    add_library(${OCEAN_TARGET_NAME} ${APPLICATION_ADVANCED_SOURCE_FILE} ${APPLICATION_ADVANCED_HEADER_FILE})
+    add_library(${OCEAN_TARGET_NAME} STATIC ${APPLICATION_ADVANCED_SOURCE_FILE} ${APPLICATION_ADVANCED_HEADER_FILE})
 
     target_include_directories(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_IMPL_DIR}")
 

@@ -28,12 +28,12 @@ if (ANDROID)
             ocean_base
             ocean_math
             ocean_platform_meta_quest
+            ocean_rendering
         PRIVATE
             ocean_cv
             ocean_cv_fonts
             ocean_io
             ocean_media
-            ocean_rendering
             ocean_scenedescription
     )
 

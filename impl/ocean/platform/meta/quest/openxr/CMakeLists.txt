@@ -11,6 +11,8 @@ if (ANDROID)
 
     set(OCEAN_TARGET_NAME "ocean_platform_meta_quest_openxr")
 
+    find_package(OpenXR REQUIRED)
+
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
@@ -32,6 +34,10 @@ if (ANDROID)
             ocean_platform_gles
             ocean_platform_meta_quest
             ocean_platform_openxr
+            OpenXR::openxr_loader
+            "-lGLESv3"
+        PRIVATE
+            "-lEGL"
     )
 
     # Installation

@@ -39,25 +39,28 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
-            ocean_cv
-            ocean_cv_detector
             ocean_cv_detector_blob
-            ocean_geometry
             ocean_math
-            ocean_system
             ocean_test
             ocean_tracking
+        PRIVATE
+            ocean_cv
+            ocean_cv_detector
+            ocean_geometry
+            ocean_media
+            ocean_system
             ocean_tracking_blob
-            ocean_tracking_pattern
             ocean_tracking_point
     )
 
     if (ANDROID)
         target_link_libraries(${OCEAN_TARGET_NAME}
-            PUBLIC
+            PRIVATE
                 ocean_media_android
-                ocean_platform_android
                 ocean_media_openimagelibraries
+                ocean_platform_android
+                ocean_platform_linux
+                ocean_tracking_pattern
         )
     endif()
 
