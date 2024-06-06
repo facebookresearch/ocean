@@ -9,6 +9,8 @@ add_subdirectory(application)
 
 if (ANDROID)
 
+    find_package(JNI REQUIRED)
+
     set(OCEAN_TARGET_NAME "ocean_platform_android")
 
     # Source files
@@ -28,11 +30,13 @@ if (ANDROID)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
-            ocean_io
             ocean_platform
-            ocean_platform_linux
-            -ljnigraphics
+            JNI::JNI
             -landroid
+        PRIVATE
+            ocean_io
+            ocean_math
+            ocean_platform_linux
     )
 
     # Installation

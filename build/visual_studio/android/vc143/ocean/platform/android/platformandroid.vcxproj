@@ -72,7 +72,6 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Android.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\AndroidNativeAppGlue.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Battery.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Bitmap.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\base\jni\BaseJni.h" />

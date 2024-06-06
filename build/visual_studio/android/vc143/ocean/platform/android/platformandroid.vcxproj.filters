@@ -48,9 +48,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\jni\SceneDescriptionSDXX3DJni.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\AndroidNativeAppGlue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\base\jni\BaseJni.h">
       <Filter>Header Files</Filter>
     </ClInclude>
