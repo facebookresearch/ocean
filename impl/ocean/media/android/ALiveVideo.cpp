@@ -1184,6 +1184,47 @@ std::string ALiveVideo::cameraIdForMedium(ACameraManager* cameraManager, const s
 		return std::string();
 	}
 
+#ifdef OCEAN_DEBUG
+	Log::debug() << "ALiveVideo: Found " << cameraIdList->numCameras << " cameras:";
+	for (int i = 0; i < cameraIdList->numCameras; ++i)
+	{
+		std::string cameraType = "Unknown";
+
+		const char* id = cameraIdList->cameraIds[i];
+		ocean_assert(id != nullptr);
+
+		if (id != nullptr)
+		{
+			ACameraMetadata* cameraMetadata;
+			if (NativeCameraLibrary::get().ACameraManager_getCameraCharacteristics(cameraManager, id, &cameraMetadata) == ACAMERA_OK)
+			{
+				ACameraMetadata_const_entry constEntry = {0};
+				if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_LENS_FACING, &constEntry) == ACAMERA_OK)
+				{
+					const acamera_metadata_enum_android_lens_facing_t lensFacing = acamera_metadata_enum_android_lens_facing_t(constEntry.data.u8[0]);
+
+					switch (lensFacing)
+					{
+						case ACAMERA_LENS_FACING_FRONT:
+							cameraType = "Front-facing";
+							break;
+
+						case ACAMERA_LENS_FACING_BACK:
+							cameraType = "Back-facing";
+							break;
+
+						case ACAMERA_LENS_FACING_EXTERNAL:
+							cameraType = "External";
+							break;
+					}
+				}
+			}
+		}
+
+		Log::debug() << "ALiveVideo: Camera "  << i << ": " << cameraIdList->cameraIds[i] << ", type: " << cameraType;
+	}
+#endif // OCEAN_DEBUG
+
 	constexpr unsigned int defaultPreferredFrameWidth = 1280u;
 	constexpr unsigned int defaultPreferredFrameHeight = 720u;
 
