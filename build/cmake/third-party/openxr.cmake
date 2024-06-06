@@ -6,11 +6,9 @@
 message(CHECK_START "openxr")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
-if(BUILD_SHARED_LIBS)
-  set(DYNAMIC_LOADER ON)
-else()
-  set(DYNAMIC_LOADER OFF)
-endif()
+# Ocean's Android/Quest OpenXR apps currently expect "openxr_loader" to be a shared library
+# OpenXR's build process performs shared build of "openxr_loader" by default for all platforms except for Windows.
+# Set "DYNAMIC_LOADER" variable to override this behavior.
 
 include(GNUInstallDirs)
 
