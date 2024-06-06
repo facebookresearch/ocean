@@ -16,6 +16,8 @@ This document describes the process to build Ocean for Android. It covers:
 * Define the following environment variables:
   * `ANDROID_HOME` - points to the location of the Android SDK, for example: `${HOME}/Library/Android/sdk` (on macOS)
   * `ANDROID_NDK` - points to the location of the Android NDK, for example: `${HOME}/Library/Android/sdk/ndk/26.2.11394342` (on macOS)
+  * `ANDROID_NDK_VERSION` - Android NDK version number, for example: `26.2.11394342`
+    * May be part of `ANDROID_NDK` path or found as "Pkg.BaseRevision" property listed in `${ANDROID_NDK}/source.properties`
   * `JAVA_HOME` - points to the location of the JDK, for example: `/Library/Java/JavaVirtualMachines/openjdk-22.0.1.jdk/Contents/Home` (on macOS)
 
 ## 2 Building the third-party libraries
