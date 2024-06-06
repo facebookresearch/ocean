@@ -12,7 +12,6 @@ set OCEAN_THIRD_PARTY_SOURCE_DIR=%~dp0..\..\build\cmake\third-party
 
 set BUILD_FAILURES=
 
-set VCVARSALL="C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvarsall.bat"
 
 if "%ANDROID_NDK%" == "" (
     echo "ERROR: Set ANDROID_NDK to the location of your Android NDK installation."
@@ -26,15 +25,11 @@ if "%JAVA_HOME%" == "" (
 
 set ANDROID_SDK_VERSION=android-34
 
-@REM SET PATH=%PATH%;C:\Users\aschneider1\Desktop
-@REM SET PATH=%PATH%;C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.39.33519\bin\Hostx64\x64
-
 @REM
 @REM arm64-v8a
 @REM
 
 set ANDROID_ABI=arm64-v8a
-@REM call %VCVARSALL% x64_arm64
 
 @REM Static, debug
 set BUILD_TYPE=Debug
@@ -55,7 +50,6 @@ call :run_build
 @REM
 
 set ANDROID_ABI=armeabi-v7a
-@REM call %VCVARSALL% x64_arm
 
 @REM Static, debug
 set BUILD_TYPE=Debug
@@ -76,7 +70,6 @@ call :run_build
 @REM
 
 set ANDROID_ABI=x86_64
-@REM call %VCVARSALL% x64
 
 @REM Static, debug
 set BUILD_TYPE=Debug
@@ -97,7 +90,6 @@ call :run_build
 @REM
 
 set ANDROID_ABI=x86
-@REM call %VCVARSALL% x64_x86
 
 @REM Static, debug
 set BUILD_TYPE=Debug
@@ -126,8 +118,8 @@ if "%BUILD_FAILURES%" == "" (
 )
 
 :run_build
-call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat android %OCEAN_THIRD_PARTY_SOURCE_DIR% %BUILD_DIRECTORY% "-" ^
-        "-GNMake Makefiles" ^
+call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat android %OCEAN_THIRD_PARTY_SOURCE_DIR% %BUILD_DIRECTORY% "-j16" ^
+        "-GNinja" ^
         "-DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY%" ^
         "-DCMAKE_BUILD_TYPE=%BUILD_TYPE%" ^
         "-DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS%" ^
@@ -137,7 +129,8 @@ call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat android %OCEAN_THIRD_PARTY_SO
         "-DCMAKE_ANDROID_STL_TYPE=c++_static" ^
         "-DCMAKE_ANDROID_NDK=%ANDROID_NDK%" ^
         "-DCMAKE_SYSTEM_NAME=Android" ^
-        "-DCMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%\build\cmake\android.toolchain.cmake"
+        "-DCMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%\build\cmake\android.toolchain.cmake" ^
+        "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=%~dp0\FindNinjaAndroidSDK.cmake"
 
 @echo off
 if %errorlevel% neq 0 (

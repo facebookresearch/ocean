@@ -15,6 +15,10 @@ if (APPLE)
     set(CMAKE_SHARED_LIBRARY_SONAME_OBJC_FLAG "-install_name")
 endif()
 
+if(CMAKE_SYSTEM_NAME AND "${CMAKE_SYSTEM_NAME}" STREQUAL Android)
+  include(build/cmake/FindNinjaAndroidSDK.cmake)
+endif()
+
 project(ocean)
 
 # Additional CMake configurations

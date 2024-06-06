@@ -5,9 +5,8 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-if(_"${CMAKE_SYSTEM_NAME}" STREQUAL _Android AND
-   ${CMAKE_HOST_SYSTEM_NAME} STREQUAL Windows)
-  include(findNMake.cmake)
+if(CMAKE_SYSTEM_NAME AND "${CMAKE_SYSTEM_NAME}" STREQUAL Android)
+  include(${CMAKE_CURRENT_LIST_DIR}/../FindNinjaAndroidSDK.cmake)
 endif()
 
 project(ocean_third_party)
