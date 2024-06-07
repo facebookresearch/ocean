@@ -112,6 +112,6 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     )
 
     include(GoogleTest)
-    gtest_add_tests(${OCEAN_TARGET_NAME} SOURCES ${OCEAN_TARGET_SOURCE_FILES})
+    gtest_add_tests(TARGET ${OCEAN_TARGET_NAME} WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)
 
 endif()

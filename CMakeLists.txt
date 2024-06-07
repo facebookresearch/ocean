@@ -173,6 +173,7 @@ if (OCEAN_BUILD_DEMOS)
 endif()
 
 if (OCEAN_BUILD_TESTS)
+    enable_testing()
     add_subdirectory(impl/ocean/test)
     add_subdirectory(impl/application/ocean/test)
 endif()
