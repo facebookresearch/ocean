@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.meta.ocean.app.demo.platform.meta.quest.openxr.fingerdistance.android;
+package com.meta.ocean.app.demo.platform.meta.quest.openxr.fingerdistance.quest;
 
 public class FingerDistanceActivity extends android.app.NativeActivity
 {
