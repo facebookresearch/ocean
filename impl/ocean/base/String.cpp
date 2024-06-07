@@ -208,78 +208,78 @@ std::string String::toAStringHex(const unsigned short value, const bool upperCas
 	return toAStringHexReverse((unsigned char*)(&value), sizeof(value), upperCases);
 }
 
-std::string String::toAStringHex(const unsigned char* value, const unsigned int number, const bool upperCases)
+std::string String::toAStringHex(const uint8_t* data, const size_t size, const bool upperCases)
 {
-	ocean_assert(value);
+	ocean_assert(data != nullptr || size == 0);
 
-	std::string result(number * 2u, ' ');
+	std::string result(size * 2, ' ');
 
-	const unsigned char aCharacters = upperCases ? 'A' : 'a';
+	const char aCharacter = upperCases ? 'A' : 'a';
 
-	for (unsigned int n = 0u; n < number; ++n)
+	for (size_t n = 0; n < size; ++n)
 	{
-		unsigned char v = value[n];
+		const uint8_t value = data[n];
 
-		const unsigned int integer0 = (unsigned int)(v & 0x0F);
-		const unsigned int integer1 = (unsigned int)((v >> 4) & 0x0F);
+		const uint8_t integer0 = value & 0x0Fu;
+		const uint8_t integer1 = (value >> 4u) & 0x0Fu;
 
-		char* pointer = &result[n * 2u];
+		char* const target = &result[n * 2];
 
-		if (integer0 < 10)
+		if (integer0 < 10u)
 		{
-			pointer[1] = '0' + char(integer0);
+			target[1] = '0' + char(integer0);
 		}
 		else
 		{
-			pointer[1] = char(aCharacters + char(integer0 - 10));
+			target[1] = aCharacter + char(integer0 - 10);
 		}
 
-		if (integer1 < 10)
+		if (integer1 < 10u)
 		{
-			pointer[0] = '0' + char(integer1);
+			target[0] = '0' + char(integer1);
 		}
 		else
 		{
-			pointer[0] = char(aCharacters + char(integer1 - 10));
+			target[0] = aCharacter + char(integer1 - 10);
 		}
 	}
 
 	return result;
 }
 
-std::string String::toAStringHexReverse(const unsigned char* value, const unsigned int number, const bool upperCases)
+std::string String::toAStringHexReverse(const uint8_t* data, const size_t size, const bool upperCases)
 {
-	ocean_assert(value);
+	ocean_assert(data != nullptr || size == 0);
 
-	std::string result(number * 2u, ' ');
+	std::string result(size * 2, ' ');
 
-	const unsigned char aCharacters = upperCases ? 'A' : 'a';
+	const char aCharacter = upperCases ? 'A' : 'a';
 
-	for (unsigned int n = 0u; n < number; ++n)
+	for (size_t n = 0u; n < size; ++n)
 	{
-		unsigned char v = value[n];
+		const uint8_t value = data[n];
 
-		const unsigned int integer0 = (unsigned int)(v & 0x0F);
-		const unsigned int integer1 = (unsigned int)((v >> 4) & 0x0F);
+		const uint8_t integer0 = value & 0x0F;
+		const uint8_t integer1 = (value >> 4) & 0x0F;
 
-		char* pointer = &result[(number - n - 1u) * 2u];
+		char* const target = &result[(size - n - 1) * 2];
 
-		if (integer0 < 10)
+		if (integer0 < 10u)
 		{
-			pointer[1] = '0' + char(integer0);
+			target[1] = '0' + char(integer0);
 		}
 		else
 		{
-			pointer[1] = char(aCharacters + char(integer0 - 10));
+			target[1] = aCharacter + char(integer0 - 10);
 		}
 
-		if (integer1 < 10)
+		if (integer1 < 10u)
 		{
-			pointer[0] = '0' + char(integer1);
+			target[0] = '0' + char(integer1);
 		}
 		else
 		{
-			pointer[0] = char(aCharacters + char(integer1 - 10));
+			target[0] = aCharacter + char(integer1 - 10);
 		}
 	}
 

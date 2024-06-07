@@ -224,22 +224,22 @@ class OCEAN_BASE_EXPORT String
 		static std::string toAStringHex(const unsigned short value, const bool upperCases = true);
 
 		/**
-		 * Converts characters to a string with 8bit character as hexadecimal notation.
-		 * @param value The value to convert
-		 * @param number The number of given characters
+		 * Converts memory to a string with hexadecimal notation.
+		 * @param data The memory to convert, can be nullptr if size == 0
+		 * @param size The size of the memory in bytes, with range [0, infinity)
 		 * @param upperCases True, to use upper case characters; False, to use lower case characters
 		 * @return Converted string
 		 */
-		static std::string toAStringHex(const unsigned char* value, const unsigned int number, const bool upperCases = true);
+		static std::string toAStringHex(const uint8_t* data, const size_t size, const bool upperCases = true);
 
 		/**
-		 * Converts characters to a string with 8bit character as hexadecimal notation in a reverse order.
-		 * @param value The value to convert
-		 * @param number The number of given characters
+		 * Converts memory to a string with hexadecimal notation in a reverse order.
+		 * @param data The memory to convert, can be nullptr if size == 0
+		 * @param size The size of the memory in bytes, with range [0, infinity)
 		 * @param upperCases True, to use upper case characters; False, to use lower case characters
 		 * @return Converted string
 		 */
-		static std::string toAStringHexReverse(const unsigned char* value, const unsigned int number, const bool upperCases = true);
+		static std::string toAStringHexReverse(const uint8_t* data, const size_t size, const bool upperCases = true);
 
 		/**
 		 * Converts a string to a string with lower characters only.
