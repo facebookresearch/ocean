@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.meta.ocean.app.demo.platform.meta.quest.openxr.panoramaviewer.android;
+package com.meta.ocean.app.demo.platform.meta.quest.openxr.panoramaviewer.quest;
 
 public class PanoramaViewerActivity extends android.app.NativeActivity
 {
