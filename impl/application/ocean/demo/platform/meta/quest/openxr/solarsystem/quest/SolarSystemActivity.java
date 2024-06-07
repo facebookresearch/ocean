@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.meta.ocean.app.demo.platform.meta.quest.openxr.solarsystem.android;
+package com.meta.ocean.app.demo.platform.meta.quest.openxr.solarsystem.quest;
 
 public class SolarSystemActivity extends android.app.NativeActivity
 {
