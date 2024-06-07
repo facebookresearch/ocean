@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.meta.ocean.app.demo.platform.meta.quest.openxr.renderer.android;
+package com.meta.ocean.app.demo.platform.meta.quest.openxr.renderer.quest;
 
 public class OpenXRRendererApplicationActivity extends android.app.NativeActivity
 {
