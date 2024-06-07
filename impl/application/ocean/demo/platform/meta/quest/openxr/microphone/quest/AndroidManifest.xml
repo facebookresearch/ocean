@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		package="com.meta.ocean.app.demo.platform.meta.quest.openxr.microphone.android"
+		package="com.meta.ocean.app.demo.platform.meta.quest.openxr.microphone.quest"
 		android:versionCode="2"
 		android:versionName="1.0" android:installLocation="auto" >
 
@@ -15,7 +15,7 @@
 	<application android:allowBackup="false" android:label="OceanOpenXRMicrophone" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
 		<meta-data android:name="com.samsung.android.vr.application.mode" android:value="vr_only"/>
 		<activity
-				android:name="com.meta.ocean.app.demo.platform.meta.quest.openxr.microphone.android.MicrophoneApplicationActivity"
+				android:name="com.meta.ocean.app.demo.platform.meta.quest.openxr.microphone.quest.MicrophoneApplicationActivity"
 				android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
 				android:launchMode="singleTask"
 				android:screenOrientation="landscape"
