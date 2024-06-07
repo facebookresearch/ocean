@@ -30,9 +30,6 @@ public class VideoPreviewActivity extends Activity
 		System.loadLibrary("OceanDemoMediaVideoPreview");
 	}
 
-	/// Global shark activity.
-	public static VideoPreviewActivity mainActivity = null;
-
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
@@ -41,8 +38,6 @@ public class VideoPreviewActivity extends Activity
 		BaseJni.initialize("STANDARD, QUEUED");
 		MediaAndroidJni.registerLibrary();
 		RenderingGLESceneGraphJni.registerLibrary();
-
-		mainActivity = this;
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
