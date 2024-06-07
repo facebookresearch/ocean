@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.meta.ocean.app.demo.platform.meta.quest.openxr.theremin.android;
+package com.meta.ocean.app.demo.platform.meta.quest.openxr.theremin.quest;
 
 public class ThereminApplicationActivity extends android.app.NativeActivity
 {
