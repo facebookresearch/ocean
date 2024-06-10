@@ -14,7 +14,7 @@ CPMAddPackage(
   NAME           googletest
   GIT_REPOSITORY https://github.com/google/googletest
   GIT_TAG        v1.14.0
-#  PATCH_COMMAND  ${GIT_EXECUTABLE} apply "${CMAKE_CURRENT_SOURCE_DIR}/tinyxml2/tinyxml2.patch"
+  PATCH_COMMAND  ${GIT_EXECUTABLE} apply "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest.patch"
 )
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
