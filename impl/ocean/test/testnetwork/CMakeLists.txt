@@ -62,3 +62,48 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
     )
 
 endif()
+
+if (ANDROID OR IOS OR LINUX OR MACOS)
+
+    set(OCEAN_TARGET_NAME "ocean_test_testnetwork_gtest")
+
+    find_package(GTest REQUIRED)
+
+    enable_testing()
+
+    # Source files
+    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
+    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
+    list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestNetwork.cpp")
+
+    # Target definition
+    add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
+
+    target_include_directories(${OCEAN_TARGET_NAME} PRIVATE "${OCEAN_IMPL_DIR}")
+
+    target_compile_definitions(${OCEAN_TARGET_NAME}
+        PUBLIC
+            "${OCEAN_PREPROCESSOR_FLAGS}"
+            "-DOCEAN_USE_GTEST"
+    )
+
+    if (BUILD_SHARED_LIBS)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE -DUSE_OCEAN_TEST_NETWORK_EXPORT)
+    endif()
+
+    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
+
+    # Dependencies
+    target_link_libraries(${OCEAN_TARGET_NAME}
+        PUBLIC
+            GTest::gtest_main
+            ocean_base
+        PRIVATE
+            ocean_network
+            ocean_system
+    )
+
+    include(GoogleTest)
+    gtest_add_tests(TARGET ${OCEAN_TARGET_NAME} WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)
+
+endif()
