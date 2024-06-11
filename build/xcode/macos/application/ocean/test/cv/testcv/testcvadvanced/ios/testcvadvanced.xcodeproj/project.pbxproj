@@ -348,6 +348,8 @@
 					"-lOceanTestCVAdvancedD",
 					"-framework",
 					Foundation,
+					"-framework",
+					UIKit,
 				);
 				OTHER_LIBTOOLFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fayteq.testcvadvanced;
@@ -420,6 +422,8 @@
 					"-lOceanTestCVAdvanced",
 					"-framework",
 					Foundation,
+					"-framework",
+					UIKit,
 				);
 				OTHER_LIBTOOLFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fayteq.testcvadvanced;
