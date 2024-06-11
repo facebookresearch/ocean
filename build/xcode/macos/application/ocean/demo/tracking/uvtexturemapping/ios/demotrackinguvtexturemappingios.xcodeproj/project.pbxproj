@@ -20,7 +20,7 @@
 		50816126243522B700266738 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../impl/application/ocean/demo/tracking/uvtexturemapping/osx/AppDelegate.h; sourceTree = "<group>"; };
 		5081612D243522FA00266738 /* sift640x512.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = sift640x512.bmp; path = ../../../../../../../../../res/application/ocean/demo/tracking/uvtexturemapping/sift640x512.bmp; sourceTree = "<group>"; };
 		5081612E243522FA00266738 /* cameracalibration.occ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cameracalibration.occ; path = ../../../../../../../../../res/application/ocean/demo/tracking/uvtexturemapping/cameracalibration.occ; sourceTree = "<group>"; };
-		508161312435230700266738 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../res/application/ocean/demo/tracking/uvtexturemapping/ios/Info.plist; sourceTree = "<group>"; };
+		508161312435230700266738 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../impl/application/ocean/demo/tracking/uvtexturemapping/ios/Info.plist; sourceTree = "<group>"; };
 		508161322435230700266738 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = ../../../../../../../../../res/application/ocean/demo/tracking/uvtexturemapping/ios/LaunchScreen.xib; sourceTree = "<group>"; };
 		508161352435234700266738 /* UVTextureMappingWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UVTextureMappingWrapper.cpp; path = ../../../../../../../../../impl/application/ocean/demo/tracking/uvtexturemapping/UVTextureMappingWrapper.cpp; sourceTree = "<group>"; };
 		508161372435235100266738 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ../../../../../../../../../impl/application/ocean/demo/tracking/uvtexturemapping/ios/AppDelegate.mm; sourceTree = "<group>"; };
@@ -320,7 +320,7 @@
 					"$(inherited)",
 					../../../../../../../../../impl,
 				);
-				INFOPLIST_FILE = ../../../../../../../../../res/application/ocean/demo/tracking/uvtexturemapping/ios/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../impl/application/ocean/demo/tracking/uvtexturemapping/ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
@@ -428,7 +428,7 @@
 					"$(inherited)",
 					../../../../../../../../../impl,
 				);
-				INFOPLIST_FILE = ../../../../../../../../../res/application/ocean/demo/tracking/uvtexturemapping/ios/Info.plist;
+				INFOPLIST_FILE = ../../../../../../../../../impl/application/ocean/demo/tracking/uvtexturemapping/ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
