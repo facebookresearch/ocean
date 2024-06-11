@@ -29,15 +29,15 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 
 		/**
 		 * Converts a Java native string to a std string.
-		 * @param env Java environment
-		 * @param javaString Java string to be converted
+		 * @param env The java environment, must be valid
+		 * @param javaString Java string to be converted, may be nullptr
 		 * @return Resulting std string
 		 */
 		static std::string toAString(JNIEnv* env, jstring javaString);
 
 		/**
 		 * Converts a std string to a Java native string.
-		 * @param env Java environment
+		 * @param env The java environment, must be valid
 		 * @param stdString Std string to be converted
 		 * @return Resulting Java native string
 		 */
@@ -45,11 +45,29 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 
 		/**
 		 * Converts a vector of std strings to a Java array with native strings.
-		 * @param env Java environment
-		 * @param stdStrings Std strings to be converted, can be empty
+		 * @param env The java environment, must be valid
+		 * @param strings Std strings to be converted, can be empty
 		 * @return Resulting Java native string
 		 */
-		static jobjectArray toJavaStringArray(JNIEnv* env, const std::vector<std::string>& stdStrings);
+		static jobjectArray toJavaStringArray(JNIEnv* env, const std::vector<std::string>& strings);
+
+		/**
+		 * Converts a Java native list with string to a vector of strings.
+		 * @param env The java environment, must be valid
+		 * @param javaStringList Java list with strings to be converted, must be valid
+		 * @param strings The resulting vector of strings
+		 * @return True, if succeeded
+		 */
+		static bool toVector(JNIEnv* env, jobject javaStringList, std::vector<std::string>& strings);
+
+		/**
+		 * Converts a Java native list with integer to a vector of integers.
+		 * @param env The java environment, must be valid
+		 * @param javaIntegerList Java list with integers to be converted, must be valid
+		 * @param values The resulting vector of integers
+		 * @return True, if succeeded
+		 */
+		static bool toVector(JNIEnv* env, jobject javaIntegerList, std::vector<int>& values);
 
 		/**
 		 * Returns the class name of an object.

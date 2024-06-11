@@ -26,6 +26,12 @@ namespace Android
 
 std::string Utilities::toAString(JNIEnv* env, jstring javaString)
 {
+	if (javaString == nullptr)
+	{
+		// e.g., if a Java String is null
+		return std::string();
+	}
+
 	ocean_assert(env != nullptr);
 
 	jboolean isCopy = false;
@@ -48,18 +54,144 @@ jstring Utilities::toJavaString(JNIEnv* env, const std::string& stdString)
 	return env->NewStringUTF(stdString.c_str());
 }
 
-jobjectArray Utilities::toJavaStringArray(JNIEnv* env, const std::vector<std::string>& stdStrings)
+jobjectArray Utilities::toJavaStringArray(JNIEnv* env, const std::vector<std::string>& strings)
 {
 	ocean_assert(env != nullptr);
 
-	jobjectArray result = env->NewObjectArray(stdStrings.size(), env->FindClass("java/lang/String"), env->NewStringUTF(""));
+	jobjectArray result = env->NewObjectArray(strings.size(), env->FindClass("java/lang/String"), env->NewStringUTF(""));
 
-	for (size_t n = 0; n < stdStrings.size(); ++n)
+	for (size_t n = 0; n < strings.size(); ++n)
 	{
-		env->SetObjectArrayElement(result, n, env->NewStringUTF(stdStrings[n].c_str()));
+		env->SetObjectArrayElement(result, n, env->NewStringUTF(strings[n].c_str()));
 	}
 
 	return result;
+}
+
+bool Utilities::toVector(JNIEnv* env, jobject javaStringList, std::vector<std::string>& strings)
+{
+	ocean_assert(env != nullptr);
+	ocean_assert(javaStringList != nullptr);
+
+	const ScopedJClass javaClassList(*env, env->FindClass("java/util/List"));
+
+	if (!javaClassList)
+	{
+		return false;
+	}
+
+	const jmethodID functionId = env->GetMethodID(javaClassList, "toArray", "()[Ljava/lang/Object;");
+
+	if (functionId == nullptr)
+	{
+		return false;
+	}
+
+	const ScopedJObjectArray javaArray(*env, (jobjectArray)(env->CallObjectMethod(javaStringList, functionId)));
+
+	if (!javaArray)
+	{
+		return false;
+	}
+
+	const jsize size = env->GetArrayLength(javaArray);
+
+	if (size < 0)
+	{
+		return false;
+	}
+
+	strings.clear();
+
+	if (size == 0)
+	{
+		return true;
+	}
+
+	strings.reserve(size_t(size));
+
+	for (jsize n = 0; n < size; ++n)
+	{
+		const ScopedJString javaString(*env, (jstring)(env->GetObjectArrayElement(javaArray, n)));
+
+		if (!javaString)
+		{
+			return false;
+		}
+
+		strings.emplace_back(toAString(env, javaString));
+	}
+	
+	return true;
+}
+
+bool Utilities::toVector(JNIEnv* env, jobject javaIntegerList, std::vector<int>& values)
+{
+	ocean_assert(env != nullptr);
+	ocean_assert(javaIntegerList != nullptr);
+
+	const ScopedJClass javaClassList(*env, env->FindClass("java/util/List"));
+
+	if (!javaClassList.isValid())
+	{
+		return false;
+	}
+
+	const jmethodID functionIdToArray = env->GetMethodID(javaClassList, "toArray", "()[Ljava/lang/Object;");
+
+	if (functionIdToArray == nullptr)
+	{
+		return false;
+	}
+
+	const ScopedJObjectArray javaArray(*env, (jobjectArray)(env->CallObjectMethod(javaIntegerList, functionIdToArray)));
+
+	if (!javaArray)
+	{
+		return false;
+	}
+
+	const jsize size = env->GetArrayLength(javaArray);
+
+	if (size < 0)
+	{
+		return false;
+	}
+
+	values.clear();
+
+	if (size == 0)
+	{
+		return true;
+	}
+
+	const ScopedJClass javaClassInteger(*env, env->FindClass("java/lang/Integer"));
+
+	if (!javaClassInteger)
+	{
+		return false;
+	}
+
+	const jmethodID jFunctionIdIntValue = env->GetMethodID(javaClassInteger, "intValue", "()I");
+
+	if (jFunctionIdIntValue == nullptr)
+	{
+		return false;
+	}
+
+	for (jsize n = 0; n < size; ++n)
+	{
+		const ScopedJObject javaObject(*env, (jstring)(env->GetObjectArrayElement(javaArray, n)));
+
+		if (!javaObject)
+		{
+			return false;
+		}
+
+		values.emplace_back(env->CallIntMethod(javaObject, jFunctionIdIntValue));
+	}
+	
+	return true;
 }
 
 bool Utilities::className(JNIEnv* env, jobject object, std::string& name)
