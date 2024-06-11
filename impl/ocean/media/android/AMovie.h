@@ -233,13 +233,6 @@ class OCEAN_MEDIA_A_EXPORT AMovie final :
 		 */
 		static bool extractAudioSamplesFromCodecOutputBuffer(AMediaCodec* const mediaCodec);
 
-		/**
-		 * Extracts the video frame from an output buffer of a video codec.
-		 * @param mediaCodec The media codec to which the output buffer belongs, must be valid
-		 * @return The resulting extracted frame, invalid if the frame could not be extracted
-		 */
-		static Frame extractVideoFrameFromCodecOutputBuffer(AMediaCodec* const mediaCodec);
-
 	protected:
 
 		/// Optional file description if used.

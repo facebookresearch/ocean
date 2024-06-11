@@ -85,6 +85,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\NativeMediaLibrary.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\PixelFormats.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\Plugin.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\VideoDecoder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\AAudio.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\NativeMediaLibrary.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\PixelFormats.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\Plugin.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\VideoDecoder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
