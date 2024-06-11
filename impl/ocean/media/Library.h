@@ -58,6 +58,9 @@ class OCEAN_MEDIA_EXPORT Library
 
 			/// Name of the library.
 			std::string library;
+
+			/// Optional unique identifier of the medium, e.g., a device name or a serial number.
+			std::string uniqueIdentifier_;
 		};
 
 		/**
