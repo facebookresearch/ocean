@@ -92,6 +92,12 @@ class ScopedJNIObject
 		inline ~ScopedJNIObject();
 
 		/**
+		 * Makes this scoped object a global object.
+		 * Global objects can be access from any thread.
+		 */
+		inline void makeGlobal();
+
+		/**
 		 * Releases this encapsulated jobject and deletes the local reference to the jobject.
 		 */
 		inline void release();
@@ -101,6 +107,12 @@ class ScopedJNIObject
 		 * @return True, if so
 		 */
 		inline bool isValid() const;
+
+		/**
+		 * Returns whether this object is global.
+		 * @return True, if so
+		 */
+		inline bool isGlobal() const;
 
 		/**
 		 * Returns the pointer to the encapsulated object.
@@ -156,6 +168,9 @@ class ScopedJNIObject
 
 		/// The encapsulated object.
 		T object_ = T();
+
+		/// The encapsulated global object.
+		T globalObject_ = T();
 };
 
 template <typename T>
@@ -187,8 +202,26 @@ inline ScopedJNIObject<T>::~ScopedJNIObject()
 }
 
 template <typename T>
+inline void ScopedJNIObject<T>::makeGlobal()
+{
+	ocean_assert(isValid());
+
+	if (globalObject_ == nullptr)
+	{
+		globalObject_ = T(jniEnvironment_->NewGlobalRef(object_));
+	}
+}
+
+template <typename T>
 inline void ScopedJNIObject<T>::release()
 {
+	if (globalObject_ != nullptr)
+	{
+		ocean_assert(jniEnvironment_ != nullptr);
+		jniEnvironment_->DeleteGlobalRef(globalObject_);
+		globalObject_ = nullptr;
+	}
+
 	if (object_)
 	{
 		ocean_assert(jniEnvironment_ != nullptr);
@@ -204,15 +237,27 @@ inline bool ScopedJNIObject<T>::isValid() const
 }
 
 template <typename T>
+inline bool ScopedJNIObject<T>::isGlobal() const
+{
+	return globalObject_ != nullptr;
+}
+
+template <typename T>
 inline T ScopedJNIObject<T>::object() const
 {
+	if (globalObject_ != nullptr)
+	{
+		ocean_assert(object_ != nullptr);
+		return globalObject_;
+	}
+
 	return object_;
 }
 
 template <typename T>
 inline ScopedJNIObject<T>::operator T() const
 {
-	return object_;
+	return object();
 }
 
 template <typename T>
@@ -220,7 +265,7 @@ inline T ScopedJNIObject<T>::operator->() const
 {
 	ocean_assert(isValid());
 
-	return object_;
+	return object();
 }
 
 template <typename T>
@@ -238,9 +283,11 @@ ScopedJNIObject<T>& ScopedJNIObject<T>::operator=(ScopedJNIObject<T>&& object)
 
 		jniEnvironment_ = object.jniEnvironment_;
 		object_ = std::move(object.object_);
+		globalObject_ = std::move(object.globalObject_);
 
 		object.jniEnvironment_ = nullptr;
 		object.object_ = T();
+		object.globalObject_ = T();
 	}
 
 	return *this;
