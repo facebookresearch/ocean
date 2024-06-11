@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		507D226D2C17961500C01F40 /* development_team.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 507D226C2C17961500C01F40 /* development_team.xcconfig */; };
 		5081612F243522FA00266738 /* sift640x512.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 5081612D243522FA00266738 /* sift640x512.bmp */; };
 		50816130243522FA00266738 /* cameracalibration.occ in Resources */ = {isa = PBXBuildFile; fileRef = 5081612E243522FA00266738 /* cameracalibration.occ */; };
 		508161342435230700266738 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 508161322435230700266738 /* LaunchScreen.xib */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		507D226C2C17961500C01F40 /* development_team.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = development_team.xcconfig; sourceTree = "<group>"; };
 		50816125243522AF00266738 /* UVTextureMappingWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UVTextureMappingWrapper.h; path = ../../../../../../../../../impl/application/ocean/demo/tracking/uvtexturemapping/UVTextureMappingWrapper.h; sourceTree = "<group>"; };
 		50816126243522B700266738 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../impl/application/ocean/demo/tracking/uvtexturemapping/osx/AppDelegate.h; sourceTree = "<group>"; };
 		5081612D243522FA00266738 /* sift640x512.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = sift640x512.bmp; path = ../../../../../../../../../res/application/ocean/demo/tracking/uvtexturemapping/sift640x512.bmp; sourceTree = "<group>"; };
@@ -39,12 +41,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		507D226B2C1795F900C01F40 /* Config Files */ = {
+			isa = PBXGroup;
+			children = (
+				507D226C2C17961500C01F40 /* development_team.xcconfig */,
+			);
+			name = "Config Files";
+			sourceTree = "<group>";
+		};
 		5D4A71611D8B10B000B8B729 = {
 			isa = PBXGroup;
 			children = (
 				5DF0B9571D8FE33E00BE5D21 /* Header Files */,
 				5DF0B9561D8FE33000BE5D21 /* Source Files */,
 				5DF0B9581D8FE35D00BE5D21 /* Resource Files */,
+				507D226B2C1795F900C01F40 /* Config Files */,
 				5D4A716B1D8B10B000B8B729 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -119,7 +130,6 @@
 				TargetAttributes = {
 					5D4A71691D8B10B000B8B729 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = V9WTTPBFK9;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -187,6 +197,7 @@
 /* Begin XCBuildConfiguration section */
 		5D4A718F1D8B10B000B8B729 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 507D226C2C17961500C01F40 /* development_team.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -246,6 +257,7 @@
 		};
 		5D4A71901D8B10B000B8B729 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 507D226C2C17961500C01F40 /* development_team.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -305,7 +317,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackinguvtexturemappingios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackinguvtexturemappingios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
@@ -391,7 +402,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.uvtexturemapping.ios;
 				PRODUCT_MODULE_NAME = demotrackinguvtexturemappingios;
 				PRODUCT_NAME = demotrackinguvtexturemappingios;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackinguvtexturemappingios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
@@ -416,7 +426,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackinguvtexturemappingios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackinguvtexturemappingios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
@@ -501,7 +510,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.uvtexturemapping.ios;
 				PRODUCT_MODULE_NAME = demotrackinguvtexturemappingios;
 				PRODUCT_NAME = demotrackinguvtexturemappingios;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackinguvtexturemappingios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
