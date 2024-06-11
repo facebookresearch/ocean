@@ -346,6 +346,22 @@ class OCEAN_CV_EXPORT FrameConverter
 					public:
 
 						/**
+						 * Helper class for a hash function.
+						 * The separate struct is necessary for compilers like GCC.
+						 */
+						struct Hash
+						{
+							/**
+							 * Hash function.
+							 * @param conversionTriple The conversion triple for which the hash will be determined
+							 * @return The hash value
+							 */
+							inline size_t operator()(const ConversionTriple& conversionTriple) const;
+						};
+
+					public:
+
+						/**
 						 * Default constructor.
 						 */
 						ConversionTriple() = default;
@@ -364,13 +380,6 @@ class OCEAN_CV_EXPORT FrameConverter
 						 * @return True, if so
 						 */
 						inline bool operator==(const ConversionTriple& conversionTriple) const;
-
-						/**
-						 * Hash function.
-						 * @param conversionTriple The conversion triple for which the hash will be determined
-						 * @return The hash value
-						 */
-						inline size_t operator()(const ConversionTriple& conversionTriple) const;
 
 					public:
 
@@ -507,7 +516,7 @@ class OCEAN_CV_EXPORT FrameConverter
 				/**
 				 * Definition of a map mapping pairs or pixel formats to function pointers.
 				 */
-				typedef std::unordered_map<ConversionTriple, FunctionWrapper, ConversionTriple> FormatPair2FunctionWrapperMap;
+				typedef std::unordered_map<ConversionTriple, FunctionWrapper, ConversionTriple::Hash> FormatPair2FunctionWrapperMap;
 
 			public:
 
@@ -2609,6 +2618,11 @@ inline bool FrameConverter::Options::allowApproximation() const
 	return (optionsType_ & OT_APPROXIMATED) == OT_APPROXIMATED;
 }
 
+inline size_t FrameConverter::ConversionFunctionMap::ConversionTriple::Hash::operator()(const ConversionTriple& conversionTriple) const
+{
+	return size_t(conversionTriple.sourcePixelFormat_ ^ (conversionTriple.targetPixelFormat_ << uint64_t(1u)) ^ (uint64_t(conversionTriple.optionsType_) << uint64_t(2u)));
+}
+
 inline FrameConverter::ConversionFunctionMap::ConversionTriple::ConversionTriple(const FrameType::PixelFormat& sourcePixelFormat, const FrameType::PixelFormat& targetPixelFormat, const Options::OptionsType optionsType) :
 	sourcePixelFormat_(sourcePixelFormat),
 	targetPixelFormat_(targetPixelFormat),
@@ -2620,11 +2634,6 @@ inline FrameConverter::ConversionFunctionMap::ConversionTriple::ConversionTriple
 inline bool FrameConverter::ConversionFunctionMap::ConversionTriple::operator==(const ConversionTriple& conversionTriple) const
 {
 	return sourcePixelFormat_ == conversionTriple.sourcePixelFormat_ && targetPixelFormat_ == conversionTriple.targetPixelFormat_ && optionsType_ == conversionTriple.optionsType_;
-}
-
-inline size_t FrameConverter::ConversionFunctionMap::ConversionTriple::operator()(const ConversionTriple& conversionTriple) const
-{
-	return size_t(conversionTriple.sourcePixelFormat_ ^ (conversionTriple.targetPixelFormat_ << uint64_t(1u)) ^ (uint64_t(conversionTriple.optionsType_) << uint64_t(2u)));
 }
 
 inline bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::PixelFormat targetPixelFormat, Frame& target, const bool forceCopy, Worker* worker, const Options& options)
