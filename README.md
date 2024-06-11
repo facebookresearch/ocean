@@ -12,6 +12,7 @@ Please read the [contribution guidelines](CONTRIBUTING.md) before submitting any
 - Install [CMake](https://cmake.org/download/). The required version is 3.29.
 - Define an environment variable `OCEAN_DEVELOPMENT_PATH` that points to the local directory containing this repository
 - Ocean requires C++20
+- Ensure that the [Git](https://www.git-scm.com/downloads) executable is available in your path.
 
 ## Building
 
@@ -20,6 +21,7 @@ Please refer to the platform-specific instructions when building Ocean:
 * [Android](building_for_android.md)
 * [iOS](building_for_ios.md)
 * [macOS](building_for_macos.md)
+* [Windows](building_for_windows.md)
 
 # License
 

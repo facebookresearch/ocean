@@ -11,6 +11,7 @@ This document describes the process to build Ocean for Android. It covers:
 
 * [General prerequisites listed on the main page](README.md)
 * Install an Android SDK and NDK (Android API 34), for example using [Android Studio](https://developer.android.com/studio). Other versions may work as well but haven't been tested.
+* Install the ninja build tool and ensure its executable is present within the directory tree pointed to by the `ANDROID_HOME` environment variable (see below). An easy way to do this is to install the CMake component available under the "SDK Tools" tab on the "Android SDK" page of Android Studio's Settings facility.
 * Install a Java Development Kit (JDK), for example [OpenJDK 22](https://jdk.java.net/22/).
 * To build the Ocean Android demo/test apps, install [Gradle 8.7](https://www.gradle.org)
 * Define the following environment variables:
@@ -29,7 +30,7 @@ As with the desktop use case, this process consists of two steps:
 
 These steps need to be repeated for all Android ABIs required.
 
-The easiest way to build the third-party libraries is by using the provided build scripts, [`build/cmake/build_thirdparty_android.sh`](build/cmake/build_thirdparty_android.sh). Simply comment out all build configurations that are not required for your project, for example:
+The easiest way to build the third-party libraries is by using the provided build scripts, [`build/cmake/build_thirdparty_android.sh`](build/cmake/build_thirdparty_android.sh) (on Windows: [`build/cmake/build_thirdparty_android.bat`](build/cmake/build_thirdparty_android.bat)). Simply comment out all build configurations that are not required for your project, for example:
 
 ```
 # run_build_for_android armeabi-v7a android-32 Debug static
@@ -53,15 +54,15 @@ run_build_for_android arm64-v8a   android-32 Release shared
 # run_build_for_android x86_64      android-32 Release shared
 ```
 
-Once the scripts completes, all binaries and include files of the third-party libraries will have been installed into `/tmp/ocean/install/android/${ANDROID_ABI}_${LINKING_TYPE_${BUILD_TYPE}`.
+Once the script completes, all binaries and include files of the third-party libraries will have been installed into `/tmp/ocean/install/android/${ANDROID_ABI}_${LINKING_TYPE_${BUILD_TYPE}`. On a Windows build host, they will be installed into that directory under drive C: with "android" abbreviated to "and" due to path name length considerations.
 
 ## 3 Using Ocean in external Android projects
 
 This section provides an example of how to build the Ocean libraries so that they can be integrated into an existing Android project.
 
-First, build the required third-party libraries as described above for the required Android ABIs. Then take a look at the build script for Android-builds of Ocean, [`build/cmake/build_ocean_android.sh`](build/cmake/build_ocean_android.sh), and comment out all build configurations that are not required. Make sure the selection of enabled build configurations matches the one from the build of the third-party libraries.
+First, build the required third-party libraries as described above for the required Android ABIs. Then take a look at the build script for Android builds of Ocean, [`build/cmake/build_ocean_android.sh`](build/cmake/build_ocean_android.sh) (.bat on Windows), and comment out all build configurations that are not required. Make sure the selection of enabled build configurations matches the one from the build of the third-party libraries.
 
-All binaries and include files of Ocean will have been installed into `/tmp/ocean/install/android/${ANDROID_ABI}_${LINKING_TYPE_${BUILD_TYPE}`.
+All binaries and include files of Ocean will have been installed into `/tmp/ocean/install/android/${ANDROID_ABI}_${LINKING_TYPE_${BUILD_TYPE}`. On Windows, the same directory under C:, with "android" shortened to "and".
 
 At this point, Ocean can be integrated into any external project. Projects that use Gradle as their main build system can take advantage of `externalNativeBuild` to build Ocean directly by using adding something similar to the following to their configuration:
 
@@ -78,11 +79,11 @@ externalNativeBuild {
 
 For a full example, please take a look at the Gradle configuration of the Ocean Android apps, for example [`build/gradle/application/ocean/demo/base/console/android/app/build.gradle.kts`](build/gradle/application/ocean/demo/base/console/android/app/build.gradle.kts).
 
-For projects using build systems of than Gradle, the precise details of the integration of Ocean are beyond the scope of this document and are left to the reader.
+For projects using build systems other than Gradle, the precise details of the integration of Ocean are beyond the scope of this document and are left to the reader.
 
 ## 4 Building the Ocean Android demo/test apps
 
-First, build the required third-party libraries as described above for the required Android ABIs. Then find the Gradle configuration of Ocean Android app that you want to build, for example [`build/gradle/application/ocean/demo/base/console/android`](build/gradle/application/ocean/demo/base/console/android/app/build.gradle.kts):
+First, build the required third-party libraries as described above for the required Android ABIs. Then find the Gradle configuration of an Ocean Android app that you want to build, for example [`build/gradle/application/ocean/demo/base/console/android`](build/gradle/application/ocean/demo/base/console/android/app/build.gradle.kts):
 
 ```
 cd ${OCEAN_DEVELOPMENT_PATH}/build/gradle/application/ocean/demo/base/console/android
