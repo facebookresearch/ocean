@@ -157,7 +157,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "../../../../../../../copy_arm_static.sh \"../../../../../../../../../../../bin/application/ocean/demo/cv/ios/\"\n";
+			shellScript = "../../../../../../../../copy_arm_static.sh \"../../../../../../../../../../../bin/application/ocean/demo/cv/ios/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
