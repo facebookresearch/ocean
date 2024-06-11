@@ -60,6 +60,8 @@ class PixelFormats
 			COLOR_RANGE_LIMITED = 2
 		};
 
+	public:
+
 		/**
 		 * Translates an Android pixel format to an Ocean pixel format for video data.
 		 * @param androidFormat The Android pixel format to translate
