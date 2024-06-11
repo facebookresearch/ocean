@@ -11,6 +11,10 @@
 		501EAB2B285A63C000EBB693 /* TestVocabularyTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 501EAB29285A63C000EBB693 /* TestVocabularyTree.h */; };
 		501EAB2D285A63D900EBB693 /* TestVocabularyTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 501EAB2C285A63D900EBB693 /* TestVocabularyTree.cpp */; };
 		501EAB2E285A63D900EBB693 /* TestVocabularyTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 501EAB2C285A63D900EBB693 /* TestVocabularyTree.cpp */; };
+		50363FBF2C17CE7D001581D0 /* TestPatternTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50363FBE2C17CE7D001581D0 /* TestPatternTracker.cpp */; };
+		50363FC02C17CE7D001581D0 /* TestPatternTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50363FBE2C17CE7D001581D0 /* TestPatternTracker.cpp */; };
+		50363FC22C17CE92001581D0 /* TestPatternTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 50363FC12C17CE92001581D0 /* TestPatternTracker.h */; };
+		50363FC32C17CE92001581D0 /* TestPatternTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 50363FC12C17CE92001581D0 /* TestPatternTracker.h */; };
 		933A3EEB22123DF30075A9EC /* TestMatchingBlob.h in Headers */ = {isa = PBXBuildFile; fileRef = 933A3EEA22123DF30075A9EC /* TestMatchingBlob.h */; };
 		933A3EEC22123DF30075A9EC /* TestMatchingBlob.h in Headers */ = {isa = PBXBuildFile; fileRef = 933A3EEA22123DF30075A9EC /* TestMatchingBlob.h */; };
 		933A3EEE22123E170075A9EC /* TestMatchingBlob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933A3EED22123E170075A9EC /* TestMatchingBlob.cpp */; };
@@ -40,6 +44,8 @@
 /* Begin PBXFileReference section */
 		501EAB29285A63C000EBB693 /* TestVocabularyTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestVocabularyTree.h; path = ../../../../../../impl/ocean/test/testtracking/TestVocabularyTree.h; sourceTree = "<group>"; };
 		501EAB2C285A63D900EBB693 /* TestVocabularyTree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestVocabularyTree.cpp; path = ../../../../../../impl/ocean/test/testtracking/TestVocabularyTree.cpp; sourceTree = "<group>"; };
+		50363FBE2C17CE7D001581D0 /* TestPatternTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestPatternTracker.cpp; path = ../../../../../../impl/ocean/test/testtracking/TestPatternTracker.cpp; sourceTree = "<group>"; };
+		50363FC12C17CE92001581D0 /* TestPatternTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestPatternTracker.h; path = ../../../../../../impl/ocean/test/testtracking/TestPatternTracker.h; sourceTree = "<group>"; };
 		5DD0BFD61BD525E000ABBC5B /* libOceanTestTrackingD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestTrackingD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DD14AA91D953F8B00CCA9F0 /* libOceanTestTrackingD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestTrackingD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		933A3EEA22123DF30075A9EC /* TestMatchingBlob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestMatchingBlob.h; path = ../../../../../../impl/ocean/test/testtracking/TestMatchingBlob.h; sourceTree = "<group>"; };
@@ -98,6 +104,7 @@
 				938C399B22123249009287D8 /* TestDatabase.cpp */,
 				93E4883F2B29401500BD0E62 /* TestHomographyImageAlignmentDense.cpp */,
 				933A3EED22123E170075A9EC /* TestMatchingBlob.cpp */,
+				50363FBE2C17CE7D001581D0 /* TestPatternTracker.cpp */,
 				938C399922123249009287D8 /* TestSimilarityTracker.cpp */,
 				93F9AF89267C0592003BEAF4 /* TestSmoothedTransformation.cpp */,
 				938C399A22123249009287D8 /* TestTracking.cpp */,
@@ -112,6 +119,7 @@
 				938C39A42212325D009287D8 /* TestDatabase.h */,
 				93E488422B29402E00BD0E62 /* TestHomographyImageAlignmentDense.h */,
 				933A3EEA22123DF30075A9EC /* TestMatchingBlob.h */,
+				50363FC12C17CE92001581D0 /* TestPatternTracker.h */,
 				938C39A32212325D009287D8 /* TestSimilarityTracker.h */,
 				93F9AF8C267C05B2003BEAF4 /* TestSmoothedTransformation.h */,
 				938C39A22212325D009287D8 /* TestTracking.h */,
@@ -131,6 +139,7 @@
 				93E488432B29402E00BD0E62 /* TestHomographyImageAlignmentDense.h in Headers */,
 				938C39A52212325D009287D8 /* TestTracking.h in Headers */,
 				501EAB2A285A63C000EBB693 /* TestVocabularyTree.h in Headers */,
+				50363FC22C17CE92001581D0 /* TestPatternTracker.h in Headers */,
 				933A3EEB22123DF30075A9EC /* TestMatchingBlob.h in Headers */,
 				93F9AF8D267C05B2003BEAF4 /* TestSmoothedTransformation.h in Headers */,
 				938C39A92212325D009287D8 /* TestDatabase.h in Headers */,
@@ -145,6 +154,7 @@
 				93E488442B29402E00BD0E62 /* TestHomographyImageAlignmentDense.h in Headers */,
 				938C39A62212325D009287D8 /* TestTracking.h in Headers */,
 				501EAB2B285A63C000EBB693 /* TestVocabularyTree.h in Headers */,
+				50363FC32C17CE92001581D0 /* TestPatternTracker.h in Headers */,
 				933A3EEC22123DF30075A9EC /* TestMatchingBlob.h in Headers */,
 				93F9AF8E267C05B2003BEAF4 /* TestSmoothedTransformation.h in Headers */,
 				938C39AA2212325D009287D8 /* TestDatabase.h in Headers */,
@@ -244,6 +254,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				938C399E22123249009287D8 /* TestTracking.cpp in Sources */,
+				50363FBF2C17CE7D001581D0 /* TestPatternTracker.cpp in Sources */,
 				938C399C22123249009287D8 /* TestSimilarityTracker.cpp in Sources */,
 				93F9AF8A267C0592003BEAF4 /* TestSmoothedTransformation.cpp in Sources */,
 				93E488402B29401500BD0E62 /* TestHomographyImageAlignmentDense.cpp in Sources */,
@@ -258,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				938C399F22123249009287D8 /* TestTracking.cpp in Sources */,
+				50363FC02C17CE7D001581D0 /* TestPatternTracker.cpp in Sources */,
 				938C399D22123249009287D8 /* TestSimilarityTracker.cpp in Sources */,
 				93F9AF8B267C0592003BEAF4 /* TestSmoothedTransformation.cpp in Sources */,
 				93E488412B29401500BD0E62 /* TestHomographyImageAlignmentDense.cpp in Sources */,
