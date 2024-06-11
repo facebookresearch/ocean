@@ -771,9 +771,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5DD14B211D95623E00CCA9F0"
-               BuildableName = "testmath.app"
-               BlueprintName = "testmath arm64 (Static)"
-               ReferencedContainer = "container:application/ocean/test/math/testmath/ios/testmath.xcodeproj">
+               BuildableName = "testmathios.app"
+               BlueprintName = "testmathios arm64 (Static)"
+               ReferencedContainer = "container:application/ocean/test/math/testmath/ios/testmathios.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry

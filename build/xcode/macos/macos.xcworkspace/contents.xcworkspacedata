@@ -211,7 +211,7 @@
                   location = "group:application/ocean/test/math/testmath/macos/testmath.xcodeproj">
                </FileRef>
                <FileRef
-                  location = "group:application/ocean/test/math/testmath/ios/testmath.xcodeproj">
+                  location = "group:application/ocean/test/math/testmath/ios/testmathios.xcodeproj">
                </FileRef>
             </Group>
             <Group

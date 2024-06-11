@@ -16,7 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5DD14B221D95623E00CCA9F0 /* testmath.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = testmath.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD14B221D95623E00CCA9F0 /* testmathios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = testmathios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DD14B451D956F8100CCA9F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../../../../../../../res/application/ocean/test/math/testmath/ios/Assets.xcassets; sourceTree = "<group>"; };
 		5DD14B461D956F8100CCA9F0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../impl/application/ocean/test/math/testmath/ios/Info.plist; sourceTree = "<group>"; };
 		5DD14B471D956F8100CCA9F0 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ../../../../../../../../../res/application/ocean/test/math/testmath/ios/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -52,7 +52,7 @@
 		5DD14B231D95623E00CCA9F0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5DD14B221D95623E00CCA9F0 /* testmath.app */,
+				5DD14B221D95623E00CCA9F0 /* testmathios.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -90,9 +90,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5DD14B211D95623E00CCA9F0 /* testmath arm64 (Static) */ = {
+		5DD14B211D95623E00CCA9F0 /* testmathios arm64 (Static) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5DD14B391D95623E00CCA9F0 /* Build configuration list for PBXNativeTarget "testmath arm64 (Static)" */;
+			buildConfigurationList = 5DD14B391D95623E00CCA9F0 /* Build configuration list for PBXNativeTarget "testmathios arm64 (Static)" */;
 			buildPhases = (
 				5DD14B1E1D95623E00CCA9F0 /* Sources */,
 				5DD14B1F1D95623E00CCA9F0 /* Frameworks */,
@@ -103,9 +103,9 @@
 			);
 			dependencies = (
 			);
-			name = "testmath arm64 (Static)";
+			name = "testmathios arm64 (Static)";
 			productName = testmath;
-			productReference = 5DD14B221D95623E00CCA9F0 /* testmath.app */;
+			productReference = 5DD14B221D95623E00CCA9F0 /* testmathios.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -124,7 +124,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5DD14B1D1D95623E00CCA9F0 /* Build configuration list for PBXProject "testmath" */;
+			buildConfigurationList = 5DD14B1D1D95623E00CCA9F0 /* Build configuration list for PBXProject "testmathios" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -137,7 +137,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5DD14B211D95623E00CCA9F0 /* testmath arm64 (Static) */,
+				5DD14B211D95623E00CCA9F0 /* testmathios arm64 (Static) */,
 			);
 		};
 /* End PBXProject section */
@@ -339,8 +339,8 @@
 				);
 				OTHER_LIBTOOLFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fayteq.testmath;
-				PRODUCT_MODULE_NAME = testmath;
-				PRODUCT_NAME = testmath;
+				PRODUCT_MODULE_NAME = testmathios;
+				PRODUCT_NAME = testmathios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../bin/tmp/impl/application/ocean/test/testmath/osx/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
@@ -399,8 +399,8 @@
 				);
 				OTHER_LIBTOOLFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fayteq.testmath;
-				PRODUCT_MODULE_NAME = testmath;
-				PRODUCT_NAME = testmath;
+				PRODUCT_MODULE_NAME = testmathios;
+				PRODUCT_NAME = testmathios;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../bin/tmp/impl/application/ocean/test/testmath/osx/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
@@ -421,7 +421,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5DD14B1D1D95623E00CCA9F0 /* Build configuration list for PBXProject "testmath" */ = {
+		5DD14B1D1D95623E00CCA9F0 /* Build configuration list for PBXProject "testmathios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5DD14B371D95623E00CCA9F0 /* Debug */,
@@ -430,7 +430,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5DD14B391D95623E00CCA9F0 /* Build configuration list for PBXNativeTarget "testmath arm64 (Static)" */ = {
+		5DD14B391D95623E00CCA9F0 /* Build configuration list for PBXNativeTarget "testmathios arm64 (Static)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5DD14B3A1D95623E00CCA9F0 /* Debug */,

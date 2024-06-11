@@ -85,34 +85,34 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5DD14B211D95623E00CCA9F0"
-               BuildableName = "testmath.app"
-               BlueprintName = "testmath arm64 (Static)"
-               ReferencedContainer = "container:testmath.xcodeproj">
+               BuildableName = "testmathios.app"
+               BlueprintName = "testmathios arm64 (Static)"
+               ReferencedContainer = "container:testmathios.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "Release"
-      selectedDebuggerIdentifier = ""
-      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5DD14B211D95623E00CCA9F0"
-            BuildableName = "testmath.app"
-            BlueprintName = "testmath arm64 (Static)"
-            ReferencedContainer = "container:testmath.xcodeproj">
+            BuildableName = "testmathios.app"
+            BlueprintName = "testmathios arm64 (Static)"
+            ReferencedContainer = "container:testmathios.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Release"
-      selectedDebuggerIdentifier = ""
-      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -124,14 +124,14 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5DD14B211D95623E00CCA9F0"
-            BuildableName = "testmath.app"
-            BlueprintName = "testmath arm64 (Static)"
-            ReferencedContainer = "container:testmath.xcodeproj">
+            BuildableName = "testmathios.app"
+            BlueprintName = "testmathios arm64 (Static)"
+            ReferencedContainer = "container:testmathios.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -140,17 +140,17 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5DD14B211D95623E00CCA9F0"
-            BuildableName = "testmath.app"
-            BlueprintName = "testmath arm64 (Static)"
-            ReferencedContainer = "container:testmath.xcodeproj">
+            BuildableName = "testmathios.app"
+            BlueprintName = "testmathios arm64 (Static)"
+            ReferencedContainer = "container:testmathios.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "Release">
+      buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
