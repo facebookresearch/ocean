@@ -68,7 +68,7 @@ if (MACOS OR LINUX OR WIN32)
         )
     else()
         target_link_libraries(${OCEAN_TARGET_NAME}
-            PRIVATE
+            PUBLIC
             wxWidgets::wxWidgets
         )
     endif()
