@@ -12,7 +12,7 @@
 
 #ifndef OCEAN_MEDIA_ANDROID_VIDEODECODER_AVAILABLE
 	#define OCEAN_MEDIA_ANDROID_VIDEODECODER_AVAILABLE
-#endif	
+#endif
 
 #include "ocean/media/android/Android.h"
 #include "ocean/media/android/NativeMediaLibrary.h"
@@ -101,25 +101,38 @@ class VideoDecoder
 		 */
 		inline VideoDecoder(VideoDecoder&& videoDecoder) noexcept;
 
+		/**
+		 * Destructs the video decoder and releases all associated resources.
+		 */
 		~VideoDecoder();
 
 		/**
-		 * @param mime The mimetype (Multipurpose Internet Mail Extensions) of the video to be decoded, e.g., "video/avc", "video/hevc", ...
+		 * @param mime The MIME type (Multipurpose Internet Mail Extensions) of the video to be decoded, e.g., "video/avc", "video/hevc", ...
 		 * @param width The width of the video to be decoded, in pixel, with range [1, infinity)
 		 * @param height The height of the video to be decoded, in pixel, with range [1, infinity)
 		 * @return True, if succeeded
+		 * @see isInitialized().
 		 */
 		bool initialize(const std::string& mime, const unsigned int width, const unsigned int height);
 
+		/**
+		 * Starts the video decoder.
+		 * @return True, if succeeded
+		 * @see isStarted().
+		 */
 		bool start();
 
+		/**
+		 * Stops the video decoder.
+		 * @return True, if succeeded
+		 */
 		bool stop();
 
 		/**
 		 * Adds a new media sample which needs to be decoded to the video decoder.
 		 * The decoder needs to be initialized and started.<br>
 		 * The presentation time is mainly intended to allow associating the provided encoded media sample with the resulting decoded frame when calling popFrame().<br>
-		 * However, it's recommended to define a reasonable presentation time for each sample (e.g., let the first sample start at 0 and increment the time by 1^6/fps for each follwing sample.
+		 * However, it's recommended to define a reasonable presentation time for each sample (e.g., let the first sample start at 0 and increment the time by 1^6/fps for each following sample.
 		 * @param data The data of the encoded media sample, must be valid
 		 * @apram size The size of the encoded media sample, in bytes, with range [1, infinity)
 		 * @param presentationTime The presentation time of the sample, in microseconds, with range [0, infinity)
@@ -150,8 +163,17 @@ class VideoDecoder
 		 */
 		inline bool isStarted() const;
 
+		/**
+		 * Explicitly releases this video encoder.
+		 * If the encoder is still running, the encoder will be stopped as well.
+		 */
 		void release();
 
+		/**
+		 * Move operator.
+		 * @param videoDecoder The video decoder to be moved
+		 * @return Reference to this object
+		 */
 		inline VideoDecoder& operator=(VideoDecoder&& videoDecoder) noexcept;
 
 		/**

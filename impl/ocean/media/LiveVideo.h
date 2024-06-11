@@ -112,7 +112,7 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 				/// The pixel format of the stream, only valid if the stream type is ST_FRAME.
 				FrameType::PixelFormat framePixelFormat_ = FrameType::FORMAT_UNDEFINED;
 
-				/// The codec of the stream, only valid if the streeam type is ST_CODEC.
+				/// The codec of the stream, only valid if the stream type is ST_CODEC.
 				CodecType codecType_ = CT_INVALID;
 		};
 
@@ -149,7 +149,7 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		 * Returns the current ISO of this device.
 		 * @param minISO Optional resulting minimal ISO to set, with range (0, infinity), -1 if unknown
 		 * @param maxISO Optional resulting maximal ISO to set, with range (0, infinity), -1 if unknown
-		 * @return The current ISO, with range [minISO, maxISO], 0 for auto IOS, -1 if unknnown
+		 * @return The current ISO, with range [minISO, maxISO], 0 for auto IOS, -1 if unknown
 		 */
 		virtual float iso(float* minISO = nullptr, float* maxISO = nullptr) const;
 
@@ -179,7 +179,7 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		virtual bool setPreferredStreamConfiguration(const StreamConfiguration& streamConfiguration);
 
 		/**
-		 * Sets the exposure duriation of this device.
+		 * Sets the exposure duration of this device.
 		 * @param duration The exposure duration to be set, in seconds, with range (0, infinity), 0 for auto exposure, -1 for a one-time auto exposure
 		 * @return True, if succeeded
 		 * @see exposureDuration().
@@ -188,7 +188,7 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 
 		/**
 		 * Sets the ISO of this device.
-		 * @param iso The iso to be set, with range (0, infinity), -1 for auto ISO
+		 * @param iso The ISO to be set, with range (0, infinity), -1 for auto ISO
 		 * @return True, if succeeded
 		 * @see iso().
 		 */

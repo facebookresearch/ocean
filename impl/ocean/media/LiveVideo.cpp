@@ -21,7 +21,7 @@ LiveVideo::StreamConfiguration::StreamConfiguration(const StreamType streamType,
 	framePixelFormat_(framePixelFormat),
 	codecType_(codecType)
 {
-
+	// nothing to do here
 }
 
 std::string LiveVideo::StreamConfiguration::toString() const
@@ -35,7 +35,7 @@ std::string LiveVideo::StreamConfiguration::toString() const
 
 	result += "\nResolution: " + String::toAString(width_) + "x" + String::toAString(height_);
 	result += "\nFrame rates: ";
-	
+
 	for (const double frameRate : frameRates_)
 	{
 		result += String::toAString(frameRate, 1u) + " ";

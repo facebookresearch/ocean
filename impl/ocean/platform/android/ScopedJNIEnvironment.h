@@ -30,7 +30,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT ScopedJNIEnvironment
 
 		/**
 		 * Creates a new scoped object, acquires the JNI environment and attaches the thread.
-		 * @param javaVM The virutal Java machine, must be valid
+		 * @param javaVM The virtual Java machine, must be valid
 		 */
 		explicit ScopedJNIEnvironment(JavaVM* javaVM);
 
@@ -80,7 +80,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT ScopedJNIEnvironment
 
 	protected:
 
-		/// The virutal Java machine.
+		/// The virtual Java machine.
 		JavaVM* javaVM_ = nullptr;
 
 		/// The JNI environment.

@@ -21,7 +21,7 @@
 
 #ifndef OCEAN_MEDIA_ANDROID_IMAGE_AVAILABLE
 	#define OCEAN_MEDIA_ANDROID_IMAGE_AVAILABLE
-#endif	
+#endif
 
 namespace Ocean
 {

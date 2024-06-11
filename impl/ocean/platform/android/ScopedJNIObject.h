@@ -75,7 +75,7 @@ class ScopedJNIObject
 
 		/**
 		 * Creates a new scoped object for a given jobject.
-		 * Beware: This object must not live longer than the provided scoped JNI enviornment!
+		 * Beware: This object must not live longer than the provided scoped JNI environment!
 		 * @param scopedJNIEnvironment The associated scoped JNI environment
 		 * @param object The jobject to be encapsulated, can be nullptr
 		 */
@@ -150,13 +150,13 @@ class ScopedJNIObject
 
 		/**
 		 * Disables copy constructor.
-		 * @param object Object which would be copied
+		 * @param object The object which would be copied
 		 */
 		ScopedJNIObject(const ScopedJNIObject& object) = delete;
 
 		/**
 		 * Disables copy operator.
-		 * @param object Object which would be copied
+		 * @param object The object which would be copied
 		 * @return Reference to this object
 		 */
 		ScopedJNIObject& operator=(const ScopedJNIObject& object) = delete;

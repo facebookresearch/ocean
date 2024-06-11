@@ -119,7 +119,7 @@ bool VideoDecoder::stop()
 
 	if (decoder_ == nullptr || !isStarted_)
 	{
-		// no assert, it's ok to stop a not-initialized or non-started decoder
+		// no assert, it's fine to stop a not-initialized or non-started decoder
 		return true;
 	}
 

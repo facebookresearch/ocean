@@ -29,7 +29,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 
 		/**
 		 * Converts a Java native string to a std string.
-		 * @param env The java environment, must be valid
+		 * @param env The Java environment, must be valid
 		 * @param javaString Java string to be converted, may be nullptr
 		 * @return Resulting std string
 		 */
@@ -37,7 +37,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 
 		/**
 		 * Converts a std string to a Java native string.
-		 * @param env The java environment, must be valid
+		 * @param env The Java environment, must be valid
 		 * @param stdString Std string to be converted
 		 * @return Resulting Java native string
 		 */
@@ -45,7 +45,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 
 		/**
 		 * Converts a vector of std strings to a Java array with native strings.
-		 * @param env The java environment, must be valid
+		 * @param env The Java environment, must be valid
 		 * @param strings Std strings to be converted, can be empty
 		 * @return Resulting Java native string
 		 */
@@ -53,7 +53,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 
 		/**
 		 * Converts a Java native list with string to a vector of strings.
-		 * @param env The java environment, must be valid
+		 * @param env The Java environment, must be valid
 		 * @param javaStringList Java list with strings to be converted, must be valid
 		 * @param strings The resulting vector of strings
 		 * @return True, if succeeded
@@ -62,7 +62,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 
 		/**
 		 * Converts a Java native list with integer to a vector of integers.
-		 * @param env The java environment, must be valid
+		 * @param env The Java environment, must be valid
 		 * @param javaIntegerList Java list with integers to be converted, must be valid
 		 * @param values The resulting vector of integers
 		 * @return True, if succeeded
@@ -101,7 +101,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 
 		/**
 		 * Returns the minimum and target SDK versions stored in the application manifest.
-		 * @param env The Java envrionment, must be valid
+		 * @param env The Java environment, must be valid
 		 * @param activity The Android main activity, must be valid
 		 * @param minSdkVersion The resulting minimum SDK version of the application as defined in its manifest
 		 * @param targetSdkVersion The resulting target SDK version of the application as defined in its manifest
@@ -111,7 +111,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 
 		/**
 		 * Return the Android SDK version of the system.
-		 * @param env The Java envrionment, must be valid
+		 * @param env The Java environment, must be valid
 		 * @param version The resulting Android SDK version, only valid if this function returns 'true'
 		 * @return True, if succeeded, otherwise false
 		 */
@@ -183,7 +183,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 		 * Sends an intent to the OS to request it to join a Wi-Fi network (WPA2-PSK).
 		 * The intent is send to the system settings app to save and connect to a new Wi-Fi network. This will display a notification to user to accept or reject the new Wi-Fi network.
 		 * Additional notes:
-		 *  * The Wi-Fi network must use the security protocal WPA2-PSK.
+		 *  * The Wi-Fi network must use the security protocol WPA2-PSK.
 		 *  * This function requires Android SDK version 29 or higher.
 		 *  * This function requires the permissions `android.permission.CHANGE_NETWORK_STATE` and `android.permission.WRITE_SETTINGS` to be set in the app manifest to work.
 		 *  * Rejecting a new network does NOT revoke the permission `android.permission.CHANGE_NETWORK_STATE` again. Re-tries are possible.
