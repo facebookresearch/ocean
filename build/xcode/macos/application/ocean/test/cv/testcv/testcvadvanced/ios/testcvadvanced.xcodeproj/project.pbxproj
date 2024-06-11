@@ -16,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5026B3D32C17D47A004B1EF5 /* development_team.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = development_team.xcconfig; sourceTree = "<group>"; };
 		5DD14B221D95623E00CCA9F0 /* testcvadvanced.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = testcvadvanced.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9376FD662A2AA6BA00AD21D4 /* Main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Main.mm; path = ../../../../../../../../../../impl/application/ocean/test/cv/testcv/testadvanced/ios/Main.mm; sourceTree = "<group>"; };
 		9376FD672A2AA6BA00AD21D4 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ../../../../../../../../../../impl/application/ocean/test/cv/testcv/testadvanced/ios/AppDelegate.mm; sourceTree = "<group>"; };
@@ -39,12 +40,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5026B3D22C17D462004B1EF5 /* Config Files */ = {
+			isa = PBXGroup;
+			children = (
+				5026B3D32C17D47A004B1EF5 /* development_team.xcconfig */,
+			);
+			name = "Config Files";
+			sourceTree = "<group>";
+		};
 		5DD14B191D95623E00CCA9F0 = {
 			isa = PBXGroup;
 			children = (
 				5DD14B421D956F4100CCA9F0 /* Header FIles */,
 				5DD14B431D956F5A00CCA9F0 /* Source FIles */,
 				5DD14B441D956F6B00CCA9F0 /* Resource Files */,
+				5026B3D22C17D462004B1EF5 /* Config Files */,
 				5DD14B231D95623E00CCA9F0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -119,7 +129,6 @@
 				TargetAttributes = {
 					5DD14B211D95623E00CCA9F0 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = V9WTTPBFK9;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -187,6 +196,7 @@
 /* Begin XCBuildConfiguration section */
 		5DD14B371D95623E00CCA9F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5026B3D32C17D47A004B1EF5 /* development_team.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -246,6 +256,7 @@
 		};
 		5DD14B381D95623E00CCA9F0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5026B3D32C17D47A004B1EF5 /* development_team.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -305,7 +316,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testcvadvanced/osx/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testcvadvanced/osx/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
 					"_DEBUG=1",
@@ -355,7 +365,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.fayteq.testcvadvanced;
 				PRODUCT_MODULE_NAME = testcvadvanced;
 				PRODUCT_NAME = testcvadvanced;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testcvadvanced/osx/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
 				WARNING_CFLAGS = (
@@ -380,7 +389,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testcvadvanced/osx/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testcvadvanced/osx/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
 					"NDEBUG=1",
@@ -429,7 +437,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.fayteq.testcvadvanced;
 				PRODUCT_MODULE_NAME = testcvadvanced;
 				PRODUCT_NAME = testcvadvanced;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testcvadvanced/osx/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
 				WARNING_CFLAGS = (
