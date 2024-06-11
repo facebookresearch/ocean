@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		507D22612C17843A00C01F40 /* development_team.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 507D22602C17843A00C01F40 /* development_team.xcconfig */; };
 		5D50B1B71D92824F009DDDFF /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B41D92824F009DDDFF /* AppDelegate.mm */; };
 		5D50B1B91D92824F009DDDFF /* Application.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B61D92824F009DDDFF /* Application.mm */; };
 		5D73B0661D92C5FA000B5F33 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		507D22602C17843A00C01F40 /* development_team.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = development_team.xcconfig; sourceTree = "<group>"; };
 		5D4A716A1D8B10B000B8B729 /* demomediavideopreviewios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = demomediavideopreviewios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D50B1B41D92824F009DDDFF /* AppDelegate.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = AppDelegate.mm; path = ../../../../../../../../../impl/application/ocean/demo/media/videopreview/ios/AppDelegate.mm; sourceTree = "<group>"; };
 		5D50B1B61D92824F009DDDFF /* Application.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Application.mm; path = ../../../../../../../../../impl/application/ocean/demo/media/videopreview/ios/Application.mm; sourceTree = "<group>"; };
@@ -33,12 +35,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		507D225F2C17841100C01F40 /* Config Files */ = {
+			isa = PBXGroup;
+			children = (
+				507D22602C17843A00C01F40 /* development_team.xcconfig */,
+			);
+			name = "Config Files";
+			sourceTree = "<group>";
+		};
 		5D4A71611D8B10B000B8B729 = {
 			isa = PBXGroup;
 			children = (
 				5DF0B9571D8FE33E00BE5D21 /* Header Files */,
 				5DF0B9561D8FE33000BE5D21 /* Source Files */,
 				5DF0B9581D8FE35D00BE5D21 /* Resource Files */,
+				507D225F2C17841100C01F40 /* Config Files */,
 				5D4A716B1D8B10B000B8B729 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -110,7 +121,6 @@
 				TargetAttributes = {
 					5D4A71691D8B10B000B8B729 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = V9WTTPBFK9;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -175,6 +185,7 @@
 /* Begin XCBuildConfiguration section */
 		5D4A718F1D8B10B000B8B729 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 507D22602C17843A00C01F40 /* development_team.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -234,6 +245,7 @@
 		};
 		5D4A71901D8B10B000B8B729 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 507D22602C17843A00C01F40 /* development_team.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -293,7 +305,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../bin/tmp/impl/application/ocean/demomediavideopreviewios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../bin/tmp/impl/application/ocean/demomediavideopreviewios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
@@ -361,7 +372,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.media.videopreview.ios;
 				PRODUCT_MODULE_NAME = demomediavideopreviewios;
 				PRODUCT_NAME = demomediavideopreviewios;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../bin/tmp/impl/application/ocean/demomediavideopreviewios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
@@ -386,7 +396,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../bin/tmp/impl/application/ocean/demomediavideopreviewios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../bin/tmp/impl/application/ocean/demomediavideopreviewios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
@@ -453,7 +462,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.media.videopreview.ios;
 				PRODUCT_MODULE_NAME = demomediavideopreviewios;
 				PRODUCT_NAME = demomediavideopreviewios;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../bin/tmp/impl/application/ocean/demomediavideopreviewios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
