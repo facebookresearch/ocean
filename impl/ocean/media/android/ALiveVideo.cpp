@@ -1717,7 +1717,7 @@ int ALiveVideo::ALiveVideoManager::createCamera(ALiveVideo* object, const std::s
 
 	if (environment)
 	{
-		jclass cameraClass = environment->FindClass("com/facebook/ocean/media/android/MediaAndroidJni");
+		jclass cameraClass = environment->FindClass("com/meta/ocean/media/android/MediaAndroidJni");
 
 		if (cameraClass)
 		{
@@ -1762,7 +1762,7 @@ void ALiveVideo::ALiveVideoManager::releaseCamera(const int cameraId)
 
 		if (environment)
 		{
-			jclass cameraClass = environment->FindClass("com/facebook/ocean/media/android/MediaAndroidJni");
+			jclass cameraClass = environment->FindClass("com/meta/ocean/media/android/MediaAndroidJni");
 
 			if (cameraClass)
 			{
@@ -1794,7 +1794,7 @@ bool ALiveVideo::ALiveVideoManager::startCamera(const int cameraId)
 
 	if (environment)
 	{
-		jclass cameraClass = environment->FindClass("com/facebook/ocean/media/android/MediaAndroidJni");
+		jclass cameraClass = environment->FindClass("com/meta/ocean/media/android/MediaAndroidJni");
 
 		if (cameraClass)
 		{
@@ -1822,7 +1822,7 @@ bool ALiveVideo::ALiveVideoManager::pauseCamera(const int cameraId)
 
 	if (environment)
 	{
-		jclass cameraClass = environment->FindClass("com/facebook/ocean/media/android/MediaAndroidJni");
+		jclass cameraClass = environment->FindClass("com/meta/ocean/media/android/MediaAndroidJni");
 
 		if (cameraClass)
 		{
@@ -1846,7 +1846,7 @@ bool ALiveVideo::ALiveVideoManager::stopCamera(const int cameraId)
 
 	if (environment)
 	{
-		jclass cameraClass = environment->FindClass("com/facebook/ocean/media/android/MediaAndroidJni");
+		jclass cameraClass = environment->FindClass("com/meta/ocean/media/android/MediaAndroidJni");
 
 		if (cameraClass)
 		{
