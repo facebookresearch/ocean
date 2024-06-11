@@ -79,7 +79,10 @@ class OCEAN_RENDERING_GLES_EXPORT GLESVertexSet :
 				/**
 				 * Destructs the object and releases all resources.
 				 */
-				~VertexBufferObjectT() override;
+				~VertexBufferObjectT() override // need to be defined here in the class as Clang will complain otherwise
+				{
+					release();
+				}
 
 				/**
 				 * Sets the data of this buffer.
@@ -387,12 +390,6 @@ GLESVertexSet::VertexBufferObjectT<T>::VertexBufferObjectT(VertexBufferObjectT<T
 {
 	vertexBufferObject.buffer_ = 0u;
 	vertexBufferObject.numberElements_ = 0u;
-}
-
-template <typename T>
-GLESVertexSet::VertexBufferObjectT<T>::~VertexBufferObjectT<T>()
-{
-	release();
 }
 
 template <typename T>
