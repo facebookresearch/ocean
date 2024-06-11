@@ -247,6 +247,9 @@
          location = "container:"
          name = "test">
          <FileRef
+            location = "group:ocean/test/test.xcodeproj">
+         </FileRef>
+         <FileRef
             location = "group:ocean/test/testbase/testbase.xcodeproj">
          </FileRef>
          <FileRef
