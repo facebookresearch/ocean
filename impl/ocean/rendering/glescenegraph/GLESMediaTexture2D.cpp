@@ -395,8 +395,10 @@ void GLESMediaTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestam
 
 						switch (frameType_.pixelFormat())
 						{
-							case FrameType::FORMAT_Y_VU12:
-							case FrameType::FORMAT_Y_UV12:
+							case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
+							case FrameType::FORMAT_Y_VU12_FULL_RANGE:
+							case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
+							case FrameType::FORMAT_Y_UV12_FULL_RANGE:
 							{
 								unsigned int rowLength = 0u;
 								unsigned int byteAlignment = 0u;
@@ -412,12 +414,18 @@ void GLESMediaTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestam
 								break;
 							}
 
-							case FrameType::FORMAT_Y_U_V12:
-							case FrameType::FORMAT_Y_V_U12:
+							case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
+							case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
+							case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
+							case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
 							{
+								const bool uIsFirstPlane = frameType_.pixelFormat() == FrameType::FORMAT_Y_U_V12_LIMITED_RANGE
+																|| frameType_.pixelFormat() == FrameType::FORMAT_Y_U_V12_FULL_RANGE;
+
+
 								// we use the Y_U_V12 shader also for Y_V_U12, just switching the source planes
-								const unsigned int firstPlaneIndex = frameType_.pixelFormat() == FrameType::FORMAT_Y_U_V12 ? 1u : 2u;
-								const unsigned int secondPlaneIndex = frameType_.pixelFormat() == FrameType::FORMAT_Y_U_V12 ? 2u : 1u;
+								const unsigned int firstPlaneIndex = uIsFirstPlane ? 1u : 2u;
+								const unsigned int secondPlaneIndex = uIsFirstPlane ? 2u : 1u;
 
 								const GLsizei height_2 = height / 2;
 
@@ -527,8 +535,10 @@ bool GLESMediaTexture2D::needsSecondaryTextureObjects(const FrameType& frameType
 		case FrameType::FORMAT_YVU24:
 			return false;
 
-		case FrameType::FORMAT_Y_UV12:
-		case FrameType::FORMAT_Y_VU12:
+		case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
+		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
 		case FrameType::FORMAT_Y_U_V12:
 		case FrameType::FORMAT_Y_V_U12:
 			return true;
@@ -581,8 +591,10 @@ bool GLESMediaTexture2D::determineInternalFrameType(const FrameType& frameType, 
 
 		case FrameType::FORMAT_YUV24:
 		case FrameType::FORMAT_YVU24:
-		case FrameType::FORMAT_Y_UV12:
-		case FrameType::FORMAT_Y_VU12:
+		case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
+		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
 		case FrameType::FORMAT_Y_U_V12:
 		case FrameType::FORMAT_Y_V_U12:
 			internalFrameType = frameType;
@@ -701,10 +713,14 @@ bool GLESMediaTexture2D::determinePrimaryTextureProperties(const FrameType& fram
 			type = GL_UNSIGNED_BYTE;
 			return true;
 
-		case FrameType::FORMAT_Y_UV12:
-		case FrameType::FORMAT_Y_VU12:
-		case FrameType::FORMAT_Y_U_V12:
-		case FrameType::FORMAT_Y_V_U12:
+		case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
+		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
+		case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:		
+		case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
 			width = frameType.width();
 			height = frameType.height();
 #ifdef OCEAN_RENDERING_GLES_USE_ES
@@ -806,8 +822,10 @@ bool GLESMediaTexture2D::determineSecondaryTextureProperties(const FrameType& fr
 			type = 0;
 			return false;
 
-		case FrameType::FORMAT_Y_VU12:
-		case FrameType::FORMAT_Y_UV12:
+		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
+		case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
 			width = frameType.width() / 2u;
 			height = frameType.height() / 2u;
 #ifdef OCEAN_RENDERING_GLES_USE_ES
@@ -818,8 +836,10 @@ bool GLESMediaTexture2D::determineSecondaryTextureProperties(const FrameType& fr
 			type = GL_UNSIGNED_BYTE;
 			return true;
 
-		case FrameType::FORMAT_Y_U_V12:
-		case FrameType::FORMAT_Y_V_U12:
+		case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
+		case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
 			width = frameType.width() / 2u;
 			height = frameType.height();
 #ifdef OCEAN_RENDERING_GLES_USE_ES
