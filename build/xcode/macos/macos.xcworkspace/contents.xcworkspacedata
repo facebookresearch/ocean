@@ -338,6 +338,9 @@
          location = "group:ocean/io/io.xcodeproj">
       </FileRef>
       <FileRef
+         location = "group:ocean/io/image/ioimage.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:ocean/math/math.xcodeproj">
       </FileRef>
       <FileRef
