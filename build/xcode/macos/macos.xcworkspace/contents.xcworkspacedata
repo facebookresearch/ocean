@@ -4,6 +4,9 @@
    <Group
       location = "container:"
       name = "application">
+      <FileRef
+         location = "group:/Users/nilsplath/fbsource/xplat/ocean/build/xcode/macos/ocean_development_team.xcconfig">
+      </FileRef>
       <Group
          location = "container:"
          name = "ocean">

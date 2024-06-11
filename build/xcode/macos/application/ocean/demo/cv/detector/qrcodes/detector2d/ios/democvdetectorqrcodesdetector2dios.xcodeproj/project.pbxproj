@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		50A994F82C1774DC00808CBE /* development_team.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 50A994F72C1774DC00808CBE /* development_team.xcconfig */; };
 		50CAE3CC2B9684A20035ECED /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50CAE3CA2B9684990035ECED /* AppDelegate.mm */; };
 		50CAE3CD2B9684A20035ECED /* Application.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50CAE3CB2B9684990035ECED /* Application.mm */; };
 		50CAE3D02B9684C40035ECED /* Detector2DWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50CAE3CF2B9684C30035ECED /* Detector2DWrapper.cpp */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		50A994F72C1774DC00808CBE /* development_team.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = development_team.xcconfig; sourceTree = "<group>"; };
 		50CAE3C92B9684990035ECED /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/AppDelegate.h; sourceTree = "<group>"; };
 		50CAE3CA2B9684990035ECED /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/AppDelegate.mm; sourceTree = "<group>"; };
 		50CAE3CB2B9684990035ECED /* Application.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Application.mm; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/Application.mm; sourceTree = "<group>"; };
@@ -34,12 +36,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		50A994F62C17749A00808CBE /* Config Files */ = {
+			isa = PBXGroup;
+			children = (
+				50A994F72C1774DC00808CBE /* development_team.xcconfig */,
+			);
+			name = "Config Files";
+			sourceTree = "<group>";
+		};
 		5D4A71611D8B10B000B8B729 = {
 			isa = PBXGroup;
 			children = (
 				5DF0B9571D8FE33E00BE5D21 /* Header Files */,
 				5DF0B9561D8FE33000BE5D21 /* Source Files */,
 				5DF0B9581D8FE35D00BE5D21 /* Resource Files */,
+				50A994F62C17749A00808CBE /* Config Files */,
 				5D4A716B1D8B10B000B8B729 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -111,7 +122,6 @@
 				TargetAttributes = {
 					5D4A71691D8B10B000B8B729 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = V9WTTPBFK9;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -295,7 +305,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
@@ -369,7 +378,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.cv.detector.qrcodes.detector.ios;
 				PRODUCT_MODULE_NAME = democvdetectorqrcodesdetector2dios;
 				PRODUCT_NAME = democvdetectorqrcodesdetector2dios;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
+
 				SYMROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
@@ -394,7 +403,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
@@ -467,7 +475,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.cv.detector.qrcodes.detector.ios;
 				PRODUCT_MODULE_NAME = democvdetectorqrcodesdetector2dios;
 				PRODUCT_NAME = democvdetectorqrcodesdetector2dios;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",

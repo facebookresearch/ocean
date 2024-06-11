@@ -14,6 +14,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		50FF3A002C126D21004A6C0C /* development_team.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = development_team.xcconfig; sourceTree = "<group>"; };
 		5D4A716A1D8B10B000B8B729 /* democvdetectorlinedetectorios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = democvdetectorlinedetectorios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9327784E21BA061B0012E514 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../../impl/application/ocean/demo/cv/detector/linedetector/ios/AppDelegate.h; sourceTree = "<group>"; };
 		9327784F21BA06210012E514 /* LineDetectorWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LineDetectorWrapper.h; path = ../../../../../../../../../../impl/application/ocean/demo/cv/detector/linedetector/LineDetectorWrapper.h; sourceTree = "<group>"; };
@@ -35,12 +36,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		507020E42C1270BB00718B21 /* Config Files */ = {
+			isa = PBXGroup;
+			children = (
+				50FF3A002C126D21004A6C0C /* development_team.xcconfig */,
+			);
+			name = "Config Files";
+			sourceTree = "<group>";
+		};
 		5D4A71611D8B10B000B8B729 = {
 			isa = PBXGroup;
 			children = (
 				5DF0B9571D8FE33E00BE5D21 /* Header Files */,
 				5DF0B9561D8FE33000BE5D21 /* Source Files */,
 				5DF0B9581D8FE35D00BE5D21 /* Resource Files */,
+				507020E42C1270BB00718B21 /* Config Files */,
 				5D4A716B1D8B10B000B8B729 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -113,7 +123,6 @@
 				TargetAttributes = {
 					5D4A71691D8B10B000B8B729 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = V9WTTPBFK9;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -290,6 +299,7 @@
 		};
 		5D4A71921D8B10B000B8B729 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50FF3A002C126D21004A6C0C /* development_team.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_WARN_UNREACHABLE_CODE = NO;
@@ -297,8 +307,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = B4H6M5LP3J;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = V9WTTPBFK9;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
@@ -371,8 +379,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.cv.detector.linedetector.ios;
 				PRODUCT_MODULE_NAME = democvdetectorlinedetectorios;
 				PRODUCT_NAME = democvdetectorlinedetectorios;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
@@ -390,6 +396,7 @@
 		};
 		5D4A71931D8B10B000B8B729 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50FF3A002C126D21004A6C0C /* development_team.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_WARN_UNREACHABLE_CODE = NO;
@@ -397,8 +404,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = B4H6M5LP3J;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = V9WTTPBFK9;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
@@ -470,8 +475,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.cv.detector.linedetector.ios;
 				PRODUCT_MODULE_NAME = democvdetectorlinedetectorios;
 				PRODUCT_NAME = democvdetectorlinedetectorios;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorlinedetectorios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
