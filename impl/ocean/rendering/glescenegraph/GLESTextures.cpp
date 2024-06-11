@@ -107,7 +107,8 @@ GLESAttribute::ProgramType GLESTextures::necessaryShader() const
 				type = GLESAttribute::ProgramType(type | GLESAttribute::PT_TEXTURE_RGBA);
 				break;
 
-			case FrameType::FORMAT_YUV24:
+			case FrameType::FORMAT_Y_U_V24_LIMITED_RANGE: // we are currently using the same shader for limited and full value range, may have a minor impact on color precision
+			case FrameType::FORMAT_Y_U_V24_FULL_RANGE:
 				type = GLESAttribute::ProgramType(type | GLESAttribute::PT_TEXTURE_YUV24);
 				break;
 
@@ -115,16 +116,20 @@ GLESAttribute::ProgramType GLESTextures::necessaryShader() const
 				type = GLESAttribute::ProgramType(type | GLESAttribute::PT_TEXTURE_YVU24);
 				break;
 
-			case FrameType::FORMAT_Y_UV12:
+			case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
+			case FrameType::FORMAT_Y_UV12_FULL_RANGE:
 				type = GLESAttribute::ProgramType(type | GLESAttribute::PT_TEXTURE_Y_UV12);
 				break;
 
-			case FrameType::FORMAT_Y_VU12:
+			case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
+			case FrameType::FORMAT_Y_VU12_FULL_RANGE:
 				type = GLESAttribute::ProgramType(type | GLESAttribute::PT_TEXTURE_Y_VU12);
 				break;
 
-			case FrameType::FORMAT_Y_U_V12:
-			case FrameType::FORMAT_Y_V_U12:
+			case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
+			case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
+			case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
+			case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
 				type = GLESAttribute::ProgramType(type | GLESAttribute::PT_TEXTURE_Y_U_V12);
 				break;
 
