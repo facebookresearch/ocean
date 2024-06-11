@@ -385,6 +385,8 @@
 					CoreGraphics,
 					"-framework",
 					CoreMotion,
+					"-framework",
+					CoreLocation,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.uvtexturemapping.ios;
 				PRODUCT_MODULE_NAME = demotrackinguvtexturemappingios;
@@ -493,6 +495,8 @@
 					CoreGraphics,
 					"-framework",
 					CoreMotion,
+					"-framework",
+					CoreLocation,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.uvtexturemapping.ios;
 				PRODUCT_MODULE_NAME = demotrackinguvtexturemappingios;
