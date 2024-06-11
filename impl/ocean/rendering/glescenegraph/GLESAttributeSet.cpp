@@ -97,7 +97,13 @@ void GLESAttributeSet::bindAttributes(const GLESFramebuffer& framebuffer, const 
 				}
 
 #ifdef OCEAN_DEBUG
-				Log::warning() << "<debug> PENDING shader: " << GLESAttribute::translateProgramType(newShaderType);
+				static unsigned int debugCounter = 0u;
+				static unsigned int debugModulo = 1u;
+				if ((++debugCounter % debugModulo) == 0u)
+				{
+					Log::warning() << "<debug> PENDING shader: " << GLESAttribute::translateProgramType(newShaderType);
+					debugModulo *= 2u; // ensuring that we see the message less and less often
+				}
 #endif
 				return;
 			}
