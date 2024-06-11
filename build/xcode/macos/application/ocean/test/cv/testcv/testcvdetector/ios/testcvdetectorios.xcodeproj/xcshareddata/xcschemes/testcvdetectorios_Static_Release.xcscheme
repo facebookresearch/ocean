@@ -98,6 +98,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D9860981D8B523000DEDB00"
+               BuildableName = "libOceanIOImage.a"
+               BlueprintName = "ioimage arm64 (Static)"
+               ReferencedContainer = "container:../../../../../../../ocean/io/image/ioimage.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5D98621E1D8B5A6400DEDB00"
                BuildableName = "libOceanMath.a"
                BlueprintName = "math arm64 (Static)"
@@ -130,6 +144,20 @@
                BuildableName = "libOceanMediaImageIO.a"
                BlueprintName = "mediaimageio arm64 (Static)"
                ReferencedContainer = "container:../../../../../../../ocean/media/imageio/mediaimageio.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D9862CF1D8B5D9400DEDB00"
+               BuildableName = "libOceanMediaSpecial.a"
+               BlueprintName = "mediaspecial arm64 (Static)"
+               ReferencedContainer = "container:../../../../../../../ocean/media/special/mediaspecial.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -186,6 +214,20 @@
                BuildableName = "libOceanSystem.a"
                BlueprintName = "system arm64 (Static)"
                ReferencedContainer = "container:../../../../../../../ocean/system/system.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DF4B8701D941D5C00284665"
+               BuildableName = "libOceanTest.a"
+               BlueprintName = "test arm64 (Static)"
+               ReferencedContainer = "container:../../../../../../../ocean/test/test.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
