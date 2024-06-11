@@ -80,6 +80,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\AMicrophone.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\AMovie.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\Android.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\Image.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\NativeCameraLibrary.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\NativeMediaLibrary.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\PixelFormats.cpp" />
@@ -93,6 +94,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\AMicrophone.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\AMovie.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\Android.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\Image.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\NativeCameraLibrary.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\NativeMediaLibrary.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\PixelFormats.h" />
