@@ -52,6 +52,12 @@ class OCEAN_PLATFORM_ANDROID_EXPORT ScopedJNIEnvironment
 		inline bool isValid() const;
 
 		/**
+		 * Returns the JNI environment which is attached with the current thread.
+		 * @return The JNI environment, can be nullptr if invalid
+		 */
+		inline JNIEnv* operator->() const;
+
+		/**
 		 * Returns whether this scoped object holds a valid JNI environment.
 		 * @return True, if so
 		 */
@@ -75,13 +81,13 @@ class OCEAN_PLATFORM_ANDROID_EXPORT ScopedJNIEnvironment
 	protected:
 
 		/// The virutal Java machine.
-		JavaVM* javaVM_;
+		JavaVM* javaVM_ = nullptr;
 
 		/// The JNI environment.
-		JNIEnv* jniEnv_;
+		JNIEnv* jniEnv_ = nullptr;
 
 		/// True, if the thread has been attached; False, if the thread was attached already.
-		bool threadAttachedExplicitly_;
+		bool threadAttachedExplicitly_ = false;
 };
 
 inline JNIEnv* ScopedJNIEnvironment::jniEnv() const
@@ -92,6 +98,13 @@ inline JNIEnv* ScopedJNIEnvironment::jniEnv() const
 inline bool ScopedJNIEnvironment::isValid() const
 {
 	return jniEnv_ != nullptr;
+}
+
+inline JNIEnv* ScopedJNIEnvironment::operator->() const
+{
+	ocean_assert(isValid());
+
+	return jniEnv();
 }
 
 inline ScopedJNIEnvironment::operator bool() const

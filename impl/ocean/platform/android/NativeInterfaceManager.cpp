@@ -19,7 +19,7 @@
  * @return JNI version
  * @ingroup platformandroid
  */
-JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
+JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
 {
 	Ocean::Log::info() << "JNI_OnLoad invoked.";
 	Ocean::Platform::Android::NativeInterfaceManager::get().setVirtualMachine(vm);
@@ -79,6 +79,10 @@ JNIEnv* NativeInterfaceManager::environment()
 		{
 			Log::error() << "Failed to attach the environment to the current thread!";
 		}
+		else
+		{
+			Log::debug() << "Attached the environment to the current thread.";
+		}
 	}
 
 	if (environment)
@@ -125,17 +129,11 @@ void NativeInterfaceManager::setCurrentActivity(jobject activity)
 	const ScopedLock scopedLock(lock_);
 
 	JNIEnv* env = environment();
+	ocean_assert(env != nullptr);
 
-	if (currentActivity_ != nullptr)
-	{
-		env->DeleteGlobalRef(currentActivity_);
-		currentActivity_ = nullptr;
-	}
+	currentActivity_ = ScopedJObject(*env, activity);
 
-	if (activity != nullptr)
-	{
-		currentActivity_ = env->NewGlobalRef(activity);
-	}
+	currentActivity_.makeGlobal();
 }
 
 }

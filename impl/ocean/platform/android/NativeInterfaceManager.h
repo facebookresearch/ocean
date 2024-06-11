@@ -9,6 +9,7 @@
 #define META_OCEAN_PLATFORM_ANDROID_NATIVE_INTERFACE_MANAGER_H
 
 #include "ocean/platform/android/Android.h"
+#include "ocean/platform/android/ScopedJNIObject.h"
 
 #include "ocean/base/Lock.h"
 #include "ocean/base/Singleton.h"
@@ -93,7 +94,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT NativeInterfaceManager : public Singleton<Na
 		JavaVM* virtualMachine_ = nullptr;
 
 		/// The JNI object of the current activity with global reference, nullptr if not set.
-		jobject currentActivity_ = nullptr;
+		ScopedJObject currentActivity_;
 
 		/// Map holding Java native environments individually for each thread.
 		ThreadEnvironmentMap threadEnvironmentMap_;
