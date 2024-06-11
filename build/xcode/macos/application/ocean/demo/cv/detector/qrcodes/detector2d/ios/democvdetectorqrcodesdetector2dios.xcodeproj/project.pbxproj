@@ -314,8 +314,18 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
-				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../../../../../bin/lib/ios_arm64_xc9_static_debug;
-				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../../../../../bin/lib/ios_i386_xc9_static_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					../../../../../../../../../../../bin/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../../../../../3rdparty/freetype/2.10/lib/ios_arm64_xc_static_debug,
+					../../../../../../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static_debug,
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					../../../../../../../../../../../bin/lib/ios_i386_xc9_static_debug,
+					../../../../../../../../../../../3rdparty/freetype/2.10/lib/ios_i386_xc_static_debug,
+					../../../../../../../../../../../3rdparty/libpng/lib/ios_i386_xc9_static_debug,
+					../../../../../../../../../../../3rdparty/zlib/lib/ios_i386_xc9_static_debug,
+				);
 				OBJROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -336,6 +346,9 @@
 					"-lOceanRenderingD",
 					"-lOceanRenderingGLESceneGraphD",
 					"-lOceanSystemD",
+					"-lfreetype",
+					"-lpng",
+					"-lzlib",
 					"-framework",
 					UIKit,
 					"-framework",
@@ -399,8 +412,18 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
-				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../../../../../bin/lib/ios_arm64_xc9_static;
-				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../../../../../bin/lib/ios_i386_xc9_static;
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					../../../../../../../../../../../bin/lib/ios_arm64_xc9_static,
+					../../../../../../../../../../../3rdparty/freetype/2.10/lib/ios_arm64_xc_static,
+					../../../../../../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static,
+					../../../../../../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static,
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					../../../../../../../../../../../bin/lib/ios_i386_xc9_static,
+					../../../../../../../../../../../3rdparty/freetype/2.10/lib/ios_i386_xc_static,
+					../../../../../../../../../../../3rdparty/libpng/lib/ios_i386_xc9_static,
+					../../../../../../../../../../../3rdparty/zlib/lib/ios_i386_xc9_static,
+				);
 				OBJROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -421,6 +444,9 @@
 					"-lOceanRendering",
 					"-lOceanRenderingGLESceneGraph",
 					"-lOceanSystem",
+					"-lfreetype",
+					"-lpng",
+					"-lzlib",
 					"-framework",
 					UIKit,
 					"-framework",
