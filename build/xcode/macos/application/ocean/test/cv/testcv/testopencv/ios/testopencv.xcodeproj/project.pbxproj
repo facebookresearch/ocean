@@ -122,7 +122,6 @@
 				TargetAttributes = {
 					5DD14B211D95623E00CCA9F0 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = V9WTTPBFK9;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -305,7 +304,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testopencv/osx/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testopencv/osx/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
 					"_DEBUG=1",
@@ -381,7 +379,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testcv.testopencv;
 				PRODUCT_MODULE_NAME = testopencv;
 				PRODUCT_NAME = testopencv;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testopencv/osx/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
 				VALID_ARCHS = arm64;
@@ -407,7 +404,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testopencv/osx/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testopencv/osx/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
 					"NDEBUG=1",
@@ -482,7 +478,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testcv.testopencv;
 				PRODUCT_MODULE_NAME = testopencv;
 				PRODUCT_NAME = testopencv;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testopencv/osx/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
 				VALID_ARCHS = arm64;
