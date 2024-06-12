@@ -131,7 +131,7 @@ function(get_ocean_compiler_flags ocean_compiler_flags)
         list(APPEND local_compiler_flags "/D_UNICODE")
         list(APPEND local_compiler_flags "/DUNICODE")
     elseif (LINUX)
-        # Nothing else to add at this time.
+        list(APPEND local_compiler_flags "-fpermissive")
     endif()
 
     set(${ocean_compiler_flags} ${local_compiler_flags} PARENT_SCOPE)
