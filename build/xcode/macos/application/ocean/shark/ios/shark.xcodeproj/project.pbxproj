@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		50E960802C18E545007CFE1C /* development_team.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 50E9607F2C18E545007CFE1C /* development_team.xcconfig */; };
+		50E960812C18E545007CFE1C /* development_team.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 50E9607F2C18E545007CFE1C /* development_team.xcconfig */; };
 		5D50B1B71D92824F009DDDFF /* SharkAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B41D92824F009DDDFF /* SharkAppDelegate.mm */; };
 		5D50B1B91D92824F009DDDFF /* SharkMain.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B61D92824F009DDDFF /* SharkMain.mm */; };
 		5D50B1C21D92840E009DDDFF /* dinosaur.ox3dv in Resources */ = {isa = PBXBuildFile; fileRef = 5D50B1BE1D92840E009DDDFF /* dinosaur.ox3dv */; };
@@ -28,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		50E9607F2C18E545007CFE1C /* development_team.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = development_team.xcconfig; sourceTree = "<group>"; };
 		5D4A716A1D8B10B000B8B729 /* shark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = shark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D50B1B41D92824F009DDDFF /* SharkAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SharkAppDelegate.mm; path = ../../../../../../../impl/application/ocean/shark/ios/SharkAppDelegate.mm; sourceTree = "<group>"; };
 		5D50B1B61D92824F009DDDFF /* SharkMain.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SharkMain.mm; path = ../../../../../../../impl/application/ocean/shark/ios/SharkMain.mm; sourceTree = "<group>"; };
@@ -63,11 +66,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		50E9607E2C18E529007CFE1C /* Config Files */ = {
+			isa = PBXGroup;
+			children = (
+				50E9607F2C18E545007CFE1C /* development_team.xcconfig */,
+			);
+			name = "Config Files";
+			sourceTree = "<group>";
+		};
 		5D4A71611D8B10B000B8B729 = {
 			isa = PBXGroup;
 			children = (
 				5DF0B9571D8FE33E00BE5D21 /* Header Files */,
 				5DF0B9561D8FE33000BE5D21 /* Source Files */,
+				50E9607E2C18E529007CFE1C /* Config Files */,
 				5DF0B9581D8FE35D00BE5D21 /* Resource Files */,
 				5D4A716B1D8B10B000B8B729 /* Products */,
 			);
@@ -174,11 +186,9 @@
 				TargetAttributes = {
 					5D4A71691D8B10B000B8B729 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = V9WTTPBFK9;
 						ProvisioningStyle = Manual;
 					};
 					C0E9B1811DAD3B8600895C4B = {
-						DevelopmentTeam = V9WTTPBFK9;
 					};
 				};
 			};
@@ -209,6 +219,7 @@
 				5D50B1C21D92840E009DDDFF /* dinosaur.ox3dv in Resources */,
 				5D73B0671D92C5FA000B5F33 /* Main.storyboard in Resources */,
 				5D73B0661D92C5FA000B5F33 /* LaunchScreen.xib in Resources */,
+				50E960802C18E545007CFE1C /* development_team.xcconfig in Resources */,
 				5D50B1C51D92840E009DDDFF /* trex.obj in Resources */,
 				5D50B1C31D92840E009DDDFF /* sift640.bmp in Resources */,
 				5D50B1C41D92840E009DDDFF /* trex.mtl in Resources */,
@@ -222,6 +233,7 @@
 				C0E9B18B1DAD3B8600895C4B /* dinosaur.ox3dv in Resources */,
 				C0E9B18C1DAD3B8600895C4B /* Main.storyboard in Resources */,
 				C0E9B18D1DAD3B8600895C4B /* LaunchScreen.xib in Resources */,
+				50E960812C18E545007CFE1C /* development_team.xcconfig in Resources */,
 				C0E9B18E1DAD3B8600895C4B /* trex.obj in Resources */,
 				C0E9B18F1DAD3B8600895C4B /* sift640.bmp in Resources */,
 				C0E9B1901DAD3B8600895C4B /* trex.mtl in Resources */,
@@ -285,6 +297,7 @@
 /* Begin XCBuildConfiguration section */
 		5D4A718F1D8B10B000B8B729 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50E9607F2C18E545007CFE1C /* development_team.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -344,6 +357,7 @@
 		};
 		5D4A71901D8B10B000B8B729 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50E9607F2C18E545007CFE1C /* development_team.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -403,7 +417,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
@@ -498,7 +511,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.fayteq.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_MODULE_NAME = shark;
 				PRODUCT_NAME = shark;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
@@ -523,7 +535,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
@@ -617,7 +628,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.fayteq.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_MODULE_NAME = shark;
 				PRODUCT_NAME = shark;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
 				WARNING_CFLAGS = (
 					"-Wdeprecated-copy-dtor",
@@ -641,7 +651,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"OCEAN_RUNTIME_SHARED=1",
@@ -721,7 +730,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"OCEAN_RUNTIME_SHARED=1",
