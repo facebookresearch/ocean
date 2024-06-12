@@ -42,7 +42,16 @@ bool Manager::initialize(jobject activityObject, JNIEnv* jniEnv, const std::stri
 	ocean_assert(!initializationPending_);
 	initializationPending_ = true;
 
-	return MessageHandler::invokeRequest(ovr_PlatformInitializeAndroidAsynchronous(appId.c_str(), activityObject, jniEnv), &Manager::onInitialized);
+	if (!MessageHandler::invokeRequest(ovr_PlatformInitializeAndroidAsynchronous(appId.c_str(), activityObject, jniEnv), &Manager::onInitialized))
+	{
+		initializationPending_ = false;
+
+		Log::error() << "Failed to initialize platform SDK";
+
+		return false;
+	}
+
+	return true;
 }
 
 Manager::~Manager()
@@ -53,6 +62,11 @@ Manager::~Manager()
 void Manager::update(const double timestamp)
 {
 	const ScopedLock scopedLock(lock_);
+
+	if (!isInitialized_ && !initializationPending_)
+	{
+		return;
+	}
 
 	ovrMessage* message = ovr_PopMessage();
 
@@ -196,10 +210,18 @@ void Manager::onGetIsViewerEntitled(ovrMessage* message, const bool succeeded)
 
 		MessageHandler::invokeRequest(ovr_User_GetLoggedInUser(), &Manager::onGetLoggedInUser);
 		MessageHandler::invokeRequest(ovr_User_GetAccessToken(), &Manager::onGetAccessToken);
+
+		const ScopedLock scopedLock(lock_);
+
+		entitlementType_ = ET_ENTITLED;
 	}
 	else
 	{
-		Log::error() << "User is not entitled: " << Utilities::errorMessage(message);
+		Log::debug() << "User is not entitled: " << Utilities::errorMessage(message);
+
+		const ScopedLock scopedLock(lock_);
+
+		entitlementType_ = ET_NOT_ENTITLED;
 	}
 }
 

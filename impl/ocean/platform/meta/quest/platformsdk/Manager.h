@@ -42,6 +42,21 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Manager :
 	friend class Singleton<Manager>;
 	friend class MessageHandler;
 
+	public:
+
+		/**
+		 * Definition of individual entitlement types.
+		 */
+		enum EntitlementType : uint32_t
+		{
+			/// The entitlement state is not yet known.
+			ET_NOT_YET_KNOWN = 0u,
+			/// The user is not entitled.
+			ET_NOT_ENTITLED,
+			/// The user is entitled.
+			ET_ENTITLED,
+		};
+
 	protected:
 
 		/**
@@ -91,6 +106,15 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Manager :
 		 * @return The user's id, 0 if unknown or not yet known
 		 */
 		inline uint64_t userId(std::string* accessToken = nullptr) const;
+
+		/**
+		 * Returns the entitlement type.
+		 * One of the requirements to sell an app in the Meta Quest Store is that you verify the user purchased or obtained your app legitimately.
+		 * This check is called the entitlement check. You should make the entitlement check within 10 seconds of the user launching your app.
+		 * @return The user's entitelement type
+		 * @see https://developer.oculus.com/documentation/native/ps-entitlement-check/
+		 */
+		inline EntitlementType entitlementType() const;
 
 		/**
 		 * Invokes a new request.
@@ -158,11 +182,14 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Manager :
 
 	protected:
 
+		/// True, if the manager's initialization is pending.
+		bool initializationPending_ = false;
+
 		/// True, if the manager has been initialized.
 		bool isInitialized_  = false;
 
-		/// True, if the manager's initialization is pending.
-		bool initializationPending_ = false;
+		/// The entitlement type of the user.
+		EntitlementType entitlementType_ = ET_NOT_YET_KNOWN;
 
 		/// The deep link which has been used to launch the app, empty if the app was launched normally.
 		std::string launchDeepLink_;
@@ -211,6 +238,13 @@ inline uint64_t Manager::userId(std::string* accessToken) const
 	}
 
 	return userId_;
+}
+
+inline Manager::EntitlementType Manager::entitlementType() const
+{
+	const ScopedLock scopedLock(lock_);
+
+	return entitlementType_;
 }
 
 }
