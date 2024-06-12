@@ -508,7 +508,7 @@
 					"-framework",
 					CoreLocation,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.fayteq.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.shark.ios";
 				PRODUCT_MODULE_NAME = shark;
 				PRODUCT_NAME = shark;
 				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
@@ -625,7 +625,7 @@
 					"-framework",
 					CoreLocation,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.fayteq.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.shark.ios";
 				PRODUCT_MODULE_NAME = shark;
 				PRODUCT_NAME = shark;
 				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
@@ -704,7 +704,7 @@
 					"-framework",
 					UIKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.fayteq.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.shark.ios";
 				PRODUCT_MODULE_NAME = shark;
 				PRODUCT_NAME = shark;
 				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
@@ -782,7 +782,7 @@
 					"-framework",
 					UIKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.fayteq.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.shark.ios";
 				PRODUCT_MODULE_NAME = shark;
 				PRODUCT_NAME = shark;
 				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";
