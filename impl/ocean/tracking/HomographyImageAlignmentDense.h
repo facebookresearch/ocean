@@ -64,7 +64,7 @@ class OCEAN_TRACKING_EXPORT HomographyImageAlignmentDense
 				/**
 				 * Destructs this object.
 				 */
-				virtual ~ConsistencyData();
+				virtual ~ConsistencyData() = default;
 
 				/**
 				 * Disabled copy operator.

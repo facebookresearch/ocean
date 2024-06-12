@@ -452,7 +452,14 @@ class HomographyImageAlignmentDense::DenseAdditiveHomographyProvider : public Ho
 		/**
 		 * Destructs the provider object and moves some consistency data back to the consistency object, if provided
 		 */
-		inline ~DenseAdditiveHomographyProvider();
+		inline ~DenseAdditiveHomographyProvider() // need to be defined here in the class as Clang will complain otherwise
+		{
+			if (this->consistencyObject_)
+			{
+				// we now move the information from the provider to the consistency data object
+				this->consistencyObject_->moveFromProvider(*this);
+			}
+		}
 
 		/**
 		 * Determines the Hessian matrix and the Error-Jacobian vector (the transposed Jacobian multiplied with the individual errors).
@@ -508,16 +515,6 @@ inline HomographyImageAlignmentDense::DenseAdditiveHomographyProvider<tChannels>
 			// we now move/copy the information form the consistency data object to the provider
 			this->consistencyObject_->moveToProvider(*this);
 		}
-	}
-}
-
-template <unsigned int tChannels>
-inline HomographyImageAlignmentDense::DenseAdditiveHomographyProvider<tChannels>::~DenseAdditiveHomographyProvider<tChannels>()
-{
-	if (this->consistencyObject_)
-	{
-		// we now move the information from the provider to the consistency data object
-		this->consistencyObject_->moveFromProvider(*this);
 	}
 }
 
@@ -781,11 +778,6 @@ bool HomographyImageAlignmentDense::DenseAdditiveHomographyProvider<tChannels>::
 	return true;
 }
 
-HomographyImageAlignmentDense::ConsistencyData::~ConsistencyData()
-{
-	// nothing to do here
-}
-
 bool HomographyImageAlignmentDense::optimizeAlignmentAdditive(const Frame& templateFrame, const CV::SubRegion& templateSubRegion, const Frame& currentFrame, const SquareMatrix3& roughHomography, const unsigned int homographyParameters, const bool zeroMean, SquareMatrix3& homography, const unsigned int iterations, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors, ConsistencyDataRef* externalConsistencyData, bool* abort)
 {
 	ocean_assert(templateFrame.pixelFormat() == currentFrame.pixelFormat());
@@ -900,7 +892,14 @@ class HomographyImageAlignmentDense::DenseInverseCompositionalHomographyProvider
 		/**
 		 * Destructs the provider object and moves some consistency data back to the consistency object, if provided
 		 */
-		inline ~DenseInverseCompositionalHomographyProvider();
+		inline ~DenseInverseCompositionalHomographyProvider() // need to be defined here in the class as Clang will complain otherwise
+		{
+			if (this->consistencyObject_)
+			{
+				// we now move the information from the provider to the consistency data object
+				this->consistencyObject_->moveFromProvider(*this);
+			}
+		}
 
 		/**
 		 * Determines the Hessian matrix and the Error-Jacobian vector (the transposed Jacobian multiplied with the individual errors).
@@ -1038,16 +1037,6 @@ inline HomographyImageAlignmentDense::DenseInverseCompositionalHomographyProvide
 			// we now move/copy the information form the consistency data object to the provider
 			this->consistencyObject_->moveToProvider(*this);
 		}
-	}
-}
-
-template <unsigned int tChannels>
-inline HomographyImageAlignmentDense::DenseInverseCompositionalHomographyProvider<tChannels>::~DenseInverseCompositionalHomographyProvider<tChannels>()
-{
-	if (this->consistencyObject_)
-	{
-		// we now move the information from the provider to the consistency data object
-		this->consistencyObject_->moveFromProvider(*this);
 	}
 }
 
