@@ -432,7 +432,7 @@
 					"-framework",
 					CoreMedia,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.fayteq.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.demo.cv.synthesis.videoinpainting.ios";
 				PRODUCT_MODULE_NAME = democvsynthesisvideoinpainting;
 				PRODUCT_NAME = democvsynthesisvideoinpainting;
 				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
@@ -522,7 +522,7 @@
 					"-framework",
 					CoreMedia,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.fayteq.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.demo.cv.synthesis.videoinpainting.ios";
 				PRODUCT_MODULE_NAME = democvsynthesisvideoinpainting;
 				PRODUCT_NAME = democvsynthesisvideoinpainting;
 				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
@@ -595,7 +595,7 @@
 					"-framework",
 					CoreMedia,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.fayteq.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.demo.cv.synthesis.videoinpainting.ios";
 				PRODUCT_MODULE_NAME = democvsynthesisvideoinpainting;
 				PRODUCT_NAME = democvsynthesisvideoinpainting;
 				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
@@ -668,7 +668,7 @@
 					"-framework",
 					CoreMedia,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.fayteq.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.demo.cv.synthesis.videoinpainting.ios";
 				PRODUCT_MODULE_NAME = democvsynthesisvideoinpainting;
 				PRODUCT_NAME = democvsynthesisvideoinpainting;
 				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";
