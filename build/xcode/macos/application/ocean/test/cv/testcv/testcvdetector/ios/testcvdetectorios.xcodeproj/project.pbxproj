@@ -17,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5063FF6D2C18C24B00E0CD83 /* development_team.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = development_team.xcconfig; sourceTree = "<group>"; };
 		5DD14B221D95623E00CCA9F0 /* testcvdetectorios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = testcvdetectorios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93A8C4AA221C9C7D0049A4F6 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ../../../../../../../../../../impl/application/ocean/test/cv/testcv/testdetector/ios/AppDelegate.mm; sourceTree = "<group>"; };
 		93A8C4AB221C9C7D0049A4F6 /* ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ViewController.mm; path = ../../../../../../../../../../impl/application/ocean/test/cv/testcv/testdetector/ios/ViewController.mm; sourceTree = "<group>"; };
@@ -41,12 +42,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5063FF6C2C18C23400E0CD83 /* Config Files */ = {
+			isa = PBXGroup;
+			children = (
+				5063FF6D2C18C24B00E0CD83 /* development_team.xcconfig */,
+			);
+			name = "Config Files";
+			sourceTree = "<group>";
+		};
 		5DD14B191D95623E00CCA9F0 = {
 			isa = PBXGroup;
 			children = (
 				5DD14B421D956F4100CCA9F0 /* Header FIles */,
 				5DD14B431D956F5A00CCA9F0 /* Source FIles */,
 				5DD14B441D956F6B00CCA9F0 /* Resource Files */,
+				5063FF6C2C18C23400E0CD83 /* Config Files */,
 				5DD14B231D95623E00CCA9F0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -122,7 +132,6 @@
 				TargetAttributes = {
 					5DD14B211D95623E00CCA9F0 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = V9WTTPBFK9;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -191,6 +200,7 @@
 /* Begin XCBuildConfiguration section */
 		5DD14B371D95623E00CCA9F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5063FF6D2C18C24B00E0CD83 /* development_team.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -250,6 +260,7 @@
 		};
 		5DD14B381D95623E00CCA9F0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5063FF6D2C18C24B00E0CD83 /* development_team.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -309,7 +320,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testcvdetector/osx/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testcvdetector/osx/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
 					"_DEBUG=1",
@@ -363,7 +373,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testcvdetector.ios;
 				PRODUCT_MODULE_NAME = testcvdetectorios;
 				PRODUCT_NAME = testcvdetectorios;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testcvdetector/osx/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
 				WARNING_CFLAGS = (
@@ -388,7 +397,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testcvdetector/osx/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testcvdetector/osx/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"ENABLE_LOGGING=1",
 					"NDEBUG=1",
@@ -441,7 +449,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testcvdetector.ios;
 				PRODUCT_MODULE_NAME = testcvdetectorios;
 				PRODUCT_NAME = testcvdetectorios;
-				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
 				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/test/testcvdetector/osx/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
 				WARNING_CFLAGS = (
