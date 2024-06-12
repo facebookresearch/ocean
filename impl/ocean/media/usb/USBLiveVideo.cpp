@@ -431,9 +431,9 @@ bool USBLiveVideo::startInternal()
 		return true;
 	}
 
-	const unsigned int preferredWidth = preferredFrameType_.width();
-	const unsigned int preferredHeight = preferredFrameType_.height();
-	const double preferredFrameRate = double(recentFrameFrequency_);
+	const unsigned int preferredWidth = preferredFrameWidth();
+	const unsigned int preferredHeight = preferredFrameHeight();
+	const double preferredFrameRate = double(preferredFrameFrequency());
 
 	System::USB::Video::VideoDevice::DeviceStreamType preferredDeviceStreamType = translateStreamType(preferredStreamType_);
 	const FrameType::PixelFormat preferredPixelFormat = preferredFrameType_.pixelFormat();
