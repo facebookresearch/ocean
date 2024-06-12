@@ -11,6 +11,13 @@ if (MACOS OR LINUX OR WIN32)
 
     find_package(wxWidgets REQUIRED)
 
+    if (LINUX)
+        if(wxWidgets_USE_FILE)
+            # Add platform-specific configs to include the correct headers, etc.
+            include(${wxWidgets_USE_FILE})
+        endif()
+    endif()
+
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
 
