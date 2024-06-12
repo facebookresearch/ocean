@@ -25,14 +25,11 @@
 
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
-#include "ocean/base/Processor.h"
 #include "ocean/base/String.h"
 #include "ocean/base/TaskQueue.h"
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/Utilities.h"
 
-#include "ocean/system/Memory.h"
-#include "ocean/system/OperatingSystem.h"
 #include "ocean/system/Process.h"
 
 #ifdef _ANDROID
