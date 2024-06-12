@@ -221,7 +221,6 @@ class OCEAN_CV_DETECTOR_EXPORT FrameChangeDetector
 
 		/**
 		 * Computes a distance score between two histograms.
-		 * TODO (jtprice): update documentation with specific approach once it is finalized
 		 * @param tileHistogram1 First histogram to compare
 		 * @param tileHistogram2 Second histogram to compare
 		 * @return Score reflecting the distance between the histograms, with lower values indicating higher similarity

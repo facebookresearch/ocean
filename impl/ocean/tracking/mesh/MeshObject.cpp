@@ -35,7 +35,7 @@ namespace Tracking
 namespace Mesh
 {
 
-// TODO (jtprice): fix or explain hardcoded values
+// TODO fix or explain hardcoded values
 MeshObject::MeshObject(const Frame& yTextureFrame, const UVTextureMapping::MeshUVTextureMappingRef& meshUVTextureMappingRef, Worker* worker) :
 	featureMap_(yTextureFrame.constdata<uint8_t>(), yTextureFrame.width(), yTextureFrame.height(), yTextureFrame.paddingElements(), meshUVTextureMappingRef, Scalar(6.5), 0u, worker),
 	texturePyramid_(yTextureFrame, CV::FramePyramid::idealLayers(yTextureFrame.width(), yTextureFrame.height(), 15u, 15u), true /*copyFirstLayer*/, worker),
@@ -59,7 +59,7 @@ MeshObject::MeshObject(const Frame& yTextureFrame, const UVTextureMapping::MeshU
 		meshTriangles_.emplace_back(texturePyramid_.layers());
 	}
 
-	// TODO (jtprice): fix hardcoded values
+	// TODO fix hardcoded values
 	for (unsigned int pyramidLevel = 0u; pyramidLevel < texturePyramid_.layers(); ++pyramidLevel)
 	{
 		const Scalar scale_originalTextureFromDownsampledTexture = Scalar(texturePyramid_.sizeFactor(pyramidLevel));
@@ -272,11 +272,11 @@ bool MeshObject::determinePose(const MeshObjectTrackingOptions& options, const P
 
 bool MeshObject::determinePoseFromFrameFeatures(const MeshObjectTrackingOptions& options, const PinholeCamera& pinholeCamera, const CV::Detector::Blob::BlobFeatures& features, const CV::FramePyramid& currentFramePyramid, Worker* worker)
 {
-	// TODO (jtprice): explore whether there's a performance hit for not filtering the features based
+	// TODO explore whether there's a performance hit for not filtering the features based
 	// on the pose guess
 
 	// Apply a brute-force feature matching to determine candidates.
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	Blob::Correspondences::CorrespondencePairs correspondenceCandidates(Blob::UnidirectionalCorrespondences::determineFeatureCorrespondencesWithQualityEarlyReject(features, featureMap_.features(), features.size(), Scalar(0.1), Scalar(0.7), worker));
 
 	constexpr size_t kMinimumNumberInitialCorrespondenceCandidates = 12u;
@@ -292,10 +292,10 @@ bool MeshObject::determinePoseFromFrameFeatures(const MeshObjectTrackingOptions&
 	ocean_assert(objectPoints.size() == imagePoints.size());
 
 	HomogenousMatrix4 pose_world_T_camera;
-	RandomGenerator randomGenerator; // TODO (jtprice): is it better to preallocate this?
+	RandomGenerator randomGenerator; // TODO is it better to preallocate this?
 
 	// Run P3P RANSAC to determine an initial pose.
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pose_world_T_camera, 10u, true, options.recognitionRansacIterations, Scalar(15 * 15)))
 	{
 		return false;
@@ -303,7 +303,7 @@ bool MeshObject::determinePoseFromFrameFeatures(const MeshObjectTrackingOptions&
 
 	// Apply another iteration of feature matching, now guided with the known pose. This often
 	// significantly increases the number of feature correspondences.
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	correspondenceCandidates = Blob::UnidirectionalCorrespondences::determineFeatureCorrespondencesWithPose(AnyCameraPinhole(pinholeCamera), pose_world_T_camera, features, featureMap_.features(), features.size(), Scalar(10), Scalar(0.1), Scalar(0.7));
 
 	imagePoints.clear();
@@ -312,7 +312,7 @@ bool MeshObject::determinePoseFromFrameFeatures(const MeshObjectTrackingOptions&
 	ocean_assert(objectPoints.size() == imagePoints.size());
 
 	// Run a second P3P to refine the pose using the guided matches.
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	Indices32 resultingValidCorrespondences;
 	if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, pose_world_T_camera, 10u, true, options.recognitionRansacIterations, Scalar(5 * 5), &resultingValidCorrespondences))
 	{
@@ -419,7 +419,7 @@ bool MeshObject::optimizePoseByRectification(const MeshObjectTrackingOptions& op
 	// Optimize the given rough pose by application of the new 2D/3D correspondences.
 
 	Scalar initError, finalError;
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	if (totalNumberTrackedPoints_ < options.minNumberTrackedPoints ||
 		!Geometry::NonLinearOptimizationPose::optimizePose(
 			pinholeCamera,

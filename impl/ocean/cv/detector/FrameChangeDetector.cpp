@@ -282,7 +282,7 @@ Scalar FrameChangeDetector::computeHistogramDistance(const FrameChangeDetector::
 {
 	static_assert(kNumberIntensityBins != 0u, "Number of histogram bins is set to zero!");
 
-	// TODO (jtprice): Will remove these once the final approach is decided.
+	// TODO Will remove these once the final approach is decided.
 
 	// Sum of absolute differences.
 	//Scalar histogramDistance = Scalar(0.0);

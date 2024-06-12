@@ -575,7 +575,7 @@ void ContrastLimitedAdaptiveHistogram::bilinearInterpolationNEON7BitPrecisionSub
 		// The areas of the right-most and bottom-most tiles are handled by their left/upper neighboring tile
 		if (tileX == lastHorizontalTile || tileY == lastVerticalTile)
 		{
-			// TODO @nilsplath Make sure to iterate only over (horizontalTiles - 1u) * (verticalTiles - 1u) tiles to improve performance of multi-core implementations
+			// TODO Make sure to iterate only over (horizontalTiles - 1u) * (verticalTiles - 1u) tiles to improve performance of multi-core implementations
 			continue;
 		}
 

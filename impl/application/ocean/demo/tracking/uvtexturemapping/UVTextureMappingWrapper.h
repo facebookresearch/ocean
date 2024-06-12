@@ -29,7 +29,6 @@
  * @ingroup applicationdemotracking
  * @defgroup applicationdemotrackinguvtexturemapping UV Texture Mapping
  * @{
- * TODO jtprice Add a description of this demo here.
  * The implementation of the basic functionality is platform independent, thus is can be used on any platform.
  * @}
  */

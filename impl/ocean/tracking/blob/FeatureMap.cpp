@@ -115,7 +115,7 @@ FeatureMap::FeatureMap(const uint8_t* yFrame, const unsigned int width, const un
 
 	//
 	// Now, compute a 3D point on the surface of the cylinder for each 2D point, and throw out invalid points.
-	// NOTE (jtprice): We could also check that the features do not lie on the cylinder boundary.
+	// NOTE: We could also check that the features do not lie on the cylinder boundary.
 	//
 
 	{
@@ -215,7 +215,7 @@ FeatureMap::FeatureMap(const uint8_t* yFrame, const unsigned int width, const un
 
 	//
 	// Now, compute a 3D point on the surface of the cone for each 2D point, and throw out invalid points.
-	// NOTE (jtprice): We could also check that the features do not lie on the cone boundary.
+	// NOTE: We could also check that the features do not lie on the cone boundary.
 	//
 
 	{

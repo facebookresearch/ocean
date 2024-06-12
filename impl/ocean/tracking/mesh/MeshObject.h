@@ -134,7 +134,7 @@ class OCEAN_TRACKING_MESH_EXPORT MeshObject
 		 * @param timestamp Optional timestamp of the pose guess
 		 * @return pose The camera pose guess, if any
 		 */
-		// TODO (jtprice): I think we can get rid of poseGuess_world_T_camera. Keeping for now.
+		// TODO I think we can get rid of poseGuess_world_T_camera. Keeping for now.
 		inline const HomogenousMatrix4& poseGuess_world_T_camera(Timestamp* timestamp = nullptr) const;
 
 		/**

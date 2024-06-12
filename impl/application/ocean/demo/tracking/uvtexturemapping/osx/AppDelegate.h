@@ -11,7 +11,6 @@
  * @ingroup applicationdemotrackinguvtexturemapping
  * @defgroup applicationdemotrackinguvtexturemappingosx UV Texture Mapping (OSX)
  * @{
- * TODO jtprice Add a description of this demo here.
  * This demo application uses the platform independent UVTextureMappingWrapper class implementing most of the necessary code.
  * However, this application here is intended for Apple OSX platforms only.
  * @see UVTextureMappingWrapper, applicationdemotrackinguvtexturemapping

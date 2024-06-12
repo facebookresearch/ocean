@@ -179,7 +179,7 @@ bool MeshObjectTrackerCore::determinePoses(bool allowRecognition, const Frame& y
 	ocean_assert(yFrame && FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
 	ocean_assert(yFrame.width() == pinholeCamera.width() && yFrame.height() == pinholeCamera.height());
 
-	// TODO (jtprice): ignoring Android-specific logic, for now -- will copy it later from the pattern tracker
+	// TODO ignoring Android-specific logic, for now -- will copy it later from the pattern tracker
 
 	if (yFrame.pixels() > 1280u * 720u)
 	{
@@ -203,7 +203,7 @@ bool MeshObjectTrackerCore::determinePosesWithDownsampledResolution(bool allowRe
 	ocean_assert(yFrame && FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
 	ocean_assert(yFrame.width() == pinholeCamera.width() && yFrame.height() == pinholeCamera.height());
 
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	const unsigned int pyramidLayers = previousFramePyramid_.isValid() ? previousFramePyramid_.layers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 15u, 15u);
 
 	ocean_assert(pyramidLayers >= 1u);
@@ -260,7 +260,7 @@ bool MeshObjectTrackerCore::determinePosesForUntrackedObjects(const PinholeCamer
 	const unsigned int* integralImage = updateIntegralImageBuffer(yFrame);
 	ocean_assert(integralImage);
 
-	// TODO (jtprice): this parameter may need to be adaptive to the device?
+	// TODO this parameter may need to be adaptive to the device?
 	// Although we may have downsampled the original input image, we still have the simple possibility
 	// to select the sampling density for the Blob detector. Thus, as we do not downsample 1280x720
 	// input images, we simply reduce the sampling density instead (for images having more pixels than
@@ -269,7 +269,7 @@ bool MeshObjectTrackerCore::determinePosesForUntrackedObjects(const PinholeCamer
 	const CV::Detector::Blob::BlobFeatureDetector::SamplingDense samplingDensity =
 		yFrame.pixels() > kMaxImageSizeForFullSampling ? CV::Detector::Blob::BlobFeatureDetector::SAMPLING_SPARSE : CV::Detector::Blob::BlobFeatureDetector::SAMPLING_NORMAL;
 
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	CV::Detector::Blob::BlobFeatures features;
 	CV::Detector::Blob::BlobFeatureDetector::detectFeatures(integralImage, yFrame.width(), yFrame.height(), samplingDensity, 10, true, features, worker);
 

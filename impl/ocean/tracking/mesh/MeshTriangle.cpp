@@ -80,7 +80,7 @@ bool MeshTriangle::rectifyTriangleAndIdentifyReferenceCorrespondences(
 	Worker* worker)
 {
 	constexpr unsigned int kNumChannels = 1u; // always use grayscale images
-	// TODO (jtprice): move this to options
+	// TODO move this to options
 	constexpr unsigned int kNumPyramidLayersForTracking = 3u;
 
 	ocean_assert(pinholeCamera.isValid());
@@ -119,7 +119,7 @@ bool MeshTriangle::rectifyTriangleAndIdentifyReferenceCorrespondences(
 
 	const Scalar projectedSquaredArea = imageTriangle2.area2();
 
-	constexpr Scalar kMinimumSquaredArea = Scalar(25.0); // TODO (jtprice): could make this, e.g., 100
+	constexpr Scalar kMinimumSquaredArea = Scalar(25.0); // TODO could make this, e.g., 100
 	if (projectedSquaredArea < kMinimumSquaredArea)
 	{
 		previousTexturePyramidLevel_ = kInvalidPyramidLevel;
@@ -191,7 +191,7 @@ bool MeshTriangle::rectifyTriangleAndIdentifyReferenceCorrespondences(
 	// triangle a bit so that feature matching can be applied near the triangle edges. The warped
 	// output image will bound this triangle.
 
-	// TODO (jtprice): check the padding amount
+	// TODO check the padding amount
 	constexpr Scalar kPaddingPixels = Scalar(15.0); // fixed for all pyramid levels
 
 	const Triangle2 scaledUvTriangle2(
@@ -255,7 +255,7 @@ bool MeshTriangle::rectifyTriangleAndIdentifyReferenceCorrespondences(
 	const Vector3 paddedTrianglePoint2 = triangle3.barycentric2cartesian(paddedBarycentricCoordinate2);
 	const Triangle3 paddedTriangle3(paddedTrianglePoint0, paddedTrianglePoint1, paddedTrianglePoint2);
 
-	// TODO (jtprice): investigate making this a minimum of 4; and consider if there are better ways of
+	// TODO investigate making this a minimum of 4; and consider if there are better ways of
 	// computing this value
 	const unsigned int lookupTableBinSize = minmax(1u, (unsigned int)(std::min(textureSubregionWidth, textureSubregionHeight) / 4u), 50u);
 	const unsigned char kMaskValue = 0xFF;

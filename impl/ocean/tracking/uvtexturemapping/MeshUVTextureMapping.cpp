@@ -39,8 +39,8 @@ MeshUVTextureMapping::MeshUVTextureMapping(const Vectors3& vertices, const Vecto
 	// given region.
 	//
 
-	constexpr Scalar kBinSize = Scalar(5.); // in pixels; TODO (jtprice): Maybe make this a configurable parameter?
-	constexpr Scalar kMaxTextureArea = Scalar(2.68e8); // ~256MiB; TODO (jtprice): Make this device-dependent
+	constexpr Scalar kBinSize = Scalar(5.); // in pixels
+	constexpr Scalar kMaxTextureArea = Scalar(2.68e8); // ~256MiB
 
 	const Box2 textureCoordinatesBbox(textureCoordinates);
 

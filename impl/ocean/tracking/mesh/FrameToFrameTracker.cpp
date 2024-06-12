@@ -50,7 +50,7 @@ bool trackFrameToFrameAtLowerResolution(const PinholeCamera& pinholeCamera, cons
 	// We'll pull points from up to 3 layers in the pyramid, starting at `initialPyramidLayer`.
 	constexpr unsigned int kMaxNumTrackingLayers = 3u;
 
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	if (previousFramePyramid.layers() <= initialPyramidLayer ||
 		previousImagePoints.size() < 3u)
 	{
@@ -96,8 +96,8 @@ bool trackFrameToFrameAtLowerResolution(const PinholeCamera& pinholeCamera, cons
 		}
 	}
 
-	// TODO (jtprice): hardcoded values
-	// TODO (jtprice): This is 3u above -- investigate this when the hardcoded values are removed
+	// TODO hardcoded values
+	// TODO This is 3u above -- investigate this when the hardcoded values are removed
 	if (previousFrameSubPyramidObjectPoints.size() <= 5u)
 	{
 		return false;
@@ -131,15 +131,15 @@ bool trackFrameToFrameAtLowerResolution(const PinholeCamera& pinholeCamera, cons
 			return false; // failed due to bad input
 		}
 
-		// TODO (jtprice): hardcoded values
-		// TODO (jtprice): does it make sense to rule out points that were successfully matched?
+		// TODO hardcoded values
+		// TODO does it make sense to rule out points that were successfully matched?
 		if (validIndices.size() >= 10u)
 		{
 			break;
 		}
 	}
 
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	if (validIndices.size() <= 5u)
 	{
 		return false;
@@ -153,7 +153,7 @@ bool trackFrameToFrameAtLowerResolution(const PinholeCamera& pinholeCamera, cons
 
 	ocean_assert(previousFrameSubPyramidObjectPoints.size() == currentFrameSubPyramidImagePoints.size());
 
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	Scalar initialError, finalError;
 	return Geometry::NonLinearOptimizationPose::optimizePose(
 		lowerResolutionCamera,
@@ -199,7 +199,7 @@ bool trackFrameToFrame(
 	ocean_assert(FrameType::formatIsGeneric(currentFramePyramid.frameType().pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, kNumChannels));
 	ocean_assert(pinholeCamera.width() == previousFramePyramid.finestWidth() && pinholeCamera.height() == previousFramePyramid.finestHeight());
 
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	ocean_assert(previousObjectPoints.size() == previousImagePoints.size() && previousImagePoints.size() >= 3u);
 
 	ocean_assert(currentImagePoints.empty());
@@ -234,7 +234,7 @@ bool trackFrameToFrame(
 		}
 	}
 
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	if (validIndices.size() < 3u)
 	{
 		return false;
@@ -262,7 +262,7 @@ bool trackFrameToFrame(
 	{
 		currentImagePoints.clear();
 
-		// TODO (jtprice): hardcoded values
+		// TODO hardcoded values
 		if (!CV::Advanced::AdvancedMotionSSD::trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations<kNumChannels, kPatchSize>(
 				previousFramePyramid,
 				currentFramePyramid,
@@ -278,8 +278,8 @@ bool trackFrameToFrame(
 			return false; // failed due to bad input
 		}
 
-		// TODO (jtprice): hardcoded values
-		// TODO (jtprice): does it make sense to rule out points that were successfully matched?
+		// TODO hardcoded values
+		// TODO does it make sense to rule out points that were successfully matched?
 		if (trackedValidIndices.size() >= 10)
 		{
 			break;
@@ -288,7 +288,7 @@ bool trackFrameToFrame(
 		trackedValidIndices.clear();
 	}
 
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	if (trackedValidIndices.size() <= 3u)
 	{
 		return false;
@@ -305,7 +305,7 @@ bool trackFrameToFrame(
 
 	ocean_assert(currentObjectPoints.size() == currentImagePoints.size());
 
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	Scalar initialError, finalError;
 	return Geometry::NonLinearOptimizationPose::optimizePose(
 		pinholeCamera,
@@ -334,7 +334,7 @@ bool FrameToFrameTracker::track(const PinholeCamera& pinholeCamera, const CV::Fr
 	ocean_assert(currentFramePyramid.frameType() == previousFramePyramid.frameType());
 	ocean_assert(currentFramePyramid.layers() == previousFramePyramid.layers());
 
-	// TODO (jtprice): hardcoded values
+	// TODO hardcoded values
 	ocean_assert(previousObjectPoints.size() >= 3u);
 	ocean_assert(previousObjectPoints.size() == previousImagePoints.size());
 	ocean_assert(pose_world_T_previousFrame.isValid());
@@ -353,7 +353,7 @@ bool FrameToFrameTracker::track(const PinholeCamera& pinholeCamera, const CV::Fr
 	// rough pose.
 	if (currentFramePyramid.layers() >= 3u)
 	{
-		// TODO (jtprice): hardcoded values
+		// TODO hardcoded values
 		trackFrameToFrameAtLowerResolution(
 			pinholeCamera,
 			previousFramePyramid,
@@ -370,7 +370,7 @@ bool FrameToFrameTracker::track(const PinholeCamera& pinholeCamera, const CV::Fr
 
 	if (currentRoughPose_world_T_currentFrame.isValid())
 	{
-		// TODO (jtprice): hardcoded values
+		// TODO hardcoded values
 		const CV::FramePyramid previousFramePyramidSlice(previousFramePyramid, 0u, 3u, false /*copyData*/);
 		const CV::FramePyramid currentFramePyramidSlice(currentFramePyramid, 0u, 3u, false /*copyData*/);
 

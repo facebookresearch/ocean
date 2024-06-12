@@ -14,7 +14,6 @@
  * @ingroup applicationdemotrackinguvtexturemapping
  * @defgroup applicationdemotrackinguvtexturemappingwin UV Texture Mapping (Windows)
  * @{
- * TODO jtprice Add a description of the demo here.
  * This demo application uses the platform independent UVTextureMappingWrapper class implementing most of the necessary code.
  * However, this application here is intended for Windows platforms only.
  * @see UVTextureMappingWrapper, applicationdemotrackinguvtexturemappingosx
