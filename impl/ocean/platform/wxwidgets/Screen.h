@@ -72,7 +72,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT Screen
 		 * @param parent Optional handle of a parent (or associated) window to which the resulting position should match if no proposed position is provided
 		 * @return The resulting top left position of the window
 		 */
-		static CV::PixelPositionI suitableWindowPosition(const unsigned int windowWidth, const unsigned int windowHeight, const int left = NumericT<int>::minValue(), const int top = NumericT<int>::minValue(), const WXHWND parent = nullptr);
+		static CV::PixelPositionI suitableWindowPosition(const unsigned int windowWidth, const unsigned int windowHeight, const int left = NumericT<int>::minValue(), const int top = NumericT<int>::minValue(), const OCEAN_WXWIDGETS_HANDLE parent = nullptr);
 
 #ifdef __APPLE__
 
@@ -86,7 +86,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT Screen
 		 * @param parent Optional handle of a parent (or associated) window to which the resulting position should match if no proposed position is provided
 		 * @return The resulting top left position of the window
 		 */
-		static CV::PixelPositionI suitableWindowPositionApple(const unsigned int windowWidth, const unsigned int windowHeight, const int left = NumericT<int>::minValue(), const int top = NumericT<int>::minValue(), const WXHWND parent = nullptr);
+		static CV::PixelPositionI suitableWindowPositionApple(const unsigned int windowWidth, const unsigned int windowHeight, const int left = NumericT<int>::minValue(), const int top = NumericT<int>::minValue(), const OCEAN_WXWIDGETS_HANDLE parent = nullptr);
 
 #endif
 

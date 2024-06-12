@@ -76,7 +76,7 @@ CV::PixelBoundingBoxI Screen::virtualDisplayBoundingBox()
 	return boundingBox;
 }
 
-CV::PixelPositionI Screen::suitableWindowPosition(const unsigned int windowWidth, const unsigned int windowHeight, const int left, const int top, const WXHWND parent)
+CV::PixelPositionI Screen::suitableWindowPosition(const unsigned int windowWidth, const unsigned int windowHeight, const int left, const int top, const OCEAN_WXWIDGETS_HANDLE parent)
 {
 #if defined(__APPLE__)
 	return suitableWindowPositionApple(windowWidth, windowHeight, left, top, parent);

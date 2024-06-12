@@ -36,7 +36,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT WxScopedParentWindow
 		 * Creates a new scoped window.
 		 * @param handle The handle of an already existing window which will be taken over as long as the scoped window exists, may be nullptr which is then equivalent to the default constructor
 		 */
-		explicit WxScopedParentWindow(WXHWND handle);
+		explicit WxScopedParentWindow(OCEAN_WXWIDGETS_HANDLE handle);
 
 		/**
 		 * Move constructor.

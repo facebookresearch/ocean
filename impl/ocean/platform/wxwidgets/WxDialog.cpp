@@ -165,7 +165,7 @@ int WxDialog::ShowModal()
 		{
 			//ocean_assert(false);
 			// This is likely to prove that the object still exists
-			//if (wxFindWinFromHandle((WXHWND) hwndOldFocus) == oldFocus)
+			//if (wxFindWinFromHandle((OCEAN_WXWIDGETS_HANDLE) hwndOldFocus) == oldFocus)
 			//	oldFocus->SetFocus();
 		}
 #endif

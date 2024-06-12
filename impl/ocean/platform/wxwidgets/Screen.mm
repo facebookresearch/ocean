@@ -22,7 +22,7 @@ namespace Platform
 namespace WxWidgets
 {
 
-CV::PixelPositionI Screen::suitableWindowPositionApple(const unsigned int windowWidth, const unsigned int windowHeight, const int left, const int top, const WXHWND parent)
+CV::PixelPositionI Screen::suitableWindowPositionApple(const unsigned int windowWidth, const unsigned int windowHeight, const int left, const int top, const OCEAN_WXWIDGETS_HANDLE parent)
 {
 	ocean_assert(windowWidth >= 1u && windowHeight >= 1u);
 

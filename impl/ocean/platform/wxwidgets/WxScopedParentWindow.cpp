@@ -21,7 +21,7 @@ WxScopedParentWindow::WxScopedParentWindow()
 	window_ = new wxFrame(nullptr, -1, L"WxScopedParentWindow");
 }
 
-WxScopedParentWindow::WxScopedParentWindow(WXHWND handle)
+WxScopedParentWindow::WxScopedParentWindow(OCEAN_WXWIDGETS_HANDLE handle)
 {
 #ifdef _WINDOWS
 

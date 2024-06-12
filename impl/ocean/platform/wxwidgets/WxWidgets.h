@@ -21,6 +21,14 @@
 
 #include <wx/wx.h>
 
+#ifndef OCEAN_WXWIDGETS_HANDLE
+	#if defined(OCEAN_PLATFORM_BUILD_LINUX)
+		#define OCEAN_WXWIDGETS_HANDLE WXWidget
+	#else
+		#define OCEAN_WXWIDGETS_HANDLE WXHWND
+	#endif
+#endif
+
 #ifdef __clang__
     #pragma clang diagnostic pop
 #endif
