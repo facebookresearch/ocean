@@ -345,7 +345,7 @@
 					"-lOceanTestBaseD",
 				);
 				OTHER_LIBTOOLFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.fayteq.testbase;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testbase.ios;
 				PRODUCT_MODULE_NAME = testbase;
 				PRODUCT_NAME = testbase;
 				SYMROOT = "../../../../../../../../../bin/tmp/impl/application/ocean/test/testbase/osx/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
@@ -400,7 +400,7 @@
 					"-lOceanTestBase",
 				);
 				OTHER_LIBTOOLFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.fayteq.testbase;
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.test.testbase.ios;
 				PRODUCT_MODULE_NAME = testbase;
 				PRODUCT_NAME = testbase;
 				SYMROOT = "../../../../../../../../../bin/tmp/impl/application/ocean/test/testbase/osx/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
