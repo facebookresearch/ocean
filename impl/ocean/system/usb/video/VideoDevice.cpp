@@ -105,7 +105,7 @@ std::string VideoDevice::VideoControl::toString() const
 	return result;
 }
 
-VideoDevice::VideoControlInterface::VideoControlInterface(const libusb_interface_descriptor& interfaceDescriptor, libusb_device_handle* /*usbDeviceHandle*/)
+VideoDevice::VideoControlInterface::VideoControlInterface(const libusb_interface_descriptor& interfaceDescriptor, libusb_device_handle* usbDeviceHandle)
 {
 	ocean_assert(interfaceDescriptor.bInterfaceClass == LIBUSB_CLASS_VIDEO);
 	ocean_assert(interfaceDescriptor.bInterfaceSubClass == SC_VIDEOCONTROL);
@@ -184,6 +184,8 @@ VideoDevice::VideoControlInterface::VideoControlInterface(const libusb_interface
 				Log::debug() << " ";
 				Log::debug() << "Parsing VC_INPUT_TERMINAL, with descriptor size " << descriptorSize;
 				Log::debug() << inputTerminalDescriptor.toString(usbDeviceHandle);
+#else
+				OCEAN_SUPPRESS_UNUSED_WARNING(usbDeviceHandle);
 #endif
 
 				if (!inputTerminalDescriptor.isValid())
@@ -805,7 +807,7 @@ float VideoDevice::VideoStreamingInterface::determineResolutionFactor(const T& f
 	ocean_assert(resolutionFactor >= 0.0f);
 
 	// Returns 1 for an input of 0 and values progressively closer to 0 as the input increases, following the exponential decay formula f(x) = e^(-x).
-	return float(NumericD::exp(-resolutionFactor));
+	return NumericF::exp(-resolutionFactor);
 }
 
 template <typename T>
@@ -850,7 +852,7 @@ float VideoDevice::VideoStreamingInterface::determineFrameRateFactor(const T& fr
 		}
 	}
 
-	ocean_assert(bestRatio > 0.0);
+	ocean_assert(bestRatio >= 0.0);
 
 	// Returns 1 for an input of 0 and values progressively closer to 0 as the input increases, following the exponential decay formula f(x) = e^(-x).
 	return float(NumericD::exp(-bestRatio));
@@ -1510,6 +1512,10 @@ bool VideoDevice::executeVideoControl(libusb_device_handle* usbDeviceHandle, con
 
 bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int preferredHeight, const double preferredFrameRate, const DeviceStreamType preferredDeviceStreamType, const FrameType::PixelFormat preferredPixelFormat, const VSFrameBasedVideoFormatDescriptor::EncodingFormat preferredEncodingFormat)
 {
+#ifdef OCEAN_INTENSIVE_DEBUG
+	Log::debug() << "VideoDevice::start(): " << preferredWidth << "x" << preferredHeight << ", " << String::toAString(preferredFrameRate, 1u) << "fps, " << translateDeviceStreamType(preferredDeviceStreamType) << ", " << FrameType::translatePixelFormat(preferredPixelFormat) << ", " + VSFrameBasedVideoFormatDescriptor::translateEncodingFormat(preferredEncodingFormat);
+#endif
+
 	const ScopedLock scopedLock(lock_);
 
 	ocean_assert(isValid());
@@ -1777,6 +1783,10 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 
 bool VideoDevice::stop()
 {
+#ifdef OCEAN_INTENSIVE_DEBUG
+	Log::debug() << "VideoDevice::stop();
+#endif
+
 	const ScopedLock scopedLock(lock_);
 
 	if (!isStarted_)
