@@ -260,7 +260,7 @@ bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Po
 
 #elif defined(OCEAN_PLATFORM_BUILD_LINUX) || defined(OCEAN_PLATFORM_BUILD_ANDROID)
 
-	using ScopedCurlHandle = ScopedObjectCompileTimeVoid<CURL*, curl_easy_cleanup>;
+	using ScopedCurlHandle = ScopedObjectCompileTimeVoidT<CURL*, curl_easy_cleanup>;
 
 	ScopedCurlHandle curlHandle(curl_easy_init());
 
@@ -405,8 +405,8 @@ bool HTTPSClient::httpsPostRequest(const std::string& url, const uint8_t* reques
 
 #elif defined(OCEAN_PLATFORM_BUILD_LINUX) || defined(OCEAN_PLATFORM_BUILD_ANDROID)
 
-	using ScopedCurlHandle = ScopedObjectCompileTimeVoid<CURL*, curl_easy_cleanup>;
-	using ScopedCurlList = ScopedObjectCompileTimeVoid<struct curl_slist*, curl_slist_free_all>;
+	using ScopedCurlHandle = ScopedObjectCompileTimeVoidT<CURL*, curl_easy_cleanup>;
+	using ScopedCurlList = ScopedObjectCompileTimeVoidT<struct curl_slist*, curl_slist_free_all>;
 
 	ScopedCurlHandle curlHandle(curl_easy_init());
 

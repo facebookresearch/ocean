@@ -32,7 +32,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Battery
 		/**
 		 * Definition of a scoped object for FILE pointers.
 		 */
-		typedef ScopedObjectCompileTime<FILE*, FILE*, int, pclose, 0, false /*tCheckReturnValue*/> ScopedFILE;
+		using ScopedFILE = ScopedObjectCompileTimeT<FILE*, FILE*, int, pclose, 0, false /*tCheckReturnValue*/>;
 
 	public:
 

@@ -72,21 +72,21 @@ bool unregisterAVFLibrary();
  * The wrapped CVBufferRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediaavf
  */
-typedef ScopedObjectCompileTimeVoid<CVBufferRef, CVBufferRelease> ScopedCVBufferRef;
+using ScopedCVBufferRef = ScopedObjectCompileTimeVoidT<CVBufferRef, CVBufferRelease>;
 
 /**
  * Definition of a scoped object holding a CVPixelBufferRef object.
  * The wrapped CVPixelBufferRef object will be released automatically once the scoped object does not exist anymore.
- * @ingroup platformapple
+ * @ingroup mediaavf
  */
-typedef ScopedObjectCompileTime<CVPixelBufferRef, CVBufferRef, void, CVBufferRelease> ScopedCVPixelBufferRef;
+using ScopedCVPixelBufferRef = ScopedObjectCompileTimeT<CVPixelBufferRef, CVBufferRef, void, CVBufferRelease>;
 
 /**
  * Definition of a scoped object holding a CMSampleBufferRef object.
  * The wrapped CMSampleBufferRef object will be released automatically once the scoped object does not exist anymore.
- * @ingroup platformapple
+ * @ingroup mediaavf
  */
-typedef ScopedObjectCompileTime<CMSampleBufferRef, CFTypeRef, void, CFRelease> ScopedCMSampleBufferRef;
+using ScopedCMSampleBufferRef = ScopedObjectCompileTimeT<CMSampleBufferRef, CFTypeRef, void, CFRelease>;
 
 }
 

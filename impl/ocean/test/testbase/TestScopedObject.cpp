@@ -133,8 +133,8 @@ bool TestScopedObject::testRuntime(const double testDuration)
 	{
 		// testing the default release function
 
-		typedef Ocean::ScopedObject<Object*> ScopedObject;
-		typedef std::vector<ScopedObject> ScopedObjects;
+		using ScopedObject = ScopedObjectT<Object*>;
+		using ScopedObjects = std::vector<ScopedObject>;
 
 		ScopedObjects scopedObjects(10); // testing invalid scoped objects
 		scopedObjects.clear();
@@ -177,8 +177,8 @@ bool TestScopedObject::testRuntime(const double testDuration)
 	{
 		// testing a custom release function
 
-		typedef Ocean::ScopedObject<Object*, Object*, std::function<void(Object*)>> ScopedObject;
-		typedef std::vector<ScopedObject> ScopedObjects;
+		using ScopedObject = ScopedObjectT<Object*, Object*, std::function<void(Object*)>>;
+		using ScopedObjects = std::vector<ScopedObject>;
 
 		ScopedObjects scopedObjects(10); // testing invalid scoped objects
 		scopedObjects.clear();
@@ -241,8 +241,8 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 	{
 		// testing object which needs to be released
 
-		typedef Ocean::ScopedObjectCompileTimeVoid<Object*, &TestScopedObject::releaseObject> ScopedObject;
-		typedef std::vector<ScopedObject> ScopedObjects;
+		using ScopedObject = ScopedObjectCompileTimeVoidT<Object*, &TestScopedObject::releaseObject>;
+		using ScopedObjects = std::vector<ScopedObject>;
 
 		const uint64_t uniqueId = Manager::get().uniqueId();
 
@@ -289,8 +289,8 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 
 		constexpr bool needsRelease = false;
 
-		typedef Ocean::ScopedObjectCompileTimeVoid<Object*, &TestScopedObject::releaseObject> ScopedObject;
-		typedef std::vector<ScopedObject> ScopedObjects;
+		using ScopedObject = ScopedObjectCompileTimeVoidT<Object*, &TestScopedObject::releaseObject>;
+		using ScopedObjects = std::vector<ScopedObject>;
 
 		ObjectPointers objectPoints;
 
@@ -352,8 +352,8 @@ bool TestScopedObject::testCompileTime(const double testDuration)
 
 		constexpr int32_t invalidValue = -1;
 
-		typedef ScopedObjectCompileTime<int32_t, uint32_t, bool, TestScopedObject::increaseCounter, true, true, invalidValue> ScopedObject;
-		typedef std::vector<ScopedObject> ScopedObjects;
+		using ScopedObject = ScopedObjectCompileTimeT<int32_t, uint32_t, bool, TestScopedObject::increaseCounter, true, true, invalidValue>;
+		using ScopedObjects = std::vector<ScopedObject>;
 
 		const Timestamp startTimestamp(true);
 

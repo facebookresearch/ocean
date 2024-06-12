@@ -38,7 +38,7 @@ template <class T> void release(T *object);
  * @ingroup mediads
  */
 template <typename T>
-using ScopeDirectShowObject = ScopedObjectCompileTimeVoid<T*, release>;
+using ScopeDirectShowObject = ScopedObjectCompileTimeVoidT<T*, release>;
 
 /**
  * Definition of a scoped object holding an IAMStreamConfig object.

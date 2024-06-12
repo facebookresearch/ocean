@@ -104,98 +104,98 @@ template <class T> void release(T *object);
  * @ingroup mediamf
  */
 template <typename T>
-using ScopedMediaFoundationObject = ScopedObjectCompileTimeVoid<T*, release>;
+using ScopedMediaFoundationObject = ScopedObjectCompileTimeVoidT<T*, release>;
 
 /**
  * Definition of a scoped object holding a IMFActivate object.
  * The wrapped IMFActivate object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFActivate> ScopedIMFActivate;
+using ScopedIMFActivate = ScopedMediaFoundationObject<IMFActivate>;
 
 /**
  * Definition of a scoped object holding a IMFAudioStreamVolume object.
  * The wrapped IMFAudioStreamVolume object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFAudioStreamVolume> ScopedIMFAudioStreamVolume;
+using ScopedIMFAudioStreamVolume = ScopedMediaFoundationObject<IMFAudioStreamVolume>;
 
 /**
  * Definition of a scoped object holding a IMFMediaBuffer object.
  * The wrapped IMFMediaBuffer object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFMediaBuffer> ScopedIMFMediaBuffer;
+using ScopedIMFMediaBuffer = ScopedMediaFoundationObject<IMFMediaBuffer>;
 
 /**
  * Definition of a scoped object holding a IMFMediaEvent object.
  * The wrapped IMFMediaEvent object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFMediaEvent> ScopedIMFMediaEvent;
+using ScopedIMFMediaEvent = ScopedMediaFoundationObject<IMFMediaEvent>;
 
 /**
  * Definition of a scoped object holding a IMFMediaEventGenerator object.
  * The wrapped IMFMediaEventGenerator object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFMediaEventGenerator> ScopedIMFMediaEventGenerator;
+using ScopedIMFMediaEventGenerator = ScopedMediaFoundationObject<IMFMediaEventGenerator>;
 
 /**
  * Definition of a scoped object holding a IMFMediaSession object.
  * The wrapped IMFMediaSession object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFMediaSession> ScopedIMFMediaSession;
+using ScopedIMFMediaSession = ScopedMediaFoundationObject<IMFMediaSession>;
 
 /**
  * Definition of a scoped object holding a ScopedIMFMediaSource object.
  * The wrapped ScopedIMFMediaSource object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFMediaSource> ScopedIMFMediaSource;
+using ScopedIMFMediaSource = ScopedMediaFoundationObject<IMFMediaSource>;
 
 /**
  * Definition of a scoped object holding a IMFMediaType object.
  * The wrapped IMFMediaType object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFMediaType> ScopedIMFMediaType;
+using ScopedIMFMediaType = ScopedMediaFoundationObject<IMFMediaType>;
 
 /**
  * Definition of a scoped object holding a IMFMediaTypeHandler object.
  * The wrapped IMFMediaTypeHandler object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFMediaTypeHandler> ScopedIMFMediaTypeHandler;
+using ScopedIMFMediaTypeHandler = ScopedMediaFoundationObject<IMFMediaTypeHandler>;
 
 /**
  * Definition of a scoped object holding a IMFSample object.
  * The wrapped IMFSample object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFSample> ScopedIMFSample;
+using ScopedIMFSample = ScopedMediaFoundationObject<IMFSample>;
 
 /**
  * Definition of a scoped object holding a IMFStreamSink object.
  * The wrapped IMFStreamSink object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFStreamSink> ScopedIMFStreamSink;
+using ScopedIMFStreamSink = ScopedMediaFoundationObject<IMFStreamSink>;
 
 /**
  * Definition of a scoped object holding a IMFTopology object.
  * The wrapped IMFTopology object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFTopology> ScopedIMFTopology;
+using ScopedIMFTopology = ScopedMediaFoundationObject<IMFTopology>;
 
 /**
  * Definition of a scoped object holding a IMFTopologyNode object.
  * The wrapped IMFTopologyNode object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<IMFTopologyNode> ScopedIMFTopologyNode;
+using ScopedIMFTopologyNode = ScopedMediaFoundationObject<IMFTopologyNode>;
 
 template <class T>
 void release(T *object)

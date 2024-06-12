@@ -59,7 +59,7 @@ OCEAN_SYSTEM_USB_EXPORT void releaseTransfer(libusb_transfer* libusbTranser);
  * Definition of a scoped libusb transfer object.
  * @ingroup systemusb
  */
-using ScopedTransfer = ScopedObjectCompileTimeVoid<libusb_transfer*, releaseTransfer>;
+using ScopedTransfer = ScopedObjectCompileTimeVoidT<libusb_transfer*, releaseTransfer>;
 
 /**
  * Definition of a vector holding scoped libusb transfer objects.

@@ -50,7 +50,7 @@ class OCEAN_MEDIA_A_EXPORT AMovie final :
 		/**
 		 * Definition of a scoped file based on a file descriptor.
 		 */
-		typedef ScopedObjectCompileTime<int, int, int, close, 0, true, -1> ScopedFileDescriptor;
+		using ScopedFileDescriptor = ScopedObjectCompileTimeT<int, int, int, close, 0, true, -1>;
 
 	public:
 

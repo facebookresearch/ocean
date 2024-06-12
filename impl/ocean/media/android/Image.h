@@ -39,14 +39,14 @@ class Image
 		/**
 		 * Definition of a scoped file based on a file descriptor.
 		 */
-		typedef ScopedObjectCompileTime<int, int, int, close, 0, true, -1> ScopedFileDescriptor;
+		using ScopedFileDescriptor = ScopedObjectCompileTimeT<int, int, int, close, 0, true, -1>;
 
 #if defined(__ANDROID_API__) && __ANDROID_API__ >= 30
 
 		/**
 		 * Definition of a scoped object wrapping an AImageDecoder object.
 		 */
-		typedef ScopedObjectCompileTimeVoid<AImageDecoder*, AImageDecoder_delete> ScopedAImageDecoder;
+		using ScopedAImageDecoder = ScopedObjectCompileTimeVoidT<AImageDecoder*, AImageDecoder_delete>;
 #endif
 
 	public:

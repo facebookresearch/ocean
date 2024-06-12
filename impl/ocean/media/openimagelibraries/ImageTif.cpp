@@ -250,7 +250,7 @@ Frame ImageTif::decodeImage(const void* buffer, const size_t size)
 
 	InputDataTriple inputDataTriple(byteBuffer, size, 0);
 
-	typedef ScopedObjectCompileTimeVoid<TIFF*, &TIFFClose> ScopedTiffObject;
+	using ScopedTiffObject = ScopedObjectCompileTimeVoidT<TIFF*, &TIFFClose>;
 
 	TIFF* tiff = TIFFClientOpen("tiffmemoryclient", "r", (thandle_t)&inputDataTriple, imageTifReadData_Load, imageTifDataInvalid, imageTifSeekData_Load, imageTifCloseData, imageTifSizeData_Load, imageTifMapData, imageTifUnmapData);
 
@@ -353,7 +353,7 @@ bool ImageTif::encodeImage(const Frame& frame, std::vector<uint8_t>& buffer, con
 
 	OutputDataTriple outputDataTriple(std::vector<uint8_t>(outputFrame->frameTypeSize()), 0, 0);
 
-	typedef ScopedObjectCompileTimeVoid<TIFF*, &TIFFClose> ScopedTiffObject;
+	using ScopedTiffObject = ScopedObjectCompileTimeVoidT<TIFF*, &TIFFClose>;
 
 	TIFF* tiff = TIFFClientOpen("tiffmemoryclient", "w", (thandle_t)&outputDataTriple, imageTifDataInvalid, imageTifWriteData_Write, imageTifSeekData_Write, imageTifCloseData, imageTifSizeData_Write, imageTifMapData, imageTifUnmapData);
 

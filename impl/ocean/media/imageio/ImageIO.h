@@ -82,14 +82,14 @@ bool unregisterImageIOLibrary();
  * The wrapped CGImageSourceRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediaiio
  */
-typedef ScopedObjectCompileTime<CGImageSourceRef, CFTypeRef, void, CFRelease> ScopedCGImageSourceRef;
+using ScopedCGImageSourceRef = ScopedObjectCompileTimeT<CGImageSourceRef, CFTypeRef, void, CFRelease>;
 
 /**
  * Definition of a scoped object holding a CGImageDestinationRef object.
  * The wrapped CGImageDestinationRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediaiio
  */
-typedef ScopedObjectCompileTime<CGImageDestinationRef, CFTypeRef, void, CFRelease> ScopedCGImageDestinationRef;
+using ScopedCGImageDestinationRef = ScopedObjectCompileTimeT<CGImageDestinationRef, CFTypeRef, void, CFRelease>;
 
 }
 

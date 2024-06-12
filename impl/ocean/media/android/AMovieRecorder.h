@@ -48,7 +48,7 @@ class OCEAN_MEDIA_A_EXPORT AMovieRecorder : virtual public MovieRecorder
 		/**
 		 * Definition of a scoped object for FILE pointers.
 		 */
-		typedef ScopedObjectCompileTime<FILE*, FILE*, int, fclose> ScopedFILE;
+		using ScopedFILE = ScopedObjectCompileTimeT<FILE*, FILE*, int, fclose>;
 
 	public:
 

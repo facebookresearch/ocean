@@ -61,56 +61,56 @@ XrResult xrDestroySpaceOcean(XrSpace xrSpace);
  * The wrapped XrSpace object will be released automatically once the scoped object does not exist anymore.
  * @ingroup platformopenxr
  */
-typedef ScopedObjectCompileTime<XrSpace, XrSpace, XrResult, xrDestroySpaceOcean, XR_SUCCESS> ScopedXrSpace;
+using ScopedXrSpace = ScopedObjectCompileTimeT<XrSpace, XrSpace, XrResult, xrDestroySpaceOcean, XR_SUCCESS>;
 
 /**
  * Definition of a vector holding OpenXR XrVector2f objects.
  * @see XrVector2f.
  * @ingroup platformopenxr
  */
-typedef std::vector<XrVector2f> XrVectors2f;
+using XrVectors2f = std::vector<XrVector2f>;
 
 /**
  * Definition of a vector holding OpenXR XrVector3f objects.
  * @see XrVector3f.
  * @ingroup platformopenxr
  */
-typedef std::vector<XrVector3f> XrVectors3f;
+using XrVectors3f = std::vector<XrVector3f>;
 
 /**
  * Definition of a vector holding OpenXR XrVector4f objects.
  * @see XrVector4f.
  * @ingroup platformopenxr
  */
-typedef std::vector<XrVector4f> XrVectors4f;
+using XrVectors4f = std::vector<XrVector4f>;
 
 /**
  * Definition of a vector holding OpenXR XrVector4sFB objects.
  * @see XrVector4sFB.
  * @ingroup platformopenxr
  */
-typedef std::vector<XrVector4sFB> XrVectors4sFB;
+using XrVectors4sFB = std::vector<XrVector4sFB>;
 
 /**
  * Definition of a vector holding OpenXR XrPosef objects.
  * @see XrPosef.
  * @ingroup platformopenxr
  */
-typedef std::vector<XrPosef> XrPosesf;
+using XrPosesf = std::vector<XrPosef>;
 
 /**
  * Definition of a vector holding OpenXR XrHandJointEXT objects.
  * @see XrHandJointEXT.
  * @ingroup platformopenxr
  */
-typedef std::vector<XrHandJointEXT> XrHandJointsEXT;
+using XrHandJointsEXT = std::vector<XrHandJointEXT>;
 
 /**
  * Definition of a vector holding OpenXR XrPath objects.
  * @see XrPath.
  * @ingroup platformopenxr
  */
-typedef std::vector<XrPath> XrPaths;
+using XrPaths = std::vector<XrPath>;
 
 }
 

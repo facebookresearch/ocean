@@ -48,70 +48,70 @@ namespace Apple
  * The wrapped CFStringRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup platformapple
  */
-typedef ScopedObjectCompileTime<CFStringRef, CFTypeRef, void, CFRelease> ScopedCFStringRef;
+using ScopedCFStringRef = ScopedObjectCompileTimeT<CFStringRef, CFTypeRef, void, CFRelease>;
 
 /**
  * Definition of a scoped object holding a CFURLRef object.
  * The wrapped CFURLRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup platformapple
  */
-typedef ScopedObjectCompileTime<CFURLRef, CFTypeRef, void, CFRelease> ScopedCFURLRef;
+using ScopedCFURLRef = ScopedObjectCompileTimeT<CFURLRef, CFTypeRef, void, CFRelease>;
 
 /**
  * Definition of a scoped object holding a CFDataRef object.
  * The wrapped CFDataRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup platformapple
  */
-typedef ScopedObjectCompileTime<CFDataRef, CFTypeRef, void, CFRelease> ScopedCFDataRef;
+using ScopedCFDataRef = ScopedObjectCompileTimeT<CFDataRef, CFTypeRef, void, CFRelease>;
 
 /**
  * Definition of a scoped object holding a CFMutableDataRef object.
  * The wrapped CFMutableDataRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup platformapple
  */
-typedef ScopedObjectCompileTime<CFMutableDataRef, CFTypeRef, void, CFRelease> ScopedCFMutableDataRef;
+using ScopedCFMutableDataRef = ScopedObjectCompileTimeT<CFMutableDataRef, CFTypeRef, void, CFRelease>;
 
 /**
  * Definition of a scoped object holding a CGImageRef object.
  * The wrapped CGImageRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup platformapple
  */
-typedef ScopedObjectCompileTimeVoid<CGImageRef, CGImageRelease> ScopedCGImageRef;
+using ScopedCGImageRef = ScopedObjectCompileTimeVoidT<CGImageRef, CGImageRelease>;
 
 /**
  * Definition of a scoped object holding a CGDataProviderRef object.
  * The wrapped CGDataProviderRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup platformapple
  */
-typedef ScopedObjectCompileTimeVoid<CGDataProviderRef, CGDataProviderRelease> ScopedCGDataProviderRef;
+using ScopedCGDataProviderRef = ScopedObjectCompileTimeVoidT<CGDataProviderRef, CGDataProviderRelease>;
 
 /**
  * Definition of a scoped object holding a CGColorSpaceRef object.
  * The wrapped CGColorSpaceRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup platformapple
  */
-typedef ScopedObjectCompileTimeVoid<CGColorSpaceRef, CGColorSpaceRelease> ScopedCGColorSpaceRef;
+using ScopedCGColorSpaceRef = ScopedObjectCompileTimeVoidT<CGColorSpaceRef, CGColorSpaceRelease>;
 
 /**
  * Definition of a scoped object holding a CFNumberRef object.
  * The wrapped CFNumberRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup platformapple
  */
-typedef ScopedObjectCompileTime<CFNumberRef, CFTypeRef, void, CFRelease> ScopedCFNumberRef;
+using ScopedCFNumberRef = ScopedObjectCompileTimeT<CFNumberRef, CFTypeRef, void, CFRelease>;
 
 /**
  * Definition of a scoped object holding a CFDictionaryRef object.
  * The wrapped CFDictionaryRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup platformapple
  */
-typedef ScopedObjectCompileTime<CFDictionaryRef, CFTypeRef, void, CFRelease> ScopedCFDictionaryRef;
+using ScopedCFDictionaryRef = ScopedObjectCompileTimeT<CFDictionaryRef, CFTypeRef, void, CFRelease>;
 
 /**
  * Definition of a scoped object holding a CFType object.
  * The wrapped CFType object will be released automatically once the scoped object does not exist anymore.
  * @ingroup platformapple
  */
-typedef ScopedObjectCompileTimeVoid<CFTypeRef, CFRelease> ScopedCFTypeRef;
+using ScopedCFTypeRef = ScopedObjectCompileTimeVoidT<CFTypeRef, CFRelease>;
 
 }
 
