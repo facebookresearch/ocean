@@ -86,3 +86,67 @@ if (MACOS OR ANDROID OR IOS OR LINUX)
     )
 
 endif()
+
+if (ANDROID OR IOS OR LINUX OR MACOS)
+
+    find_package(OpenCV COMPONENTS calib3d core features2d highgui imgcodecs imgproc objdetect photo video xfeatures2d QUIET)
+
+    if (NOT OpenCV_FOUND)
+        message(STATUS "Excluding 'ocean_test_testcv_testopencv_gtest' because OpenCV hasn't been found.")
+        return()
+    endif()
+
+    set(OCEAN_TARGET_NAME "ocean_test_testcv_testopencv_gtest")
+
+    # Workaround some OpenCV-related linker errors
+    find_package(Eigen3)
+    find_package(ZLIB)
+    find_package(JPEG)
+
+    find_package(GTest REQUIRED)
+
+    enable_testing()
+
+    # Source files
+    file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
+    file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
+    list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestOpenCV.cpp")
+
+    # Target definition
+    add_executable(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
+
+    target_include_directories(${OCEAN_TARGET_NAME} PRIVATE "${OCEAN_IMPL_DIR}")
+
+    target_compile_definitions(${OCEAN_TARGET_NAME}
+        PUBLIC
+            "${OCEAN_PREPROCESSOR_FLAGS}"
+            "-DOCEAN_USE_GTEST"
+    )
+
+    if (BUILD_SHARED_LIBS)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_CV_OPENCV_EXPORT")
+    endif()
+
+    target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
+
+    if (NOT WIN32)
+        target_compile_options(${OCEAN_TARGET_NAME} PRIVATE "-fexceptions")
+    endif()
+
+    # Dependencies
+    target_link_libraries(${OCEAN_TARGET_NAME}
+        PUBLIC
+            GTest::gtest_main
+            ocean_base
+        PRIVATE
+            ocean_cv
+            ocean_geometry
+            ocean_system
+            ocean_test_testcv
+            ${OpenCV_LIBS}
+    )
+
+    include(GoogleTest)
+    gtest_add_tests(TARGET ${OCEAN_TARGET_NAME} WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)
+
+endif()
