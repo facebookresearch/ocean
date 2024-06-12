@@ -90,7 +90,7 @@ class OCEAN_MEDIA_EXPORT MovieFrameProvider : protected Thread
 		/**
 		 * Definition of a non-thread-safe ring map mapping frame indices to frame references.
 		 */
-		typedef RingMap<unsigned int, FrameRef, false> FrameDatabase;
+		typedef RingMapT<unsigned int, FrameRef, false> FrameDatabase;
 
 		/**
 		 * Definition of a preview frame composed of a finished-state and the frame data.

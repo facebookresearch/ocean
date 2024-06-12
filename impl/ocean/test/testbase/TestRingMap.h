@@ -32,7 +32,7 @@ class OCEAN_TEST_BASE_EXPORT TestRingMap
 		/**
 		 * Definition of a ring map holding strings.
 		 */
-		typedef RingMap<unsigned int, std::string, false> StringMap;
+		typedef RingMapT<unsigned int, std::string, false> StringMap;
 
 	public:
 

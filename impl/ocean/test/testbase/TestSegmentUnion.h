@@ -10,8 +10,6 @@
 
 #include "ocean/test/testbase/TestBase.h"
 
-#include "ocean/base/RingMap.h"
-
 namespace Ocean
 {
 
@@ -40,7 +38,7 @@ class OCEAN_TEST_BASE_EXPORT TestSegmentUnion
 		 * Tests the function determining the size of the union.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
-		 * @tparam T The data type defnining the end points
+		 * @tparam T The data type defining the end points
 		 */
 		template <typename T>
 		static bool testUnionSize(const double testDuration);
@@ -49,7 +47,7 @@ class OCEAN_TEST_BASE_EXPORT TestSegmentUnion
 		 * Tests the function determining the intersection of the union with a segment.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
-		 * @tparam T The data type defnining the end points
+		 * @tparam T The data type defining the end points
 		 */
 		template <typename T>
 		static bool testIntersection(const double testDuration);
@@ -58,7 +56,7 @@ class OCEAN_TEST_BASE_EXPORT TestSegmentUnion
 		 * Tests the function determining the maximal gap between segments.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
-		 * @tparam T The data type defnining the end points
+		 * @tparam T The data type defining the end points
 		 */
 		template <typename T>
 		static bool testMaximalGap(const double testDuration);
@@ -66,7 +64,7 @@ class OCEAN_TEST_BASE_EXPORT TestSegmentUnion
 		/**
 		 * Tests the bool cast operator.
 		 * @return True, if succeeded
-		 * @tparam T The data type defnining the end points
+		 * @tparam T The data type defining the end points
 		 */
 		template <typename T>
 		static bool testBoolCastOperator();

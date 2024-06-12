@@ -28,9 +28,9 @@ namespace Ocean
  * @ingroup base
  */
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys = false>
-class RingMap
+class RingMapT
 {
-	template <typename TKey2, typename T2, bool tThreadsafe2, bool tOrderedKeys2> friend class RingMap;
+	template <typename TKey2, typename T2, bool tThreadsafe2, bool tOrderedKeys2> friend class RingMapT;
 
 	public:
 
@@ -79,25 +79,25 @@ class RingMap
 		/**
 		 * Creates a new ring storage object with no capacity.
 		 */
-		RingMap() = default;
+		RingMapT() = default;
 
 		/**
 		 * Move constructor.
 		 * @param ringMap Object to be moved
 		 */
-		inline RingMap(RingMap<TKey, T, tThreadsafe, tOrderedKeys>&& ringMap);
+		inline RingMapT(RingMapT<TKey, T, tThreadsafe, tOrderedKeys>&& ringMap) noexcept;
 
 		/**
 		 * Copy constructor.
 		 * @param ringMap Object to be copied
 		 */
-		inline RingMap(const RingMap<TKey, T, tThreadsafe, tOrderedKeys>& ringMap);
+		inline RingMapT(const RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& ringMap);
 
 		/**
 		 * Creates a new ring storage object with a specified capacity.
 		 * @param capacity The capacity of the storage container, with range [0, infinity)
 		 */
-		explicit inline RingMap(const size_t capacity);
+		explicit inline RingMapT(const size_t capacity);
 
 		/**
 		 * Returns the capacity of this storage container.
@@ -214,7 +214,7 @@ class RingMap
 		 * @param ringMap The ring map to be moved
 		 * @return Reference to this object
 		 */
-		RingMap<TKey, T, tThreadsafe, tOrderedKeys>& operator=(RingMap<TKey, T, tThreadsafe, tOrderedKeys>&& ringMap);
+		RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& operator=(RingMapT<TKey, T, tThreadsafe, tOrderedKeys>&& ringMap) noexcept;
 
 		/**
 		 * Move operator.
@@ -223,14 +223,14 @@ class RingMap
 		 * @tparam tThreadSafeSecond True, if the map to be moved is thread-safe
 		 */
 		template <bool tThreadSafeSecond>
-		RingMap<TKey, T, tThreadsafe, tOrderedKeys>& operator=(RingMap<TKey, T, tThreadSafeSecond, tOrderedKeys>&& ringMap);
+		RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& operator=(RingMapT<TKey, T, tThreadSafeSecond, tOrderedKeys>&& ringMap) noexcept;
 
 		/**
 		 * Copy operator.
 		 * @param ringMap The ring map to be moved
 		 * @return Reference to this object
 		 */
-		RingMap<TKey, T, tThreadsafe, tOrderedKeys>& operator=(const RingMap<TKey, T, tThreadsafe, tOrderedKeys>& ringMap);
+		RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& operator=(const RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& ringMap);
 
 		/**
 		 * Copy operator.
@@ -239,7 +239,7 @@ class RingMap
 		 * @tparam tThreadSafeSecond True, if the map to be moved is thread-safe
 		 */
 		template <bool tThreadSafeSecond>
-		RingMap<TKey, T, tThreadsafe, tOrderedKeys>& operator=(const RingMap<TKey, T, tThreadSafeSecond, tOrderedKeys>& ringMap);
+		RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& operator=(const RingMapT<TKey, T, tThreadSafeSecond, tOrderedKeys>& ringMap);
 
 	protected:
 
@@ -265,32 +265,32 @@ class RingMap
 };
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-inline RingMap<TKey, T, tThreadsafe, tOrderedKeys>::RingMap(RingMap<TKey, T, tThreadsafe, tOrderedKeys>&& ringMap)
+inline RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::RingMapT(RingMapT<TKey, T, tThreadsafe, tOrderedKeys>&& ringMap) noexcept
 {
 	*this = std::move(ringMap);
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-inline RingMap<TKey, T, tThreadsafe, tOrderedKeys>::RingMap(const RingMap<TKey, T, tThreadsafe, tOrderedKeys>& ringMap)
+inline RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::RingMapT(const RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& ringMap)
 {
 	*this = ringMap;
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-inline RingMap<TKey, T, tThreadsafe, tOrderedKeys>::RingMap(const size_t capacity) :
+inline RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::RingMapT(const size_t capacity) :
 	storageCapacity_(capacity)
 {
 	// nothing to do here
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-inline size_t RingMap<TKey, T, tThreadsafe, tOrderedKeys>::capacity() const
+inline size_t RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::capacity() const
 {
 	return storageCapacity_;
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-inline size_t RingMap<TKey, T, tThreadsafe, tOrderedKeys>::size() const
+inline size_t RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::size() const
 {
 	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
 	ocean_assert(isValid());
@@ -299,7 +299,7 @@ inline size_t RingMap<TKey, T, tThreadsafe, tOrderedKeys>::size() const
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-void RingMap<TKey, T, tThreadsafe, tOrderedKeys>::setCapacity(const size_t capacity)
+void RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::setCapacity(const size_t capacity)
 {
 	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
 	ocean_assert(isValid());
@@ -332,7 +332,7 @@ void RingMap<TKey, T, tThreadsafe, tOrderedKeys>::setCapacity(const size_t capac
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::insertElement(const TKey& key, const T& element, const bool forceOverwrite)
+bool RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::insertElement(const TKey& key, const T& element, const bool forceOverwrite)
 {
 	T copyElement(element);
 
@@ -340,7 +340,7 @@ bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::insertElement(const TKey& key,
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::insertElement(const TKey& key, T&& element, const bool forceOverwrite)
+bool RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::insertElement(const TKey& key, T&& element, const bool forceOverwrite)
 {
 	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
 	ocean_assert(isValid());
@@ -392,8 +392,8 @@ bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::insertElement(const TKey& key,
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-template <typename RingMap<TKey, T, tThreadsafe, tOrderedKeys>::AccessMode tAccessMode>
-bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::element(const TKey& key, T& element) const
+template <typename RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::AccessMode tAccessMode>
+bool RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::element(const TKey& key, T& element) const
 {
 	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
 	ocean_assert(isValid());
@@ -437,7 +437,7 @@ bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::element(const TKey& key, T& el
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::highestElement(T& element) const
+bool RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::highestElement(T& element) const
 {
 	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
 	ocean_assert(isValid());
@@ -458,7 +458,7 @@ bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::highestElement(T& element) con
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::lowestElement(T& element) const
+bool RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::lowestElement(T& element) const
 {
 	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
 	ocean_assert(isValid());
@@ -479,8 +479,8 @@ bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::lowestElement(T& element) cons
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-template <typename RingMap<TKey, T, tThreadsafe, tOrderedKeys>::AccessMode tAccessMode>
-bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::checkoutElement(const TKey& key, T& element)
+template <typename RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::AccessMode tAccessMode>
+bool RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::checkoutElement(const TKey& key, T& element)
 {
 	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
 	ocean_assert(isValid());
@@ -528,7 +528,7 @@ bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::checkoutElement(const TKey& ke
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::hasElement(const TKey& key) const
+bool RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::hasElement(const TKey& key) const
 {
 	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
 	ocean_assert(isValid());
@@ -537,7 +537,7 @@ bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::hasElement(const TKey& key) co
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-std::vector<T> RingMap<TKey, T, tThreadsafe, tOrderedKeys>::elements() const
+std::vector<T> RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::elements() const
 {
 	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
 	ocean_assert(isValid());
@@ -554,7 +554,7 @@ std::vector<T> RingMap<TKey, T, tThreadsafe, tOrderedKeys>::elements() const
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::refreshElement(const TKey& key)
+bool RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::refreshElement(const TKey& key)
 {
 	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
 	ocean_assert(isValid());
@@ -574,7 +574,7 @@ bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::refreshElement(const TKey& key
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-void RingMap<TKey, T, tThreadsafe, tOrderedKeys>::clear()
+void RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::clear()
 {
 	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
 	ocean_assert(isValid());
@@ -586,7 +586,7 @@ void RingMap<TKey, T, tThreadsafe, tOrderedKeys>::clear()
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-inline bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::isValid() const
+inline bool RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::isValid() const
 {
 	ocean_assert(keyMap_.size() == keyList_.size());
 
@@ -594,7 +594,7 @@ inline bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::isValid() const
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-inline bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::isEmpty() const
+inline bool RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::isEmpty() const
 {
 	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
 	ocean_assert(isValid());
@@ -603,7 +603,7 @@ inline bool RingMap<TKey, T, tThreadsafe, tOrderedKeys>::isEmpty() const
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-RingMap<TKey, T, tThreadsafe, tOrderedKeys>& RingMap<TKey, T, tThreadsafe, tOrderedKeys>::operator=(RingMap<TKey, T, tThreadsafe, tOrderedKeys>&& ringMap)
+RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::operator=(RingMapT<TKey, T, tThreadsafe, tOrderedKeys>&& ringMap) noexcept
 {
 	if (this != &ringMap)
 	{
@@ -621,7 +621,7 @@ RingMap<TKey, T, tThreadsafe, tOrderedKeys>& RingMap<TKey, T, tThreadsafe, tOrde
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
 template <bool tThreadSafeSecond>
-RingMap<TKey, T, tThreadsafe, tOrderedKeys>& RingMap<TKey, T, tThreadsafe, tOrderedKeys>::operator=(RingMap<TKey, T, tThreadSafeSecond, tOrderedKeys>&& ringMap)
+RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::operator=(RingMapT<TKey, T, tThreadSafeSecond, tOrderedKeys>&& ringMap) noexcept
 {
 	if ((void*)(this) != (void*)(&ringMap))
 	{
@@ -638,7 +638,7 @@ RingMap<TKey, T, tThreadsafe, tOrderedKeys>& RingMap<TKey, T, tThreadsafe, tOrde
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
-RingMap<TKey, T, tThreadsafe, tOrderedKeys>& RingMap<TKey, T, tThreadsafe, tOrderedKeys>::operator=(const RingMap<TKey, T, tThreadsafe, tOrderedKeys>& ringMap)
+RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::operator=(const RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& ringMap)
 {
 	if (this != &ringMap)
 	{
@@ -655,7 +655,7 @@ RingMap<TKey, T, tThreadsafe, tOrderedKeys>& RingMap<TKey, T, tThreadsafe, tOrde
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
 template <bool tThreadSafeSecond>
-RingMap<TKey, T, tThreadsafe, tOrderedKeys>& RingMap<TKey, T, tThreadsafe, tOrderedKeys>::operator=(const RingMap<TKey, T, tThreadSafeSecond, tOrderedKeys>& ringMap)
+RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::operator=(const RingMapT<TKey, T, tThreadSafeSecond, tOrderedKeys>& ringMap)
 {
 	if ((void*)(this) != (void*)(&ringMap))
 	{

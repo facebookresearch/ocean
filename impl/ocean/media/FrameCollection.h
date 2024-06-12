@@ -33,12 +33,12 @@ class OCEAN_MEDIA_EXPORT FrameCollection
 		/**
 		 * Definition of a pair combining a frame with a camera profile.
 		 */
-		typedef std::pair<FrameRef, SharedAnyCamera> FrameCameraPair;
+		using FrameCameraPair = std::pair<FrameRef, SharedAnyCamera>;
 
 		/**
 		 * Definition of a ring map mapping timestamps to frame pairs.
 		 */
-		typedef RingMap<Timestamp, FrameCameraPair, true /*thread-safe*/, true /*ordered keys*/> RingMap;
+		using RingMap = RingMapT<Timestamp, FrameCameraPair, true /*thread-safe*/, true /*ordered keys*/>;
 
 	public:
 
