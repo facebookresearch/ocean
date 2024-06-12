@@ -56,7 +56,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_base
             ocean_cv
             ocean_media
-            # ocean_media_ffmpeg  # Not yet available.
+            ocean_media_ffmpeg
             ocean_media_openimagelibraries
             ocean_media_special
             # ocean_media_vrs  # Not yet available.
@@ -77,15 +77,6 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
         PUBLIC
             ocean_media_avfoundation
             ocean_media_imageio
-        )
-    endif()
-
-    if (LINUX)
-        target_link_libraries(${OCEAN_TARGET_NAME}
-            PUBLIC
-                ocean_media_android
-                ocean_media_vrs
-                ocean_platform_android
         )
     endif()
 

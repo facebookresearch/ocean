@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 3.26)
 
 add_subdirectory(android)
 add_subdirectory(avfoundation)
+add_subdirectory(ffmpeg)
 add_subdirectory(imageio)
 add_subdirectory(mediafoundation)
 add_subdirectory(openimagelibraries)

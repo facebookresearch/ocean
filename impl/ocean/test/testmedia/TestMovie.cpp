@@ -22,7 +22,7 @@
 	#include "ocean/media/avfoundation/AVFoundation.h"
 #endif
 
-#if defined(OCEAN_PLATFORM_BUILD_LINUX)
+#if defined(OCEAN_PLATFORM_BUILD_LINUX) and !defined(OCEAN_DISABLE_FFMPEG_IN_CMAKE)
 	#include "ocean/media/ffmpeg/FFmpeg.h"
 #endif
 
@@ -805,7 +805,7 @@ void TestMovie::registerMediaLibraries()
 		Media::AVFoundation::registerAVFLibrary();
 	#elif defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY)
 		Media::AVFoundation::registerAVFLibrary();
-	#elif defined(OCEAN_PLATFORM_BUILD_LINUX)
+	#elif defined(OCEAN_PLATFORM_BUILD_LINUX) and !defined(OCEAN_DISABLE_FFMPEG_IN_CMAKE)
 		Media::FFmpeg::registerFFmpegLibrary();
 	#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
 		Media::Android::registerAndroidLibrary();
@@ -822,7 +822,7 @@ void TestMovie::unregisterMediaLibraries()
 		Media::AVFoundation::unregisterAVFLibrary();
 	#elif defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY)
 		Media::AVFoundation::unregisterAVFLibrary();
-	#elif defined(OCEAN_PLATFORM_BUILD_LINUX)
+	#elif defined(OCEAN_PLATFORM_BUILD_LINUX) and !defined(OCEAN_DISABLE_FFMPEG_IN_CMAKE)
 		Media::FFmpeg::unregisterFFmpegLibrary();
 	#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
 		Media::Android::unregisterAndroidLibrary();
@@ -855,7 +855,7 @@ std::vector<std::string> TestMovie::libraryNamesDecoder()
 	decoderNames.emplace_back(Media::AVFoundation::nameAVFLibrary());
 #elif defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY)
 	decoderNames.emplace_back(Media::AVFoundation::nameAVFLibrary());
-#elif defined(OCEAN_PLATFORM_BUILD_LINUX)
+#elif defined(OCEAN_PLATFORM_BUILD_LINUX) and !defined(OCEAN_DISABLE_FFMPEG_IN_CMAKE)
 	decoderNames.emplace_back(Media::FFmpeg::nameFFmpegLibrary());
 #elif defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 	decoderNames.emplace_back(Media::MediaFoundation::nameMediaFoundationLibrary());
