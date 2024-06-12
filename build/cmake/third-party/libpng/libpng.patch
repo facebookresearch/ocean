@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ad3f2427d..627254fd8 100644
+index ad3f2427d..acb78dc68 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -24,6 +24,7 @@ set(PNGLIB_SUBREVISION 0)
@@ -41,22 +41,16 @@ index ad3f2427d..627254fd8 100644
    if(UNIX AND AWK)
      if(HAVE_LD_VERSION_SCRIPT)
        set_target_properties(png_shared PROPERTIES
-@@ -990,8 +989,9 @@ function(create_symlink DEST_FILE)
-                               ${_SYM_FILE} ${DEST_FILE}
+@@ -991,7 +990,7 @@ function(create_symlink DEST_FILE)
                        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
      else()
-+      message(STATUS "ACS1: ${_SYM_FILE} ${DEST_FILE}")
        execute_process(COMMAND "${CMAKE_COMMAND}"
 -                              -E create_symlink
 +                              -E copy_if_different
                                ${_SYM_FILE} ${DEST_FILE}
                        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
      endif()
-@@ -1009,10 +1009,11 @@ function(create_symlink DEST_FILE)
-                                  $<TARGET_LINKER_FILE_DIR:${_SYM_TARGET}>/$<TARGET_LINKER_FILE_NAME:${_SYM_TARGET}>
-                                  $<TARGET_LINKER_FILE_DIR:${_SYM_TARGET}>/${DEST_FILE})
-     else()
-+      message(STATUS "ACS2: ${_SYM_TARGET} ${DEST_FILE}")
+@@ -1012,7 +1011,7 @@ function(create_symlink DEST_FILE)
        add_custom_command(TARGET ${_SYM_TARGET}
                           POST_BUILD
                           COMMAND "${CMAKE_COMMAND}"
@@ -65,7 +59,7 @@ index ad3f2427d..627254fd8 100644
                                   $<TARGET_LINKER_FILE_NAME:${_SYM_TARGET}>
                                   $<TARGET_LINKER_FILE_DIR:${_SYM_TARGET}>/${DEST_FILE})
      endif()
-@@ -1067,7 +1068,9 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+@@ -1067,7 +1066,9 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
    if(PNG_SHARED)
      # Create a symlink for libpng.dll.a => libpng16.dll.a on Cygwin
      if(NOT WIN32 OR CYGWIN OR MINGW)
@@ -76,7 +70,7 @@ index ad3f2427d..627254fd8 100644
        install(FILES $<TARGET_LINKER_FILE_DIR:png_shared>/libpng${CMAKE_SHARED_LIBRARY_SUFFIX}
                DESTINATION ${CMAKE_INSTALL_LIBDIR})
      endif()
-@@ -1075,7 +1078,9 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+@@ -1075,7 +1076,9 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
  
    if(PNG_STATIC)
      if(NOT WIN32 OR CYGWIN OR MINGW)
