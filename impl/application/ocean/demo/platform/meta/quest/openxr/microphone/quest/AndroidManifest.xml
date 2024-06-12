@@ -12,7 +12,7 @@
 	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-	<application android:allowBackup="false" android:label="OceanOpenXRMicrophone" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
+	<application android:allowBackup="false" android:label="Microphone" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
 		<meta-data android:name="com.samsung.android.vr.application.mode" android:value="vr_only"/>
 		<activity
 				android:name="com.meta.ocean.app.demo.platform.meta.quest.openxr.microphone.quest.MicrophoneApplicationActivity"

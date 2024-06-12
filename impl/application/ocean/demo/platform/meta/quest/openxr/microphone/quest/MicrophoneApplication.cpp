@@ -75,6 +75,17 @@ void MicrophoneApplication::onFramebufferInitialized()
 	scene->addChild(renderingTransform_);
 }
 
+void MicrophoneApplication::onFramebufferReleasing()
+{
+	renderingLineStrips_.release();
+	renderingVertexSet_.release();
+	renderingTransform_.release();
+
+	microphoneSubscription_.release();
+
+	VRNativeApplication::onFramebufferReleasing();
+}
+
 void MicrophoneApplication::onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime)
 {
 	VRNativeApplication::onPreRender(xrPredictedDisplayTime, predictedDisplayTime);
@@ -201,6 +212,8 @@ void MicrophoneApplication::updateMicrophoneSpectrum()
 void MicrophoneApplication::onMicrophoneSample(const int16_t* elements, const size_t size)
 {
 	// we convert the samples and store the result in 'newSample_'
+
+	Log::debug() << "MicrophoneApplication::onMicrophoneSample(): " << size << " elements";
 
 	Values newSample(size);
 
