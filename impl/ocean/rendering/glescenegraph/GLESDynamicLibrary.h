@@ -13,8 +13,14 @@
 #ifdef OCEAN_RENDERING_GLES_USE_DYNAMIC_LIBRARY
 
 #define GL_GLEXT_PROTOTYPES
-#include <gl/GL.h>
-#include <gl/glext.h>
+
+#if defined(OCEAN_PLATFORM_BUILD_LINUX)
+	#include <GL/gl.h>
+	#include <GL/glext.h>
+#else
+	#include <gl/GL.h>
+	#include <gl/glext.h>
+#endif
 
 namespace Ocean
 {

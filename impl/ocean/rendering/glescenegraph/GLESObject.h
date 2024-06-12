@@ -30,8 +30,14 @@
 	#include <GLES3/gl32.h>
 #else
 	#define GL_GLEXT_PROTOTYPES
-	#include <gl/GL.h>
-	#include <gl/glext.h>
+
+	#if defined(OCEAN_PLATFORM_BUILD_LINUX)
+		#include <GL/gl.h>
+		#include <GL/glext.h>
+	#else
+		#include <gl/GL.h>
+		#include <gl/glext.h>
+	#endif
 #endif
 
 namespace Ocean
