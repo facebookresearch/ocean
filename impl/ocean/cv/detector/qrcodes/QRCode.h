@@ -167,6 +167,12 @@ class QRCode
 		inline bool operator==(const QRCode& otherCode) const;
 
 		/**
+		 * Checks for inequality with another QR code
+		 * @returns True if both QR codes are not equal, otherwise false
+		 */
+		inline bool operator!=(const QRCode& otherCode) const;
+
+		/**
 		 * Translates an encoding mode enum into a human-readable string
 		 * @param encodingMode The encoding mode that will be converted into a string
 		 * @return The translated encoding mode
@@ -352,7 +358,12 @@ inline bool QRCode::isSame(const QRCode& otherCode, const bool ignoreModules) co
 
 inline bool QRCode::operator==(const QRCode& otherCode) const
 {
-	return isSame(otherCode, /* ignoreModules */ false);
+		return isSame(otherCode, /* ignoreModules */ false);
+}
+
+inline bool QRCode::operator!=(const QRCode& otherCode) const
+{
+		return !(*this == otherCode);
 }
 
 inline std::string QRCode::translateEncodingMode(const QRCode::EncodingMode encodingMode)
