@@ -136,10 +136,10 @@ DSObject::PinPairs DSObject::connections(IBaseFilter* filter)
 		ScopedIPin connected = connectedPin(connectedPins[n].object());
 		ocean_assert(connected.object() != nullptr);
 
-		pairs.emplace_back(std::move(connectedPins[n]), std::move(connected));
-
 		ScopedIBaseFilter childFilter = pinOwner(connected.object());
 		ocean_assert(childFilter.object() != nullptr);
+
+		pairs.emplace_back(std::move(connectedPins[n]), std::move(connected));
 
 		PinPairs children(connections(childFilter.object()));
 
