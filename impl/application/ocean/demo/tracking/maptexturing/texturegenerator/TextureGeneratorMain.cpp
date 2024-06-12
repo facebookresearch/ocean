@@ -265,7 +265,7 @@ class ScopedPlugin
 			break;
 		}
 
-		const ScopedValue<Index32> scopedFrameIndex(frameIndex, frameIndex + 1u);
+		const ScopedValueT<Index32> scopedFrameIndex(frameIndex, frameIndex + 1u);
 
 		SharedAnyCamera anyCamera;
 		const FrameRef frameRef = frameMedium->frame(timestamp, &anyCamera);

@@ -348,8 +348,8 @@ void FrameTracker::threadRun()
 	const ScopedEvent scopedEvent(startEvent, failedEvent, finishedEvent, eventCallbacks_);
 
 	ocean_assert(finished_ == false);
-	const ScopedValue<bool> scopedFinishedValue(finished_, true, false);
-	ScopedValue<bool> scopedSucceededValue(succeeded_, false, false);
+	const ScopedValueT<bool> scopedFinishedValue(finished_, true, false);
+	ScopedValueT<bool> scopedSucceededValue(succeeded_, false, false);
 
 	ocean_assert(frameProviderInterface_);
 

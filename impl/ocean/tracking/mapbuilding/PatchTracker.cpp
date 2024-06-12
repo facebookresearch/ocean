@@ -229,7 +229,7 @@ bool PatchTracker::trackRecording(Devices::DevicePlayer& devicePlayer, const std
 			return 1;
 		}
 
-		const ScopedValue<unsigned int> scopedFrameIndex(frameIndex, frameIndex + 1u);
+		const ScopedValueT<unsigned int> scopedFrameIndex(frameIndex, frameIndex + 1u);
 
 		if (yPreviousFramePyramid && (yPreviousFramePyramid->finestWidth() != frame->width() || yPreviousFramePyramid->finestHeight() != frame->height()))
 		{

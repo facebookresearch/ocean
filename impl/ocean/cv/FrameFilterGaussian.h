@@ -602,8 +602,8 @@ inline void FrameFilterGaussian::filter1Channel8Bit121NEON(const uint8_t* source
 		// | [6] 2                                         2 | [4] 2
 		// |  3  1     the filter factors are based on:    1 |  2  1
 
-		// using scoped value for intermediate storage as source and target can be identical e.g., for implace filtering
-		const ScopedValue<uint8_t> firstPixelValue(*target, uint8_t((responseTopRow[0] + responseCenterRow[0] * 2u + responseBottomRow[0] + 8u) / 16u));
+		// using scoped value for intermediate storage as source and target can be identical e.g., for in-place filtering
+		const ScopedValueT<uint8_t> firstPixelValue(*target, uint8_t((responseTopRow[0] + responseCenterRow[0] * 2u + responseBottomRow[0] + 8u) / 16u));
 
 		for (unsigned int n = 0u; n < innerPixels; n += 16u)
 		{

@@ -282,8 +282,8 @@ void OnDeviceMapCreatorTracker6DOF::threadRun()
 		{
 			ocean_assert(frame->isValid() && frameAnyCamera->isValid());
 
-			const ScopedValue<unsigned int> scopedFrameIndex(frameIndex, (frame->timestamp() == lastFrameTimestamp) ? frameIndex : (frameIndex + 1u));
-			const ScopedValue<Timestamp> scopedLastFrameTimestamp(lastFrameTimestamp, frame->timestamp());
+			const ScopedValueT<unsigned int> scopedFrameIndex(frameIndex, (frame->timestamp() == lastFrameTimestamp) ? frameIndex : (frameIndex + 1u));
+			const ScopedValueT<Timestamp> scopedLastFrameTimestamp(lastFrameTimestamp, frame->timestamp());
 
 			if (frameIndex == lastProcessedFrameIndex)
 			{
@@ -306,7 +306,7 @@ void OnDeviceMapCreatorTracker6DOF::threadRun()
 				break;
 			}
 
-			const ScopedValue<Index32> scopedLastProcessedFrameIndex(lastProcessedFrameIndex, frameIndex);
+			const ScopedValueT<Index32> scopedLastProcessedFrameIndex(lastProcessedFrameIndex, frameIndex);
 
 			if (performance.measurements() >= 100u)
 			{

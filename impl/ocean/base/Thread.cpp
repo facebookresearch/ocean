@@ -530,7 +530,7 @@ void Thread::internalThreadRun()
 
 #endif // defined(_WINDOWS)
 
-	const ScopedValue<bool> scopedIsActiveValue(threadIsActive_, false, true);
+	const ScopedValueT<bool> scopedIsActiveValue(threadIsActive_, false, true);
 
 	ocean_assert(threadIsInvokedToStart_);
 	threadIsInvokedToStart_ = false;

@@ -19,7 +19,7 @@ namespace Ocean
  * @ingroup base
  */
 template <typename T>
-class ScopedValue
+class ScopedValueT
 {
 	public:
 
@@ -28,22 +28,14 @@ class ScopedValue
 		 * @param target The target value that will be changed at the end of the surrounding scope
 		 * @param delayedValue Value that will be assigned at the end of the surrounding scope
 		 */
-		inline ScopedValue(T& target, const T& delayedValue);
+		inline ScopedValueT(T& target, const T& delayedValue);
 
 		/**
 		 * Creates a new scoped value object.
 		 * @param target The target value that will be changed at the end of the surrounding scope
 		 * @param delayedValue Value that will be assigned at the end of the surrounding scope
 		 */
-		inline ScopedValue(T& target, T&& delayedValue);
-
-		/**
-		 * Creates a new scoped value object.
-		 * @param target The target value that will be changed at the end of the surrounding scope
-		 * @param delayedValue Value that will be assigned at the end of the surrounding scope
-		 * @param immediateValue Value that will be assigned directly inside the constructor
-		 */
-		inline ScopedValue(T& target, const T& delayedValue, const T& immediateValue);
+		inline ScopedValueT(T& target, T&& delayedValue);
 
 		/**
 		 * Creates a new scoped value object.
@@ -51,34 +43,42 @@ class ScopedValue
 		 * @param delayedValue Value that will be assigned at the end of the surrounding scope
 		 * @param immediateValue Value that will be assigned directly inside the constructor
 		 */
-		inline ScopedValue(T& target, T&& delayedValue, T&& immediateValue);
+		inline ScopedValueT(T& target, const T& delayedValue, const T& immediateValue);
+
+		/**
+		 * Creates a new scoped value object.
+		 * @param target The target value that will be changed at the end of the surrounding scope
+		 * @param delayedValue Value that will be assigned at the end of the surrounding scope
+		 * @param immediateValue Value that will be assigned directly inside the constructor
+		 */
+		inline ScopedValueT(T& target, T&& delayedValue, T&& immediateValue);
 
 		/**
 		 * Destructs the scoped value object.
 		 */
-		inline ~ScopedValue();
+		inline ~ScopedValueT();
 
 		/**
 		 * Changes the value that will be assigned at the end of the surrounding scope.
-		 * @param value Value to be changed
+		 * @param value The value to be changed
 		 */
 		inline void setDelayed(const T& value);
 
 		/**
 		 * Changes the value that will be assigned at the end of the surrounding scope.
-		 * @param value Value to be changed
+		 * @param value The value to be changed
 		 */
 		inline void setDelayed(T&& value);
 
 		/**
 		 * Immediately changes the target value, the modification is not applied at the end of the surrounding scope
-		 * @param value Value to be changed
+		 * @param value The value to be changed
 		 */
 		inline void setImmediately(const T& value);
 
 		/**
 		 * Immediately changes the target value, the modification is not applied at the end of the surrounding scope
-		 * @param value Value to be changed
+		 * @param value The value to be changed
 		 */
 		inline void setImmediately(T&& value);
 
@@ -88,13 +88,13 @@ class ScopedValue
 		 * Disabled copy constructor.
 		 * @param value The value which would be copied
 		 */
-		ScopedValue(const ScopedValue<T>& value) = delete;
+		ScopedValueT(const ScopedValueT<T>& value) = delete;
 
 		/**
 		 * Disabled copy operator.
 		 * @param value The value which would be copied
 		 */
-		ScopedValue& operator=(const ScopedValue<T>& value) = delete;
+		ScopedValueT& operator=(const ScopedValueT<T>& value) = delete;
 
 	protected:
 
@@ -106,7 +106,7 @@ class ScopedValue
 };
 
 template <typename T>
-inline ScopedValue<T>::ScopedValue(T& target, const T& delayedValue) :
+inline ScopedValueT<T>::ScopedValueT(T& target, const T& delayedValue) :
 	valueTarget(target),
 	valueDelayed(delayedValue)
 {
@@ -114,7 +114,7 @@ inline ScopedValue<T>::ScopedValue(T& target, const T& delayedValue) :
 }
 
 template <typename T>
-inline ScopedValue<T>::ScopedValue(T& target, T&& delayedValue) :
+inline ScopedValueT<T>::ScopedValueT(T& target, T&& delayedValue) :
 	valueTarget(target),
 	valueDelayed(std::move(delayedValue))
 {
@@ -122,7 +122,7 @@ inline ScopedValue<T>::ScopedValue(T& target, T&& delayedValue) :
 }
 
 template <typename T>
-inline ScopedValue<T>::ScopedValue(T& target, const T& delayedValue, const T& immediateValue) :
+inline ScopedValueT<T>::ScopedValueT(T& target, const T& delayedValue, const T& immediateValue) :
 	valueTarget(target),
 	valueDelayed(delayedValue)
 {
@@ -130,7 +130,7 @@ inline ScopedValue<T>::ScopedValue(T& target, const T& delayedValue, const T& im
 }
 
 template <typename T>
-inline ScopedValue<T>::ScopedValue(T& target, T&& delayedValue, T&& immediateValue) :
+inline ScopedValueT<T>::ScopedValueT(T& target, T&& delayedValue, T&& immediateValue) :
 	valueTarget(target),
 	valueDelayed(std::move(delayedValue))
 {
@@ -138,31 +138,31 @@ inline ScopedValue<T>::ScopedValue(T& target, T&& delayedValue, T&& immediateVal
 }
 
 template <typename T>
-inline ScopedValue<T>::~ScopedValue()
+inline ScopedValueT<T>::~ScopedValueT()
 {
 	valueTarget = valueDelayed;
 }
 
 template <typename T>
-inline void ScopedValue<T>::setDelayed(const T& value)
+inline void ScopedValueT<T>::setDelayed(const T& value)
 {
 	valueDelayed = value;
 }
 
 template <typename T>
-inline void ScopedValue<T>::setDelayed(T&& value)
+inline void ScopedValueT<T>::setDelayed(T&& value)
 {
 	valueDelayed = std::move(value);
 }
 
 template <typename T>
-inline void ScopedValue<T>::setImmediately(const T& value)
+inline void ScopedValueT<T>::setImmediately(const T& value)
 {
 	valueTarget = value;
 }
 
 template <typename T>
-inline void ScopedValue<T>::setImmediately(T&& value)
+inline void ScopedValueT<T>::setImmediately(T&& value)
 {
 	valueTarget = std::move(value);
 }

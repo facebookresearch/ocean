@@ -1089,7 +1089,7 @@ void RMVFeatureTracker6DOF::threadRun()
 		const ScopedLock scopedLock(trackerAsynchronousDataProcessingLock);
 
 		ocean_assert(!trackerAsynchronousDataProcessingActive);
-		const ScopedValue<bool> scopedValue(trackerAsynchronousDataProcessingActive, false, true);
+		const ScopedValueT<bool> scopedValue(trackerAsynchronousDataProcessingActive, false, true);
 
 		ocean_assert(trackerAsynchronousDataProcessingPoseIF.isValid());
 
