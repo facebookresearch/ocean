@@ -79,6 +79,11 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 			public:
 
 				/**
+				 * Default constructor creating an invalid object.
+				 */
+				StreamConfiguration() = default;
+
+				/**
 				 * Creates a new stream configuration object.
 				 * @param streamType The type of the stream
 				 * @param width The width of the stream in pixel
@@ -94,6 +99,13 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 				 * @return The readable information of this stream configuration
 				 */
 				std::string toString() const;
+
+				/**
+				 * Returns whether this configuraiton object holds a valid configuration.
+				 * The configuration is valid if a valid stream type and a valid image resolution is defined.
+				 * @return True, if so
+				 */
+				inline bool isValid() const;
 
 			public:
 
@@ -224,6 +236,11 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		 */
 		explicit LiveVideo(const std::string& url);
 };
+
+inline bool LiveVideo::StreamConfiguration::isValid() const
+{
+	return streamType_ != ST_INVALID && width_ > 0u && height_ > 0u;
+}
 
 }
 
