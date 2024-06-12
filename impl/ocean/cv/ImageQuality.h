@@ -46,9 +46,7 @@ class OCEAN_CV_EXPORT ImageQuality
 		/**
 		 * Determines the multi-scale structural similarity (MSSSIM) of two images with identical frame type for images with pixel formats that have 8 bit per channel.
 		 *
-		 * Beware: The implementation of this function does not really match with the paper
-		 * Multi-Scale Structural Similarity for Image Quality Assessment<br>
-		 * However, the calculation is equivalent to D6290052 - so that we get the same behavior.
+		 * Beware: For backwards-compatibility the implementation of this function does not fully match that in the paper "Multi-Scale Structural Similarity for Image Quality Assessment"
 		 *
 		 * @param imageX The first image to be used, must be valid
 		 * @param imageY The second image to be used, must be valid
