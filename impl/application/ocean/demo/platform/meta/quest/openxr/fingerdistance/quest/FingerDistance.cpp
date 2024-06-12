@@ -117,6 +117,12 @@ void FingerDistance::onPreRender(const XrTime& xrPredictedDisplayTime, const Tim
 
 			showGroup = true;
 		}
+
+		// let's change the transparency of the hands based on the distance
+
+		const Scalar transparency = std::min(distance, Scalar(0.85)); // at most 85% transparency
+
+		vrHandVisualizer_.setTransparency(transparency);
 	}
 	else
 	{
