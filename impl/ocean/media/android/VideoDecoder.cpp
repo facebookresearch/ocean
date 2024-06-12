@@ -20,6 +20,16 @@ namespace Media
 namespace Android
 {
 
+VideoDecoder::VideoDecoder()
+{
+	nativeMediaLibrarySubscription_ = NativeMediaLibrary::get().initialize();
+
+	if (!nativeMediaLibrarySubscription_)
+	{
+		Log::error() << "VideoDecoder:: Failed to initialize native media library";
+	}
+}
+
 VideoDecoder::~VideoDecoder()
 {
 	release();
@@ -43,12 +53,13 @@ bool VideoDecoder::initialize(const std::string& mime, const unsigned int width,
 		return false;
 	}
 
-	Media::Android::NativeMediaLibrary& nativeMediaLibrary = Media::Android::NativeMediaLibrary::get();
-
-	if (!nativeMediaLibrary.isInitialized())
+	if (!nativeMediaLibrarySubscription_)
 	{
-		nativeMediaLibrary.initialize(); // **TODO** update to subscription-based initialization
+		Log::error() << "VideoRecorder: Native media library is not initialized";
+		return false;
 	}
+
+	NativeMediaLibrary& nativeMediaLibrary = NativeMediaLibrary::get();
 
 	AMediaCodec* decoder = nativeMediaLibrary.AMediaCodec_createDecoderByType(mime.c_str()); // **TODO** used scoped object
 
@@ -100,7 +111,7 @@ bool VideoDecoder::start()
 		return true;
 	}
 
-	const media_status_t startStatus = Media::Android::NativeMediaLibrary::get().AMediaCodec_start(decoder_);
+	const media_status_t startStatus = NativeMediaLibrary::get().AMediaCodec_start(decoder_);
 
 	if (startStatus != AMEDIA_OK)
 	{
@@ -123,7 +134,7 @@ bool VideoDecoder::stop()
 		return true;
 	}
 
-	const media_status_t startStatus = Media::Android::NativeMediaLibrary::get().AMediaCodec_stop(decoder_);
+	const media_status_t startStatus = NativeMediaLibrary::get().AMediaCodec_stop(decoder_);
 
 	if (startStatus != AMEDIA_OK)
 	{
@@ -159,7 +170,7 @@ bool VideoDecoder::pushSample(const void* data, const size_t size, const uint64_
 		return false;
 	}
 
-	Media::Android::NativeMediaLibrary& nativeMediaLibrary = Media::Android::NativeMediaLibrary::get();
+	NativeMediaLibrary& nativeMediaLibrary = NativeMediaLibrary::get();
 
 	const uint8_t* remainingData = (const uint8_t*)(data);
 	size_t remainingSize = size;
@@ -229,7 +240,7 @@ void VideoDecoder::release()
 			stop();
 		}
 
-		Media::Android::NativeMediaLibrary::get().AMediaCodec_delete(decoder_);  // TODO
+		NativeMediaLibrary::get().AMediaCodec_delete(decoder_);  // TODO
 		decoder_ = nullptr;
 	}
 }

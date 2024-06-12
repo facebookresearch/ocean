@@ -93,7 +93,7 @@ class VideoDecoder
 		/**
 		 * Default constructor creating an un-initialized decoder.
 		 */
-		VideoDecoder() = default;
+		VideoDecoder();
 
 		/**
 		 * Move constructor.
@@ -198,6 +198,9 @@ class VideoDecoder
 		VideoDecoder& operator=(const VideoDecoder&) = delete;
 
 	protected:
+
+		/// The subscription for the native media library.
+		NativeMediaLibrary::ScopedSubscription nativeMediaLibrarySubscription_;
 
 		/// The Android media decoder used to decode the video.
 		AMediaCodec* decoder_ = nullptr;

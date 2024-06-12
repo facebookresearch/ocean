@@ -10,9 +10,14 @@
 
 #include "ocean/media/android/Android.h"
 
+#include "ocean/base/ScopedSubscription.h"
 #include "ocean/base/Singleton.h"
 
 #if defined(__ANDROID_API__) && __ANDROID_API__ >= 21
+
+#ifndef OCEAN_MEDIA_ANDROID_NATIVEMEDIALIBRARY_AVAILABLE
+	#define OCEAN_MEDIA_ANDROID_NATIVEMEDIALIBRARY_AVAILABLE
+#endif
 
 #if __ANDROID_API__ >= 24
 
@@ -43,6 +48,11 @@ class OCEAN_MEDIA_A_EXPORT NativeMediaLibrary : public Singleton<NativeMediaLibr
 	friend class Singleton<NativeMediaLibrary>;
 
 	public:
+
+		/**
+		 * Definition of a subscription object.
+		 */
+		using ScopedSubscription = ScopedSubscriptionT<unsigned int, NativeMediaLibrary>;
 
 		/**
 		 * Definition of individual MediaFormat keys.
@@ -167,15 +177,10 @@ class OCEAN_MEDIA_A_EXPORT NativeMediaLibrary : public Singleton<NativeMediaLibr
 
 		/**
 		 * Initializes the media library.
-		 * This function must not be called if already initialized.
-		 * @return True, if succeeded
+		 * The library will be initialized as long as the resulting subscription object exists.
+		 * @return The subscription object, invalid in case the library could not be initialized
 		 */
-		bool initialize();
-
-		/**
-		 * Releases the library.
-		 */
-		void release();
+		[[nodiscard]] ScopedSubscription initialize();
 
 		/**
 		 * Returns whether the library is initialized.
@@ -290,6 +295,17 @@ class OCEAN_MEDIA_A_EXPORT NativeMediaLibrary : public Singleton<NativeMediaLibr
 		 */
 		inline ~NativeMediaLibrary();
 
+		/**
+		 * Uninitializes the library.
+		 * @param unused An unused id
+		 */
+		void uninitialize(const unsigned int unused);
+
+		/**
+		 * Releases the library.
+		 */
+		void release();
+
 	protected:
 
 		/// The handle of the library.
@@ -377,6 +393,12 @@ class OCEAN_MEDIA_A_EXPORT NativeMediaLibrary : public Singleton<NativeMediaLibr
 		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_selectTrack* AMediaExtractor_selectTrack_ = nullptr;
 		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_setDataSource* AMediaExtractor_setDataSource_ = nullptr;
 		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_setDataSourceFd* AMediaExtractor_setDataSourceFd_ = nullptr;
+
+		/// The counter for counting the usage of this library.
+		unsigned int initializationCounter_ = 0u;
+
+		/// The library's lock.
+		mutable Lock lock_;
 };
 
 inline NativeMediaLibrary::NativeMediaLibrary()
@@ -386,12 +408,14 @@ inline NativeMediaLibrary::NativeMediaLibrary()
 
 inline NativeMediaLibrary::~NativeMediaLibrary()
 {
-	release();
+	ocean_assert(initializationCounter_ == 0u);
 }
 
 inline bool NativeMediaLibrary::isInitialized() const
 {
-	return libraryHandle_ != nullptr;
+	const ScopedLock scopedLock(lock_);
+
+	return initializationCounter_ != 0u;
 }
 
 #if __ANDROID_API__ >= 24

@@ -9,6 +9,7 @@
 #define META_OCEAN_MEDIA_ANDROID_A_LIBRARY_H
 
 #include "ocean/media/android/Android.h"
+#include "ocean/media/android/NativeMediaLibrary.h"
 
 #include "ocean/media/Library.h"
 #include "ocean/media/Manager.h"
@@ -158,6 +159,11 @@ class OCEAN_MEDIA_A_EXPORT ALibrary : public Library
 
 		/// The SL engine interface for all audio objects.
 		SLEngineItf slEngineInterface_ = nullptr;
+
+#ifdef OCEAN_MEDIA_ANDROID_NATIVEMEDIALIBRARY_AVAILABLE
+		/// The subscription for the native media library
+		NativeMediaLibrary::ScopedSubscription nativeMediaLibrarySubscription_;
+#endif
 };
 
 }

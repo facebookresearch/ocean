@@ -13,7 +13,6 @@
 #include "ocean/media/android/AMovie.h"
 #include "ocean/media/android/AMovieRecorder.h"
 #include "ocean/media/android/NativeCameraLibrary.h"
-#include "ocean/media/android/NativeMediaLibrary.h"
 
 namespace Ocean
 {
@@ -46,14 +45,16 @@ ALibrary::ALibrary() :
 
 #endif // defined(__ANDROID_API__) && __ANDROID_API__ >= 24
 
-#if defined(__ANDROID_API__) && __ANDROID_API__ >= 21
+#ifdef OCEAN_MEDIA_ANDROID_NATIVEMEDIALIBRARY_AVAILABLE
 
-	if (!NativeMediaLibrary::get().initialize())
+	nativeMediaLibrarySubscription_ = NativeMediaLibrary::get().initialize();
+
+	if (!nativeMediaLibrarySubscription_)
 	{
 		Log::error() << "Failed to load native media library";
 	}
 
-#endif // defined(__ANDROID_API__) && __ANDROID_API__ >= 21
+#endif // OCEAN_MEDIA_ANDROID_NATIVEMEDIALIBRARY_AVAILABLE
 }
 
 ALibrary::~ALibrary()
@@ -62,9 +63,9 @@ ALibrary::~ALibrary()
 	NativeCameraLibrary::get().release();
 #endif // defined(__ANDROID_API__) && __ANDROID_API__ >= 24
 
-#if defined(__ANDROID_API__) && __ANDROID_API__ >= 21
-	NativeMediaLibrary::get().release();
-#endif // defined(__ANDROID_API__) && __ANDROID_API__ >= 21
+#ifdef OCEAN_MEDIA_ANDROID_NATIVEMEDIALIBRARY_AVAILABLE
+	nativeMediaLibrarySubscription_.release();
+#endif
 
 	releaseAudioEngine();
 }

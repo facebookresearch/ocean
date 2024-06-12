@@ -21,12 +21,17 @@ namespace Media
 namespace Android
 {
 
-bool NativeMediaLibrary::initialize()
+NativeMediaLibrary::ScopedSubscription NativeMediaLibrary::initialize()
 {
-	if (libraryHandle_ != nullptr)
+	const ScopedLock scopedLock(lock_);
+
+	if (initializationCounter_ != 0u)
 	{
-		ocean_assert(false && "The library is initialized already!");
-		return true;
+		ocean_assert(libraryHandle_ != nullptr);
+
+		++initializationCounter_;
+
+		return ScopedSubscription(0u, std::bind(&NativeMediaLibrary::uninitialize, this, std::placeholders::_1));
 	}
 
 	libraryHandle_ = dlopen("libmediandk.so", RTLD_LAZY);
@@ -34,7 +39,7 @@ bool NativeMediaLibrary::initialize()
 	if (libraryHandle_ == nullptr)
 	{
 		Log::error() << "Failed to load libmediandk.so library";
-		return false;
+		return ScopedSubscription();
 	}
 
 #if __ANDROID_API__ >= 24
@@ -85,7 +90,7 @@ bool NativeMediaLibrary::initialize()
 			|| AImage_getTimestamp_ == nullptr || AImage_getNumberOfPlanes_ == nullptr || AImage_getPlanePixelStride_ == nullptr || AImage_getPlaneRowStride_ == nullptr || AImage_getPlaneData_ == nullptr)
 	{
 		release();
-		return false;
+		return ScopedSubscription();
 	}
 
 
@@ -135,7 +140,7 @@ bool NativeMediaLibrary::initialize()
 			|| AImageReader_getFormat_ == nullptr || AImageReader_getMaxImages_ == nullptr || AImageReader_acquireNextImage_ == nullptr || AImageReader_acquireLatestImage_ == nullptr || AImageReader_setImageListener_ == nullptr)
 	{
 		release();
-		return false;
+		return ScopedSubscription();
 	}
 
 #endif // __ANDROID_API__ >= 24
@@ -209,7 +214,7 @@ bool NativeMediaLibrary::initialize()
 	if (AMediaCodec_createDecoderByType_ == nullptr || AMediaCodec_createEncoderByType_ == nullptr || AMediaCodec_configure_ == nullptr || AMediaCodec_delete_ == nullptr || AMediaCodec_start_ == nullptr || AMediaCodec_stop_ == nullptr)
 	{
 		release();
-		return false;
+		return ScopedSubscription();
 	}
 
 	/// Loading all function pointers of AMediaFormat
@@ -303,7 +308,7 @@ bool NativeMediaLibrary::initialize()
 	if (AMediaMuxer_addTrack_ == nullptr || AMediaMuxer_delete_ == nullptr || AMediaMuxer_new_ == nullptr || AMediaExtractor_selectTrack_ == nullptr || AMediaMuxer_setLocation_ == nullptr || AMediaMuxer_setOrientationHint_ == nullptr || AMediaMuxer_start_ == nullptr || AMediaMuxer_stop_ == nullptr || AMediaMuxer_writeSampleData_ == nullptr)
 	{
 		release();
-		return false;
+		return ScopedSubscription();
 	}
 
 
@@ -352,18 +357,31 @@ bool NativeMediaLibrary::initialize()
 	if (AMediaExtractor_advance_ == nullptr || AMediaExtractor_new_ == nullptr || AMediaExtractor_delete_ == nullptr || AMediaExtractor_setDataSource_ == nullptr || AMediaExtractor_setDataSourceFd_ == nullptr || AMediaExtractor_getTrackCount_ == nullptr || AMediaExtractor_getTrackFormat_ == nullptr || AMediaExtractor_readSampleData_ == nullptr || AMediaExtractor_getSampleTime_ == nullptr || AMediaExtractor_seekTo_ == nullptr)
 	{
 		release();
-		return false;
+		return ScopedSubscription();
 	}
 
-	return true;
+	ocean_assert(initializationCounter_ == 0u);
+	initializationCounter_ = 1u;
+
+	return ScopedSubscription(0u, std::bind(&NativeMediaLibrary::uninitialize, this, std::placeholders::_1));
+}
+
+void NativeMediaLibrary::uninitialize(const unsigned int /*unused*/)
+{
+	const ScopedLock scopedLock(lock_);
+
+	ocean_assert(initializationCounter_ != 0u);
+
+	if (--initializationCounter_ == 0u)
+	{
+		release();
+	}
 }
 
 void NativeMediaLibrary::release()
 {
-	if (libraryHandle_ == nullptr)
-	{
-		return;
-	}
+	ocean_assert(libraryHandle_ != nullptr);
+	ocean_assert(initializationCounter_ == 0u);
 
 	const bool result = dlclose(libraryHandle_) == 0;
 	libraryHandle_ = nullptr;
