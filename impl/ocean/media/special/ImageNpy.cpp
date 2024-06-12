@@ -41,7 +41,7 @@ Frame ImageNpy::decodeImage(const void* buffer, const size_t size)
 
 	ocean_assert(frameType.channels() == 1u);
 
-	// **TODO** hot fix to ensure that images cannot be larger than 2^32 bytes until T116072475 is finished
+	// **TODO** hot fix to ensure that images cannot be larger than 2^32 bytes
 
 	if (frameType.bytesPerDataType() == 0u || uint64_t(frameType.width()) * uint64_t(frameType.height()) >= uint64_t(4294967294u) / uint64_t(frameType.bytesPerDataType())) // width * height * bytesPerDataType < 2^32
 	{

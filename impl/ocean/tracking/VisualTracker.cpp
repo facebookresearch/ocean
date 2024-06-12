@@ -80,7 +80,7 @@ bool VisualTracker::determinePoses(const Frames& frames, const SharedAnyCameras&
 
 		ocean_assert(frameToRectify.isValid());
 
-		const unsigned int rectifiedWidth = anyCameras.front()->width() * 75u / 100u; // TODO T130031091 Improve the selection of the camera size
+		const unsigned int rectifiedWidth = anyCameras.front()->width() * 75u / 100u;
 		const unsigned int rectifiedHeight = anyCameras.front()->height() * 75u / 100u;
 
 		anyCameraPinhole = std::make_shared<AnyCameraPinhole>(PinholeCamera(rectifiedWidth, rectifiedHeight, Numeric::deg2rad(70)));

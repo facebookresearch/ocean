@@ -121,7 +121,7 @@ Frame ImagePng::decodeImage(const void* buffer, const size_t size)
 
 	const FrameType frameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT);
 
-	// **TODO** hot fix to ensure that images cannot be larger than 2^32 bytes until T116072475 is finished
+	// **TODO** hot fix to ensure that images cannot be larger than 2^32 bytes
 
 	ocean_assert(frameType.channels() <= 4u);
 

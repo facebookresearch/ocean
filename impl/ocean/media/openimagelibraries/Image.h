@@ -46,8 +46,6 @@ namespace OpenImageLibraries
  *
  * webp          FORMAT_RGB24      ORIGIN_UPPER_LEFT      yes
  * webp          FORMAT_BGR24      ORIGIN_UPPER_LEFT      yes
- * webp          FORMAT_RGBA32     ORIGIN_UPPER_LEFT      yes                                Currently not available, cf. T147465624
- * webp          FORMAT_BGRA32     ORIGIN_UPPER_LEFT      yes                                Currently not available, cf. T147465624
  *
  * tif           FORMAT_RGB24      ORIGIN_UPPER_LEFT      no
  * tif           FORMAT_RGBA32     ORIGIN_UPPER_LEFT      no

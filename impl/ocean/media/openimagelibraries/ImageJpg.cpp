@@ -118,7 +118,7 @@ Frame ImageJpg::decodeImage(const void* buffer, const size_t size)
 	const FrameType frameType(width, height, pixelFormat, pixelOrigin);
 	ocean_assert(frameType.isValid());
 
-	// **TODO** hot fix to ensure that images cannot be larger than 2^32 bytes until T116072475 is finished
+	// **TODO** hot fix to ensure that images cannot be larger than 2^32 bytes
 
 	ocean_assert(frameType.channels() <= 3u);
 	if (uint64_t(width) * uint64_t(height) >= uint64_t(1431655764ull)) // width * height * 3 < 2^32

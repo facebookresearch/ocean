@@ -280,7 +280,7 @@ Frame ImageTif::decodeImage(const void* buffer, const size_t size)
 	ocean_assert(orientation == ORIENTATION_TOPLEFT || orientation == ORIENTATION_BOTLEFT);
 	const FrameType::PixelOrigin pixelOrigin = (orientation == ORIENTATION_TOPLEFT) ? FrameType::ORIGIN_UPPER_LEFT : FrameType::ORIGIN_LOWER_LEFT;
 
-	// **TODO** hot fix to ensure that images cannot be larger than 2^32 bytes until T116072475 is finished
+	// **TODO** hot fix to ensure that images cannot be larger than 2^32 bytes
 
 	if (uint64_t(width) * uint64_t(height) >= uint64_t(1073741823ull)) // width * height * 4 < 2^32
 	{

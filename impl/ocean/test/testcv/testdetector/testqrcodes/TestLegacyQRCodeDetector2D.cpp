@@ -547,7 +547,7 @@ TestDataManager::ScopedSubscriptions TestLegacyQRCodeDetector2D_registerTestData
 			absolutePath + "qrcode/detection_1_qrcode/0154.png",
 			absolutePath + "qrcode/detection_1_qrcode/0157.png",
 			absolutePath + "qrcode/detection_1_qrcode/0159.png",
-			absolutePath + "qrcode/detection_1_qrcode/0162.png" // T46956176 ECI mode was disabled
+			absolutePath + "qrcode/detection_1_qrcode/0162.png"
 		};
 
 		scopedSubscriptions.emplace_back(TestDataManager::get().registerTestDataCollection("legacyqrCodedetector2d_1code", std::make_unique<TestLegacyQRCodeDetector2D::FileDataCollection>(std::move(filenames1Code))));

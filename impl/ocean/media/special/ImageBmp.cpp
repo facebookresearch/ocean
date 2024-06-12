@@ -148,7 +148,7 @@ Frame ImageBmp::decodeImage(const void* buffer, const size_t size)
 	const FrameType::PixelOrigin pixelOrigin = bitmapDataHeader.biHeight > 0 ? FrameType::ORIGIN_LOWER_LEFT : FrameType::ORIGIN_UPPER_LEFT;
 	const FrameType frameType((unsigned int)(bitmapDataHeader.biWidth), (unsigned int)(abs(bitmapDataHeader.biHeight)), pixelFormat, pixelOrigin);
 
-	// **TODO** hot fix to ensure that images cannot be larger than 2^32 bytes until T116072475 is finished
+	// **TODO** hot fix to ensure that images cannot be larger than 2^32 bytes
 
 	ocean_assert(frameType.channels() <= 3u);
 	if (uint64_t(frameType.width()) * uint64_t(frameType.height()) >= uint64_t(1431655764ull)) // width * height * 3 < 2^32

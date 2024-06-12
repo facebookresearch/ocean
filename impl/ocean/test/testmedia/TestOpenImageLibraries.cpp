@@ -775,7 +775,7 @@ bool TestOpenImageLibraries::testWebpImageEncodeDecode(const double testDuration
 #endif
 
 #if 0
-	// Disabled RGBA and BGRA for now; for some tiny images with alpha the WEBP encoder simply drops the alpha layer even when `WebPConfig::exact == 1`. Tracking this in T147465624.
+	// Disabled RGBA and BGRA for now; for some tiny images with alpha the WEBP encoder simply drops the alpha layer even when `WebPConfig::exact == 1`.
 	const FrameType::PixelFormats pixelFormats =
 	{
 		FrameType::FORMAT_RGB24,

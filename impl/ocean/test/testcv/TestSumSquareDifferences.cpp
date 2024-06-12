@@ -1096,7 +1096,7 @@ bool TestSumSquareDifferences::testBuffer8BitPerChannel(const unsigned int width
 		CV::CVUtilities::randomizeFrame(frame0, false, &randomGenerator);
 		CV::CVUtilities::randomizeFrame(frame1, false, &randomGenerator);
 
-		// Add valid locations nearest to buffer boundaries to test for memory access violation bugs (e.g. T174573674)
+		// Add valid locations nearest to buffer boundaries to test for memory access violation bugs
 		offsets0[0] = 0u;
 		offsets1[0] = 0u;
 		
@@ -1822,7 +1822,7 @@ bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const unsig
 		CV::CVUtilities::randomizeFrame(frame0, false, &randomGenerator);
 		CV::CVUtilities::randomizeFrame(frame1, false, &randomGenerator);
 
-		// Add valid locations nearest to buffer boundaries to test for memory access violation bugs (e.g. T174573674)
+		// Add valid locations nearest to buffer boundaries to test for memory access violation bugs
 		centersX0[0] = 0u;
 		centersY0[0] = 0u;
 		centersX1[0] = 0u;

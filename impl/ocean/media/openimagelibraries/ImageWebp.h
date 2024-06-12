@@ -85,7 +85,7 @@ class OCEAN_MEDIA_OIL_EXPORT ImageWebp
 inline bool ImageWebp::isPixelFormatSupported(const FrameType::PixelFormat pixelFormat)
 {
 #if 0
-	// Disabled RGBA and BGRA for now; for some tiny images with alpha the WEBP encoder simply drops the alpha layer even when `WebPConfig::exact == 1`. Tracking this in T147465624.
+	// Disabled RGBA and BGRA for now; for some tiny images with alpha the WEBP encoder simply drops the alpha layer even when `WebPConfig::exact == 1`.
 	return pixelFormat == FrameType::FORMAT_RGB24 || pixelFormat == FrameType::FORMAT_BGR24
 		|| pixelFormat == FrameType::FORMAT_RGBA32	|| pixelFormat == FrameType::FORMAT_BGRA32;
 #else
