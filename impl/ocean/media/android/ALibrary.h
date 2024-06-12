@@ -9,6 +9,7 @@
 #define META_OCEAN_MEDIA_ANDROID_A_LIBRARY_H
 
 #include "ocean/media/android/Android.h"
+#include "ocean/media/android/NativeCameraLibrary.h"
 #include "ocean/media/android/NativeMediaLibrary.h"
 
 #include "ocean/media/Library.h"
@@ -159,6 +160,11 @@ class OCEAN_MEDIA_A_EXPORT ALibrary : public Library
 
 		/// The SL engine interface for all audio objects.
 		SLEngineItf slEngineInterface_ = nullptr;
+
+#ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
+		/// The subscription for the native camera library
+		NativeCameraLibrary::ScopedSubscription nativeCameraLibrarySubscription_;
+#endif
 
 #ifdef OCEAN_MEDIA_ANDROID_NATIVEMEDIALIBRARY_AVAILABLE
 		/// The subscription for the native media library

@@ -21,12 +21,23 @@ namespace Media
 namespace Android
 {
 
-bool NativeCameraLibrary::initialize()
+NativeCameraLibrary::ScopedSubscription NativeCameraLibrary::initialize()
 {
+	const ScopedLock scopedLock(lock_);
+
+	if (initializationCounter_ != 0u)
+	{
+		ocean_assert(libraryHandle_ != nullptr);
+
+		++initializationCounter_;
+
+		return ScopedSubscription(0u, std::bind(&NativeCameraLibrary::uninitialize, this, std::placeholders::_1));
+	}
+
 	if (libraryHandle_ != nullptr)
 	{
 		ocean_assert(false && "The library is initialized already!");
-		return true;
+		return ScopedSubscription();
 	}
 
 	libraryHandle_ = dlopen("libcamera2ndk.so", RTLD_LAZY);
@@ -34,7 +45,7 @@ bool NativeCameraLibrary::initialize()
 	if (libraryHandle_ == nullptr)
 	{
 		Log::error() << "Failed to load camera2ndk.so library";
-		return false;
+		return ScopedSubscription();
 	}
 
 	// Loading all function pointers of ACameraDevice
@@ -83,7 +94,7 @@ bool NativeCameraLibrary::initialize()
 		|| ACaptureSessionOutput_create_ == nullptr || ACaptureSessionOutput_free_ == nullptr || ACaptureSessionOutputContainer_add_ == nullptr || ACaptureSessionOutputContainer_remove_ == nullptr || ACameraDevice_createCaptureSession_ == nullptr)
 	{
 		release();
-		return false;
+		return ScopedSubscription();
 	}
 
 
@@ -125,7 +136,7 @@ bool NativeCameraLibrary::initialize()
 			|| ACameraManager_registerAvailabilityCallback_ == nullptr || ACameraManager_unregisterAvailabilityCallback_ == nullptr || ACameraManager_getCameraCharacteristics_ == nullptr || ACameraManager_openCamera_ == nullptr)
 	{
 		release();
-		return false;
+		return ScopedSubscription();
 	}
 
 
@@ -150,7 +161,7 @@ bool NativeCameraLibrary::initialize()
 	if (ACameraMetadata_getConstEntry_ == nullptr || ACameraMetadata_getAllTags_ == nullptr || ACameraMetadata_copy_ == nullptr || ACameraMetadata_free_ == nullptr)
 	{
 		release();
-		return false;
+		return ScopedSubscription();
 	}
 
 
@@ -213,7 +224,7 @@ bool NativeCameraLibrary::initialize()
 			|| ACaptureRequest_setEntry_i64_ == nullptr || ACaptureRequest_setEntry_double_ == nullptr || ACaptureRequest_setEntry_rational_ == nullptr || ACaptureRequest_free_ == nullptr)
 	{
 		release();
-		return false;
+		return ScopedSubscription();
 	}
 
 
@@ -246,18 +257,32 @@ bool NativeCameraLibrary::initialize()
 	if (ACameraCaptureSession_close_ == nullptr || ACameraCaptureSession_getDevice_ == nullptr || ACameraCaptureSession_capture_ == nullptr || ACameraCaptureSession_setRepeatingRequest_ == nullptr || ACameraCaptureSession_stopRepeating_ == nullptr || ACameraCaptureSession_abortCaptures_ == nullptr)
 	{
 		release();
-		return false;
+		return ScopedSubscription();
 	}
 
-	return true;
+	ocean_assert(initializationCounter_ == 0u);
+	initializationCounter_ = 1u;
+
+	return ScopedSubscription(0u, std::bind(&NativeCameraLibrary::uninitialize, this, std::placeholders::_1));
 }
+
+void NativeCameraLibrary::uninitialize(const unsigned int /*unused*/)
+{
+	const ScopedLock scopedLock(lock_);
+
+	ocean_assert(initializationCounter_ != 0u);
+
+	if (--initializationCounter_ == 0u)
+	{
+		release();
+	}
+}
+
 
 void NativeCameraLibrary::release()
 {
-	if (libraryHandle_ == nullptr)
-	{
-		return;
-	}
+	ocean_assert(libraryHandle_ != nullptr);
+	ocean_assert(initializationCounter_ == 0u);
 
 	const bool result = dlclose(libraryHandle_) == 0;
 	libraryHandle_ = nullptr;

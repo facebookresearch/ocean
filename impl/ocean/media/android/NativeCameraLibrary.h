@@ -10,9 +10,14 @@
 
 #include "ocean/media/android/Android.h"
 
+#include "ocean/base/ScopedSubscription.h"
 #include "ocean/base/Singleton.h"
 
 #if defined(__ANDROID_API__) && __ANDROID_API__ >= 24
+
+#ifndef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
+	#define OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
+#endif
 
 #include <camera/NdkCaptureRequest.h>
 
@@ -36,6 +41,13 @@ namespace Android
 class OCEAN_MEDIA_A_EXPORT NativeCameraLibrary : public Singleton<NativeCameraLibrary>
 {
 	friend class Singleton<NativeCameraLibrary>;
+
+	public:
+
+		/**
+		 * Definition of a subscription object.
+		 */
+		using ScopedSubscription = ScopedSubscriptionT<unsigned int, NativeCameraLibrary>;
 
 	protected:
 
@@ -102,10 +114,17 @@ class OCEAN_MEDIA_A_EXPORT NativeCameraLibrary : public Singleton<NativeCameraLi
 
 	public:
 
-		bool initialize();
+		/**
+		 * Initializes the camera library.
+		 * The library will be initialized as long as the resulting subscription object exists.
+		 * @return The subscription object, invalid in case the library could not be initialized
+		 */
+		[[nodiscard]] ScopedSubscription initialize();
 
-		void release();
-
+		/**
+		 * Returns whether the library is initialized.
+		 * @return True, if so
+		 */
 		inline bool isInitialized() const;
 
 		/**
@@ -172,11 +191,25 @@ class OCEAN_MEDIA_A_EXPORT NativeCameraLibrary : public Singleton<NativeCameraLi
 	protected:
 
 		/**
-		 * Protected default contructor.
+		 * Protected default constructor.
 		 */
 		inline NativeCameraLibrary();
 
+		/**
+		 * Destructs the library
+		 */
 		inline ~NativeCameraLibrary();
+
+		/**
+		 * Uninitializes the library.
+		 * @param unused An unused id
+		 */
+		void uninitialize(const unsigned int unused);
+
+		/**
+		 * Releases the library.
+		 */
+		void release();
 
 	protected:
 
@@ -233,6 +266,12 @@ class OCEAN_MEDIA_A_EXPORT NativeCameraLibrary : public Singleton<NativeCameraLi
 		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraCaptureSession_setRepeatingRequest* ACameraCaptureSession_setRepeatingRequest_ = nullptr;
 		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraCaptureSession_stopRepeating* ACameraCaptureSession_stopRepeating_ = nullptr;
 		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraCaptureSession_abortCaptures* ACameraCaptureSession_abortCaptures_ = nullptr;
+
+		/// The counter for counting the usage of this library.
+		unsigned int initializationCounter_ = 0u;
+
+		/// The library's lock.
+		mutable Lock lock_;
 };
 
 inline NativeCameraLibrary::NativeCameraLibrary()
@@ -242,12 +281,14 @@ inline NativeCameraLibrary::NativeCameraLibrary()
 
 inline NativeCameraLibrary::~NativeCameraLibrary()
 {
-	release();
+	ocean_assert(initializationCounter_ == 0u);
 }
 
 inline bool NativeCameraLibrary::isInitialized() const
 {
-	return libraryHandle_ != nullptr;
+	const ScopedLock scopedLock(lock_);
+
+	return initializationCounter_ != 0u;
 }
 
 inline camera_status_t NativeCameraLibrary::ACameraDevice_close(ACameraDevice* device)
