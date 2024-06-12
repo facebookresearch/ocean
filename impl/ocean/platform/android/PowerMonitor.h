@@ -30,7 +30,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT PowerMonitor final : protected Thread
 		/**
 		 * Definition of a scoped subscription object.
 		 */
-		typedef ScopedSubscription<bool, PowerMonitor> ScopedSubscription;
+		using ScopedSubscription = ScopedSubscriptionT<bool, PowerMonitor>;
 
 	protected:
 
@@ -64,7 +64,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT PowerMonitor final : protected Thread
 		/**
 		 * Definition of a vector holding measurement objects.
 		 */
-		typedef std::vector<Measurement> Measurements;
+		using Measurements = std::vector<Measurement>;
 
 	public:
 

@@ -38,11 +38,11 @@ class OCEAN_MEDIA_EXPORT Microphone : public virtual LiveMedium
 	public:
 
 		/**
-		 * Definition of indiviudal microphone types.
+		 * Definition of individual microphone types.
 		 */
 		enum MicrophoneTypes : uint32_t
 		{
-			/// An unknown micrphone type.
+			/// An unknown microphone type.
 			MT_UNKNOWN = 0u,
 			/// A built-in microphone (e.g., in a mobile phone).
 			MT_BUILTIN = 1u << 0u,
@@ -57,7 +57,7 @@ class OCEAN_MEDIA_EXPORT Microphone : public virtual LiveMedium
 		 */
 		enum MicrophoneConfigurations : uint32_t
 		{
-			/// A default micorphone's configuration.
+			/// A default microphone configuration.
 			MC_DEFAULT = 0u,
 			/// The microphone is configured for voice communication and can include features like an Acoustic Echo Canceler, may have some latency.
 			MC_VOICE_COMMUNICATION = 1u << 0u,
@@ -84,19 +84,19 @@ class OCEAN_MEDIA_EXPORT Microphone : public virtual LiveMedium
 		 * @param data The samples data, must be valid
 		 * @param size The size of the data, in bytes, with range [1, infinity)
 		 */
-		typedef std::function<void(const SamplesType samplesType, const void* data, const size_t size)> SamplesCallbackFunction;
+		using SamplesCallbackFunction = std::function<void(const SamplesType samplesType, const void* data, const size_t size)>;
 
 		/**
 		 * Definition of a subscription object for microphone samples.
 		 */
-		typedef ScopedSubscriptionHandler::ScopedSubscriptionType SamplesScopedSubscription;
+		using SamplesScopedSubscription = ScopedSubscriptionHandler::ScopedSubscriptionType;
 
 	protected:
 
 		/**
 		 * Definition of a subscription handler for voip samples events.
 		 */
-		typedef ScopedSubscriptionCallbackHandler<SamplesCallbackFunction, Microphone, true> SamplesCallbackHandler;
+		using SamplesCallbackHandler = ScopedSubscriptionCallbackHandlerT<SamplesCallbackFunction, Microphone, true>;
 
 	public:
 
@@ -107,7 +107,7 @@ class OCEAN_MEDIA_EXPORT Microphone : public virtual LiveMedium
 		virtual MicrophoneTypes microphoneTypes() const;
 
 		/**
-		 * Returns the configuraiton of this microphone.
+		 * Returns the configuration of this microphone.
 		 * @return The microphone's configuration
 		 */
 		virtual MicrophoneConfigurations microphoneConfigurations() const;

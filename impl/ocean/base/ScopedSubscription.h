@@ -24,7 +24,7 @@ namespace Ocean
  * @ingroup base
  */
 template <typename T, typename TOwner>
-class ScopedSubscription
+class ScopedSubscriptionT
 {
 	friend TOwner;
 
@@ -34,25 +34,25 @@ class ScopedSubscription
 		 * Definition of a callback function for release requests.
 		 * @param subscriptionId The id of the subscription to be released
 		 */
-		typedef std::function<void(const T& subscriptionId)> ReleaseCallbackFunction;
+		using ReleaseCallbackFunction = std::function<void(const T& subscriptionId)>;
 
 	public:
 
 		/**
 		 * Creates an invalid (unsubscribed) subscription object.
 		 */
-		ScopedSubscription() = default;
+		ScopedSubscriptionT() = default;
 
 		/**
 		 * Move constructor.
 		 * @param scopedSubscription The object to be moved
 		 */
-		inline ScopedSubscription(ScopedSubscription<T, TOwner>&& scopedSubscription);
+		inline ScopedSubscriptionT(ScopedSubscriptionT<T, TOwner>&& scopedSubscription);
 
 		/**
 		 * Destructs the object and releases the subscription if any.
 		 */
-		~ScopedSubscription();
+		~ScopedSubscriptionT();
 
 		/**
 		 * Explicitly releases the subscription before this object is disposes.
@@ -76,28 +76,28 @@ class ScopedSubscription
 		 * @param scopedSubscription The object to be moved
 		 * @return Reference to this object
 		 */
-		inline ScopedSubscription<T, TOwner>& operator=(ScopedSubscription<T, TOwner>&& scopedSubscription);
+		inline ScopedSubscriptionT<T, TOwner>& operator=(ScopedSubscriptionT<T, TOwner>&& scopedSubscription);
 
 		/**
 		 * Returns whether two subscription objects are identical.
 		 * @param scopedSubscription The second subscription object to compare
 		 * @return True, if so
 		 */
-		inline bool operator==(const ScopedSubscription<T, TOwner>& scopedSubscription) const;
+		inline bool operator==(const ScopedSubscriptionT<T, TOwner>& scopedSubscription) const;
 
 		/**
 		 * Returns whether two subscription objects are not identical.
 		 * @param scopedSubscription The second subscription object to compare
 		 * @return True, if so
 		 */
-		inline bool operator!=(const ScopedSubscription<T, TOwner>& scopedSubscription) const;
+		inline bool operator!=(const ScopedSubscriptionT<T, TOwner>& scopedSubscription) const;
 
 		/**
 		 * Hash function.
 		 * @param scopedSubscription The object for which the hash value will be determined
 		 * @return The resulting hash value
 		 */
-		inline size_t operator()(const ScopedSubscription<T, TOwner>& scopedSubscription) const;
+		inline size_t operator()(const ScopedSubscriptionT<T, TOwner>& scopedSubscription) const;
 
 	protected:
 
@@ -105,21 +105,21 @@ class ScopedSubscription
 		 * Disabled copy constructor.
 		 * @param scopedSubscription The object which would be copied
 		 */
-		ScopedSubscription(const ScopedSubscription<T, TOwner>& scopedSubscription) = delete;
+		ScopedSubscriptionT(const ScopedSubscriptionT<T, TOwner>& scopedSubscription) = delete;
 
 		/**
 		 * Creates a new subscription object for a valid subscription id.
 		 * @param subscriptionId The subscription id, must be valid
 		 * @param releaseCallbackFunction The callback function which will be used when the subscription needs to be released, must be valid
 		 */
-		explicit inline ScopedSubscription(const T& subscriptionId, ReleaseCallbackFunction releaseCallbackFunction);
+		explicit inline ScopedSubscriptionT(const T& subscriptionId, ReleaseCallbackFunction releaseCallbackFunction);
 
 		/**
 		 * The disabled assign operator.
 		 * @param scopedSubscription The object which would be assigned
 		 * @return The reference to this object
 		 */
-		ScopedSubscription<T, TOwner>& operator=(const ScopedSubscription<T, TOwner>& scopedSubscription) = delete;
+		ScopedSubscriptionT<T, TOwner>& operator=(const ScopedSubscriptionT<T, TOwner>& scopedSubscription) = delete;
 
 	protected:
 
@@ -141,7 +141,7 @@ class ScopedSubscriptionHandler
 		/**
 		 * Definition of a scoped subscription object
 		 */
-		typedef ScopedSubscription<unsigned int, ScopedSubscriptionHandler> ScopedSubscriptionType;
+		using ScopedSubscriptionType = ScopedSubscriptionT<unsigned int, ScopedSubscriptionHandler>;
 
 	protected:
 
@@ -163,7 +163,7 @@ class ScopedSubscriptionHandler
  * @ingroup base
  */
 template <typename TCallbackFunction, typename TOwner, bool tThreadSafe>
-class ScopedSubscriptionCallbackHandler : public ScopedSubscriptionHandler
+class ScopedSubscriptionCallbackHandlerT : public ScopedSubscriptionHandler
 {
 	friend TOwner;
 
@@ -172,7 +172,7 @@ class ScopedSubscriptionCallbackHandler : public ScopedSubscriptionHandler
 		/**
 		 * Definition of the data type of the callback function.
 		 */
-		typedef TCallbackFunction CallbackFunctionType;
+		using CallbackFunctionType = TCallbackFunction;
 
 		/// True, if this handler is thread-safe.
 		static constexpr bool isThreadSafe_ = tThreadSafe;
@@ -182,7 +182,7 @@ class ScopedSubscriptionCallbackHandler : public ScopedSubscriptionHandler
 		/**
 		 * Definition of an unordered map mapping subscription ids to callback functions.
 		 */
-		typedef std::unordered_map<unsigned int, TCallbackFunction> CallbackMap;
+		using CallbackMap = std::unordered_map<unsigned int, TCallbackFunction>;
 
 	public:
 
@@ -235,13 +235,13 @@ class ScopedSubscriptionCallbackHandler : public ScopedSubscriptionHandler
 };
 
 template <typename T, typename TOwner>
-inline ScopedSubscription<T, TOwner>::ScopedSubscription(ScopedSubscription<T, TOwner>&& scopedSubscription)
+inline ScopedSubscriptionT<T, TOwner>::ScopedSubscriptionT(ScopedSubscriptionT<T, TOwner>&& scopedSubscription)
 {
 	*this = std::move(scopedSubscription);
 }
 
 template <typename T, typename TOwner>
-inline ScopedSubscription<T, TOwner>::ScopedSubscription(const T& subscriptionId, ReleaseCallbackFunction releaseCallbackFunction) :
+inline ScopedSubscriptionT<T, TOwner>::ScopedSubscriptionT(const T& subscriptionId, ReleaseCallbackFunction releaseCallbackFunction) :
 	subscriptionId_(std::make_unique<T>(subscriptionId)),
 	releaseCallbackFunction_(std::move(releaseCallbackFunction))
 {
@@ -249,13 +249,13 @@ inline ScopedSubscription<T, TOwner>::ScopedSubscription(const T& subscriptionId
 }
 
 template <typename T, typename TOwner>
-ScopedSubscription<T, TOwner>::~ScopedSubscription()
+ScopedSubscriptionT<T, TOwner>::~ScopedSubscriptionT()
 {
 	release();
 }
 
 template <typename T, typename TOwner>
-void ScopedSubscription<T, TOwner>::release()
+void ScopedSubscriptionT<T, TOwner>::release()
 {
 	if (subscriptionId_)
 	{
@@ -268,19 +268,19 @@ void ScopedSubscription<T, TOwner>::release()
 }
 
 template <typename T, typename TOwner>
-inline bool ScopedSubscription<T, TOwner>::isValid() const
+inline bool ScopedSubscriptionT<T, TOwner>::isValid() const
 {
 	return subscriptionId_ != nullptr;
 }
 
 template <typename T, typename TOwner>
-inline ScopedSubscription<T, TOwner>::operator bool() const
+inline ScopedSubscriptionT<T, TOwner>::operator bool() const
 {
 	return isValid();
 }
 
 template <typename T, typename TOwner>
-inline ScopedSubscription<T, TOwner>& ScopedSubscription<T, TOwner>::operator=(ScopedSubscription<T, TOwner>&& scopedSubscription)
+inline ScopedSubscriptionT<T, TOwner>& ScopedSubscriptionT<T, TOwner>::operator=(ScopedSubscriptionT<T, TOwner>&& scopedSubscription)
 {
 	if (this != &scopedSubscription)
 	{
@@ -294,19 +294,19 @@ inline ScopedSubscription<T, TOwner>& ScopedSubscription<T, TOwner>::operator=(S
 }
 
 template <typename T, typename TOwner>
-inline bool ScopedSubscription<T, TOwner>::operator==(const ScopedSubscription<T, TOwner>& scopedSubscription) const
+inline bool ScopedSubscriptionT<T, TOwner>::operator==(const ScopedSubscriptionT<T, TOwner>& scopedSubscription) const
 {
 	return subscriptionId_ == scopedSubscription.subscriptionId_ && releaseCallbackFunction_ == scopedSubscription.releaseCallbackFunction_;
 }
 
 template <typename T, typename TOwner>
-inline bool ScopedSubscription<T, TOwner>::operator!=(const ScopedSubscription<T, TOwner>& scopedSubscription) const
+inline bool ScopedSubscriptionT<T, TOwner>::operator!=(const ScopedSubscriptionT<T, TOwner>& scopedSubscription) const
 {
 	return !(*this == scopedSubscription);
 }
 
 template <typename T, typename TOwner>
-inline size_t ScopedSubscription<T, TOwner>::operator()(const ScopedSubscription<T, TOwner>& scopedSubscription) const
+inline size_t ScopedSubscriptionT<T, TOwner>::operator()(const ScopedSubscriptionT<T, TOwner>& scopedSubscription) const
 {
 	return std::hash<std::unique_ptr<T>>()(scopedSubscription.subscriptionId_);
 }
@@ -318,7 +318,7 @@ inline ScopedSubscriptionHandler::ScopedSubscriptionType ScopedSubscriptionHandl
 }
 
 template <typename TCallbackFunction, typename TOwner, bool tThreadSafe>
-typename ScopedSubscriptionHandler::ScopedSubscriptionType ScopedSubscriptionCallbackHandler<TCallbackFunction, TOwner, tThreadSafe>::addCallback(TCallbackFunction callbackFunction)
+typename ScopedSubscriptionHandler::ScopedSubscriptionType ScopedSubscriptionCallbackHandlerT<TCallbackFunction, TOwner, tThreadSafe>::addCallback(TCallbackFunction callbackFunction)
 {
 	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
@@ -327,11 +327,11 @@ typename ScopedSubscriptionHandler::ScopedSubscriptionType ScopedSubscriptionCal
 	ocean_assert(callbackMap_.find(subscriptionId) == callbackMap_.cend());
 	callbackMap_.emplace(subscriptionId, std::move(callbackFunction));
 
-	return scopedSubscription(subscriptionId, std::bind(&ScopedSubscriptionCallbackHandler<TCallbackFunction, TOwner, tThreadSafe>::removeCallback, this, std::placeholders::_1));
+	return scopedSubscription(subscriptionId, std::bind(&ScopedSubscriptionCallbackHandlerT<TCallbackFunction, TOwner, tThreadSafe>::removeCallback, this, std::placeholders::_1));
 }
 
 template <typename TCallbackFunction, typename TOwner, bool tThreadSafe>
-size_t ScopedSubscriptionCallbackHandler<TCallbackFunction, TOwner, tThreadSafe>::subscriptions() const
+size_t ScopedSubscriptionCallbackHandlerT<TCallbackFunction, TOwner, tThreadSafe>::subscriptions() const
 {
 	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
@@ -339,7 +339,7 @@ size_t ScopedSubscriptionCallbackHandler<TCallbackFunction, TOwner, tThreadSafe>
 }
 
 template <typename TCallbackFunction, typename TOwner, bool tThreadSafe>
-bool ScopedSubscriptionCallbackHandler<TCallbackFunction, TOwner, tThreadSafe>::isEmpty() const
+bool ScopedSubscriptionCallbackHandlerT<TCallbackFunction, TOwner, tThreadSafe>::isEmpty() const
 {
 	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
@@ -348,7 +348,7 @@ bool ScopedSubscriptionCallbackHandler<TCallbackFunction, TOwner, tThreadSafe>::
 
 template <typename TCallbackFunction, typename TOwner, bool tThreadSafe>
 template <class... TArgs>
-typename TCallbackFunction::result_type ScopedSubscriptionCallbackHandler<TCallbackFunction, TOwner, tThreadSafe>::callCallbacks(TArgs&& ... args)
+typename TCallbackFunction::result_type ScopedSubscriptionCallbackHandlerT<TCallbackFunction, TOwner, tThreadSafe>::callCallbacks(TArgs&& ... args)
 {
 	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 
@@ -370,7 +370,7 @@ typename TCallbackFunction::result_type ScopedSubscriptionCallbackHandler<TCallb
 }
 
 template <typename TCallbackFunction, typename TOwner, bool tThreadSafe>
-void ScopedSubscriptionCallbackHandler<TCallbackFunction, TOwner, tThreadSafe>::removeCallback(const unsigned int& subscriptionId)
+void ScopedSubscriptionCallbackHandlerT<TCallbackFunction, TOwner, tThreadSafe>::removeCallback(const unsigned int& subscriptionId)
 {
 	const TemplatedScopedLock<tThreadSafe> scopedLock(lock_);
 

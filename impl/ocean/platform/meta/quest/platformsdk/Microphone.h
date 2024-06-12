@@ -50,21 +50,21 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Microphone :
 		 * @param elements The elements of the sample, must be valid
 		 * @param size The number of elements in the sample, with range [1, infinity)
 		 */
-		typedef std::function<void(const int16_t* elements, const size_t size)> SampleCallback;
+		using SampleCallback = std::function<void(const int16_t* elements, const size_t size)>;
 
 		/**
 		 * Definition of a subscription object for microphone samples.
 		 * The subscription exists as long as this object exists.<br>
 		 * The microphone will be stopped once the last subscription object is disposed.
 		 */
-		typedef ScopedSubscription<unsigned int, Microphone> ScopedSubscription;
+		using ScopedSubscription = ScopedSubscriptionT<unsigned int, Microphone>;
 
 	protected:
 
 		/**
 		 * Definition of a map mapping subscription ids to callback functions for microphone samples.
 		 */
-		typedef std::unordered_map<unsigned int, SampleCallback> SampleCallbackMap;
+		using SampleCallbackMap = std::unordered_map<unsigned int, SampleCallback>;
 
 	public:
 

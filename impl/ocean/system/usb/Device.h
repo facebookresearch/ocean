@@ -54,7 +54,7 @@ class OCEAN_SYSTEM_USB_EXPORT Device
 		/**
 		 * Definition of a scoped subscription object.
 		 */
-		using ScopedSubscription = ScopedSubscription<int, Device>;
+		using ScopedSubscription = ScopedSubscriptionT<int, Device>;
 
 	protected:
 

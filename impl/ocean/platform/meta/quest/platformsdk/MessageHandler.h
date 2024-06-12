@@ -44,7 +44,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT MessageHandler
 
 		/**
 		 * This class implements a scoped handle for options.
-		 * The class is a helper class to ensure that options are always destoyed after usage.
+		 * The class is a helper class to ensure that options are always destroyed after usage.
 		 * @tparam T The data type of the option
 		 */
 		template <typename T>
@@ -55,7 +55,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT MessageHandler
 				/**
 				 * Definition of a function pointer to a function destroying the object.
 				 */
-				typedef void(*DestroyFunction)(T object);
+				using DestroyFunction = void(*)(T object);
 
 			public:
 
@@ -163,7 +163,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT MessageHandler
 			public:
 
 				/**
-				 * Default contructor.
+				 * Default constructor.
 				 */
 				RequestQueue() = default;
 
@@ -198,7 +198,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT MessageHandler
 		 * @param message The response message, must be valid
 		 * @param succeeded True, if the message succeeded; False, if an error happened
 		 */
-		typedef std::function<void(ovrMessage* message, bool succeeded)> ResponseCallback;
+		using ResponseCallback = std::function<void(ovrMessage* message, bool succeeded)>;
 
 		/**
 		 * Definition of a member callback function for message responses.
@@ -212,12 +212,12 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT MessageHandler
 		/**
 		 * Definition of a scoped subscription object for messages.
 		 */
-		typedef ScopedSubscription<unsigned int, MessageHandler> MessageScopedSubscription;
+		using MessageScopedSubscription = ScopedSubscriptionT<unsigned int, MessageHandler>;
 
 		/**
 		 * Definition of a vector holding MessageScopedSubscription objects.
 		 */
-		typedef std::vector<MessageScopedSubscription> MessageScopedSubscriptions;
+		using MessageScopedSubscriptions = std::vector<MessageScopedSubscription>;
 
 	public:
 

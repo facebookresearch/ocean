@@ -292,7 +292,7 @@ class OCEAN_MEDIA_EXPORT FrameMedium : virtual public Medium
 		/**
 		 * Definition of a thread-safe subscription handler for frame callback functions.
 		 */
-		typedef ScopedSubscriptionCallbackHandler<FrameCallbackFunction, FrameMedium, true> FrameCallbackHandler;
+		typedef ScopedSubscriptionCallbackHandlerT<FrameCallbackFunction, FrameMedium, true> FrameCallbackHandler;
 
 	protected:
 

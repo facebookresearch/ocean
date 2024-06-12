@@ -89,19 +89,19 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Network :
 		/**
 		 * Definition of a subscription object for connection requests.
 		 */
-		typedef ScopedSubscription<unsigned int, Network> ConnectionScopedSubscription;
+		using ConnectionScopedSubscription = ScopedSubscriptionT<unsigned int, Network>;
 
 		/**
 		 * Definition of a subscription object for a received data.
 		 */
-		typedef ScopedSubscription<unsigned int, Network> ReceiveScopedSubscription;
+		using ReceiveScopedSubscription = ScopedSubscriptionT<unsigned int, Network>;
 
 	protected:
 
 		/**
 		 * Definition of an unordered map mapping subscription ids to connection callback functions.
 		 */
-		typedef std::unordered_map<unsigned int, ConnectionCallbackFunction> ConnectionCallbackFunctionMap;
+		using ConnectionCallbackFunctionMap = std::unordered_map<unsigned int, ConnectionCallbackFunction>;
 
 		/**
 		 * Definition of individual data purpose types.
@@ -112,7 +112,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Network :
 			PT_UNKNOWN  = 0u,
 			/// The data contains a package.
 			PT_PACKAGE,
-			/// The data contains an acknowledgement.
+			/// The data contains an acknowledgment.
 			PT_ACKNOWLEDGEMENT
 		};
 
@@ -130,9 +130,9 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Network :
 		};
 
 		/**
-		 * Definition of an unordered map mapping component ids to paris of subscription ids and receive data callback functions.
+		 * Definition of an unordered map mapping component ids to pairs of subscription ids and receive data callback functions.
 		 */
-		typedef std::unordered_map<ComponentId, std::pair<unsigned int, ReceiveCallbackFunction>> ReceiveCallbackFunctionMap;
+		using ReceiveCallbackFunctionMap = std::unordered_map<ComponentId, std::pair<unsigned int, ReceiveCallbackFunction>>;
 
 		/// Definition of the maximal package size for TCP connections.
 		static constexpr size_t maximalPackageSize_ = 65000;
@@ -150,7 +150,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Network :
 		static constexpr unsigned int maximalPendingPackages_ = 12000000 / maximalPackageSize_;
 
 		/**
-		 * This class allows to separate a lage buffer (a package) into smaller chunks so that the individual chunks can be transmitted via TCP and re-assembled on the receiver side.
+		 * This class allows to separate a large buffer (a package) into smaller chunks so that the individual chunks can be transmitted via TCP and re-assembled on the receiver side.
 		 */
 		class SenderPackage
 		{
@@ -173,7 +173,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Network :
 
 				/**
 				 * Returns the pointer to the current chunk data.
-				 * @return The current cunk data
+				 * @return The current chunk data
 				 */
 				const void* currentChunkData() const;
 
@@ -273,7 +273,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Network :
 				/// The data of the package.
 				std::vector<uint8_t> packageData_;
 
-				/// The the id of the component to which this package belongs.
+				/// The id of the component to which this package belongs.
 				ComponentId componentId_ = CI_UNKNOWN;
 
 				/// Returns the size of the completed package.
@@ -289,27 +289,27 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Network :
 		/**
 		 * Definition of a queue holding sender packages.
 		 */
-		typedef std::queue<SenderPackage> SenderPackageQueue;
+		using SenderPackageQueue = std::queue<SenderPackage>;
 
 		/**
 		 * Definition of a pair combining a user id with a package id.
 		 */
-		typedef std::pair<uint64_t, uint32_t> SenderPackagePair;
+		using SenderPackagePair = std::pair<uint64_t, uint32_t>;
 
 		/**
 		 * Definition of a map mapping pairs of user ids and package ids to receiver packages.
 		 */
-		typedef std::map<SenderPackagePair, ReceiverPackage> ReceiverPackageMap;
+		using ReceiverPackageMap = std::map<SenderPackagePair, ReceiverPackage>;
 
 		/**
-		 * Definition of an unordered map mapping user ids to pendering package counters.
+		 * Definition of an unordered map mapping user ids to pending package counters.
 		 */
-		typedef std::unordered_map<uint64_t, unsigned int> PendingPackageCounterMap;
+		using PendingPackageCounterMap = std::unordered_map<uint64_t, unsigned int>;
 
 	public:
 
 		/**
-		 * Activates the automatic connection acceptance for all connections comming from users in the current room.
+		 * Activates the automatic connection acceptance for all connections coming from users in the current room.
 		 * @return True, if succeeded
 		 */
 		bool acceptAllConnectionsForCurrentRoom();
@@ -346,7 +346,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Network :
 		/**
 		 * Sends data to all users in the current room via TCP.
 		 * @param componentId The id of the component from which the data was sent
-		 * @param data The data to send, can have arbitary size
+		 * @param data The data to send, can have arbitrary size
 		 * @return True, if succeeded
 		 */
 		bool sendToRoomTCP(const ComponentId componentId, std::vector<uint8_t>&& data);
@@ -365,7 +365,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Network :
 		 * Sends data to a user via TCP.
 		 * @param receiverUserId The id of the remote user to which the data will be sent, must be valid
 		 * @param componentId The id of the component from which the data was sent
-		 * @param data The data to send, can have arbitary size
+		 * @param data The data to send, can have arbitrary size
 		 * @return True, if succeeded
 		 */
 		bool sendToUserTCP(const uint64_t receiverUserId, const ComponentId componentId, std::vector<uint8_t>&& data);
@@ -427,7 +427,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Network :
 		~Network() override;
 
 		/**
-		 * Removes a conneciton callback function.
+		 * Removes a connection callback function.
 		 * @param subscriptionId The id of the callback function to remove, must be valid
 		 */
 		void removeConnectionCallback(const unsigned int& subscriptionId);

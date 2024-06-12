@@ -35,7 +35,7 @@ class OCEAN_TEST_EXPORT TestDataManager : public Singleton<TestDataManager>
 		/**
 		 * Definition of a scoped subscription object for for data collections.
 		 */
-		using ScopedSubscription = ScopedSubscription<std::string, TestDataManager>;
+		using ScopedSubscription = ScopedSubscriptionT<std::string, TestDataManager>;
 
 		/**
 		 * Definition of a vector holding scoped subscription objects.

@@ -46,7 +46,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Multiplayer :
 		/**
 		 * Definition of a subscription object for an active GroupPresence configuration.
 		 */
-		typedef ScopedSubscription<bool, Multiplayer> ScopedGroupPresence;
+		using ScopedGroupPresence = ScopedSubscriptionT<bool, Multiplayer>;
 
 		/**
 		 * This class holds the relevant information of a received join intent.
@@ -95,7 +95,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Multiplayer :
 		 * Sets the current GroupPresence and activates it (sets it as joinable).
 		 * The group presence will be set and will be active until the scoped group presence object of the resulting future exists.<br>
 		 * Only one active group presence can be set at the same time.
-		 * @param destinationApiName The name of the destiation API, must be valid
+		 * @param destinationApiName The name of the destination API, must be valid
 		 * @param lobbySessionId The lobby session id to set, can be empty
 		 * @param matchSessionId The lobby session id to set, can be empty
 		 */
@@ -220,7 +220,7 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Multiplayer :
 		/// The promise for an active group presence configuration.
 		std::promise<ScopedGroupPresence> setGroupPresenceRequestPromise_;
 
-		/// The promise for launch invite planel responses.
+		/// The promise for launch invite panel responses.
 		std::optional<std::promise<bool>> launchInvitePanelRequestPromise_;
 
 		/// True, if currently a group presence configuration is active.
