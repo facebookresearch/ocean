@@ -26,6 +26,10 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
         endif()
     endif()
 
+    if (LINUX)
+        find_package(OpenGL REQUIRED)
+    endif()
+
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
 
@@ -80,6 +84,10 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
 
     if (ANDROID)
         target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC "-lGLESv3")
+    endif()
+
+    if (LINUX)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC OpenGL::GL)
     endif()
 
     # Installation
