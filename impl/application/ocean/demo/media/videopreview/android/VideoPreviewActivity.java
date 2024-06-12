@@ -14,6 +14,7 @@ import com.meta.ocean.platform.android.application.*;
 import com.meta.ocean.rendering.glescenegraph.RenderingGLESceneGraphJni;
 
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
@@ -30,6 +31,10 @@ public class VideoPreviewActivity extends Activity
 		System.loadLibrary("OceanDemoMediaVideoPreview");
 	}
 
+	/**
+	 * Called when the activity is starting.
+	 */
+	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
@@ -48,14 +53,41 @@ public class VideoPreviewActivity extends Activity
 		setContentView(viewObject);
 
 		requestPermissions(new String[]{"android.permission.CAMERA"}, 0);
+	}
 
-		GLFrameView.setFrameMedium("LiveVideoId:0", "LIVE_VIDEO", 1280, 720, true);
+	/**
+	 * Callback for the result from requesting permissions.
+	 */
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+	{
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+		for (int i = 0; i < permissions.length; ++i)
+		{
+			if (permissions[i].equals("android.permission.CAMERA"))
+			{
+				if (grantResults[i] == PackageManager.PERMISSION_GRANTED)
+				{
+					BaseJni.information("The app has permission to access the camera");
+
+					// use a different url to use a different camera (e.g., "LiveVideoId:1")
+
+					GLFrameView.setFrameMedium("LiveVideoId:0", "LIVE_VIDEO", 1280, 720, true);
+				}
+				else
+				{
+					BaseJni.warning("The app does not have permission to access the camera");
+				}
+			}
+		}
 	}
 
 	/**
 	 * Called after onRestoreInstanceState(Bundle), onRestart(), or onPause(), for your activity to start interacting with the user.
 	 * This is a good place to begin animations, open exclusive-access devices.
 	 */
+	@Override
 	public void onResume()
 	{
 		super.onResume();
@@ -69,6 +101,7 @@ public class VideoPreviewActivity extends Activity
 	 * Called as part of the activity lifecycle when an activity is going into the background,
 	 * but has not (yet) been killed. The counterpart to onResume().
 	 */
+	@Override
 	public void onPause()
 	{
 		MediaAndroidJni.releaseResources();
@@ -81,6 +114,7 @@ public class VideoPreviewActivity extends Activity
 	 * Called when you are no longer visible to the user.
 	 * You will next receive either onRestart(), onDestroy(), or nothing, depending on later user activity.
 	 */
+	@Override
 	public void onStop()
 	{
 		MediaAndroidJni.releaseResources();
@@ -91,6 +125,10 @@ public class VideoPreviewActivity extends Activity
 		Log.i(getClass().getSimpleName(), "onStop");
 	}
 
+	/**
+	 * Perform any final cleanup before an activity is destroyed
+	 */
+	@Override
 	protected void onDestroy()
 	{
 		MediaAndroidJni.releaseResources();
