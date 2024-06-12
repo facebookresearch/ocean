@@ -17,6 +17,11 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     find_package(TIFF REQUIRED)
     #find_package(WEBP REQUIRED)  # Not yet available
 
+    if (LINUX)
+        # Required by libtiff
+        find_package(LibLZMA REQUIRED)
+    endif()
+
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/*.cpp")
@@ -25,6 +30,10 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     add_library(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
 
     target_include_directories(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_IMPL_DIR})
+
+    if (LINUX)
+        target_include_directories(${OCEAN_TARGET_NAME} PUBLIC ${LIBLZMA_INCLUDE_DIRS})
+    endif()
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
 
@@ -60,6 +69,10 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             TIFF::TIFF
             # WEBP::WEBP  # Not yet available
     )
+
+    if (LINUX)
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${LIBLZMA_LIBRARIES})
+    endif()
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
