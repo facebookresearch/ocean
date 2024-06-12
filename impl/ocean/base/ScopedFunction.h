@@ -21,31 +21,31 @@ namespace Ocean
  * @ingroup base
  */
 template <typename T>
-class ScopedFunction
+class ScopedFunctionT
 {
 	public:
 
 		/**
 		 * Creates an object without function.
 		 */
-		ScopedFunction() = default;
+		ScopedFunctionT() = default;
 
 		/**
 		 * Creates a new object with a given function.
 		 * @param function The function to be invoked once this object is disposed
 		 */
-		explicit ScopedFunction(T&& function);
+		explicit ScopedFunctionT(T&& function) noexcept;
 
 		/**
 		 * Move constructor.
 		 * @param scopedFunction Object to be moved
 		 */
-		ScopedFunction(ScopedFunction<T>&& scopedFunction);
+		ScopedFunctionT(ScopedFunctionT<T>&& scopedFunction) noexcept;
 
 		/**
 		 * Destructs this object and invoked the function if this object holds function.
 		 */
-		~ScopedFunction();
+		~ScopedFunctionT();
 
 		/**
 		 * Explicitly released this object.
@@ -64,20 +64,20 @@ class ScopedFunction
 		 * @param scopedFunction The object to be moved
 		 * @return Reference to this object
 		 */
-		ScopedFunction& operator=(ScopedFunction<T>&& scopedFunction);
+		ScopedFunctionT& operator=(ScopedFunctionT<T>&& scopedFunction) noexcept;
 
 	protected:
 
 		/**
 		 * Disabled copy constructor.
 		 */
-		ScopedFunction(const ScopedFunction&) = delete;
+		ScopedFunctionT(const ScopedFunctionT&) = delete;
 
 		/**
 		 * Disabled assign operator.
 		 * @return Reference to this object
 		 */
-		ScopedFunction<T>& operator=(const ScopedFunction&) = delete;
+		ScopedFunctionT<T>& operator=(const ScopedFunctionT&) = delete;
 
 	protected:
 
@@ -89,29 +89,29 @@ class ScopedFunction
  * Definition of a scoped function with void return parameter.
  * @ingroup base
  */
-typedef ScopedFunction<std::function<void()>> ScopedFunctionVoid;
+typedef ScopedFunctionT<std::function<void()>> ScopedFunctionVoid;
 
 template <typename T>
-ScopedFunction<T>::ScopedFunction(T&& function) :
+ScopedFunctionT<T>::ScopedFunctionT(T&& function) noexcept :
 	function_(std::move(function))
 {
 	// nothing to do here
 }
 
 template <typename T>
-ScopedFunction<T>::ScopedFunction(ScopedFunction<T>&& scopedFunction)
+ScopedFunctionT<T>::ScopedFunctionT(ScopedFunctionT<T>&& scopedFunction) noexcept
 {
 	*this = std::move(scopedFunction);
 }
 
 template <typename T>
-ScopedFunction<T>::~ScopedFunction()
+ScopedFunctionT<T>::~ScopedFunctionT()
 {
 	release();
 }
 
 template <typename T>
-void ScopedFunction<T>::release()
+void ScopedFunctionT<T>::release()
 {
 	if (function_)
 	{
@@ -122,13 +122,13 @@ void ScopedFunction<T>::release()
 }
 
 template <typename T>
-void ScopedFunction<T>::revoke()
+void ScopedFunctionT<T>::revoke()
 {
 	function_ = T();
 }
 
 template <typename T>
-ScopedFunction<T>& ScopedFunction<T>::operator=(ScopedFunction<T>&& scopedFunction)
+ScopedFunctionT<T>& ScopedFunctionT<T>::operator=(ScopedFunctionT<T>&& scopedFunction) noexcept
 {
 	if (this != &scopedFunction)
 	{
