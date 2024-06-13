@@ -54,3 +54,30 @@ jobs:
             -c ${{ matrix.build_config }} \
             -l ${{ env.OCEAN_LINK_TYPE }} \
             -t ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
+
+      - name: Upload build artifacts
+        if: success() && !matrix.build_config == 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ocean-build
+          path: ${{ env.OCEAN_BUILD_PATH }}
+
+  test:
+    name: Test Linux build (release, static)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download build artifacts
+        id: download-build-artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ocean-build
+          path: ${{ env.OCEAN_BUILD_PATH }}
+
+      - name: Run tests
+        run: |
+          cd ${{ env.OCEAN_BUILD_PATH }}/static_Release
+          # We don't need to repopulate the install directory, since it's a static build, but we will get errors if it doesn't exist
+          mkdir ${{ env.OCEAN_INSTALL_PATH }}/static_Release
+          ctest
