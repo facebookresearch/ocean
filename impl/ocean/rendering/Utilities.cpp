@@ -1273,6 +1273,71 @@ TransformRef Utilities::createLines(const Engine& engine, const Vectors3& vertic
 	return TransformRef();
 }
 
+TransformRef Utilities::createLines(const Engine& engine, const Vector3* points, const Vector3* normals, const size_t size, const Scalar scale, const RGBAColor& emissiveColor, MaterialRef* material, VertexSetRef* vertexSet)
+{
+	ocean_assert(points != nullptr && normals != nullptr);
+	ocean_assert(size > 0);
+	ocean_assert(emissiveColor.isValid());
+
+	try
+	{
+		Vectors3 vertices;
+		vertices.reserve(size * 2);
+
+		for (size_t n = 0; n < size; ++n)
+		{
+			vertices.emplace_back(points[n]);
+			vertices.emplace_back(points[n] + normals[n] * scale);
+		}
+
+		VertexSetRef internalVertexSet = engine.factory().createVertexSet();
+		internalVertexSet->setVertices(vertices);
+
+		const LinesRef internalLines = engine.factory().createLines();
+		internalLines->setVertexSet(internalVertexSet);
+		internalLines->setIndices((unsigned int)(vertices.size()));
+
+		const GeometryRef internalGeometry = engine.factory().createGeometry();
+
+		Rendering::AttributeSetRef attributeSet = engine.factory().createAttributeSet();
+
+		const MaterialRef internalMaterial = engine.factory().createMaterial();
+		internalMaterial->setDiffuseColor(RGBAColor(0, 0, 0));
+		internalMaterial->setEmissiveColor(emissiveColor);
+		internalMaterial->setTransparency(1.0f - emissiveColor.alpha());
+
+		if (internalMaterial->transparency() != 0.0f)
+		{
+			attributeSet->addAttribute(engine.factory().createBlendAttribute());
+		}
+
+		attributeSet->addAttribute(internalMaterial);
+
+		if (material != nullptr)
+		{
+			*material = internalMaterial;
+		}
+
+		internalGeometry->addRenderable(internalLines, std::move(attributeSet));
+
+		const TransformRef transform = engine.factory().createTransform();
+		transform->addChild(internalGeometry);
+
+		if (vertexSet != nullptr)
+		{
+			*vertexSet = std::move(internalVertexSet);
+		}
+
+		return transform;
+	}
+	catch (...)
+	{
+		// nothing to do here
+	}
+
+	return TransformRef();
+}
+
 AttributeSetRef Utilities::findAttributeSet(const NodeRef& node)
 {
 	if (node.isNull())

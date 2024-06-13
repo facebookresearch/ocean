@@ -286,6 +286,20 @@ class OCEAN_RENDERING_EXPORT Utilities
 		static TransformRef createLines(const Engine& engine, const Vectors3& vertices, const TriangleFaces& triangleFaces, const RGBAColor& emissiveColor, const RGBAColors& colorsPerVertex = RGBAColors(), MaterialRef* material = nullptr, AttributeSetRef* attributeSet = nullptr, LinesRef* lines = nullptr, VertexSetRef* vertexSet = nullptr);
 
 		/**
+		 * Returns a Transform holding a geometry with lines (normals for given points).
+		 * @param engine Rendering engine to be used
+		 * @param points The starting points where the normals will start, at least one
+		 * @param normals The normal vectors, one for each point
+		 * @param size The number of points (and normals), with range [1, infinity)
+		 * @param scale The scale which will be applied to each normal (allowing to control the length of the normals), with range (-infinity, infinity)
+		 * @param emissiveColor The emissiveColor of all normals, can be transparent
+		 * @param material Optional resulting Material node
+		 * @param vertexSet Optional result vertex set object which holds the vertices of the 3D normals, two vertices for each normal
+		 * @return The Transform node holding the normals
+		 */
+		static TransformRef createLines(const Engine& engine, const Vector3* points, const Vector3* normals, const size_t size, const Scalar scale, const RGBAColor& emissiveColor, MaterialRef* material = nullptr, VertexSetRef* vertexSet = nullptr);
+
+		/**
 		 * Returns the first attribute set object that is located in a given node tree.
 		 * @param node The node defining the root of the tree in that the attribute set is located
 		 * @return First attribute set object that can be found
