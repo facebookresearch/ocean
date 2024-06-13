@@ -5,13 +5,16 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(application)
-add_subdirectory(openxr)
-add_subdirectory(platformsdk)
-
 if (ANDROID)
 
-    set(OCEAN_TARGET_NAME "ocean_platform_meta_quest")
+    set(OCEAN_TARGET_NAME "ocean_platform_meta_quest_platformsdk")
+
+    find_package(OVRPlatformSDK QUIET)
+
+    if (NOT OVRPlatformSDK_FOUND)
+        message(STATUS "Excluding '${OCEAN_TARGET_NAME}' from build because Oculus (OVR) Platform SDK wasn't found.")
+        return()
+    endif()
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/*.h")
@@ -20,7 +23,7 @@ if (ANDROID)
     # Target definition
     add_library(${OCEAN_TARGET_NAME} ${OCEAN_TARGET_SOURCE_FILES} ${OCEAN_TARGET_HEADER_FILES})
 
-    target_include_directories(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_IMPL_DIR}")
+    target_include_directories(${OCEAN_TARGET_NAME} PUBLIC "${OVRPlatformSDK_INCLUDE_DIR}" "${OCEAN_IMPL_DIR}")
 
     target_compile_definitions(${OCEAN_TARGET_NAME} PUBLIC ${OCEAN_PREPROCESSOR_FLAGS})
 
@@ -29,9 +32,9 @@ if (ANDROID)
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
-            ocean_platform
-        PRIVATE
-            ocean_platform_android
+            ocean_base
+            ocean_platform_meta_quest
+            OVRPlatformSDK::OVRPlatformSDK
     )
 
     # Installation
@@ -41,7 +44,7 @@ if (ANDROID)
     )
 
     install(FILES ${OCEAN_TARGET_HEADER_FILES}
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/platform/meta/quest
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ocean/platform/meta/quest/platformsdk
             COMPONENT include
     )
 
