@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef META_OCEAN_TEST_TESTMATH_TEST_SCALAR_AUTOMATIC_DIFFERENTIATION_H
-#define META_OCEAN_TEST_TESTMATH_TEST_SCALAR_AUTOMATIC_DIFFERENTIATION_H
+#ifndef META_OCEAN_TEST_TESTMATH_TEST_AUTOMATIC_DIFFERENTIATION_H
+#define META_OCEAN_TEST_TESTMATH_TEST_AUTOMATIC_DIFFERENTIATION_H
 
 #include "ocean/test/testmath/TestMath.h"
 
@@ -23,7 +23,7 @@ namespace TestMath
  * This class implements a test for the automatic differentiation functionalities.
  * @ingroup testmath
  */
-class OCEAN_TEST_MATH_EXPORT TestScalarAutomaticDifferentiation
+class OCEAN_TEST_MATH_EXPORT TestAutomaticDifferentiation
 {
 	public:
 
@@ -86,4 +86,4 @@ class OCEAN_TEST_MATH_EXPORT TestScalarAutomaticDifferentiation
 
 }
 
-#endif // META_OCEAN_TEST_TESTMATH_TEST_SCALAR_AUTOMATIC_DIFFERENTIATION_H
+#endif // META_OCEAN_TEST_TESTMATH_TEST_AUTOMATIC_DIFFERENTIATION_H

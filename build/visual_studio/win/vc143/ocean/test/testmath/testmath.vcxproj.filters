@@ -146,7 +146,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVariance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestScalarAutomaticDifferentiation.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestAutomaticDifferentiation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -286,7 +286,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVariance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestScalarAutomaticDifferentiation.h">
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestAutomaticDifferentiation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

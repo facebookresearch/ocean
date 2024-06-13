@@ -5,14 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "ocean/test/testmath/TestScalarAutomaticDifferentiation.h"
+#include "ocean/test/testmath/TestAutomaticDifferentiation.h"
 
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
 
+#include "ocean/math/AutomaticDifferentiation.h"
 #include "ocean/math/PinholeCamera.h"
 #include "ocean/math/Pose.h"
-#include "ocean/math/ScalarAutomaticDifferentiation.h"
 #include "ocean/math/StaticMatrix.h"
 #include "ocean/math/Random.h"
 
@@ -27,7 +27,7 @@ namespace Test
 namespace TestMath
 {
 
-bool TestScalarAutomaticDifferentiation::test(const double testDuration)
+bool TestAutomaticDifferentiation::test(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -90,70 +90,70 @@ bool TestScalarAutomaticDifferentiation::test(const double testDuration)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestScalarAutomaticDifferentiation, Simple_float)
+TEST(TestAutomaticDifferentiation, Simple_float)
 {
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testSimple<float>(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestAutomaticDifferentiation::testSimple<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestScalarAutomaticDifferentiation, Simple_double)
+TEST(TestAutomaticDifferentiation, Simple_double)
 {
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testSimple<double>(GTEST_TEST_DURATION));
-}
-
-
-TEST(TestScalarAutomaticDifferentiation, Functions_float)
-{
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testFunctions<float>(GTEST_TEST_DURATION));
-}
-
-TEST(TestScalarAutomaticDifferentiation, Functions_double)
-{
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testFunctions<double>(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestAutomaticDifferentiation::testSimple<double>(GTEST_TEST_DURATION));
 }
 
 
-TEST(TestScalarAutomaticDifferentiation, Nested_float)
+TEST(TestAutomaticDifferentiation, Functions_float)
 {
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testNested<float>(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestAutomaticDifferentiation::testFunctions<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestScalarAutomaticDifferentiation, Nested_double)
+TEST(TestAutomaticDifferentiation, Functions_double)
 {
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testNested<double>(GTEST_TEST_DURATION));
-}
-
-
-TEST(TestScalarAutomaticDifferentiation, Homography_float)
-{
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testHomography<float>(GTEST_TEST_DURATION));
-}
-
-TEST(TestScalarAutomaticDifferentiation, Homography_double)
-{
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testHomography<double>(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestAutomaticDifferentiation::testFunctions<double>(GTEST_TEST_DURATION));
 }
 
 
-TEST(TestScalarAutomaticDifferentiation, Pose_float)
+TEST(TestAutomaticDifferentiation, Nested_float)
 {
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testPose<float>(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestAutomaticDifferentiation::testNested<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestScalarAutomaticDifferentiation, Pose_double)
+TEST(TestAutomaticDifferentiation, Nested_double)
 {
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testPose<double>(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestAutomaticDifferentiation::testNested<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestAutomaticDifferentiation, Homography_float)
+{
+	EXPECT_TRUE(TestAutomaticDifferentiation::testHomography<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestAutomaticDifferentiation, Homography_double)
+{
+	EXPECT_TRUE(TestAutomaticDifferentiation::testHomography<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestAutomaticDifferentiation, Pose_float)
+{
+	EXPECT_TRUE(TestAutomaticDifferentiation::testPose<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestAutomaticDifferentiation, Pose_double)
+{
+	EXPECT_TRUE(TestAutomaticDifferentiation::testPose<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
 
 template <typename T>
-bool TestScalarAutomaticDifferentiation::testSimple(const double testDuration)
+bool TestAutomaticDifferentiation::testSimple(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Testing automatic differentiation of simple functions with " << TypeNamer::name<T>() << ":";
 
-	using AutoDiff = ScalarAutomaticDifferentiationT<T>;
+	using AutoDiff = AutomaticDifferentiationT<T>;
 
 	RandomGenerator randomGenerator;
 
@@ -623,13 +623,13 @@ bool TestScalarAutomaticDifferentiation::testSimple(const double testDuration)
 }
 
 template <typename T>
-bool TestScalarAutomaticDifferentiation::testFunctions(const double testDuration)
+bool TestAutomaticDifferentiation::testFunctions(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Testing automatic differentiation of mathematic functions with " << TypeNamer::name<T>() << ":";
 
-	using AutoDiff = ScalarAutomaticDifferentiationT<T>;
+	using AutoDiff = AutomaticDifferentiationT<T>;
 
 	RandomGenerator randomGenerator;
 
@@ -951,13 +951,13 @@ bool TestScalarAutomaticDifferentiation::testFunctions(const double testDuration
 }
 
 template <typename T>
-bool TestScalarAutomaticDifferentiation::testNested(const double testDuration)
+bool TestAutomaticDifferentiation::testNested(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Testing automatic differentiation of nested functions with " << TypeNamer::name<T>() << ":";
 
-	using AutoDiff = ScalarAutomaticDifferentiationT<T>;
+	using AutoDiff = AutomaticDifferentiationT<T>;
 
 	RandomGenerator randomGenerator;
 
@@ -1113,7 +1113,7 @@ bool TestScalarAutomaticDifferentiation::testNested(const double testDuration)
 }
 
 template <typename T>
-bool TestScalarAutomaticDifferentiation::testHomography(const double testDuration)
+bool TestAutomaticDifferentiation::testHomography(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -1124,7 +1124,7 @@ bool TestScalarAutomaticDifferentiation::testHomography(const double testDuratio
 
 	Log::info() << "Testing automatic differentiation for the homography Jacobian 2x8 for " << numberPoints << " points with " << TypeNamer::name<T>() << ":";
 
-	using AutoDiff = ScalarAutomaticDifferentiationT<T>;
+	using AutoDiff = AutomaticDifferentiationT<T>;
 
 	RandomGenerator randomGenerator;
 
@@ -1257,7 +1257,7 @@ bool TestScalarAutomaticDifferentiation::testHomography(const double testDuratio
 }
 
 template <typename T>
-bool TestScalarAutomaticDifferentiation::testPose(const double testDuration)
+bool TestAutomaticDifferentiation::testPose(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -1268,7 +1268,7 @@ bool TestScalarAutomaticDifferentiation::testPose(const double testDuration)
 
 	Log::info() << "Testing automatic differentiation for the 6-DOF camera pose for " << numberPoints << " points with " << TypeNamer::name<T>() << ":";
 
-	using AutoDiff = ScalarAutomaticDifferentiationT<T>;
+	using AutoDiff = AutomaticDifferentiationT<T>;
 
 	HighPerformanceStatistic performanceAutomatic;
 

@@ -281,16 +281,16 @@
 		93FE35C12361151E00108484 /* Cone3.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FE35BD2361151E00108484 /* Cone3.h */; };
 		C09DFB751E9B86800013811D /* ClusteringSpectral.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB721E9B86800013811D /* ClusteringSpectral.h */; };
 		C09DFB761E9B86800013811D /* MathUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB731E9B86800013811D /* MathUtilities.h */; };
-		C09DFB771E9B86800013811D /* ScalarAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB741E9B86800013811D /* ScalarAutomaticDifferentiation.h */; };
+		C09DFB771E9B86800013811D /* AutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB741E9B86800013811D /* AutomaticDifferentiation.h */; };
 		C09DFB781E9B86840013811D /* ClusteringSpectral.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB721E9B86800013811D /* ClusteringSpectral.h */; };
 		C09DFB791E9B86840013811D /* ClusteringSpectral.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB721E9B86800013811D /* ClusteringSpectral.h */; };
 		C09DFB7A1E9B86850013811D /* ClusteringSpectral.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB721E9B86800013811D /* ClusteringSpectral.h */; };
 		C09DFB7B1E9B86870013811D /* MathUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB731E9B86800013811D /* MathUtilities.h */; };
 		C09DFB7C1E9B86880013811D /* MathUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB731E9B86800013811D /* MathUtilities.h */; };
 		C09DFB7D1E9B86880013811D /* MathUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB731E9B86800013811D /* MathUtilities.h */; };
-		C09DFB7E1E9B868B0013811D /* ScalarAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB741E9B86800013811D /* ScalarAutomaticDifferentiation.h */; };
-		C09DFB7F1E9B868C0013811D /* ScalarAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB741E9B86800013811D /* ScalarAutomaticDifferentiation.h */; };
-		C09DFB801E9B868D0013811D /* ScalarAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB741E9B86800013811D /* ScalarAutomaticDifferentiation.h */; };
+		C09DFB7E1E9B868B0013811D /* AutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB741E9B86800013811D /* AutomaticDifferentiation.h */; };
+		C09DFB7F1E9B868C0013811D /* AutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB741E9B86800013811D /* AutomaticDifferentiation.h */; };
+		C09DFB801E9B868D0013811D /* AutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB741E9B86800013811D /* AutomaticDifferentiation.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -368,7 +368,7 @@
 		93FE35BD2361151E00108484 /* Cone3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cone3.h; path = ../../../../../impl/ocean/math/Cone3.h; sourceTree = "<group>"; };
 		C09DFB721E9B86800013811D /* ClusteringSpectral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClusteringSpectral.h; path = ../../../../../impl/ocean/math/ClusteringSpectral.h; sourceTree = "<group>"; };
 		C09DFB731E9B86800013811D /* MathUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathUtilities.h; path = ../../../../../impl/ocean/math/MathUtilities.h; sourceTree = "<group>"; };
-		C09DFB741E9B86800013811D /* ScalarAutomaticDifferentiation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScalarAutomaticDifferentiation.h; path = ../../../../../impl/ocean/math/ScalarAutomaticDifferentiation.h; sourceTree = "<group>"; };
+		C09DFB741E9B86800013811D /* AutomaticDifferentiation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AutomaticDifferentiation.h; path = ../../../../../impl/ocean/math/AutomaticDifferentiation.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -487,7 +487,7 @@
 				9380ACA92410283E0071E691 /* RGBAColor.h */,
 				5D93710D1BC7FE510046ACD4 /* Rotation.h */,
 				933E9B43241DA1EE00489BE5 /* SampleMap.h */,
-				C09DFB741E9B86800013811D /* ScalarAutomaticDifferentiation.h */,
+				C09DFB741E9B86800013811D /* AutomaticDifferentiation.h */,
 				9372739223D91A4A00B6D90A /* SophusUtilities.h */,
 				5D93710E1BC7FE510046ACD4 /* SparseMatrix.h */,
 				5D93710F1BC7FE510046ACD4 /* Sphere3.h */,
@@ -562,7 +562,7 @@
 				5D93713D1BC7FE510046ACD4 /* SquareMatrix2.h in Headers */,
 				5D9371351BC7FE510046ACD4 /* Plane3.h in Headers */,
 				5D9371441BC7FE510046ACD4 /* Triangle3.h in Headers */,
-				C09DFB771E9B86800013811D /* ScalarAutomaticDifferentiation.h in Headers */,
+				C09DFB771E9B86800013811D /* AutomaticDifferentiation.h in Headers */,
 				5D9371331BC7FE510046ACD4 /* Matrix.h in Headers */,
 				5D9371271BC7FE510046ACD4 /* Euler.h in Headers */,
 				937570372384FA5500D3AA05 /* FisheyeCamera.h in Headers */,
@@ -625,7 +625,7 @@
 				5D9371691BC7FE5A0046ACD4 /* SquareMatrix2.h in Headers */,
 				5D9371611BC7FE5A0046ACD4 /* Plane3.h in Headers */,
 				5D9371701BC7FE5A0046ACD4 /* Triangle3.h in Headers */,
-				C09DFB7E1E9B868B0013811D /* ScalarAutomaticDifferentiation.h in Headers */,
+				C09DFB7E1E9B868B0013811D /* AutomaticDifferentiation.h in Headers */,
 				5D93715F1BC7FE5A0046ACD4 /* Matrix.h in Headers */,
 				5D9371531BC7FE5A0046ACD4 /* Euler.h in Headers */,
 				937570382384FA5500D3AA05 /* FisheyeCamera.h in Headers */,
@@ -688,7 +688,7 @@
 				5D491CF41D8F55DE00C4099B /* SquareMatrix2.h in Headers */,
 				5D491CF51D8F55DE00C4099B /* Plane3.h in Headers */,
 				5D491CF61D8F55DE00C4099B /* Triangle3.h in Headers */,
-				C09DFB7F1E9B868C0013811D /* ScalarAutomaticDifferentiation.h in Headers */,
+				C09DFB7F1E9B868C0013811D /* AutomaticDifferentiation.h in Headers */,
 				5D491CF71D8F55DE00C4099B /* Matrix.h in Headers */,
 				5D491CF81D8F55DE00C4099B /* Euler.h in Headers */,
 				9375703A2384FA5500D3AA05 /* FisheyeCamera.h in Headers */,
@@ -751,7 +751,7 @@
 				5D9862541D8B5A6400DEDB00 /* SquareMatrix2.h in Headers */,
 				5D9862551D8B5A6400DEDB00 /* Plane3.h in Headers */,
 				5D9862561D8B5A6400DEDB00 /* Triangle3.h in Headers */,
-				C09DFB801E9B868D0013811D /* ScalarAutomaticDifferentiation.h in Headers */,
+				C09DFB801E9B868D0013811D /* AutomaticDifferentiation.h in Headers */,
 				5D9862571D8B5A6400DEDB00 /* Matrix.h in Headers */,
 				5D9862581D8B5A6400DEDB00 /* Euler.h in Headers */,
 				937570392384FA5500D3AA05 /* FisheyeCamera.h in Headers */,

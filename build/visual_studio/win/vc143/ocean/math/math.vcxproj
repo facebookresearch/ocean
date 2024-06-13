@@ -221,7 +221,7 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\Euler.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\ExponentialMap.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\MathUtilities.h" />
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\ScalarAutomaticDifferentiation.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\AutomaticDifferentiation.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\SophusUtilities.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\SphericalExponentialMap.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\FiniteLine2.h" />

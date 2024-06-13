@@ -297,14 +297,14 @@
 		93FE35C92361155000108484 /* TestCone3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FE35C72361154F00108484 /* TestCone3.cpp */; };
 		93FE35CA2361155000108484 /* TestCone3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FE35C72361154F00108484 /* TestCone3.cpp */; };
 		93FE35CB2361155000108484 /* TestCone3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FE35C72361154F00108484 /* TestCone3.cpp */; };
-		C09DFB631E9B83D30013811D /* TestScalarAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB621E9B83D30013811D /* TestScalarAutomaticDifferentiation.h */; };
-		C09DFB641E9B83DB0013811D /* TestScalarAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB621E9B83D30013811D /* TestScalarAutomaticDifferentiation.h */; };
-		C09DFB651E9B83DB0013811D /* TestScalarAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB621E9B83D30013811D /* TestScalarAutomaticDifferentiation.h */; };
-		C09DFB661E9B83DB0013811D /* TestScalarAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB621E9B83D30013811D /* TestScalarAutomaticDifferentiation.h */; };
-		C09DFB681E9B83EE0013811D /* TestScalarAutomaticDifferentiation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09DFB671E9B83EE0013811D /* TestScalarAutomaticDifferentiation.cpp */; };
-		C09DFB691E9B83F00013811D /* TestScalarAutomaticDifferentiation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09DFB671E9B83EE0013811D /* TestScalarAutomaticDifferentiation.cpp */; };
-		C09DFB6A1E9B83F00013811D /* TestScalarAutomaticDifferentiation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09DFB671E9B83EE0013811D /* TestScalarAutomaticDifferentiation.cpp */; };
-		C09DFB6B1E9B83F10013811D /* TestScalarAutomaticDifferentiation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09DFB671E9B83EE0013811D /* TestScalarAutomaticDifferentiation.cpp */; };
+		C09DFB631E9B83D30013811D /* TestAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB621E9B83D30013811D /* TestAutomaticDifferentiation.h */; };
+		C09DFB641E9B83DB0013811D /* TestAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB621E9B83D30013811D /* TestAutomaticDifferentiation.h */; };
+		C09DFB651E9B83DB0013811D /* TestAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB621E9B83D30013811D /* TestAutomaticDifferentiation.h */; };
+		C09DFB661E9B83DB0013811D /* TestAutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB621E9B83D30013811D /* TestAutomaticDifferentiation.h */; };
+		C09DFB681E9B83EE0013811D /* TestAutomaticDifferentiation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09DFB671E9B83EE0013811D /* TestAutomaticDifferentiation.cpp */; };
+		C09DFB691E9B83F00013811D /* TestAutomaticDifferentiation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09DFB671E9B83EE0013811D /* TestAutomaticDifferentiation.cpp */; };
+		C09DFB6A1E9B83F00013811D /* TestAutomaticDifferentiation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09DFB671E9B83EE0013811D /* TestAutomaticDifferentiation.cpp */; };
+		C09DFB6B1E9B83F10013811D /* TestAutomaticDifferentiation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09DFB671E9B83EE0013811D /* TestAutomaticDifferentiation.cpp */; };
 		C0E9B13B1DACEF1400895C4B /* TestPinholeCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2811BAB379B0000B274 /* TestPinholeCamera.cpp */; };
 		C0E9B13C1DACEF1400895C4B /* TestLine3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2871BAB379B0000B274 /* TestLine3.cpp */; };
 		C0E9B13D1DACEF1400895C4B /* TestBox2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A27F1BAB379B0000B274 /* TestBox2.cpp */; };
@@ -469,8 +469,8 @@
 		93EE70C920B5F52C006E342E /* TestFourierTransformation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFourierTransformation.cpp; path = ../../../../../../impl/ocean/test/testmath/TestFourierTransformation.cpp; sourceTree = "<group>"; };
 		93FE35C22361153E00108484 /* TestCone3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestCone3.h; path = ../../../../../../impl/ocean/test/testmath/TestCone3.h; sourceTree = "<group>"; };
 		93FE35C72361154F00108484 /* TestCone3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCone3.cpp; path = ../../../../../../impl/ocean/test/testmath/TestCone3.cpp; sourceTree = "<group>"; };
-		C09DFB621E9B83D30013811D /* TestScalarAutomaticDifferentiation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestScalarAutomaticDifferentiation.h; path = ../../../../../../impl/ocean/test/testmath/TestScalarAutomaticDifferentiation.h; sourceTree = "<group>"; };
-		C09DFB671E9B83EE0013811D /* TestScalarAutomaticDifferentiation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestScalarAutomaticDifferentiation.cpp; path = ../../../../../../impl/ocean/test/testmath/TestScalarAutomaticDifferentiation.cpp; sourceTree = "<group>"; };
+		C09DFB621E9B83D30013811D /* TestAutomaticDifferentiation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAutomaticDifferentiation.h; path = ../../../../../../impl/ocean/test/testmath/TestAutomaticDifferentiation.h; sourceTree = "<group>"; };
+		C09DFB671E9B83EE0013811D /* TestAutomaticDifferentiation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAutomaticDifferentiation.cpp; path = ../../../../../../impl/ocean/test/testmath/TestAutomaticDifferentiation.cpp; sourceTree = "<group>"; };
 		C0E9B17F1DACEF1400895C4B /* libOceanTestMathD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestMathD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0F6E5CD1E1E92AB00F90052 /* TestSparseMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSparseMatrix.h; path = ../../../../../../impl/ocean/test/testmath/TestSparseMatrix.h; sourceTree = "<group>"; };
 		C0F6E5CF1E1E92BD00F90052 /* TestSparseMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSparseMatrix.cpp; path = ../../../../../../impl/ocean/test/testmath/TestSparseMatrix.cpp; sourceTree = "<group>"; };
@@ -545,7 +545,7 @@
 				938A389A276EB2D600DC5251 /* TestRGBAColor.h */,
 				5DB3A2C51BAB37AB0000B274 /* TestRotation.h */,
 				933E9B4D241DA2DA00489BE5 /* TestSampleMap.h */,
-				C09DFB621E9B83D30013811D /* TestScalarAutomaticDifferentiation.h */,
+				C09DFB621E9B83D30013811D /* TestAutomaticDifferentiation.h */,
 				C0F6E5CD1E1E92AB00F90052 /* TestSparseMatrix.h */,
 				5DB3A2C61BAB37AB0000B274 /* TestSphere3.h */,
 				5DB3A2C71BAB37AB0000B274 /* TestSquareMatrix2.h */,
@@ -618,7 +618,7 @@
 				938A389F276EB2EB00DC5251 /* TestRGBAColor.cpp */,
 				5DB3A28F1BAB379B0000B274 /* TestRotation.cpp */,
 				933E9B48241DA2CC00489BE5 /* TestSampleMap.cpp */,
-				C09DFB671E9B83EE0013811D /* TestScalarAutomaticDifferentiation.cpp */,
+				C09DFB671E9B83EE0013811D /* TestAutomaticDifferentiation.cpp */,
 				C0F6E5CF1E1E92BD00F90052 /* TestSparseMatrix.cpp */,
 				5DB3A2901BAB379B0000B274 /* TestSphere3.cpp */,
 				5DB3A2911BAB379B0000B274 /* TestSquareMatrix2.cpp */,
@@ -673,7 +673,7 @@
 				5D9370D81BC6D19C0046ACD4 /* TestApproximation.h in Headers */,
 				5D9370D91BC6D19C0046ACD4 /* TestEquation.h in Headers */,
 				5D9370DA1BC6D19C0046ACD4 /* TestPlane3.h in Headers */,
-				C09DFB641E9B83DB0013811D /* TestScalarAutomaticDifferentiation.h in Headers */,
+				C09DFB641E9B83DB0013811D /* TestAutomaticDifferentiation.h in Headers */,
 				9314E8592A61F67E006024E9 /* TestHSVAColor.h in Headers */,
 				5D9370DB1BC6D19C0046ACD4 /* TestSquareMatrix2.h in Headers */,
 				5D9370DC1BC6D19C0046ACD4 /* TestSquareMatrix4.h in Headers */,
@@ -726,7 +726,7 @@
 				5DB3A2CD1BAB37AB0000B274 /* TestApproximation.h in Headers */,
 				5DB3A2D31BAB37AB0000B274 /* TestEquation.h in Headers */,
 				5DB3A2DE1BAB37AB0000B274 /* TestPlane3.h in Headers */,
-				C09DFB631E9B83D30013811D /* TestScalarAutomaticDifferentiation.h in Headers */,
+				C09DFB631E9B83D30013811D /* TestAutomaticDifferentiation.h in Headers */,
 				9314E8582A61F67E006024E9 /* TestHSVAColor.h in Headers */,
 				5DB3A2E21BAB37AB0000B274 /* TestSquareMatrix2.h in Headers */,
 				5DB3A2E41BAB37AB0000B274 /* TestSquareMatrix4.h in Headers */,
@@ -779,7 +779,7 @@
 				5DD14ADF1D953FE100CCA9F0 /* TestApproximation.h in Headers */,
 				5DD14AE01D953FE100CCA9F0 /* TestEquation.h in Headers */,
 				5DD14AE11D953FE100CCA9F0 /* TestPlane3.h in Headers */,
-				C09DFB651E9B83DB0013811D /* TestScalarAutomaticDifferentiation.h in Headers */,
+				C09DFB651E9B83DB0013811D /* TestAutomaticDifferentiation.h in Headers */,
 				9314E85A2A61F67E006024E9 /* TestHSVAColor.h in Headers */,
 				5DD14AE21D953FE100CCA9F0 /* TestSquareMatrix2.h in Headers */,
 				5DD14AE31D953FE100CCA9F0 /* TestSquareMatrix4.h in Headers */,
@@ -832,7 +832,7 @@
 				C0E9B16E1DACEF1400895C4B /* TestApproximation.h in Headers */,
 				C0E9B16F1DACEF1400895C4B /* TestEquation.h in Headers */,
 				C0E9B1701DACEF1400895C4B /* TestPlane3.h in Headers */,
-				C09DFB661E9B83DB0013811D /* TestScalarAutomaticDifferentiation.h in Headers */,
+				C09DFB661E9B83DB0013811D /* TestAutomaticDifferentiation.h in Headers */,
 				9314E85B2A61F67E006024E9 /* TestHSVAColor.h in Headers */,
 				C0E9B1711DACEF1400895C4B /* TestSquareMatrix2.h in Headers */,
 				C0E9B1721DACEF1400895C4B /* TestSquareMatrix4.h in Headers */,
@@ -1017,7 +1017,7 @@
 				9326A7FA23AAEA1600F8604A /* TestExponentialMap.cpp in Sources */,
 				93E85A792926D89200AC40CE /* TestMathUtilities.cpp in Sources */,
 				5D9370B01BC6D19C0046ACD4 /* TestPlane3.cpp in Sources */,
-				C09DFB691E9B83F00013811D /* TestScalarAutomaticDifferentiation.cpp in Sources */,
+				C09DFB691E9B83F00013811D /* TestAutomaticDifferentiation.cpp in Sources */,
 				5D9370B11BC6D19C0046ACD4 /* TestRandom.cpp in Sources */,
 				9314E85E2A61F68E006024E9 /* TestHSVAColor.cpp in Sources */,
 				93EE70CB20B5F52D006E342E /* TestFourierTransformation.cpp in Sources */,
@@ -1070,7 +1070,7 @@
 				9326A7F923AAEA1600F8604A /* TestExponentialMap.cpp in Sources */,
 				93E85A782926D89200AC40CE /* TestMathUtilities.cpp in Sources */,
 				5DB3A2A81BAB379B0000B274 /* TestPlane3.cpp in Sources */,
-				C09DFB681E9B83EE0013811D /* TestScalarAutomaticDifferentiation.cpp in Sources */,
+				C09DFB681E9B83EE0013811D /* TestAutomaticDifferentiation.cpp in Sources */,
 				5DB3A2A91BAB379B0000B274 /* TestRandom.cpp in Sources */,
 				9314E85D2A61F68E006024E9 /* TestHSVAColor.cpp in Sources */,
 				93EE70CA20B5F52D006E342E /* TestFourierTransformation.cpp in Sources */,
@@ -1123,7 +1123,7 @@
 				9326A7FB23AAEA1600F8604A /* TestExponentialMap.cpp in Sources */,
 				93E85A7A2926D89200AC40CE /* TestMathUtilities.cpp in Sources */,
 				5DD14AB21D953FE100CCA9F0 /* TestPlane3.cpp in Sources */,
-				C09DFB6A1E9B83F00013811D /* TestScalarAutomaticDifferentiation.cpp in Sources */,
+				C09DFB6A1E9B83F00013811D /* TestAutomaticDifferentiation.cpp in Sources */,
 				5DD14AB31D953FE100CCA9F0 /* TestRandom.cpp in Sources */,
 				9314E85F2A61F68E006024E9 /* TestHSVAColor.cpp in Sources */,
 				93EE70CC20B5F52D006E342E /* TestFourierTransformation.cpp in Sources */,
@@ -1176,7 +1176,7 @@
 				9326A7FC23AAEA1600F8604A /* TestExponentialMap.cpp in Sources */,
 				93E85A7B2926D89200AC40CE /* TestMathUtilities.cpp in Sources */,
 				C0E9B1411DACEF1400895C4B /* TestPlane3.cpp in Sources */,
-				C09DFB6B1E9B83F10013811D /* TestScalarAutomaticDifferentiation.cpp in Sources */,
+				C09DFB6B1E9B83F10013811D /* TestAutomaticDifferentiation.cpp in Sources */,
 				C0E9B1421DACEF1400895C4B /* TestRandom.cpp in Sources */,
 				9314E8602A61F68E006024E9 /* TestHSVAColor.cpp in Sources */,
 				93EE70CD20B5F52D006E342E /* TestFourierTransformation.cpp in Sources */,

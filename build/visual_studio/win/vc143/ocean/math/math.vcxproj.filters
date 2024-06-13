@@ -226,7 +226,7 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\ScalarAutomaticDifferentiation.h">
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\math\AutomaticDifferentiation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -39,7 +39,7 @@
 #include "ocean/test/testmath/TestRGBAColor.h"
 #include "ocean/test/testmath/TestRotation.h"
 #include "ocean/test/testmath/TestSampleMap.h"
-#include "ocean/test/testmath/TestScalarAutomaticDifferentiation.h"
+#include "ocean/test/testmath/TestAutomaticDifferentiation.h"
 #include "ocean/test/testmath/TestSparseMatrix.h"
 #include "ocean/test/testmath/TestSphere3.h"
 #include "ocean/test/testmath/TestSquareMatrix2.h"
@@ -436,13 +436,13 @@ bool testMath(const double testDuration, Worker& worker, const std::string& test
 		allSucceeded = TestSparseMatrix::test(testDuration) && allSucceeded;
 	}
 
-	if (testSet.empty() || testSet.find("scalarautomaticdifferentiation") != testSet.end())
+	if (testSet.empty() || testSet.find("automaticdifferentiation") != testSet.end())
 	{
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
 		Log::info() << " ";
-		allSucceeded = TestScalarAutomaticDifferentiation::test(testDuration) && allSucceeded;
+		allSucceeded = TestAutomaticDifferentiation::test(testDuration) && allSucceeded;
 	}
 
 	if (testSet.empty() || testSet.find("fouriertransformation") != testSet.end())
