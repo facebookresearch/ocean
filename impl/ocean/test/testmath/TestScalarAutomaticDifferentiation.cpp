@@ -16,6 +16,8 @@
 #include "ocean/math/StaticMatrix.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -34,68 +36,130 @@ bool TestScalarAutomaticDifferentiation::test(const double testDuration)
 	Log::info() << "---   Automatic scalar differentiation test:   ---";
 	Log::info() << " ";
 
-	allSucceeded = testSimple(testDuration) && allSucceeded;
+	allSucceeded = testSimple<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testSimple<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
-
-	allSucceeded = testFunctions(testDuration) && allSucceeded;
-
+	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testNested(testDuration) && allSucceeded;
+	allSucceeded = testFunctions<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testFunctions<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
-
-	allSucceeded = testHomography(testDuration) && allSucceeded;
-
+	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testPose(testDuration) && allSucceeded;
+	allSucceeded = testNested<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testNested<double>(testDuration) && allSucceeded;
 
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testHomography<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testHomography<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testPose<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testPose<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Differentiation test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Differentiation test FAILED!";
+	}
 
 	return allSucceeded;
 }
-	
+
 #ifdef OCEAN_USE_GTEST
-	
-TEST(TestScalarAutomaticDifferentiation, Simple) {
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testSimple(GTEST_TEST_DURATION));
+
+TEST(TestScalarAutomaticDifferentiation, Simple_float)
+{
+	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testSimple<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestScalarAutomaticDifferentiation, Functions) {
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testFunctions(GTEST_TEST_DURATION));
+TEST(TestScalarAutomaticDifferentiation, Simple_double)
+{
+	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testSimple<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestScalarAutomaticDifferentiation, Nested) {
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testNested(GTEST_TEST_DURATION));
+
+TEST(TestScalarAutomaticDifferentiation, Functions_float)
+{
+	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testFunctions<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestScalarAutomaticDifferentiation, Homography) {
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testHomography(GTEST_TEST_DURATION));
+TEST(TestScalarAutomaticDifferentiation, Functions_double)
+{
+	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testFunctions<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestScalarAutomaticDifferentiation, Pose) {
-	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testPose(GTEST_TEST_DURATION));
+
+TEST(TestScalarAutomaticDifferentiation, Nested_float)
+{
+	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testNested<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestScalarAutomaticDifferentiation, Nested_double)
+{
+	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testNested<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestScalarAutomaticDifferentiation, Homography_float)
+{
+	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testHomography<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestScalarAutomaticDifferentiation, Homography_double)
+{
+	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testHomography<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestScalarAutomaticDifferentiation, Pose_float)
+{
+	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testPose<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestScalarAutomaticDifferentiation, Pose_double)
+{
+	EXPECT_TRUE(TestScalarAutomaticDifferentiation::testPose<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
 
+template <typename T>
 bool TestScalarAutomaticDifferentiation::testSimple(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing automatic differentiation of simple functions:";
+	Log::info() << "Testing automatic differentiation of simple functions with " << TypeNamer::name<T>() << ":";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	using AutoDiff = ScalarAutomaticDifferentiationT<T>;
 
-	const Scalar valueRange = std::is_same<float, Scalar>::value ? Scalar(10) : Scalar(1000);
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(0.99, randomGenerator);
+
+	constexpr T valueRange = std::is_same<float, T>::value ? T(10) : T(1000);
 
 	const Timestamp startTimestamp(true);
 
@@ -103,257 +167,431 @@ bool TestScalarAutomaticDifferentiation::testSimple(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Scalar x = Random::scalar(-valueRange, valueRange);
-			const Scalar c = Random::scalar(-valueRange, valueRange);
+			const T x = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			const T c = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = x
 				// f'(x) = 1
 
-				const Scalar derivative = ScalarAutomaticDifferentiation(x).derivative();
-				const Scalar test = 1;
+				const AutoDiff autoDiff(x);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = x;
+				constexpr T expectedDerivative = 1;
 
-				iterations++;
+				if (autoDiff.value() != expectedValue)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (autoDiff.derivative() != expectedDerivative)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = x + c
 				// f'(x) = 1
 
-				const Scalar derivative = (ScalarAutomaticDifferentiation(x) + c).derivative();
-				const Scalar test = 1;
+				const AutoDiff autoDiff = AutoDiff(x) + c;
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = x + c;
+				constexpr T expectedDerivative = 1;
 
-				iterations++;
+				if (autoDiff.value() != expectedValue)
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (autoDiff.derivative() != expectedDerivative)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = c + x
 				// f'(x) = 1
 
-				const Scalar derivative = (c + ScalarAutomaticDifferentiation(x)).derivative();
-				const Scalar test = 1;
+				const AutoDiff autoDiff = c + AutoDiff(x);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = c + x;
+				constexpr T expectedDerivative = 1;
 
-				iterations++;
+				if (autoDiff.value() != expectedValue)
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (autoDiff.derivative() != expectedDerivative)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = x - c
 				// f'(x) = 1
 
-				const Scalar derivative = (ScalarAutomaticDifferentiation(x) - c).derivative();
-				const Scalar test = 1;
+				const AutoDiff autoDiff = AutoDiff(x) - c;
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = x - c;
+				constexpr T expectedDerivative = 1;
 
-				iterations++;
+				if (autoDiff.value() != expectedValue)
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (autoDiff.derivative() != expectedDerivative)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = c - x
 				// f'(x) = -1
 
-				const Scalar derivative = (c - ScalarAutomaticDifferentiation(x)).derivative();
-				const Scalar test = -1;
+				const AutoDiff autoDiff = c - AutoDiff(x);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = c - x;
+				constexpr T expectedDerivative = -1;
 
-				iterations++;
+				if (autoDiff.value() != expectedValue)
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (autoDiff.derivative() != expectedDerivative)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = x + x + c
 				// f'(x) = 2
 
-				const Scalar derivative = (ScalarAutomaticDifferentiation(x) + ScalarAutomaticDifferentiation(x) + c).derivative();
-				const Scalar test = 2;
+				const AutoDiff autoDiff = AutoDiff(x) + AutoDiff(x) + c;
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = x + x + c;
+				constexpr T expectedDerivative = 2;
 
-				iterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
-				// f(x) = cx
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				// f(x) = x * c
 				// f'(x) = c
 
-				const Scalar derivative = (ScalarAutomaticDifferentiation(x) * c).derivative();
-				const Scalar test = c;
+				const AutoDiff autoDiff = AutoDiff(x) * c;
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = x * c;
+				const T expectedDerivative = c;
 
-				iterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				// f(x) = c * x
+				// f'(x) = c
+
+				const AutoDiff autoDiff = c * AutoDiff(x);
+
+				const T expectedValue = c * x;
+				const T expectedDerivative = c;
+
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = x^2
 				// f'(x) = 2x
 
-				const Scalar derivative = (ScalarAutomaticDifferentiation(x) * ScalarAutomaticDifferentiation(x)).derivative();
-				const Scalar test = Scalar(2) * x;
+				const AutoDiff autoDiff = AutoDiff(x) * AutoDiff(x);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = x * x;
+				const T expectedDerivative = T(2) * x;
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
-				// f(x) = c * x^2
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				// f(x) = x^2 * c
 				// f'(x) = 2cx
 
-				const Scalar derivative = (ScalarAutomaticDifferentiation(x) * ScalarAutomaticDifferentiation(x) * c).derivative();
-				const Scalar test = Scalar(2) * x * c;
+				const AutoDiff autoDiff = AutoDiff(x) * AutoDiff(x) * c;
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = x * x * c;
+				const T expectedDerivative = T(2) * c * x;
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) == x^3
 				// f'(x) = 3x^2
 
-				const Scalar derivative = (ScalarAutomaticDifferentiation(x) * ScalarAutomaticDifferentiation(x) * ScalarAutomaticDifferentiation(x)).derivative();
-				const Scalar test = Scalar(3) * x * x;
+				const AutoDiff autoDiff = AutoDiff(x) * AutoDiff(x) * AutoDiff(x);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = x * x * x;
+				const T expectedDerivative = T(3) * x * x;
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) == 3 * (x + c)
 				// f'(x) = 3
 
-				const Scalar derivative = (3 * (ScalarAutomaticDifferentiation(x) + c)).derivative();
-				const Scalar test = Scalar(3);
+				const AutoDiff autoDiff = T(3) * (AutoDiff(x) + c);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = T(3) * (x + c);
+				constexpr T expectedDerivative = T(3);
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) == (3 * (x + 2))^2 = (3x + 6)^2 = 9x^2 + 36x + 36
 				// f'(x) = 2 * (3x + 6) * 3 = 18x + 36
 
-				const Scalar derivative = (((ScalarAutomaticDifferentiation(x) + 2) * 3) * ((ScalarAutomaticDifferentiation(x) + 2) * 3)).derivative();
-				const Scalar test = Scalar(2) * (Scalar(3) * x + Scalar(6)) * Scalar(3);
+				const AutoDiff autoDiff = ((T(3) * (AutoDiff(x) + T(2))) * (T(3) * (AutoDiff(x) + T(2))));
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = NumericT<T>::sqr(T(3) * (x + T(2)));
+				const T expectedDerivative = T(18) * x + T(36);
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) == (3 * (x + c))^2 = (3x + 3c)^2 = 9x^2 + 18cx + 9c^2
 				// f'(x) = 2 * (3x + 3c) * 3 = 18x + 18c
 
-				const Scalar derivative = (((ScalarAutomaticDifferentiation(x) + c) * 3) * ((ScalarAutomaticDifferentiation(x) + c) * 3)).derivative();
-				const Scalar test = Scalar(2) * (Scalar(3) * x + Scalar(3) * c) * Scalar(3);
+				const AutoDiff autoDiff = (((AutoDiff(x) + c) * T(3)) * ((AutoDiff(x) + c) * T(3)));
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = NumericT<T>::sqr(T(3) * (x + c));
+				const T expectedDerivative = T(18) * x + T(18) * c;
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			if (Numeric::isNotEqualEps(x))
+			if (NumericT<T>::isNotEqualEps(x))
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = 1 / x
 				// f'(x) = -1 / x^2
 
-				const Scalar derivative = (Scalar(1) / ScalarAutomaticDifferentiation(x)).derivative();
-				const Scalar test = -Scalar(1) / (x * x);
+				const AutoDiff autoDiff = T(1) / AutoDiff(x);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = T(1) / x;
+				const T expectedDerivative = -T(1) / (x * x);
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			if (Numeric::isNotEqualEps(x))
+			if (NumericT<T>::isNotEqualEps(x))
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = c / x
 				// f'(x) = -c / x^2
 
-				const Scalar derivative = (c / ScalarAutomaticDifferentiation(x)).derivative();
-				const Scalar test = -c / (x * x);
+				const AutoDiff autoDiff = c / AutoDiff(x);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = c / x;
+				const T expectedDerivative = -c / (x * x);
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			if (Numeric::isNotEqualEps(x * x))
+			if (NumericT<T>::isNotEqualEps(x * x))
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = c / x^2
 				// f'(x) = -2c / x^3
 
-				const Scalar derivative = (c / (ScalarAutomaticDifferentiation(x) * ScalarAutomaticDifferentiation(x))).derivative();
-				const Scalar test = -Scalar(2) * c / (x * x * x);
+				const AutoDiff autoDiff = c / (AutoDiff(x) * AutoDiff(x));
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = c / (x * x);
+				const T expectedDerivative = -T(2) * c / (x * x * x);
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			if (Numeric::isNotEqualEps(x * x))
+			if (NumericT<T>::isNotEqualEps(x * x))
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = (c / x) * (1 / x)
 				// f'(x) = -2c / x^3
 
-				const Scalar derivative = ((c / ScalarAutomaticDifferentiation(x)) * (1 / ScalarAutomaticDifferentiation(x))).derivative();
-				const Scalar test = -Scalar(2) * c / (x * x * x);
+				const AutoDiff autoDiff = (c / AutoDiff(x)) * (1 / AutoDiff(x));
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = (c / x) * (1 / x);
+				const T expectedDerivative = (-T(2) * c) / (x * x * x);
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 		}
-
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0u);
+	Log::info() << "Validation: " << validation;
 
-	const double percent = double(validIterations) / double(iterations);
-
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
+template <typename T>
 bool TestScalarAutomaticDifferentiation::testFunctions(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing automatic differentiation of mathematic functions:";
+	Log::info() << "Testing automatic differentiation of mathematic functions with " << TypeNamer::name<T>() << ":";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	using AutoDiff = ScalarAutomaticDifferentiationT<T>;
 
-	const Scalar valueRange = std::is_same<float, Scalar>::value ? Scalar(10) : Scalar(1000);
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(0.99, randomGenerator);
+
+	constexpr T valueRange = std::is_same<float, T>::value ? T(10) : T(1000);
 
 	const Timestamp startTimestamp(true);
 
@@ -361,236 +599,329 @@ bool TestScalarAutomaticDifferentiation::testFunctions(const double testDuration
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Scalar x = Random::scalar(-valueRange, valueRange);
-			const Scalar c = Random::scalar(-valueRange, valueRange);
+			const T x = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			const T c = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = sin(x)
 				// f'(x) = cos(x)
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::sin(ScalarAutomaticDifferentiation(x));
+				const AutoDiff autoDiff = AutoDiff::sin(AutoDiff(x));
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = Numeric::cos(x);
+				const T expectedValue = NumericT<T>::sin(x);
+				const T expectedDerivative = NumericT<T>::cos(x);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = cos(x)
 				// f'(x) = -sin(x)
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::cos(ScalarAutomaticDifferentiation(x));
+				const AutoDiff autoDiff = AutoDiff::cos(AutoDiff(x));
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = -Numeric::sin(x);
+				const T expectedValue = NumericT<T>::cos(x);
+				const T expectedDerivative = -NumericT<T>::sin(x);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = tan(x)
 				// f'(x) = 1 / cos(x)^2
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::tan(ScalarAutomaticDifferentiation(x));
+				const AutoDiff autoDiff = AutoDiff::tan(AutoDiff(x));
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = Scalar(1) / Numeric::sqr(Numeric::cos(x));
+				const T expectedValue = NumericT<T>::tan(x);
+				const T expectedDerivative = T(1) / NumericT<T>::sqr(NumericT<T>::cos(x));
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			if (x >= Scalar(0))
+			if (x >= T(0))
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = sqrt(x)
-				// f'(x) = 1 / 2 * sqrt(x)
+				// f'(x) = 1 / (2 * sqrt(x))
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::sqrt(ScalarAutomaticDifferentiation(x));
+				const AutoDiff autoDiff = AutoDiff::sqrt(AutoDiff(x));
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = Scalar(1) / (Scalar(2) * Numeric::sqrt(x));
+				const T expectedValue = NumericT<T>::sqrt(x);
+				const T expectedDerivative = T(1) / (T(2) * NumericT<T>::sqrt(x));
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = exp(x)
 				// f'(x) = exp(x)
 
-				const Scalar x2 = Random::scalar(-10, 10);
+				const AutoDiff autoDiff = AutoDiff::exp(AutoDiff(x));
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::exp(ScalarAutomaticDifferentiation(x2));
+				const T expectedValue = NumericT<T>::exp(x);
+				const T expectedDerivative = NumericT<T>::exp(x);
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = Numeric::exp(x2);
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
-
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			if (x > Numeric::eps())
+			if (x > NumericT<T>::eps())
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = log(x)
 				// f'(x) = 1 / x
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::log(ScalarAutomaticDifferentiation(x));
+				const AutoDiff autoDiff = AutoDiff::log(AutoDiff(x));
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = Scalar(1) / x;
+				const T expectedValue = NumericT<T>::log(x);
+				const T expectedDerivative = T(1) / x;
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			if (x > Numeric::eps())
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = log2(x) = log(x) / log(2)
 				// f'(x) = (1 / x) * log(2) / log(2)^2 = 1 / (x * log(2))
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::log2(ScalarAutomaticDifferentiation(x));
+				const AutoDiff autoDiff = AutoDiff::log2(AutoDiff(x));
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = Scalar(1) / (x * Numeric::log(2));
+				const T expectedValue = NumericT<T>::log2(x);
+				const T expectedDerivative = T(1) / (x * NumericT<T>::log(2));
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			if (x > Numeric::eps())
+			if (x > NumericT<T>::eps())
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = log10(x) = log(x) / log(10)
 				// f'(x) = (1 / x) * log(10) / log(10)^2 = 1 / (x * log(10))
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::log10(ScalarAutomaticDifferentiation(x));
+				const AutoDiff autoDiff = AutoDiff::log10(AutoDiff(x));
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = Scalar(1) / (x * Numeric::log(10));
+				const T expectedValue = NumericT<T>::log10(x);
+				const T expectedDerivative = T(1) / (x * NumericT<T>::log(10));
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			if (x > Numeric::eps())
+			if (x > NumericT<T>::eps())
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = log(x) / log10(x)
 				// f'(x) = [log10(x) / x - log(x) / (x * log(10))] / log10(x)^2 = 0
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::log(ScalarAutomaticDifferentiation(x)) / ScalarAutomaticDifferentiation::log10(ScalarAutomaticDifferentiation(x));
+				const AutoDiff autoDiff = AutoDiff::log(AutoDiff(x)) / AutoDiff::log10(AutoDiff(x));
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = 0;
+				const T expectedValue = NumericT<T>::log(x) / NumericT<T>::log10(x);
+				constexpr T expectedDerivative = T(0);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
-			if (x >= Scalar(0))
+			if (x >= T(0))
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x, y) = x ^ y
 				// f'(x, y) = y * x ^ (y - 1)
 
-				const Scalar y = Random::scalar(-10, 10);
+				const T y = RandomT<T>::scalar(randomGenerator, -10, 10);
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::pow(ScalarAutomaticDifferentiation(x), y);
+				const AutoDiff autoDiff = AutoDiff::pow(AutoDiff(x), y);
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = y * Numeric::pow(x, y - Scalar(1));
+				const T expectedValue = NumericT<T>::pow(x, y);
+				const T expectedDerivative = y * NumericT<T>::pow(x, y - T(1));
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = |x|
 				// f'(x) = sign(x)
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::abs(ScalarAutomaticDifferentiation(x));
+				const AutoDiff autoDiff = AutoDiff::abs(AutoDiff(x));
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = x >= Scalar(0) ? Scalar(1) : Scalar(-1);
+				const T expectedValue = NumericT<T>::abs(x);
+				const T expectedDerivative = NumericT<T>::sign(x);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
-				// f(x) = min(x, c)
-				// f'(x) = x < c: x'      x >= c 0
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::min(ScalarAutomaticDifferentiation(x) * ScalarAutomaticDifferentiation(x), c);
+				// f(x) = min(x * x, c)
+				// f'(x) = x * x < c:       2x
+				//              else:       0
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = (x * x) < c ? (2 * x) : 0;
+				const AutoDiff autoDiff = AutoDiff::min(AutoDiff(x) * AutoDiff(x), c);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = std::min(x * x, c);
+				const T expectedDerivative = x * x < c ? T(2) * x : T(0);
 
-				iterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
-				// f(x) = max(x, c)
-				// f'(x) = x > c: x'      x >= c 0
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::max(ScalarAutomaticDifferentiation(x) * ScalarAutomaticDifferentiation(x), c);
+				// f(x) = max(x * x, c)
+				// f'(x) = x * x > c:         2x
+				//              else:         0
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = (x * x) > c ? (2 * x) : 0;
+				const AutoDiff autoDiff = AutoDiff::max(AutoDiff(x) * AutoDiff(x), c);
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				const T expectedValue = std::max(x * x, c);
+				const T expectedDerivative = x * x > c ? T(2) * x : T(0);
 
-				iterations++;
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0u);
+	Log::info() << "Validation: " << validation;
 
-	const double percent = double(validIterations) / double(iterations);
-
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
+template <typename T>
 bool TestScalarAutomaticDifferentiation::testNested(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing automatic differentiation of nested functions:";
+	Log::info() << "Testing automatic differentiation of nested functions with " << TypeNamer::name<T>() << ":";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	using AutoDiff = ScalarAutomaticDifferentiationT<T>;
 
-	const Scalar valueRange = std::is_same<float, Scalar>::value ? Scalar(10) : Scalar(1000);
+	RandomGenerator randomGenerator;
+
+	constexpr double successThreshold = std::is_same<float, T>::value ? 0.95 : 0.98;
+
+	ValidationPrecision validation(successThreshold, randomGenerator);
+
+	constexpr T valueRange = std::is_same<float, T>::value ? T(10) : T(1000);
 
 	const Timestamp startTimestamp(true);
 
@@ -598,10 +929,12 @@ bool TestScalarAutomaticDifferentiation::testNested(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Scalar x = Random::scalar(-valueRange, valueRange);
-			const Scalar c = Random::scalar(-valueRange, valueRange);
+			const T x = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			const T c = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = g(h(x))
 				// h(x) = x^2
 				// g(y) = 2y
@@ -610,19 +943,26 @@ bool TestScalarAutomaticDifferentiation::testNested(const double testDuration)
 				//       = g'(x^2) * 2x
 				//       = 2 * 2x            = [2 * x^2]' = 4x
 
-				const ScalarAutomaticDifferentiation y = ScalarAutomaticDifferentiation(x) * ScalarAutomaticDifferentiation(x);
-				const ScalarAutomaticDifferentiation f = 2 * y;
+				const AutoDiff y = AutoDiff(x) * AutoDiff(x);
+				const AutoDiff autoDiff = T(2) * y;
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = Scalar(4) * x;
+				const T expectedValue = T(2) * (x * x);
+				const T expectedDerivative = T(4) * x;
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = g(h(x))
 				// h(x) = x^2 + c
 				// g(y) = 5 - 2y
@@ -631,19 +971,26 @@ bool TestScalarAutomaticDifferentiation::testNested(const double testDuration)
 				//       = g'(x^2 + c) * 2x
 				//       = -2 * 2x            = [6 - 2 * (x^2 + c)]' = [6 - 2x^2 - 2c]' = -4x
 
-				const ScalarAutomaticDifferentiation y = ScalarAutomaticDifferentiation(x) * ScalarAutomaticDifferentiation(x) + c;
-				const ScalarAutomaticDifferentiation f = 5 - 2 * y;
+				const AutoDiff y = AutoDiff(x) * AutoDiff(x) + c;
+				const AutoDiff autoDiff = T(5) - T(2) * y;
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = Scalar(-4) * x;
+				const T expectedValue = T(5) - T(2) * (x * x + c);
+				const T expectedDerivative = -T(4) * x;
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = k(g(h(x))
 				// h(x) = x^2 + 9
 				// g(y) = c * y + 7
@@ -652,53 +999,76 @@ bool TestScalarAutomaticDifferentiation::testNested(const double testDuration)
 				// f'(x) = k'(g(h(x)) * g'(h(x)) * h'(x)
 				//       = 4 * c * 2x                     = [((c * (x^2 + 9) + 7) * 4]' = [(cx^2 + 9c + 7) * 4]' = [4cx^2 + 36c + 28]' = 8cx
 
-				const ScalarAutomaticDifferentiation y = ScalarAutomaticDifferentiation(x) * ScalarAutomaticDifferentiation(x) + 9;
-				const ScalarAutomaticDifferentiation z = c * ScalarAutomaticDifferentiation(y) + 7;
-				const ScalarAutomaticDifferentiation f = z * 4;
+				const AutoDiff y = AutoDiff(x) * AutoDiff(x) + T(9);
+				const AutoDiff z = c * y + T(7);
+				const AutoDiff autoDiff = z * T(4);
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = Scalar(8) * c * x;
+				const T expectedValue = (c * (x * x + T(9)) + T(7)) * T(4);
+				const T expectedDerivative = T(8) * c * x;
 
-				if (Numeric::isWeakEqual(derivative, test))
-					validIterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				iterations++;
+				if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 
 			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 				// f(x) = e^(5x^2 - 3x + c)
 				// f'(x) = e^(5x^2 - 3x + c) * (10x - 3)
 
-				const Scalar x2 = Random::scalar(-1, 1);
-				const Scalar c2 = Random::scalar(-1, 1);
+				const T _x = RandomT<T>::scalar(randomGenerator, -1, 1);
+				const T _c = RandomT<T>::scalar(randomGenerator, -1, 1);
 
-				const ScalarAutomaticDifferentiation f = ScalarAutomaticDifferentiation::exp(5 * ScalarAutomaticDifferentiation(x2) * ScalarAutomaticDifferentiation(x2) - 3 * ScalarAutomaticDifferentiation(x2) + c2);
+				const T expectedValue = NumericT<T>::exp(T(5) * _x * _x - T(3) * _x + _c);
+				const T expectedDerivative = NumericT<T>::exp(T(5) * _x * _x - T(3) * _x + _c) * (T(10) * _x - T(3));
 
-				// alternative way to directly use x^2 as value
-				const ScalarAutomaticDifferentiation f2 = ScalarAutomaticDifferentiation::exp(5 * ScalarAutomaticDifferentiation(x2 * x2, 2 * x2) - 3 * ScalarAutomaticDifferentiation(x2) + c2);
-				ocean_assert(Numeric::isEqual<3>(f.derivative(), f2.derivative(), Scalar(0.1)));
+				{
+					const AutoDiff autoDiff = AutoDiff::exp(T(5) * AutoDiff(_x) * AutoDiff(_x) - T(3) * AutoDiff(_x) + _c);
 
-				const Scalar derivative = f.derivative();
-				const Scalar test = Numeric::exp(5 * x2 * x2 - 3 * x2 + c2) * (10 * x2 - 3);
+					if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+					{
+						scopedIteration.setInaccurate();
+					}
 
-				if (Numeric::isEqual<3>(derivative, test, Scalar(0.01)) && Numeric::isEqual<3>(f.derivative(), f2.derivative(), Scalar(0.01)))
-					validIterations++;
+					if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
 
-				iterations++;
+				{
+					// alternative way to directly use x^2 as value
+
+					const AutoDiff autoDiff = AutoDiff::exp(T(5) * AutoDiff(_x * _x, T(2) * _x) - T(3) * AutoDiff(_x) + _c);
+
+					if (NumericT<T>::isNotWeakEqual(autoDiff.value(), expectedValue))
+					{
+						scopedIteration.setInaccurate();
+					}
+
+					if (NumericT<T>::isNotWeakEqual(autoDiff.derivative(), expectedDerivative))
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0u);
+	Log::info() << "Validation: " << validation;
 
-	const double percent = double(validIterations) / double(iterations);
-
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
+template <typename T>
 bool TestScalarAutomaticDifferentiation::testHomography(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
@@ -708,15 +1078,13 @@ bool TestScalarAutomaticDifferentiation::testHomography(const double testDuratio
 	const unsigned int width = 1920u;
 	const unsigned int height = 1080u;
 
-	Log::info() << "Testing automatic differentiation for the homography Jacobian 2x8 for " << numberPoints << " points:";
+	Log::info() << "Testing automatic differentiation for the homography Jacobian 2x8 for " << numberPoints << " points with " << TypeNamer::name<T>() << ":";
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	using AutoDiff = ScalarAutomaticDifferentiationT<T>;
 
-	Vectors2 points(numberPoints);
+	RandomGenerator randomGenerator;
 
-	Scalars jacobians(numberPoints * 8u * 2u);
-	Scalars testJacobians(numberPoints * 8u * 2u);
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	HighPerformanceStatistic performanceAutomatic;
 	HighPerformanceStatistic performanceDirect;
@@ -725,19 +1093,32 @@ bool TestScalarAutomaticDifferentiation::testHomography(const double testDuratio
 
 	do
 	{
-		SquareMatrix3 homography;
+		VectorsT2<T> points(numberPoints);
+
+		std::vector<T> jacobians(numberPoints * 8u * 2u);
+		std::vector<T> testJacobians(numberPoints * 8u * 2u);
+
+		SquareMatrixT3<T> homography;
 
 		for (unsigned int n = 0u; n < 9u; ++n)
-			homography[n] = Random::scalar(-10, 10);
+		{
+			homography[n] = RandomT<T>::scalar(randomGenerator, -10, 10);
+		}
 
-		while (Numeric::isEqualEps(homography[8]))
-			homography[8] = Random::scalar(-10, 10);
+		while (NumericT<T>::isEqualEps(homography[8]))
+		{
+			homography[8] = RandomT<T>::scalar(randomGenerator, -10, 10);
+		}
 
 		for (unsigned int n = 0u; n < 9u; ++n)
+		{
 			homography[n] /= homography[8];
+		}
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
-			points[n] = Vector2(Random::scalar(0, Scalar(width)), Random::scalar(0, Scalar(height)));
+		{
+			points[n] = RandomT<T>::vector2(randomGenerator, T(0), T(width), T(0), T(height));
+		}
 
 		// Homography:
 		// |   h0    h3     h6  |
@@ -751,16 +1132,16 @@ bool TestScalarAutomaticDifferentiation::testHomography(const double testDuratio
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			const Scalar& x = points[n].x();
-			const Scalar& y = points[n].y();
+			const T& x = points[n].x();
+			const T& y = points[n].y();
 
-			Scalar* jx = jacobians.data() + n * 8u * 2u;
-			Scalar* jy = jx + 8;
+			T* jx = jacobians.data() + n * 8u * 2u;
+			T* jy = jx + 8;
 
 			for (unsigned int i = 0u; i < 8u; ++i)
 			{
-				const ScalarAutomaticDifferentiation dx = (ScalarAutomaticDifferentiation(homography[0], i == 0u) * x + ScalarAutomaticDifferentiation(homography[3], i == 3u) * y + ScalarAutomaticDifferentiation(homography[6], i == 6u)) / (ScalarAutomaticDifferentiation(homography[2], i == 2u) * x + ScalarAutomaticDifferentiation(homography[5], i == 5u) * y + Scalar(1));
-				const ScalarAutomaticDifferentiation dy = (ScalarAutomaticDifferentiation(homography[1], i == 1u) * x + ScalarAutomaticDifferentiation(homography[4], i == 4u) * y + ScalarAutomaticDifferentiation(homography[7], i == 7u)) / (ScalarAutomaticDifferentiation(homography[2], i == 2u) * x + ScalarAutomaticDifferentiation(homography[5], i == 5u) * y + Scalar(1));
+				const AutoDiff dx = (AutoDiff(homography[0], i == 0u) * x + AutoDiff(homography[3], i == 3u) * y + AutoDiff(homography[6], i == 6u)) / (AutoDiff(homography[2], i == 2u) * x + AutoDiff(homography[5], i == 5u) * y + T(1));
+				const AutoDiff dy = (AutoDiff(homography[1], i == 1u) * x + AutoDiff(homography[4], i == 4u) * y + AutoDiff(homography[7], i == 7u)) / (AutoDiff(homography[2], i == 2u) * x + AutoDiff(homography[5], i == 5u) * y + T(1));
 
 				jx[i] = dx();
 				jy[i] = dy();
@@ -773,64 +1154,65 @@ bool TestScalarAutomaticDifferentiation::testHomography(const double testDuratio
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			const Scalar& x = points[n].x();
-			const Scalar& y = points[n].y();
+			const T& x = points[n].x();
+			const T& y = points[n].y();
 
 			// code taken from Jacobian::calculateHomographyJacobian2x8
 
-			const Scalar u = homography[0] * x + homography[3] * y + homography[6];
-			const Scalar v = homography[1] * x + homography[4] * y + homography[7];
-			const Scalar w = homography[2] * x + homography[5] * y + Scalar(1);
+			const T u = homography[0] * x + homography[3] * y + homography[6];
+			const T v = homography[1] * x + homography[4] * y + homography[7];
+			const T w = homography[2] * x + homography[5] * y + T(1);
 
-			ocean_assert(Numeric::isNotEqualEps(w));
-			const Scalar invW = Scalar(1) / w;
-			const Scalar invW2 = invW * invW;
+			ocean_assert(NumericT<T>::isNotEqualEps(w));
+			const T invW = T(1) / w;
+			const T invW2 = invW * invW;
 
-			Scalar* jx = testJacobians.data() + n * 8u * 2u;
-			Scalar* jy = jx + 8;
+			T* jx = testJacobians.data() + n * 8u * 2u;
+			T* jy = jx + 8;
 
 			jx[0] = x * invW;
-			jx[1] = Scalar(0);
+			jx[1] = T(0);
 			jx[2] = -x * u * invW2;
 			jx[3] = y * invW;
-			jx[4] = Scalar(0);
+			jx[4] = T(0);
 			jx[5] = -y * u * invW2;
 			jx[6] = invW;
-			jx[7] = Scalar(0);
+			jx[7] = T(0);
 
-			jy[0] = Scalar(0);
+			jy[0] = T(0);
 			jy[1] = x * invW;
 			jy[2] = -x * v * invW2;
-			jy[3] = Scalar(0);
+			jy[3] = T(0);
 			jy[4] = y * invW;
 			jy[5] = -y * v * invW2;
-			jy[6] = Scalar(0);
+			jy[6] = T(0);
 			jy[7] = invW;
 		}
 
 		performanceDirect.stop();
 
+		size_t accurateJacobians = 0;
+
 		for (size_t n = 0u; n < jacobians.size(); ++n)
 		{
-			if (Numeric::isWeakEqual(jacobians[n], testJacobians[n]))
-				validIterations++;
-
-			iterations++;
+			if (NumericT<T>::isWeakEqual(jacobians[n], testJacobians[n]))
+			{
+				++accurateJacobians;
+			}
 		}
+
+		validation.addIterations(accurateJacobians, jacobians.size());
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	ocean_assert(iterations != 0u);
+	Log::info() << "Performance automatic: " << performanceAutomatic;
+	Log::info() << "Performance direct: " << performanceDirect;
+	Log::info() << "Validation: " << validation;
 
-	const double percent = double(validIterations) / double(iterations);
-
-	Log::info() << "Performance automatic: " << performanceAutomatic.averageMseconds() << "ms";
-	Log::info() << "Performance direct: " << performanceDirect.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
+template <typename T>
 bool TestScalarAutomaticDifferentiation::testPose(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
@@ -840,37 +1222,39 @@ bool TestScalarAutomaticDifferentiation::testPose(const double testDuration)
 	const unsigned int width = 1920u;
 	const unsigned int height = 1080u;
 
-	Log::info() << "Testing automatic differentiation for the 6-DOF camera pose for " << numberPoints << " points:";
+	Log::info() << "Testing automatic differentiation for the 6-DOF camera pose for " << numberPoints << " points with " << TypeNamer::name<T>() << ":";
 
-	Vectors3 objectPoints(numberPoints);
-
-	Scalars jacobians(numberPoints * 6u * 2u);
+	using AutoDiff = ScalarAutomaticDifferentiationT<T>;
 
 	HighPerformanceStatistic performanceAutomatic;
+
+	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		const Vector3 translation(Random::vector3(-10, 10));
-		const Quaternion quaternion(Random::quaternion());
+		VectorsT3<T> objectPoints(numberPoints);
 
-		const Pose pose(translation, quaternion);
-		const HomogenousMatrix4 transformation(translation, quaternion);
+		std::vector<T> jacobians(numberPoints * 6u * 2u);
 
-		const HomogenousMatrix4 transformationIF(PinholeCamera::standard2InvertedFlipped(transformation));
-		const Pose poseIF(transformationIF);
+		const VectorT3<T> translation(RandomT<T>::vector3(randomGenerator, -10, 10));
+		const QuaternionT<T> quaternion(RandomT<T>::quaternion(randomGenerator));
 
-		const PinholeCamera pinholeCamera(width, height, Numeric::deg2rad(60));
+		const PoseT<T> world_P_camera(translation, quaternion);
+		const HomogenousMatrixT4<T> world_T_camera(translation, quaternion);
+
+		const HomogenousMatrixT4<T> flippedCamera_T_world(CameraT<T>::standard2InvertedFlipped(world_T_camera));
+		const PoseT<T> flippedCamera_P_world(flippedCamera_T_world);
+
+		const PinholeCameraT<T> pinholeCamera(width, height, NumericT<T>::deg2rad(60));
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			Vector2 tmpImagePoint(Random::vector2(0, 1));
-			tmpImagePoint.x() *= Scalar(pinholeCamera.width());
-			tmpImagePoint.y() *= Scalar(pinholeCamera.height());
+			const VectorT2<T> imagePoint = RandomT<T>::vector2(randomGenerator, T(0), T(pinholeCamera.width()), T(0), T(pinholeCamera.height()));
 
-			const Line3 ray(pinholeCamera.ray(tmpImagePoint, translation, quaternion));
-			const Vector3 objectPoint(ray.point(Random::scalar(1, 5)));
+			const LineT3<T> ray(pinholeCamera.ray(imagePoint, translation, quaternion));
+			const VectorT3<T> objectPoint(ray.point(RandomT<T>::scalar(randomGenerator, 1, 5)));
 
 			objectPoints[n] = objectPoint;
 		}
@@ -901,63 +1285,63 @@ bool TestScalarAutomaticDifferentiation::testPose(const double testDuration)
 
 		performanceAutomatic.start();
 
-		StaticMatrix<ScalarAutomaticDifferentiation, 3, 3> camera33(ScalarAutomaticDifferentiation(0, false));
-		camera33.element<0, 0>() = ScalarAutomaticDifferentiation(pinholeCamera.focalLengthX(), false);
-		camera33.element<1, 1>() = ScalarAutomaticDifferentiation(pinholeCamera.focalLengthY(), false);
-		camera33.element<0, 2>() = ScalarAutomaticDifferentiation(pinholeCamera.principalPointX(), false);
-		camera33.element<1, 2>() = ScalarAutomaticDifferentiation(pinholeCamera.principalPointY(), false);
-		camera33.element<2, 2>() = ScalarAutomaticDifferentiation(1, false);
+		StaticMatrix<AutoDiff, 3, 3> camera33(AutoDiff(0, false));
+		camera33.template element<0, 0>() = AutoDiff(pinholeCamera.focalLengthX(), false);
+		camera33.template element<1, 1>() = AutoDiff(pinholeCamera.focalLengthY(), false);
+		camera33.template element<0, 2>() = AutoDiff(pinholeCamera.principalPointX(), false);
+		camera33.template element<1, 2>() = AutoDiff(pinholeCamera.principalPointY(), false);
+		camera33.template element<2, 2>() = AutoDiff(1, false);
 
-		StaticMatrix<ScalarAutomaticDifferentiation, 3, 4> pose34;
-		StaticMatrix<ScalarAutomaticDifferentiation, 4, 1> point41;
+		StaticMatrix<AutoDiff, 3, 4> pose34;
+		StaticMatrix<AutoDiff, 4, 1> point41;
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			const Scalar& x = objectPoints[n].x();
-			const Scalar& y = objectPoints[n].y();
-			const Scalar& z = objectPoints[n].z();
+			const T& x = objectPoints[n].x();
+			const T& y = objectPoints[n].y();
+			const T& z = objectPoints[n].z();
 
-			Scalar* jx = jacobians.data() + n * 6u * 2u;
-			Scalar* jy = jx + 6;
+			T* jx = jacobians.data() + n * 6u * 2u;
+			T* jy = jx + 6;
 
 			for (unsigned int i = 0u; i < 6u; ++i)
 			{
-				const ScalarAutomaticDifferentiation wx(poseIF.rx(), i == 0u);
-				const ScalarAutomaticDifferentiation wy(poseIF.ry(), i == 1u);
-				const ScalarAutomaticDifferentiation wz(poseIF.rz(), i == 2u);
-				const ScalarAutomaticDifferentiation tx(poseIF.x(), i == 3u);
-				const ScalarAutomaticDifferentiation ty(poseIF.y(), i == 4u);
-				const ScalarAutomaticDifferentiation tz(poseIF.z(), i == 5u);
+				const AutoDiff wx(flippedCamera_P_world.rx(), i == 0u);
+				const AutoDiff wy(flippedCamera_P_world.ry(), i == 1u);
+				const AutoDiff wz(flippedCamera_P_world.rz(), i == 2u);
+				const AutoDiff tx(flippedCamera_P_world.x(), i == 3u);
+				const AutoDiff ty(flippedCamera_P_world.y(), i == 4u);
+				const AutoDiff tz(flippedCamera_P_world.z(), i == 5u);
 
-				const ScalarAutomaticDifferentiation angle(ScalarAutomaticDifferentiation::sqrt(wx * wx +  wy * wy + wz * wz));
-				const ScalarAutomaticDifferentiation cosAngle(ScalarAutomaticDifferentiation::cos(angle));
-				const ScalarAutomaticDifferentiation cosAngle1_a2 = (1 - cosAngle) / (angle * angle);
-				const ScalarAutomaticDifferentiation sin_a(ScalarAutomaticDifferentiation::sin(angle) / angle);
+				const AutoDiff angle(AutoDiff::sqrt(wx * wx +  wy * wy + wz * wz));
+				const AutoDiff cosAngle(AutoDiff::cos(angle));
+				const AutoDiff cosAngle1_a2 = (1 - cosAngle) / (angle * angle);
+				const AutoDiff sin_a(AutoDiff::sin(angle) / angle);
 
-				pose34.element<0, 0>() = cosAngle + cosAngle1_a2 * wx * wx;
-				pose34.element<0, 1>() = cosAngle1_a2 * wx * wy - sin_a * wz;
-				pose34.element<0, 2>() = cosAngle1_a2 * wx * wz + sin_a * wy;
-				pose34.element<0, 3>() = tx;
+				pose34.template element<0, 0>() = cosAngle + cosAngle1_a2 * wx * wx;
+				pose34.template element<0, 1>() = cosAngle1_a2 * wx * wy - sin_a * wz;
+				pose34.template element<0, 2>() = cosAngle1_a2 * wx * wz + sin_a * wy;
+				pose34.template element<0, 3>() = tx;
 
-				pose34.element<1, 0>() = cosAngle1_a2 * wx * wy + sin_a * wz;
-				pose34.element<1, 1>() = cosAngle + cosAngle1_a2 * wy * wy;
-				pose34.element<1, 2>() = cosAngle1_a2 * wy * wz - sin_a * wx;
-				pose34.element<1, 3>() = ty;
+				pose34.template element<1, 0>() = cosAngle1_a2 * wx * wy + sin_a * wz;
+				pose34.template element<1, 1>() = cosAngle + cosAngle1_a2 * wy * wy;
+				pose34.template element<1, 2>() = cosAngle1_a2 * wy * wz - sin_a * wx;
+				pose34.template element<1, 3>() = ty;
 
-				pose34.element<2, 0>() = cosAngle1_a2 * wx * wz - sin_a * wy;
-				pose34.element<2, 1>() = cosAngle1_a2 * wy * wz + sin_a * wx;
-				pose34.element<2, 2>() = cosAngle + cosAngle1_a2 * wz * wz;
-				pose34.element<2, 3>() = tz;
+				pose34.template element<2, 0>() = cosAngle1_a2 * wx * wz - sin_a * wy;
+				pose34.template element<2, 1>() = cosAngle1_a2 * wy * wz + sin_a * wx;
+				pose34.template element<2, 2>() = cosAngle + cosAngle1_a2 * wz * wz;
+				pose34.template element<2, 3>() = tz;
 
-				point41.element<0, 0>() = ScalarAutomaticDifferentiation(x, false);
-				point41.element<1, 0>() = ScalarAutomaticDifferentiation(y, false);
-				point41.element<2, 0>() = ScalarAutomaticDifferentiation(z, false);
-				point41.element<3, 0>() = ScalarAutomaticDifferentiation(1, false);
+				point41.template element<0, 0>() = AutoDiff(x, false);
+				point41.template element<1, 0>() = AutoDiff(y, false);
+				point41.template element<2, 0>() = AutoDiff(z, false);
+				point41.template element<3, 0>() = AutoDiff(1, false);
 
-				StaticMatrix<ScalarAutomaticDifferentiation, 3, 1> result = camera33 * pose34 * point41;
+				StaticMatrix<AutoDiff, 3, 1> result = camera33 * pose34 * point41;
 
-				const ScalarAutomaticDifferentiation dx = result[0] / result[2];
-				const ScalarAutomaticDifferentiation dy = result[1] / result[2];
+				const AutoDiff dx = result[0] / result[2];
+				const AutoDiff dy = result[1] / result[2];
 
 				jx[i] = dx();
 				jy[i] = dy();
@@ -968,20 +1352,12 @@ bool TestScalarAutomaticDifferentiation::testPose(const double testDuration)
 
 #if 0
 		// the performance 'Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6' will be approx. 25 times faster
-		Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(testJacobians.data(), pinholeCamera, poseIF, objectPoints.data(), objectPoints.size(), false);
-
-		for (size_t n = 0u; n < jacobians.size(); ++n)
-		{
-			if (Numeric::isWeakEqual(jacobians[n], testJacobians[n]))
-				validIterations++;
-
-			iterations++;
-		}
+		Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(testJacobians.data(), pinholeCamera, flippedCamera_P_world, objectPoints.data(), objectPoints.size(), false);
 #endif
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	Log::info() << "Performance automatic: " << performanceAutomatic.averageMseconds() << "ms";
+	Log::info() << "Performance automatic: " << performanceAutomatic;
 	return true;
 }
 

@@ -38,35 +38,45 @@ class OCEAN_TEST_MATH_EXPORT TestScalarAutomaticDifferentiation
 		 * Tests the automatic differentiation of simple functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type to be used
 		 */
+		template <typename T>
 		static bool testSimple(const double testDuration);
 
 		/**
 		 * Tests the automatic differentiation of mathematic functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type to be used
 		 */
+		template <typename T>
 		static bool testFunctions(const double testDuration);
 
 		/**
 		 * Tests the automatic differentiation of nested functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type to be used
 		 */
+		template <typename T>
 		static bool testNested(const double testDuration);
 
 		/**
 		 * Tests the automatic differentiation for the homography function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type to be used
 		 */
+		template <typename T>
 		static bool testHomography(const double testDuration);
 
 		/**
 		 * Tests the automatic differentiation for the 6-DOF camera pose function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type to be used
 		 */
+		template <typename T>
 		static bool testPose(const double testDuration);
 };
 

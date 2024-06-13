@@ -230,6 +230,10 @@ class ValidationPrecision
 #endif // OCEAN_DEBUG
 };
 
+#ifndef OCEAN_SET_INACCURATE
+	#define OCEAN_SET_INACCURATE(scopedIteration, expected, actual) scopedIteration.setInaccurate(expected, actual, __FILE__, __LINE__);
+#endif
+
 inline ValidationPrecision::ScopedIteration::ScopedIteration(ValidationPrecision& ValidationPrecision) :
 	validationPrecision_(ValidationPrecision)
 {
@@ -245,7 +249,6 @@ inline void ValidationPrecision::ScopedIteration::setInaccurate()
 {
 	accurate_ = false;
 }
-
 
 template <typename T>
 inline void ValidationPrecision::ScopedIteration::setInaccurate(const T& expected, const T& actual, const char* file, const int line)
