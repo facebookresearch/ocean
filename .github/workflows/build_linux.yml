@@ -35,7 +35,8 @@ jobs:
           sudo apt-get upgrade
           sudo apt-get install -o Acquire::Retries=5 \
             cmake git ninja-build zip libx11-dev libgtk-3-dev \
-            liblzma-dev libgl1-mesa-dev libxcb-glx0-dev
+            liblzma-dev libgl1-mesa-dev libxcb-glx0-dev \
+            libdeflate-dev
 
       - name: Build and install third-party libraries for Ocean
         run: |
