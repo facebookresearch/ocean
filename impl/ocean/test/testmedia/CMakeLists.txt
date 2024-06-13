@@ -154,7 +154,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_base
             ocean_cv
             ocean_media
-            # ocean_media_ffmpeg  # Not yet available.
+            ocean_media_ffmpeg
             ocean_media_openimagelibraries
             ocean_media_special
             ocean_system
