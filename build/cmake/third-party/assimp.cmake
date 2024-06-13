@@ -22,6 +22,13 @@ endif()
 set(ASSIMP_BUILD_ZLIB OFF CACHE BOOL "")
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "")
 
+if (LINUX)
+  if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    # Avoid errors on certain Linux builds
+    add_compile_options(-Wno-error=array-bounds)
+  endif()
+endif()
+
 CPMAddPackage(
   NAME           assimp
   GIT_REPOSITORY https://github.com/assimp/assimp.git
