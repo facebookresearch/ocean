@@ -72,138 +72,6 @@ class OCEAN_TEST_TRACKING_EXPORT TestVocabularyTree
 			// nothing to do here
 		};
 
-		template <>
-		class TypeHelper<DT_BINARY>
-		{
-			public:
-
-				/**
-				 * The readable name of the descriptor type.
-				 */
-				static constexpr const char* name_ = "Binary";
-
-				/**
-				 * Definition of a descriptor data type.
-				 */
-				using Descriptor = BinaryDescriptor;
-
-				/**
-				 * Definition of a vector holding descriptors.
-				 */
-				using Descriptors = std::vector<Descriptor>;
-
-				/**
-				 * Definition of the data type for the distance between two descriptors.
-				 */
-				using DistanceType = unsigned int;
-
-				/**
-				 * Determines the (hamming) distance between two binary descriptors.
-				 * @param descriptorA The first descriptor
-				 * @param descriptorB The second descriptor
-				 * @return The resulting distance
-				 */
-				static DistanceType determineDistance(const BinaryDescriptor& descriptorA, const BinaryDescriptor& descriptorB);
-
-				/**
-				 * Randomizes a descriptor.
-				 * @param descriptor The descriptor to be randomized
-				 * @param randomGenerator The random generator object to be used
-				 */
-				static void randomizeDescriptor(BinaryDescriptor& descriptor, RandomGenerator& randomGenerator);
-
-				/**
-				 * Applies a minor random modification to a given descriptor.
-				 * @param descriptor The descriptor to modify
-				 * @param randomGenerator The random generator object to be used
-				 * @return The modified descriptor
-				 */
-				static BinaryDescriptor modifyDescriptor(const BinaryDescriptor& descriptor, RandomGenerator& randomGenerator);
-
-				/**
-				 * Returns a bunch of descriptor epsilons which can be used for testing.
-				 * @param numberEpsilons The number of epsilon value to return, with range [2, numberBits]
-				 * @return The descriptor epsilons
-				 */
-				static std::vector<DistanceType> descriptorEpsilons(const unsigned int numberEpsilons);
-
-				/**
-				 * Definition of the vocabulary tree data type.
-				 */
-				using VocabularyTree = Tracking::VocabularyTree<Descriptor, DistanceType, determineDistance>;
-
-				/**
-				 * The function pointer to the cluster mean function.
-				 */
-				static constexpr const VocabularyTree::ClustersMeanFunction clusterMeanFunction_ = &VocabularyTree::determineClustersMeanForBinaryDescriptor<binaryDescriptorElements_ * 8u>;
-		};
-
-		template <>
-		class TypeHelper<DT_FLOAT>
-		{
-			public:
-
-				/**
-				 * The readable name of the descriptor type.
-				 */
-				static constexpr const char* name_ = "Float";
-
-				/**
-				 * Definition of a descriptor data type.
-				 */
-				using Descriptor = FloatDescriptor;
-
-				/**
-				 * Definition of a vector holding descriptors.
-				 */
-				using Descriptors = std::vector<Descriptor>;
-
-				/**
-				 * Definition of the data type for the distance between two descriptors.
-				 */
-				using DistanceType = float;
-
-				/**
-				 * Determines the square distance between two float descriptors.
-				 * @param descriptorA The first descriptor
-				 * @param descriptorB The second descriptor
-				 * @return The resulting square distance
-				 */
-				static float determineDistance(const FloatDescriptor& descriptorA, const FloatDescriptor& descriptorB);
-
-				/**
-				 * Randomizes a descriptor.
-				 * @param descriptor The descriptor to be randomized
-				 * @param randomGenerator The random generator object to be used
-				 */
-				static void randomizeDescriptor(FloatDescriptor& descriptor, RandomGenerator& randomGenerator);
-
-				/**
-				 * Applies a minor random modification to a given descriptor.
-				 * @param descriptor The descriptor to modify
-				 * @param randomGenerator The random generator object to be used
-				 * @return The modified descriptor
-				 */
-				static FloatDescriptor modifyDescriptor(const FloatDescriptor& descriptor, RandomGenerator& randomGenerator);
-
-				/**
-				 * Returns a bunch of descriptor epsilons which can be used for testing.
-				 * @param numberEpsilons The number of epsilon value to return, with range [2, numberBits]
-				 * @return The descriptor epsilons
-				 */
-				static std::vector<DistanceType> descriptorEpsilons(const unsigned int numberEpsilons);
-
-				/**
-				 * Definition of the vocabulary tree data type.
-				 */
-				using VocabularyTree = Tracking::VocabularyTree<Descriptor, DistanceType, determineDistance>;
-
-				/**
-				 * The function pointer to the cluster mean function.
-				 */
-				static constexpr const VocabularyTree::ClustersMeanFunction clusterMeanFunction_ = &VocabularyTree::determineClustersMeanForFloatDescriptor<floatDescriptorElements_>;
-		};
-
 	public:
 
 		/**
@@ -278,6 +146,138 @@ class OCEAN_TEST_TRACKING_EXPORT TestVocabularyTree
 		 * @return The resulting integer values, one for each bit
 		 */
 		static Indices32 separateBinaryDescriptor(const BinaryDescriptor& descriptor);
+};
+
+template <>
+class OCEAN_TEST_TRACKING_EXPORT TestVocabularyTree::TypeHelper<TestVocabularyTree::DT_BINARY>
+{
+	public:
+
+		/**
+		 * The readable name of the descriptor type.
+		 */
+		static constexpr const char* name_ = "Binary";
+
+		/**
+		 * Definition of a descriptor data type.
+		 */
+		using Descriptor = BinaryDescriptor;
+
+		/**
+		 * Definition of a vector holding descriptors.
+		 */
+		using Descriptors = std::vector<Descriptor>;
+
+		/**
+		 * Definition of the data type for the distance between two descriptors.
+		 */
+		using DistanceType = unsigned int;
+
+		/**
+		 * Determines the (hamming) distance between two binary descriptors.
+		 * @param descriptorA The first descriptor
+		 * @param descriptorB The second descriptor
+		 * @return The resulting distance
+		 */
+		static DistanceType determineDistance(const BinaryDescriptor& descriptorA, const BinaryDescriptor& descriptorB);
+
+		/**
+		 * Randomizes a descriptor.
+		 * @param descriptor The descriptor to be randomized
+		 * @param randomGenerator The random generator object to be used
+		 */
+		static void randomizeDescriptor(BinaryDescriptor& descriptor, RandomGenerator& randomGenerator);
+
+		/**
+		 * Applies a minor random modification to a given descriptor.
+		 * @param descriptor The descriptor to modify
+		 * @param randomGenerator The random generator object to be used
+		 * @return The modified descriptor
+		 */
+		static BinaryDescriptor modifyDescriptor(const BinaryDescriptor& descriptor, RandomGenerator& randomGenerator);
+
+		/**
+		 * Returns a bunch of descriptor epsilons which can be used for testing.
+		 * @param numberEpsilons The number of epsilon value to return, with range [2, numberBits]
+		 * @return The descriptor epsilons
+		 */
+		static std::vector<DistanceType> descriptorEpsilons(const unsigned int numberEpsilons);
+
+		/**
+		 * Definition of the vocabulary tree data type.
+		 */
+		using VocabularyTree = Tracking::VocabularyTree<Descriptor, DistanceType, determineDistance>;
+
+		/**
+		 * The function pointer to the cluster mean function.
+		 */
+		static constexpr const VocabularyTree::ClustersMeanFunction clusterMeanFunction_ = &VocabularyTree::determineClustersMeanForBinaryDescriptor<binaryDescriptorElements_ * 8u>;
+};
+
+template <>
+class OCEAN_TEST_TRACKING_EXPORT TestVocabularyTree::TypeHelper<TestVocabularyTree::DT_FLOAT>
+{
+	public:
+
+		/**
+		 * The readable name of the descriptor type.
+		 */
+		static constexpr const char* name_ = "Float";
+
+		/**
+		 * Definition of a descriptor data type.
+		 */
+		using Descriptor = FloatDescriptor;
+
+		/**
+		 * Definition of a vector holding descriptors.
+		 */
+		using Descriptors = std::vector<Descriptor>;
+
+		/**
+		 * Definition of the data type for the distance between two descriptors.
+		 */
+		using DistanceType = float;
+
+		/**
+		 * Determines the square distance between two float descriptors.
+		 * @param descriptorA The first descriptor
+		 * @param descriptorB The second descriptor
+		 * @return The resulting square distance
+		 */
+		static float determineDistance(const FloatDescriptor& descriptorA, const FloatDescriptor& descriptorB);
+
+		/**
+		 * Randomizes a descriptor.
+		 * @param descriptor The descriptor to be randomized
+		 * @param randomGenerator The random generator object to be used
+		 */
+		static void randomizeDescriptor(FloatDescriptor& descriptor, RandomGenerator& randomGenerator);
+
+		/**
+		 * Applies a minor random modification to a given descriptor.
+		 * @param descriptor The descriptor to modify
+		 * @param randomGenerator The random generator object to be used
+		 * @return The modified descriptor
+		 */
+		static FloatDescriptor modifyDescriptor(const FloatDescriptor& descriptor, RandomGenerator& randomGenerator);
+
+		/**
+		 * Returns a bunch of descriptor epsilons which can be used for testing.
+		 * @param numberEpsilons The number of epsilon value to return, with range [2, numberBits]
+		 * @return The descriptor epsilons
+		 */
+		static std::vector<DistanceType> descriptorEpsilons(const unsigned int numberEpsilons);
+
+		/**
+		 * Definition of the vocabulary tree data type.
+		 */
+		using VocabularyTree = Tracking::VocabularyTree<Descriptor, DistanceType, determineDistance>;
+
+		/**
+		 * The function pointer to the cluster mean function.
+		 */
+		static constexpr const VocabularyTree::ClustersMeanFunction clusterMeanFunction_ = &VocabularyTree::determineClustersMeanForFloatDescriptor<floatDescriptorElements_>;
 };
 
 }
