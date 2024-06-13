@@ -203,7 +203,7 @@ class VideoDecoder
 		NativeMediaLibrary::ScopedSubscription nativeMediaLibrarySubscription_;
 
 		/// The Android media decoder used to decode the video.
-		AMediaCodec* decoder_ = nullptr;
+		NativeMediaLibrary::ScopedAMediaCodec decoder_;
 
 		/// True, if the decoder is currently started.
 		bool isStarted_ = false;
@@ -221,7 +221,7 @@ inline bool VideoDecoder::isInitialized() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	return decoder_ != nullptr;
+	return decoder_.isValid();
 }
 
 inline bool VideoDecoder::isStarted() const
@@ -239,8 +239,7 @@ inline VideoDecoder& VideoDecoder::operator=(VideoDecoder&& videoDecoder) noexce
 	{
 		release();
 
-		decoder_ = videoDecoder.decoder_;
-		videoDecoder.decoder_ = nullptr;
+		decoder_ = std::move(videoDecoder.decoder_);
 
 		isStarted_ = videoDecoder.isStarted_;
 		videoDecoder.isStarted_ = false;

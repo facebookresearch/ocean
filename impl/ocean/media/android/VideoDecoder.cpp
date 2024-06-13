@@ -47,7 +47,7 @@ bool VideoDecoder::initialize(const std::string& mime, const unsigned int width,
 
 	const ScopedLock scopedLock(lock_);
 
-	if (decoder_ != nullptr)
+	if (decoder_.isValid())
 	{
 		ocean_assert(false && "Already initialized");
 		return false;
@@ -61,27 +61,27 @@ bool VideoDecoder::initialize(const std::string& mime, const unsigned int width,
 
 	NativeMediaLibrary& nativeMediaLibrary = NativeMediaLibrary::get();
 
-	AMediaCodec* decoder = nativeMediaLibrary.AMediaCodec_createDecoderByType(mime.c_str()); // **TODO** used scoped object
+	NativeMediaLibrary::ScopedAMediaCodec decoder(nativeMediaLibrary.AMediaCodec_createDecoderByType(mime.c_str()));
 
-	if (decoder == nullptr)
+	if (!decoder.isValid())
 	{
 		Log::error() << "Failed to create decoder for MIME " << mime;
 		return false;
 	}
 
-	AMediaFormat* format = nativeMediaLibrary.AMediaFormat_new(); // **TODO** used scoped object
+	NativeMediaLibrary::ScopedAMediaFormat format(nativeMediaLibrary.AMediaFormat_new());
 
-	if (format == nullptr)
+	if (!format.isValid())
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
 	}
 
-	nativeMediaLibrary.AMediaFormat_setString(format, nativeMediaLibrary.AMEDIAFORMAT_KEY_MIME, mime.c_str());
-	nativeMediaLibrary.AMediaFormat_setInt32(format, nativeMediaLibrary.AMEDIAFORMAT_KEY_WIDTH, int(width));
-	nativeMediaLibrary.AMediaFormat_setInt32(format, nativeMediaLibrary.AMEDIAFORMAT_KEY_HEIGHT, int(height));
+	nativeMediaLibrary.AMediaFormat_setString(format.object(), nativeMediaLibrary.AMEDIAFORMAT_KEY_MIME, mime.c_str());
+	nativeMediaLibrary.AMediaFormat_setInt32(format.object(), nativeMediaLibrary.AMEDIAFORMAT_KEY_WIDTH, int(width));
+	nativeMediaLibrary.AMediaFormat_setInt32(format.object(), nativeMediaLibrary.AMEDIAFORMAT_KEY_HEIGHT, int(height));
 
-	const media_status_t configureStatus = nativeMediaLibrary.AMediaCodec_configure(decoder, format, nullptr /*surface*/, nullptr /*crypto*/, 0 /*flags*/);
+	const media_status_t configureStatus = nativeMediaLibrary.AMediaCodec_configure(decoder.object(), format.object(), nullptr /*surface*/, nullptr /*crypto*/, 0 /*flags*/);
 
 	if (configureStatus != AMEDIA_OK)
 	{
@@ -89,7 +89,7 @@ bool VideoDecoder::initialize(const std::string& mime, const unsigned int width,
 		return false;
 	}
 
-	decoder_ = decoder;
+	decoder_ = std::move(decoder);
 
 	ocean_assert(isStarted_ == false);
 
@@ -100,7 +100,7 @@ bool VideoDecoder::start()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (decoder_ == nullptr)
+	if (!decoder_.isValid())
 	{
 		ocean_assert(false && "Not initialized");
 		return false;
@@ -111,7 +111,7 @@ bool VideoDecoder::start()
 		return true;
 	}
 
-	const media_status_t startStatus = NativeMediaLibrary::get().AMediaCodec_start(decoder_);
+	const media_status_t startStatus = NativeMediaLibrary::get().AMediaCodec_start(decoder_.object());
 
 	if (startStatus != AMEDIA_OK)
 	{
@@ -128,13 +128,13 @@ bool VideoDecoder::stop()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (decoder_ == nullptr || !isStarted_)
+	if (!decoder_.isValid() || !isStarted_)
 	{
 		// no assert, it's fine to stop a not-initialized or non-started decoder
 		return true;
 	}
 
-	const media_status_t startStatus = NativeMediaLibrary::get().AMediaCodec_stop(decoder_);
+	const media_status_t startStatus = NativeMediaLibrary::get().AMediaCodec_stop(decoder_.object());
 
 	if (startStatus != AMEDIA_OK)
 	{
@@ -158,7 +158,7 @@ bool VideoDecoder::pushSample(const void* data, const size_t size, const uint64_
 
 	const ScopedLock scopedLock(lock_);
 
-	if (decoder_ == nullptr)
+	if (!decoder_.isValid())
 	{
 		ocean_assert(false && "Not initialized");
 		return false;
@@ -179,7 +179,7 @@ bool VideoDecoder::pushSample(const void* data, const size_t size, const uint64_
 	{
 		const int64_t timeoutUs = Timestamp::seconds2microseconds(0.5);
 
-		const ssize_t inputBufferIndex = nativeMediaLibrary.AMediaCodec_dequeueInputBuffer(decoder_, timeoutUs);
+		const ssize_t inputBufferIndex = nativeMediaLibrary.AMediaCodec_dequeueInputBuffer(decoder_.object(), timeoutUs);
 
 		if (inputBufferIndex < 0)
 		{
@@ -188,7 +188,7 @@ bool VideoDecoder::pushSample(const void* data, const size_t size, const uint64_
 		}
 
 		size_t inputBufferSize = 0;
-		uint8_t* const inputBuffer = nativeMediaLibrary.AMediaCodec_getInputBuffer(decoder_, size_t(inputBufferIndex), &inputBufferSize);
+		uint8_t* const inputBuffer = nativeMediaLibrary.AMediaCodec_getInputBuffer(decoder_.object(), size_t(inputBufferIndex), &inputBufferSize);
 
 		if (inputBuffer == nullptr || inputBufferSize == 0)
 		{
@@ -204,7 +204,7 @@ bool VideoDecoder::pushSample(const void* data, const size_t size, const uint64_
 		remainingSize -= bufferSize;
 		ocean_assert(remainingSize < size);
 
-		const media_status_t queueStatus = nativeMediaLibrary.AMediaCodec_queueInputBuffer(decoder_, size_t(inputBufferIndex), 0u /*offset*/, bufferSize, presentationTime, 0u);
+		const media_status_t queueStatus = nativeMediaLibrary.AMediaCodec_queueInputBuffer(decoder_.object(), size_t(inputBufferIndex), 0u /*offset*/, bufferSize, presentationTime, 0u);
 
 		if (queueStatus != AMEDIA_OK)
 		{
@@ -220,28 +220,27 @@ Frame VideoDecoder::popFrame(int64_t* presentationTime)
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (decoder_ == nullptr || !isStarted_)
+	if (!decoder_.isValid() || !isStarted_)
 	{
 		ocean_assert(false && "Not initialized or started");
 		return Frame();
 	}
 
-	return extractVideoFrameFromCodecOutputBuffer(decoder_, presentationTime);
+	return extractVideoFrameFromCodecOutputBuffer(decoder_.object(), presentationTime);
 }
 
 void VideoDecoder::release()
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (decoder_ != nullptr)
+	if (decoder_.isValid())
 	{
 		if (isStarted_)
 		{
 			stop();
 		}
 
-		NativeMediaLibrary::get().AMediaCodec_delete(decoder_);  // TODO
-		decoder_ = nullptr;
+		decoder_.release();
 	}
 }
 
@@ -264,20 +263,20 @@ Frame VideoDecoder::extractVideoFrameFromCodecOutputBuffer(AMediaCodec* const me
 
 	Frame frame;
 
-	AMediaFormat* outputMediaFormat = nativeMediaLibrary.AMediaCodec_getOutputFormat(mediaCodec);
+	NativeMediaLibrary::ScopedAMediaFormat outputMediaFormat(nativeMediaLibrary.AMediaCodec_getOutputFormat(mediaCodec));
 
-	if (outputMediaFormat != nullptr)
+	if (outputMediaFormat.isValid())
 	{
 #ifdef OCEAN_INTENSIVE_DEBUG
 		Log::debug() << "Output buffer format for current sample:";
-		Log::debug() << NativeMediaLibrary::get().AMediaFormat_toString(outputMediaFormat);
+		Log::debug() << NativeMediaLibrary::get().AMediaFormat_toString(outputMediaFormat.object());
 #endif
 
 		int32_t width = 0;
-		nativeMediaLibrary.AMediaFormat_getInt32(outputMediaFormat, NativeMediaLibrary::AMEDIAFORMAT_KEY_WIDTH, &width);
+		nativeMediaLibrary.AMediaFormat_getInt32(outputMediaFormat.object(), NativeMediaLibrary::AMEDIAFORMAT_KEY_WIDTH, &width);
 
 		int32_t height = 0;
-		nativeMediaLibrary.AMediaFormat_getInt32(outputMediaFormat, NativeMediaLibrary::AMEDIAFORMAT_KEY_HEIGHT, &height);
+		nativeMediaLibrary.AMediaFormat_getInt32(outputMediaFormat.object(), NativeMediaLibrary::AMEDIAFORMAT_KEY_HEIGHT, &height);
 
 		if (width <= 0 || height <= 0)
 		{
@@ -291,7 +290,7 @@ Frame VideoDecoder::extractVideoFrameFromCodecOutputBuffer(AMediaCodec* const me
 		int32_t cropTop = 0;
 		int32_t cropRight = 0;
 		int32_t cropBottom = 0;
-		const bool validDisplayCrop = nativeMediaLibrary.AMediaFormat_getRect(outputMediaFormat, NativeMediaLibrary::AMEDIAFORMAT_KEY_DISPLAY_CROP, &cropLeft, &cropTop, &cropRight, &cropBottom);
+		const bool validDisplayCrop = nativeMediaLibrary.AMediaFormat_getRect(outputMediaFormat.object(), NativeMediaLibrary::AMEDIAFORMAT_KEY_DISPLAY_CROP, &cropLeft, &cropTop, &cropRight, &cropBottom);
 
 		if (validDisplayCrop)
 		{
@@ -319,10 +318,10 @@ Frame VideoDecoder::extractVideoFrameFromCodecOutputBuffer(AMediaCodec* const me
 		}
 
 		int32_t stride = 0;
-		nativeMediaLibrary.AMediaFormat_getInt32(outputMediaFormat, NativeMediaLibrary::AMEDIAFORMAT_KEY_STRIDE, &stride);
+		nativeMediaLibrary.AMediaFormat_getInt32(outputMediaFormat.object(), NativeMediaLibrary::AMEDIAFORMAT_KEY_STRIDE, &stride);
 
 		int32_t sliceHeight = 0;
-		nativeMediaLibrary.AMediaFormat_getInt32(outputMediaFormat, NativeMediaLibrary::AMEDIAFORMAT_KEY_SLICE_HEIGHT, &sliceHeight);
+		nativeMediaLibrary.AMediaFormat_getInt32(outputMediaFormat.object(), NativeMediaLibrary::AMEDIAFORMAT_KEY_SLICE_HEIGHT, &sliceHeight);
 
 		if (sliceHeight == 0)
 		{
@@ -330,10 +329,10 @@ Frame VideoDecoder::extractVideoFrameFromCodecOutputBuffer(AMediaCodec* const me
 		}
 
 		int32_t colorFormat = 0;
-		nativeMediaLibrary.AMediaFormat_getInt32(outputMediaFormat, NativeMediaLibrary::AMEDIAFORMAT_KEY_COLOR_FORMAT, &colorFormat);
+		nativeMediaLibrary.AMediaFormat_getInt32(outputMediaFormat.object(), NativeMediaLibrary::AMEDIAFORMAT_KEY_COLOR_FORMAT, &colorFormat);
 
 		int32_t colorRange = 0;
-		nativeMediaLibrary.AMediaFormat_getInt32(outputMediaFormat, NativeMediaLibrary::AMEDIAFORMAT_KEY_COLOR_RANGE, &colorRange);
+		nativeMediaLibrary.AMediaFormat_getInt32(outputMediaFormat.object(), NativeMediaLibrary::AMEDIAFORMAT_KEY_COLOR_RANGE, &colorRange);
 
 		const FrameType::PixelFormat pixelFormat = PixelFormats::androidMediaCodecColorFormatToPixelFormat(PixelFormats::AndroidMediaCodecColorFormat(colorFormat), PixelFormats::AndroidMediaFormatColorRange(colorRange));
 
@@ -451,8 +450,6 @@ Frame VideoDecoder::extractVideoFrameFromCodecOutputBuffer(AMediaCodec* const me
 
 			frame = frame.subFrame((unsigned int)(cropLeft), (unsigned int)(cropTop), cropWidth, cropHeight, Frame::CM_COPY_REMOVE_PADDING_LAYOUT);
 		}
-
-		nativeMediaLibrary.AMediaFormat_delete(outputMediaFormat);
 	}
 	else
 	{
