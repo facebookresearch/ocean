@@ -11,7 +11,7 @@
 
 #include <vtzero/vector_tile.hpp>
 
-#include <strstream>
+#include <sstream>
 #include <regex>
 
 namespace Ocean
@@ -1102,19 +1102,26 @@ bool Basemap::extractTileUrlTemplate(const char* styleData, const size_t styleSi
 		return false;
 	}
 
-	std::shared_ptr<std::istrstream> jsonStream = std::make_shared<std::istrstream>(styleData, styleSize);
+	const std::string styleString(styleData, styleSize);
+
+	std::shared_ptr<std::stringstream> jsonStream = std::make_shared<std::stringstream>(styleString);
+
 	JSONConfig json(jsonStream);
+
 	if (json.exist("sources"))
 	{
 		JSONConfig::JSONValue& sourceValue = json.value("sources", 0);
+
 		if (sourceValue.exist("facebook"))
 		{
 			JSONConfig::JSONValue& facebookValue = sourceValue.value("facebook", 0);
+
 			if (facebookValue.exist("tiles"))
 			{
 				JSONConfig::JSONValue& tilesValue = facebookValue.value("tiles", 0);
-				std::string emptyString;
-				urlTemplate = tilesValue(emptyString);
+
+				urlTemplate = tilesValue(std::string());
+
 				return urlTemplate.length() > 0;
 			}
 		}
