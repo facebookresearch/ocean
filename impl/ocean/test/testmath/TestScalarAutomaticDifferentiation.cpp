@@ -569,6 +569,50 @@ bool TestScalarAutomaticDifferentiation::testSimple(const double testDuration)
 					scopedIteration.setInaccurate();
 				}
 			}
+
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				// f(x) = -x
+				// f'(x) = -1
+
+				const AutoDiff autoDiff = -AutoDiff(x);
+
+				const T expectedValue = -x;
+				const T expectedDerivative = -T(1);
+
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				// f(x) = -x*x
+				// f'(x) = -2x
+
+				const AutoDiff autoDiff = -AutoDiff(x) * AutoDiff(x);
+
+				const T expectedValue = -x * x;
+				const T expectedDerivative = -T(2) * x;
+
+				if (NumericT<T>::isNotEqual(autoDiff.value(), expectedValue))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				if (NumericT<T>::isNotEqual(autoDiff.derivative(), expectedDerivative))
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));

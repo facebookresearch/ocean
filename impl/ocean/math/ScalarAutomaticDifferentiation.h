@@ -184,6 +184,12 @@ class ScalarAutomaticDifferentiationT
 		inline ScalarAutomaticDifferentiationT<T, TNumeric> operator-(const ScalarAutomaticDifferentiationT<T, TNumeric>& right) const;
 
 		/**
+		 * Unary negation operator returns the negative of this differentiation object.
+		 * @return The negative differentiation object
+		 */
+		inline ScalarAutomaticDifferentiationT<T, TNumeric> operator-() const;
+
+		/**
 		 * Subtracts two differentiation objects and determines the resulting derivative.
 		 * @param right The right differentiation object
 		 * @return The reference to this object
@@ -438,6 +444,15 @@ inline ScalarAutomaticDifferentiationT<T, TNumeric> ScalarAutomaticDifferentiati
 {
 	// (u - v)' = u' - v'
 	return ScalarAutomaticDifferentiationT<T, TNumeric>(value_ - right.value_, derivative_ - right.derivative_);
+}
+
+template <typename T, typename TNumeric>
+inline ScalarAutomaticDifferentiationT<T, TNumeric> ScalarAutomaticDifferentiationT<T, TNumeric>::operator-() const
+{
+	// f(x) = -x
+	// f'(x) = -x'
+
+	return ScalarAutomaticDifferentiationT<T, TNumeric>(-value_, -derivative_);
 }
 
 template <typename T, typename TNumeric>
