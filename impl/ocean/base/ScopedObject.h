@@ -48,10 +48,28 @@ class ScopedObjectT
 
 		/**
 		 * Creates a new scoped object.
+		 * This constructor allows to decide at runtime whether the release function will be used or not.
+		 * @param object The object to be wrapped
+		 * @param releaseFunction The release function
+		 * @param useReleaseFunction True, to use the provided release function; False, to ignore the provided release function (so that the wrapped object will never be released)
+		 */
+		ScopedObjectT(T&& object, TReleaseFunction&& releaseFunction, const bool useReleaseFunction) noexcept;
+
+		/**
+		 * Creates a new scoped object.
 		 * @param object The object to be wrapped
 		 * @param releaseFunction The release function
 		 */
 		ScopedObjectT(const T& object, TReleaseFunction&& releaseFunction) noexcept;
+
+		/**
+		 * Creates a new scoped object.
+		 * This constructor allows to decide at runtime whether the release function will be used or not.
+		 * @param object The object to be wrapped
+		 * @param releaseFunction The release function
+		 * @param useReleaseFunction True, to use the provided release function; False, to ignore the provided release function (so that the wrapped object will never be released)
+		 */
+		ScopedObjectT(const T& object, TReleaseFunction&& releaseFunction, const bool useReleaseFunction) noexcept;
 
 		/**
 		 * Destructs this scoped object and releases the internal wrapped object.
@@ -59,7 +77,7 @@ class ScopedObjectT
 		~ScopedObjectT();
 
 		/**
-		 * Returns whether this scoped object holds a valid object.
+		 * Returns whether this scoped object holds a valid release function (which will be invoked once the object is released).
 		 * @return True, if so
 		 */
 		bool isValid() const;
@@ -264,11 +282,31 @@ ScopedObjectT<T, TReleaseValue, TReleaseFunction>::ScopedObjectT(T&& object, TRe
 }
 
 template <typename T, typename TReleaseValue, typename TReleaseFunction>
+ScopedObjectT<T, TReleaseValue, TReleaseFunction>::ScopedObjectT(T&& object, TReleaseFunction&& releaseFunction, const bool useReleaseFunction) noexcept :
+	object_(std::move(object))
+{
+	if (useReleaseFunction)
+	{
+		releaseFunction_ = std::move(releaseFunction);
+	}
+}
+
+template <typename T, typename TReleaseValue, typename TReleaseFunction>
 ScopedObjectT<T, TReleaseValue, TReleaseFunction>::ScopedObjectT(const T& object, TReleaseFunction&& releaseFunction) noexcept :
 	object_(object),
 	releaseFunction_(std::move(releaseFunction))
 {
 	// nothing to do here
+}
+
+template <typename T, typename TReleaseValue, typename TReleaseFunction>
+ScopedObjectT<T, TReleaseValue, TReleaseFunction>::ScopedObjectT(const T& object, TReleaseFunction&& releaseFunction, const bool useReleaseFunction) noexcept :
+	object_(object)
+{
+	if (useReleaseFunction)
+	{
+		releaseFunction_ = std::move(releaseFunction);
+	}
 }
 
 template <typename T, typename TReleaseValue, typename TReleaseFunction>
@@ -280,7 +318,7 @@ ScopedObjectT<T, TReleaseValue, TReleaseFunction>::~ScopedObjectT()
 template <typename T, typename TReleaseValue, typename TReleaseFunction>
 bool ScopedObjectT<T, TReleaseValue, TReleaseFunction>::isValid() const
 {
-	return releaseFunction_;
+	return bool(releaseFunction_);
 }
 
 template <typename T, typename TReleaseValue, typename TReleaseFunction>
