@@ -21,6 +21,11 @@ namespace Media
 namespace Android
 {
 
+NativeMediaLibrary::NativeMediaLibrary()
+{
+	// nothing to do here
+}
+
 NativeMediaLibrary::ScopedSubscription NativeMediaLibrary::initialize()
 {
 	const ScopedLock scopedLock(lock_);

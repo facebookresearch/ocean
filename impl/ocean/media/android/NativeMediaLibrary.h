@@ -10,6 +10,7 @@
 
 #include "ocean/media/android/Android.h"
 
+#include "ocean/base/ScopedObject.h"
 #include "ocean/base/ScopedSubscription.h"
 #include "ocean/base/Singleton.h"
 
@@ -53,6 +54,44 @@ class OCEAN_MEDIA_A_EXPORT NativeMediaLibrary : public Singleton<NativeMediaLibr
 		 * Definition of a subscription object.
 		 */
 		using ScopedSubscription = ScopedSubscriptionT<unsigned int, NativeMediaLibrary>;
+
+		/**
+		 * Definition of a scoped object for AMediaFormat objects.
+		 */
+		class ScopedAMediaFormat : public ScopedObjectT<AMediaFormat*, AMediaFormat*, std::function<media_status_t(AMediaFormat*)>>
+		{
+			public:
+
+				/**
+				 * Default constructor creating an invalid object.
+				 */
+				ScopedAMediaFormat() = default;
+
+				/**
+				 * Creates a new scoped object and takes over the ownership of the given media format.
+				 * @param mediaCodec The media format to take over, can be nullptr to create an invalid object.
+				 */
+				explicit inline ScopedAMediaFormat(AMediaFormat* mediaFormat);
+		};
+
+		/**
+		 * Definition of a scoped object for AMediaCodec objects.
+		 */
+		class ScopedAMediaCodec : public ScopedObjectT<AMediaCodec*, AMediaCodec*, std::function<media_status_t(AMediaCodec*)>>
+		{
+			public:
+
+				/**
+				 * Default constructor creating an invalid object.
+				 */
+				ScopedAMediaCodec() = default;
+
+				/**
+				 * Creates a new scoped object and takes over the ownership of the given media codec.
+				 * @param mediaCodec The media codec to take over, can be nullptr to create an invalid object.
+				 */
+				explicit inline ScopedAMediaCodec(AMediaCodec* mediaCodec);
+		};
 
 		/**
 		 * Definition of individual MediaFormat keys.
@@ -288,7 +327,7 @@ class OCEAN_MEDIA_A_EXPORT NativeMediaLibrary : public Singleton<NativeMediaLibr
 		/**
 		 * Protected default constructor.
 		 */
-		inline NativeMediaLibrary();
+		NativeMediaLibrary();
 
 		/**
 		 * Destructs the library
@@ -401,7 +440,14 @@ class OCEAN_MEDIA_A_EXPORT NativeMediaLibrary : public Singleton<NativeMediaLibr
 		mutable Lock lock_;
 };
 
-inline NativeMediaLibrary::NativeMediaLibrary()
+inline NativeMediaLibrary::ScopedAMediaFormat::ScopedAMediaFormat(AMediaFormat* mediaFormat) :
+	ScopedObjectT(mediaFormat, std::bind(&NativeMediaLibrary::AMediaFormat_delete, &NativeMediaLibrary::get(), mediaFormat), mediaFormat != nullptr)
+{
+	// nothing to do here
+}
+
+inline NativeMediaLibrary::ScopedAMediaCodec::ScopedAMediaCodec(AMediaCodec* mediaCodec) :
+	ScopedObjectT(mediaCodec, std::bind(&NativeMediaLibrary::AMediaCodec_delete, &NativeMediaLibrary::get(), mediaCodec), mediaCodec != nullptr)
 {
 	// nothing to do here
 }
