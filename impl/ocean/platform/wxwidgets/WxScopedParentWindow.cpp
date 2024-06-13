@@ -23,13 +23,13 @@ WxScopedParentWindow::WxScopedParentWindow()
 
 WxScopedParentWindow::WxScopedParentWindow(OCEAN_WXWIDGETS_HANDLE handle)
 {
-#ifdef _WINDOWS
+#if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 
 	window_ = new wxWindow();
 	window_->SetHWND(handle);
 	assocated_ = true;
 
-#elif defined(__APPLE__)
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE)
 
 	ocean_assert(!handle && "Not supported for this platform!");
 	window_ = new wxFrame(nullptr, -1, L"WxScopedParentWindow");
@@ -37,6 +37,7 @@ WxScopedParentWindow::WxScopedParentWindow(OCEAN_WXWIDGETS_HANDLE handle)
 #else
 
 	#warning Missing implementation
+	ocean_assert(false && "Missing implementation!");
 
 #endif
 }
@@ -56,12 +57,15 @@ WxScopedParentWindow::~WxScopedParentWindow()
 
 void WxScopedParentWindow::release()
 {
-	if (window_)
+	if (window_ != nullptr)
 	{
-#ifdef _WINDOWS
+#ifdef OCEAN_PLATFORM_BUILD_WINDOWS
 		if (assocated_)
+		{
 			window_->SetHWND(nullptr);
+		}
 #endif
+
 		window_->Destroy();
 		window_ = nullptr;
 	}

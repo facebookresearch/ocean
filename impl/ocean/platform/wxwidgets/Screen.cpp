@@ -78,9 +78,12 @@ CV::PixelBoundingBoxI Screen::virtualDisplayBoundingBox()
 
 CV::PixelPositionI Screen::suitableWindowPosition(const unsigned int windowWidth, const unsigned int windowHeight, const int left, const int top, const OCEAN_WXWIDGETS_HANDLE parent)
 {
-#if defined(__APPLE__)
+#if defined(OCEAN_PLATFORM_BUILD_APPLE)
+
 	return suitableWindowPositionApple(windowWidth, windowHeight, left, top, parent);
-#elif defined(_WINDOWS)
+
+#elif defined(OCEAN_PLATFORM_BUILD_WINDOWS)
+
 	ocean_assert(windowWidth >= 1u && windowHeight >= 1u);
 
 	const CV::PixelBoundingBoxI screenBoundingBox(virtualDisplayBoundingBox());
@@ -132,16 +135,25 @@ CV::PixelPositionI Screen::suitableWindowPosition(const unsigned int windowWidth
 	}
 
 	return CV::PixelPositionI(screenBoundingBox.left() + int(screenBoundingBox.width() / 2u) - int(windowWidth / 2u), screenBoundingBox.top() + int(screenBoundingBox.height() / 2u) - int(windowHeight / 2u));
+
 #else
+
 	#warning Missing implementation
+	ocean_assert(false && "Missing implementation!");
+
+	return CV::PixelPositionI(0u, 0u);
+
 #endif
 }
 
 double Screen::scaleFactor(const wxWindow* window)
 {
-#if defined(__APPLE__)
+#if defined(OCEAN_PLATFORM_BUILD_APPLE)
+
 	return scaleFactorApple(window);
-#elif defined(_WINDOWS)
+
+#elif defined(OCEAN_PLATFORM_BUILD_WINDOWS)
+
 	double factor = 1.0;
 	int logicalPixelSize = 0;
 
@@ -165,9 +177,14 @@ double Screen::scaleFactor(const wxWindow* window)
 	factor = double(logicalPixelSize) * 0.01041666666666666666667; // 1/96 (96 is the dpi of a 100 percent scaling on Windows platforms)
 	ocean_assert(factor > 0.0);
 	return factor;
+
 #else
+
 	#warning Missing implementation.
 	ocean_assert(false && "Missing implementation!");
+
+	return 1.0;
+
 #endif
 }
 
