@@ -1,6 +1,8 @@
 # Ocean
 ## A C++ Framework For Computer Vision (CV) And Augmented Reality (AR) Applications
 
+[![Build Ocean on Linux (static)](https://github.com/facebookresearch/ocean/actions/workflows/build_linux.yml/badge.svg)](https://github.com/facebookresearch/ocean/actions/workflows/build_linux.yml)
+
 # Contributing
 
 Please read the [contribution guidelines](CONTRIBUTING.md) before submitting any code changes.
