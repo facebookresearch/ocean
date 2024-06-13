@@ -1,3 +1,4 @@
+libusb
 libjpeg
 googletest
 gl
