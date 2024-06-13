@@ -9,6 +9,11 @@ if (ANDROID)
 
     set(OCEAN_TARGET_NAME "application_ocean_demo_platform_meta_quest_openxr_fingerdistance_quest_native")
 
+    if (BUILD_SHARED_LIBS)
+        message(STATUS "Excluding '${OCEAN_TARGET_NAME}' for shared library build because of transitive dependencies to missing symbols (library registration functions).")
+        return()
+    endif()
+
     file(GLOB OCEAN_TARGET_HEADER_FILES "quest/*.h")
     file(GLOB OCEAN_TARGET_SOURCE_FILES "quest/*.cpp")
 

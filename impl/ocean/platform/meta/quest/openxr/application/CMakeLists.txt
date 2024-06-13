@@ -63,6 +63,15 @@ if (ANDROID)
             COMPONENT include
     )
 
+    if (BUILD_SHARED_LIBS)
+        # Avoid building "ocean_platform_meta_quest_openxr_application_advanced" when performing shared library build.
+        # Requisite library registration functions (e.g. `SceneDescription::SDX::X3D::registerX3DLibrary()`) are missing
+        # in shared library builds of dependencies.
+
+        message(STATUS "Excluding 'ocean_platform_meta_quest_openxr_application_advanced' for shared library build.")
+        return()
+    endif()
+
     set(OCEAN_TARGET_NAME "ocean_platform_meta_quest_openxr_application_advanced")
 
     # Target definition
