@@ -3,7 +3,7 @@ title: Microphone
 sidebar_position: 9
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
+import React from 'react';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 The Microphone app provides a practical example of how to access the Quest's microphone and handle Android permissions. It processes live microphone samples in real-time and converts them into an audio spectrum.
 
-<img src={useBaseUrl('img/docs/demoapps/questapps/microphone.png')} alt="Image: Screenshot Finger Distance app" width="600" className="center-image"/>
+<img src={require('@site/static/img/docs/demoapps/questapps/microphone.png').default} alt="Image: Screenshot Finger Distance app" width="600" className="center-image"/>
 
 ### Features
  - **Microphone Access**: Demonstrates how to access the Quest's microphone for audio input.

@@ -3,7 +3,7 @@ title: Padding and Stride
 sidebar_position: 3
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
+import React from 'react';
 import styles from './images.css';
 
 This page outlines how the image class in Ocean is structured, provides a list of best practices, and illustrates some common operations on images using examples.
@@ -23,11 +23,11 @@ Why does Ocean define padding memory in elements and not in bytes? When defining
 
 Imagine an image with pixel format [`Y32`](https://fburl.com/diffusion/usbsa0em) which is based on elements with data type `uint32_t`. On some platforms, e.g., `armv7`, each pixel value needs to be located in memory with a 32 bit aligned address - otherwise the process will crash when accessing the pixel values. If the plane would allow to define padding in bytes, the user could easily define a padding size which is not a multiple of 4 which would cause the app to crash.
 
-<img src={useBaseUrl('img/docs/images/Frame_Y32_InvalidPadding.png')} alt="Image: A plane with 4 bytes per element and padding in bytes which is not a multiple of 4. This can cause apps to crash." width="700" className="center-image"/>
+<img src={require('@site/static/img/docs/images/Frame_Y32_InvalidPadding.png').default} alt="Image: A plane with 4 bytes per element and padding in bytes which is not a multiple of 4. This can cause apps to crash." width="700" className="center-image"/>
 
 This kind of bug is actually very hard to find as it may not be reproducable. However, this can be easily prevented by defining padding **in elements**, i.e., the padding size in bytes is always and automatically a multiple of the element size (a multiple of 4 in case of `uint32_t` as in the example above).
 
-<img src={useBaseUrl('img/docs/images/Frame_Y32_ValidPadding.png')} alt="Image: A plane which defines the padding in elements" width="700" className="center-image"/>
+<img src={require('@site/static/img/docs/images/Frame_Y32_ValidPadding.png').default} alt="Image: A plane which defines the padding in elements" width="700" className="center-image"/>
 
 ## Helper functions
 

@@ -3,7 +3,7 @@ title: Finger Distance
 sidebar_position: 6
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl';
+import React from 'react';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 FingerDistance, based on [VRNativeApplicationAdvanced](vrnativeapplicationadvanced.md), measures the distance between both index fingers and visualizes this distance in VR. This app is an excellent introduction to hand interaction and the visualization of simple 3D objects.
 
-<img src={useBaseUrl('img/docs/demoapps/questapps/fingerdistance.png')} alt="Image: Screenshot Finger Distance app" width="600" className="center-image"/>
+<img src={require('@site/static/img/docs/demoapps/questapps/fingerdistance.png').default} alt="Image: Screenshot Finger Distance app" width="600" className="center-image"/>
 
 ### Features
  - **Distance Measurement and Visualization**: Measures and visually represents the distance between index fingers in VR.
