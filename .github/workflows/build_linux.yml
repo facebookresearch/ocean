@@ -9,6 +9,8 @@ on:
     # Execute this workflow:
     # Mon-Sun, every 24 hours at 6 am (UTC)
     - cron: '0 6 * * *'
+  # Have the ability to trigger this job manually through the API
+  workflow_dispatch:
 
 env:
   OCEAN_LINK_TYPE: static
