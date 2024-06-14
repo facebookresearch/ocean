@@ -13,7 +13,7 @@ TrackerTransform
 	insideOut FALSE
 
 	# define the tracking pattern used for tracking (would be an id of a marker if we would use marker tracking). In this example we use a well known image used for testing and comparing tracking algorithms
-	object "sift640.bmp"
+	object "tropical-island-with-toucans.jpeg"
 
 	# defining the size of the pattern/marker to be used in meter, we define the horizontal length, the vertical length is automatically determined by the ratio of the 'map', it's a 3D value for future features as e.g., for 3D feature maps
 	objectSize 0.251 0 0
