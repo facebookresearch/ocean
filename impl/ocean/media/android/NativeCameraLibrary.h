@@ -10,6 +10,7 @@
 
 #include "ocean/media/android/Android.h"
 
+#include "ocean/base/ScopedObject.h"
 #include "ocean/base/ScopedSubscription.h"
 #include "ocean/base/Singleton.h"
 
@@ -48,6 +49,82 @@ class OCEAN_MEDIA_A_EXPORT NativeCameraLibrary : public Singleton<NativeCameraLi
 		 * Definition of a subscription object.
 		 */
 		using ScopedSubscription = ScopedSubscriptionT<unsigned int, NativeCameraLibrary>;
+
+		/**
+		 * Definition of a scoped object for ACameraManager objects.
+		 */
+		class ScopedACameraManager : public ScopedObjectT<ACameraManager*, ACameraManager*, std::function<void(ACameraManager*)>>
+		{
+			public:
+
+				/**
+				 * Default constructor creating an invalid object.
+				 */
+				ScopedACameraManager() = default;
+
+				/**
+				 * Creates a new scoped object and takes over the ownership of the given camera manager.
+				 * @param cameraManager The camera manager to take over, can be nullptr to create an invalid object.
+				 */
+				explicit inline ScopedACameraManager(ACameraManager* cameraManager);
+		};
+
+		/**
+		 * Definition of a scoped object for ACameraIdList objects.
+		 */
+		class ScopedACameraIdList : public ScopedObjectT<ACameraIdList*, ACameraIdList*, std::function<void(ACameraIdList*)>>
+		{
+			public:
+
+				/**
+				 * Default constructor creating an invalid object.
+				 */
+				ScopedACameraIdList() = default;
+
+				/**
+				 * Creates a new scoped object and takes over the ownership of the created camera id list.
+				 * @param cameraManager The camera manager which will be used to create the camera id list, must be valid
+				 */
+				explicit ScopedACameraIdList(ACameraManager* cameraManager);
+		};
+
+		/**
+		 * Definition of a scoped object for ACaptureSessionOutputContainer objects.
+		 */
+		class ScopedACaptureSessionOutputContainer : public ScopedObjectT<ACaptureSessionOutputContainer*, ACaptureSessionOutputContainer*, std::function<void(ACaptureSessionOutputContainer*)>>
+		{
+			public:
+
+				/**
+				 * Default constructor creating an invalid object.
+				 */
+				ScopedACaptureSessionOutputContainer() = default;
+
+				/**
+				 * Creates a new scoped object and takes over the ownership of the created capture session output.
+				  * @param captureSessionOutputContainer The capture session output container to take over, can be nullptr to create an invalid object.
+				 */
+				explicit inline ScopedACaptureSessionOutputContainer(ACaptureSessionOutputContainer* captureSessionOutputContainer);
+		};
+
+		/**
+		 * Definition of a scoped object for ACaptureSessionOutput objects.
+		 */
+		class ScopedACaptureSessionOutput : public ScopedObjectT<ACaptureSessionOutput*, ACaptureSessionOutput*, std::function<void(ACaptureSessionOutput*)>>
+		{
+			public:
+
+				/**
+				 * Default constructor creating an invalid object.
+				 */
+				ScopedACaptureSessionOutput() = default;
+
+				/**
+				 * Creates a new scoped object and takes over the ownership of the created capture session output.
+				 * @param nativeWindow The native window to which the session output will be attached, must be valid
+				 */
+				explicit ScopedACaptureSessionOutput(ANativeWindow* nativeWindow);
+		};
 
 	protected:
 
@@ -193,7 +270,7 @@ class OCEAN_MEDIA_A_EXPORT NativeCameraLibrary : public Singleton<NativeCameraLi
 		/**
 		 * Protected default constructor.
 		 */
-		inline NativeCameraLibrary();
+		NativeCameraLibrary();
 
 		/**
 		 * Destructs the library
@@ -274,7 +351,14 @@ class OCEAN_MEDIA_A_EXPORT NativeCameraLibrary : public Singleton<NativeCameraLi
 		mutable Lock lock_;
 };
 
-inline NativeCameraLibrary::NativeCameraLibrary()
+inline NativeCameraLibrary::ScopedACameraManager::ScopedACameraManager(ACameraManager* cameraManager) :
+	ScopedObjectT(cameraManager, std::bind(&NativeCameraLibrary::ACameraManager_delete, &NativeCameraLibrary::get(), cameraManager), cameraManager != nullptr)
+{
+	// nothing to do here
+}
+
+inline NativeCameraLibrary::ScopedACaptureSessionOutputContainer::ScopedACaptureSessionOutputContainer(ACaptureSessionOutputContainer* captureSessionOutputContainer) :
+	ScopedObjectT(captureSessionOutputContainer, std::bind(&NativeCameraLibrary::ACaptureSessionOutputContainer_free, &NativeCameraLibrary::get(), captureSessionOutputContainer), captureSessionOutputContainer != nullptr)
 {
 	// nothing to do here
 }

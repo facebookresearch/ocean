@@ -21,9 +21,7 @@
 #endif
 
 #if __ANDROID_API__ >= 24
-
-#include <media/NdkImageReader.h>
-
+	#include <media/NdkImageReader.h>
 #endif // __ANDROID_API__ >= 24
 
 #include <media/NdkMediaCodec.h>
@@ -69,7 +67,7 @@ class OCEAN_MEDIA_A_EXPORT NativeMediaLibrary : public Singleton<NativeMediaLibr
 
 				/**
 				 * Creates a new scoped object and takes over the ownership of the given media format.
-				 * @param mediaCodec The media format to take over, can be nullptr to create an invalid object.
+				 * @param mediaFormat The media format to take over, can be nullptr to create an invalid object.
 				 */
 				explicit inline ScopedAMediaFormat(AMediaFormat* mediaFormat);
 		};

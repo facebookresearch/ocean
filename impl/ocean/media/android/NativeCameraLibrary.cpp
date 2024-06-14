@@ -21,6 +21,51 @@ namespace Media
 namespace Android
 {
 
+NativeCameraLibrary::ScopedACameraIdList::ScopedACameraIdList(ACameraManager* cameraManager)
+{
+	ocean_assert(cameraManager != nullptr);
+
+	NativeCameraLibrary& nativeCameraLibrary = NativeCameraLibrary::get();
+
+	ACameraIdList* cameraIdList = nullptr;
+	if (nativeCameraLibrary.ACameraManager_getCameraIdList(cameraManager, &cameraIdList) == ACAMERA_OK)
+	{
+		object_ = cameraIdList;
+		releaseFunction_ = std::bind(&NativeCameraLibrary::ACameraManager_deleteCameraIdList, &nativeCameraLibrary, cameraIdList);
+
+		ocean_assert(isValid());
+	}
+	else
+	{
+		ocean_assert(!isValid());
+	}
+}
+
+NativeCameraLibrary::ScopedACaptureSessionOutput::ScopedACaptureSessionOutput(ANativeWindow* nativeWindow)
+{
+	ocean_assert(nativeWindow != nullptr);
+
+	NativeCameraLibrary& nativeCameraLibrary = NativeCameraLibrary::get();
+
+	ACaptureSessionOutput* captureSessionOutput = nullptr;
+	if (nativeCameraLibrary.ACaptureSessionOutput_create(nativeWindow, &captureSessionOutput) == ACAMERA_OK)
+	{
+		object_ = captureSessionOutput;
+		releaseFunction_ = std::bind(&NativeCameraLibrary::ACaptureSessionOutput_free, &nativeCameraLibrary, captureSessionOutput);
+
+		ocean_assert(isValid());
+	}
+	else
+	{
+		ocean_assert(!isValid());
+	}
+}
+
+NativeCameraLibrary::NativeCameraLibrary()
+{
+	// nothing to do here
+}
+
 NativeCameraLibrary::ScopedSubscription NativeCameraLibrary::initialize()
 {
 	const ScopedLock scopedLock(lock_);
