@@ -10,6 +10,8 @@ import TabItem from '@theme/TabItem';
 
 The VRNativeApplicationAdvanced is an enhanced version of the [VRNativeApplication](vrnativeapplication.md), incorporating several additional functionalities and features for a more interactive VR experience.
 
+<img src={require('@site/static/img/docs/demoapps/questapps/vrnativeapplicationadvanced.png').default} alt="Image: Hierarchy of Ocean's Quest environments" width="600" className="center-image"/>
+
 ### Features
   - **Controller Tracking and Visualization**: Automatic tracking and visualization of controllers.
  - **Hand Tracking and Rendering**: Supports hand tracking and rendering for more natural interactions.

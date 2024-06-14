@@ -12,6 +12,8 @@ The NativeApplication demo is the most basic example of a native application tha
 
 Use this demo app as a starting point if you already have your own OpenXR framework which you intend to use, if you want to implement your own OpenXR codebase, or if you need to debug extreme low-level issues.
 
+<img src={require('@site/static/img/docs/demoapps/questapps/nativeapplication.png').default} alt="Image: Hierarchy of Ocean's Quest environments" width="600" className="center-image"/>
+
 The entire app is realized with only [four source files](https://github.com/facebookresearch/ocean/tree/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/application/ocean/demo/platform/meta/quest/openxr/nativeapplication/quest). The main class, [`OpenXRNativeApplication`](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/application/ocean/demo/platform/meta/quest/openxr/nativeapplication/quest/OpenXRNativeApplication.h#L24), is derived from [`Platform::Meta::Quest::OpenXR::Application::NativeApplication`](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/ocean/platform/meta/quest/openxr/application/NativeApplication.h#L49), which is the base class for all of Ocean's Quest applications. This base class primarily handles Android-specific application logic, such as the main loop, Android Activity event calls, or Android permission handling.
 
 The demo app requires the implementation of three different event functions:

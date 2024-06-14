@@ -10,6 +10,8 @@ import TabItem from '@theme/TabItem';
 
 Building on the [NativeApplication](nativeapplication.md), the VRNativeApplication introduces a basic VR environment. This demo integrates an OpenXR session and sets up Ocean's OpenGL ES rendering engine, ready to render simple primitive objects.
 
+<img src={require('@site/static/img/docs/demoapps/questapps/vrnativeapplication.png').default} alt="Image: Hierarchy of Ocean's Quest environments" width="600" className="center-image"/>
+
 ### Features
 - **Integrated OpenXR Session**: Unlike the NativeApplication, this demo includes an OpenXR session setup.
 - **Integrated Rendering Engine**: Ready to render simple primitive objects using Ocean's OpenGL ES rendering engine.
