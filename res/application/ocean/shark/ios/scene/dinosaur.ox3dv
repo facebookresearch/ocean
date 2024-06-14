@@ -26,9 +26,9 @@ TrackerTransform
 	[
 		Transform
 		{
-			scale 0.15 0.15 0.15
+			scale 0.05 0.05 0.05
 			translation 0.1255 0 0.1
-			rotation 0 1 0 -1.57
+			rotation 0 1 0 1.57
 
 			children Inline
 			{

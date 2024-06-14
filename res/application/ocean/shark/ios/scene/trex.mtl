@@ -1,15 +1,8 @@
-newmtl default
-	Ns 32
-	d 1
-	illum 2
-	Kd 0.4 0.4 0.4
-	Ks 0.7 0.7 0.7
-	Ka 0.3 0.3 0.3
+# MagicaVoxel @ Ephtracy
 
-newmtl bone
-	Ns 96
-	d 1
-	illum 2
-	Kd 0.64 0.6 0.44
-	Ks 0.24 0.24 0.24
-	Ka 0 0 0
+newmtl palette
+illum 1
+Ka 0.000 0.000 0.000
+Kd 1.000 1.000 1.000
+Ks 0.000 0.000 0.000
+map_Kd trex.png
