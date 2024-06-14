@@ -403,10 +403,6 @@ void UnidirectionalCorrespondences::determineFeatureCorrespondencesWithQualitySu
 		{
 			unsigned int& forwardIndexForBackwardFeature = forwardIndicesForBackwardFeatures[minBackwardIndexFirst];
 
-			// lock-free read check
-			if (forwardIndexForBackwardFeature == (unsigned int)(-2))
-				continue;
-
 			if constexpr (tLocks != 0u)
 			{
 				ocean_assert(locks != nullptr);
