@@ -13,8 +13,6 @@ namespace Ocean
 
 WorkerPool::~WorkerPool()
 {
-	const ScopedLock scopedLock(lock_);
-
 	freeWorkers_.clear();
 	usedWorkers_.clear();
 }
