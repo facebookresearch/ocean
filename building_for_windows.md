@@ -16,7 +16,7 @@ This document describes the process to build Ocean for Windows. It covers:
 The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_windows.bat`](build/cmake/build_thirdparty_windows.bat). By default, this will build all third-party libraries in both debug and release configurations. Each of these will be built with static as well as dynamic linking. To build a specific configuration, use the parameters `-config BUILD_TYPE` and `-link LINKING_TYPE`. For example to build only the shared debug configurations, run:
 
 ```
-./build/cmake/build_thirdparty_windows.bat -config debug -link shared
+./build/cmake/build_thirdparty_windows.bat -config "debug release" -link shared
 ```
 
 The default installation location will be shown in the logs of the build script and similar to `C:/tmp/ocean/install/win`. A custom location for the installation can specified as follows:

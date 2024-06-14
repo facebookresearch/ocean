@@ -10,11 +10,16 @@ setlocal
 @REM Determine the location of the source directory from the location of this script
 set OCEAN_THIRD_PARTY_SOURCE_DIR=%~dp0..\..\build\cmake\third-party
 
-
 @echo off
 setlocal enableDelayedExpansion
 
-set "options=-install:C:\tmp\ocean\install\win -build:C:\tmp\ocean\build\win -config:"debug release" -link:"static shared" -archive:NULL -h:"
+if "%OCEAN_INSTALL_PATH%" == "" (
+  set INSTALL_PATH=C:\tmp\ocean\install\win
+) else (
+  set INSTALL_PATH=%OCEAN_INSTALL_PATH%
+)
+
+set "options=-install:!INSTALL_PATH! -build:C:\tmp\ocean\build\win -config:"debug release" -link:"static shared" -archive:NULL -h:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -50,6 +55,8 @@ if !-h!==1 (
     echo(
     echo Arguments:
     echo(
+    echo   List arguments should be space-delimited in double quotes
+    echo(
     echo   -install INSTALL_DIR : The optional location where the third-party libraries of Ocean will
     echo                 be installed. Otherwise builds will be installed to: !-install!
     echo(
@@ -75,16 +82,17 @@ if !-h!==1 (
 set BUILD_FAILURES=
 
 for %%c in (!-config!) do (
-  for %%l in (!-link!) do (
-    if /I %%c==debug (
-      set BUILD_TYPE=Debug
-    ) else if /I %%c==release (
-      set BUILD_TYPE=Release
-    ) else (
-      echo Invalid build config %%c
-      exit /b
-    )
 
+  if /I %%c==debug (
+    set BUILD_TYPE=Debug
+  ) else if /I %%c==release (
+    set BUILD_TYPE=Release
+  ) else (
+    echo Invalid build config %%c
+    exit /b
+  )
+
+  for %%l in (!-link!) do (
     if /I %%l==static (
       set BUILD_SHARED_LIBS=OFF
       set bibase=static_!BUILD_TYPE!
@@ -96,13 +104,13 @@ for %%c in (!-config!) do (
       exit /b
     )
 
-    set BUILD_DIRECTORY=!-build!/!bibase!
-    set INSTALL_DIRECTORY=!-install!/!bibase!
+    set BUILD_DIRECTORY=!-build!\!bibase!
+    set INSTALL_DIRECTORY=!-install!\!bibase!
 
-    echo BUILD_TYPE !BUILD_TYPE!
-    echo BUILD_SHARED_LIBS !BUILD_SHARED_LIBS!
-    echo BUILD_DIRECTORY !BUILD_DIRECTORY!
-    echo INSTALL_DIRECTORY !INSTALL_DIRECTORY!
+    echo BUILD_TYPE           !BUILD_TYPE!
+    echo BUILD_SHARED_LIBS    !BUILD_SHARED_LIBS!
+    echo BUILD_DIRECTORY      !BUILD_DIRECTORY!
+    echo INSTALL_DIRECTORY    !INSTALL_DIRECTORY!
 
     call :run_build
   )
@@ -132,7 +140,7 @@ call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat windows %OCEAN_THIRD_PARTY_SO
 
 @echo off
 if %errorlevel% neq 0 (
-    set BUILD_FAILURES=%BUILD_FAILURES% !BUILD_SHARED_LIBS!_%BUILD_TYPE%_pass%BUILD_PASS%
+    set BUILD_FAILURES=%BUILD_FAILURES% !bibase!
     exit /b 1
 ) else (
     exit /b 0
