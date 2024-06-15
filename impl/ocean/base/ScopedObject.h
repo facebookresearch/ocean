@@ -89,6 +89,12 @@ class ScopedObjectT
 		const T& object() const;
 
 		/**
+		 * Returns the wrapped object.
+		 * @return The wrapped object
+		 */
+		const T& operator->() const;
+
+		/**
 		 * Explicitly releases the wrapped object.
 		 */
 		void release();
@@ -205,6 +211,12 @@ class ScopedObjectCompileTimeT
 		 * @return The wrapped object
 		 */
 		const T& object() const;
+
+		/**
+		 * Returns the wrapped object.
+		 * @return The wrapped object
+		 */
+		const T& operator->() const;
 
 		/**
 		 * Releases the current wrapped object and returns a new wrapped object.
@@ -328,6 +340,14 @@ const T& ScopedObjectT<T, TReleaseValue, TReleaseFunction>::object() const
 }
 
 template <typename T, typename TReleaseValue, typename TReleaseFunction>
+const T& ScopedObjectT<T, TReleaseValue, TReleaseFunction>::operator->() const
+{
+	ocean_assert(isValid());
+
+	return object();
+}
+
+template <typename T, typename TReleaseValue, typename TReleaseFunction>
 void ScopedObjectT<T, TReleaseValue, TReleaseFunction>::release()
 {
 	if (releaseFunction_)
@@ -418,6 +438,14 @@ template <typename T, typename TReleaseValue, typename TReleaseReturn, TReleaseR
 const T& ScopedObjectCompileTimeT<T, TReleaseValue, TReleaseReturn, tReleaseFunction, tExpectedReturnValue, tCheckReturnValue, tInvalidValue>::object() const
 {
 	return object_;
+}
+
+template <typename T, typename TReleaseValue, typename TReleaseReturn, TReleaseReturn (*tReleaseFunction)(TReleaseValue), typename NotVoidTyper<TReleaseReturn>::Type tExpectedReturnValue, bool tCheckReturnValue, T tInvalidValue>
+const T& ScopedObjectCompileTimeT<T, TReleaseValue, TReleaseReturn, tReleaseFunction, tExpectedReturnValue, tCheckReturnValue, tInvalidValue>::operator->() const
+{
+	ocean_assert(isValid());
+
+	return object();
 }
 
 template <typename T, typename TReleaseValue, typename TReleaseReturn, TReleaseReturn (*tReleaseFunction)(TReleaseValue), typename NotVoidTyper<TReleaseReturn>::Type tExpectedReturnValue, bool tCheckReturnValue, T tInvalidValue>
