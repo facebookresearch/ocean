@@ -23,13 +23,18 @@ public class MessengerCodeActivity extends GLFrameViewActivity
 		System.loadLibrary("OceanDemoCVDetectorMessengerCode");
 	}
 
+	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
 		String assetDirectory = getExternalFilesDir(null).getAbsolutePath() + "/";
 		Assets.copyFiles(getAssets(), assetDirectory, true);
+	}
 
+	@Override
+	protected void onCameraPermissionGranted()
+	{
 		initializeMessengerCode("LiveVideoId:0", "1280x720", "Y8");
 	}
 

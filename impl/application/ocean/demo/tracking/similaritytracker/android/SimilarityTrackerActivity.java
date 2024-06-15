@@ -29,15 +29,20 @@ public class SimilarityTrackerActivity extends GLFrameViewActivity
 		System.loadLibrary("OceanDemoTrackingSimilarityTracker");
 	}
 
+	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-        messageOutput_ = BaseJni.MessageOutput.OUTPUT_QUEUED.value();
+		messageOutput_ = BaseJni.MessageOutput.OUTPUT_QUEUED.value();
 
 		super.onCreate(savedInstanceState);
 
-		initializeSimilarityTracker("LiveVideoId:0", "1280x720");
-
 		addContentView(new MessengerView(this, true), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
+	}
+
+	@Override
+	protected void onCameraPermissionGranted()
+	{
+		initializeSimilarityTracker("LiveVideoId:0", "1280x720");
 	}
 
 	/**

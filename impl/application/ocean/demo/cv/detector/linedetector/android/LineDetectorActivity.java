@@ -26,6 +26,7 @@ public class LineDetectorActivity extends GLFrameViewActivity
 		System.loadLibrary("OceanDemoCVDetectorLineDetector");
 	}
 
+	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		messageOutput_ = BaseJni.MessageOutput.OUTPUT_QUEUED.value();
@@ -33,7 +34,11 @@ public class LineDetectorActivity extends GLFrameViewActivity
 		super.onCreate(savedInstanceState);
 
 		addContentView(new MessengerView(this, true), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
+	}
 
+	@Override
+	protected void onCameraPermissionGranted()
+	{
 		initializeLineDetector("LiveVideoId:0", "1280x720");
 	}
 

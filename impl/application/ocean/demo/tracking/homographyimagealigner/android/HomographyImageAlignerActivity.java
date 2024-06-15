@@ -23,18 +23,19 @@ public class HomographyImageAlignerActivity extends GLFrameViewActivity
 		System.loadLibrary("OceanDemoTrackingHomographyImageAligner");
 	}
 
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        videoUrl_ = "LiveVideoId:0";
-		videoPreferredWidth_ = 1280;
-		videoPreferredHeight_ = 720;
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+	}
 
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCameraPermissionGranted()
+	{
+		initializeHomographyImageAligner("LiveVideoId:0", "1280x720");
+	}
 
-        initializeHomographyImageAligner(videoUrl_, "1280x720");
-    }
-
-    /**
+	/**
 	 * Java native interface function to set or change the view's background media object.
 	 * @param inputMedium The URL of the input medium (e.g., "LiveVideoId:0")
 	 * @param resolution The resolution of the input medium (e.g., "640x480", "1280x720", "1920x1080")

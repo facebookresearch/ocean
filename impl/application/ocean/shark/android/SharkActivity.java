@@ -27,6 +27,7 @@ public class SharkActivity extends GLFrameViewActivity
 		System.loadLibrary("OceanShark");
 	}
 
+	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
@@ -44,6 +45,13 @@ public class SharkActivity extends GLFrameViewActivity
 		NativeInterfaceShark.loadScene(assetDir + "dinosaur.ox3dv", true);
 	}
 
+	@Override
+	protected void onCameraPermissionGranted()
+	{
+		GLFrameView.setFrameMedium("LiveVideoId:0", "LIVE_VIDEO", 1280, 720, true);
+	}
+
+	@Override
 	protected void onDestroy()
 	{
 		SceneDescriptionSDXX3DJni.unregisterLibrary();

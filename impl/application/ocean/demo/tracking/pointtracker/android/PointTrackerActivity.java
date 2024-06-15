@@ -23,14 +23,18 @@ public class PointTrackerActivity extends GLFrameViewActivity
 		System.loadLibrary("OceanDemoTrackingPointTracker");
 	}
 
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+	}
 
-        initializePointTracker("LiveVideoId:0", "1280x720");
-    }
+	@Override
+	protected void onCameraPermissionGranted()
+	{
+		initializePointTracker("LiveVideoId:0", "1280x720");
+	}
 
-    /**
+	/**
 	  * Java native interface function to set or change the view's background media object.
 	  * @param inputMedium The URL of the input medium (e.g., "LiveVideoId:0")
 	  * @param resolution The resolution of the input medium (e.g., "640x480", "1280x720", "1920x1080")

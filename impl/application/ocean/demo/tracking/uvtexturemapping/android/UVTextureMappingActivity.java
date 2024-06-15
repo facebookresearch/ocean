@@ -27,6 +27,7 @@ public class UVTextureMappingActivity extends GLFrameViewActivity
 		System.loadLibrary("OceanDemoTrackingUVTextureMapping");
 	}
 
+	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		messageOutput_ = BaseJni.MessageOutput.OUTPUT_QUEUED.value();
@@ -36,24 +37,13 @@ public class UVTextureMappingActivity extends GLFrameViewActivity
 		addContentView(new MessengerView(this, true), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200)	);
 
 		Assets.copyFiles(getAssets(), getExternalFilesDir(null) + "/", true);
-
-		requestPermission("android.permission.CAMERA");
 	}
 
 	@Override
-	protected void onPermissionGranted(String permission)
+	protected void onCameraPermissionGranted()
 	{
-		super.onPermissionGranted(permission);
-
-		if (permission == "android.permission.CAMERA")
-		{
-			if (!initializeUVTextureMapping("LiveVideoId:0", getExternalFilesDir(null) + "/sift640x512.bmp", "1920x1080"))
-			{
-				Log.e("UVTextureMappingActivity", "Failed to initialize UV texture mapping!");
-			}
-		}
+		initializeUVTextureMapping("LiveVideoId:0", getExternalFilesDir(null) + "/sift640x512.bmp", "1920x1080");
 	}
-
 
 	/**
 	 * Java native interface function to set or change the view's background media object.

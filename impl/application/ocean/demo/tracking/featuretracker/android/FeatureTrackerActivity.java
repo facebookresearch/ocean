@@ -26,20 +26,22 @@ public class FeatureTrackerActivity extends GLFrameViewActivity
 		System.loadLibrary("OceanDemoTrackingFeatureTracker");
 	}
 
+	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		messageOutput_ = BaseJni.MessageOutput.OUTPUT_QUEUED.value();
-
-		videoUrl_ = "LiveVideoId:0";
-		videoPreferredWidth_ = 1920;
-		videoPreferredHeight_ = 1080;
 
 		super.onCreate(savedInstanceState);
 
 		addContentView(new MessengerView(this, true), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
 
-		Assets.copyFiles(getAssets(), getExternalFilesDir(null) + "/", true);
-		initializeFeatureTracker(videoUrl_, getExternalFilesDir(null) + "/sift640x512.bmp", "1920x1080");
+		Assets.copyFiles(getAssets(), getExternalFilesDir(null) + "/", true);		
+	}
+
+	@Override
+	protected void onCameraPermissionGranted()
+	{
+		initializeFeatureTracker("LiveVideoId:0", getExternalFilesDir(null) + "/sift640x512.bmp", "1920x1080");
 	}
 
 	/**

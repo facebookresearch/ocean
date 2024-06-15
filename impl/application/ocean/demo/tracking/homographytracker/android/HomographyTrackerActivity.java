@@ -26,22 +26,27 @@ public class HomographyTrackerActivity extends GLFrameViewActivity
 		System.loadLibrary("OceanDemoTrackingHomographyTracker");
 	}
 
-		protected void onCreate(Bundle savedInstanceState)
-		{
-			messageOutput_ = BaseJni.MessageOutput.OUTPUT_QUEUED.value();
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		messageOutput_ = BaseJni.MessageOutput.OUTPUT_QUEUED.value();
 
-			super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 
-			initializeHomographyTracker("LiveVideoId:0", "1280x720");
+		addContentView(new MessengerView(this, true), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
+	}
 
-			addContentView(new MessengerView(this, true), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
-		}
+	@Override
+	protected void onCameraPermissionGranted()
+	{
+		initializeHomographyTracker("LiveVideoId:0", "1280x720");
+	}
 
-		/**
-		 * Java native interface function to initialize the homography tracker.
-		 * @param inputMedium The URL of the input medium (e.g., "LiveVideoId:0")
-		 * @param resolution The resolution of the input medium (e.g., "640x480", "1280x720", "1920x1080")
-		 * @return True, if succeeded
-		 */
-		public static native boolean initializeHomographyTracker(String inputMedium, String resolution);
+	/**
+	 * Java native interface function to initialize the homography tracker.
+	 * @param inputMedium The URL of the input medium (e.g., "LiveVideoId:0")
+	 * @param resolution The resolution of the input medium (e.g., "640x480", "1280x720", "1920x1080")
+	 * @return True, if succeeded
+	 */
+	public static native boolean initializeHomographyTracker(String inputMedium, String resolution);
 }

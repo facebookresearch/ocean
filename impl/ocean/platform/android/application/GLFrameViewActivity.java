@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import java.util.Set;
 import java.util.HashSet;
 
+import com.meta.ocean.base.BaseJni;
 import com.meta.ocean.media.android.MediaAndroidJni;
 import com.meta.ocean.platform.android.*;
 import com.meta.ocean.rendering.glescenegraph.RenderingGLESceneGraphJni;
@@ -32,6 +33,7 @@ import com.meta.ocean.rendering.glescenegraph.RenderingGLESceneGraphJni;
  */
 public class GLFrameViewActivity extends OceanActivity
 {
+	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
@@ -44,21 +46,39 @@ public class GLFrameViewActivity extends OceanActivity
 		setContentView(glViewFrame);
 
 		requestPermission("android.permission.CAMERA");
-
-		GLFrameView.setFrameMedium(videoUrl_, "LIVE_VIDEO", videoPreferredWidth_, videoPreferredHeight_, true);
 	}
 
+	@Override
 	protected void onPermissionGranted(String permission)
 	{
 		super.onPermissionGranted(permission);
 
 		GLFrameView.onPermissionGranted(permission);
+
+		if (permission.equals("android.permission.CAMERA"))
+		{
+			BaseJni.debug("GLFrameViewActivity: The app has permission to access the camera");
+
+			onCameraPermissionGranted();
+		}
+	}
+
+	/**
+	 * Event function which will be called when the application has been granted access to a camera.
+	 */
+	protected void onCameraPermissionGranted()
+	{
+		// should be implemented in a derived class (in case the application is using a camera as input)
+		// the derived class could doe something like
+
+		// GLFrameView.setFrameMedium("LiveVideoId:0", "LIVE_VIDEO", 1280, 720, true);
 	}
 
 	/**
 	 * Called after onRestoreInstanceState(Bundle), onRestart(), or onPause(), for your activity to start interacting with the user.
 	 * This is a good place to begin animations, open exclusive-access devices.
 	 */
+	@Override
 	public void onResume()
 	{
 		super.onResume();
@@ -70,6 +90,7 @@ public class GLFrameViewActivity extends OceanActivity
 	 * Called as part of the activity lifecycle when an activity is going into the background,
 	 * but has not (yet) been killed. The counterpart to onResume().
 	 */
+	@Override
 	public void onPause()
 	{
 		super.onPause();
@@ -81,6 +102,7 @@ public class GLFrameViewActivity extends OceanActivity
 	 * Called when you are no longer visible to the user.
 	 * You will next receive either onRestart(), onDestroy(), or nothing, depending on later user activity.
 	 */
+	@Override
 	public void onStop()
 	{
 		super.onStop();
@@ -93,6 +115,7 @@ public class GLFrameViewActivity extends OceanActivity
 	 * This can happen either because the activity is finishing (someone called finish() on it), or because the system is temporarily destroying this instance of the activity to save space.
 	 * You can distinguish between these two scenarios with the isFinishing() method.
 	 */
+	@Override
 	protected void onDestroy()
 	{
 		MediaAndroidJni.releaseResources();
@@ -107,13 +130,4 @@ public class GLFrameViewActivity extends OceanActivity
 
 	/// The OpenGLES FrameView of this activity.
 	protected GLFrameView glViewFrame = null;
-
-	/// The url of the video.
-	protected String videoUrl_ = "LiveVideoId:0";
-
-	/// The preferred width of the video source, in pixel.
-	protected int videoPreferredWidth_ = 1280;
-
-	/// The preferred height of the video source, in pixel.
-	protected int videoPreferredHeight_ = 720;
 }

@@ -70,7 +70,7 @@ void GLMainView::threadRun()
 			// however, this demo application focuses on the usage of platform independent code and not on performance
 			// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 
-			pixelImage_->setPixelImage(resultingTrackerFrame);
+			pixelImage_->setPixelImage(std::move(resultingTrackerFrame));
 
 			Log::info() << resultingTrackerPerformance * 1000.0 << "ms";
 

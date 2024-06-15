@@ -23,10 +23,15 @@ public class Detector2DActivity extends GLFrameViewActivity
 		System.loadLibrary("OceanDemoCVDetectorQRCodes");
 	}
 
+	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+	}
 
+	@Override
+	protected void onCameraPermissionGranted()
+	{
 		initializeQRCode("LiveVideoId:0", "1280x720");
 	}
 
