@@ -25,8 +25,8 @@ namespace JNI
 {
 
 /**
- * @ingroup mediaopenimagelibraries
- * @defgroup mediaopenimagelibrariesjni Ocean Media OpenImageLibraries JNI Library
+ * @ingroup mediaoil
+ * @defgroup mediaoiljni Ocean Media OpenImageLibraries JNI Library
  * @{
  * The Ocean Media OpenImageLibraries JNI Library provides a Java Native Interface for Android.
  * The library is available on Android platforms only.

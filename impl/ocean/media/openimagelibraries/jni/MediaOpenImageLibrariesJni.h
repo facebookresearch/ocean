@@ -15,7 +15,7 @@
  * @param env The JNI environment
  * @param javaThis The JNI object
  * @return True, if succeeded
- * @ingroup mediaopenimagelibrariesjni
+ * @ingroup mediaoiljni
  */
 extern "C" jboolean Java_com_meta_ocean_media_openimagelibraries_MediaOpenImageLibrariesJni_registerLibrary(JNIEnv* env, jobject javaThis);
 
@@ -24,7 +24,7 @@ extern "C" jboolean Java_com_meta_ocean_media_openimagelibraries_MediaOpenImageL
  * @param env The JNI environment
  * @param javaThis The JNI object
  * @return True, if succeeded
- * @ingroup mediaopenimagelibrariesjni
+ * @ingroup mediaoiljni
  */
 extern "C" jboolean Java_com_meta_ocean_media_openimagelibraries_MediaOpenImageLibrariesJni_unregisterLibrary(JNIEnv* env, jobject javaThis);
 
