@@ -12,6 +12,15 @@ set(tiff-tests OFF CACHE BOOL "")
 set(tiff-contrib OFF CACHE BOOL "")
 set(HAVE_LD_VERSION_SCRIPT OFF)
 
+if (LINUX)
+    # Explicitly disable these codes because they cause build errors on Github.
+    set(libdeflate OFF)
+    set(lzma OFF)
+    set(jbig OFF)
+    set(webp OFF)
+    set(zstd OFF)
+endif()
+
 find_package(Git REQUIRED)
 
 CPMAddPackage(
