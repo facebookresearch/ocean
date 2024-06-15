@@ -64,13 +64,13 @@ class GLMainView :
 	private:
 
 		/// Static helper variable ensuring that the instance function will be registered.
-		const static bool viewInstanceRegistered;
+		const static bool instanceRegistered_;
 
 		/// The pixel image that will forward the image result from the Messenger code detector to the renderer.
-		Ocean::Media::PixelImageRef viewPixelImage;
+		Ocean::Media::PixelImageRef pixelImage_;
 
 		/// The platform-independent implementation of this demo.
-		MessengerCodeWrapper viewMessengerCodeWrapper;
+		MessengerCodeWrapper messengerCodeWrapper_;
 };
 
 inline Ocean::Platform::Android::Application::GLView* GLMainView::createInstance()

@@ -16,11 +16,11 @@
 
 using namespace Ocean;
 
-const bool GLMainView::viewInstanceRegistered = GLMainView::registerInstanceFunction(GLMainView::createInstance);
+const bool GLMainView::instanceRegistered_ = GLMainView::registerInstanceFunction(GLMainView::createInstance);
 
 GLMainView::GLMainView()
 {
-	viewPixelImage = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
+	pixelImage_ = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
 }
 
 GLMainView::~GLMainView()
@@ -37,33 +37,37 @@ void GLMainView::initializeMessengerCode(const std::string& inputMedium, const s
 	commandLines.emplace_back(String::toWString(resolution));
 	commandLines.emplace_back(String::toWString(pixelFormat));
 
-	viewMessengerCodeWrapper = MessengerCodeWrapper(commandLines);
+	messengerCodeWrapper_ = MessengerCodeWrapper(commandLines);
 
-	const Media::FrameMediumRef oldBackgroundMedium = backgroundMedium();
-
-	if (viewPixelImage && oldBackgroundMedium)
+	if (messengerCodeWrapper_.frameMedium())
 	{
-		viewPixelImage->setDevice_T_camera(oldBackgroundMedium->device_T_camera());
+		pixelImage_->setDevice_T_camera(messengerCodeWrapper_.frameMedium()->device_T_camera());
 	}
 
-	setBackgroundMedium(viewPixelImage, true /*adjustFov*/);
+	if (!setBackgroundMedium(pixelImage_, true /*adjustFov*/))
+	{
+		Log::error() << "Failed to set the background medium";
+	}
 
 	startThread();
 }
 
 void GLMainView::threadRun()
 {
-	Frame resultingAlignerFrame;
-	double resultingAlignerPerformance;
+	Frame resultingFrame;
+	double resultingPerformance;
+
+	double sumPerformance = 0.0;
+	unsigned int performanceCounter = 0u;
 
 	while (shouldThreadStop() == false)
 	{
 		// We check whether the platform-independent detector has some new image to process
 
 		std::vector<std::string> messages;
-		viewMessengerCodeWrapper.detectAndDecode(resultingAlignerFrame, resultingAlignerPerformance, messages);
+		messengerCodeWrapper_.detectAndDecode(resultingFrame, resultingPerformance, messages);
 
-		if (resultingAlignerFrame.isValid())
+		if (resultingFrame.isValid())
 		{
 			// We received a frame from the detector
 			// so we forward the result to the render by updating the visual content of the pixel image
@@ -72,11 +76,21 @@ void GLMainView::threadRun()
 			// however, this demo application focuses on the usage of platform independent code and not on performance
 			// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 
-			viewPixelImage->setPixelImage(resultingAlignerFrame);
-
-			Log::info() << resultingAlignerPerformance * 1000.0 << "ms";
+			pixelImage_->setPixelImage(std::move(resultingFrame));
+			resultingFrame = Frame();
 
 			Log::info() << (messages.empty() ? std::string("---") : (std::string("Found ") + String::toAString(messages.size()) + " codes"));
+
+			sumPerformance += resultingPerformance;
+			++performanceCounter;
+
+			if (performanceCounter >= 10u)
+			{
+				Log::info() << "Average performance: " << (sumPerformance / double(performanceCounter)) * 1000.0 << "ms";
+
+				performanceCounter = 0u;
+				sumPerformance = 0.0;
+			}
 		}
 		else
 		{

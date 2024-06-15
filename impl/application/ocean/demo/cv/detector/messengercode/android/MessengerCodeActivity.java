@@ -42,7 +42,7 @@ public class MessengerCodeActivity extends GLFrameViewActivity
 	 * Java native interface function to set or change the view's background media object.
 	 * @param inputMedium The URL of the input medium (e.g., "LiveVideoId:0")
 	 * @param resolution The resolution of the input medium (e.g., "640x480", "1280x720", "1920x1080")
-	 * @param orientation The orientation of the input medium in relation to the device around the z-axis in radian, with range [0, 2PI)
+	 * @param pixelFormat The preferred pixel format to be used, e.g., "Y8"
 	 * @return True, if succeeded
 	 */
 	public static native boolean initializeMessengerCode(String inputMedium, String resolution, String pixelFormat);
