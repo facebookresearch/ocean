@@ -462,7 +462,7 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 
 	protected:
 
-		/// Unique camera id defined by Android.
+		/// Unique camera id defined by Android, may be valid even if 'cameraDevice_' is not yet valid.
 		std::string cameraId_;
 
 		/// The camera device.
@@ -475,10 +475,10 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		ANativeWindow* nativeWindow_ = nullptr;
 
 		/// The session output.
-		ACaptureSessionOutput* sessionOutput_ = nullptr;
+		NativeCameraLibrary::ScopedACaptureSessionOutput sessionOutput_;
 
 		/// The session output container.
-		ACaptureSessionOutputContainer* sessionOutputContainer_ = nullptr;
+		NativeCameraLibrary::ScopedACaptureSessionOutputContainer sessionOutputContainer_;
 
 		/// The capture session.
 		ACameraCaptureSession* captureSession_ = nullptr;

@@ -39,15 +39,26 @@ ALiveVideo::ALiveVideo(const std::string& url) :
 {
 	libraryName_ = nameAndroidLibrary();
 
+	isValid_ = false;
+
 	if (NativeMediaLibrary::get().isInitialized() && NativeCameraLibrary::get().isInitialized())
 	{
-		frameCollection_ = FrameCollection(10);
+		NativeCameraLibrary::ScopedACameraManager cameraManager(NativeCameraLibrary::get().ACameraManager_create());
 
-		isValid_ = initialize();
-	}
-	else
-	{
-		isValid_ = false;
+		if (cameraManager.isValid())
+		{
+			FrameType frameType;
+			cameraId_ = cameraIdForMedium(cameraManager.object(), url_, preferredFrameType_, frameType);
+
+			if (!cameraId_.empty())
+			{
+				// we have a valid camera id, this is enough to rate this medium as valid
+
+				frameCollection_ = FrameCollection(10);
+
+				isValid_ = true;
+			}
+		}
 	}
 }
 
@@ -390,6 +401,14 @@ bool ALiveVideo::start()
 {
 	const ScopedLock scopedLock(lock_);
 
+	if (cameraDevice_ == nullptr)
+	{
+		if (!initialize())
+		{
+			return false;
+		}
+	}
+
 	if (captureSession_ == nullptr || captureRequest_ == nullptr)
 	{
 		return false;
@@ -428,7 +447,19 @@ bool ALiveVideo::stop()
 		return false;
 	}
 
-	return NativeCameraLibrary::get().ACameraCaptureSession_stopRepeating(captureSession_) == ACAMERA_OK;
+	const camera_status_t stopStatus = NativeCameraLibrary::get().ACameraCaptureSession_stopRepeating(captureSession_);
+
+	if (stopStatus != ACAMERA_OK && stopStatus != ACAMERA_ERROR_SESSION_CLOSED)
+	{
+		Log::error() << "ALiveVideo: Failed to stop capture session, error " << int(stopStatus);
+		return false;
+	}
+
+	releaseCaptureSession();
+	releaseImageReader();
+	releaseCamera();
+
+	return true;
 }
 
 bool ALiveVideo::initialize()
@@ -466,38 +497,37 @@ bool ALiveVideo::release()
 
 bool ALiveVideo::createCamera(FrameType& frameType)
 {
-	ACameraManager* cameraManager = NativeCameraLibrary::get().ACameraManager_create();
+	NativeCameraLibrary::ScopedACameraManager cameraManager(NativeCameraLibrary::get().ACameraManager_create());
 
-	if (cameraManager == nullptr)
+	if (!cameraManager.isValid())
 	{
 		return false;
 	}
 
-	std::string cameraId = cameraIdForMedium(cameraManager, url_, preferredFrameType_, frameType);
+	std::string cameraId = cameraIdForMedium(cameraManager.object(), url_, preferredFrameType_, frameType);
 
 	if (cameraId.empty())
 	{
-		NativeCameraLibrary::get().ACameraManager_delete(cameraManager);
 		return false;
 	}
 
-	if (cameraExposureDurationRange(cameraManager, cameraId, exposureDurationMin_, exposureDurationMax_))
+	if (cameraExposureDurationRange(cameraManager.object(), cameraId, exposureDurationMin_, exposureDurationMax_))
 	{
 		Log::debug() << "camera " << cameraId << ", Exposure duration range [" << exposureDurationMin_ * 1000.0 << ", " << exposureDurationMax_ * 1000.0 << "]ms";
 	}
 
-	if (cameraISORange(cameraManager, cameraId, isoMin_, isoMax_))
+	if (cameraISORange(cameraManager.object(), cameraId, isoMin_, isoMax_))
 	{
 		Log::debug() << "camera " << cameraId << ", ISO range [" << isoMin_ << ", " << isoMax_ << "]";
 	}
 
-	if (cameraFocusRange(cameraManager, cameraId, focusPositionMin_, focusPositionMax_))
+	if (cameraFocusRange(cameraManager.object(), cameraId, focusPositionMin_, focusPositionMax_))
 	{
 		Log::debug() << "camera " << cameraId << ", Focus range [" << focusPositionMin_ << ", " << focusPositionMax_ << "]";
 	}
 
 	float cameraSensorPhysicalSizeX = -1.0f;
-	if (cameraSensorPysicalSize(cameraManager, cameraId, cameraSensorPhysicalSizeX))
+	if (cameraSensorPysicalSize(cameraManager.object(), cameraId, cameraSensorPhysicalSizeX))
 	{
 		Log::debug() << "camera " << cameraId << ", Physical sensor size: " << cameraSensorPhysicalSizeX;
 	}
@@ -510,10 +540,7 @@ bool ALiveVideo::createCamera(FrameType& frameType)
 	cameraDeviceCallbacks.onError = onCameraErrorStatic;
 
 	ocean_assert(cameraDevice_ == nullptr);
-	const camera_status_t status = NativeCameraLibrary::get().ACameraManager_openCamera(cameraManager, cameraId.data(), &cameraDeviceCallbacks, &cameraDevice_);
-
-	NativeCameraLibrary::get().ACameraManager_delete(cameraManager);
-	cameraManager = nullptr;
+	const camera_status_t status = NativeCameraLibrary::get().ACameraManager_openCamera(cameraManager.object(), cameraId.data(), &cameraDeviceCallbacks, &cameraDevice_);
 
 	if (status != ACAMERA_OK)
 	{
@@ -521,6 +548,7 @@ bool ALiveVideo::createCamera(FrameType& frameType)
 		return false;
 	}
 
+	// we update the camera id (which was set in the constructor, most likely it has not changed)
 	cameraId_ = std::move(cameraId);
 	cameraSensorPhysicalSizeX_ = cameraSensorPhysicalSizeX;
 
@@ -545,8 +573,9 @@ bool ALiveVideo::releaseCamera()
 		cameraDevice_ = nullptr;
 	}
 
-	cameraId_.clear();
 	cameraSensorPhysicalSizeX_ = -1.0f;
+
+	// we intentially do not clear the 'cameraId_' parameter to ensure that some functions can still use this value even if the camera has been stopped
 
 	return result;
 }
@@ -594,19 +623,30 @@ bool ALiveVideo::createCaptureSession()
 
 	bool noError = true;
 
-	ocean_assert(sessionOutput_ == nullptr);
-	if (noError && NativeCameraLibrary::get().ACaptureSessionOutput_create(nativeWindow_, &sessionOutput_) != ACAMERA_OK)
+	ocean_assert(!sessionOutput_.isValid());
+	sessionOutput_ = NativeCameraLibrary::ScopedACaptureSessionOutput(nativeWindow_);
+
+	if (!sessionOutput_.isValid())
 	{
 		noError = false;
 	}
 
-	ocean_assert(sessionOutputContainer_ == nullptr);
-	if (noError && NativeCameraLibrary::get().ACaptureSessionOutputContainer_create(&sessionOutputContainer_) != ACAMERA_OK)
+	ocean_assert(!sessionOutputContainer_.isValid());
+
+	if (noError)
 	{
-		noError = false;
+		ACaptureSessionOutputContainer* sessionOutputContainer = nullptr;
+		if (NativeCameraLibrary::get().ACaptureSessionOutputContainer_create(&sessionOutputContainer) == ACAMERA_OK)
+		{
+			sessionOutputContainer_ = NativeCameraLibrary::ScopedACaptureSessionOutputContainer(sessionOutputContainer);
+		}
+		else
+		{
+			noError = false;
+		}
 	}
 
-	if (noError && NativeCameraLibrary::get().ACaptureSessionOutputContainer_add(sessionOutputContainer_, sessionOutput_) != ACAMERA_OK)
+	if (noError && NativeCameraLibrary::get().ACaptureSessionOutputContainer_add(sessionOutputContainer_.object(), sessionOutput_.object()) != ACAMERA_OK)
 	{
 		noError = false;
 	}
@@ -620,7 +660,7 @@ bool ALiveVideo::createCaptureSession()
 		sessionStateCallbacks.onClosed = onSessionClosedStatic;
 
 		ocean_assert(captureSession_ == nullptr);
-		if (noError && NativeCameraLibrary::get().ACameraDevice_createCaptureSession(cameraDevice_, sessionOutputContainer_, &sessionStateCallbacks, &captureSession_) != ACAMERA_OK)
+		if (noError && NativeCameraLibrary::get().ACameraDevice_createCaptureSession(cameraDevice_, sessionOutputContainer_.object(), &sessionStateCallbacks, &captureSession_) != ACAMERA_OK)
 		{
 			noError = false;
 		}
@@ -678,17 +718,9 @@ void ALiveVideo::releaseCaptureSession()
 		captureSession_ = nullptr;
 	}
 
-	if (sessionOutputContainer_ != nullptr)
-	{
-		NativeCameraLibrary::get().ACaptureSessionOutputContainer_free(sessionOutputContainer_);
-		sessionOutputContainer_ = nullptr;
-	}
+	sessionOutputContainer_.release();
 
-	if (sessionOutput_ != nullptr)
-	{
-		NativeCameraLibrary::get().ACaptureSessionOutput_free(sessionOutput_);
-		sessionOutput_ = nullptr;
-	}
+	sessionOutput_.release();
 }
 
 void ALiveVideo::onCameraImageCallback(AImageReader* /*imageReader*/)
@@ -1178,8 +1210,9 @@ std::string ALiveVideo::cameraIdForMedium(ACameraManager* cameraManager, const s
 		String::isInteger32(url.substr(12), &oceanLiveVideoId);
 	}
 
-	ACameraIdList* cameraIdList = nullptr;
-	if (NativeCameraLibrary::get().ACameraManager_getCameraIdList(cameraManager, &cameraIdList) != ACAMERA_OK)
+	const NativeCameraLibrary::ScopedACameraIdList cameraIdList(cameraManager);
+
+	if (!cameraIdList.isValid())
 	{
 		return std::string();
 	}
@@ -1319,18 +1352,18 @@ std::string ALiveVideo::cameraIdForMedium(ACameraManager* cameraManager, const s
 
 							if (pixelFormat == FrameType::FORMAT_Y_U_V12 && width > 0 && height > 0)
 							{
-								if ((unsigned int)width == preferredFrameWidth && (unsigned int)height == preferredFrameHeight)
+								if ((unsigned int)(width) == preferredFrameWidth && (unsigned int)(height) == preferredFrameHeight)
 								{
-									bestFrameType = FrameType((unsigned int)width, (unsigned int)height, FrameType::FORMAT_Y_U_V12, FrameType::ORIGIN_UPPER_LEFT);
+									bestFrameType = FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_Y_U_V12, FrameType::ORIGIN_UPPER_LEFT);
 									break;
 								}
-								else if ((unsigned int)width >= preferredFrameWidth && (unsigned int)height >= preferredFrameHeight)
+								else if ((unsigned int)(width) >= preferredFrameWidth && (unsigned int)(height) >= preferredFrameHeight)
 								{
-									const unsigned int sizeDelta = std::max((unsigned int)width - preferredFrameWidth, (unsigned int)height - preferredFrameHeight);
+									const unsigned int sizeDelta = std::max((unsigned int)(width) - preferredFrameWidth, (unsigned int)(height) - preferredFrameHeight);
 
 									if (sizeDelta < bestSizeDelta)
 									{
-										bestFrameType = FrameType((unsigned int)width, (unsigned int)height, FrameType::FORMAT_Y_U_V12, FrameType::ORIGIN_UPPER_LEFT);
+										bestFrameType = FrameType((unsigned int)(width), (unsigned int)(height), FrameType::FORMAT_Y_U_V12, FrameType::ORIGIN_UPPER_LEFT);
 										bestSizeDelta = sizeDelta;
 									}
 								}
@@ -1351,8 +1384,6 @@ std::string ALiveVideo::cameraIdForMedium(ACameraManager* cameraManager, const s
 			NativeCameraLibrary::get().ACameraMetadata_free(cameraMetadata);
 		}
 	}
-
-	NativeCameraLibrary::get().ACameraManager_deleteCameraIdList(cameraIdList);
 
 	return result;
 }
