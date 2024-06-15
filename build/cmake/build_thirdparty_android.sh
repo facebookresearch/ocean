@@ -4,7 +4,6 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-
 if [ -z "${ANDROID_NDK}" ]; then
   echo "ERROR: Set ANDROID_NDK to the location of your Android NDK installation."
   exit 1
@@ -15,88 +14,296 @@ if [ -z "${JAVA_HOME}" ]; then
   exit 1
 fi
 
-echo "Building the third-party libraries required by Ocean for Android ...:"
-echo " "
+OCEAN_PLATFORM="android"
 
-OCEAN_THIRD_PARTY_SOURCE_DIRECTORY=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../../build/cmake/third-party && pwd )
-OCEAN_THIRD_PARTY_BUILD_ROOT_DIRECTORY="/tmp"
-OCEAN_THIRD_PARTY_INSTALL_ROOT_DIRECTORY="/tmp"
+# OTP = OCEAN_THIRD_PARTY
+OTP_SOURCE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd third-party && pwd )
 
-# Builds the third-party libraries for Ocean (Android)
+OTP_BUILD_DIR="/tmp/ocean/build/${OCEAN_PLATFORM}"
+OTP_INSTALL_DIR="/tmp/ocean/install/${OCEAN_PLATFORM}"
+
+OTP_VALID_ANDROID_ABIS="arm64-v8a,armeabi-v7a,x86_64,x86"
+OTP_ANDROID_ABIS="arm64-v8a,armeabi-v7a,x86_64,x86"
+
+OTP_VALID_BUILD_CONFIGS="debug,release"
+OTP_BUILD_CONFIG="debug,release"
+
+OTP_VALID_LINKING_TYPES="static,shared"
+OTP_LINKING_TYPES="static"
+
+OTP_ANDROID_SDK="android-32"
+
+OTP_ARCHIVE=""
+
+# Collection of builds that have errors that will be listed at the end of the script
+OTP_FAILED_BUILDS=()
+
+# Displays the supported parameters of this script
+display_help()
+{
+    echo "Script to build the third-party libraries required by Ocean (${OCEAN_PLATFORM}):"
+    echo ""
+    echo "  $(basename "$0") [-h|--help] [-i|--install INSTALL_DIR] [-b|--build BUILD_DIR] [-c|--config BUILD_CONFIG]"
+    echo "                   [-l|--link LINKING_TYPE] [-a | --archive ARCHIVE]"
+    echo ""
+    echo "Arguments:"
+    echo ""
+    echo "  --android_abi ABI_LIST : A list of Android ABIs as build target platforms; valid values are:"
+    for abi in $(echo "${OTP_VALID_ANDROID_ABIS}" | tr ',' '\n'); do
+        echo "                  ${abi}"
+    done
+    echo ""
+    echo "  --android_sdk ANDROID_SDK : name of Android SDK version for builds. Default: ${OTP_ANDROID_SDK}"
+    echo ""
+    echo "  -i | -install INSTALL_DIR : The optional location where the third-party libraries of Ocean will"
+    echo "                be installed. Otherwise builds will be installed to: ${OTP_INSTALL_DIR}"
+    echo ""
+    echo "  -b | -build BUILD_DIR : The optional location where the third-party libraries of Ocean will"
+    echo "                be built. Otherwise builds will be installed to: ${OTP_BUILD_DIR}"
+    echo ""
+    echo "  -c | --config BUILD_CONFIG : The optional build configs(s) to be built; valid values are:"
+    for type in $(echo "${OTP_VALID_BUILD_CONFIGS}" | tr ',' '\n'); do
+        echo "                  ${type}"
+    done
+    echo "                Multiple values must be separated by commas. Default value if nothing is"
+    echo "                specified: \"${OTP_BUILD_CONFIG}\""
+    echo ""
+    echo "  -l | -link LINKING_TYPE : The optional linking type for which will be built; valid values are:"
+    for type in $(echo "${OTP_VALID_LINKING_TYPES}" | tr ',' '\n'); do
+        echo "                  ${type}"
+    done
+    echo "                Multiple values must be separated by commas. Default value if nothing is"
+    echo "                specified: \"${OTP_LINKING_TYPES}\""
+    echo ""
+    echo " -a | --archive ARCHIVE: If specified, this will copy the contents of INSTALL_DIR after the build"
+    echo "                into a ZIP archive; the path to this archive must exist."
+    echo ""
+    echo "  -h | --help : This summary"
+    echo ""
+}
+
+# Builds the third-party libraries for Ocean
 #
-# ANDROID_ABI: The identifier of the Android ABI for which the build will be configured, cf. https://developer.android.com/ndk/guides/abis
-# ANDROID_SDK_VERSION: The version of the Android SDK as a string, format: android-X, cf. https://developer.android.com/tools/releases/platforms#12
-# BUILD_TYPE: The build type to be used, valid values: Debug, Release
-# LIBRARY_TYPE: The type of libraries to be built, valid values: static, shared
-function run_build_for_android {
-    ANDROID_ABI=$1
-    ANDROID_SDK_VERSION=$2
+# BUILD_CONFIG: The build type to be used, valid values: Debug, Release
+# LINKING_TYPE: The type of libraries to be built, valid values: static, shared
+function run_build {
+    BUILD_CONFIG=$1
 
-    BUILD_TYPE=$3
-    if [[ ${BUILD_TYPE} != "Debug" ]] && [[ ${BUILD_TYPE} != "Release" ]]; then
-        echo "ERROR: Invalid value: BUILD_TYPE=${BUILD_TYPE}"
+    # Convert the name of the build mode to the CMake notation.
+    if [[ ${BUILD_CONFIG} == "debug" ]]; then
+        BUILD_CONFIG="Debug"
+    elif [[ ${BUILD_CONFIG} == "release" ]]; then
+        BUILD_CONFIG="Release"
+    else
+        echo "ERROR: Invalid value: BUILD_CONFIG=${BUILD_CONFIG}" >&2
         exit 1
     fi
 
-    LIBRARY_TYPE=$4
-    if [[ ${LIBRARY_TYPE} == "static" ]]; then
+    LINKING_TYPE=$2
+    if [[ ${LINKING_TYPE} == "static" ]]; then
         ENABLE_BUILD_SHARED_LIBS="OFF"
-    elif [[ ${LIBRARY_TYPE} == "shared" ]]; then
+    elif [[ ${LINKING_TYPE} == "shared" ]]; then
         ENABLE_BUILD_SHARED_LIBS="ON"
     else
-        echo "ERROR: Invalid value: LIBRARY_TYPE=${LIBRARY_TYPE}"
+        echo "ERROR: Invalid value: LINKING_TYPE=${LINKING_TYPE}" >&2
         exit 1
     fi
 
-    OCEAN_THIRD_PARTY_BUILD_DIRECTORY="${OCEAN_THIRD_PARTY_BUILD_ROOT_DIRECTORY}/ocean/build/android/third-party/${ANDROID_ABI}_${LIBRARY_TYPE}_${BUILD_TYPE}"
-    OCEAN_THIRD_PARTY_INSTALL_DIRECTORY="${OCEAN_THIRD_PARTY_INSTALL_ROOT_DIRECTORY}/ocean/install/android/${ANDROID_ABI}_${LIBRARY_TYPE}_${BUILD_TYPE}"
+    ANDROID_ABI=$3
+    if ! grep -q "${ANDROID_ABI}" <<< "${OTP_VALID_ANDROID_ABIS}" ; then
+        echo "ERROR: Invalid Android ABI ${ANDROID_ABI}" >&2
+        exit 1
+    fi
 
-    echo " "
-    echo "ANDROID_NDK: ${ANDROID_NDK}"
-    echo "JAVA_HOME: ${JAVA_HOME}"
-    echo " "
-    echo "ANDROID_ABI: ${ANDROID_ABI}"
-    echo "ANDROID_SDK_VERSION: ${ANDROID_SDK_VERSION}"
-    echo "BUILD_TYPE: ${BUILD_TYPE}"
-    echo "LIBRARY_TYPE: ${LIBRARY_TYPE}"
-    echo " "
-    echo "OCEAN_THIRD_PARTY_BUILD_DIRECTORY: ${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}"
-    echo "OCEAN_THIRD_PARTY_INSTALL_DIRECTORY: ${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}"
-    echo " "
+    ANDROID_SDK_VERSION=$4
 
-    ${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}/build_deps.sh android "${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" -j16 \
-        "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" \
+    OTP_BUILD_DIRECTORY="${OTP_BUILD_DIR}/third-party/${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_CONFIG}"
+    OTP_INSTALL_DIRECTORY="${OTP_INSTALL_DIR}/${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_CONFIG}"
+
+    echo ""
+    echo ""
+    echo ""
+    echo "Build type: ${BUILD_CONFIG}"
+    echo "Linking type: ${LINKING_TYPE}"
+    echo ""
+    echo "Build directory: ${OTP_BUILD_DIRECTORY}"
+    echo "Install directory: ${OTP_INSTALL_DIRECTORY}"
+    echo ""
+    echo ""
+    echo ""
+
+    eval "${OTP_SOURCE_DIR}/build_deps.sh" ${OCEAN_PLATFORM} "${OTP_SOURCE_DIR}" "${OTP_BUILD_DIRECTORY}" -j16 \
+        "-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}" \
         "-DANDROID_ABI=${ANDROID_ABI}" \
         "-DANDROID_PLATFORM=${ANDROID_SDK_VERSION}" \
         "-DCMAKE_ANDROID_STL_TYPE=c++_static" \
         "-DCMAKE_ANDROID_NDK=${ANDROID_NDK}" \
         "-DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake" \
-        "-DCMAKE_INSTALL_PREFIX=${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
+        "-DCMAKE_INSTALL_PREFIX=${OTP_INSTALL_DIRECTORY}" \
         "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}"
+    if [ "$?" != 0 ]; then
+        OTP_FAILED_BUILDS+=("${ANDROID_ABI} + ${LINKING_TYPE} + ${BUILD_CONFIG}")
+    fi
 
-    echo " "
-    echo " "
-    echo " "
+    echo ""
+    echo ""
+    echo ""
 }
 
-# Shared builds are currently unused.  Android app builds use a single shared library created from linking static builds of Ocean and third-party libraries.
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        -h|--help)
+        display_help
+        exit 0
+        ;;
+        --android_abi)
+        OTP_ANDROID_ABIS="$2"
+        shift
+        shift
+        ;;
+        --android_sdk)
+        OTP_ANDROID_SDK="$2"
+        shift
+        shift
+        ;;
+        -i|--install)
+        OTP_INSTALL_DIR="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -b|--build)
+        OTP_BUILD_DIR="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -c|--config)
+        OTP_BUILD_CONFIG="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -l|--link)
+        OTP_LINKING_TYPES="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -a|--archive)
+        OTP_ARCHIVE="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        *)
+        echo "ERROR: Unknown value \"$1\"." >&2
+        exit 1
+        ;;
+    esac
+done
 
-run_build_for_android armeabi-v7a android-32 Debug static
-run_build_for_android arm64-v8a   android-32 Debug static
-run_build_for_android x86         android-32 Debug static
-run_build_for_android x86_64      android-32 Debug static
+echo "Building the third-party libraries required for Ocean (${OCEAN_PLATFORM}) ...:"
+echo ""
 
-# run_build_for_android armeabi-v7a android-32 Debug shared
-# run_build_for_android arm64-v8a   android-32 Debug shared
-# run_build_for_android x86         android-32 Debug shared
-# run_build_for_android x86_64      android-32 Debug shared
+if [ "${OTP_BUILD_CONFIG}" == "" ]; then
+    echo "ERROR: At least one build type has to be specified." >&2
+    exit 1
+fi
 
-run_build_for_android armeabi-v7a android-32 Release static
-run_build_for_android arm64-v8a   android-32 Release static
-run_build_for_android x86         android-32 Release static
-run_build_for_android x86_64      android-32 Release static
+# Remove duplicate values
+OTP_BUILD_CONFIG=$(echo "${OTP_BUILD_CONFIG}" | tr ',' '\n' | sort -u)
 
-# run_build_for_android armeabi-v7a android-32 Release shared
-# run_build_for_android arm64-v8a   android-32 Release shared
-# run_build_for_android x86         android-32 Release shared
-# run_build_for_android x86_64      android-32 Release shared
+# Only allow valid values
+for type in ${OTP_BUILD_CONFIG}; do
+    if ! echo "${OTP_VALID_BUILD_CONFIGS}" | grep -w "$type" > /dev/null; then
+        echo "Error: Unknown build type \"${type}\"" >&2
+        exit 1
+    fi
+done
+
+if [ "${OTP_ANDROID_ABIS}" == "" ]; then
+    echo "ERROR: At least one Android ABI has to be specified." >&2
+    exit 1
+fi
+
+# Remove duplicate values
+OTP_ANDROID_ABIS=$(echo "${OTP_ANDROID_ABIS}" | tr ',' '\n' | sort -u)
+
+# Only allow valid values
+for type in ${OTP_ANDROID_ABIS}; do
+    if ! echo "${OTP_VALID_ANDROID_ABIS}" | grep -w "$type" > /dev/null; then
+        echo "Error: Unknown Android ABI \"${type}\"" >&2
+        exit 1
+    fi
+done
+
+if [ "${OTP_LINKING_TYPES}" == "" ]; then
+    echo "ERROR: At least one linking type has to be specified." >&2
+    exit 1
+fi
+
+# Remove duplicate values
+OTP_LINKING_TYPES=$(echo "$OTP_LINKING_TYPES" | tr ',' '\n' | sort -u)
+
+# Only allow valid values
+for type in ${OTP_LINKING_TYPES}; do
+    if ! echo "${OTP_VALID_LINKING_TYPES}" | grep -w "$type" > /dev/null; then
+        echo "Error: Unknown build type \"${type}\"" >&2
+        exit 1
+    fi
+done
+
+echo "The third-party libraries will be build for the following combinations:"
+for abi in ${OTP_ANDROID_ABIS}; do
+    for build_config in ${OTP_BUILD_CONFIG}; do
+        for link_type in ${OTP_LINKING_TYPES}; do
+            echo " * ${abi} + ${build_config} + ${link_type}"
+        done
+    done
+done
+
+echo ""
+echo ""
+echo ""
+echo "Install root directory for all builds: ${OTP_INSTALL_DIR}"
+echo ""
+echo ""
+echo ""
+
+# Build
+for abi in ${OTP_ANDROID_ABIS}; do
+    for build_config in ${OTP_BUILD_CONFIG}; do
+        for link_type in ${OTP_LINKING_TYPES}; do
+            run_build "${build_config}" "${link_type}" "${abi}" "${OTP_ANDROID_SDK}"
+        done
+    done
+done
+
+# Determine if all of the above builds were successful.
+OTP_BUILD_SUCCESSFUL=0
+
+if [ "${#OTP_FAILED_BUILDS[@]}" -eq 0 ]; then
+    OTP_BUILD_SUCCESSFUL=1
+fi
+
+# Copy the build artifacts into the specified archive, if applicable
+if [ "${OTP_ARCHIVE}" != "" ]; then
+    if [[ ${OTP_BUILD_SUCCESSFUL} == 1 && -d ${OTP_INSTALL_DIR} ]]; then
+        echo "Creating \"${OTP_ARCHIVE}\" ..."
+        OTP_CURRENT_DIRECTORY="${PWD}"
+        cd  "${OTP_INSTALL_DIR}" && zip -rv "${OTP_ARCHIVE}" .
+        cd "${OTP_CURRENT_DIRECTORY}"
+        echo "done."
+        echo ""
+    else
+        echo "WARNING: Failed to create \"${OTP_ARCHIVE}\"."
+    fi
+fi
+
+if [ ${OTP_BUILD_SUCCESSFUL} == 1 ]; then
+    echo "All builds were successful."
+else
+    echo "Some builds have failed." >&2
+    for config in "${OTP_FAILED_BUILDS[@]}"; do
+        echo "- $config" >&2
+    done
+
+    exit 1
+fi

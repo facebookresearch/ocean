@@ -173,7 +173,7 @@ fi
 OTP_BUILD_CONFIG=$(echo "$OTP_BUILD_CONFIG" | tr ',' '\n' | sort -u)
 
 # Only allow valid values
-for type in ${OTP_BUILD_CONFIG[@]}; do
+for type in ${OTP_BUILD_CONFIG}; do
     if ! echo "${OTP_VALID_BUILD_CONFIGS}" | grep -w "$type" > /dev/null; then
         echo "Error: Unknown build type \"${type}\"" >&2
         exit 1
@@ -189,7 +189,7 @@ fi
 OTP_LINKING_TYPES=$(echo "$OTP_LINKING_TYPES" | tr ',' '\n' | sort -u)
 
 # Only allow valid values
-for type in ${OTP_LINKING_TYPES[@]}; do
+for type in ${OTP_LINKING_TYPES}; do
     if ! echo "${OTP_VALID_LINKING_TYPES}" | grep -w "$type" > /dev/null; then
         echo "Error: Unknown build type \"${type}\"" >&2
         exit 1
@@ -197,8 +197,8 @@ for type in ${OTP_LINKING_TYPES[@]}; do
 done
 
 echo "The third-party libraries will be build for the following combinations:"
-for build_config in ${OTP_BUILD_CONFIG[@]}; do
-    for link_type in ${OTP_LINKING_TYPES[@]}; do
+for build_config in ${OTP_BUILD_CONFIG}; do
+    for link_type in ${OTP_LINKING_TYPES}; do
         echo " * ${build_config} + ${link_type}"
     done
 done
@@ -212,8 +212,8 @@ echo ""
 echo ""
 
 # Build
-for build_config in ${OTP_BUILD_CONFIG[@]}; do
-    for link_type in ${OTP_LINKING_TYPES[@]}; do
+for build_config in ${OTP_BUILD_CONFIG}; do
+    for link_type in ${OTP_LINKING_TYPES}; do
         run_build "${build_config}" "${link_type}"
     done
 done
