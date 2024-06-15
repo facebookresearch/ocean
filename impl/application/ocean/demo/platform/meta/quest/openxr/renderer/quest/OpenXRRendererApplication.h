@@ -14,6 +14,9 @@
 
 using namespace Ocean;
 
+// define this marco in case you want to use the custom render callbacks
+// #define OCEAN_USE_CUSTOM_RENDER_CALLBACK
+
 /**
  * Implements a specialization of the VRApplication.
  * @ingroup applicationdemoplatformmetaquestopenxr
@@ -42,6 +45,8 @@ class OpenXRRendererApplication : public Platform::Meta::Quest::OpenXR::Applicat
 		 */
 		void onFramebufferInitialized() override;
 
+#ifdef OCEAN_USE_CUSTOM_RENDER_CALLBACK
+
 		/**
 		 * Optional explicit callback function for pre-render events.
 		 * @param eyeIndex The index of the eye (framebuffer) for which the current image will be rendered
@@ -59,6 +64,8 @@ class OpenXRRendererApplication : public Platform::Meta::Quest::OpenXR::Applicat
 		 * @param predictedDisplayTime The predicted timestamp when the image will be display
 		 */
 		void onPostRenderFramebuffer(const size_t eyeIndex, const HomogenousMatrix4 view_T_world, const SquareMatrix4 projection, const Timestamp predictedDisplayTime);
+
+#endif // OCEAN_USE_CUSTOM_RENDER_CALLBACK
 };
 
 #endif // OCEAN_META_APPLICATION_DEMO_PLATFORM_META_QUEST_OPENXR_RENDERER_OPEN_XR_RENDERER_APPLICATION_H

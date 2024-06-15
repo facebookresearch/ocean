@@ -12,12 +12,18 @@ The Renderer app extends the [VRNativeApplication](vrnativeapplication.md) by de
 
 <img src={require('@site/static/img/docs/demoapps/questapps/rendererapplication.png').default} alt="Image: Hierarchy of Ocean's Quest environments" width="600" className="center-image"/>
 
-### Features
+Within the [`onFramebufferInitialized()`](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/OpenXRRendererApplication.cpp#L26) function, a 3D coordinate system is established. The scene remains static, meaning its appearance does not change over time. Optionally, the app also demonstrates how to integrate a custom render call, for instance, utilizing a third-party rendering engine. This feature provides flexibility for developers looking to customize the rendering process according to specific requirements or to leverage advanced rendering technologies.
+
+TODO: Add screenshot picture
+
+Use this app as a foundational template for developing lightweight VR applications with minimal dependencies. It offers a streamlined approach for those looking to create efficient and straightforward VR experiences.
+
+## Features
 - **Coordinate System Visualization**: Displays the Quest's world coordinate system with 1-meter long axes in front of the user. Each axis has an own color (red for x-axis, green for y-axis, blue for z-axis).
 - **Custom OpenGL ES Engine Integration**: Demonstrates how a custom OpenGL ES engine could be integrated into the rendering pipeline (disabled by default).
 
 
-### Usage
+## Usage
 - **Immediate Visual Representation**: Unlike the previous apps, this app provides immediate visual feedback by displaying the coordinate system upon app start.
 
 ## Building

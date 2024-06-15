@@ -42,17 +42,19 @@ void OpenXRRendererApplication::onFramebufferInitialized()
 	// we add the new scene graph object to the scene
 	scene->addChild(transform);
 
-#if 0
+#ifdef OCEAN_USE_CUSTOM_RENDER_CALLBACK
+
 	// enable the definition of the pre-render callback to apply custom OpenGL ES render calls before Ocean's scene graph rendering engine is applied
 	framebuffer_->setPreRenderCallback(Rendering::Framebuffer::RenderCallback::create(*this, &OpenXRRendererApplication::onPreRenderFramebuffer));
-#endif
 
-#if 0
 	// enable the definition of the post-render callback to apply custom OpenGL ES render calls after Ocean's scene graph rendering engine is applied
 	framebuffer_->setPostRenderCallback(Rendering::Framebuffer::RenderCallback::create(*this, &OpenXRRendererApplication::onPostRenderFramebuffer));
-#endif
+
+#endif // OCEAN_USE_CUSTOM_RENDER_CALLBACK
 
 }
+
+#ifdef OCEAN_USE_CUSTOM_RENDER_CALLBACK
 
 void OpenXRRendererApplication::onPreRenderFramebuffer(const size_t eyeIndex, const HomogenousMatrix4 /*view_T_world*/, const SquareMatrix4 /*projection*/, const Timestamp /*predictedDisplayTime*/)
 {
@@ -93,3 +95,5 @@ void OpenXRRendererApplication::onPostRenderFramebuffer(const size_t eyeIndex, c
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	ocean_assert(GL_NO_ERROR == glGetError());
 }
+
+#endif // OCEAN_USE_CUSTOM_RENDER_CALLBACK
