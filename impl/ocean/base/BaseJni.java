@@ -99,6 +99,13 @@ public class BaseJni
 	public static native boolean setWorkerPoolCapacity(int capacity);
 
 	/**
+	 * Java native interface function to forward an debug message to the framework.
+	 * @param message Debug message to forward
+	 * @see warning(), error().
+	 */
+	public static native void debug(String message);
+
+	/**
 	 * Java native interface function to forward an information message to the framework.
 	 * @param message Information message to forward
 	 * @see warning(), error().

@@ -51,6 +51,11 @@ jboolean Java_com_meta_ocean_base_BaseJni_setWorkerPoolCapacity(JNIEnv* env, job
 	return JNI::BaseJni::setWorkerPoolCapacity((unsigned int)capacity);
 }
 
+void Java_com_meta_ocean_base_BaseJni_debug(JNIEnv* env, jobject javaThis, jstring message)
+{
+	JNI::BaseJni::debug(Platform::Android::Utilities::toAString(env, message));
+}
+
 void Java_com_meta_ocean_base_BaseJni_information(JNIEnv* env, jobject javaThis, jstring message)
 {
 	JNI::BaseJni::information(Platform::Android::Utilities::toAString(env, message));
@@ -169,6 +174,11 @@ bool BaseJni::setWorkerPoolCapacity(const unsigned int capacity)
 	}
 
 	return false;
+}
+
+void BaseJni::debug(const std::string& message)
+{
+	Ocean::Log::debug() << message;
 }
 
 void BaseJni::information(const std::string& message)

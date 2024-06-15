@@ -70,6 +70,16 @@ extern "C" jboolean Java_com_meta_ocean_base_BaseJni_forceProcessorCoreNumber(JN
 extern "C" jboolean Java_com_meta_ocean_base_BaseJni_setWorkerPoolCapacity(JNIEnv* env, jobject javaThis, jint capacity);
 
 /**
+ * Java native interface function to forward a debug message to the framework.
+ * @param env The JNI environment
+ * @param javaThis The JNI object
+ * @param message The debug message to forward
+ * @ingroup basejni
+ * @see Java_com_meta_ocean_base_BaseJni_information().
+ */
+extern "C" void Java_com_meta_ocean_base_BaseJni_debug(JNIEnv* env, jobject javaThis, jstring message);
+
+/**
  * Java native interface function to forward an information message to the framework.
  * @param env The JNI environment
  * @param javaThis The JNI object
@@ -164,6 +174,12 @@ class OCEAN_BASE_JNI_EXPORT BaseJni
 		 * @return True, if succeeded
 		 */
 		static bool setWorkerPoolCapacity(const unsigned int capacity);
+
+		/**
+		 * Java native interface function to forward a debug message to the framework.
+		 * @param message The debug message to forward
+		 */
+		static void debug(const std::string& message);
 
 		/**
 		 * Java native interface function to forward an information message to the framework.
