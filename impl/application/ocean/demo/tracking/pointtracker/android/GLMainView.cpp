@@ -39,13 +39,15 @@ void GLMainView::initializePointTracker(const std::string& inputMedium, const st
 
 	pointTrackerWrapper_ = PointTrackerWrapper(commandLines);
 
-	const Media::FrameMediumRef oldBackgroundMedium = backgroundMedium();
-	if (pixelImage_ && oldBackgroundMedium)
+	if (pointTrackerWrapper_.frameMedium())
 	{
-		pixelImage_->setDevice_T_camera(oldBackgroundMedium->device_T_camera());
+		pixelImage_->setDevice_T_camera(pointTrackerWrapper_.frameMedium()->device_T_camera());
 	}
 
-	setBackgroundMedium(pixelImage_, true);
+	if (!setBackgroundMedium(pixelImage_, true))
+	{
+		Log::error() << "Failed to set the background medium";
+	}
 
 	startThread();
 }
@@ -59,7 +61,6 @@ void GLMainView::threadRun()
 		// we check whether the platform independent tracker has some new image to process
 
 		Frame resultingTrackerFrame;
-
 		if (pointTrackerWrapper_.trackNewFrame(resultingTrackerFrame, resultingTrackerPerformance) && resultingTrackerFrame.isValid())
 		{
 			// we received an augmented frame from the tracker
@@ -69,7 +70,7 @@ void GLMainView::threadRun()
 			// however, this demo application focuses on the usage of platform independent code and not on performance
 			// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 
-			pixelImage_->setPixelImage(resultingTrackerFrame);
+			pixelImage_->setPixelImage(std::move(resultingTrackerFrame));
 
 			Log::info() << resultingTrackerPerformance * 1000.0 << "ms";
 		}

@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef FACEBOOK_APPLICATION_OCEAN_DEMO_TRACKING_POINTTRACKER_ANDROID_GL_MAIN_VIEW_H
-#define FACEBOOK_APPLICATION_OCEAN_DEMO_TRACKING_POINTTRACKER_ANDROID_GL_MAIN_VIEW_H
+#ifndef META_OCEAN_APPLICATION_OCEAN_DEMO_TRACKING_POINTTRACKER_ANDROID_GL_MAIN_VIEW_H
+#define META_OCEAN_APPLICATION_OCEAN_DEMO_TRACKING_POINTTRACKER_ANDROID_GL_MAIN_VIEW_H
 
 #include "application/ocean/demo/tracking/pointtracker/PointTrackerWrapper.h"
 
@@ -49,7 +49,7 @@ class GLMainView :
 		/**
 		 * Destructs a main view object.
 		 */
-		virtual ~GLMainView();
+		~GLMainView() override;
 
 		/**
 		 * This function has to be overloaded in derivated class.
@@ -85,4 +85,4 @@ inline Ocean::Platform::Android::Application::GLView* GLMainView::createInstance
  */
 extern "C" jboolean Java_com_meta_ocean_app_demo_tracking_pointtracker_android_PointTrackerActivity_initializePointTracker(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring resolution);
 
-#endif // FACEBOOK_APPLICATION_OCEAN_DEMO_TRACKING_POINTTRACKER_ANDROID_GL_MAIN_VIEW_H
+#endif // META_OCEAN_APPLICATION_OCEAN_DEMO_TRACKING_POINTTRACKER_ANDROID_GL_MAIN_VIEW_H
