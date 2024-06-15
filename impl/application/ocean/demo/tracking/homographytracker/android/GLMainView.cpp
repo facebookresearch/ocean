@@ -39,20 +39,21 @@ void GLMainView::initializeHomographyTracker(const std::string& inputMedium, con
 
 	homographyTrackerWrapper_ = HomographyTrackerWrapper(commandLines);
 
-	const Media::FrameMediumRef oldBackgroundMedium = backgroundMedium();
-	if (pixelImage_ && oldBackgroundMedium)
+	if (homographyTrackerWrapper_.frameMedium())
 	{
-		pixelImage_->setDevice_T_camera(oldBackgroundMedium->device_T_camera());
+		pixelImage_->setDevice_T_camera(homographyTrackerWrapper_.frameMedium()->device_T_camera());
 	}
 
-	setBackgroundMedium(pixelImage_, true);
+	if (!setBackgroundMedium(pixelImage_, true))
+	{
+		Log::error() << "Failed to set the background medium";
+	}
 
 	startThread();
 }
 
 void GLMainView::threadRun()
 {
-	Frame resultingTrackerFrame;
 	double resultingTrackerPerformance;
 
 	while (shouldThreadStop() == false)
@@ -61,6 +62,7 @@ void GLMainView::threadRun()
 
 		const Vector2 localRecentTouchPosition = recentTouchPosition_;
 
+		Frame resultingTrackerFrame;
 		if (homographyTrackerWrapper_.trackNewFrame(resultingTrackerFrame, resultingTrackerPerformance, localRecentTouchPosition) && resultingTrackerFrame.isValid())
 		{
 			// we received an augmented frame from the tracker

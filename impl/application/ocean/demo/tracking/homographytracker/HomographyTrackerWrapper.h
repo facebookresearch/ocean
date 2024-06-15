@@ -80,6 +80,12 @@ class HomographyTrackerWrapper
 		bool trackNewFrame(Frame& frame, double& time, const Vector2& newObjectPosition = Vector2(Numeric::minValue(), Numeric::minValue()), bool* lastFrameReached = nullptr);
 
 		/**
+		 * Returns the frame medium providing the visual information for the wrapper.
+		 * @return The wrapper's frame medium
+		 */
+		inline const Media::FrameMediumRef frameMedium() const;
+
+		/**
 		 * Move operator.
 		 * @param homographyTrackerWrapper The object to be moved
 		 */
@@ -122,5 +128,10 @@ class HomographyTrackerWrapper
 		/// The 3DOF orientation tracker which is used to support the homography tracker.
 		Devices::OrientationTracker3DOFRef orientationTracker3DOF_;
 };
+
+inline const Media::FrameMediumRef HomographyTrackerWrapper::frameMedium() const
+{
+	return frameMedium_;
+}
 
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_TRACKING_HOMOGRAPHYTRACKER_HOMOGRAPHY_TRACKER_WRAPPER_H
