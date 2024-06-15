@@ -83,9 +83,7 @@ bool loadParametersFromStringOrFile(std::string parameterString, std::array<Scal
 	{
 		if (!(iss >> parameter))
 		{
-			Platform::Utilities::showMessageBox(
-				"Error",
-				"Not all parameters were specified, or the input file could not be read.\nGot parameters:\n\"" + parameterString + "\"");
+			Platform::Utilities::showMessageBox("Error", "Not all parameters were specified, or the input file could not be read.\nGot parameters:\n\"" + parameterString + "\"");
 			return false;
 		}
 	}
@@ -106,8 +104,6 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 	// disable multi-core computation by forcing one CPU core
 	Processor::get().forceCores(1);
 #endif
-
-	Messenger::get().setOutputType(Messenger::OUTPUT_STANDARD);
 
 	CommandArguments commandArguments("Demo application for feature-based trackers");
 	commandArguments.registerNamelessParameters("Optional the first command argument is interpreted as input parameter");

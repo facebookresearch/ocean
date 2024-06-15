@@ -50,7 +50,7 @@ class GLMainView :
 		/**
 		 * Destructs a main view object.
 		 */
-		virtual ~GLMainView();
+		~GLMainView() override;
 
 		/**
 		 * This function has to be overloaded in derivated class.
