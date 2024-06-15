@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef FACEBOOK_APPLICATION_OCEAN_DEMO_TRACKING_SIMILARITYTRACKER_SIMILARITY_TRACKER_WRAPPER_H
-#define FACEBOOK_APPLICATION_OCEAN_DEMO_TRACKING_SIMILARITYTRACKER_SIMILARITY_TRACKER_WRAPPER_H
+#ifndef META_OCEAN_APPLICATION_OCEAN_DEMO_TRACKING_SIMILARITYTRACKER_SIMILARITY_TRACKER_WRAPPER_H
+#define META_OCEAN_APPLICATION_OCEAN_DEMO_TRACKING_SIMILARITYTRACKER_SIMILARITY_TRACKER_WRAPPER_H
 
 #include "application/ocean/demo/tracking/ApplicationDemoTracking.h"
 
@@ -82,6 +82,12 @@ class SimilarityTrackerWrapper
 		bool trackNewFrame(Frame& frame, double& time, const Vector2& newObjectPosition = Vector2(Numeric::minValue(), Numeric::minValue()), bool* lastFrameReached = nullptr, Tracking::Point::SimilarityTracker::TrackerConfidence* trackerConfidence = nullptr, Tracking::Point::SimilarityTracker::RegionTextureness* regionTextureness = nullptr);
 
 		/**
+		 * Returns the frame medium providing the visual information for the wrapper.
+		 * @return The wrapper's frame medium
+		 */
+		inline const Media::FrameMediumRef frameMedium() const;
+
+		/**
 		 * Move operator.
 		 * @param similarityTrackerWrapper The object to be moved
 		 */
@@ -125,10 +131,15 @@ class SimilarityTrackerWrapper
 		Devices::OrientationTracker3DOFRef orientationTracker3DOF_;
 
 		/// The device orientation associated with the previous frame.
-		Quaternion world_Q_previousCamera_;
+		Quaternion world_Q_previousCamera_ = Quaternion(false);
 
 		/// The camera profile of the medium.
 		PinholeCamera camera_;
 };
 
-#endif // FACEBOOK_APPLICATION_OCEAN_DEMO_TRACKING_SIMILARITYTRACKER_SIMILARITY_TRACKER_WRAPPER_H
+inline const Media::FrameMediumRef SimilarityTrackerWrapper::frameMedium() const
+{
+	return frameMedium_;
+}
+
+#endif // META_OCEAN_APPLICATION_OCEAN_DEMO_TRACKING_SIMILARITYTRACKER_SIMILARITY_TRACKER_WRAPPER_H

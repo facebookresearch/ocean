@@ -58,7 +58,7 @@ class GLMainView :
 		/**
 		 * Destructs a main view object.
 		 */
-		virtual ~GLMainView();
+		~GLMainView() override;
 
 		/**
 		 * This function has to be overloaded in derivated class.
@@ -75,16 +75,16 @@ class GLMainView :
 	private:
 
 		/// Static helper variable ensuring that the instance function will be registered.
-		const static bool viewInstanceRegistered;
+		const static bool instanceRegistered_;
 
 		/// The pixel image that will forward the image result from the similarity tracker to the renderer.
-		Ocean::Media::PixelImageRef viewPixelImage;
+		Ocean::Media::PixelImageRef pixelImage_;
 
 		/// The actual implementation of the similarity tracker.
-		SimilarityTrackerWrapper viewSimilarityTracker;
+		SimilarityTrackerWrapper similarityTracker_;
 
 		/// Position of the most recent user interaction.
-		Vector2 recentTouchPosition;
+		Vector2 recentTouchPosition_ = Vector2(Numeric::minValue(), Numeric::minValue());
 };
 
 inline Ocean::Platform::Android::Application::GLView* GLMainView::createInstance()

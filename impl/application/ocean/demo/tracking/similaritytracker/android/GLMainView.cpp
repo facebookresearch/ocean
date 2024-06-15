@@ -17,12 +17,11 @@
 
 using namespace Ocean;
 
-const bool GLMainView::viewInstanceRegistered = GLMainView::registerInstanceFunction(GLMainView::createInstance);
+const bool GLMainView::instanceRegistered_ = GLMainView::registerInstanceFunction(GLMainView::createInstance);
 
-GLMainView::GLMainView() :
-	recentTouchPosition(Numeric::minValue(), Numeric::maxValue())
+GLMainView::GLMainView()
 {
-	viewPixelImage = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
+	pixelImage_ = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
 }
 
 GLMainView::~GLMainView()
@@ -38,15 +37,17 @@ void GLMainView::initializeSimilarityTracker(const std::string& inputMedium, con
 	commandLines.push_back(String::toWString(inputMedium));
 	commandLines.push_back(String::toWString(resolution));
 
-	viewSimilarityTracker = SimilarityTrackerWrapper(commandLines);
+	similarityTracker_ = SimilarityTrackerWrapper(commandLines);
 
-	const Media::FrameMediumRef oldBackgroundMedium = backgroundMedium();
-	if (viewPixelImage && oldBackgroundMedium)
+	if (similarityTracker_.frameMedium())
 	{
-		viewPixelImage->setDevice_T_camera(oldBackgroundMedium->device_T_camera());
+		pixelImage_->setDevice_T_camera(similarityTracker_.frameMedium()->device_T_camera());
 	}
 
-	setBackgroundMedium(viewPixelImage, true);
+	if (!setBackgroundMedium(pixelImage_, true))
+	{
+		Log::error() << "Failed to set the background medium";
+	}
 
 	startThread();
 }
@@ -59,10 +60,10 @@ void GLMainView::threadRun()
 	{
 		// we check whether the platform independent tracker has some new image to process
 
-		const Vector2 localRecentTouchPosition = recentTouchPosition;
-		Frame resultingTrackerFrame;
+		const Vector2 localRecentTouchPosition = recentTouchPosition_;
 
-		if (viewSimilarityTracker.trackNewFrame(resultingTrackerFrame, resultingTrackerPerformance, localRecentTouchPosition) && resultingTrackerFrame.isValid())
+		Frame resultingTrackerFrame;
+		if (similarityTracker_.trackNewFrame(resultingTrackerFrame, resultingTrackerPerformance, localRecentTouchPosition) && resultingTrackerFrame.isValid())
 		{
 			// we received an augmented frame from the tracker
 			// so we forward the result to the render by updating the visual content of the pixel image
@@ -71,11 +72,18 @@ void GLMainView::threadRun()
 			// however, this demo application focuses on the usage of platform independent code and not on performance
 			// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 
-			viewPixelImage->setPixelImage(resultingTrackerFrame);
+			pixelImage_->setPixelImage(std::move(resultingTrackerFrame));
 
-			Log::info() << resultingTrackerPerformance * 1000.0 << "ms";
+			if (resultingTrackerPerformance >= 0.0)
+			{
+				Log::info() << resultingTrackerPerformance * 1000.0 << "ms";
+			}
+			else
+			{
+				Log::info() << "No tracking location selected";
+			}
 
-			recentTouchPosition = Vector2(Numeric::minValue(), Numeric::minValue());
+			recentTouchPosition_ = Vector2(Numeric::minValue(), Numeric::minValue());
 		}
 		else
 		{
@@ -91,7 +99,7 @@ void GLMainView::onTouchDown(const float x, const float y)
 
 	if (screen2frame(x, y, xFrame, yFrame))
 	{
-		recentTouchPosition = Vector2(xFrame, yFrame);
+		recentTouchPosition_ = Vector2(xFrame, yFrame);
 	}
 }
 
