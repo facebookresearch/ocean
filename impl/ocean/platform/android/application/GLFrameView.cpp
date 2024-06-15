@@ -33,18 +33,6 @@ namespace Android
 namespace Application
 {
 
-GLFrameView::GLFrameView() :
-	GLView(),
-	viewInitialViewportWidth((unsigned int)(-1)),
-	viewInitialViewportHeight((unsigned int)(-1)),
-	viewPreviousTouchX(-1.0f),
-	viewPreviousTouchY(-1.0f),
-	viewRenderingIterations(0),
-	adjustFovXToBackground(false)
-{
-	// nothing to do here
-}
-
 GLFrameView::~GLFrameView()
 {
 	release();
@@ -54,47 +42,47 @@ bool GLFrameView::initialize()
 {
 	Log::debug() << "GLFrameView::initialize()";
 
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	GLView::initialize();
 
-	ocean_assert(viewEngine.isNull());
+	ocean_assert(engine_.isNull());
 
-	viewEngine = Rendering::Manager::get().engine("GLESceneGraph");
-	if (viewEngine.isNull())
+	engine_ = Rendering::Manager::get().engine("GLESceneGraph");
+	if (engine_.isNull())
 	{
 		Log::error() << "Failed to create the GLESceneGraph rendering engine";
 		return false;
 	}
 
-	viewFramebuffer = viewEngine->createFramebuffer();
-	if (viewFramebuffer.isNull())
+	framebuffer_ = engine_->createFramebuffer();
+	if (framebuffer_.isNull())
 	{
 		Log::error() << "Failed to create a GLES framebuffer";
 		return false;
 	}
 
-	const Rendering::PerspectiveViewRef view(viewEngine->factory().createPerspectiveView());
+	const Rendering::PerspectiveViewRef view(engine_->factory().createPerspectiveView());
 	ocean_assert(view);
 
 	view->setBackgroundColor(RGBAColor(0, 0, 0));
 	view->setFovX(Numeric::deg2rad(30));
 	view->setTransformation(HomogenousMatrix4(Vector3(0, 0, 20)));
 
-	viewFramebuffer->setView(view);
+	framebuffer_->setView(view);
 
-	if (viewInitialViewportWidth != (unsigned int)(-1) && viewInitialViewportHeight != (unsigned int)(-1))
+	if (initialViewportWidth_ != (unsigned int)(-1) && initialViewportHeight_ != (unsigned int)(-1))
 	{
-		const float aspectRatio = float(viewInitialViewportWidth) / float(viewInitialViewportHeight);
-		viewFramebuffer->setViewport(0, 0, viewInitialViewportWidth, viewInitialViewportHeight);
+		const float aspectRatio = float(initialViewportWidth_) / float(initialViewportHeight_);
+		framebuffer_->setViewport(0, 0, initialViewportWidth_, initialViewportHeight_);
 
 		view->setAspectRatio(aspectRatio);
 	}
 
-	if (intermediateBackgroundFrameMedium)
+	if (intermediateBackgroundFrameMedium_)
 	{
-		GLFrameView::setBackgroundMedium(intermediateBackgroundFrameMedium, intermediateBackgroundAdjustFov);
-		intermediateBackgroundFrameMedium.release();
+		GLFrameView::setBackgroundMedium(intermediateBackgroundFrameMedium_, intermediateBackgroundAdjustFov_);
+		intermediateBackgroundFrameMedium_.release();
 	}
 
 	Log::info() << "Succeeded to initialize the view";
@@ -105,18 +93,18 @@ bool GLFrameView::release()
 {
 	Log::debug() << "GLFrameView::release()";
 
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
-	const std::string engineName(viewEngine->engineName());
+	const std::string engineName(engine_->engineName());
 	const Timestamp timestampNow(true);
 
-	Log::info() << "Render iterations " << viewRenderingIterations;
-	Log::info() << "Real performance: " << String::toAString(1000.0 * double(timestampNow - viewRenderingStartTimestamp) / max(1.0, double(viewRenderingIterations)), 8) << "ms / frame";
+	Log::info() << "Render iterations " << renderingIterations_;
+	Log::info() << "Real performance: " << String::toAString(1000.0 * double(timestampNow - renderingStartTimestamp_) / max(1.0, double(renderingIterations_)), 8) << "ms / frame";
 
-	intermediateBackgroundFrameMedium.release();
-	viewBackground.release();
-	viewFramebuffer.release();
-	viewEngine.release();
+	intermediateBackgroundFrameMedium_.release();
+	background_.release();
+	framebuffer_.release();
+	engine_.release();
 
 	ocean_assert(Rendering::ObjectRefManager::get().hasEngineObject(engineName, true) == false);
 
@@ -127,11 +115,11 @@ bool GLFrameView::release()
 
 bool GLFrameView::setFovX(const Scalar fovx)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	try
 	{
-		const Rendering::PerspectiveViewRef view(viewFramebuffer->view());
+		const Rendering::PerspectiveViewRef view(framebuffer_->view());
 		return view->setFovX(fovx);
 	}
 	catch (const std::exception& exception)
@@ -145,11 +133,11 @@ bool GLFrameView::setFovX(const Scalar fovx)
 
 bool GLFrameView::setBackgroundColor(const RGBAColor& color)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	try
 	{
-		const Rendering::ViewRef view(viewFramebuffer->view());
+		const Rendering::ViewRef view(framebuffer_->view());
 		return view->setBackgroundColor(color);
 	}
 	catch (const std::exception& exception)
@@ -209,30 +197,30 @@ bool GLFrameView::setBackgroundMedium(const std::string& url, const std::string&
 
 bool GLFrameView::setBackgroundMedium(const Media::FrameMediumRef& frameMedium, const bool adjustFov)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	try
 	{
-		if (viewFramebuffer)
+		if (framebuffer_)
 		{
-			const Rendering::ViewRef view(viewFramebuffer->view());
+			const Rendering::ViewRef view(framebuffer_->view());
 
 			if (frameMedium)
 			{
-				if (viewBackground)
+				if (background_)
 				{
-					viewBackground->setMedium(frameMedium);
+					background_->setMedium(frameMedium);
 					frameMedium->start();
 				}
 				else
 				{
-					viewBackground = viewEngine->factory().createUndistortedBackground();
+					background_ = engine_->factory().createUndistortedBackground();
 
-					if (viewBackground)
+					if (background_)
 					{
-						viewBackground->setMedium(frameMedium);
+						background_->setMedium(frameMedium);
 
-						const HomogenousMatrix4 device_T_display = viewFramebuffer->device_T_display();
+						const HomogenousMatrix4 device_T_display = framebuffer_->device_T_display();
 						ocean_assert(device_T_display.isValid());
 
 						const HomogenousMatrix4 display_T_camera = device_T_display.inverted() * HomogenousMatrix4(frameMedium->device_T_camera());
@@ -245,11 +233,11 @@ bool GLFrameView::setBackgroundMedium(const Media::FrameMediumRef& frameMedium, 
 							display_R_camera = Quaternion(Vector3(0, 1, 0), Numeric::pi()) * display_R_camera;
 						}
 
-						viewBackground->setOrientation(display_R_camera);
+						background_->setOrientation(display_R_camera);
 
 						frameMedium->start();
 
-						view->addBackground(viewBackground);
+						view->addBackground(background_);
 					}
 					else
 					{
@@ -259,15 +247,15 @@ bool GLFrameView::setBackgroundMedium(const Media::FrameMediumRef& frameMedium, 
 
 				if (adjustFov)
 				{
-					adjustFovXToBackground = true;
+					adjustFovXToBackground_ = true;
 				}
 			}
 			else
 			{
-				if (viewBackground)
+				if (background_)
 				{
-					view->removeBackground(viewBackground);
-					viewBackground.release();
+					view->removeBackground(background_);
+					background_.release();
 				}
 			}
 		}
@@ -275,8 +263,8 @@ bool GLFrameView::setBackgroundMedium(const Media::FrameMediumRef& frameMedium, 
 		{
 			// we store the background information until the view has been initialized
 
-			intermediateBackgroundFrameMedium = frameMedium;
-			intermediateBackgroundAdjustFov = adjustFov;
+			intermediateBackgroundFrameMedium_ = frameMedium;
+			intermediateBackgroundAdjustFov_ = adjustFov;
 		}
 	}
 	catch (const std::exception& exception)
@@ -290,29 +278,29 @@ bool GLFrameView::setBackgroundMedium(const Media::FrameMediumRef& frameMedium, 
 
 Media::FrameMediumRef GLFrameView::backgroundMedium() const
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
-	if (viewBackground)
+	if (background_)
 	{
-		return viewBackground->medium();
+		return background_->medium();
 	}
 
-	return intermediateBackgroundFrameMedium;
+	return intermediateBackgroundFrameMedium_;
 }
 
 bool GLFrameView::resize(const int width, const int height)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	if (width <= 0 || height <= 0)
 	{
 		return false;
 	}
 
-	if (viewFramebuffer.isNull())
+	if (framebuffer_.isNull())
 	{
-		viewInitialViewportWidth = width;
-		viewInitialViewportHeight = height;
+		initialViewportWidth_ = width;
+		initialViewportHeight_ = height;
 
 		return true;
 	}
@@ -320,9 +308,9 @@ bool GLFrameView::resize(const int width, const int height)
 	{
 		try
 		{
-			viewFramebuffer->setViewport(0, 0, width, height);
+			framebuffer_->setViewport(0, 0, width, height);
 
-			const Rendering::ViewRef renderingView(viewFramebuffer->view());
+			const Rendering::ViewRef renderingView(framebuffer_->view());
 			if (renderingView)
 			{
 				renderingView->setAspectRatio(float(width) / float(height));
@@ -336,7 +324,7 @@ bool GLFrameView::resize(const int width, const int height)
 		}
 		catch (...)
 		{
-			Log::error() << "Uncaught exception occured!";
+			Log::error() << "Uncaught exception occurred!";
 		}
 	}
 
@@ -345,25 +333,25 @@ bool GLFrameView::resize(const int width, const int height)
 
 bool GLFrameView::render()
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
-	if (viewEngine.isNull() || viewFramebuffer.isNull())
+	if (engine_.isNull() || framebuffer_.isNull())
 	{
 		return false;
 	}
 
-	if (viewRenderingStartTimestamp.isInvalid())
+	if (renderingStartTimestamp_.isInvalid())
 	{
-		viewRenderingStartTimestamp.toNow();
+		renderingStartTimestamp_.toNow();
 	}
 
-	++viewRenderingIterations;
+	++renderingIterations_;
 
 	try
 	{
-		if (adjustFovXToBackground)
+		if (adjustFovXToBackground_)
 		{
-			const Rendering::PerspectiveViewRef perspectiveView(viewFramebuffer->view());
+			const Rendering::PerspectiveViewRef perspectiveView(framebuffer_->view());
 			if (perspectiveView)
 			{
 				bool validCamera = false;
@@ -372,7 +360,7 @@ bool GLFrameView::render()
 				if (validCamera)
 				{
 					perspectiveView->setFovX(idealFovX);
-					adjustFovXToBackground = false;
+					adjustFovXToBackground_ = false;
 
 					Log::info() << "Adjusting the view's field of view to the background's field of view: " << Numeric::rad2deg(idealFovX) << "deg";
 				}
@@ -380,10 +368,10 @@ bool GLFrameView::render()
 		}
 
 		// Updates the rendering engine
-		viewEngine->update(Timestamp(true));
+		engine_->update(Timestamp(true));
 
 		// Rendering the current frame
-		viewFramebuffer->render();
+		framebuffer_->render();
 		return true;
 	}
 	catch (const std::exception& exception)
@@ -392,7 +380,7 @@ bool GLFrameView::render()
 	}
 	catch (...)
 	{
-		Log::error() << "Uncaught exception occured during rendering!";
+		Log::error() << "Uncaught exception occurred during rendering!";
 	}
 
 	return false;
@@ -400,30 +388,30 @@ bool GLFrameView::render()
 
 bool GLFrameView::screen2frame(const Scalar xScreen, const Scalar yScreen, Scalar& xFrame, Scalar& yFrame)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	if (xScreen < 0 || yScreen < 0)
 	{
 		return false;
 	}
 
-	if (!viewBackground || !viewFramebuffer || !viewFramebuffer->view())
+	if (!background_ || !framebuffer_ || !framebuffer_->view())
 	{
 		return false;
 	}
 
 	try
 	{
-		ocean_assert(viewBackground);
-		ocean_assert(viewFramebuffer);
+		ocean_assert(background_);
+		ocean_assert(framebuffer_);
 
-		const PinholeCamera camera(viewBackground->camera());
-		const Quaternion backgroundOrientation = viewBackground->orientation();
+		const PinholeCamera camera(background_->camera());
+		const Quaternion backgroundOrientation = background_->orientation();
 
 		unsigned int left, top, width, height;
-		viewFramebuffer->viewport(left, top, width, height);
+		framebuffer_->viewport(left, top, width, height);
 
-		const Line3 pickingRay(viewFramebuffer->view()->viewingRay((unsigned int)(xScreen + Scalar(0.5)), (unsigned int)(yScreen + Scalar(0.5)), (unsigned int)width, (unsigned int)height));
+		const Line3 pickingRay(framebuffer_->view()->viewingRay((unsigned int)(xScreen + Scalar(0.5)), (unsigned int)(yScreen + Scalar(0.5)), (unsigned int)width, (unsigned int)height));
 
 		Vector3 direction(backgroundOrientation.inverted() * pickingRay.direction());
 
@@ -444,24 +432,24 @@ bool GLFrameView::screen2frame(const Scalar xScreen, const Scalar yScreen, Scala
 
 void GLFrameView::onTouchDown(const float x, const float y)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
-	viewPreviousTouchX = x;
-	viewPreviousTouchY = y;
+	previousTouchX_ = x;
+	previousTouchY_ = y;
 }
 
 void GLFrameView::onTouchMove(const float x, const float y)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
-	if (viewPreviousTouchX != -1.0f && viewPreviousTouchY != -1.0f && viewFramebuffer)
+	if (previousTouchX_ != -1.0f && previousTouchY_ != -1.0f && framebuffer_)
 	{
 		try
 		{
-			const Rendering::ViewRef view(viewFramebuffer->view());
+			const Rendering::ViewRef view(framebuffer_->view());
 
-			Scalar xDifference = Scalar(viewPreviousTouchX - x);
-			Scalar yDifference = Scalar(viewPreviousTouchY - y);
+			Scalar xDifference = Scalar(previousTouchX_ - x);
+			Scalar yDifference = Scalar(previousTouchY_ - y);
 
 			Quaternion orientation = view->transformation().rotation();
 
@@ -477,8 +465,8 @@ void GLFrameView::onTouchMove(const float x, const float y)
 
 			view->setTransformation(HomogenousMatrix4(rotation) * view->transformation());
 
-			viewPreviousTouchX = x;
-			viewPreviousTouchY = y;
+			previousTouchX_ = x;
+			previousTouchY_ = y;
 		}
 		catch (const std::exception& exception)
 		{
@@ -489,10 +477,10 @@ void GLFrameView::onTouchMove(const float x, const float y)
 
 void GLFrameView::onTouchUp(const float x, const float y)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
-	viewPreviousTouchX = -1.0f;
-	viewPreviousTouchY = -1.0f;
+	previousTouchX_ = -1.0f;
+	previousTouchY_ = -1.0f;
 }
 
 }

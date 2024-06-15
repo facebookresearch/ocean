@@ -49,29 +49,33 @@ GLMainView::~GLMainView()
 bool GLMainView::initialize()
 {
 	if (!GLFrameView::initialize())
+	{
 		return false;
+	}
 
 	ocean_assert(viewInitialized == false);
 	viewInitialized = true;
 
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	for (SceneFilenamePairs::const_iterator i = viewPendingScenes.begin(); i != viewPendingScenes.end(); ++i)
+	{
 		loadScene(i->first, i->second);
+	}
 
 	return true;
 }
 
 bool GLMainView::release()
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	Log::info() << "Performance: " << viewPerformance.averageMseconds() << "ms / frame";
 
 	Timestamp timestampNow(true);
 
-	Log::info() << "Render iterations " << viewRenderingIterations;
-	Log::info() << "Real performance: " << String::toAString(1000.0 * double(timestampNow - viewRenderingStartTimestamp) / max(1.0, double(viewRenderingIterations)), 8) << "ms / frame";
+	Log::info() << "Render iterations " << renderingIterations_;
+	Log::info() << "Real performance: " << String::toAString(1000.0 * double(timestampNow - renderingStartTimestamp_) / max(1.0, double(renderingIterations_)), 8) << "ms / frame";
 
 	unloadScenes();
 
@@ -80,21 +84,25 @@ bool GLMainView::release()
 
 bool GLMainView::loadScene(const std::string& filename, const bool replace)
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	if (!viewInitialized)
 	{
 		if (replace)
+		{
 			viewPendingScenes = SceneFilenamePairs(1, SceneFilenamePair(filename, replace));
+		}
 		else
+		{
 			viewPendingScenes.push_back(SceneFilenamePair(filename, replace));
+		}
 
 		Log::info() << "The scene \"" << filename << "\" will be loaded after the view has been initialized.";
 
 		return true;
 	}
 
-	if (viewFramebuffer.isNull() || viewEngine.isNull())
+	if (framebuffer_.isNull() || engine_.isNull())
 	{
 		Log::error() << "Failed to load scene file: No valid framebuffer!";
 		return false;
@@ -103,16 +111,14 @@ bool GLMainView::loadScene(const std::string& filename, const bool replace)
 	try
 	{
 		if (replace)
+		{
 			unloadScenes();
+		}
 
 		const IO::File file(filename);
 
-		// currently not necessary:
-		//if (Interaction::Manager::get().isSupported(file.extension()))
-		//	if (Interaction::Manager::get().load(viewEngine, Timestamp(true), filename))
-		//		return true;
+		const SceneDescription::SceneRef scene = SceneDescription::Manager::get().load(filename, engine_, Timestamp(true));
 
-		const SceneDescription::SceneRef scene = SceneDescription::Manager::get().load(filename, viewEngine, Timestamp(true));
 		if (scene)
 		{
 			if (scene->descriptionType() == SceneDescription::TYPE_PERMANENT)
@@ -122,17 +128,19 @@ bool GLMainView::loadScene(const std::string& filename, const bool replace)
 
 				viewPermanentSceneIds.push_back(sdxScene->sceneId());
 
-				viewFramebuffer->addScene(sdxScene->renderingScene());
+				framebuffer_->addScene(sdxScene->renderingScene());
 			}
 			else
 			{
 				SceneDescription::SDLSceneRef sdlScene(scene);
 				ocean_assert(sdlScene);
 
-				const Rendering::SceneRef renderingScene(sdlScene->apply(viewEngine));
+				const Rendering::SceneRef renderingScene(sdlScene->apply(engine_));
 
 				if (renderingScene)
-					viewFramebuffer->addScene(renderingScene);
+				{
+					framebuffer_->addScene(renderingScene);
+				}
 				else
 				{
 					Log::error() << "Failed to apply the scene description to the rendering engine";
@@ -162,25 +170,31 @@ bool GLMainView::loadScene(const std::string& filename, const bool replace)
 
 bool GLMainView::unloadScenes()
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
 	bool result = true;
 
 	try
 	{
 		for (SceneIds::const_iterator i = viewPermanentSceneIds.begin(); i != viewPermanentSceneIds.end(); ++i)
+		{
 			if (SceneDescription::Manager::get().unload(*i))
+			{
 				Log::info() << "Successfully unloaded scene with id: " << *i;
+			}
 			else
 			{
 				Log::error() << "Failed to unload scene with id: " << *i;
 				result = false;
 			}
+		}
 
 		viewPermanentSceneIds.clear();
 
-		if (viewFramebuffer)
-			viewFramebuffer->clearScenes();
+		if (framebuffer_)
+		{
+			framebuffer_->clearScenes();
+		}
 	}
 	catch(...)
 	{
@@ -192,21 +206,26 @@ bool GLMainView::unloadScenes()
 
 bool GLMainView::render()
 {
-	const ScopedLock scopedLock(lock);
+	const ScopedLock scopedLock(lock_);
 
-	if (viewEngine.isNull() || viewFramebuffer.isNull())
+	if (engine_.isNull() || framebuffer_.isNull())
+	{
 		return false;
+	}
 
-	if (viewRenderingStartTimestamp.isInvalid())
-		viewRenderingStartTimestamp.toNow();
+	if (renderingStartTimestamp_.isInvalid())
+	{
+		renderingStartTimestamp_.toNow();
+	}
 
-	++viewRenderingIterations;
+	++renderingIterations_;
 
 	try
 	{
-		if (adjustFovXToBackground)
+		if (adjustFovXToBackground_)
 		{
-			const Rendering::PerspectiveViewRef perspectiveView(viewFramebuffer->view());
+			const Rendering::PerspectiveViewRef perspectiveView(framebuffer_->view());
+
 			if (perspectiveView)
 			{
 				bool validCamera = false;
@@ -223,22 +242,22 @@ bool GLMainView::render()
 		viewPerformance.start();
 
 		// Applying specific pre-updates on all scene descriptions necessary before the interaction plugins are applied
-		Timestamp updateTimestamp = SceneDescription::Manager::get().preUpdate(viewFramebuffer->view(), Timestamp(true));
+		Timestamp updateTimestamp = SceneDescription::Manager::get().preUpdate(framebuffer_->view(), Timestamp(true));
 
 		// Applying the pre update function of the interaction plugins
-		// updateTimestamp = Interaction::Manager::get().preUpdate(viewEngine, updateTimestamp);
+		// updateTimestamp = Interaction::Manager::get().preUpdate(engine_, updateTimestamp);
 
 		// Applying updates on all scene descriptions
-		SceneDescription::Manager::get().update(viewFramebuffer->view(), updateTimestamp);
+		SceneDescription::Manager::get().update(framebuffer_->view(), updateTimestamp);
 
 		// Updates the rendering engine
-		viewEngine->update(updateTimestamp);
+		engine_->update(updateTimestamp);
 
 		// Applying post update function of the interaction plugins
-		// Interaction::Manager::get().postUpdate(viewEngine, updateTimestamp);
+		// Interaction::Manager::get().postUpdate(engine_, updateTimestamp);
 
 		// Rendering the current frame
-		viewFramebuffer->render();
+		framebuffer_->render();
 
 		// stops the performance measurement
 		viewPerformance.stop();

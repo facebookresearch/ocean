@@ -80,8 +80,8 @@ class OCEAN_PLATFORM_ANDROID_APPLICATION_EXPORT GLFrameView : public GLView
 		/**
 		 * Sets the background medium of this view.
 		 * @param frameMedium Background media object to set
-		 * @param adjustFov True, to adjust the view's field of view to the fielf of view of the medium automatically
-		 * @return True, if suceeded
+		 * @param adjustFov True, to adjust the view's field of view to the field of view of the medium automatically
+		 * @return True, if succeeded
 		 */
 		virtual bool setBackgroundMedium(const Media::FrameMediumRef& frameMedium, const bool adjustFov = false);
 
@@ -147,7 +147,7 @@ class OCEAN_PLATFORM_ANDROID_APPLICATION_EXPORT GLFrameView : public GLView
 		/**
 		 * Creates a new view object.
 		 */
-		GLFrameView();
+		GLFrameView() = default;
 
 		/**
 		 * Destructs a view object.
@@ -157,43 +157,43 @@ class OCEAN_PLATFORM_ANDROID_APPLICATION_EXPORT GLFrameView : public GLView
 	protected:
 
 		/// Rendering engine object.
-		Rendering::EngineRef viewEngine;
+		Rendering::EngineRef engine_;
 
 		/// Rendering framebuffer object.
-		Rendering::FramebufferRef viewFramebuffer;
+		Rendering::FramebufferRef framebuffer_;
 
 		/// Rendering undistorted background object.
-		Rendering::UndistortedBackgroundRef viewBackground;
+		Rendering::UndistortedBackgroundRef background_;
 
 		/// Initial viewport width.
-		unsigned int viewInitialViewportWidth;
+		unsigned int initialViewportWidth_ = (unsigned int)(-1);
 
 		/// Initial viewport height.
-		unsigned int viewInitialViewportHeight;
+		unsigned int initialViewportHeight_ = (unsigned int)(-1);
 
 		/// Previous horizontal touch position.
-		float viewPreviousTouchX;
+		float previousTouchX_ = -1.0f;
 
 		/// Previous vertical touch position.
-		float viewPreviousTouchY;
+		float previousTouchY_ = -1.0f;
 
-		/// Rendering start timestmap.
-		Timestamp viewRenderingStartTimestamp;
+		/// Rendering start timestamp.
+		Timestamp renderingStartTimestamp_;
 
 		/// Rendering iterations.
-		unsigned int viewRenderingIterations;
+		unsigned int renderingIterations_ = 0u;
 
-		/// State determining that the view's field of view has to be adjusted to the backtround's field of view.
-		bool adjustFovXToBackground;
+		/// State determining that the view's field of view has to be adjusted to the background's field of view.
+		bool adjustFovXToBackground_;
 
-		/// The frame medium of the background which is stored as long as the view hasn'n been initialized.
-		Media::FrameMediumRef intermediateBackgroundFrameMedium;
+		/// The frame medium of the background which is stored as long as the view hasn't been initialized.
+		Media::FrameMediumRef intermediateBackgroundFrameMedium_;
 
 		/// True, to adjust the field of view of the view automatically so that the background medium is entirely covered.
-		bool intermediateBackgroundAdjustFov;
+		bool intermediateBackgroundAdjustFov_ = false;
 
 		/// View lock object.
-		mutable Lock lock;
+		mutable Lock lock_;
 };
 
 inline Ocean::Platform::Android::Application::GLView* GLFrameView::createInstance()
