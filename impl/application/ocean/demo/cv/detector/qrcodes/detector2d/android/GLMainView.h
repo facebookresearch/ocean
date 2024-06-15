@@ -71,13 +71,13 @@ class GLMainView :
 	private:
 
 		/// Static helper variable ensuring that the instance function will be registered.
-		const static bool viewInstanceRegistered_;
+		const static bool instanceRegistered_;
 
 		/// The pixel image that will forward the image result from the QR code detector to the renderer.
-		Ocean::Media::PixelImageRef viewPixelImage_;
+		Ocean::Media::PixelImageRef pixelImage_;
 
 		/// The platform-independent implementation of this demo.
-		Detector2DWrapper viewDetector2DWrapper_;
+		Detector2DWrapper detector2DWrapper_;
 };
 
 inline Ocean::Platform::Android::Application::GLView* GLMainView::createInstance()

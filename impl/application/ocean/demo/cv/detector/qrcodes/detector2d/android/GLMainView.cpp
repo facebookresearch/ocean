@@ -17,11 +17,11 @@
 
 using namespace Ocean;
 
-const bool GLMainView::viewInstanceRegistered_ = GLMainView::registerInstanceFunction(GLMainView::createInstance);
+const bool GLMainView::instanceRegistered_ = GLMainView::registerInstanceFunction(GLMainView::createInstance);
 
 GLMainView::GLMainView()
 {
-	viewPixelImage_ = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
+	pixelImage_ = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
 }
 
 GLMainView::~GLMainView()
@@ -37,16 +37,17 @@ void GLMainView::initializeQRCode(const std::string& inputMedium, const std::str
 	commandLines.push_back(String::toWString(inputMedium));
 	commandLines.push_back(String::toWString(resolution));
 
-	viewDetector2DWrapper_ = Detector2DWrapper(commandLines);
+	detector2DWrapper_ = Detector2DWrapper(commandLines);
 
-	const Media::FrameMediumRef oldBackgroundMedium = backgroundMedium();
-
-	if (viewPixelImage_ && oldBackgroundMedium)
+	if (detector2DWrapper_.frameMedium())
 	{
-		viewPixelImage_->setDevice_T_camera(oldBackgroundMedium->device_T_camera());
+		pixelImage_->setDevice_T_camera(detector2DWrapper_.frameMedium()->device_T_camera());
 	}
 
-	setBackgroundMedium(viewPixelImage_, true);
+	if (!setBackgroundMedium(pixelImage_, true))
+	{
+		Log::error() << "Failed to set the background medium";
+	}
 
 	startThread();
 }
@@ -59,11 +60,11 @@ void GLMainView::threadRun()
 	{
 		// We check whether the platform-independent detector has some new image to process
 
-		Frame resultingAlignerFrame;
+		Frame resultingFrame;
 		std::vector<std::string> messages;
-		viewDetector2DWrapper_.detectAndDecode(resultingAlignerFrame, resultingAlignerPerformance, messages);
+		detector2DWrapper_.detectAndDecode(resultingFrame, resultingAlignerPerformance, messages);
 
-		if (resultingAlignerFrame.isValid())
+		if (resultingFrame.isValid())
 		{
 			// We received a frame from the detector
 			// so we forward the result to the render by updating the visual content of the pixel image
@@ -72,7 +73,7 @@ void GLMainView::threadRun()
 			// however, this demo application focuses on the usage of platform independent code and not on performance
 			// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 
-			viewPixelImage_->setPixelImage(resultingAlignerFrame);
+			pixelImage_->setPixelImage(std::move(resultingFrame));
 
 			Log::info() << resultingAlignerPerformance * 1000.0 << "ms";
 
