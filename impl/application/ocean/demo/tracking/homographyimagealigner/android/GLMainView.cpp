@@ -16,11 +16,11 @@
 
 using namespace Ocean;
 
-const bool GLMainView::viewInstanceRegistered = GLMainView::registerInstanceFunction(GLMainView::createInstance);
+const bool GLMainView::instanceRegistered_ = GLMainView::registerInstanceFunction(GLMainView::createInstance);
 
 GLMainView::GLMainView()
 {
-	viewPixelImage = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
+	pixelImage_ = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
 }
 
 GLMainView::~GLMainView()
@@ -36,29 +36,31 @@ void GLMainView::initializeHomographyImageAligner(const std::string& inputMedium
 	commandLines.push_back(String::toWString(inputMedium));
 	commandLines.push_back(String::toWString(resolution));
 
-	viewHomographyImageAligner = HomographyImageAligner(commandLines);
+	homographyImageAligner_ = HomographyImageAligner(commandLines);
 
-	const Media::FrameMediumRef oldBackgroundMedium = backgroundMedium();
-	if (viewPixelImage && oldBackgroundMedium)
+	if (homographyImageAligner_.frameMedium())
 	{
-		viewPixelImage->setDevice_T_camera(oldBackgroundMedium->device_T_camera());
+		pixelImage_->setDevice_T_camera(homographyImageAligner_.frameMedium()->device_T_camera());
 	}
 
-	setBackgroundMedium(viewPixelImage, true);
+	if (!setBackgroundMedium(pixelImage_, true))
+	{
+		Log::error() << "Failed to set the background medium";
+	}
 
 	startThread();
 }
 
 void GLMainView::threadRun()
 {
-	Frame resultingAlignerFrame;
 	double resultingAlignerPerformance;
 
 	while (shouldThreadStop() == false)
 	{
 		// we check whether the platform independent tracker has some new image to process
 
-		if (viewHomographyImageAligner.alignNewFrame(resultingAlignerFrame, resultingAlignerPerformance) && resultingAlignerFrame.isValid())
+		Frame resultingAlignerFrame;
+		if (homographyImageAligner_.alignNewFrame(resultingAlignerFrame, resultingAlignerPerformance) && resultingAlignerFrame.isValid())
 		{
 			// we received an augmented frame from the tracker
 			// so we forward the result to the render by updating the visual content of the pixel image
@@ -67,7 +69,7 @@ void GLMainView::threadRun()
 			// however, this demo application focuses on the usage of platform independent code and not on performance
 			// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 
-			viewPixelImage->setPixelImage(std::move(resultingAlignerFrame));
+			pixelImage_->setPixelImage(std::move(resultingAlignerFrame));
 
 			Log::info() << resultingAlignerPerformance * 1000.0 << "ms";
 		}

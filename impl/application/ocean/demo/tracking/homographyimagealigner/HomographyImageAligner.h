@@ -86,6 +86,12 @@ class HomographyImageAligner
 		bool alignNewFrame(Frame& frame, double& time, SquareMatrix3* currentHomographyPrevious = nullptr, Vectors2* previousPoints = nullptr, Vectors2* currentPoints = nullptr, Indices32* validPointIndices = nullptr, bool* lastFrameReached = nullptr);
 
 		/**
+		 * Returns the frame medium providing the visual information for the aligner.
+		 * @return The aligners's frame medium
+		 */
+		inline const Media::FrameMediumRef frameMedium() const;
+
+		/**
 		 * Move operator.
 		 * @param homographyImageAligner The aligner object to be moved
 		 * @return Reference to this object
@@ -149,6 +155,11 @@ class HomographyImageAligner
 		/// The performance measurement object.
 		HighPerformanceStatistic performance_;
 };
+
+inline const Media::FrameMediumRef HomographyImageAligner::frameMedium() const
+{
+	return frameMedium_;
+}
 
 inline HomographyImageAligner::HomographyImageAligner(HomographyImageAligner&& homographyImageAligner)
 {

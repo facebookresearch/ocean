@@ -60,13 +60,13 @@ class GLMainView :
 	private:
 
 		/// Static helper variable ensuring that the instance function will be registered.
-		const static bool viewInstanceRegistered;
+		const static bool instanceRegistered_;
 
 		/// The pixel image that will forward the image result from the feature tracker to the renderer.
-		Ocean::Media::PixelImageRef viewPixelImage;
+		Ocean::Media::PixelImageRef pixelImage_;
 
 		/// The actual implementation of the image aligner.
-		HomographyImageAligner viewHomographyImageAligner;
+		HomographyImageAligner homographyImageAligner_;
 };
 
 inline Ocean::Platform::Android::Application::GLView* GLMainView::createInstance()
