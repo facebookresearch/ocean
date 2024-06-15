@@ -39,26 +39,28 @@ void GLMainView::initializeUVTextureMapping(const std::string& inputMedium, cons
 
 	uvTextureMappingWrapper_ = UVTextureMappingWrapper(commandLines);
 
-	const Media::FrameMediumRef oldBackgroundMedium = backgroundMedium();
-	if (pixelImage_ && oldBackgroundMedium)
+	if (uvTextureMappingWrapper_.frameMedium())
 	{
-		pixelImage_->setDevice_T_camera(oldBackgroundMedium->device_T_camera());
+		pixelImage_->setDevice_T_camera(uvTextureMappingWrapper_.frameMedium()->device_T_camera());
 	}
 
-	setBackgroundMedium(pixelImage_, true);
+	if (!setBackgroundMedium(pixelImage_, true))
+	{
+		Log::error() << "Failed to set the background medium";
+	}
 
 	startThread();
 }
 
 void GLMainView::threadRun()
 {
-	Frame resultingTrackerFrame;
 	double resultingTrackerPerformance;
 
 	while (shouldThreadStop() == false)
 	{
 		// we check whether the platform independent tracker has some new image to process
 
+		Frame resultingTrackerFrame;
 		if (uvTextureMappingWrapper_.trackNewFrame(resultingTrackerFrame, resultingTrackerPerformance) && resultingTrackerFrame.isValid())
 		{
 			// we received an augmented frame from the tracker
@@ -68,7 +70,7 @@ void GLMainView::threadRun()
 			// however, this demo application focuses on the usage of platform independent code and not on performance
 			// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 
-			pixelImage_->setPixelImage(resultingTrackerFrame);
+			pixelImage_->setPixelImage(std::move(resultingTrackerFrame));
 
 			Log::info() << resultingTrackerPerformance * 1000.0 << "ms";
 		}
@@ -77,7 +79,6 @@ void GLMainView::threadRun()
 			Thread::sleep(1u);
 		}
 	}
-
 }
 
 jboolean Java_com_meta_ocean_app_demo_tracking_uvtexturemapping_android_UVTextureMappingActivity_initializeUVTextureMapping(JNIEnv* env, jobject javaThis, jstring inputMedium, jstring pattern, jstring resolution)

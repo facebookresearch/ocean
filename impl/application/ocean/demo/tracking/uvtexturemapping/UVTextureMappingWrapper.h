@@ -107,6 +107,12 @@ class UVTextureMappingWrapper
 		bool trackNewFrame(Frame& frame, double& time);
 
 		/**
+		 * Returns the frame medium providing the visual information for the wrapper.
+		 * @return The wrapper's frame medium
+		 */
+		inline const Media::FrameMediumRef frameMedium() const;
+
+		/**
 		 * Move operator.
 		 * @param uvTextureMappingWrapper The object to be moved
 		 * @return Reference to this object
@@ -145,6 +151,11 @@ class UVTextureMappingWrapper
 		/// The 3DOF orientation tracker which is used to support the tracker.
 		Devices::OrientationTracker3DOFRef orientationTracker3DOF_;
 };
+
+inline const Media::FrameMediumRef UVTextureMappingWrapper::frameMedium() const
+{
+	return trackerFrameMedium;
+}
 
 inline UVTextureMappingWrapper::UVTextureMappingWrapper(UVTextureMappingWrapper&& uvTextureMappingWrapper) noexcept
 {
