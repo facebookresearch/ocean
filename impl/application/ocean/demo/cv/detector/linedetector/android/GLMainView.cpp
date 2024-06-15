@@ -16,11 +16,11 @@
 
 using namespace Ocean;
 
-const bool GLMainView::viewInstanceRegistered = GLMainView::registerInstanceFunction(GLMainView::createInstance);
+const bool GLMainView::instanceRegistered_ = GLMainView::registerInstanceFunction(GLMainView::createInstance);
 
 GLMainView::GLMainView()
 {
-	viewPixelImage = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
+	pixelImage_ = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
 }
 
 GLMainView::~GLMainView()
@@ -33,19 +33,20 @@ void GLMainView::initializeLineDetector(const std::string& inputMedium, const st
 {
 	std::vector<std::wstring> commandLines;
 
-	commandLines.push_back(String::toWString(inputMedium));
-	commandLines.push_back(String::toWString(resolution));
+	commandLines.emplace_back(String::toWString(inputMedium));
+	commandLines.emplace_back(String::toWString(resolution));
 
-	viewLineDetectorWrapper = LineDetectorWrapper(commandLines);
+	lineDetectorWrapper_ = LineDetectorWrapper(commandLines);
 
-	const Media::FrameMediumRef oldBackgroundMedium = backgroundMedium();
-
-	if (viewPixelImage && oldBackgroundMedium)
+	if (lineDetectorWrapper_.frameMedium())
 	{
-		viewPixelImage->setDevice_T_camera(oldBackgroundMedium->device_T_camera());
+		pixelImage_->setDevice_T_camera(lineDetectorWrapper_.frameMedium()->device_T_camera());
 	}
 
-	setBackgroundMedium(viewPixelImage, true /*adjustFov*/);
+	if (!setBackgroundMedium(pixelImage_, true /*adjustFov*/))
+	{
+		Log::error() << "Failed to set the background medium";
+	}
 
 	startThread();
 }
@@ -55,11 +56,14 @@ void GLMainView::threadRun()
 	Frame resultingDetectorFrame;
 	double resultingDetectorPerformance;
 
+	double sumPerformance = 0.0;
+	unsigned int performanceCounter = 0u;
+
 	while (shouldThreadStop() == false)
 	{
 		// we check whether the platform independent detector has some new image to process
 
-		if (viewLineDetectorWrapper.detectNewFrame(resultingDetectorFrame, resultingDetectorPerformance) && resultingDetectorFrame.isValid())
+		if (lineDetectorWrapper_.detectNewFrame(resultingDetectorFrame, resultingDetectorPerformance) && resultingDetectorFrame.isValid())
 		{
 			// we received an augmented frame from the detector
 			// so we forward the result to the render by updating the visual content of the pixel image
@@ -68,9 +72,19 @@ void GLMainView::threadRun()
 			// however, this demo application focuses on the usage of platform independent code and not on performance
 			// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 
-			viewPixelImage->setPixelImage(resultingDetectorFrame);
+			pixelImage_->setPixelImage(std::move(resultingDetectorFrame));
+			resultingDetectorFrame = Frame();
 
-			Log::info() << resultingDetectorPerformance * 1000.0 << "ms";
+			sumPerformance += resultingDetectorPerformance;
+			++performanceCounter;
+
+			if (performanceCounter >= 10u)
+			{
+				Log::info() << "Average performance: " << (sumPerformance / double(performanceCounter)) * 1000.0 << "ms";
+
+				performanceCounter = 0u;
+				sumPerformance = 0.0;
+			}
 		}
 		else
 		{
