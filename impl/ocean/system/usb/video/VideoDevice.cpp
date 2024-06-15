@@ -105,6 +105,52 @@ std::string VideoDevice::VideoControl::toString() const
 	return result;
 }
 
+bool VideoDevice::VideoControl::executeVideoControlCommit(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, const VideoControl& videoControl, const size_t videoControlSize, const uint8_t bRequest)
+{
+	VideoControl copyVideoControl(videoControl);
+
+	// bmRequestType:          wIndex
+	// 0b00100001              Entity ID and Interface.
+	// 0b00100010              Endpoint
+
+	constexpr uint8_t bmRequestType = 0b00100001u;
+
+	constexpr uint16_t wValue = uint16_t(VS_COMMIT_CONTROL) << 8u;
+	const uint16_t wIndex = uint16_t(interfaceIndex);
+
+	return executeVideoControl(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (uint8_t*)(&copyVideoControl), videoControlSize);
+}
+
+bool VideoDevice::VideoControl::executeVideoControlProbe(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, VideoControl& videoControl, const size_t videoControlSizex, const uint8_t bRequest)
+{
+	// bmRequestType:          wIndex
+	// 0b10100001              Entity ID and Interface.
+	// 0b10100010              Endpoint
+
+	constexpr uint8_t bmRequestType = 0b10100001u;
+
+	constexpr uint16_t wValue = uint16_t(VS_PROBE_CONTROL) << 8u;
+	const uint16_t wIndex = uint16_t(interfaceIndex);
+
+	return executeVideoControl(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (uint8_t*)(&videoControl), videoControlSizex);
+}
+
+bool VideoDevice::VideoControl::executeVideoControl(libusb_device_handle* usbDeviceHandle, const uint8_t bmRequestType, const uint8_t bRequest, const uint16_t wValue, const uint16_t wIndex, uint8_t* buffer, const size_t size)
+{
+	ocean_assert(usbDeviceHandle != nullptr);
+	ocean_assert(size == 26 || size == sizeof(VideoControl));
+
+	const int result = libusb_control_transfer(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, buffer, uint16_t(size), 0u);
+
+	if (result != int(size))
+	{
+		Log::info() << "Control transfer failed: " << result << ", " << libusb_error_name(result);
+		return false;
+	}
+
+	return true;
+}
+
 VideoDevice::VideoControlInterface::VideoControlInterface(const libusb_interface_descriptor& interfaceDescriptor, libusb_device_handle* usbDeviceHandle)
 {
 	ocean_assert(interfaceDescriptor.bInterfaceClass == LIBUSB_CLASS_VIDEO);
@@ -1059,10 +1105,12 @@ bool VideoDevice::Sample::append(const PayloadHeader& payloadHeader, const void 
 			else
 			{
 				Log::error() << "Buffer is getting to large";
+				return false;
 			}
 		}
 		else
 		{
+			Log::warning() << "Refusing to extend payload buffer from " << buffer_.size() << " to " << position_ + size;
 			return false;
 		}
 	}
@@ -1469,47 +1517,6 @@ bool VideoDevice::parseVideoInterface(const libusb_interface_descriptor& interfa
 	return false;
 }
 
-bool VideoDevice::executeVideoControlCommit(const uint8_t interfaceIndex, const VideoControl& videoControl, const size_t videoControlSize) const
-{
-	VideoControl copyVideoControl(videoControl);
-
-	return executeVideoControl(usbDeviceHandle_, interfaceIndex, true /*commit*/, (uint8_t*)(&copyVideoControl), videoControlSize);
-}
-
-bool VideoDevice::executeVideoControlProbe(const uint8_t interfaceIndex, VideoControl& videoControl, const size_t videoControlSizex) const
-{
-	return executeVideoControl(usbDeviceHandle_, interfaceIndex, false /*commit*/, (uint8_t*)(&videoControl), videoControlSizex);
-}
-
-bool VideoDevice::executeVideoControl(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, const bool commit, uint8_t* buffer, const size_t size)
-{
-	ocean_assert(usbDeviceHandle != nullptr);
-	ocean_assert(interfaceIndex != 0u);
-	ocean_assert(size == 26 || size == sizeof(VideoControl));
-
-	constexpr uint8_t request_SET_CUR = 0x01u;
-	constexpr uint8_t request_GET_CUR = 0x81u;
-
-	constexpr uint8_t requestType_SET_CUR = 0b00100001u;
-	constexpr uint8_t requestType_GET_CUR = 0b10100001u;
-
-	const uint8_t request = commit ? request_SET_CUR : request_GET_CUR;
-	const uint8_t requestType = commit ? requestType_SET_CUR : requestType_GET_CUR;
-
-	const uint16_t wValue = commit ? (uint16_t(VS_COMMIT_CONTROL) << 8u) : (uint16_t(VS_PROBE_CONTROL) << 8u);
-	const uint16_t wIndex = uint16_t(interfaceIndex);
-
-	const int result = libusb_control_transfer(usbDeviceHandle, requestType, request, wValue, wIndex, buffer, uint16_t(size), 0u);
-
-	if (result != int(size))
-	{
-		Log::info() << "Control transfer failed: " << result << ", " << libusb_error_name(result);
-		return false;
-	}
-
-	return true;
-}
-
 bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int preferredHeight, const double preferredFrameRate, const DeviceStreamType preferredDeviceStreamType, const FrameType::PixelFormat preferredPixelFormat, const VSFrameBasedVideoFormatDescriptor::EncodingFormat preferredEncodingFormat)
 {
 #ifdef OCEAN_INTENSIVE_DEBUG
@@ -1586,21 +1593,30 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 			const VideoStreamingInterface::PriorityTriple priorityTriple = priorityMap.rbegin()->second;
 			ocean_assert(priorityTriple.first() != 0u && priorityTriple.second() != 0u && priorityTriple.third() != 0u);
 
-			VideoControl commitVideoControl;
-
 			size_t controlBufferSize = 26;
 			if (videoControlInterface_.vcHeaderDescriptor_.bcdUVC_ >= 0x0110u)
 			{
-				controlBufferSize = sizeof(commitVideoControl);
+				controlBufferSize = sizeof(VideoControl);
 			}
 
-			commitVideoControl.bmHint_ = 1u << 0u; // try to prioritize dwFrameInterval
+#ifdef OCEAN_INTENSIVE_DEBUG
+			VideoControl getMaxVideoControl;
+			if (VideoControl::executeVideoControlProbe(usbDeviceHandle_, streamingInterfaceIndex, getMaxVideoControl, controlBufferSize, VideoControl::RC_GET_MAX))
+			{
+				Log::debug() << " ";
+				Log::debug() << "Get max video control:\n" << getMaxVideoControl.toString();
+				Log::debug() << " ";
+			}
+#endif
 
+			VideoControl commitVideoControl;
+
+			commitVideoControl.bmHint_ = 1u << 0u; // try to prioritize dwFrameInterval
 			commitVideoControl.bFormatIndex_ = priorityTriple.first();
 			commitVideoControl.bFrameIndex_ = priorityTriple.second();
 			commitVideoControl.dwFrameInterval_ = priorityTriple.third();
 
-			if (executeVideoControlCommit(streamingInterfaceIndex, commitVideoControl, controlBufferSize))
+			if (VideoControl::executeVideoControlCommit(usbDeviceHandle_, streamingInterfaceIndex, commitVideoControl, controlBufferSize))
 			{
 
 #ifdef OCEAN_INTENSIVE_DEBUG
@@ -1610,11 +1626,11 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 #endif
 
 				VideoControl probeVideoControl;
-				if (executeVideoControlProbe(streamingInterfaceIndex, probeVideoControl, controlBufferSize))
+				if (VideoControl::executeVideoControlProbe(usbDeviceHandle_, streamingInterfaceIndex, probeVideoControl, controlBufferSize))
 				{
 #ifdef OCEAN_INTENSIVE_DEBUG
 					Log::debug() << " ";
-					Log::debug() << "Probed video control:\n" << probeVideoControl.toString();
+					Log::debug() << "Probe video control:\n" << probeVideoControl.toString();
 					Log::debug() << " ";
 #endif
 
@@ -1626,7 +1642,38 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 					dwMaxPayloadTransferSize = probeVideoControl.dwMaxPayloadTransferSize_;
 					dwMaxVideoFrameSize = probeVideoControl.dwMaxVideoFrameSize_;
 
-					activeDescriptorFormatIndex_ = commitVideoControl.bFormatIndex_; // some webcams return an invalid format/frame in the probe, so we use the commit values instead
+					// some webcams return an invalid format/frame in the probe, so we use the commit values instead
+					// further some cameras return an invalid probe 'dwMaxVideoFrameSize' value when using uncompressed video frames (e.g., BRIO 301), so that we always re-calculate the frame size manually for uncompressed video streams
+
+					unsigned int priorityWidth = 0u;
+					unsigned int priorityHeight = 0u;
+					FrameType::PixelFormat priorityPixelFormat = FrameType::FORMAT_UNDEFINED;
+					VSFrameBasedVideoFormatDescriptor::EncodingFormat priorityEncodingFormat = VSFrameBasedVideoFormatDescriptor::EF_INVALID;
+					const DeviceStreamType priorityDeviceStreamType = extractStreamProperties(priorityTriple.first(), priorityTriple.second(), priorityWidth, priorityHeight, priorityPixelFormat, priorityEncodingFormat);
+
+					if (priorityDeviceStreamType == DST_UNCOMPRESSED)
+					{
+						const FrameType frameType(priorityWidth, priorityHeight, priorityPixelFormat, FrameType::ORIGIN_UPPER_LEFT);
+
+						ocean_assert(frameType.isValid());
+						if (frameType.isValid())
+						{
+							const unsigned int expectedFrameSize = frameType.frameTypeSize();
+
+							if (expectedFrameSize != dwMaxVideoFrameSize)
+							{
+								Log::warning() << "VideoDevice: Detected invalid frame size for uncompressed video stream, expected: " << expectedFrameSize << ", claimed: " << dwMaxVideoFrameSize << ", using the expected frame size instead";
+
+								dwMaxVideoFrameSize = expectedFrameSize;
+							}
+						}
+						else
+						{
+							Log::error() << "VideoDevice: Failed to determine frame type for uncompressed video stream";
+						}
+					}
+
+					activeDescriptorFormatIndex_ = commitVideoControl.bFormatIndex_;
 					activeDescriptorFrameIndex_ = commitVideoControl.bFrameIndex_;
 
 					break;
@@ -1784,7 +1831,7 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 bool VideoDevice::stop()
 {
 #ifdef OCEAN_INTENSIVE_DEBUG
-	Log::debug() << "VideoDevice::stop();
+	Log::debug() << "VideoDevice::stop()";
 #endif
 
 	const ScopedLock scopedLock(lock_);

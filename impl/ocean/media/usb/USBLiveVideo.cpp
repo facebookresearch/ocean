@@ -751,7 +751,7 @@ Frame USBLiveVideo::processUncompressedSample(const unsigned int width, const un
 
 	if (size != frameType.frameTypeSize())
 	{
-		Log::error() << "Wrong sample size: " << size / 1024 << "KB vs. " << frameType.frameTypeSize() / 1024u << "KB expected, trying Mjpeg instead";
+		Log::error() << "Wrong sample size: " << size / 1024 << "KB vs. " << frameType.frameTypeSize() / 1024u << "KB expected";
 		return Frame();
 	}
 

@@ -520,10 +520,71 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 			public:
 
 				/**
+				 * Definition of the individual Video Class-Specific Request Codes.
+				 */
+				enum RequestCode : uint8_t
+				{
+					/// Undefined request code.
+					RC_UNDEFINED = 0u,
+					/// Set current.
+					RC_SET_CUR = 0x01u,
+					/// Get current.
+					RC_GET_CUR = 0x81u,
+					/// Get minimum.
+					RC_GET_MIN = 0x82u,
+					/// Get maximum.
+					RC_GET_MAX = 0x83u,
+					/// Get resolution.
+					RC_GET_RES = 0x84u,
+					/// Get length.
+					RC_GET_LEN = 0x85u,
+					/// Get information.
+					RC_GET_INFO = 0x86u,
+					/// Get default.
+					RC_GET_DEF = 0x87u
+				};
+
+				/**
 				 * Returns a string with the content of this object.
 				 * @return The string holding the content of this object
 				 */
 				std::string toString() const;
+
+				/**
+				 * Executes a video commit control request.
+				 * @param usbDeviceHandle The hand of the USB device to which the request will be set
+				 * @param interfaceIndex The index of the interface to which the control request will be sent
+				 * @param videoControl The control to be sent, must be valid
+				 * @param videoControlSize The size of the control to be sent, in bytes, either 26 or 34
+				 * @param bRequest The request parameter
+				 * @return True, if succeeded
+				 */
+				static bool executeVideoControlCommit(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, const VideoControl& videoControl, const size_t videoControlSize, const uint8_t bRequest = RC_SET_CUR);
+
+				/**
+				 * Executes a video probe control request.
+				 * @param usbDeviceHandle The hand of the USB device to which the request will be set
+				 * @param interfaceIndex The index of the interface to which the control request will be sent
+				 * @param videoControl The resulting control
+				 * @param videoControlSize The size of the control to be sent, in bytes, either 26 or 34
+				 * @param bRequest The request parameter
+				 * @return True, if succeeded
+				 */
+				static bool executeVideoControlProbe(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, VideoControl& videoControl, const size_t videoControlSize, const uint8_t bRequest = RC_GET_CUR);
+
+				/**
+				 * Executes a video control commit or probe request.
+				 * @param usbDeviceHandle The hand of the USB device to which the request will be set
+				 * @param bmRequestType The request type parameter
+				 * @param bRequest The request parameter
+				 * @param wValue The value parameter
+				 * @param wIndex The index parameter
+				 * @param commit True, to perform a commit request; False, to perform a probe request
+				 * @param buffer The control buffer, must be valid
+				 * @param size The size of the control buffer, in bytes, either 26 or 34
+				 * @return True, if succeeded
+				 */
+				static bool executeVideoControl(libusb_device_handle* usbDeviceHandle, const uint8_t bmRequestType, const uint8_t bRequest, const uint16_t wValue, const uint16_t wIndex, uint8_t* buffer, const size_t size);
 
 			public:
 
@@ -1012,24 +1073,6 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 		bool parseVideoInterface(const libusb_interface_descriptor& interfaceDescriptor);
 
 		/**
-		 * Executes a video commit control request.
-		 * @param interfaceIndex The index of the interface to which the control request will be sent
-		 * @param videoControl The control to be sent, must be valid
-		 * @param videoControlSize The size of the control to be sent, in bytes, either 26 or 34
-		 * @return True, if succeeded
-		 */
-		bool executeVideoControlCommit(const uint8_t interfaceIndex, const VideoControl& videoControl, const size_t videoControlSize) const;
-
-		/**
-		 * Executes a video probe control request.
-		 * @param interfaceIndex The index of the interface to which the control request will be sent
-		 * @param videoControl The resulting control
-		 * @param videoControlSize The size of the control to be sent, in bytes, either 26 or 34
-		 * @return True, if succeeded
-		 */
-		bool executeVideoControlProbe(const uint8_t interfaceIndex, VideoControl& videoControl, const size_t videoControlSize) const;
-
-		/**
 		 * Processes the payload which has been received from the device via a USB transfer.
 		 * @param bufferPointers The buffers holding the payload, at least one
 		 */
@@ -1047,17 +1090,6 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 		 * @return True, the transfer should be resubmitted
 		 */
 		bool libusbStreamCallback(libusb_transfer& usbTransfer);
-
-		/**
-		 * Executes a video control commit or probe request.
-		 * @param usbDeviceHandle The hand of the USB device to which the request will be set
-		 * @param interfaceIndex The index of the interface to which the control request will be sent
-		 * @param commit True, to perform a commit request; False, to perform a probe request
-		 * @param buffer The control buffer, must be valid
-		 * @param size The size of the control buffer, in bytes, either 26 or 34
-		 * @return True, if succeeded
-		 */
-		static bool executeVideoControl(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, const bool commit, uint8_t* buffer, const size_t size);
 
 		/**
 		 * Static libusb status transfer callback function.
