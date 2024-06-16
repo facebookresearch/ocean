@@ -1,0 +1,55 @@
+name: Build and deploy website
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Execute this workflow:
+    # Mon-Sun, every 24 hours at 6 am (UTC)
+    - cron: '0 6 * * *'
+  # Have the ability to trigger this job manually through the API
+  workflow_dispatch:
+
+jobs:
+  build_website_job:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get upgrade -y
+        sudo apt-get install -y -o Acquire::Retries=5 \
+              doxygen graphviz nodejs yarn
+
+    # Install a newer version of yarn; required when testing locally with `act`
+    # - name: Install a newer version of yarn
+    #   run: |
+    #     sudo apt-get remove -y cmdtest yarn
+    #     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    #     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    #     sudo apt-get update
+    #     sudo apt-get install -y yarn
+
+    - name: Build website
+      run: |
+        cd ${{ github.workspace }}/website
+        yarn install
+        yarn run build
+      id: build
+
+    # Disabled until the repo is published.
+    # - name: Deploy website
+    #   if: ${{ github.event_name == 'push' }}
+    #   uses: JamesIves/github-pages-deploy-action@releases/v3
+    #   with:
+    #       ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #       BRANCH: gh-pages
+    #       FOLDER: website/build
