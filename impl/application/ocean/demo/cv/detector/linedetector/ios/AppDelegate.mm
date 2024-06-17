@@ -122,7 +122,7 @@
 
 	if (lineDetectorWrapper_.detectNewFrame(resultingDetectorFrame, resultingDetectorPerformance) && resultingDetectorFrame.isValid())
 	{
-		pixelImage_->setPixelImage(resultingDetectorFrame);
+		pixelImage_->setPixelImage(std::move(resultingDetectorFrame));
 
 		textLabel_.text = StringApple::toNSString(String::toAString(resultingDetectorPerformance * 1000.0) + " ms");
 	}

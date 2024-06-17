@@ -92,8 +92,23 @@ using namespace Ocean;
 			return;
 		}
 
+		const HomogenousMatrix4 device_T_display = framebuffer_->device_T_display();
+		ocean_assert(device_T_display.isValid());
+
+		const HomogenousMatrix4 display_T_camera = device_T_display.inverted() * HomogenousMatrix4(liveVideo->device_T_camera());
+
+		Quaternion display_R_camera(display_T_camera.rotation());
+
+		if ((display_R_camera * Vector3(0, 0, 1)) * Vector3(0, 0, 1) < 0)
+		{
+			// the camera is pointing towards the opposite direction of the display (e.g., user-facing camera)
+			display_R_camera = Quaternion(Vector3(0, 1, 0), Numeric::pi()) * display_R_camera;
+		}
+
+		background->setOrientation(display_R_camera);
+
 		// we define a preferred frame dimension (however, the camera device may provide a different dimension if this dimension is not suitable/available)
-		liveVideo->setPreferredFrameDimension(640u, 480u);
+		liveVideo->setPreferredFrameDimension(1280, 720u);
 
 		// we start the camera device
 		liveVideo->start();

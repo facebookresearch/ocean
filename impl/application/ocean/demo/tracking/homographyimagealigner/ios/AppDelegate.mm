@@ -27,13 +27,13 @@
 @interface AppDelegate ()
 {
 	/// The platform independent wrapper for the aligner.
-	HomographyImageAligner applicationHomographyImageAligner;
+	HomographyImageAligner homographyImageAligner_;
 
 	/// A text label showing the performance of the aligner.
-	UILabel* textLabel;
+	UILabel* textLabel_;
 
 	/// The pixel image that will forward the image result from the feature tracker to the renderer.
-	Media::PixelImageRef applicationPixelImage;
+	Media::PixelImageRef pixelImage_;
 }
 @end
 
@@ -70,37 +70,39 @@
 	self.window.rootViewController = viewController;
 	[self.window makeKeyAndVisible];
 
-	textLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 500, 30)];
-	textLabel.textColor = [UIColor blackColor];
-	textLabel.shadowColor = [UIColor whiteColor];
-	[viewController.view addSubview:textLabel];
+	textLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 500, 30)];
+	textLabel_.textColor = [UIColor blackColor];
+	textLabel_.shadowColor = [UIColor whiteColor];
+	[viewController.view addSubview:textLabel_];
 
 
 	std::vector<std::wstring> commandLines;
-	commandLines.push_back(L"LiveVideoId:0"); // video source
-	commandLines.push_back(L"1280x720"); // video resolution
-	commandLines.push_back(L"150"); // number feature points
-	commandLines.push_back(L"7"); // path size
-	commandLines.push_back(L"2"); // sub-pixel iterations/precision
-	commandLines.push_back(L"128"); // maximal offset between corresponding feature points
-	commandLines.push_back(L"2"); // search radius on coarsest pyramid layer
-	commandLines.push_back(L"3"); // RANSAC threshold
-	commandLines.push_back(L"Y8"); // pixel format to be used
-	commandLines.push_back(L"nozeromean"); // we not not apply a zero-mean SSD
+	commandLines.emplace_back(L"LiveVideoId:0"); // video source
+	commandLines.emplace_back(L"1280x720"); // video resolution
+	commandLines.emplace_back(L"150"); // number feature points
+	commandLines.emplace_back(L"7"); // path size
+	commandLines.emplace_back(L"2"); // sub-pixel iterations/precision
+	commandLines.emplace_back(L"128"); // maximal offset between corresponding feature points
+	commandLines.emplace_back(L"2"); // search radius on coarsest pyramid layer
+	commandLines.emplace_back(L"3"); // RANSAC threshold
+	commandLines.emplace_back(L"Y8"); // pixel format to be used
+	commandLines.emplace_back(L"nozeromean"); // we not not apply a zero-mean SSD
 
-	applicationHomographyImageAligner = HomographyImageAligner(commandLines);
+	homographyImageAligner_ = HomographyImageAligner(commandLines);
 
 
 	// now we create a PixelImage that simply wrapps a Frame object
 	// as the OpenGLES renderer uses Media objects for textures only
 	// we will update this pixel image each time we receive an update from the tracker
 
-	applicationPixelImage = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
-	[viewController setFrameMedium:applicationPixelImage];
+	pixelImage_ = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
 
-	if (applicationPixelImage)
+	if (pixelImage_)
 	{
-		applicationPixelImage->start();
+		pixelImage_->setDevice_T_camera(homographyImageAligner_.frameMedium()->device_T_camera());
+		pixelImage_->start();
+
+		[viewController setFrameMedium:pixelImage_];
 	}
 
 
@@ -113,7 +115,7 @@
 
 - (void)timerTicked:(NSTimer*)timer
 {
-	if (applicationPixelImage.isNull())
+	if (pixelImage_.isNull())
 	{
 		return;
 	}
@@ -123,7 +125,7 @@
 
 	// we check whether the platform independent tracker has some new image to process
 
-	if (applicationHomographyImageAligner.alignNewFrame(resultingAlignerFrame, resultingAlignerPerformance) && resultingAlignerFrame.isValid())
+	if (homographyImageAligner_.alignNewFrame(resultingAlignerFrame, resultingAlignerPerformance) && resultingAlignerFrame.isValid())
 	{
 		// we received an augmented frame from the tracker
 		// so we forward the result to the render by updating the visual content of the pixel image
@@ -132,15 +134,15 @@
 		// however, this demo application focuses on the usage of platform independent code and not on performance
 		// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 
-		applicationPixelImage->setPixelImage(std::move(resultingAlignerFrame));
+		pixelImage_->setPixelImage(std::move(resultingAlignerFrame));
 
-		textLabel.text = StringApple::toNSString(String::toAString(resultingAlignerPerformance * 1000.0) + " ms");
+		textLabel_.text = StringApple::toNSString(String::toAString(resultingAlignerPerformance * 1000.0) + " ms");
 	}
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-	applicationHomographyImageAligner.release();
+	homographyImageAligner_.release();
 }
 
 @end

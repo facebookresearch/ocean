@@ -29,16 +29,16 @@
 @interface AppDelegate ()
 {
 	/// The platform independent wrapper for the detection of Messenger code
-	MessengerCodeWrapper applicationMessengerCodeWrapper;
+	MessengerCodeWrapper messengerCodeWrapper_;
 
 	/// A text label showing the performance of the original implementation of Messenger code
-	UILabel* runtimePerformanceLabel;
+	UILabel* runtimePerformanceLabel_;
 
 	/// A text label to display the decoded Messenger code
-	UILabel* decodedMessengerCodeLabel;
+	UILabel* decodedMessengerCodeLabel_;
 
 	/// The pixel image that will hold the image result from the Messenger code detection and forward it to the renderer
-	Media::PixelImageRef applicationPixelImage;
+	Media::PixelImageRef pixelImage_;
 }
 @end
 
@@ -75,39 +75,38 @@
 	self.window.rootViewController = viewController;
 	[self.window makeKeyAndVisible];
 
-	runtimePerformanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 500, 30)];
-	runtimePerformanceLabel.textColor = [UIColor blackColor];
-	runtimePerformanceLabel.shadowColor = [UIColor whiteColor];
-	[viewController.view addSubview:runtimePerformanceLabel];
+	runtimePerformanceLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 500, 30)];
+	runtimePerformanceLabel_.textColor = [UIColor blackColor];
+	runtimePerformanceLabel_.shadowColor = [UIColor whiteColor];
+	[viewController.view addSubview:runtimePerformanceLabel_];
 
-	decodedMessengerCodeLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 30, 500, 30)];
-	decodedMessengerCodeLabel.textColor = [UIColor blackColor];
-	decodedMessengerCodeLabel.shadowColor = [UIColor whiteColor];
-	decodedMessengerCodeLabel.lineBreakMode = NSLineBreakByWordWrapping;
-	decodedMessengerCodeLabel.numberOfLines = 0;
-	[viewController.view addSubview:decodedMessengerCodeLabel];
+	decodedMessengerCodeLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 30, 500, 30)];
+	decodedMessengerCodeLabel_.textColor = [UIColor blackColor];
+	decodedMessengerCodeLabel_.shadowColor = [UIColor whiteColor];
+	decodedMessengerCodeLabel_.lineBreakMode = NSLineBreakByWordWrapping;
+	decodedMessengerCodeLabel_.numberOfLines = 0;
+	[viewController.view addSubview:decodedMessengerCodeLabel_];
 
 	std::vector<std::wstring> commandLines;
 	commandLines.push_back(L"LiveVideoId:0"); // 0. Video source
 	commandLines.push_back(L"1280x720"); // 1. Video resolution
 	commandLines.push_back(L"Y8"); // 2. Pixel format to be used
 
-	applicationMessengerCodeWrapper = MessengerCodeWrapper(commandLines);
+	messengerCodeWrapper_ = MessengerCodeWrapper(commandLines);
 
 
 	// Now we create a PixelImage that simply wrapps a Frame object
 	// as the OpenGLES renderer uses Media objects for textures only
 	// we will update this pixel image each time we receive an update from the tracker
 
-	applicationPixelImage = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
-	[viewController setFrameMedium:applicationPixelImage];
+	pixelImage_ = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
 
-	if (applicationPixelImage)
+	if (pixelImage_)
 	{
-		applicationPixelImage->setDevice_T_camera(applicationMessengerCodeWrapper.frameMedium()->device_T_camera());
-		applicationPixelImage->start();
+		pixelImage_->setDevice_T_camera(messengerCodeWrapper_.frameMedium()->device_T_camera());
+		pixelImage_->start();
 
-		[viewController setFrameMedium:applicationPixelImage];
+		[viewController setFrameMedium:pixelImage_];
 	}
 
 
@@ -120,8 +119,10 @@
 
 - (void)timerTicked:(NSTimer*)timer
 {
-	if (applicationPixelImage.isNull())
+	if (pixelImage_.isNull())
+	{
 		return;
+	}
 
 	double resultingPerformance = -1.0;
 
@@ -129,16 +130,16 @@
 
 	Frame resultingFrame;
 	std::vector<std::string> messages;
-	const bool detectedMessengerCode = applicationMessengerCodeWrapper.detectAndDecode(resultingFrame, resultingPerformance, messages) && resultingFrame.isValid();
+	const bool detectedMessengerCode = messengerCodeWrapper_.detectAndDecode(resultingFrame, resultingPerformance, messages) && resultingFrame.isValid();
 
 	// **NOTE** copying the resulting RGB frame and forwarding the frame to the renderer costs some performance
 	// however, this demo application focuses on the usage of platform independent code and not on performance
 	// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 	if (resultingFrame.isValid())
 	{
-		applicationPixelImage->setPixelImage(resultingFrame);
+		pixelImage_->setPixelImage(std::move(resultingFrame));
 
-		runtimePerformanceLabel.text = StringApple::toNSString(String::toAString(resultingPerformance * 1000.0) + " ms");
+		runtimePerformanceLabel_.text = StringApple::toNSString(String::toAString(resultingPerformance * 1000.0) + " ms");
 
 		if (detectedMessengerCode)
 		{
@@ -150,18 +151,18 @@
 			}
 
 			Log::info() << oss.str();
-			decodedMessengerCodeLabel.text = StringApple::toNSString(oss.str());
+			decodedMessengerCodeLabel_.text = StringApple::toNSString(oss.str());
 		}
 		else
 		{
-			decodedMessengerCodeLabel.text = StringApple::toNSString("---");
+			decodedMessengerCodeLabel_.text = StringApple::toNSString("---");
 		}
 	}
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-	applicationMessengerCodeWrapper.release();
+	messengerCodeWrapper_.release();
 }
 
 @end

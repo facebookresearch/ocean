@@ -33,7 +33,7 @@
 	@public
 
 		/// Position of the most recent user interaction.
-		Vector2 recentTouchPosition;
+		Vector2 recentTouchPosition_;
 }
 @end
 
@@ -43,7 +43,7 @@
 {
 	if ([super init])
 	{
-		recentTouchPosition = Vector2(Numeric::minValue(), Numeric::maxValue());
+		recentTouchPosition_ = Vector2(Numeric::minValue(), Numeric::maxValue());
 	}
 
 	return self;
@@ -57,7 +57,7 @@
 	const CGPoint viewPoint = [[touches anyObject] locationInView:[self view]];
 	const CGPoint mediumPoint = [self view2medium:viewPoint];
 
-	recentTouchPosition = Vector2(mediumPoint.x, mediumPoint.y);
+	recentTouchPosition_ = Vector2(mediumPoint.x, mediumPoint.y);
 }
 
 @end
@@ -65,22 +65,22 @@
 @interface AppDelegate ()
 {
 	/// The platform independent wrapper for the tracker.
-	SimilarityTrackerWrapper applicationSimilarityTrackerWrapper;
+	SimilarityTrackerWrapper similarityTrackerWrapper_;
 
 	/// The custom view controller of this application.
-	CustomViewController* applicationViewController;
+	CustomViewController* viewController_;
 
 	/// A text label showing the performance of the aligner.
-	UILabel* textLabelPerformance;
+	UILabel* textLabelPerformance_;
 
 	/// A text label showing the tracker's confidence.
-	UILabel* textLabelConfidence;
+	UILabel* textLabelConfidence_;
 
 	/// A text label showing the tracker's textureness.
-	UILabel* textLabelTextureness;
+	UILabel* textLabelTextureness_;
 
 	/// The pixel image that will forward the image result from the feature tracker to the renderer.
-	Media::PixelImageRef applicationPixelImage;
+	Media::PixelImageRef pixelImage_;
 }
 @end
 
@@ -112,49 +112,44 @@
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	self.window.backgroundColor = [UIColor whiteColor];
 
-	applicationViewController = [[CustomViewController alloc] init];
+	viewController_ = [[CustomViewController alloc] init];
 
-	self.window.rootViewController = applicationViewController;
+	self.window.rootViewController = viewController_;
 	[self.window makeKeyAndVisible];
 
-	textLabelPerformance = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 800, 20)];
-	textLabelPerformance.textColor = [UIColor blackColor];
-	textLabelPerformance.shadowColor = [UIColor whiteColor];
-	[applicationViewController.view addSubview:textLabelPerformance];
+	textLabelPerformance_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 800, 20)];
+	textLabelPerformance_.textColor = [UIColor blackColor];
+	textLabelPerformance_.shadowColor = [UIColor whiteColor];
+	[viewController_.view addSubview:textLabelPerformance_];
 
-	textLabelConfidence = [[UILabel alloc] initWithFrame:CGRectMake(10, 30, 800, 20)];
-	textLabelConfidence.textColor = [UIColor blackColor];
-	textLabelConfidence.shadowColor = [UIColor whiteColor];
-	[applicationViewController.view addSubview:textLabelConfidence];
+	textLabelConfidence_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 30, 800, 20)];
+	textLabelConfidence_.textColor = [UIColor blackColor];
+	textLabelConfidence_.shadowColor = [UIColor whiteColor];
+	[viewController_.view addSubview:textLabelConfidence_];
 
-	textLabelTextureness = [[UILabel alloc] initWithFrame:CGRectMake(10, 50, 800, 20)];
-	textLabelTextureness.textColor = [UIColor blackColor];
-	textLabelTextureness.shadowColor = [UIColor whiteColor];
-	[applicationViewController.view addSubview:textLabelTextureness];
+	textLabelTextureness_ = [[UILabel alloc] initWithFrame:CGRectMake(10, 50, 800, 20)];
+	textLabelTextureness_.textColor = [UIColor blackColor];
+	textLabelTextureness_.shadowColor = [UIColor whiteColor];
+	[viewController_.view addSubview:textLabelTextureness_];
 
 	std::vector<std::wstring> commandLines;
 	commandLines.push_back(L"LiveVideoId:0"); // video source
 	commandLines.push_back(L"1280x720"); // video resolution
 
-	applicationSimilarityTrackerWrapper = SimilarityTrackerWrapper(commandLines);
+	similarityTrackerWrapper_ = SimilarityTrackerWrapper(commandLines);
 
 	// now we create a PixelImage that simply wrapps a Frame object
 	// as the OpenGLES renderer uses Media objects for textures only
 	// we will update this pixel image each time we receive an update from the tracker
 
-	applicationPixelImage = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
+	pixelImage_ = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
 
-	const Media::FrameMediumRef oldBackgroundMedium = [applicationViewController frameMedium];
-	if (applicationPixelImage && oldBackgroundMedium)
+	if (pixelImage_)
 	{
-		applicationPixelImage->setDevice_T_camera(oldBackgroundMedium->device_T_camera());
-	}
+		pixelImage_->setDevice_T_camera(similarityTrackerWrapper_.frameMedium()->device_T_camera());
+		pixelImage_->start();
 
-	[applicationViewController setFrameMedium:applicationPixelImage];
-
-	if (applicationPixelImage)
-	{
-		applicationPixelImage->start();
+		[viewController_ setFrameMedium:pixelImage_];
 	}
 
 
@@ -167,7 +162,7 @@
 
 - (void)timerTicked:(NSTimer*)timer
 {
-	if (applicationPixelImage.isNull())
+	if (pixelImage_.isNull())
 	{
 		return;
 	}
@@ -176,13 +171,13 @@
 	Tracking::Point::SimilarityTracker::TrackerConfidence trackerConfidence = Tracking::Point::SimilarityTracker::TC_NONE;
 	Tracking::Point::SimilarityTracker::RegionTextureness regionTextureness = Tracking::Point::SimilarityTracker::RT_UNKNOWN;
 
-	const Vector2 recentTouchPosition = applicationViewController->recentTouchPosition;
+	const Vector2 recentTouchPosition = viewController_->recentTouchPosition_;
 
 	// we check whether the platform independent tracker has some new image to process
 
 	Frame resultingFrame;
 
-	if (applicationSimilarityTrackerWrapper.trackNewFrame(resultingFrame, resultingPerformance, recentTouchPosition, nullptr, &trackerConfidence, &regionTextureness) && resultingFrame.isValid())
+	if (similarityTrackerWrapper_.trackNewFrame(resultingFrame, resultingPerformance, recentTouchPosition, nullptr, &trackerConfidence, &regionTextureness) && resultingFrame.isValid())
 	{
 		// we received an augmented frame from the tracker
 		// so we forward the result to the render by updating the visual content of the pixel image
@@ -191,30 +186,30 @@
 		// however, this demo application focuses on the usage of platform independent code and not on performance
 		// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 
-		applicationPixelImage->setPixelImage(std::move(resultingFrame));
+		pixelImage_->setPixelImage(std::move(resultingFrame));
 
 		if (resultingPerformance >= 0.0)
 		{
-			textLabelPerformance.text = StringApple::toNSString(String::toAString(resultingPerformance * 1000.0) + " ms");
+			textLabelPerformance_.text = StringApple::toNSString(String::toAString(resultingPerformance * 1000.0) + " ms");
 		}
 		else
 		{
-			textLabelPerformance.text = StringApple::toNSString("Select a region to track.");
+			textLabelPerformance_.text = StringApple::toNSString("Select a region to track.");
 		}
 
 		ocean_assert(trackerConfidence <= Tracking::Point::SimilarityTracker::TC_VERY_GOOD);
-		textLabelConfidence.text = StringApple::toNSString(" Confidence: " + std::string(trackerConfidence * 3, '*'));
+		textLabelConfidence_.text = StringApple::toNSString(" Confidence: " + std::string(trackerConfidence * 3, '*'));
 
 		ocean_assert(regionTextureness <= Tracking::Point::SimilarityTracker::RT_HIGH);
-		textLabelTextureness.text = StringApple::toNSString("Textureness: " + std::string(regionTextureness * 4, '*'));
+		textLabelTextureness_.text = StringApple::toNSString("Textureness: " + std::string(regionTextureness * 4, '*'));
 
-		applicationViewController->recentTouchPosition = Vector2(Numeric::minValue(), Numeric::minValue());
+		viewController_->recentTouchPosition_ = Vector2(Numeric::minValue(), Numeric::minValue());
 	}
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-	applicationSimilarityTrackerWrapper.release();
+	similarityTrackerWrapper_.release();
 }
 
 @end

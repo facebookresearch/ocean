@@ -141,7 +141,9 @@
 - (void)timerTicked:(NSTimer*)timer
 {
 	if (pixelImage_.isNull())
+	{
 		return;
+	}
 
 	double resultingTrackerPerformance;
 
@@ -157,7 +159,7 @@
 		// however, this demo application focuses on the usage of platform independent code and not on performance
 		// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 
-		pixelImage_->setPixelImage(resultingTrackerFrame);
+		pixelImage_->setPixelImage(std::move(resultingTrackerFrame));
 
 		textLabel_.text = StringApple::toNSString(String::toAString(resultingTrackerPerformance * 1000.0) + " ms");
 	}

@@ -158,6 +158,11 @@ bool HomographyImageAlignmentSparse::determineHomographyWithPoints(const Frame& 
 		}
 	}
 
+	if (currentPointCandidates.size() < 4)
+	{
+		return false;
+	}
+
 	RandomGenerator randomGenerator;
 
 	Indices32 usedIndices;

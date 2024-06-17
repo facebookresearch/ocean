@@ -127,19 +127,13 @@
 
 	pixelImage_ = Media::Manager::get().newMedium("PixelImageForRenderer", Media::Medium::PIXEL_IMAGE);
 
-	const Media::FrameMediumRef oldBackgroundMedium = [viewController_ frameMedium];
-	if (pixelImage_ && oldBackgroundMedium)
-	{
-		pixelImage_->setDevice_T_camera(oldBackgroundMedium->device_T_camera());
-	}
-
-	[viewController_ setFrameMedium:pixelImage_];
-
 	if (pixelImage_)
 	{
+		pixelImage_->setDevice_T_camera(homographyTrackerWrapper_.frameMedium()->device_T_camera());
 		pixelImage_->start();
-	}
 
+		[viewController_ setFrameMedium:pixelImage_];
+	}
 
 	// we create a timer that invokes our tracker every 10ms
 
@@ -169,7 +163,7 @@
 		// however, this demo application focuses on the usage of platform independent code and not on performance
 		// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 
-		pixelImage_->setPixelImage(resultingFrame);
+		pixelImage_->setPixelImage(std::move(resultingFrame));
 
 		if (resultingPerformance >= 0.0)
 		{

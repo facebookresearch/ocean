@@ -137,7 +137,7 @@
 	// @see ocean_app_shark for a high performance implementation of an Augmented Realty application (even more powerful)
 	if (resultingFrame.isValid())
 	{
-		pixelImage_->setPixelImage(resultingFrame);
+		pixelImage_->setPixelImage(std::move(resultingFrame));
 
 		runtimePerformanceLabel_.text = StringApple::toNSString(String::toAString(resultingPerformance * 1000.0) + " ms");
 
