@@ -3,6 +3,7 @@ title: Renderer
 sidebar_position: 4
 ---
 
+import React from 'react';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -14,7 +15,7 @@ The Renderer app extends the [VRNativeApplication](vrnativeapplication.md) by de
 
 Within the [`onFramebufferInitialized()`](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/OpenXRRendererApplication.cpp#L26) function, a 3D coordinate system is established. The scene remains static, meaning its appearance does not change over time. Optionally, the app also demonstrates how to integrate a custom render call, for instance, utilizing a third-party rendering engine. This feature provides flexibility for developers looking to customize the rendering process according to specific requirements or to leverage advanced rendering technologies.
 
-TODO: Add screenshot picture
+<img src={require('@site/static/img/docs/demoapps/questapps/renderer.jpg').default} alt="Image: Screenshot of the Renderer Quest app" width="600" className="center-image"/>
 
 Use this app as a foundational template for developing lightweight VR applications with minimal dependencies. It offers a streamlined approach for those looking to create efficient and straightforward VR experiences.
 

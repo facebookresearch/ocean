@@ -3,14 +3,23 @@ title: Console
 sidebar_position: 2
 ---
 
+import React from 'react';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 ## Description
 
-This demo app is a bare-bone example for how to set up simple console apps with Ocean which can be run on multiple platforms. Here, *console* refers to the lack of any sophisticated UI elements.
+This demo app provides a basic example of how to set up simple console applications using Ocean, designed to run across multiple platforms. In this context, "console" implies the absence of complex UI elements, focusing instead on displaying Ocean's log messages.
 
-The platform-independent code can be found in [`application/ocean/demo/base/console/Console.cpp`](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/application/ocean/demo/base/console/Console.cpp#L17-L54). Platform-dependent code is located in sub-directories that match the name of the corresponding platform.
+<div class="center-images">
+  <img src={require('@site/static/img/docs/demoapps/console_ios.jpg').default} alt="Image: Screenshot of console app on iOS" height="400" className="center-image"/>
+  <img src={require('@site/static/img/docs/demoapps/console_android.jpg').default} alt="Image: Screenshot of console app on Android" height="390" className="center-image"/>
+  <img src={require('@site/static/img/docs/demoapps/console_windows_mac.jpg').default} alt="Image: Screenshot of console app on Desktop" height="400" className="center-image"/>
+</div>
+
+The app is available on all platforms and represents Ocean's simplest demonstration application. Despite its simplicity, it serves as an excellent starting point for quick debugging and prototyping.
+
+The code for desktop platforms code can be found in [`Console.cpp`](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/application/ocean/demo/base/console/Console.cpp#L17-L54). Platform-dependent code is located in sub-directories that match the name of the corresponding platform.
 
 ## Building
 

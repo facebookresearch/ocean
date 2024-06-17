@@ -10,6 +10,8 @@ import TabItem from '@theme/TabItem';
 
 The Quest Graph Visualizer is a sophisticated VR application designed to render interactive 3D graphs, offering a dynamic and immersive way to explore complex data structures. This app is particularly useful for users interested in visualizing mathematical functions, data analysis, and algorithmic paths in three dimensions.
 
+<img src={require('@site/static/img/docs/demoapps/questapps/graphs.jpg').default} alt="Image: Screenshot of the Graphs Quest app" width="600" className="center-image"/>
+
 ## Features
   TODO
 

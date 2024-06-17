@@ -10,6 +10,8 @@ import TabItem from '@theme/TabItem';
 
 PanoramaViewer showcases how a 360-degree image can be used to create a teleportation experience in VR. This app introduces the use of assets like pictures and provides insights into adjusting properties in the rendering engine.
 
+<img src={require('@site/static/img/docs/demoapps/questapps/panoramaviewer.jpg').default} alt="Image: Screenshot of Panorama Viewer Quest app" width="600" className="center-image"/>
+
 ### Features
  - **360-Degree Image Utilization**: Uses a panoramic image to create immersive VR experiences.
  - **Asset Introduction**: Introduces the use of external assets like images in VR applications.

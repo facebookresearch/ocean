@@ -3,12 +3,13 @@ title: VRNativeApplication
 sidebar_position: 3
 ---
 
+import React from 'react';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 ## Description
 
-Building on the [NativeApplication](nativeapplication.md), VRNativeApplication introduces a basic VR environment. This demo integrates an OpenXR session and sets up Ocean's OpenGL ES rendering engine, ready to render simple primitive objects.
+Building on the [**NativeApplication**](nativeapplication.md), VRNativeApplication introduces a basic VR environment. This demo integrates an OpenXR session and sets up Ocean's OpenGL ES rendering engine, ready to render simple primitive objects.
 
 However, the app does not render any content; it is merely ready to create your own VR experience.
 
@@ -18,7 +19,7 @@ The entire app is realized with only [four source files](https://github.com/face
 
 To transform the demo app into a fully functional VR experience, you simply need to incorporate some 3D content for rendering. This content should be added within the [`onFramebufferInitialized()`](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/application/ocean/demo/platform/meta/quest/openxr/vrnativeapplication/quest/OpenXRVRNativeApplication.cpp#L16) event function, which is triggered after the rendering framebuffer has been initialized.
 
-The subsequent demo app, [Renderer](renderer.md), demonstrates precisely this process.
+The subsequent demo app, [**Renderer**](renderer.md), demonstrates precisely this process.
 
 
 ## Features

@@ -3,12 +3,13 @@ title: NativeApplication
 sidebar_position: 2
 ---
 
+import React from 'react';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 ## Description
 
-The NativeApplication demo is the most basic example of a native application that can be executed on OpenXR-compatible devices like Meta's Quest headsets. It is designed to be OpenXR-ready, providing a foundational template for developers to build upon. However, the OpenXR session needs to be implemented before it can be utilized.
+The NativeApplication demo is the most basic example of a native application that can be executed on [OpenXR](https://www.khronos.org/openxr/)-compatible devices like Meta's Quest headsets. It is designed to be OpenXR-ready, providing a foundational template for developers to build upon. However, the OpenXR session needs to be implemented before it can be utilized.
 
 Use this demo app as a starting point if you already have your own OpenXR framework which you intend to use, if you want to implement your own OpenXR codebase, or if you need to debug extreme low-level issues.
 

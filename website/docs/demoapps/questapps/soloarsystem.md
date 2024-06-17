@@ -10,6 +10,8 @@ import TabItem from '@theme/TabItem';
 
 The SolarSystem app transports users into a beautifully rendered VR representation of our solar system. Using X3D for scene description, this app creates a rich, educational experience where users can explore animated planets and listen to an informative audio guide.
 
+<img src={require('@site/static/img/docs/demoapps/questapps/solarsystem.jpg').default} alt="Image: Screenshot of the Solar System Quest app" width="600" className="center-image"/>
+
 ### Features
  - **Rich VR Experience**: Users are teleported into an animated solar system, complete with detailed planetary models.
  - **Scene Description with X3D**: Utilizes X3D to create a comprehensive scene description, allowing for detailed and accurate representations of celestial bodies.

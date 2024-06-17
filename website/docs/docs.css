@@ -10,6 +10,17 @@
     margin: 0 auto;
   }
 
+  .center-images {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+  }
+
+  .center-images img {
+    margin: 20px 20px; /* Reduces space between images */
+  }
+
  .icon-container {
     text-align: center; /* Centers the icons horizontally */
   }
