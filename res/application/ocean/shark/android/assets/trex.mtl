@@ -1,24 +1,8 @@
-#
-# Wavefront material file: C:\Dokumente und Einstellungen\Wetzel\Desktop\dino95.mtl
-#
-# Converted by the PolyTrans geometry converter from Okino Computer Graphics, Inc.
-# Date/time of export: 06/29/2010 19:13:18
-#
-# Bounding box of geometry = (-0.190294,-0.00136636,-1.07673) to (0.547293,0.721199,0.920766).
+# MagicaVoxel @ Ephtracy
 
-newmtl default
-	Ns 32
-	d 1
-	illum 2
-	Kd 0.4 0.4 0.4
-	Ks 0.7 0.7 0.7
-	Ka 0.3 0.3 0.3
-
-newmtl bone
-	Ns 96
-	d 1
-	illum 2
-	Kd 0.64 0.6 0.44
-	Ks 0.24 0.24 0.24
-	Ka 0 0 0
-
+newmtl palette
+illum 1
+Ka 0.000 0.000 0.000
+Kd 1.000 1.000 1.000
+Ks 0.000 0.000 0.000
+map_Kd trex.png
