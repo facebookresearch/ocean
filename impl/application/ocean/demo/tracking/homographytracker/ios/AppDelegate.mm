@@ -51,7 +51,9 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	if ([touches count] != 1)
+	{
 		return;
+	}
 
 	const CGPoint viewPoint = [[touches anyObject] locationInView:[self view]];
 	const CGPoint mediumPoint = [self view2medium:viewPoint];

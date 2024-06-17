@@ -259,6 +259,7 @@ bool HomographyTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 	frameTimestamp_ = currentFrame.timestamp();
 
 	Quaternion world_Q_camera(false);
+#if 0 // currently disabled
 	if (orientationTracker3DOF_)
 	{
 		const Devices::OrientationTracker3DOF::OrientationTracker3DOFSampleRef sample = orientationTracker3DOF_->sample(frameTimestamp_, Devices::Measurement::IS_TIMESTAMP_INTERPOLATE);
@@ -275,6 +276,7 @@ bool HomographyTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 			world_Q_camera = world_Q_flippedWorld * flippedWorld_Q_device * Quaternion(frameMedium_->device_T_camera().rotation());
 		}
 	}
+#endif
 
 	// as we will need worker objects in several function calls we simply request one for the remaining function
 
