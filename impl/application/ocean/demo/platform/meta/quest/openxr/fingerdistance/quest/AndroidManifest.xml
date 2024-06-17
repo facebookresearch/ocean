@@ -11,7 +11,7 @@
 	<uses-feature android:name="oculus.software.handtracking" android:required="true" />
 	<uses-permission android:name="com.oculus.permission.HAND_TRACKING" />
 
-	<application android:allowBackup="false" android:label="OceanOpenXRFingerDistance" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
+	<application android:allowBackup="false" android:label="Finger Distance" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
 		<meta-data android:name="com.samsung.android.vr.application.mode" android:value="vr_only"/>
 		<activity
 				android:name="com.meta.ocean.app.demo.platform.meta.quest.openxr.fingerdistance.quest.FingerDistanceActivity"

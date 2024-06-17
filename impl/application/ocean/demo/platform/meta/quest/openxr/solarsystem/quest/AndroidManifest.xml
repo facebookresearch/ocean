@@ -12,7 +12,7 @@
 	<uses-feature android:name="oculus.software.handtracking" android:required="false" />
 	<uses-permission android:name="com.oculus.permission.HAND_TRACKING" />
 
-	<application android:allowBackup="false" android:label="OceanOpenXRSolarSystem" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
+	<application android:allowBackup="false" android:label="Solar System" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
 		<meta-data android:name="com.samsung.android.vr.application.mode" android:value="vr_only"/>
 		<activity
 				android:name="com.meta.ocean.app.demo.platform.meta.quest.openxr.solarsystem.quest.SolarSystemActivity"
