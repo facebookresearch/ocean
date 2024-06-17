@@ -102,6 +102,10 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             "-DOCEAN_USE_GTEST"
     )
 
+    if(BUILD_SHARED_LIBS)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_TEST_TRACKING_EXPORT")
+    endif()
+
     target_compile_options(${OCEAN_TARGET_NAME} PUBLIC "${OCEAN_COMPILER_FLAGS}")
 
     if (NOT WIN32)
