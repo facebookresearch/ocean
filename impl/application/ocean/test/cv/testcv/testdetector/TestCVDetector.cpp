@@ -47,7 +47,7 @@ using namespace Ocean;
 #endif
 
 	const std::string frameworkPath(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
-	std::string mediaFilename = frameworkPath + std::string("/res/application/ocean/test/cv/testcv/testdetector/sift800x640.bmp");
+	std::string mediaFilename = frameworkPath + std::string("/res/application/ocean/test/cv/testcv/testdetector/tropical-island-with-toucans_800x800.jpg");
 
 
 #ifdef OCEAN_DEBUG

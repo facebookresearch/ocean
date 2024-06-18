@@ -67,7 +67,7 @@ using namespace Ocean;
 #endif
 
 	const std::string frameworkPath(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
-	std::string mediaFilename = frameworkPath + std::string("/res/application/ocean/test/cv/testcv/testdetector/sift800x640.bmp");
+	std::string mediaFilename = frameworkPath + std::string("/res/application/ocean/test/cv/testcv/testdetector/tropical-island-with-toucans_800x800.jpg");
 
 #ifdef OCEAN_DEBUG
 	double testDuration = 0.1;
@@ -93,7 +93,7 @@ using namespace Ocean;
 			std::cout << "(test image image.png, output to the console, all libraries will be tested, each test takes approx. 0.5 seconds)" << std::endl << std::endl;
 			std::cout << "\"\" output.log \"base, cv, geometry\"" << std::endl;
 			std::cout << "(default test image, output to output.log file, three specific libraries will be tested, with default test duration)" << std::endl << std::endl;
-			std::cout << "sift800x640.bmp ocean_framework_test.log" << std::endl;
+			std::cout << "tropical-island-with-toucans_800x800.jpg ocean_framework_test.log" << std::endl;
 			std::cout << "(standardized test)" << std::endl << std::endl;
 
 			return 0;
@@ -183,7 +183,9 @@ using namespace Ocean;
 
 			Log::info() << "\n\n\n\n\n\n";
 			if (Test::TestBase::testBase(testDuration, worker))
+			{
 				succeededTests++;
+			}
 		}
 
 		if (testSet.empty() || testSet.find("math") != testSet.end())
@@ -192,7 +194,9 @@ using namespace Ocean;
 
 			Log::info() << "\n\n\n\n\n\n";
 			if (Test::TestMath::testMath(testDuration, worker))
+			{
 				succeededTests++;
+			}
 		}
 
 		if (testSet.empty() || testSet.find("cv") != testSet.end())
@@ -201,7 +205,9 @@ using namespace Ocean;
 
 			Log::info() << "\n\n\n\n\n\n";
 			if (Test::TestCV::testCV(testDuration, worker))
+			{
 				succeededTests++;
+			}
 		}
 
 		if (testSet.empty() || testSet.find("geometry") != testSet.end())
@@ -210,7 +216,9 @@ using namespace Ocean;
 
 			Log::info() << "\n\n\n\n\n\n";
 			if (Test::TestGeometry::testGeometry(testDuration, worker))
+			{
 				succeededTests++;
+			}
 		}
 
 		if (testSet.empty() || testSet.find("cvadvanced") != testSet.end())
@@ -219,7 +227,9 @@ using namespace Ocean;
 
 			Log::info() << "\n\n\n\n\n\n";
 			if (Test::TestCV::TestAdvanced::testCVAdvanced(testDuration, worker))
+			{
 				succeededTests++;
+			}
 		}
 
 		if (testSet.empty() || testSet.find("cvdetector") != testSet.end())
@@ -228,7 +238,9 @@ using namespace Ocean;
 
 			Log::info() << "\n\n\n\n\n\n";
 			if (Test::TestCV::TestDetector::testCVDetector(testDuration, worker, mediaFilename))
+			{
 				succeededTests++;
+			}
 		}
 
 		if (testSet.empty() || testSet.find("cvsegmentation") != testSet.end())
@@ -237,7 +249,9 @@ using namespace Ocean;
 
 			Log::info() << "\n\n\n\n\n\n";
 			if (Test::TestCV::TestSegmentation::testCVSegmentation(testDuration, worker))
+			{
 				succeededTests++;
+			}
 		}
 	}
 	catch (...)
