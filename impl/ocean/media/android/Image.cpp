@@ -127,13 +127,20 @@ Frame Image::decodeImage(AImageDecoder* aImageDecoder)
 
 	if (NumericT<size_t>::isInsideValueRange(planeStrideBytes) && NumericT<size_t>::isInsideValueRange(sizeBytes))
 	{
-		if (AImageDecoder_decodeImage(aImageDecoder, frame.data<void>(), size_t(planeStrideBytes), size_t(sizeBytes)) == ANDROID_IMAGE_DECODER_SUCCESS)
+		const int decodeResult = AImageDecoder_decodeImage(aImageDecoder, frame.data<void>(), size_t(planeStrideBytes), size_t(sizeBytes));
+
+		if (decodeResult == ANDROID_IMAGE_DECODER_SUCCESS)
 		{
 			return frame;
 		}
+
+		Log::debug() << "Failed to decode image: " << decodeResult;
+	}
+	else
+	{
+		ocean_assert(false && "This should never happen!");
 	}
 
-	ocean_assert(false && "This should never happen!");
 	return Frame();
 }
 
