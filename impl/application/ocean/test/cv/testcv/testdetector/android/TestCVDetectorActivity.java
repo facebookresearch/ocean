@@ -57,7 +57,7 @@ public class TestCVDetectorActivity extends TextActivity
 		BaseJni.initialize(applicationOutput);
 
 		// Define the filename of the test image
-		final String testImageFilename = getExternalFilesDir(null) + "/sift800x640.bmp";
+		final String testImageFilename = getExternalFilesDir(null) + "/tropical-island-with-toucans_800x800.jpg";
 
 		// Define the test duration in seconds.
 		final double testDuration = 2.0;
