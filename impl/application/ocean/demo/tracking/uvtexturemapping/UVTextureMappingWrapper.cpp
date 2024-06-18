@@ -199,7 +199,7 @@ UVTextureMappingWrapper::UVTextureMappingWrapper(const std::vector<std::wstring>
 	}
 	else
 	{
-		const IO::File relativeFile("res/application/ocean/demo/tracking/uvtexturemapping/sift640x512.bmp");
+		const IO::File relativeFile("res/application/ocean/demo/tracking/uvtexturemapping/tropical-island-with-toucans_640x640.jpg");
 
 		patternAbsoluteFile = IO::Directory(frameworkPath) + relativeFile;
 	}

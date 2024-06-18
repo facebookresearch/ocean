@@ -62,7 +62,7 @@ class UVTextureMappingWrapper
 		 * "LiveVideoId:0", or "directory/trackingMovie.mp4", or "singleImage.png"
 		 *
 		 * 2. Parameter (optional): The filename of the tracking pattern e.g.:
-		 * "pattern.png", or "/absolute/path/to/image.jpg", or "ocean/res/application/ocean/demo/tracking/uvtexturemapping/sift640x512.bmp"
+		 * "pattern.png", or "/absolute/path/to/image.jpg", or "ocean/res/application/ocean/demo/tracking/uvtexturemapping/tropical-island-with-toucans_640x640.jpg"
 		 *
 		 * 3. Parameter (optional): The preferred frame dimension of the input medium in pixel:
 		 * "640x480", or "1280x720", or "1920x1080"
