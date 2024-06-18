@@ -159,7 +159,9 @@ UVTextureMappingWrapper::UVTextureMappingWrapper(const std::vector<std::wstring>
 
 			const Media::FiniteMediumRef finiteMedium(trackerFrameMedium);
 			if (finiteMedium)
+			{
 				finiteMedium->setLoop(true);
+			}
 		}
 	}
 
@@ -193,9 +195,13 @@ UVTextureMappingWrapper::UVTextureMappingWrapper(const std::vector<std::wstring>
 		const IO::File file(String::toAString(commandArguments[1]));
 
 		if (file.exists())
+		{
 			patternAbsoluteFile = file;
+		}
 		else
+		{
 			Platform::Utilities::showMessageBox("Error", std::string("Could not find a valid tracking pattern!\n\nGot \"") + file() + std::string("\""));
+		}
 	}
 	else
 	{

@@ -42,7 +42,7 @@ public class UVTextureMappingActivity extends GLFrameViewActivity
 	@Override
 	protected void onCameraPermissionGranted()
 	{
-		initializeUVTextureMapping("LiveVideoId:0", getExternalFilesDir(null) + "/sift640x512.bmp", "1920x1080");
+		initializeUVTextureMapping("LiveVideoId:0", getExternalFilesDir(null) + "/tropical-island-with-toucans_640x640.jpg", "1920x1080");
 	}
 
 	/**
