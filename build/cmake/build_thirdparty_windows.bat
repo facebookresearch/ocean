@@ -5,8 +5,6 @@
 
 echo off
 
-setlocal
-
 @REM Determine the location of the source directory from the location of this script
 set OCEAN_THIRD_PARTY_SOURCE_DIR=%~dp0..\..\build\cmake\third-party
 

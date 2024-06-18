@@ -5,8 +5,6 @@
 
 echo off
 
-setlocal
-
 @REM Determine the location of the source directory from the location of this script
 set OCEAN_THIRD_PARTY_SOURCE_DIR=%~dp0..\..\build\cmake\third-party
 
@@ -153,7 +151,7 @@ if "%BUILD_FAILURES%" == "" (
 )
 
 :run_build
-call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat android %OCEAN_THIRD_PARTY_SOURCE_DIR% %BUILD_DIRECTORY% "-j16" ^
+call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat android %OCEAN_THIRD_PARTY_SOURCE_DIR% !BUILD_DIRECTORY! "-j16" ^
         "-GNinja" ^
         "-DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY!" ^
         "-DCMAKE_BUILD_TYPE=!BUILD_TYPE!" ^
