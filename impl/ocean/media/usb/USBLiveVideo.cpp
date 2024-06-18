@@ -762,14 +762,17 @@ Frame USBLiveVideo::processUncompressedSample(const unsigned int width, const un
 
 Frame USBLiveVideo::processMjpegSample(const unsigned int width, const unsigned int height, const void* data, const size_t size)
 {
-	if (size < 4)
+	// each individual jpeg buffer starts with 0xFFD8 and should end with 0xFFD9
+
+	if (size <= 4)
 	{
 		return Frame();
 	}
 
 	const uint8_t* const byteData = (const uint8_t*)(data);
 
-	if (byteData[0] == 0xFFu && byteData[1] == 0xD8u && byteData[size - 2] == 0xFFu && byteData[size - 1] == 0xD9u) // checking magic number at beginning and end of the stream
+	// checking magic number at beginning of the buffer, we don't verify whether the end contains 0xFFD9 as some cameras may send a buffer slightly larger than expected
+	if (byteData[0] == 0xFFu && byteData[1] == 0xD8u)
 	{
 #ifdef OCEAN_MEDIA_ANDROID_IMAGE_AVAILABLE
 		// we have access to Android built-in JPEG decoder
