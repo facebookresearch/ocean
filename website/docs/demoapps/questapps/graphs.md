@@ -29,8 +29,11 @@ Furthermore, a custom scale and visualization boundary can be defined for each g
 </Tabs>
 
 ## Features
-  TODO
-
+  - **3D Graph Rendering**: Displays mathematical functions in 3D.
+  - **Visualization Options**: Switch between solid, wireframe, and normals views.
+  - **Hand-Gesture Interaction**: Explore Gradient Descent paths with hand movements.
+  - **Automatic Differentiation**: Computes values and derivatives automatically.
 
 ## Educational and Immersive
- TODO
+  - **Hands-On Learning**: Direct interaction with mathematical concepts.
+  - **Visualizing Complex Concepts**: Makes abstract math tangible and visual.
