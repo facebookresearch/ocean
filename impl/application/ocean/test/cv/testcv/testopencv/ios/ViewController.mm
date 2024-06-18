@@ -35,7 +35,7 @@ using namespace Ocean;
 	const std::string testFunctions = "";
 
 	// we seek for the resource file containing the media file
-	const std::wstring testMediaFilename = Ocean::Platform::Apple::Resource::resourcePath(L"sift800x640", L"bmp");
+	const std::wstring testMediaFilename = Ocean::Platform::Apple::Resource::resourcePath(L"tropical-island-with-toucans_800x800", L"jpg");
 
 	Test::TestCV::TestOpenCV::testCVOpenCVAsynchron(testDurations, String::toAString(testMediaFilename), testFunctions);
 
