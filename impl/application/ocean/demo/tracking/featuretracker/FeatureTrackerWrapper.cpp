@@ -259,7 +259,7 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 	}
 	else
 	{
-		const IO::File relativeFile("res/application/ocean/demo/tracking/featuretracker/sift640x512.bmp");
+		const IO::File relativeFile("res/application/ocean/demo/tracking/featuretracker/tropical-island-with-toucans_800x800.jpg");
 
 		patternAbsoluteFile = IO::Directory(frameworkPath) + relativeFile;
 	}

@@ -11,7 +11,7 @@
 		5D50B1B91D92824F009DDDFF /* Application.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B61D92824F009DDDFF /* Application.mm */; };
 		5D73B0661D92C5FA000B5F33 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */; };
 		936E70752273E933009B9F74 /* FeatureTrackerWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 936E70742273E933009B9F74 /* FeatureTrackerWrapper.cpp */; };
-		93F983E71FD74B60004EDD5A /* sift640x512.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 93F983E61FD74B60004EDD5A /* sift640x512.bmp */; };
+		93F983E71FD74B60004EDD5A /* tropical-island-with-toucans_800x800.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 93F983E61FD74B60004EDD5A /* tropical-island-with-toucans_800x800.jpg */; };
 		93F983E91FD74CC5004EDD5A /* cameracalibration.occ in Resources */ = {isa = PBXBuildFile; fileRef = 93F983E81FD74CC5004EDD5A /* cameracalibration.occ */; };
 /* End PBXBuildFile section */
 
@@ -25,7 +25,7 @@
 		5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = ../../../../../../../../../res/application/ocean/demo/tracking/featuretracker/ios/LaunchScreen.xib; sourceTree = "<group>"; };
 		936E70742273E933009B9F74 /* FeatureTrackerWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FeatureTrackerWrapper.cpp; path = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/FeatureTrackerWrapper.cpp; sourceTree = "<group>"; };
 		936E70762273E940009B9F74 /* FeatureTrackerWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeatureTrackerWrapper.h; path = ../../../../../../../../../impl/application/ocean/demo/tracking/featuretracker/FeatureTrackerWrapper.h; sourceTree = "<group>"; };
-		93F983E61FD74B60004EDD5A /* sift640x512.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = sift640x512.bmp; path = ../../../../../../../../../res/application/ocean/demo/tracking/featuretracker/sift640x512.bmp; sourceTree = "<group>"; };
+		93F983E61FD74B60004EDD5A /* tropical-island-with-toucans_800x800.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = tropical-island-with-toucans_800x800.jpg; path = ../../../../../../../../../res/application/ocean/demo/tracking/featuretracker/tropical-island-with-toucans_800x800.jpg; sourceTree = "<group>"; };
 		93F983E81FD74CC5004EDD5A /* cameracalibration.occ */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cameracalibration.occ; path = ../../../../../../../../../res/application/ocean/demo/tracking/featuretracker/cameracalibration.occ; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -91,7 +91,7 @@
 			children = (
 				5D50B1BC1D9282EE009DDDFF /* Info.plist */,
 				5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */,
-				93F983E61FD74B60004EDD5A /* sift640x512.bmp */,
+				93F983E61FD74B60004EDD5A /* tropical-island-with-toucans_800x800.jpg */,
 				93F983E81FD74CC5004EDD5A /* cameracalibration.occ */,
 			);
 			name = "Resource Files";
@@ -156,7 +156,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93F983E71FD74B60004EDD5A /* sift640x512.bmp in Resources */,
+				93F983E71FD74B60004EDD5A /* tropical-island-with-toucans_800x800.jpg in Resources */,
 				93F983E91FD74CC5004EDD5A /* cameracalibration.occ in Resources */,
 				5D73B0661D92C5FA000B5F33 /* LaunchScreen.xib in Resources */,
 			);
