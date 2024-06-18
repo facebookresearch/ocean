@@ -72,7 +72,7 @@ public class DemoPlatformAndroidPixelFormatsActivity extends TextActivity
 	{
 		final String resourcePath = getExternalFilesDir(null) + "/";
 		BaseJni.information("resourcePath: " + resourcePath);
-		final String imageFilename = "sift640x512.bmp";
+		final String imageFilename = "tropical-island-with-toucans_640x640.jpg";
 
 		Assets.copyFiles(getAssets(), resourcePath, true);
 
@@ -171,7 +171,7 @@ public class DemoPlatformAndroidPixelFormatsActivity extends TextActivity
 	{
 		final String resourcePath = getExternalFilesDir(null).getAbsolutePath();
 		BaseJni.information("resourcePath: " + resourcePath);
-		final String imageFilename = "sift640x512.bmp";
+		final String imageFilename = "tropical-island-with-toucans_640x640.jpg";
 
 		Assets.copyFiles(getAssets(), resourcePath, true);
 
