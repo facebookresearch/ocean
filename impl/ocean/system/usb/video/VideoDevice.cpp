@@ -1834,23 +1834,45 @@ bool VideoDevice::stop()
 	Log::debug() << "VideoDevice::stop()";
 #endif
 
-	const ScopedLock scopedLock(lock_);
-
-	if (!isStarted_)
 	{
-		return true;
+		// adjusting the device's states
+
+		const ScopedLock scopedLock(lock_);
+
+		if (!isStarted_)
+		{
+			return true;
+		}
+
+		ocean_assert(isValid());
+
+		for (ScopedTransfer& transfer : streamingTransfers_)
+		{
+			const int cancelResult = libusb_cancel_transfer(transfer.object());
+
+			if (cancelResult != 0)
+			{
+				Log::info() << "Failed to cancel transfer: " << libusb_error_name(cancelResult);
+			}
+		}
+
+		isStarted_ = false;
+
+		activeDescriptorFormatIndex_ = 0u;
+		activeDescriptorFrameIndex_ = 0u;
+		activeClockFrequency_ = 0u;
+		maximalSampleSize_ = 0u;
+
+		activeSample_ = nullptr;
 	}
 
-	ocean_assert(isValid());
-
-	for (ScopedTransfer& transfer : streamingTransfers_)
 	{
-		const int cancelResult = libusb_cancel_transfer(transfer.object());
+		// releasing remaining samples
 
-		if (cancelResult != 0)
-		{
-			Log::info() << "Failed to cancel transfer: " << libusb_error_name(cancelResult);
-		}
+		const ScopedLock scopedLock(samplesLock_);
+
+		sampleQueue_ = SampleQueue();
+		reusableSamples_.clear();
 	}
 
 	return true;
@@ -2076,6 +2098,13 @@ void VideoDevice::libStatusCallback(libusb_transfer& usbTransfer)
 
 bool VideoDevice::libusbStreamCallback(libusb_transfer& usbTransfer)
 {
+	const ScopedLock scopedLock(lock_);
+
+	if (!isStarted_)
+	{
+		return false;
+	}
+
 	bool resubmit = true;
 
 	ocean_assert(reusableBufferPointers_.empty());

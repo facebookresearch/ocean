@@ -57,7 +57,7 @@ void ExternalCameraApplication::onFramebufferInitialized()
 void ExternalCameraApplication::onFramebufferReleasing()
 {
 	vrTableMenu_.release();
-	
+
 	renderingTransform_.release();
 	renderingTransformCamera_.release();
 
@@ -226,7 +226,7 @@ void ExternalCameraApplication::enumerateCameras()
 	Media::Library::Definitions selectableMedia = Media::Manager::get().selectableMedia(Media::Medium::LIVE_VIDEO);
 
 	OpenXR::Application::VRTableMenu::Entries menuGroupEntries;
-	
+
 	for (const Media::Library::Definition& definition : selectableMedia)
 	{
 		menuGroupEntries.emplace_back(definition.url, definition.url);
@@ -238,10 +238,10 @@ void ExternalCameraApplication::enumerateCameras()
 	{
 		// let's place an empty entry as separation
 		menuGroupEntries.emplace_back("", "");
-	}		
+	}
 	menuGroupEntries.emplace_back("Refresh device list", "REFRESH");
-	
-	const OpenXR::Application::VRTableMenu::Groups menuGroups = 
+
+	const OpenXR::Application::VRTableMenu::Groups menuGroups =
 	{
 		{std::move(deviceGroupName), std::move(menuGroupEntries)},
 	};
@@ -293,7 +293,7 @@ bool ExternalCameraApplication::enumerateStreamConfigurations()
 
 			if (configurationsSelectedPerStreamType >= 3 && streamConfiguration.width_ != 640u && streamConfiguration.width_ != 1920u && streamConfiguration.width_ != 1280u)
 			{
-				Log::info() << n << ": " << streamConfiguration.toString() + " (skipping)";	
+				Log::info() << n << ": " << streamConfiguration.toString() + " (skipping)";
 				continue;
 			}
 
@@ -363,7 +363,7 @@ std::string ExternalCameraApplication::translateStreamType(const Media::LiveVide
 
 		case Media::LiveVideo::ST_MJPEG:
 			return "MotionJPEG stream";
-		
+
 		case Media::LiveVideo::ST_CODEC:
 		{
 			std::string result = "Compressed Stream";
