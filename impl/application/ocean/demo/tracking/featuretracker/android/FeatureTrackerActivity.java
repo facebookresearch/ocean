@@ -41,7 +41,7 @@ public class FeatureTrackerActivity extends GLFrameViewActivity
 	@Override
 	protected void onCameraPermissionGranted()
 	{
-		initializeFeatureTracker("LiveVideoId:0", getExternalFilesDir(null) + "/sift640x512.bmp", "1920x1080");
+		initializeFeatureTracker("LiveVideoId:0", getExternalFilesDir(null) + "/tropical-island-with-toucans_640x640.jpg", "1920x1080");
 	}
 
 	/**
