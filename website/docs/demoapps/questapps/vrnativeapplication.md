@@ -22,6 +22,18 @@ To transform the demo app into a fully functional VR experience, you simply need
 The subsequent demo app, [**Renderer**](renderer.md), demonstrates precisely this process.
 
 
+## Building
+
+<Tabs groupId="target-os" queryString>
+
+  <TabItem value="quest" label="Quest">
+    TODO
+  </TabItem>
+
+</Tabs>
+
+
+
 ## Features
 - **Integrated OpenXR Session**: Unlike the NativeApplication, this demo includes an OpenXR session setup.
 - **Integrated Rendering Engine**: Ready to render simple primitive objects using Ocean's OpenGL ES rendering engine.
@@ -32,13 +44,3 @@ The subsequent demo app, [**Renderer**](renderer.md), demonstrates precisely thi
 ```
 adb logcat -s Ocean
 ```
-
-## Building
-
-<Tabs groupId="target-os" queryString>
-
-  <TabItem value="quest" label="Quest">
-    TODO
-  </TabItem>
-
-</Tabs>

@@ -20,15 +20,6 @@ Before rendering each new frame, the [`onPreRender()`](https://github.com/facebo
 As the app relies on hand tracking, the hand tracking capability [*com.oculus.permission.HAND_TRACKING*](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/application/ocean/demo/platform/meta/quest/openxr/fingerdistance/quest/AndroidManifest.xml#L12) is included in the app's manifest file. Without this capability configured, hand tracking will not function, and the app will be unable to access hand poses.
 
 
-## Features
- - **Distance Measurement and Visualization**: Measures and visually represents the distance between index fingers in VR.
- - **Simple 3D Object Visualization**: Demonstrates visualization of spheres, cylinders, and text.
-
-
-## Use case
-- **Educational Tool**: Serves as a practical example for developers interested in creating educational or training applications focused on hand interactions.
-
-
 ## Building
 
 <Tabs groupId="target-os" queryString>
@@ -38,3 +29,12 @@ As the app relies on hand tracking, the hand tracking capability [*com.oculus.pe
   </TabItem>
 
 </Tabs>
+
+
+## Features
+ - **Distance Measurement and Visualization**: Measures and visually represents the distance between index fingers in VR.
+ - **Simple 3D Object Visualization**: Demonstrates visualization of spheres, cylinders, and text.
+
+
+## Use case
+- **Educational Tool**: Serves as a practical example for developers interested in creating educational or training applications focused on hand interactions.

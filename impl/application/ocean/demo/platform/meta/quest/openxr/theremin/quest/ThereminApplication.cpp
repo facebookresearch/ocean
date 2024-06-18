@@ -175,10 +175,7 @@ void ThereminApplication::onPreRender(const XrTime& xrPredictedDisplayTime, cons
 
 	if (frequency >= 20.0f && frequency <= 20000.0f)
 	{
-		if (liveAudio_->needNewSamples())
-		{
-			renderAudioSample(frequency);
-		}
+		renderAudioSample(frequency);
 	}
 
 	liveAudio_->setSoundVolume(volume);
@@ -194,6 +191,12 @@ void ThereminApplication::renderAudioSample(const float frequency)
 {
 	ocean_assert(frequency >= 20.0f && frequency <= 20000.0f);
 	ocean_assert(liveAudio_);
+
+	if (!liveAudio_->needNewSamples())
+	{
+		// no need for a new audio sample
+		return;
+	}
 
 	constexpr size_t elementsPerSecond = 48000; // 48kHz
 	constexpr size_t samplesPerSecond = 50; // 20ms

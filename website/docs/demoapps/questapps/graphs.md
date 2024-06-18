@@ -12,13 +12,6 @@ The Quest Graph Visualizer is a sophisticated VR application designed to render 
 
 <img src={require('@site/static/img/docs/demoapps/questapps/graphs.jpg').default} alt="Image: Screenshot of the Graphs Quest app" width="600" className="center-image"/>
 
-## Features
-  TODO
-
-
-## Educational and Immersive
- TODO
-
 ## Building
 
 <Tabs groupId="target-os" queryString>
@@ -28,3 +21,10 @@ The Quest Graph Visualizer is a sophisticated VR application designed to render 
   </TabItem>
 
 </Tabs>
+
+## Features
+  TODO
+
+
+## Educational and Immersive
+ TODO

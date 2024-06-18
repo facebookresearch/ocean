@@ -24,16 +24,6 @@ The demo app requires the implementation of three different event functions:
 
 Clearly, this demo app is extremely low-level and requires significant additional effort before achieving a fully functional XR experience. Please refer to Ocean's more advanced Quest demo apps to learn how to start with a completely functional XR environment, ready for rendering and interacting with virtual content.
 
-## Features
-- **OpenXR-Ready**: The application is prepared for OpenXR integration, although the session itself needs to be manually added by the developer.
-- **Basic Template**: Serves as a starting point for more complex applications.
-
-## Usage
-- **Log Verification**: No visual feedback is provided when launching the app on Quest. Developers can verify functionality by accessing the Quest's log using the command:
-```
-adb logcat -s Ocean
-```
-
 ## Building
 
 <Tabs groupId="target-os" queryString>
@@ -43,3 +33,13 @@ adb logcat -s Ocean
   </TabItem>
 
 </Tabs>
+
+## Features
+- **OpenXR-Ready**: The application is prepared for OpenXR integration, although the session itself needs to be manually added by the developer.
+- **Basic Template**: Serves as a starting point for more complex applications.
+
+## Usage
+- **Log Verification**: No visual feedback is provided when launching the app on Quest. Developers can verify functionality by accessing the Quest's log using the command:
+```
+adb logcat -s Ocean
+```

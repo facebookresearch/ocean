@@ -16,14 +16,6 @@ The demo creates a large-radius rendering sphere object in the [`createTexturedS
 
 Before the texture can be utilized, it must be transferred from the application's asset container to a temporary directory associated with the application. This transfer is facilitated by Ocean's [**ResourceManager**](https://www.internalfb.com/intern/staticdocs/ocean/doxygen/class_ocean_1_1_platform_1_1_android_1_1_resource_manager.html) for Android.
 
-### Features
- - **360-Degree Image Utilization**: Uses a panoramic image to create immersive VR experiences.
- - **Asset Introduction**: Introduces the use of external assets like images in VR applications.
-
-
-### Application Potential
- - **Tourism and Real Estate**: Ideal for applications in tourism, real estate, and other fields where immersive visualization is beneficial.
-
 ## Building
 
 <Tabs groupId="target-os" queryString>
@@ -33,3 +25,12 @@ Before the texture can be utilized, it must be transferred from the application'
   </TabItem>
 
 </Tabs>
+
+
+## Features
+ - **360-Degree Image Utilization**: Uses a panoramic image to create immersive VR experiences.
+ - **Asset Introduction**: Introduces the use of external assets like images in VR applications.
+
+
+## Application Potential
+ - **Tourism and Real Estate**: Ideal for applications in tourism, real estate, and other fields where immersive visualization is beneficial.

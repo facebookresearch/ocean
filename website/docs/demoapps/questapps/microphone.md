@@ -19,15 +19,6 @@ Before each frame is rendered, the [`updateMicrophoneSpectrum()`](https://github
 
 Before the microphone can be activated, the app must obtain permission from the user. Therefore, the record audio permission (*android.permission.RECORD_AUDIO*) is included in the app's manifest file and is [additionally](https://github.com/facebookresearch/ocean/blob/7372549e039fe1718f364aeac534f919bf45d280/impl/application/ocean/demo/platform/meta/quest/openxr/microphone/quest/MicrophoneApplication.cpp#L25) requested when the application starts. Once the user grants permission, the [`onAndroidPermissionGranted()`](https://github.com/facebookresearch/ocean/blob/7372549e039fe1718f364aeac534f919bf45d280/impl/application/ocean/demo/platform/meta/quest/openxr/microphone/quest/MicrophoneApplication.cpp#L40) function is invoked, allowing the microphone to be accessed.
 
-### Features
- - **Microphone Access**: Demonstrates how to access the Quest's microphone for audio input.
- - **Android Permission Handling**: Shows how to request and handle Android permissions required for microphone access.
- - **Real-Time Audio Processing**: Processes live microphone samples and converts them into an audio spectrum display.
-
-
-### Application Integration
- - **Audio-Based Interactions**: Enables developers to integrate audio-based interactions or features into their VR applications.
-
 ## Building
 
 <Tabs groupId="target-os" queryString>
@@ -37,3 +28,12 @@ Before the microphone can be activated, the app must obtain permission from the 
   </TabItem>
 
 </Tabs>
+
+## Features
+ - **Microphone Access**: Demonstrates how to access the Quest's microphone for audio input.
+ - **Android Permission Handling**: Shows how to request and handle Android permissions required for microphone access.
+ - **Real-Time Audio Processing**: Processes live microphone samples and converts them into an audio spectrum display.
+
+
+## Application Integration
+ - **Audio-Based Interactions**: Enables developers to integrate audio-based interactions or features into their VR applications.

@@ -14,13 +14,6 @@ Following the selection of a camera, the app seeks permission to access the exte
 
 The final step in the setup process is the real-time display of the live camera stream within the Quest environment. This feature not only broadens the capabilities of the Quest headset but also offers numerous possibilities for integrating real-world visuals into VR experiences for monitoring, broadcasting, or interactive purposes.
 
-## Features
-  TODO
-
-
-## Educational and Immersive
- TODO
-
 ## Building
 
 <Tabs groupId="target-os" queryString>
@@ -30,3 +23,10 @@ The final step in the setup process is the real-time display of the live camera 
   </TabItem>
 
 </Tabs>
+
+## Features
+  TODO
+
+
+## Educational and Immersive
+ TODO

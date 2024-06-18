@@ -19,15 +19,6 @@ In the [`onPreRender()`](https://github.com/facebookresearch/ocean/blob/c6994ae2
 
 Since the app relies on hand tracking, the hand tracking capability [*com.oculus.permission.HAND_TRACKING*](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/application/ocean/demo/platform/meta/quest/openxr/handgestures/quest/AndroidManifest.xml#L12) is included in the app's manifest file to ensure proper functionality.
 
-## Features
- - **Supported Hand Gestures**: Includes pinching, pointing, grabbing, and more.
- - **Visualization Mode Alteration**: Demonstrates how to use a controller button to change visualization modes.
-
-
-## Interaction Enhancement
- - **Gesture-Based Commands**: Offers a user-friendly way to interact with VR environments through natural hand movements.
-
-
 ## Building
 
 <Tabs groupId="target-os" queryString>
@@ -37,3 +28,12 @@ Since the app relies on hand tracking, the hand tracking capability [*com.oculus
   </TabItem>
 
 </Tabs>
+
+
+## Features
+ - **Supported Hand Gestures**: Includes pinching, pointing, grabbing, and more.
+ - **Visualization Mode Alteration**: Demonstrates how to use a controller button to change visualization modes.
+
+
+## Interaction Enhancement
+ - **Gesture-Based Commands**: Offers a user-friendly way to interact with VR environments through natural hand movements.
