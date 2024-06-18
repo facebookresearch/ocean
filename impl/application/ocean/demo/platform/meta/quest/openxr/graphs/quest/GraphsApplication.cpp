@@ -212,7 +212,6 @@ void GraphsApplication::renderGradientDescentPaths()
 							pathPoint.y() += Scalar(0.001); // adding 1mm to ensure that the path is always visible
 						}
 
-						renderingTransformGradientDescent_->clear();
 						renderingTransformGradientDescent_->addChild(Rendering::Utilities::createPoints(*engine_, gradientDescentPath, RGBAColor(0.0f, 1.0f, 0.0f), pointSize));
 						renderingTransformGradientDescent_->setVisible(true);
 					}
@@ -221,17 +220,12 @@ void GraphsApplication::renderGradientDescentPaths()
 					renderingTransformIntersection_->setVisible(true);
 				}
 			}
-
-			// we stop here and ignore whether the user is using the right hand
-			return;
 		}
 	}
 
 	// now, we check whether the user wants to interact with the right hand
 
 	const Vectors3& worldRightJointPoints = handPoses_.jointPositions(1);
-
-	bool hasBeenCleared = false;
 
 	if (worldRightJointPoints.size() == XR_HAND_JOINT_COUNT_EXT)
 	{
@@ -263,12 +257,6 @@ void GraphsApplication::renderGradientDescentPaths()
 						pathPoint *= graph.metric_s_graph_;
 
 						pathPoint.y() += Scalar(0.001); // adding 1mm to ensure that the path is always visible
-					}
-
-					if (!hasBeenCleared)
-					{
-						renderingTransformGradientDescent_->clear();
-						hasBeenCleared = true;
 					}
 
 					renderingTransformGradientDescent_->addChild(Rendering::Utilities::createPoints(*engine_, gradientDescentPath, RGBAColor(0.0f, 1.0f, 0.0f), pointSize));
