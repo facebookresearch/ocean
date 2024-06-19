@@ -51,32 +51,64 @@ From here, the Ocean binaries and include files can be used in any other project
 
 ## 4 Building the Ocean iOS demo/test apps
 
-First, build the required third-party libraries as described above.
+First, build the required third-party libraries as described above with (targets should be available as static libraries as debug and/or release builds).
 
-Then configure the CMake project of Occean:
+Also have your Apple team ID ready; it should have the following format: `XXXXXXXXXX`. Without it the apps cannot be signed and the build will fail.
+
+To configure the CMake project of Ocean as a debug build, use:
 
 ```
-cmake -S"${OCEAN_DEVELOPMENT_PATH}/ocean" \
-    -B"/tmp/ocean/build/ios/static_Debug" \
+# Debug
+cd ${OCEAN_DEVELOPMENT_PATH}
+cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
+    -B"${HOME}/build_ocean_ios_debug" \
     -DCMAKE_BUILD_TYPE="Debug" \
     -G Xcode \
     -DCMAKE_TOOLCHAIN_FILE="${OCEAN_DEVELOPMENT_PATH}/ocean/build/cmake/ios-cmake/ios.toolchain.cmake" \
     -DPLATFORM="OS64" \
-    -DDEPLOYMENT_TARGET="13.0" \
-    -DCMAKE_INSTALL_PREFIX="/tmp/ocean/install/ios/static_Debug" \
+    -DDEPLOYMENT_TARGET="15.0" \
+    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty_ios/static_Debug" \
     -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX \
     -DBUILD_SHARED_LIBS="OFF"
 ```
 
-where `-DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM` specifies the Apple team ID. Please make sure to replace `XXXXXXXXXX` with your team ID. Update other parameters as required, for example:
+and for release builds, use:
 
-* `-B` - the build directory for Ocean
-* `-DCMAKE_BUILD_TYPE` - the build type to use (tested values are `Debug` and `Release`)
+```
+# Release
+cd ${OCEAN_DEVELOPMENT_PATH}
+cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
+    -B"${HOME}/build_ocean_ios_release" \
+    -DCMAKE_BUILD_TYPE="Release" \
+    -G Xcode \
+    -DCMAKE_TOOLCHAIN_FILE="${OCEAN_DEVELOPMENT_PATH}/build/cmake/ios-cmake/ios.toolchain.cmake" \
+    -DPLATFORM="OS64" \
+    -DDEPLOYMENT_TARGET="15.0" \
+    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty_ios/static_Release" \
+    -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX \
+    -DBUILD_SHARED_LIBS="OFF"
+```
+
+In both cases make sure to replace `XXXXXXXXXX` with your Apple Team ID.
 
 Once the configuration is complete, open the generated the XCode project:
 
 ```
-open /tmp/ocean/build/ios/static_Debug/ocean.xcodeproj
+# Debug
+open ${HOME}/build_ocean_ios_debug/ocean.xcodeproj
 ```
 
-Search for the demo/test apps at the top of the XCode window. The Ocean targets for demos and tests follow the naming scheme `application_ocean_(test|demo)_..._ios`. Select an app and build and install as normal.
+or
+
+```
+# Release
+open ${HOME}/build_ocean_ios_release/ocean.xcodeproj
+```
+
+If XCode asks whether schemes should be created automatically or manually, select automatically.
+
+Then search for the demo/test apps at the top of the XCode window. The Ocean targets for demos and tests follow the naming scheme `application_ocean_(test|demo)_..._ios`. Select an app and build and install as normal. For inspiration checkout the list of available demos on the [project website](https://facebookresearch.github.io/ocean/docs/introduction/).
+
+Ocean contains many demo and test apps. So, if you're using an unpaid Apple developer account, you may run into the following limitation:
+
+> Communication with Apple failed. Your maximum App ID limit has been reached. You may create up to 10 App IDs every 7 days.
