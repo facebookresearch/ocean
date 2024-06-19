@@ -11,8 +11,10 @@ fi
 
 OCEAN_PLATFORM="ios"
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 # OTP = OCEAN_THIRD_PARTY
-OTP_SOURCE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd third-party && pwd )
+OTP_SOURCE_DIR=$( cd "${SCRIPT_DIR}/third-party" && pwd )
 
 OTP_BUILD_DIR="/tmp/ocean/build/${OCEAN_PLATFORM}"
 OTP_INSTALL_DIR="/tmp/ocean/install/${OCEAN_PLATFORM}"
@@ -22,6 +24,13 @@ OTP_BUILD_CONFIG="release"
 
 OTP_VALID_LINKING_TYPES="static,shared"
 OTP_LINKING_TYPES="static"
+
+IOS_CMAKE_TOOLCHAIN_FILE="${SCRIPT_DIR}/ios-cmake/ios.toolchain.cmake"
+
+if ! [ -f "${IOS_CMAKE_TOOLCHAIN_FILE}" ]; then
+  echo "ERROR: Cannot find the toolchain file that's required for iOS builds."
+  exit 1
+fi
 
 # Displays the supported parameters of this script
 display_help()
@@ -93,8 +102,8 @@ done
 
 # Builds the third-party libraries for Ocean (iOS)
 #
-# BUILD_TYPE: The build type to be used, valid values: Debug, Release
-# LIBRARY_TYPE: The type of libraries to be built, valid values: static, shared
+# BUILD_CONFIG: The build type to be used, valid values: Debug, Release
+# LINKING_TYPE: The type of libraries to be built, valid values: static, shared
 function run_build {
     BUILD_CONFIG=$1
 
@@ -139,7 +148,7 @@ function run_build {
     IOS_CMAKE_TOOLCHAIN_PLATFORM="OS64"
 
     BUILD_COMMAND="\"${OTP_SOURCE_DIR}/build_deps.sh\" ios \"${OTP_SOURCE_DIR}\" \"${BUILD_DIR}\" \"-parallelizeTargets -jobs $(sysctl -n hw.ncpu) CODE_SIGNING_ALLOWED=NO\" \
-        \"-DCMAKE_BUILD_TYPE=${BUILD_TYPE}\" \
+        \"-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}\" \
         -GXcode \
         \"-DCMAKE_TOOLCHAIN_FILE=${IOS_CMAKE_TOOLCHAIN_FILE}\" \
         \"-DPLATFORM=${IOS_CMAKE_TOOLCHAIN_PLATFORM}\" \
