@@ -29,21 +29,25 @@ The easiest way to build the third-party libraries is by using the provided buil
 
 ```
 cd ${OCEAN_DEVELOPMENT_PATH}
-
-# Run the build script with the default installation path ...
-./build/cmake/build_thirdparty_ios.sh
-
-# ... or, optionally, provide an installation location.
-./build/cmake/build_thirdparty_ios.sh /path/to/install/into
+./build/cmake/build_thirdparty_ios.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty_ios" -i "${HOME}/install_ocean_thirdparty_ios"
 ```
+
+Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Once the build is complete, the compiled binaries can be found in `${HOME}/install_ocean_thirdparty_ios/static_Debug` and `.../static_Release`.
 
 ## 3 Using Ocean in external XCode projects
 
-This section provides an example of how to build the Ocean libraries to integrate into an existing iOS project.
+This section provides an example of how to build the Ocean libraries for the case that you plan to integrate them into an existing iOS project.
 
-First, build the required third-party libraries as described above. Then, review the build script for iOS builds of Ocean, [`build/cmake/build_ocean_ios.sh`](3/build/cmake/build_ocean_ios.sh#L130-L134), and comment out all build configurations that are not required. Ensure the selection of enabled build configurations matches the one from the build of the third-party libraries.
+Make sure that the third-party libraries have been built and installed as described above.
 
-By default, all binaries and include files of Ocean will be installed into `/tmp/ocean/install/ios/${LINKING_TYPE_${BUILD_TYPE}`. Alternatively, you can integrate Ocean into any external project or follow the instructions to [include the CMake project of Ocean in an XCode project](https://blog.tomtasche.at/2019/05/how-to-include-cmake-project-in-xcode.html).
+```
+cd ${OCEAN_DEVELOPMENT_PATH}
+./build/cmake/build_ocean_ios.sh -c debug,release -l static -b "${HOME}/build_ocean_ios" -i "${HOME}/install_ocean_ios" -t "${HOME}/install_ocean_thirdparty_ios"
+```
+
+Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Make sure that the parameter specifying the location of the third-party libraries is the same as installation path from the previous section. Once the build is complete, the compiled binaries can be found in `${HOME}/install_ocean_ios/static_Debug` and `.../static_Release`.
+
+From here, the Ocean binaries and include files can be used in any other project. Details on how to do this will be left. Of check out this guide on how to [include the CMake project of Ocean in an XCode project](https://blog.tomtasche.at/2019/05/how-to-include-cmake-project-in-xcode.html).
 
 ## 4 Building the Ocean iOS demo/test apps
 
