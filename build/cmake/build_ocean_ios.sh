@@ -9,104 +9,133 @@ if [[ "$(uname)" != "Darwin" ]]; then
     exit 1
 fi
 
-OCEAN_BUILD_SCRIPT_DIRECTORY=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+OCEAN_PLATFORM="ios"
 
-OCEAN_SOURCE_DIRECTORY=$( cd ${OCEAN_BUILD_SCRIPT_DIRECTORY} && cd ../.. && pwd )
-OCEAN_BUILD_ROOT_DIRECTORY="/tmp"
-OCEAN_INSTALL_ROOT_DIRECTORY="/tmp"
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-IOS_CMAKE_TOOLCHAIN_FILE="${OCEAN_BUILD_SCRIPT_DIRECTORY}/ios-cmake/ios.toolchain.cmake"
+OCEAN_SOURCE_DIR=$( cd ${SCRIPT_DIR} && cd ../.. && pwd )
+
+OCEAN_BUILD_DIR="/tmp/ocean/build/${OCEAN_PLATFORM}"
+OCEAN_INSTALL_DIR="/tmp/ocean/install/${OCEAN_PLATFORM}"
+
+OCEAN_VALID_BUILD_CONFIGS="debug,release"
+OCEAN_BUILD_CONFIGS="release"
+
+OCEAN_VALID_LINKING_TYPES="static,shared"
+OCEAN_LINKING_TYPES="static"
+
+OCEAN_THIRD_PARTY_DIR=""
+
+# Collection of builds that have errors that will be listed at the end of the script
+OCEAN_FAILED_BUILDS=()
+
+IOS_CMAKE_TOOLCHAIN_FILE="${SCRIPT_DIR}/ios-cmake/ios.toolchain.cmake"
+
+if ! [ -f "${IOS_CMAKE_TOOLCHAIN_FILE}" ]; then
+  echo "ERROR: Cannot find the toolchain file that's required for iOS builds."
+  exit 1
+fi
 
 # The flag indicating the platform that will be built for, cf. ios.toolchain.cmake for details
 # OS64 - build for iOS (arm64 only)
-OCEAN_PLATFORM="OS64"
+IOS_CMAKE_TOOLCHAIN_PLATFORM="OS64"
 
 # Displays the supported parameters of this script
 display_help()
 {
-    echo "Script to build Ocean:"
-    echo ""
-    echo "  $(basename "$0") [-h|--help] [THIRD_PARTY_ROOT_DIRECTORY]"
+    echo "Script to build Ocean (${OCEAN_PLATFORM}):"
     echo ""
     echo "Arguments:"
     echo ""
-    echo "  THIRD_PARTY_ROOT_DIRECTORY : The optional location where the third-party libraries of Ocean are"
-    echo "                               installed, if they were built manually. Otherwise standard CMake locations"
-    echo "                               will be searched for compatible third-party libraries."
+    echo "  $(basename "$0") [-h|--help] [-i|--install INSTALL_DIR] [-b|--build BUILD_DIR] [-c|--config BUILD_CONFIG]"
+    echo "                   [-l|--link LINKING_TYPE] [-t|--third-party OCEAN_THIRD_PARTY_DIR]"
+    echo ""
+    echo "Arguments:"
+    echo ""
+    echo "  -i | -install INSTALL_DIR : The optional location where the third-party libraries of Ocean will"
+    echo "                be installed. Otherwise builds will be installed to: ${OCEAN_INSTALL_DIR}"
+    echo ""
+    echo "  -b | -build BUILD_DIR : The optional location where the third-party libraries of Ocean will"
+    echo "                be built. Otherwise builds will be installed to: ${OCEAN_BUILD_DIR}"
+    echo ""
+    echo "  -c | --config BUILD_CONFIG : The optional build configs(s) to be built; valid values are:"
+    for type in $(echo "${OCEAN_VALID_BUILD_CONFIGS}" | tr ',' '\n'); do
+        echo "                  ${type}"
+    done
+    echo "                Multiple values must be separated by commas. Default value if nothing is"
+    echo "                specified: \"${OCEAN_BUILD_CONFIGS}\""
+    echo ""
+    echo "  -l | -link LINKING_TYPE : The optional linking type for which will be built; valid values are:"
+    for type in $(echo "${OCEAN_VALID_LINKING_TYPES}" | tr ',' '\n'); do
+        echo "                  ${type}"
+    done
+    echo "                Multiple values must be separated by commas. Default value if nothing is"
+    echo "                specified: \"${OCEAN_LINKING_TYPES}\""
+    echo ""
+    echo "  -t | --third-party : The location where the third-party libraries of Ocean are located, if they"
+    echo "                were built manually. Otherwise standard CMake locations will be search for"
+    echo "                compatible third-party libraries."
+    echo ""
+    echo "  -h | --help : This summary"
     echo ""
     echo "  -h | --help                : This summary"
     echo ""
 }
 
-THIRD_PARTY_ROOT_DIRECTORY=""
-
-if [[ $# -gt 0 ]]; then
-    key="$1"
-    case $key in
-        -h|--help)
-        display_help
-        exit 0
-        ;;
-        *)
-        THIRD_PARTY_ROOT_DIRECTORY="${key}"
-        ;;
-    esac
-fi
-
-if [ -z "${THIRD_PARTY_ROOT_DIRECTORY}" ]; then
-    echo "WARNING: No location for the Ocean third-party libraries has been specified; please ensure that all dependencies are satisfied."
-else
-    if [ ! -d "${THIRD_PARTY_ROOT_DIRECTORY}" ]; then
-        echo "ERROR: The following directory for the third-party libraries cannot be found: ${THIRD_PARTY_ROOT_DIRECTORY} - did you run the script to build the third-party libraries?"
-        exit 1
-    fi
-fi
-
-# Builds Ocean for iOS with a specific build config
+# Builds Ocean
 #
-# BUILD_TYPE: The build type to be used, valid values: Debug, Release
-# LIBRARY_TYPE: The type of libraries to be built, valid values: static, shared
-function run_build_for_ios {
-    BUILD_TYPE=$1
-    if [[ ${BUILD_TYPE} != "Debug" ]] && [[ ${BUILD_TYPE} != "Release" ]]; then
-        echo "ERROR: Invalid value: BUILD_TYPE=${BUILD_TYPE}"
+# BUILD_CONFIG: The build type to be used, valid values: Debug, Release
+# LINKING_TYPE: The type of libraries to be built, valid values: static, shared
+function run_build {
+    BUILD_CONFIG=$1
+
+    # Convert the name of the build mode to the CMake notation.
+    if [[ ${BUILD_CONFIG} == "debug" ]]; then
+        BUILD_CONFIG="Debug"
+    elif [[ ${BUILD_CONFIG} == "release" ]]; then
+        BUILD_CONFIG="Release"
+    else
+        echo "ERROR: Invalid value: BUILD_CONFIG=${BUILD_CONFIG}" >&2
         exit 1
     fi
 
-    LIBRARY_TYPE=$2
-    if [[ ${LIBRARY_TYPE} == "static" ]]; then
+    LINKING_TYPE=$2
+    if [[ ${LINKING_TYPE} == "static" ]]; then
         ENABLE_BUILD_SHARED_LIBS="OFF"
-    elif [[ ${LIBRARY_TYPE} == "shared" ]]; then
+    elif [[ ${LINKING_TYPE} == "shared" ]]; then
         ENABLE_BUILD_SHARED_LIBS="ON"
     else
-        echo "ERROR: Invalid value: LIBRARY_TYPE=${LIBRARY_TYPE}"
+        echo "ERROR: Invalid value: LINKING_TYPE=${LINKING_TYPE}"
         exit 1
     fi
 
-    OCEAN_BUILD_DIRECTORY="${OCEAN_BUILD_ROOT_DIRECTORY}/ocean/build/ios/${LIBRARY_TYPE}_${BUILD_TYPE}"
-    OCEAN_INSTALL_DIRECTORY="${OCEAN_INSTALL_ROOT_DIRECTORY}/ocean/install/ios/${LIBRARY_TYPE}_${BUILD_TYPE}"
+    OCEAN_BUILD_DIRECTORY="${OCEAN_BUILD_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
+    OCEAN_INSTALL_DIRECTORY="${OCEAN_INSTALL_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
 
-    echo "BUILD_TYPE: ${BUILD_TYPE}"
-    echo "LIBRARY_TYPE: ${LIBRARY_TYPE}"
+    OCEAN_THIRD_PARTY_DIRECTORY="${OCEAN_THIRD_PARTY_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
+
+    echo " "
+    echo "BUILD_CONFIG: ${BUILD_CONFIG}"
+    echo "LINKING_TYPE: ${LINKING_TYPE}"
     echo " "
     echo "OCEAN_BUILD_DIRECTORY: ${OCEAN_BUILD_DIRECTORY}"
     echo "OCEAN_INSTALL_DIRECTORY: ${OCEAN_INSTALL_DIRECTORY}"
-    echo " "
-    echo "OCEAN_PLATFORM: ${OCEAN_PLATFORM}"
-    echo " "
 
-    CMAKE_CONFIGURE_COMMAND="cmake -S\"${OCEAN_SOURCE_DIRECTORY}\" \\
+    CMAKE_CONFIGURE_COMMAND="cmake -S\"${OCEAN_SOURCE_DIR}\" \\
     -B\"${OCEAN_BUILD_DIRECTORY}\" \\
-    -DCMAKE_BUILD_TYPE=\"${BUILD_TYPE}\" \\
+    -DCMAKE_BUILD_TYPE=\"${BUILD_CONFIG}\" \\
     -G Xcode \\
     -DCMAKE_TOOLCHAIN_FILE=\"${IOS_CMAKE_TOOLCHAIN_FILE}\" \\
-    -DPLATFORM=\"${OCEAN_PLATFORM}\" \\
+    -DPLATFORM=\"${IOS_CMAKE_TOOLCHAIN_PLATFORM}\" \\
+    -DDEPLOYMENT_TARGET=15 \\
     -DCMAKE_INSTALL_PREFIX=\"${OCEAN_INSTALL_DIRECTORY}\" \\
     -DBUILD_SHARED_LIBS=\"${ENABLE_BUILD_SHARED_LIBS}\" \\
-    -DCMAKE_XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER:STRING=org.ocean"
+    -DCMAKE_XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER:STRING=org.ocean \\
+    -DOCEAN_BUILD_DEMOS=FALSE \\
+    -DOCEAN_BUILD_TESTS=FALSE"
 
-    if [ -n "${THIRD_PARTY_ROOT_DIRECTORY}" ]; then
-        OCEAN_THIRD_PARTY_DIRECTORY="${THIRD_PARTY_ROOT_DIRECTORY}/${LIBRARY_TYPE}_${BUILD_TYPE}"
+    if [ -n "${OCEAN_THIRD_PARTY_DIR}" ]; then
+        OCEAN_THIRD_PARTY_DIRECTORY="${OCEAN_THIRD_PARTY_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
 
         echo "OCEAN_THIRD_PARTY_DIRECTORY: ${OCEAN_THIRD_PARTY_DIRECTORY}"
         echo " "
@@ -122,13 +151,140 @@ function run_build_for_ios {
 
     cmake --build "${OCEAN_BUILD_DIRECTORY}" --target install -- CODE_SIGNING_ALLOWED=NO -parallelizeTargets -jobs 16
 
+    build_exit_code=$?
+
+    if [ "$build_exit_code" -ne 0 ]; then
+        OCEAN_FAILED_BUILDS+=("${LINKING_TYPE}_${BUILD_CONFIG}")
+    fi
+
     echo " "
     echo " "
     echo " "
+
+    return $build_exit_code
 }
 
-run_build_for_ios Debug static
-run_build_for_ios Debug shared
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        -h|--help)
+        display_help
+        exit 0
+        ;;
+        -i|--install)
+        OCEAN_INSTALL_DIR="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -b|--build)
+        OCEAN_BUILD_DIR="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -c|--config)
+        OCEAN_BUILD_CONFIGS="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -l|--link)
+        OCEAN_LINKING_TYPES="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -t|--third-party)
+        OCEAN_THIRD_PARTY_DIR="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        *)
+        echo "ERROR: Unknown value \"$1\"." >&2
+        exit 1
+        ;;
+    esac
+done
 
-run_build_for_ios Release static
-run_build_for_ios Release shared
+if [ "${OCEAN_THIRD_PARTY_DIR}" == "" ]; then
+    echo ""
+    echo ""
+    echo "WARNING: No location for the Ocean third-party libraries was specified. If this wasn't intentional make sure to build the third-party libraries first. Please refer to the build instructions for details." >&2
+    echo ""
+    echo ""
+else
+    if [ ! -d "${OCEAN_THIRD_PARTY_DIR}" ]; then
+        echo "ERROR: The following directory for the third-party libraries cannot be found: ${OCEAN_THIRD_PARTY_DIR} - did you run the script to build the third-party libraries?" >&2
+        exit 1
+    fi
+fi
+
+if [ "${OCEAN_BUILD_CONFIGS}" == "" ]; then
+    echo "ERROR: At least one build type has to be specified." >&2
+    exit 1
+fi
+
+# Remove duplicate values
+OCEAN_BUILD_CONFIGS=$(echo "$OCEAN_BUILD_CONFIGS" | tr ',' '\n' | sort -u)
+
+# Only allow valid values
+for type in ${OCEAN_BUILD_CONFIGS[@]}; do
+    if ! echo "${OCEAN_VALID_BUILD_CONFIGS}" | grep -w "$type" > /dev/null; then
+        echo "Error: Unknown build type \"${type}\"" >&2
+        exit 1
+    fi
+done
+
+if [ "${OCEAN_LINKING_TYPES}" == "" ]; then
+    echo "ERROR: At least one linking type has to be specified." >&2
+    exit 1
+fi
+
+# Remove duplicate values
+OCEAN_LINKING_TYPES=$(echo "$OCEAN_LINKING_TYPES" | tr ',' '\n' | sort -u)
+
+# Only allow valid values
+for type in ${OCEAN_LINKING_TYPES[@]}; do
+    if ! echo "${OCEAN_VALID_LINKING_TYPES}" | grep -w "$type" > /dev/null; then
+        echo "Error: Unknown build type \"${type}\"" >&2
+        exit 1
+    fi
+done
+
+echo "The third-party libraries will be build for the following combinations:"
+for build_config in ${OCEAN_BUILD_CONFIGS[@]}; do
+    for link_type in ${OCEAN_LINKING_TYPES[@]}; do
+        echo " * ${build_config} + ${link_type}"
+    done
+done
+
+echo ""
+echo ""
+echo ""
+echo "Build directory: ${OCEAN_INSTALL_DIR}"
+echo "Installation directory: ${OCEAN_INSTALL_DIR}"
+echo ""
+echo ""
+echo ""
+
+# Build
+for build_config in ${OCEAN_BUILD_CONFIGS[@]}; do
+    for link_type in ${OCEAN_LINKING_TYPES[@]}; do
+        run_build "${build_config}" "${link_type}"
+    done
+done
+
+# Determine if all of the above builds were successful.
+OCEAN_BUILD_SUCCESSFUL=0
+
+if [ "${#OCEAN_FAILED_BUILDS[@]}" -eq 0 ]; then
+    OCEAN_BUILD_SUCCESSFUL=1
+fi
+
+if [ ${OCEAN_BUILD_SUCCESSFUL} -eq 1 ]; then
+    echo "All builds were successful."
+else
+    echo "Some builds have failed." >&2
+    for config in "${OTP_FAILED_BUILDS[@]}"; do
+        echo "- $config" >&2
+    done
+
+    exit 1
+fi
