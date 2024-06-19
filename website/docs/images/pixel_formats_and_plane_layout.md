@@ -31,3 +31,72 @@ A common pixel format with two planes is e.g., [`Y_UV12`](https://fburl.com/diff
 Images with the format `Y_U_V24` are composed of three planes. Each plane holds one image channel without any sub-sampling.
 
 <img src={require('@site/static/img/docs/images/Frame_Y_U_V24.png').default} alt="Image: The pixel format FORMAT_Y_U_V24" width="700" className="center-image"/>
+
+
+## Pre-defined pixel formats
+
+Below, you will find all currently defined pixel formats in Ocean (some formats are left out).
+Please refer to the accompanying documentation for detailed information about memory layout and value ranges.
+The most common pixel formats are highlighted for easy reference.
+
+| Type         | Name                                   | Element Type     | Alpha | Comment                                                          |
+|--------------|----------------------------------------|------------------|-------|------------------------------------------------------------------|
+| Color (RGB)  | **FORMAT_RGB24**                       | uint8_t          |       | Standard RGB format with 8 bits per channel                      |
+|              | **FORMAT_RGBA32**                      | uint8_t          | Yes   | Standard RGB format with 8 bits and alpha                        |
+|              | FORMAT_RGB32                           | uint8_t          |       | Includes 8 unused bits                                           |
+|              | FORMAT_RGB48                           | uint16_t         |       | 16 bits per channel                                              |
+|              | FORMAT_RGBA64                          | uint16_t         | Yes   |                                                                  |
+|              | FORMAT_ARGB32                          | uint8_t          | Yes   | First alpha channel, then color channels                         |
+|              | FORMAT_RGB4444                         | uint16_t         |       | 4 bits per channels, includes 4 unused bits                      |
+|              | FORMAT_RGBA4444                        | uint16_t         | Yes   |                                                                  |
+|              | FORMAT_RGB5551                         | uint16_t         |       | 5 bits per channel, includes 1 unused bit                        |
+|              | FORMAT_RGB565                          | uint16_t         |       | 5 bits for red/blue, 6 bits for green                            |
+|              | FORMAT_RGBT32                          | uint8_t          |       | Contains a custom *texture* channel                              |
+|              | FORMAT_RGGB10_PACKED                   | uint8_t          |       | Packed Bayer, 10 bits per channel                                |
+|              |                                        |                  |       |                                                                  |
+| Color (BGR)  | **FORMAT_BGR24**                       | uint8_t          |       | as RGB24 but with reverse channel order                          |
+|              | **FORMAT_BGRA32**                      | uint8_t          | Yes   |                                                                  |
+|              | FORMAT_BGR32                           | uint8_t          |       |                                                                  |
+|              | FORMAT_BGR4444                         | uint16_t         |       |                                                                  |
+|              | FORMAT_BGRA4444                        | uint8_t          | Yes   |                                                                  |
+|              | FORMAT_BGR5551                         | uint16           |       |                                                                  |
+|              | FORMAT_BGR565                          | uint16_t         |       |                                                                  |
+|              | FORMAT_ABGR32                          | uint8_t          | Yes   | First alpha channel, then color channels                         |
+|              | FORMAT_BGGR10_PACKED                   | uint8_t          |       | Packed Bayer, 10 bits per channel                                |
+|              |                                        |                  |       |                                                                  |
+| Y (Gray)     | **FORMAT_Y8**                          | uint8_t          |       | Grayscale image with 8 bits                                      |
+|              | FORMAT_Y16                             | uint16_t         |       | Grayscale image with 16 bits                                     |
+|              | **FORMAT_Y32**                         | uint32_t         |       |                                                                  |
+|              | FORMAT_Y64                             | uint64_t         |       |                                                                  |
+|              | **FORMAT_YA16**                        | uint8_t          | Yes   | Grayscale image with 8 bits and alpha                            |
+|              | FORMAT_Y10                             | uint16_t         |       | Grayscale image, 10 bits, 6 bits unused                          |
+|              | FORMAT_Y10_PACKED                      | uint8_t          |       | Packed Bayer, 10 bits per pixel                                  |
+|              |                                        |                  |       |                                                                  |
+| Color (YUV)  | FORMAT_YUV24                           | uint8_t          |       | Luminance (Y), Chrominance Blue (U, V)                           |
+|              | FORMAT_YVU24                           | uint8_t          |       | Flipped chrominance channels                                     |
+|              | FORMAT_YUVA32                          | uint8_t          | Yes   |                                                                  |
+|              | FORMAT_YUVT32                          | uint8_t          |       | Contains a custom *texture* channel                              |
+|              | FORMAT_YUYV16                          | uint8_t          |       | 16 bits per pixel, U/V every second pixel, aka YUY2              |
+|              | FORMAT_UYVY16                          | uint8_t          |       | Known as UYVY                                                    |
+|              | FORMAT_Y_UV12                          | uint8_t          |       | One gray, one chrominance plane, aka NV12                        |
+|              | FORMAT_Y_VU12                          | uint8_t          |       | Known as NV21                                                    |
+|              | FORMAT_Y_U_V24                         | uint8_t          |       | Known as I444                                                    |
+|              | FORMAT_Y_U_V12                         | uint8_t          |       | Known as I420                                                    |
+|              | FORMAT_Y_V_U12                         | uint8_t          |       | Known as YV12                                                    |
+|              | FORMAT_F32                             | float            |       | Floats with 32 bit precision, e.g., for depth                    |
+|              | FORMAT_F64                             | double           |       | Floats with 64 bit precision                                     |
+
+## Custom pixel formats
+
+In addition to the predefined pixel formats, Ocean allows the definition of custom pixel formats both at runtime and compile time.
+Below are examples demonstrating how to easily define such generic pixel formats:
+
+Pixel format for single-plane images with two channels, each represented by a `float`:
+```
+FrameType::genericPixelFormat<float, 2u>();
+```
+
+Pixel format for single-plane images with three channels, each represented by a `uint32_t`:
+```
+FrameType::genericPixelFormat<uint32_t, 3u>();
+```

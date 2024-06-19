@@ -80,7 +80,7 @@ Frame newFrame(frameType,
   });
 ```
 
-### Custom formats
+### Custom pixel formats
 
 At the time of writing, Ocean support 45+ [pre-defined pixel formats](https://github.com/facebookresearch/ocean/blob/main/impl/ocean/base/Frame.h#L151-L179) which commonly define the precise layout of the color channel (e.g., `FORMAT_RGB24` vs. `FORMAT_BGR24`). Adding a new pre-defined pixel format is straight forward. However, often a generic pixel format can be used on-the-fly in case the user does not need to keep track of e.g., the layout of the color channels.
 
@@ -100,19 +100,6 @@ This is another example of a generic pixel format for an image with three `uint1
 
 FrameType::DataType dataType = FrameType::DT_UNSIGNED_INTEGER_16;
 FrameType::PixelFormat customPixelFormat = FrameType::genericPixelFormat(dataType, 3u);
-FrameType frameType(1920u, 1080u, customPixelFormat, FrameType::ORIGIN_UPPER_LEFT);
-
-Frame newFrame(frameType);
-```
-
-Finally, a generic pixel format for an image with 1 channel of `uint8_t` elements with *two* planes. Further, we force the image dimension to be a multiple of two (the properties of the pixel format are known at compile time):
-
-```cpp
-constexpr unsigned int numberPlanes = 1u;
-constexpr unsigned int widthMultiple = 2u;
-constexpr unsigned int heightMultiple = 2u;
-
-FrameType::PixelFormat customPixelFormat = FrameType::genericPixelFormat<uint8_t, numberPlanes, widthMultiple, heightMultiple>();
 FrameType frameType(1920u, 1080u, customPixelFormat, FrameType::ORIGIN_UPPER_LEFT);
 
 Frame newFrame(frameType);
