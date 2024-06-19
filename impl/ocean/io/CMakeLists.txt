@@ -13,8 +13,13 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     set(OCEAN_TARGET_NAME "ocean_io")
 
     find_package(ZLIB REQUIRED)
-    find_package(OpenSSL QUIET)
     find_package(tinyxml2 QUIET)
+
+    if (NOT IOS)
+        # CMake accepts system-level SSL instances which were built for macOS. This causes iOS builds to fail.
+        # To avoid this problem, SSL won't be used on iOS for now.
+        find_package(OpenSSL QUIET)
+    endif()
 
     if (MACOS)
         find_library(FOUNDATION_LIB Foundation)
