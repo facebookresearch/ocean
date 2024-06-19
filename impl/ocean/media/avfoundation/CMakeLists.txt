@@ -35,6 +35,8 @@ if (MACOS OR IOS)
     target_compile_options(${OCEAN_TARGET_NAME}
         PUBLIC
             ${OCEAN_COMPILER_FLAGS}
+
+        PRIVATE
             "-Wno-unguarded-availability"
     )
 
