@@ -21,8 +21,6 @@ if [ -f $platfile ] ; then
     alldeps="$alldeps $(grep -v '^#' $platfile)"
 fi
 
-echo "alldeps = ${alldeps}"
-
 echo "Building the following dependencies for the platform \"${PLATFORM}\":"
 current_dependency_index=1
 for dep in $alldeps; do
