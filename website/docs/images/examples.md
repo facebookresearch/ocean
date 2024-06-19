@@ -1,6 +1,6 @@
 ---
 title: Code Examples
-sidebar_position: 7
+sidebar_position: 8
 ---
 
 ## Creating images
@@ -255,28 +255,6 @@ if (decodedFrame.isValid())
    std::vector<uint8_t> targetImageBuffer;
    IO::Image::encodeImage(decodedFrame, "jpg", targetImageBuffer))
 }
-```
-
-## Converting images
-
-Ocean offers highly optimized converts between different pixel formats. Here is the [list of currently supported](https://github.com/facebookresearch/ocean/blob/main/impl/ocean/cv/FrameConverter.cpp#L166) converters. Converting an image from any pixel format to any other pixel format only needs one function call.
-
-```cpp
-#include "ocean/cv/FrameConverter.h"
-
-Frame sourceFrame = ...;
-
-FrameType::PixelFormat targetPixelFormat = FrameType::FORMAT_RGB24;
-bool forceCopy = FrameType::CP_AVOID_COPY_IF_POSSIBLE;
-
-Frame targetFrame;
-if (!CV::FrameConverter::Comfort::convert(sourceFrame, targetPixelFormat, targetFrame, forceCopy))
-{
-   Log::info() << "The source image could not be converted to RGB24";
-   return;
-}
-
-assert(targetFrame.pixelFormat() == FrameType::FORMAT_RGB24);
 ```
 
 ## Debugging an image on iOS
