@@ -33,12 +33,14 @@ if (ANDROID)
 endif()
 
 if (IOS)
+    enable_language(Swift)
+
     if (NOT DEFINED CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY)
         set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer")
     endif()
 
     if(NOT DEFINED CMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM)
-        message(FATAL_ERROR "You need to specify your own Apple Team ID when configurating with CMake: -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX")
+        message(WARNING "You need to specify your own Apple Team ID when configurating with CMake: -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX")
     endif()
 endif()
 
