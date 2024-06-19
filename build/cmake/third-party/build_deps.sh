@@ -14,22 +14,43 @@ shift
 shift
 shift
 
-alldeps=`cat "${OCEAN_THIRD_PARTY_SOURCE_DIR}"/dependencies_allplatforms.txt`
+alldeps=$(grep -v '^#' "${OCEAN_THIRD_PARTY_SOURCE_DIR}"/dependencies_allplatforms.txt)
 
 platfile="${OCEAN_THIRD_PARTY_SOURCE_DIR}"/dependencies_"${PLATFORM}".txt
 if [ -f $platfile ] ; then
-    alldeps="$alldeps `cat $platfile`"
+    alldeps="$alldeps $(grep -v '^#' $platfile)"
 fi
 
-for dep in $alldeps; do 
-    if [ ${dep:0:1} = '#' ]; then
-        continue
-    fi
+echo "alldeps = ${alldeps}"
+
+echo "Building the following dependencies for the platform \"${PLATFORM}\":"
+current_dependency_index=1
+for dep in $alldeps; do
+    echo "  ${current_dependency_index}. ${dep}"
+    current_dependency_index=$((current_dependency_index + 1))
+done
+
+current_dependency_index=1
+for dep in $alldeps; do
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo "Building: ${current_dependency_index}. ${dep}"
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo ""
 
     cmake -S "${OCEAN_THIRD_PARTY_SOURCE_DIR}" -B "${BUILD_DIRECTORY_BASE}"/$dep -DINCLUDED_DEP_NAME=$dep "$@" \
     || exit 1
 
     cmake --build "${BUILD_DIRECTORY_BASE}"/$dep --target install -- $EXTRA_BUILD_FLAGS \
     || exit 2
-done
 
+    current_dependency_index=$((current_dependency_index + 1))
+done
