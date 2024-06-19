@@ -1,4 +1,3 @@
-libusb
 libjpeg
 googletest
 gl
@@ -14,7 +13,6 @@ libpng
 libtiff
 vtzero
 curl
-#libyuv
 freetype
 assimp
 #opencv
