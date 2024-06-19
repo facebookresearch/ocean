@@ -9,79 +9,225 @@ if [[ "$(uname)" != "Darwin" ]]; then
     exit 1
 fi
 
-echo "Building the third-party libraries required by Ocean for iOS ...:"
-echo " "
+OCEAN_PLATFORM="ios"
 
-OCEAN_BUILD_SCRIPT_DIRECTORY=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+# OTP = OCEAN_THIRD_PARTY
+OTP_SOURCE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd third-party && pwd )
 
-OCEAN_THIRD_PARTY_SOURCE_DIRECTORY="${OCEAN_BUILD_SCRIPT_DIRECTORY}/third-party"
-OCEAN_THIRD_PARTY_BUILD_ROOT_DIRECTORY="/tmp"
-OCEAN_THIRD_PARTY_INSTALL_ROOT_DIRECTORY="/tmp"
+OTP_BUILD_DIR="/tmp/ocean/build/${OCEAN_PLATFORM}"
+OTP_INSTALL_DIR="/tmp/ocean/install/${OCEAN_PLATFORM}"
 
-IOS_CMAKE_TOOLCHAIN_FILE="${OCEAN_BUILD_SCRIPT_DIRECTORY}/ios-cmake/ios.toolchain.cmake"
+OTP_VALID_BUILD_CONFIGS="debug,release"
+OTP_BUILD_CONFIG="release"
 
-if ! [ -f "${IOS_CMAKE_TOOLCHAIN_FILE}" ]; then
-  echo "ERROR: Cannot find the toolchain file that's required for iOS builds."
-  exit 1
-fi
+OTP_VALID_LINKING_TYPES="static,shared"
+OTP_LINKING_TYPES="static"
+
+# Displays the supported parameters of this script
+display_help()
+{
+    echo "Script to build the third-party libraries required by Ocean (${OCEAN_PLATFORM}):"
+    echo ""
+    echo "  $(basename "$0") [-h|--help] [-i|--install INSTALL_DIR] [-b|--build BUILD_DIR] [-c|--config BUILD_CONFIG]"
+    echo "                   [-l|--link LINKING_TYPE] [-a | --archive ARCHIVE]"
+    echo ""
+    echo "Arguments:"
+    echo ""
+    echo "  -i | --install INSTALL_DIR : The optional location where the third-party libraries of Ocean will"
+    echo "                be installed. Otherwise builds will be installed to: ${OTP_INSTALL_DIR}"
+    echo ""
+    echo "  -b | --build BUILD_DIR : The optional location where the third-party libraries of Ocean will"
+    echo "                be built. Otherwise builds will be installed to: ${OTP_BUILD_DIR}"
+    echo ""
+    echo "  -c | --config BUILD_CONFIG : The optional build configs(s) to be built; valid values are:"
+    for type in $(echo "${OTP_VALID_BUILD_CONFIGS}" | tr ',' '\n'); do
+        echo "                  ${type}"
+    done
+    echo "                Multiple values must be separated by commas. Default value if nothing is"
+    echo "                specified: \"${OTP_BUILD_CONFIG}\""
+    echo ""
+    echo "  -l | --link LINKING_TYPE : The optional linking type for which will be built; valid values are:"
+    for type in $(echo "${OTP_VALID_LINKING_TYPES}" | tr ',' '\n'); do
+        echo "                  ${type}"
+    done
+    echo "                Multiple values must be separated by commas. Default value if nothing is"
+    echo "                specified: \"${OTP_LINKING_TYPES}\""
+    echo ""
+    echo "  -h | --help : This summary"
+    echo ""
+}
+
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        -h|--help)
+        display_help
+        exit 0
+        ;;
+        -i|--install)
+        OTP_INSTALL_DIR="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -b|--build)
+        OTP_BUILD_DIR="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -c|--config)
+        OTP_BUILD_CONFIG="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -l|--link)
+        OTP_LINKING_TYPES="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        *)
+        echo "ERROR: Unknown value \"$1\"." >&2
+        exit 1
+        ;;
+    esac
+done
 
 # Builds the third-party libraries for Ocean (iOS)
 #
 # BUILD_TYPE: The build type to be used, valid values: Debug, Release
 # LIBRARY_TYPE: The type of libraries to be built, valid values: static, shared
-function run_build_for_ios {
-    BUILD_TYPE=$1
-    if [[ ${BUILD_TYPE} != "Debug" ]] && [[ ${BUILD_TYPE} != "Release" ]]; then
-        echo "ERROR: Invalid value: BUILD_TYPE=${BUILD_TYPE}"
+function run_build {
+    BUILD_CONFIG=$1
+
+    # Convert the name of the build mode to the CMake notation.
+    if [[ ${BUILD_CONFIG} == "debug" ]]; then
+        BUILD_CONFIG="Debug"
+    elif [[ ${BUILD_CONFIG} == "release" ]]; then
+        BUILD_CONFIG="Release"
+    else
+        echo "ERROR: Invalid value: BUILD_CONFIG=${BUILD_CONFIG}" >&2
         exit 1
     fi
 
-    LIBRARY_TYPE=$2
-    if [[ ${LIBRARY_TYPE} == "static" ]]; then
+    LINKING_TYPE=$2
+    if [[ ${LINKING_TYPE} == "static" ]]; then
         ENABLE_BUILD_SHARED_LIBS="OFF"
-    elif [[ ${LIBRARY_TYPE} == "shared" ]]; then
+    elif [[ ${LINKING_TYPE} == "shared" ]]; then
         ENABLE_BUILD_SHARED_LIBS="ON"
     else
-        echo "ERROR: Invalid value: LIBRARY_TYPE=${LIBRARY_TYPE}"
+        echo "ERROR: Invalid value: LINKING_TYPE=${LINKING_TYPE}" >&2
         exit 1
     fi
 
-    OCEAN_THIRD_PARTY_BUILD_DIRECTORY="${OCEAN_THIRD_PARTY_BUILD_ROOT_DIRECTORY}/ocean/build/ios/third-party/${LIBRARY_TYPE}_${BUILD_TYPE}"
-    OCEAN_THIRD_PARTY_INSTALL_DIRECTORY="${OCEAN_THIRD_PARTY_INSTALL_ROOT_DIRECTORY}/ocean/install/ios/${LIBRARY_TYPE}_${BUILD_TYPE}"
+    # Specific build and installation directory for the current build config
+    BUILD_DIR="${OTP_BUILD_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
+    INSTALL_DIR="${OTP_INSTALL_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
+
+    echo ""
+    echo ""
+    echo ""
+    echo "Build type: ${BUILD_CONFIG}"
+    echo "Linking type: ${LINKING_TYPE}"
+    echo ""
+    echo "Build directory: ${BUILD_DIR}"
+    echo "Install directory: ${INSTALL_DIR}"
+    echo ""
+    echo ""
+    echo ""
 
     # The flag indicating the platform that will be built for, cf. ios.toolchain.cmake for details
     # OS64 - build for iOS (arm64 only)
-    OCEAN_PLATFORM="OS64"
+    IOS_CMAKE_TOOLCHAIN_PLATFORM="OS64"
 
-    echo " "
-    echo "BUILD_TYPE: ${BUILD_TYPE}"
-    echo "LIBRARY_TYPE: ${LIBRARY_TYPE}"
-    echo " "
-    echo "OCEAN_THIRD_PARTY_BUILD_DIRECTORY: ${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}"
-    echo "OCEAN_THIRD_PARTY_INSTALL_DIRECTORY: ${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}"
-    echo " "
-    echo "OCEAN_PLATFORM: ${OCEAN_PLATFORM}"
-    echo " "
-
-    echo " "
-    ${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}/build_deps.sh ios "${OCEAN_THIRD_PARTY_SOURCE_DIRECTORY}" "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" "-parallelizeTargets -jobs 16 CODE_SIGNING_ALLOWED=NO" \
-        "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" \
+    BUILD_COMMAND="\"${OTP_SOURCE_DIR}/build_deps.sh\" ios \"${OTP_SOURCE_DIR}\" \"${BUILD_DIR}\" \"-parallelizeTargets -jobs $(sysctl -n hw.ncpu) CODE_SIGNING_ALLOWED=NO\" \
+        \"-DCMAKE_BUILD_TYPE=${BUILD_TYPE}\" \
         -GXcode \
-        "-DCMAKE_TOOLCHAIN_FILE=${IOS_CMAKE_TOOLCHAIN_FILE}" \
-        "-DPLATFORM=${OCEAN_PLATFORM}" \
-        "-DCMAKE_INSTALL_PREFIX=${OCEAN_THIRD_PARTY_INSTALL_DIRECTORY}" \
-        "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}" \
-        "-DCMAKE_XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER:STRING=org.ocean.thirdparty"
+        \"-DCMAKE_TOOLCHAIN_FILE=${IOS_CMAKE_TOOLCHAIN_FILE}\" \
+        \"-DPLATFORM=${IOS_CMAKE_TOOLCHAIN_PLATFORM}\" \
+        \"-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}\" \
+        \"-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}\" \
+        \"-DCMAKE_XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER:STRING=org.ocean.thirdparty\""
 
-    # cmake --build "${OCEAN_THIRD_PARTY_BUILD_DIRECTORY}" --target install -- CODE_SIGNING_ALLOWED=NO
+    eval "${BUILD_COMMAND}"
+    if [ "$?" != 0 ]; then
+        OTP_FAILED_BUILDS+=("${LINKING_TYPE} + ${BUILD_CONFIG}")
+    fi
 
-    echo " "
-    echo " "
-    echo " "
+    echo ""
+    echo ""
+    echo ""
 }
 
-run_build_for_ios Debug static
-run_build_for_ios Debug shared
+echo "Building the third-party libraries required for Ocean (${OCEAN_PLATFORM}) ...:"
+echo ""
 
-run_build_for_ios Release static
-run_build_for_ios Release shared
+if [ "${OTP_BUILD_CONFIG}" == "" ]; then
+    echo "ERROR: At least one build type has to be specified." >&2
+    exit 1
+fi
+
+# Remove duplicate values
+OTP_BUILD_CONFIG=$(echo "$OTP_BUILD_CONFIG" | tr ',' '\n' | sort -u)
+
+# Only allow valid values
+for type in ${OTP_BUILD_CONFIG}; do
+    if ! echo "${OTP_VALID_BUILD_CONFIGS}" | grep -w "$type" > /dev/null; then
+        echo "Error: Unknown build type \"${type}\"" >&2
+        exit 1
+    fi
+done
+
+if [ "${OTP_LINKING_TYPES}" == "" ]; then
+    echo "ERROR: At least one linking type has to be specified." >&2
+    exit 1
+fi
+
+# Remove duplicate values
+OTP_LINKING_TYPES=$(echo "$OTP_LINKING_TYPES" | tr ',' '\n' | sort -u)
+
+# Only allow valid values
+for type in ${OTP_LINKING_TYPES}; do
+    if ! echo "${OTP_VALID_LINKING_TYPES}" | grep -w "$type" > /dev/null; then
+        echo "Error: Unknown build type \"${type}\"" >&2
+        exit 1
+    fi
+done
+
+echo "The third-party libraries will be build for the following combinations:"
+for build_config in ${OTP_BUILD_CONFIG}; do
+    for link_type in ${OTP_LINKING_TYPES}; do
+        echo " * ${build_config} + ${link_type}"
+    done
+done
+
+echo ""
+echo ""
+echo ""
+echo "Install root directory for all builds: ${OTP_INSTALL_DIR}"
+echo ""
+echo ""
+echo ""
+
+# Build
+for build_config in ${OTP_BUILD_CONFIG}; do
+    for link_type in ${OTP_LINKING_TYPES}; do
+        run_build "${build_config}" "${link_type}"
+    done
+done
+
+# Determine if all of the above builds were successful.
+OTP_BUILD_SUCCESSFUL=0
+
+if [ "${#OTP_FAILED_BUILDS[@]}" -eq 0 ]; then
+    OTP_BUILD_SUCCESSFUL=1
+fi
+
+if [ ${OTP_BUILD_SUCCESSFUL} == 1 ]; then
+    echo "All builds were successful."
+else
+    echo "Some builds have failed." >&2
+    for config in "${OTP_FAILED_BUILDS[@]}"; do
+        echo "- $config" >&2
+    done
+
+    exit 1
+fi
