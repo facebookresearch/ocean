@@ -40,10 +40,10 @@ display_help()
     echo ""
     echo "Arguments:"
     echo ""
-    echo "  -i | -install INSTALL_DIR : The optional location where the third-party libraries of Ocean will"
+    echo "  -i | --install INSTALL_DIR : The optional location where the third-party libraries of Ocean will"
     echo "                be installed. Otherwise builds will be installed to: ${OTP_INSTALL_DIR}"
     echo ""
-    echo "  -b | -build BUILD_DIR : The optional location where the third-party libraries of Ocean will"
+    echo "  -b | --build BUILD_DIR : The optional location where the third-party libraries of Ocean will"
     echo "                be built. Otherwise builds will be installed to: ${OTP_BUILD_DIR}"
     echo ""
     echo "  -c | --config BUILD_CONFIG : The optional build configs(s) to be built; valid values are:"
@@ -53,7 +53,7 @@ display_help()
     echo "                Multiple values must be separated by commas. Default value if nothing is"
     echo "                specified: \"${OTP_BUILD_CONFIG}\""
     echo ""
-    echo "  -l | -link LINKING_TYPE : The optional linking type for which will be built; valid values are:"
+    echo "  -l | --link LINKING_TYPE : The optional linking type for which will be built; valid values are:"
     for type in $(echo "${OTP_VALID_LINKING_TYPES}" | tr ',' '\n'); do
         echo "                  ${type}"
     done
