@@ -7,8 +7,6 @@
 
 #include "application/ocean/demo/media/externalcamera/quest/ExternalCameraApplication.h"
 
-#include "ocean/media/usb/USB.h"
-
 using namespace Ocean;
 
 /**
@@ -22,8 +20,6 @@ using namespace Ocean;
 void android_main(struct android_app* androidApp)
 {
 	ocean_assert(androidApp != nullptr);
-
-	Media::USB::registerUSBLibrary();
 
 	ExternalCameraApplication externalCameraApplication(androidApp);
 	externalCameraApplication.run();

@@ -80,6 +80,12 @@ class ExternalCameraApplication : public OpenXR::Application::VRNativeApplicatio
 		void onFramebufferReleasing() override;
 
 		/**
+		 * The event function which is called when all resources should finally be released.
+		 * @see NativeApplication::onReleaseResources().
+		 */
+		void onReleaseResources() override;
+
+		/**
 		 * Events function called before the scene is rendered.
 		 * @see VRNativeApplication::onPreRender().
 		 */
@@ -126,7 +132,7 @@ class ExternalCameraApplication : public OpenXR::Application::VRNativeApplicatio
 		OpenXR::Application::VRTableMenu vrTableMenu_;
 
 		/// The application's state.
-		ApplicationState applicationState_ = AS_IDLE; 
+		ApplicationState applicationState_ = AS_IDLE;
 
 		/// The individual stream configurations the external camera supports.
 		Media::LiveVideo::StreamConfigurations streamConfigurations_;

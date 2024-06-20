@@ -9,6 +9,8 @@
 
 #include "ocean/media/Manager.h"
 
+#include "ocean/media/usb/USB.h"
+
 #include "ocean/rendering/Utilities.h"
 
 using namespace Platform::Meta::Quest;
@@ -16,6 +18,8 @@ using namespace Platform::Meta::Quest;
 ExternalCameraApplication::ExternalCameraApplication(struct android_app* androidApp) :
 	VRNativeApplicationAdvanced(androidApp)
 {
+	Media::USB::registerUSBLibrary();
+
 	requestAndroidPermission("android.permission.CAMERA");
 }
 
@@ -63,7 +67,16 @@ void ExternalCameraApplication::onFramebufferReleasing()
 
 	liveVideo_.release();
 
+	framebuffer_->clearScenes();
+
 	VRNativeApplicationAdvanced::onFramebufferReleasing();
+}
+
+void ExternalCameraApplication::onReleaseResources()
+{
+	Media::USB::unregisterUSBLibrary();
+
+	VRNativeApplicationAdvanced::onReleaseResources();
 }
 
 void ExternalCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime)
