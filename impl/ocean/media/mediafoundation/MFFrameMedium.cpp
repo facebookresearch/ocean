@@ -43,7 +43,7 @@ MFFrameMedium::MFFrameMedium(const std::string& url) :
 
 MFFrameMedium::~MFFrameMedium()
 {
-	frameCollection_.release();
+	frameCollection_.clear();
 
 	releaseFrameTopology();
 

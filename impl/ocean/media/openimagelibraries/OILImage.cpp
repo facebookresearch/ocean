@@ -199,7 +199,7 @@ void OILImage::release()
 {
 	const ScopedLock scopedLock(lock_);
 
-	frameCollection_.release();
+	frameCollection_.clear();
 }
 
 }

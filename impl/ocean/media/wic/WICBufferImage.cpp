@@ -138,7 +138,7 @@ bool WICBufferImage::loadImage()
 
 void WICBufferImage::release()
 {
-	frameCollection_.release();
+	frameCollection_.clear();
 }
 
 }

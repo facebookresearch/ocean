@@ -59,7 +59,7 @@ DSFrameMedium::DSFrameMedium(const std::string& url) :
 
 DSFrameMedium::~DSFrameMedium()
 {
-	frameCollection_.release();
+	frameCollection_.clear();
 
 	ocean_assert(sampleSinkFilter_.object() == nullptr);
 }

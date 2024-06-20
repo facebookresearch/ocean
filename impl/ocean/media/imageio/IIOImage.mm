@@ -147,7 +147,7 @@ bool IIOImage::loadImage()
 
 void IIOImage::release()
 {
-	frameCollection_.release();
+	frameCollection_.clear();
 }
 
 }

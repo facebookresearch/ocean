@@ -93,7 +93,7 @@ AVFMovie::~AVFMovie()
 {
 	stopThreadExplicitly();
 
-	frameCollection_.release();
+	frameCollection_.clear();
 
 	[[NSNotificationCenter defaultCenter] removeObserver:observer_ name:AVPlayerItemDidPlayToEndTimeNotification object:playerItem_];
 

@@ -47,7 +47,7 @@ FFMMovie::~FFMMovie()
 {
 	stopThreadExplicitly();
 
-	frameCollection_.release();
+	frameCollection_.clear();
 
 	releaseVideoCodec();
 }

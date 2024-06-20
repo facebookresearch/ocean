@@ -94,7 +94,7 @@ void OILBufferImage::release()
 {
 	const ScopedLock scopedLock(lock_);
 
-	frameCollection_.release();
+	frameCollection_.clear();
 }
 
 bool OILBufferImage::setPreferredFramePixelFormat(const FrameType::PixelFormat pixelFormat)

@@ -133,7 +133,7 @@ bool IIOBufferImage::loadImage()
 
 void IIOBufferImage::release()
 {
-	frameCollection_.release();
+	frameCollection_.clear();
 }
 
 }

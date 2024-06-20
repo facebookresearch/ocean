@@ -21,7 +21,7 @@ FrameCollection::FrameCollection(const size_t capacity) :
 
 FrameCollection::~FrameCollection()
 {
-	release();
+	clear();
 }
 
 FrameRef FrameCollection::recent(SharedAnyCamera* anyCamera) const
@@ -121,24 +121,9 @@ bool FrameCollection::setCapacity(const size_t capacity)
 	return true;
 }
 
-void FrameCollection::release()
+void FrameCollection::clear()
 {
-#ifdef OCEAN_DEBUG
-
-	std::vector<FrameCameraPair> debugFrameCameraPairs = ringMap_.elements();
 	ringMap_.clear();
-
-	// check whether the resource of the image is still in use
-	for (const FrameCameraPair& frameCameraPair : debugFrameCameraPairs)
-	{
-		ocean_assert(frameCameraPair.first.isUnique());
-	}
-
-#else
-
-	ringMap_.clear();
-
-#endif
 }
 
 }

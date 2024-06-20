@@ -130,9 +130,10 @@ class OCEAN_MEDIA_EXPORT FrameCollection
 		inline bool isNull() const;
 
 		/**
-		 * Releases the frame collection.
+		 * Removes all frames from this frame collection.
+		 * The capacity will be kept.
 		 */
-		void release();
+		void clear();
 
 		/**
 		 * Returns whether the frame collection is not empty.
