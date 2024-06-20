@@ -227,6 +227,7 @@ bool Device::close()
 	ocean_assert(detachedInterfaceUsageMap_.empty());
 	ocean_assert(claimedInterfaceUsageMap_.empty());
 
+	ocean_assert(usbDeviceHandle_ != nullptr);
 	libusb_close(usbDeviceHandle_);
 	usbDeviceHandle_ = nullptr;
 
@@ -556,7 +557,7 @@ int Device::determineIsochronousTransferLayout(libusb_context* usbContext, const
 				{
 					const uint16_t wMaxPacketSize = endpointDescriptor.wMaxPacketSize;
 					ocean_assert((wMaxPacketSize & 0xE000u) == 0u); // the upper 3 bits should always be zero, otherwise we may have USB 3.0
-					
+
 					const uint16_t sizePerTransaction = wMaxPacketSize & 0x7FFu; // the lower 11 bits provide the actual size of the transaction
 
 					const uint16_t additionalTransactions = (wMaxPacketSize >> 11u) & 0b11u; // the next two bytes give the number of additional transactions

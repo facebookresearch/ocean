@@ -1546,6 +1546,7 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 		return false;
 	}
 
+	ocean_assert(!claimedVideoStreamInterfaceSubscription_);
 	claimedVideoStreamInterfaceSubscription_ = claimInterface(streamingInterfaceIndex);
 
 	if (!claimedVideoStreamInterfaceSubscription_)
@@ -1732,6 +1733,8 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 	ocean_assert(activeSample_ == nullptr);
 	activeSample_ = std::make_shared<Sample>(maximalSampleSize_, activeDescriptorFormatIndex_, activeDescriptorFrameIndex_, activeClockFrequency_);
 
+	ocean_assert(streamingTransfers_.empty());
+	ocean_assert(streamingTransferMemories_.empty());
 	streamingTransfers_.clear();
 	streamingTransferMemories_.clear();
 
@@ -1811,6 +1814,16 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 		}
 	}
 
+	ocean_assert(transferIndexMap_.empty());
+	transferIndexMap_.clear();
+	transferIndexMap_.reserve(streamingTransfers_.size());
+
+	for (size_t n = 0; n < streamingTransfers_.size(); ++n)
+	{
+		ocean_assert(transferIndexMap_.find(streamingTransfers_[n].object()) == transferIndexMap_.cend());
+		transferIndexMap_.emplace(streamingTransfers_[n].object(), n);
+	}
+
 	Log::debug() << "VideoDevice: Starting " << numberTransferBuffers << " streaming transfers";
 
 	for (unsigned int transferIndex = 0u; transferIndex < numberTransferBuffers; ++transferIndex)
@@ -1864,6 +1877,8 @@ bool VideoDevice::stop()
 		maximalSampleSize_ = 0u;
 
 		activeSample_ = nullptr;
+
+		claimedVideoStreamInterfaceSubscription_.release();
 	}
 
 	{
@@ -1873,6 +1888,32 @@ bool VideoDevice::stop()
 
 		sampleQueue_ = SampleQueue();
 		reusableSamples_.clear();
+	}
+
+	// now, we need to wait until all transfers are finished
+
+	const Timestamp startTimestamp(true);
+
+	while (true)
+	{
+		TemporaryScopedLock scopedLock(lock_);
+
+			if (transferIndexMap_.empty())
+			{
+				streamingTransfers_.clear();
+				streamingTransferMemories_.clear();
+				break;
+			}
+
+		scopedLock.release();
+
+		if (startTimestamp + 5.0 < Timestamp(true))
+		{
+			Log::warning() << "Failed to waite for transfers to finish";
+			break;
+		}
+
+		Thread::sleep(1u);
 	}
 
 	return true;
@@ -2100,57 +2141,78 @@ bool VideoDevice::libusbStreamCallback(libusb_transfer& usbTransfer)
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (!isStarted_)
+	bool resubmit = false;
+
+	if (isStarted_)
 	{
-		return false;
-	}
+		resubmit = true;
 
-	bool resubmit = true;
+		ocean_assert(reusableBufferPointers_.empty());
 
-	ocean_assert(reusableBufferPointers_.empty());
-
-	switch (usbTransfer.status)
-	{
-		case LIBUSB_TRANSFER_COMPLETED:
+		switch (usbTransfer.status)
 		{
-			extractPayload(usbTransfer, reusableBufferPointers_);
-
-			if (!reusableBufferPointers_.empty())
+			case LIBUSB_TRANSFER_COMPLETED:
 			{
-				processPayload(reusableBufferPointers_);
+				extractPayload(usbTransfer, reusableBufferPointers_);
+
+				if (!reusableBufferPointers_.empty())
+				{
+					processPayload(reusableBufferPointers_);
+				}
+
+				reusableBufferPointers_.clear();
+
+				break;
 			}
 
-			reusableBufferPointers_.clear();
+			case LIBUSB_TRANSFER_ERROR:
+				resubmit = false;
+				Log::info() << "libusb streaming transfer error";
+				break;
 
-			break;
+			case LIBUSB_TRANSFER_TIMED_OUT:
+				Log::info() << "libusb streaming transfer timed out";
+				break;
+
+			case LIBUSB_TRANSFER_CANCELLED:
+				Log::info() << "libusb streaming transfer canceled";
+				resubmit = false;
+				break;
+
+			case LIBUSB_TRANSFER_STALL:
+				Log::info() << "libusb streaming transfer stall";
+				break;
+
+			case LIBUSB_TRANSFER_NO_DEVICE:
+				resubmit = false;
+				Log::info() << "libusb streaming transfer no device";
+				break;
+
+			case LIBUSB_TRANSFER_OVERFLOW:
+				Log::info() << "libusb streaming transfer overflow";
+				break;
 		}
+	}
 
-		case LIBUSB_TRANSFER_ERROR:
-			resubmit = false;
-			Log::info() << "libusb streaming transfer error";
-			break;
+	if (!resubmit)
+	{
+		// we release transfer objects which will not be re-submitted so that we know when all transfers have finished (e.g., when the device stops)
 
-		case LIBUSB_TRANSFER_TIMED_OUT:
-			Log::info() << "libusb streaming transfer timed out";
-			break;
+		const TransferIndexMap::const_iterator iTransfer = transferIndexMap_.find(&usbTransfer);
 
-		case LIBUSB_TRANSFER_CANCELLED:
-			Log::info() << "libusb streaming transfer canceled";
-			resubmit = false;
-			break;
+		ocean_assert(iTransfer != transferIndexMap_.end());
+		if (iTransfer != transferIndexMap_.end())
+		{
+			const size_t transferIndex = iTransfer->second;
 
-		case LIBUSB_TRANSFER_STALL:
-			Log::info() << "libusb streaming transfer stall";
-			break;
+			ocean_assert(transferIndex < streamingTransfers_.size());
+			if (transferIndex < streamingTransfers_.size())
+			{
+				streamingTransfers_[transferIndex].release();
+			}
 
-		case LIBUSB_TRANSFER_NO_DEVICE:
-			resubmit = false;
-			Log::info() << "libusb streaming transfer no device";
-			break;
-
-		case LIBUSB_TRANSFER_OVERFLOW:
-			Log::info() << "libusb streaming transfer overflow";
-			break;
+			transferIndexMap_.erase(iTransfer);
+		}
 	}
 
 	return resubmit;

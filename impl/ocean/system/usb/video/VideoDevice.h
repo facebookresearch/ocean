@@ -1157,6 +1157,9 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 		/// The streaming transfer objects.
 		ScopedTransfers streamingTransfers_;
 
+		/// The map mapping transfer pointers to indices.
+		TransferIndexMap transferIndexMap_;
+
 		/// The memory for the individual streaming transfer objects.
 		std::vector<Memory> streamingTransferMemories_;
 

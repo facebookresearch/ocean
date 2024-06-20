@@ -67,6 +67,11 @@ using ScopedTransfer = ScopedObjectCompileTimeVoidT<libusb_transfer*, releaseTra
  */
 using ScopedTransfers = std::vector<ScopedTransfer>;
 
+/**
+ * Definition of an unordered map mapping libusb transfer points to indices.
+ */
+using TransferIndexMap = std::unordered_map<libusb_transfer*, size_t>;
+
 }
 
 }

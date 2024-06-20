@@ -217,6 +217,12 @@ class OCEAN_MEDIA_USB_EXPORT USBLiveVideo final :
 		bool startInternal();
 
 		/**
+		 * Internal stop function actually stopping the USB video stream.
+		 * @return True, if succeeded
+		 */
+		bool stopInternal();
+
+		/**
 		 * Opens the USB device.
 		 * For Android platforms: Ensure that permission has been grated before opening the device.
 		 * @param deviceName The name of the USB device to open
@@ -318,7 +324,11 @@ class OCEAN_MEDIA_USB_EXPORT USBLiveVideo final :
 		Timestamp stopTimestamp_;
 
 #ifdef OCEAN_PLATFORM_BUILD_ANDROID
+		/// True, if the device needs to be started (out of the thread function).
 		std::atomic_bool delayedStart_ = false;
+
+		/// True, if the device needs to be stopped (out of the thread function).
+		std::atomic_bool delayedStop_ = false;
 #endif
 };
 

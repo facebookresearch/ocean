@@ -172,6 +172,8 @@ USBLiveVideo::USBLiveVideo(const std::string& url, const std::string& deviceName
 
 #endif // OCEAN_PLATFORM_BUILD_ANDROID
 
+	frameCollection_ = FrameCollection(10);
+
 	isValid_ = true;
 
 	startThread();
@@ -179,9 +181,23 @@ USBLiveVideo::USBLiveVideo(const std::string& url, const std::string& deviceName
 
 USBLiveVideo::~USBLiveVideo()
 {
-	stopThread();
+	const Timestamp startTimestamp(true);
 
 	closeDevice();
+
+	while (true)
+	{
+		if (!videoDevice_->isStarted())
+		{
+			break;
+		}
+
+		if (startTimestamp + 5.0 <= Timestamp(true))
+		{
+			Log::error() << "USBLiveVideo: Failed to stop video device within 5 seconds";
+			break;
+		}
+	}
 
 	stopThreadExplicitly();
 }
@@ -382,6 +398,8 @@ bool USBLiveVideo::start()
 {
 	const ScopedLock scopedLock(lock_);
 
+	frameCollection_.clear();
+
 	if (!videoDevice_)
 	{
 #ifdef OCEAN_PLATFORM_BUILD_ANDROID
@@ -405,15 +423,23 @@ bool USBLiveVideo::pause()
 
 bool USBLiveVideo::stop()
 {
+	const ScopedLock scopedLock(lock_);
+
 	if (!videoDevice_)
 	{
 		return true;
 	}
 
-	if (!videoDevice_->stop())
+	if (!videoDevice_->isStarted())
 	{
-		return false;
+		return true;
 	}
+
+#ifdef OCEAN_PLATFORM_BUILD_ANDROID
+	delayedStop_ = true; // on Android platforms, we perform a delayed stop to avoid blocking the calling thread for too long
+#else
+	stopInternal();
+#endif
 
 	startTimestamp_.toInvalid();
 	pauseTimestamp_.toInvalid();
@@ -450,6 +476,11 @@ bool USBLiveVideo::startInternal()
 	stopTimestamp_.toInvalid();
 
 	return true;
+}
+
+bool USBLiveVideo::stopInternal()
+{
+	return videoDevice_->stop();
 }
 
 bool USBLiveVideo::openDevice(const std::string& deviceName)
@@ -600,6 +631,16 @@ void USBLiveVideo::threadRun()
 
 		if (videoDevice_ && videoDevice_->isStarted())
 		{
+#ifdef OCEAN_PLATFORM_BUILD_ANDROID
+			if (delayedStop_)
+			{
+				stopInternal();
+				delayedStop_ = false;
+
+				continue;
+			}
+#endif // OCEAN_PLATFORM_BUILD_ANDROID
+
 			VideoDevice::SharedSample sample = videoDevice_->nextSample();
 
 			if (sample)
@@ -717,7 +758,7 @@ void USBLiveVideo::threadRun()
 					Log::error() << "Failed to invoke delayed start of USBLiveVideo device " << deviceName_;
 				}
 			}
-#endif
+#endif // OCEAN_PLATFORM_BUILD_ANDROID
 		}
 
 		if (shouldSleep)
