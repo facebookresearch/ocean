@@ -78,6 +78,13 @@ void PanoramaViewer::onFramebufferInitialized()
 	}
 }
 
+void PanoramaViewer::onFramebufferReleasing()
+{
+	renderingTextImageCredits_.release();
+
+	VRNativeApplicationAdvanced::onFramebufferReleasing();
+}
+
 void PanoramaViewer::onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime)
 {
 	if (renderingTextImageCredits_)

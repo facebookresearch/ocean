@@ -46,6 +46,12 @@ class PanoramaViewer final : public VRNativeApplicationAdvanced
 		void onFramebufferInitialized() override;
 
 		/**
+		 * Event function called before the framebuffer will be released.
+		 * @see VRApplication::onFramebufferReleasing().
+		 */
+		void onFramebufferReleasing() override;
+
+		/**
 		 * Events function called before the scene is rendered.
 		 * @see VRNativeApplication::onPreRender().
 		 */
