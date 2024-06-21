@@ -15,7 +15,12 @@ if (!project.hasProperty("oceanThirdPartyPath")) {
   if (defaultPath != null && !defaultPath.isEmpty()) {
     println("Using OCEAN_THIRDPARTY_PATH environment variable: ${defaultPath}")
   } else {
-    defaultPath = "/tmp/ocean/install/android"
+    var osName = System.getProperty("os.name").toLowerCase()
+    if (osName.contains("win")) {
+      defaultPath = "C:\\tmp\\ocean\\install\\and"
+    } else {
+      defaultPath = "/tmp/ocean/install/android"
+    }
     println("Environment variable not found. Using fallback path: ${defaultPath}")
   }
   project.ext["oceanThirdPartyPath"] = defaultPath
