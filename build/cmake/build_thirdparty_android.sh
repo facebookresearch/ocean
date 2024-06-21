@@ -23,7 +23,7 @@ OTP_BUILD_DIR="/tmp/ocean/build/${OCEAN_PLATFORM}"
 OTP_INSTALL_DIR="/tmp/ocean/install/${OCEAN_PLATFORM}"
 
 OTP_VALID_ANDROID_ABIS="arm64-v8a,armeabi-v7a,x86_64,x86"
-OTP_ANDROID_ABIS="arm64-v8a,armeabi-v7a,x86_64,x86"
+OTP_ANDROID_ABIS="arm64-v8a"
 
 OTP_VALID_BUILD_CONFIGS="debug,release"
 OTP_BUILD_CONFIG="debug,release"
