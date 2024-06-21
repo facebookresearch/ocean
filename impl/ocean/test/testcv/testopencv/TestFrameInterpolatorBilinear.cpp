@@ -7,17 +7,20 @@
 
 #include "ocean/test/testcv/testopencv/TestFrameInterpolatorBilinear.h"
 
+#include "ocean/base/RandomGenerator.h"
 #include "ocean/base/Timestamp.h"
+#include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Worker.h"
 #include "ocean/base/WorkerPool.h"
 
 #include "ocean/cv/FrameInterpolatorBilinear.h"
+#include "ocean/cv/OpenCVUtilities.h"
+
+#include "ocean/math/Random.h"
 
 #include "ocean/test/testcv/TestFrameInterpolatorBilinear.h"
 
 #include <opencv2/imgproc.hpp>
-
-#include <array>
 
 namespace Ocean
 {
@@ -346,13 +349,7 @@ void TestFrameInterpolatorBilinear::testAffine(const unsigned int width, const u
 			}
 
 			performanceOpenCV.start();
-#if 0
 			cv::warpAffine(cvSourceFrame, cvTargetFrame, cvTransformation, cv::Size(targetFrame.width(), targetFrame.height()), cv::WARP_INVERSE_MAP | cv::INTER_LINEAR, cv::BORDER_CONSTANT, cvBackgroundColor);
-#else
-			// Note: the flag cv::WARP_INVERSE_MAP is not respected by the below function; inverting the transformation manually.
-			const cv::Mat_<Scalar> cvTransformationInverted(2, 3, transformation.inverted().transposed().data());
-			amlFacetrackerWarpAffine(cvSourceFrame, cvTargetFrame, cvTransformationInverted, cv::Size(targetFrame.width(), targetFrame.height()), cv::INTER_LINEAR);
-#endif
 			performanceOpenCV.stop();
 
 			unsigned int cvTargetFramePaddingElements;
@@ -449,22 +446,16 @@ void TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 	unsigned int iteration = 0u;
 	unsigned int iterationOcean = 0u;
 	unsigned int iterationOpenCV = 0u;
-	unsigned int iterationAML = 0u;
 
 	double sumAverageErrorOcean = 0.;
 	double sumAverageErrorOpenCV = 0.;
-	double sumAverageErrorAML = 0.;
 
 	double maximalErrorOcean = 0.;
 	double maximalErrorOpenCV = 0.;
-	double maximalErrorAML = 0.;
 
 	HighPerformanceStatistic performanceOceanSingleCore;
 	HighPerformanceStatistic performanceOceanMultiCore;
 	HighPerformanceStatistic performanceOpenCV;
-	HighPerformanceStatistic performanceAML;
-
-	const unsigned int split = (channels == 1u ? 3u : 2u);
 
 	const double xTargetToSource = double(sourceWidth) / double(targetWidth);
 	const double yTargetToSource = double(sourceHeight) / double(targetHeight);
@@ -484,7 +475,7 @@ void TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 			sourceFrame.data<T>()[n] = T(RandomD::scalar(randomGenerator, -255.0, 255.0));
 		}
 
-		if (iteration % split == 0u)
+		if (iteration % 2u == 0u)
 		{
 			for (const bool multiCoreIteration : {false, true})
 			{
@@ -529,7 +520,7 @@ void TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 				++iterationOcean;
 			}
 		}
-		else if (iteration % split == 1u)
+		else
 		{
 			// OpenCV
 			const cv::Mat cvSourceFrame = CV::OpenCVUtilities::toCvMat(sourceFrame);
@@ -550,32 +541,10 @@ void TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 
 			iterationOpenCV++;
 		}
-		else
-		{
-			// AML
-			ocean_assert(channels == 1u);
-			const cv::Mat cvSourceFrame = CV::OpenCVUtilities::toCvMat(sourceFrame);
-			cv::Mat cvTargetFrame = CV::OpenCVUtilities::toCvMat(targetFrame);
-
-			performanceAML.start();
-				amlFacetrackerResize(cvSourceFrame, cvTargetFrame, cv::Size(targetWidth, targetHeight), -1., -1.);
-			performanceAML.stop();
-
-			targetFrame = CV::OpenCVUtilities::toOceanFrame(cvTargetFrame, true, targetFrame.pixelFormat());
-
-			double averageAbsError = NumericD::maxValue();
-			double maximalAbsError = NumericD::maxValue();
-			TestCV::TestFrameInterpolatorBilinear::validateScaleFrame<T>(sourceFrame.constdata<T>(), sourceWidth, sourceHeight, channels, targetFrame.constdata<T>(), targetWidth, targetHeight, xTargetToSource, yTargetToSource, 0u, 0u, &averageAbsError, &maximalAbsError);
-
-			sumAverageErrorAML += averageAbsError;
-			maximalErrorAML = max(maximalErrorAML, maximalAbsError);
-
-			iterationAML++;
-		}
 
 		iteration++;
 	}
-	while (iteration < split || startTimestamp + testDuration > Timestamp(true));
+	while (iteration < 2u || startTimestamp + testDuration > Timestamp(true));
 
 	if (iterationOcean != 0ull)
 	{
@@ -599,22 +568,6 @@ void TestFrameInterpolatorBilinear::testResize(const unsigned int sourceWidth, c
 			Log::info() << "Ocean vs. OpenCV";
 			Log::info() << "Performance ratio (single-core): [" << String::toAString(performanceOpenCV.best() / performanceOceanSingleCore.best(), 2u) << ", " << String::toAString(performanceOpenCV.median() / performanceOceanSingleCore.median(), 2u) << ", " << String::toAString(performanceOpenCV.worst() / performanceOceanSingleCore.worst(), 2u) << "] x";
 			Log::info() << "Performance ratio (multi-core): [" << String::toAString(performanceOpenCV.best() / performanceOceanMultiCore.best(), 2u) << ", " << String::toAString(performanceOpenCV.median() / performanceOceanMultiCore.median(), 2u) << ", " << String::toAString(performanceOpenCV.worst() / performanceOceanMultiCore.worst(), 2u) << "] x";
-			Log::info() << " ";
-		}
-	}
-
-	if (iterationAML != 0ull)
-	{
-		Log::info() << "AML";
-		Log::info() << "Performance: [" << String::toAString(performanceAML.bestMseconds(), 3u) << ", " << String::toAString(performanceAML.medianMseconds(), 3u) << ", " << String::toAString(performanceAML.worstMseconds(), 3u) << "] ms";
-		Log::info() << "Validation: average error " << String::toAString(double(sumAverageErrorAML) / double(iterationAML), 2u) << ", maximal error: " << String::toAString(maximalErrorAML, 2u);
-		Log::info() << " ";
-
-		if (iterationOcean != 0ull)
-		{
-			Log::info() << "Ocean vs. AML";
-			Log::info() << "Performance ratio (single-core): [" << String::toAString(performanceAML.best() / performanceOceanSingleCore.best(), 2u) << ", " << String::toAString(performanceAML.median() / performanceOceanSingleCore.median(), 2u) << ", " << String::toAString(performanceAML.worst() / performanceOceanSingleCore.worst(), 2u) << "] x";
-			Log::info() << "Performance ratio (multi-core): [" << String::toAString(performanceAML.best() / performanceOceanMultiCore.best(), 2u) << ", " << String::toAString(performanceAML.median() / performanceOceanMultiCore.median(), 2u) << ", " << String::toAString(performanceAML.worst() / performanceOceanMultiCore.worst(), 2u) << "] x";
 			Log::info() << " ";
 		}
 	}
