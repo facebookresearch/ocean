@@ -92,6 +92,18 @@ void ThereminApplication::onFramebufferInitialized()
 	renderingTransform->setTransformation(HomogenousMatrix4(Vector3(0, Scalar(-0.4), Scalar(-0.5))));
 }
 
+void ThereminApplication::onFramebufferReleasing()
+{
+	renderingTransformPitchAntenna_.release();
+	renderingTransformVolumeAntenna_.release();
+	renderingTextFrequency_.release();
+	renderingTextVolume_.release();
+
+	liveAudio_.release();
+
+	VRNativeApplicationAdvanced::onFramebufferReleasing();
+}
+
 void ThereminApplication::onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime)
 {
 	VRNativeApplicationAdvanced::onPreRender(xrPredictedDisplayTime, predictedDisplayTime);
