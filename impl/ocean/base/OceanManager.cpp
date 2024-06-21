@@ -6,6 +6,7 @@
  */
 
 #include "ocean/base/OceanManager.h"
+#include "ocean/base/Messenger.h"
 
 namespace Ocean
 {
@@ -57,6 +58,10 @@ void OceanManager::registerSingleton(const SingletonDestroyFunction& destroySing
 
 void OceanManager::shutdown()
 {
+#ifdef OCEAN_INTENSIVE_DEBUG
+	Messenger::writeToDebugOutput("OceanManager::shutdown()");
+#endif
+
 	const ScopedLock scopedLock(lock_);
 
 	// we destroy all singleton in reverse order

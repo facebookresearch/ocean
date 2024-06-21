@@ -332,12 +332,12 @@ class OCEAN_BASE_EXPORT Messenger : public Singleton<Messenger>
 		/**
 		 * Creates a new messenger object queuing all messages as default.
 		 */
-		Messenger() = default;
+		Messenger();
 
 		/**
 		 * Destructs a messenger object.
 		 */
-		~Messenger() = default;
+		~Messenger();
 
 	protected:
 

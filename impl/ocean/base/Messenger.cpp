@@ -19,6 +19,20 @@
 namespace Ocean
 {
 
+Messenger::Messenger()
+{
+#ifdef OCEAN_INTENSIVE_DEBUG
+	writeToDebugOutput("Messenger::Messenger()");
+#endif
+}
+
+Messenger::~Messenger()
+{
+#ifdef OCEAN_INTENSIVE_DEBUG
+	writeToDebugOutput("Messenger::~Messenger()");
+#endif
+}
+
 void Messenger::push(const MessageType type, std::string&& location, std::string&& message)
 {
 #ifndef OCEAN_DEBUG
