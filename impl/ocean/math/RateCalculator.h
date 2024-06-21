@@ -74,6 +74,11 @@ class OCEAN_MATH_EXPORT RateCalculator
 		 */
 		inline double window() const;
 
+		/**
+		 * Clears the rate calculator e.g., to start with a completely new measurement
+		 */
+		inline void clear();
+
 	protected:
 
 		/// The size of the sliding window, in seconds, with range (0, infinity).
@@ -110,6 +115,14 @@ inline double RateCalculator::window() const
 	const ScopedLock scopedLock(lock_);
 
 	return window_;
+}
+
+inline void RateCalculator::clear()
+{
+	const ScopedLock scopedLock(lock_);
+
+	timestampMap_.clear();
+	lastRequestTimestamp_.toInvalid();
 }
 
 }
