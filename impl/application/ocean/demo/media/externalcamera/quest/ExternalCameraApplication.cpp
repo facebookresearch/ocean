@@ -56,6 +56,10 @@ void ExternalCameraApplication::onFramebufferInitialized()
 
 	renderingTransform_ = engine_->factory().createTransform();
 	scene->addChild(renderingTransform_);
+
+	Rendering::TransformRef textTransform = Rendering::Utilities::createText(*engine_, "", RGBAColor(1.0f, 1.0f, 1.0f), RGBAColor(0.0f, 0.0f, 0.0f), false /*shaded*/, 0, 0, Scalar(0.05) /*fixedLineHeight*/, Rendering::Text::AM_CENTER, Rendering::Text::HA_CENTER, Rendering::Text::VA_BOTTOM, "", "", &renderingText_);
+	textTransform->setTransformation(HomogenousMatrix4(Vector3(0, Scalar(0.55), Scalar(0.01))));
+	renderingTransform_->addChild(std::move(textTransform));
 }
 
 void ExternalCameraApplication::onFramebufferReleasing()
@@ -64,6 +68,7 @@ void ExternalCameraApplication::onFramebufferReleasing()
 
 	renderingTransform_.release();
 	renderingTransformCamera_.release();
+	renderingText_.release();
 
 	liveVideo_.release();
 
@@ -82,6 +87,8 @@ void ExternalCameraApplication::onReleaseResources()
 void ExternalCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime)
 {
 	VRNativeApplicationAdvanced::onPreRender(xrPredictedDisplayTime, predictedDisplayTime);
+
+	ocean_assert(renderingText_);
 
 	switch (applicationState_)
 	{
@@ -121,6 +128,11 @@ void ExternalCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime
 							if (liveVideo_)
 							{
 								applicationState_ = AS_WAITING_FOR_SUPPORTED_STREAMS;
+							}
+							else
+							{
+								Log::error() << "Failed to create the live camera";
+								renderingText_->setText("Failed to create the live camera");
 							}
 						}
 
@@ -162,12 +174,17 @@ void ExternalCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime
 						{
 							if (liveVideo_->start())
 							{
+								if (renderingTransformCamera_)
+								{
+									renderingTransform_->removeChild(renderingTransformCamera_);
+									renderingTransformCamera_.release();
+								}
+
 								/// let's create a 3D box (with 1meter each side), and let's use the live video as a texture
 								/// the rendering engine will update the texture automatically
 								renderingTransformCamera_ = Rendering::Utilities::createBox(engine_, Vector3(1, 1, 1), liveVideo_);
 								renderingTransformCamera_->setVisible(false);
 
-								renderingTransform_->clear();
 								renderingTransform_->addChild(renderingTransformCamera_);
 
 								applicationState_ = AS_IDLE;
@@ -175,11 +192,13 @@ void ExternalCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime
 							else
 							{
 								Log::error() << "Failed to start live video";
+								renderingText_->setText("Failed to start live video");
 							}
 						}
 						else
 						{
 							Log::error() << "Failed to set preferred stream configuration";
+							renderingText_->setText("Failed to set preferred stream configuration");
 						}
 					}
 
@@ -189,28 +208,56 @@ void ExternalCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime
 		}
 	}
 
+	const Vector3 offset = Vector3(0, 0, -2); // 2 meter in front of the user
+
+	if (anchorCameraInWorld_)
+	{
+		// the camera should be locked with the world, so simply placing the camera at the origin of the world
+
+		renderingTransform_->setTransformation(HomogenousMatrix4(offset));
+	}
+	else
+	{
+		// the camera should be locked with the headset, so we need to determine the current headset pose
+		// as an alternative, we could have used Rendering::AbsoluteTransform with type TT_VIEW
+
+		const HomogenousMatrix4 world_T_device = locateSpace(xrSpaceView_.object(), xrPredictedDisplayTime);
+
+		if (world_T_device.isValid())
+		{
+			renderingTransform_->setTransformation(world_T_device * HomogenousMatrix4(offset));
+		}
+	}
+
 	if (liveVideo_ && liveVideo_->isStarted())
 	{
-		if (renderingTransformCamera_ && !renderingTransformCamera_->visible())
+		const FrameRef frame = liveVideo_->frame();
+
+		if (frame && frame->isValid() && frame->timestamp() != lastFrameTimestamp_)
 		{
-			// the camera screen is not yet visible, we can show the screen once we know the resolution of the camera stream
-
-			const FrameRef frame = liveVideo_->frame();
-
-			if (frame && frame->isValid())
+			if (renderingTransformCamera_ && !renderingTransformCamera_->visible())
 			{
+				rateCalculator_.clear();
+
+				// the camera screen is not yet visible, we can show the screen once we know the resolution of the camera stream
+
 				// we have the very first frame, we could not access the pixel information e.g., via frame->constdata(), however we just need the aspect ratio
 
 				Log::info() << "Received first camera frame, with resolution " << frame->width() << "x" << frame->height();
 
 				const Scalar aspectRatio = Scalar(frame->width()) / Scalar(frame->height());
 
-				const Vector3 position = Vector3(0, 0, -2); // 2 meter in front of the user
 				const Vector3 scale = Vector3(aspectRatio, 1, 0.01); // we scale the box to get a nice flat screen with height 1 meter
 
-				renderingTransformCamera_->setTransformation(HomogenousMatrix4(position, scale));
+				renderingTransformCamera_->setTransformation(HomogenousMatrix4(Vector3(0, 0, 0), scale));
 				renderingTransformCamera_->setVisible(true);
 			}
+
+			rateCalculator_.addOccurance(Timestamp(true));
+
+			renderingText_->setText(" Video resolution: " + String::toAString(frame->width()) + "x" + String::toAString(frame->height()) + " \n " + String::toAString(rateCalculator_.rate(Timestamp(true)), 1u) + " fps ");
+
+			lastFrameTimestamp_ = frame->timestamp();
 		}
 	}
 }
@@ -230,7 +277,14 @@ void ExternalCameraApplication::onButtonReleased(const OpenXR::TrackedController
 			renderingTransformCamera_->setVisible(false);
 		}
 
+		renderingText_->setText("");
+
 		applicationState_ = AS_ENUMERATE_CAMERAS;
+	}
+	else if ((buttons & OpenXR::TrackedController::BT_LEFT_X) == OpenXR::TrackedController::BT_LEFT_X
+			|| (buttons & OpenXR::TrackedController::BT_RIGHT_A) == OpenXR::TrackedController::BT_RIGHT_A)
+	{
+		anchorCameraInWorld_ = !anchorCameraInWorld_;
 	}
 }
 

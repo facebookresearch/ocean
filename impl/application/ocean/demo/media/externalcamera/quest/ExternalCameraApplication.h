@@ -13,8 +13,11 @@
 #include "ocean/platform/meta/quest/openxr/application/VRNativeApplicationAdvanced.h"
 #include "ocean/platform/meta/quest/openxr/application/VRTableMenu.h"
 
+#include "ocean/math/RateCalculator.h"
+
 #include "ocean/media/LiveVideo.h"
 
+#include "ocean/rendering/Text.h"
 #include "ocean/rendering/Transform.h"
 
 using namespace Ocean;
@@ -125,6 +128,12 @@ class ExternalCameraApplication : public OpenXR::Application::VRNativeApplicatio
 		/// The rendering Transform node holding the 3D box with the live texture of the external camera.
 		Rendering::TransformRef renderingTransformCamera_;
 
+		/// True, to anchor the camera transform in the world; False, to anchor the camera transform w.r.t. the headset.
+		bool anchorCameraInWorld_ = true;
+
+		/// The rendering Text node holding the text displaying information about the selected camera.
+		Rendering::TextRef renderingText_;
+
 		/// The external camera.
 		Media::LiveVideoRef liveVideo_;
 
@@ -136,6 +145,12 @@ class ExternalCameraApplication : public OpenXR::Application::VRNativeApplicatio
 
 		/// The individual stream configurations the external camera supports.
 		Media::LiveVideo::StreamConfigurations streamConfigurations_;
+
+		/// The rate for the video framerate.
+		RateCalculator rateCalculator_;
+
+		/// The timestamp of the last frame.
+		Timestamp lastFrameTimestamp_;
 };
 
 #endif // OCEAN_META_APPLICATION_DEMO_MEDIA_EXTERNALCAMERA_QUEST_EXTERNAL_CAMERA_APPLICATION_H
