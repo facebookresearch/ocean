@@ -396,7 +396,7 @@ public class OceanUSBManager
 
 		UsbDeviceConnection usbDeviceConnection = staticManager_.openedDeviceList_.get(deviceName);
 
-		if (usbDeviceConnection != null)
+		if (usbDeviceConnection == null)
 		{
 			Log.w("Ocean", "OceanUSBManager: Device " + deviceName + " is not opened");
 			return true;

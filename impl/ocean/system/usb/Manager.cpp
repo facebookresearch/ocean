@@ -69,6 +69,8 @@ Manager::~Manager()
 
 void Manager::release()
 {
+	const ScopedLock scopedLock(lock_);
+
 	stopThreadExplicitly();
 
 	context_ = nullptr;
