@@ -91,6 +91,23 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRNativeApplicationAdv
 		 */
 		~VRNativeApplicationAdvanced() override;
 
+		/**
+		 * Loads a new 3D model file to the scene.
+		 * Once the scene is loaded, the onModelLoaded() event function will be called.
+		 * @param modelFilename The filename of the 3D model to be loaded, must be valid
+		 * @param world_T_model The transformation between model and world to be set after the model is loded, must be valid
+		 * @see removeModel(), onModelLoaded().
+		 */
+		void loadModel(std::string modelFilename, const HomogenousMatrix4& world_T_model = HomogenousMatrix4(true));
+
+		/**
+		 * Removes a 3D model file from the scene.
+		 * Once the scene is removed, the onModelRemoved() event function will be called.
+		 * @param modelFilename The filename of the 3D model to be removed, must be valid
+		 * @see loadModel(), onModelRemoved().
+		 */
+		void removeModel(std::string modelFilename);
+
 	protected:
 
 		/**
@@ -106,18 +123,22 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRNativeApplicationAdv
 		StringSet necessaryOpenXRExtensionNames() const override;
 
 		/**
-		 * Loads a new 3D model file to the scene.
-		 * @param modelFilename The filename of the 3D model to be loaded, must be valid
-		 * @param world_T_model The transformation between model and world to be set after the model is loded, must be valid
-		 * @see removeModel().
+		 * Removes all 3D scene models from the scenegraph which are queued to be removed.
 		 */
-		void loadModel(std::string modelFilename, const HomogenousMatrix4& world_T_model = HomogenousMatrix4(true));
+		virtual void handleModelRemoveQueue();
 
 		/**
-		 * Removes a 3D model file from the scene.
-		 * @param modelFilename The filename of the 3D model to be removed, must be valid
+		 * Removes a loaded 3D scene model from the scenegraph.
+		 * @param sceneIdPair The pair combining the scene id and rendering object id of a model to be removed, must be valid
+		 * @param filename The filename of the 3D model to be removed, must be valid
 		 */
-		void removeModel(std::string modelFilename);
+		virtual void invokeRemoveModel(const SceneIdPair& sceneIdPair, const std::string& filename);
+
+		/**
+		 * Loads all 3D scene models into the scenegraph which are queued to be loaded.
+		 * @param predictedDisplayTime The timestamp which will be used for rendering, must be valid
+		 */
+		virtual void handleModelLoadQueue(const Timestamp& predictedDisplayTime);
 
 		/**
 		 * Event function called whenever the session is ready, when the session state changed to XR_SESSION_STATE_READY.

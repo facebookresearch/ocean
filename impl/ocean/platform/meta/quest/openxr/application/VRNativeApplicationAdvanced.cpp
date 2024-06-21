@@ -179,6 +179,21 @@ void VRNativeApplicationAdvanced::onFramebufferReleasing()
 {
 	Log::debug() << "VRNativeApplicationAdvanced::onFramebufferReleasing()";
 
+	TemporaryScopedLock scopedLock(modelFilenameQueueLock_);
+		// let's remove all loaded 3D models
+
+		modelFilenameLoadQueue_ = ModelFilenamePairQueue();
+
+		handleModelRemoveQueue();
+
+		for (const SceneFilenameMap::value_type& scenePair : sceneFilenameMap_)
+		{
+			invokeRemoveModel(scenePair.second, scenePair.first);
+		}
+
+		sceneFilenameMap_.clear();
+	scopedLock.release();
+
 	vrControllerVisualizer_.release();
 	vrHandVisualizer_.release();
 
@@ -196,6 +211,127 @@ void VRNativeApplicationAdvanced::onAddCompositorBackLayers(XrCompositorLayerUni
 		xrCompositionLayerPassthroughFB = {XR_TYPE_COMPOSITION_LAYER_PASSTHROUGH_FB};
 		xrCompositionLayerPassthroughFB.layerHandle = passthrough_.xrPassthroughLayerFB();
 		xrCompositionLayerPassthroughFB.flags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT;
+	}
+}
+
+void VRNativeApplicationAdvanced::handleModelRemoveQueue()
+{
+	while (true)
+	{
+		TemporaryScopedLock temporaryScopedLock(modelFilenameQueueLock_);
+
+		if (modelFilenameRemoveQueue_.empty())
+		{
+			break;
+		}
+
+		SceneFilenameMap::iterator iPair = sceneFilenameMap_.find(modelFilenameRemoveQueue_.front());
+		modelFilenameRemoveQueue_.pop();
+
+		const bool queueIsEmpty = modelFilenameRemoveQueue_.empty();
+
+		if (iPair != sceneFilenameMap_.end())
+		{
+			const std::string filename = std::move(iPair->first);
+			const SceneIdPair sceneIdPair = iPair->second;
+
+			sceneFilenameMap_.erase(iPair);
+
+			temporaryScopedLock.release();
+
+			invokeRemoveModel(sceneIdPair, filename);
+		}
+
+		if (queueIsEmpty)
+		{
+			break;
+		}
+	}
+}
+
+void VRNativeApplicationAdvanced::invokeRemoveModel(const SceneIdPair& sceneIdPair, const std::string& filename)
+{
+	ocean_assert(!filename.empty());
+
+	SceneDescription::Manager::get().unload(sceneIdPair.first);
+
+	if (engine_ && framebuffer_)
+	{
+		const Rendering::SceneRef scene(engine_->object(sceneIdPair.second));
+
+		if (scene)
+		{
+			framebuffer_->removeScene(scene);
+		}
+	}
+
+	onModelRemoved(filename);
+}
+
+void VRNativeApplicationAdvanced::handleModelLoadQueue(const Timestamp& predictedDisplayTime)
+{
+	ocean_assert(predictedDisplayTime.isValid());
+
+	TemporaryScopedLock temporaryScopedLock(modelFilenameQueueLock_);
+
+	if (!modelFilenameLoadQueue_.empty())
+	{
+		std::string modelFilename = std::move(modelFilenameLoadQueue_.front().first);
+		const HomogenousMatrix4 world_T_model(modelFilenameLoadQueue_.front().second);
+
+		modelFilenameLoadQueue_.pop();
+
+		temporaryScopedLock.release();
+
+		Rendering::SceneRef renderingScene;
+
+		try
+		{
+			// first, we try to load a permanent scene (with support for animations etc.)
+
+			const SceneDescription::SceneRef scene = SceneDescription::Manager::get().load(modelFilename, engine_, predictedDisplayTime, SceneDescription::TYPE_PERMANENT);
+
+			if (scene)
+			{
+				if (scene->descriptionType() == SceneDescription::TYPE_TRANSIENT)
+				{
+					const SceneDescription::SDLSceneRef sdlScene(scene);
+					ocean_assert(sdlScene);
+
+					renderingScene = sdlScene->apply(engine_);
+				}
+				else
+				{
+					ocean_assert(scene->descriptionType() == SceneDescription::TYPE_PERMANENT);
+
+					const SceneDescription::SDXSceneRef sdxScene(scene);
+					ocean_assert(sdxScene);
+
+					renderingScene = sdxScene->renderingScene();
+				}
+
+				if (renderingScene)
+				{
+					renderingScene->setTransformation(world_T_model);
+					framebuffer_->addScene(renderingScene);
+
+					const ScopedLock scopedLock(modelFilenameQueueLock_);
+
+					ocean_assert(sceneFilenameMap_.find(modelFilename) == sceneFilenameMap_.cend());
+					sceneFilenameMap_.emplace(modelFilename, SceneIdPair(scene->id(), renderingScene->id()));
+				}
+			}
+		}
+		catch (const std::exception& exceptionObject)
+		{
+			Log::error() << "Failed to load scene '" << modelFilename << "', reason: " << exceptionObject.what();
+		}
+		catch (...)
+		{
+			Log::error() << "Failed to load scene '" << modelFilename << "', unknown reason";
+		}
+
+		onModelLoaded(modelFilename, renderingScene);
 	}
 }
 
@@ -224,113 +360,9 @@ void VRNativeApplicationAdvanced::onPreRender(const XrTime& xrPredictedDisplayTi
 	SceneDescription::Manager::get().preUpdate(framebuffer_->view(), predictedDisplayTime);
 	SceneDescription::Manager::get().update(framebuffer_->view(), predictedDisplayTime);
 
-	while (true)
-	{
-		TemporaryScopedLock temporaryScopedLock(modelFilenameQueueLock_);
+	handleModelRemoveQueue();
 
-		if (modelFilenameRemoveQueue_.empty())
-		{
-			break;
-		}
-
-		SceneFilenameMap::iterator iPair = sceneFilenameMap_.find(modelFilenameRemoveQueue_.front());
-		modelFilenameRemoveQueue_.pop();
-
-		const bool queueIsEmpty = modelFilenameRemoveQueue_.empty();
-
-		if (iPair != sceneFilenameMap_.end())
-		{
-			const std::string filename = std::move(iPair->first);
-			const SceneIdPair sceneIdPair = iPair->second;
-
-			sceneFilenameMap_.erase(iPair);
-
-			temporaryScopedLock.release();
-
-			SceneDescription::Manager::get().unload(sceneIdPair.first);
-
-			if (engine_ && framebuffer_)
-			{
-				const Rendering::SceneRef scene(engine_->object(sceneIdPair.second));
-
-				if (scene)
-				{
-					framebuffer_->removeScene(scene);
-				}
-			}
-
-			onModelRemoved(filename);
-		}
-
-		if (queueIsEmpty)
-		{
-			break;
-		}
-	}
-
-	{
-		TemporaryScopedLock temporaryScopedLock(modelFilenameQueueLock_);
-
-		if (!modelFilenameLoadQueue_.empty())
-		{
-			std::string modelFilename = std::move(modelFilenameLoadQueue_.front().first);
-			const HomogenousMatrix4 world_T_model(modelFilenameLoadQueue_.front().second);
-
-			modelFilenameLoadQueue_.pop();
-
-			temporaryScopedLock.release();
-
-			Rendering::SceneRef renderingScene;
-
-			try
-			{
-				// first, we try to load a permanent scene (with support for animations etc.)
-
-				const SceneDescription::SceneRef scene = SceneDescription::Manager::get().load(modelFilename, engine_, predictedDisplayTime, SceneDescription::TYPE_PERMANENT);
-
-				if (scene)
-				{
-					if (scene->descriptionType() == SceneDescription::TYPE_TRANSIENT)
-					{
-						const SceneDescription::SDLSceneRef sdlScene(scene);
-						ocean_assert(sdlScene);
-
-						renderingScene = sdlScene->apply(engine_);
-					}
-					else
-					{
-						ocean_assert(scene->descriptionType() == SceneDescription::TYPE_PERMANENT);
-
-						const SceneDescription::SDXSceneRef sdxScene(scene);
-						ocean_assert(sdxScene);
-
-						renderingScene = sdxScene->renderingScene();
-					}
-
-					if (renderingScene)
-					{
-						renderingScene->setTransformation(world_T_model);
-						framebuffer_->addScene(renderingScene);
-
-						const ScopedLock scopedLock(modelFilenameQueueLock_);
-
-						ocean_assert(sceneFilenameMap_.find(modelFilename) == sceneFilenameMap_.cend());
-						sceneFilenameMap_.emplace(modelFilename, SceneIdPair(scene->id(), renderingScene->id()));
-					}
-				}
-			}
-			catch (const std::exception& exceptionObject)
-			{
-				Log::error() << "Failed to load scene '" << modelFilename << "', reason: " << exceptionObject.what();
-			}
-			catch (...)
-			{
-				Log::error() << "Failed to load scene '" << modelFilename << "', unknown reason";
-			}
-
-			onModelLoaded(modelFilename, renderingScene);
-		}
-	}
+	handleModelLoadQueue(predictedDisplayTime);
 }
 
 void VRNativeApplicationAdvanced::onModelLoaded(const std::string& /*modelFilename*/, const Rendering::SceneRef& /*scene*/)
