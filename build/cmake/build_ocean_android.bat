@@ -10,6 +10,11 @@ set OCEAN_THIRD_PARTY_SOURCE_DIR=%~dp0..\..\build\cmake\third-party
 set OCEAN_SOURCE_DIR=%~dp0..\..
 set OCEAN_BUILD_ROOT_DIRECTORY=C:\tmp\ocean\build\and
 
+if "%ANDROID_HOME%" == "" (
+    echo "ERROR: Set ANDROID_HOME to the location of your Android SDK installation."
+    exit /b 1
+)
+
 if "%ANDROID_NDK%" == "" (
     echo "ERROR: Set ANDROID_NDK to the location of your Android NDK installation."
     exit /b 1

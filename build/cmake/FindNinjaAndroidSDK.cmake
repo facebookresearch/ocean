@@ -3,6 +3,10 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+if(NOT DEFINED ENV{ANDROID_HOME})
+  message(FATAL_ERROR "Error: Environment variable ANDROID_HOME is not set")
+endif()
+
 if(WIN32)
   set(EXE_NAME "ninja.exe")
 else()
