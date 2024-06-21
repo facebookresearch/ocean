@@ -211,7 +211,7 @@ class ScopedSubscriptionCallbackHandlerT : public ScopedSubscriptionHandler
 		 * Calls all callback functions of this handler.
 		 * @param args The arguments of the callback function
 		 * @return The resulting of any of the callback functions
-		 * @tparam Args The data types of the callback functions
+		 * @tparam TArgs The data types of the callback functions
 		 */
 		template <class... TArgs>
 		typename TCallbackFunction::result_type callCallbacks(TArgs&& ... args);
