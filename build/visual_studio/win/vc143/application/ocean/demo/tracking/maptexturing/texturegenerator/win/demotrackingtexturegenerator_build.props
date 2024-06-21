@@ -13,9 +13,7 @@
     <Import Condition="'$(ocean_application_console_build_imported)' != 'True'" Project="..\..\..\..\..\application_console_build.props" />
     <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\base\base_use.props" />
     <Import Condition="'$(ocean_cv_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\cv\cv_use.props" />
-    <Import Condition="'$(ocean_devicesvrs_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\devices\vrs\devicesvrs_use.props" />
     <Import Condition="'$(ocean_media_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\media_use.props" />
-    <Import Condition="'$(ocean_mediavrs_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\vrs\mediavrs_use.props" />
     <Import Condition="'$(ocean_mediawic_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\wic\mediawic_use.props" />
     <Import Condition="'$(ocean_network_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\network\network_use.props" />
     <Import Condition="'$(ocean_platformwin_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\platform\win\platformwin_use.props" />
