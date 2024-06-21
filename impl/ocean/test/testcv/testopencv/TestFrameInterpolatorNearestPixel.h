@@ -69,19 +69,6 @@ class OCEAN_TEST_CV_OPENCV_EXPORT TestFrameInterpolatorNearestPixel
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 */
 		static void testAffine(const unsigned int width, const unsigned int height, const unsigned int channels, const double testDuration);
-
-		/**
-		 * OpenCV affine warp with modifications for the AML FaceTracker
-		 *
-		 * This function is a clone of fbsource/xplat/arfx/tracking/facetracker/Util/FastWarpAffine.h:warpAffine(...) (FBS: d543d4e)
-		 *
-		 * @param src input image.
-		 * @param dstP output image that has the size dsize and the same type as src .
-		 * @param M0 \f$3\times 3\f$ transformation matrix.
-		 * @param dsize size of the output image.
-		 * @param interpolation combination of interpolation methods (INTER_LINEAR or INTER_NEAREST) and the
-		 */
-		static void amlFacetrackerWarpAffine(const cv::Mat& src, cv::Mat& dstP, const cv::Mat& M0, cv::Size dsize, int interpolation);
 };
 
 } // namespace TestOpenCV
