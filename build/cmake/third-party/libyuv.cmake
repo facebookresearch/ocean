@@ -14,7 +14,7 @@ CPMAddPackage(
   NAME           libyuv
   GIT_REPOSITORY https://github.com/lemenkov/libyuv.git
   GIT_TAG        ce32eb773fd66239b794abee1e1ee53fdbc15bc0 # master as of 4/29/2024
-  PATCH_COMMAND  ${GIT_EXECUTABLE} apply "${CMAKE_CURRENT_SOURCE_DIR}/libyuv/libyuv.patch"
+  PATCH_COMMAND  ${GIT_EXECUTABLE} apply --ignore-whitespace "${CMAKE_CURRENT_SOURCE_DIR}/libyuv/libyuv.patch"
 )
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)

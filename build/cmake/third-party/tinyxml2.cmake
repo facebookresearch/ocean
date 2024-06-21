@@ -14,7 +14,7 @@ CPMAddPackage(
   NAME           tinyxml2
   GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git
   GIT_TAG        10.0.0
-  PATCH_COMMAND  ${GIT_EXECUTABLE} apply "${CMAKE_CURRENT_SOURCE_DIR}/tinyxml2/tinyxml2.patch"
+  PATCH_COMMAND  ${GIT_EXECUTABLE} apply --ignore-whitespace "${CMAKE_CURRENT_SOURCE_DIR}/tinyxml2/tinyxml2.patch"
 )
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)

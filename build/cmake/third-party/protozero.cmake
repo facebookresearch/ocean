@@ -14,7 +14,7 @@ CPMAddPackage(
   NAME           protozero
   GIT_REPOSITORY https://github.com/mapbox/protozero.git
   GIT_TAG        v1.7.1
-  PATCH_COMMAND  ${GIT_EXECUTABLE} apply "${CMAKE_CURRENT_SOURCE_DIR}/protozero/protozero.patch"
+  PATCH_COMMAND  ${GIT_EXECUTABLE} apply --ignore-whitespace "${CMAKE_CURRENT_SOURCE_DIR}/protozero/protozero.patch"
 )
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)

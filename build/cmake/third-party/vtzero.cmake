@@ -14,7 +14,7 @@ CPMAddPackage(
   NAME           vtzero
   GIT_REPOSITORY https://github.com/mapbox/vtzero.git
   GIT_TAG        v1.1.0
-  PATCH_COMMAND  ${GIT_EXECUTABLE} apply "${CMAKE_CURRENT_SOURCE_DIR}/vtzero/vtzero.patch"
+  PATCH_COMMAND  ${GIT_EXECUTABLE} apply --ignore-whitespace "${CMAKE_CURRENT_SOURCE_DIR}/vtzero/vtzero.patch"
 )
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)

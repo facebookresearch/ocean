@@ -25,7 +25,7 @@ CPMAddPackage(
   NAME           mbedtls
   GIT_REPOSITORY https://github.com/Mbed-TLS/mbedtls.git
   GIT_TAG        v3.6.0
-  PATCH_COMMAND  git submodule update --init && ${GIT_EXECUTABLE} apply "${CMAKE_CURRENT_SOURCE_DIR}/mbedtls/mbedtls.patch"
+  PATCH_COMMAND  git submodule update --init && ${GIT_EXECUTABLE} apply --ignore-whitespace "${CMAKE_CURRENT_SOURCE_DIR}/mbedtls/mbedtls.patch"
 )
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)

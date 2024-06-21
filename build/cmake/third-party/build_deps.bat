@@ -41,5 +41,11 @@ shift
 for /F "eol=# usebackq delims=" %%d in (%OCEAN_THIRD_PARTY_SOURCE_DIR%\dependencies_allplatforms.txt %OCEAN_THIRD_PARTY_SOURCE_DIR%\dependencies_%PLATFORM%.txt) do (
     echo %%d
     cmake -S %OCEAN_THIRD_PARTY_SOURCE_DIR% -B %BUILD_DIRECTORY_BASE%\%%d -DINCLUDED_DEP_NAME=%%d %a1% %a2% %a3% %a4% %a5% %a6% %a7% %a8% %a9% %1 %2 %3 %4 %5 %6 %7 %8 %9
+    if ERRORLEVEL 1 (
+        exit /b 1
+    )
     cmake --build %BUILD_DIRECTORY_BASE%\%%d --config %BUILD_TYPE% --target install -- %EXTRA_BUILD_FLAGS%
+    if ERRORLEVEL 1 (
+        exit /b 2
+    )
 )

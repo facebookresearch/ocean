@@ -27,7 +27,7 @@ CPMAddPackage(
   NAME           libtiff
   GIT_REPOSITORY https://github.com/libsdl-org/libtiff.git
   GIT_TAG        v4.6.0
-  PATCH_COMMAND  ${GIT_EXECUTABLE} apply "${CMAKE_CURRENT_SOURCE_DIR}/libtiff/libtiff.patch"
+  PATCH_COMMAND  ${GIT_EXECUTABLE} apply --ignore-whitespace "${CMAKE_CURRENT_SOURCE_DIR}/libtiff/libtiff.patch"
 )
 
 list(POP_BACK CMAKE_MESSAGE_INDENT)
