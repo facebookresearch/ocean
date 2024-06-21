@@ -23,7 +23,9 @@ Please refer to the platform-specific instructions when building Ocean:
 
 * [Android](building_for_android.md)
 * [iOS](building_for_ios.md)
+* [Linux](building_for_linux.md)
 * [macOS](building_for_macos.md)
+* [Meta Quest](building_for_meta_quest.md)
 * [Windows](building_for_windows.md)
 
 # License
