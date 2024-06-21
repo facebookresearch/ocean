@@ -23,6 +23,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     if (MACOS)
         find_library(FOUNDATION_LIB Foundation)
+        find_library(SECURITY_LIB Security)
     endif()
 
     # Source files
@@ -76,7 +77,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     endif()
 
     if (MACOS)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${FOUNDATION_LIB})
+        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ${FOUNDATION_LIB} ${SECURITY_LIB})
     endif()
 
     # Installation
