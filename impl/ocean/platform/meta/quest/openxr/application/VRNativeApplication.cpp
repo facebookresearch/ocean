@@ -153,6 +153,10 @@ void VRNativeApplication::releaseOpenXRSession()
 
 	onReleaseActionSets();
 
+	xrSpaceView_.release();
+	xrSpaceLocal_.release();
+	xrSpaceStage_.release();
+
 	xrSession_.release();
 }
 
