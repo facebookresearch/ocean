@@ -42,6 +42,20 @@ void HandGestures::onFramebufferInitialized()
 	scene->addChild(renderingGroupHandGestures_);
 }
 
+void HandGestures::onFramebufferReleasing()
+{
+	renderingTextHandLeft_.release();
+	renderingTextHandRight_.release();
+
+	renderingTransformHandLeft_.release();
+	renderingTransformHandRight_.release();
+
+	renderingGroupHandJoints_.release();
+	renderingGroupHandGestures_.release();
+
+	VRNativeApplicationAdvanced::onFramebufferReleasing();
+}
+
 void HandGestures::onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime)
 {
 	VRNativeApplicationAdvanced::onPreRender(xrPredictedDisplayTime, predictedDisplayTime);

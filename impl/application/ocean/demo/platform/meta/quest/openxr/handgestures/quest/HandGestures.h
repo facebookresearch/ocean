@@ -43,6 +43,12 @@ class HandGestures final : public VRNativeApplicationAdvanced
 		void onFramebufferInitialized() override;
 
 		/**
+		 * Event function called before the framebuffer will be released.
+		 * @see VRNativeApplicationAdvanced::onFramebufferReleasing().
+		 */
+		void onFramebufferReleasing() override;
+
+		/**
 		 * Events function called before the scene is rendered.
 		 * @see VRNativeApplication::onPreRender().
 		 */
