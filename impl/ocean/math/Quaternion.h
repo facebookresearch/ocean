@@ -10,7 +10,6 @@
 
 #include "ocean/math/Math.h"
 #include "ocean/math/Vector3.h"
-#include "ocean/math/Vector3.h"
 #include "ocean/math/Vector4.h"
 
 #include "ocean/base/Utilities.h"
