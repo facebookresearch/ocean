@@ -7,7 +7,10 @@
 
 #include "ocean/scenedescription/sdx/x3d/X3DLibrary.h"
 #include "ocean/scenedescription/sdx/x3d/ClassicParser.h"
-// #include "ocean/scenedescription/sdx/x3d/XMLParser.h" **TODO** temporary disabled - due to missing tinyxml2 third party in xplat
+
+#ifdef OCEAN_HAS_TINYXML2
+	#include "ocean/scenedescription/sdx/x3d/XMLParser.h"
+#endif
 
 #include "ocean/base/String.h"
 
@@ -61,12 +64,13 @@ SceneRef X3DLibrary::loadPermanent(const std::string& filename, const std::strin
 
 	if (extension == "x3d" || extension == "ox3d")
 	{
-		//XMLParser xmlParser(filename, progress, cancel);
-		//return xmlParser.parse(*this, engine, Timestamp());
-
-		ocean_assert(false && "**TODO** temporary disabled - due to missing tinyxml2 third party in xplat");
-
+#ifdef OCEAN_HAS_TINYXML2
+		XMLParser xmlParser(filename, progress, cancel);
+		return xmlParser.parse(*this, engine, Timestamp());
+#else
+		ocean_assert(false && "Disabled because tinyxml2 is not available");
 		return SceneRef();
+#endif
 	}
 	else if (extension == "x3dv" || extension == "ox3dv" || extension == "wrl")
 	{
