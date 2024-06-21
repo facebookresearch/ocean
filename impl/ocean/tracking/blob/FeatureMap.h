@@ -9,9 +9,9 @@
 #define META_OCEAN_TRACKING_BLOB_FEATURE_MAP_H
 
 #include "ocean/tracking/blob/Blob.h"
-#include "ocean/tracking/uvtexturemapping/ConeUVTextureMapping.h"
-#include "ocean/tracking/uvtexturemapping/CylinderUVTextureMapping.h"
-#include "ocean/tracking/uvtexturemapping/MeshUVTextureMapping.h"
+#include "metaonly/ocean/tracking/uvtexturemapping/ConeUVTextureMapping.h"
+#include "metaonly/ocean/tracking/uvtexturemapping/CylinderUVTextureMapping.h"
+#include "metaonly/ocean/tracking/uvtexturemapping/MeshUVTextureMapping.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/Worker.h"

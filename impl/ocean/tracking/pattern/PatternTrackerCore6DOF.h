@@ -30,7 +30,7 @@
 
 #include "ocean/tracking/blob/Blob.h"
 #include "ocean/tracking/blob/FeatureMap.h"
-#include "ocean/tracking/uvtexturemapping/UVTextureMapping.h"
+#include "metaonly/ocean/tracking/uvtexturemapping/UVTextureMapping.h"
 
 namespace Ocean
 {

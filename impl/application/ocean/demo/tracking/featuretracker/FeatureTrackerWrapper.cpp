@@ -33,8 +33,8 @@
 
 #include "ocean/tracking/orb/FeatureTracker6DOF.h"
 
-#include "ocean/tracking/uvtexturemapping/ConeUVTextureMapping.h"
-#include "ocean/tracking/uvtexturemapping/CylinderUVTextureMapping.h"
+#include "metaonly/ocean/tracking/uvtexturemapping/ConeUVTextureMapping.h"
+#include "metaonly/ocean/tracking/uvtexturemapping/CylinderUVTextureMapping.h"
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)
