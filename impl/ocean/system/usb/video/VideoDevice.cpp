@@ -1257,7 +1257,34 @@ VideoDevice::VideoDevice(Device&& device) :
 
 VideoDevice::~VideoDevice()
 {
-	stop();
+	{
+		const ScopedLock scopedLock(lock_);
+
+		stop();
+
+		if (interruptTransfer_.isValid())
+		{
+			libusb_cancel_transfer(interruptTransfer_.object());
+		}
+	}
+
+	const Timestamp startTimestamp(true);
+
+	while (!startTimestamp.hasTimePassed(5.0))
+	{
+		Thread::sleep(1u);
+
+		const ScopedLock scopedLock(lock_);
+
+		if (!interruptTransfer_.isValid())
+		{
+			break;
+		}
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	claimedVideoControlInterfaceSubscription_.release();
 }
 
 bool VideoDevice::initializeControlInterface()
@@ -1907,7 +1934,7 @@ bool VideoDevice::stop()
 
 		scopedLock.release();
 
-		if (startTimestamp + 5.0 < Timestamp(true))
+		if (startTimestamp.hasTimePassed(5.0))
 		{
 			Log::warning() << "Failed to waite for transfers to finish";
 			break;
@@ -2101,40 +2128,57 @@ void VideoDevice::processPayload(const BufferPointers& bufferPointers)
 	}
 }
 
-void VideoDevice::libStatusCallback(libusb_transfer& usbTransfer)
+bool VideoDevice::libStatusCallback(libusb_transfer& usbTransfer)
 {
+	const ScopedLock scopedLock(lock_);
+
+	bool resubmit = true;
+
 	switch (usbTransfer.status)
 	{
 		case LIBUSB_TRANSFER_COMPLETED:
-			Log::info() << "libusb transfer completed";
+			Log::debug() << "libusb transfer completed";
 			break;
 
 		case LIBUSB_TRANSFER_ERROR:
 		{
-			Log::info() << "libusb transfer error, type " << int(usbTransfer.type);
+			Log::error() << "libusb transfer error, type " << int(usbTransfer.type);
+			resubmit = false;
 			break;
 		}
 
 		case LIBUSB_TRANSFER_TIMED_OUT:
-			Log::info() << "libusb transfer timed out";
+			Log::debug() << "libusb transfer timed out";
 			break;
 
 		case LIBUSB_TRANSFER_CANCELLED:
-			Log::info() << "libusb transfer canceled";
+			Log::debug() << "libusb transfer canceled";
+			resubmit = false;
 			break;
 
 		case LIBUSB_TRANSFER_STALL:
-			Log::info() << "libusb transfer stall";
+			Log::debug() << "libusb transfer stall";
 			break;
 
 		case LIBUSB_TRANSFER_NO_DEVICE:
-			Log::info() << "libusb transfer no device";
+			Log::debug() << "libusb transfer no device";
+			resubmit = false;
 			break;
 
 		case LIBUSB_TRANSFER_OVERFLOW:
-			Log::info() << "libusb transfer overflow";
+			Log::debug() << "libusb transfer overflow";
 			break;
 	}
+
+	if (!resubmit)
+	{
+		if (interruptTransfer_.object() == &usbTransfer)
+		{
+			interruptTransfer_.release();
+		}
+	}
+
+	return resubmit;
 }
 
 bool VideoDevice::libusbStreamCallback(libusb_transfer& usbTransfer)
@@ -2248,10 +2292,11 @@ void VideoDevice::libStatusCallback(libusb_transfer* usbTransfer)
 		VideoDevice* videoDevice = reinterpret_cast<VideoDevice*>(usbTransfer->user_data);
 		ocean_assert(videoDevice != nullptr);
 
-		videoDevice->libStatusCallback(*usbTransfer);
+		if (videoDevice->libStatusCallback(*usbTransfer))
+		{
+			libusb_submit_transfer(usbTransfer);
+		}
 	}
-
-	libusb_submit_transfer(usbTransfer);
 }
 
 void VideoDevice::libusbStreamCallback(libusb_transfer* usbTransfer)

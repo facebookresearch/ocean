@@ -184,20 +184,7 @@ USBLiveVideo::~USBLiveVideo()
 	const Timestamp startTimestamp(true);
 
 	closeDevice();
-
-	while (true)
-	{
-		if (!videoDevice_->isStarted())
-		{
-			break;
-		}
-
-		if (startTimestamp + 5.0 <= Timestamp(true))
-		{
-			Log::error() << "USBLiveVideo: Failed to stop video device within 5 seconds";
-			break;
-		}
-	}
+	ocean_assert(videoDevice_ == nullptr);
 
 	stopThreadExplicitly();
 }
@@ -558,7 +545,8 @@ bool USBLiveVideo::closeDevice()
 		JNIEnv* jniEnv = Platform::Android::NativeInterfaceManager::get().environment();
 
 		ocean_assert(!deviceName_.empty());
-		System::USB::Android::OceanUSBManager::get().closeDevice(jniEnv, deviceName_);
+		const bool closeResult = System::USB::Android::OceanUSBManager::get().closeDevice(jniEnv, deviceName_);
+		ocean_assert_and_suppress_unused(closeResult, closeResult);
 #endif
 	}
 
