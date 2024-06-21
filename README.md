@@ -28,8 +28,13 @@ Please refer to the platform-specific instructions when building Ocean:
 * [Meta Quest](building_for_meta_quest.md)
 * [Windows](building_for_windows.md)
 
+Note that we provide no pre-built binaries. To use Ocean, you must build it from source.
+
 # License
 
 Ocean is released under the [MIT License](LICENSE).
 
-We provide no pre-built binaries. To use it, you must build Ocean from source.
+## License Exceptions
+
+Note that all files in the directory `res/ocean/platform/meta/quest/application/assets/ocean_meta_quest_application/controller`
+are licensed under the [Art Attribution License 1.0](res/ocean/platform/meta/quest/application/assets/ocean_meta_quest_application/controller/LICENSE). Please review the individual files for specific licensing details.

@@ -1,3 +1,8 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates. All rights reserved.
+#
+# This file is licensed under the Art Attribution License 1.0 found in the
+# LICENSE file in this directory.
+
 # File produced by Open Asset Import Library (http://www.assimp.sf.net)
 # (assimp v5.0.0)
 
@@ -9553,4 +9558,3 @@ f  1714/2294/2168 1676/2248/2130 1715/2296/2169
 f  1715/2296/2169 1676/2248/2130 1675/2247/2129
 f  1635/2207/2089 1716/2298/2170 1675/2247/2129
 f  1675/2247/2129 1716/2298/2170 1715/2296/2169
-

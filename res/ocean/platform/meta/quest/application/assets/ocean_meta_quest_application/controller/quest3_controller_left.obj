@@ -1,3 +1,8 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates. All rights reserved.
+#
+# This file is licensed under the Art Attribution License 1.0 found in the
+# LICENSE file in this directory.
+
 mtllib quest3_controllers.mtl
 o quest3_controller_left
 v 0.00825983285903931 0.00438802689313889 0.00767456769943237
