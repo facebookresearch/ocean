@@ -73,6 +73,15 @@ class OCEAN_BASE_EXPORT Timestamp
 		inline int64_t nanoseconds() const;
 
 		/**
+		 * Returns whether a specified amount of time has passed since this timestamp.
+		 * This function returns 'thisTimestamp + seconds <= currentTimestamp'.
+		 * @param seconds The number of seconds defining the time to check, with range [0, infinity)
+		 * @param currentTimestamp The current timestamp to use for comparison
+		 * @return True, if the time has passed or if this timestamp is invalid
+		 */
+		inline bool hasTimePassed(const double seconds, const Timestamp& currentTimestamp = Timestamp(true)) const;
+
+		/**
 		 * Returns whether the timestamp holds a valid time.
 		 * @return True, if so
 		 */
@@ -269,6 +278,19 @@ inline int64_t Timestamp::nanoseconds() const
 	ocean_assert(isValid());
 
 	return seconds2nanoseconds(value_);
+}
+
+inline bool Timestamp::hasTimePassed(const double seconds, const Timestamp& currentTimestamp) const
+{
+	ocean_assert(seconds >= 0.0);
+	ocean_assert(currentTimestamp.isValid());
+
+	if (!isValid())
+	{
+		return true;
+	}
+
+	return double(*this) + seconds <= double(currentTimestamp);
 }
 
 inline bool Timestamp::isValid() const

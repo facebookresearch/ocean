@@ -61,6 +61,13 @@ class OCEAN_TEST_BASE_EXPORT TestTimestamp
 		 * @return True, if succeeded
 		 */
 		static bool testNanoseconds(const double testDuration);
+
+		/**
+		 * Tests the hasTimePassed() function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testHasTimePassed(const double testDuration);
 };
 
 }

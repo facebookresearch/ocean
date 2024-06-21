@@ -51,6 +51,12 @@ bool TestTimestamp::test(const double testDuration)
 	allSucceeded = testNanoseconds(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testHasTimePassed(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -84,6 +90,11 @@ TEST(TestTimestamp, Microseconds)
 TEST(TestTimestamp, Nanoseconds)
 {
 	EXPECT_TRUE(TestTimestamp::testNanoseconds(GTEST_TEST_DURATION));
+}
+
+TEST(TestTimestamp, HasTimePassed)
+{
+	EXPECT_TRUE(TestTimestamp::testHasTimePassed(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -275,6 +286,64 @@ bool TestTimestamp::testNanoseconds(const double testDuration)
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestTimestamp::testHasTimePassed(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Has time passed test:";
+
+	bool allSucceeded = true;
+
+	const Timestamp loopStartTimestamp(true);
+
+	do
+	{
+		Timestamp startTimestamp;
+
+		if (!startTimestamp.hasTimePassed(double(RandomI::random(0, 1000)))) // an invalid start timestamp must always return true
+		{
+			allSucceeded = false;
+		}
+
+		startTimestamp = Timestamp(double(RandomI::random(-1000, 1000)));
+
+		const Timestamp currentTimestamp = Timestamp(double(RandomI::random(-1000, 1000)));
+
+		const double seconds = double(RandomI::random(0, 100));
+
+		const bool result = startTimestamp.hasTimePassed(seconds, currentTimestamp);
+
+		if (currentTimestamp < startTimestamp)
+		{
+			if (result)
+			{
+				allSucceeded = false;
+			}
+		}
+		else
+		{
+			const bool expectedResult = currentTimestamp >= startTimestamp + seconds;
+
+			if (result != expectedResult)
+			{
+				allSucceeded = false;
+			}
+		}
+	}
+	while (loopStartTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
 	{
