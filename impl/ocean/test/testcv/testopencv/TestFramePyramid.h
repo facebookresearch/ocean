@@ -71,14 +71,6 @@ class OCEAN_TEST_CV_OPENCV_EXPORT TestFramePyramid : protected Test::TestCV::Tes
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 */
 		static void testFramePyramid(const unsigned int width, const unsigned int height, const unsigned int channels, const double testDuration);
-
-		/**
-		 * The downsampling implementation of AML's FaceTracker.
-		 * @param _src Soruce image
-		 * @param _dst Destination image
-		 * @param cn Number of channels, must be 1
-		 */
-		static void pyrDown(const cv::Mat& _src, cv::Mat& _dst, uint8_t cn);
 };
 
 }

@@ -53,13 +53,6 @@ class OCEAN_TEST_CV_OPENCV_EXPORT TestFrameFilterLaplace
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 */
 		static void test1Channel8BitWith16BitResponse(const unsigned int width, const unsigned int height, const double testDuration);
-
-		/**
-		 * AML's Laplace function.
-		 * @param src Source frame
-		 * @param dst Destination frame
-		 */
-		static void laplacian(const cv::Mat& src, cv::Mat& dst);
 };
 
 }

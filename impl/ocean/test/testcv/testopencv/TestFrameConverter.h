@@ -54,14 +54,6 @@ class OCEAN_TEST_CV_OPENCV_EXPORT TestFrameConverter
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 */
 		static void testCast(const unsigned int width, const unsigned int height, const unsigned int channels, const double testDuration);
-	
-		/**
-		 * AML's implementation to convert uint8 frames to float frames.
-		 * @param _src Source frame
-		 * @param _dst Destination frame
-		 * @param _type Type of the destination frame, must be CV_32F
-		 */
-		static void convert(cv::Mat& _src, cv::Mat& _dst, int _type);
 };
 
 }
