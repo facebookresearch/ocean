@@ -38,22 +38,7 @@ std::string System::environmentVariable(const std::string& variable, const bool 
 
 	if (valuePointer == nullptr)
 	{
-		if (variable == "OCEAN_DEVELOPMENT_PATH")
-		{
-			// Workaround for macOS platforms if the OCEAN_DEVELOPMENT_PATH environment variable is not defined explicitly
-
-			const char* homePointer = getenv("HOME");
-
-			if (homePointer == nullptr)
-			{
-				return std::string();
-			}
-
-			Log::warning() << "OCEAN_DEVELOPMENT_PATH is not defined, therefore we try to link it to the correct place instead.";
-
-			return std::string(homePointer) + std::string("/fbsource/xplat/ocean");
-		}
-
+		Log::warning() << "Failed to read the value of the environment variable \"" << variable << "\".";
 		return std::string();
 	}
 
