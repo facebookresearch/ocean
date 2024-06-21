@@ -89,6 +89,13 @@ void GraphsApplication::onFramebufferReleasing()
 {
 	vrTableMenu_ = OpenXR::Application::VRTableMenu();
 
+	renderingTransformGraph_.release();
+	renderingTransformGraphMesh_.release();
+	renderingTransformIntersection_.release();
+	renderingTransformDirection_.release();
+	renderingTransformGradientDescent_.release();
+	renderingTextFunction_.release();
+
 	VRNativeApplicationAdvanced::onFramebufferReleasing();
 }
 

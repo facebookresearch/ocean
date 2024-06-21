@@ -50,6 +50,20 @@ void FingerDistance::onFramebufferInitialized()
 	renderingGroup_->addChild(renderingTransformTextDistance_);
 }
 
+void FingerDistance::onFramebufferReleasing()
+{
+	renderingTransformFingerTipLeft_.release();
+	renderingTransformFingerTipRight_.release();
+
+	renderingTransformCylinder_.release();
+	renderingTransformTextDistance_.release();
+	renderingTextDistance_.release();
+
+	renderingGroup_.release();
+
+	VRNativeApplicationAdvanced::onFramebufferReleasing();
+}
+
 void FingerDistance::onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime)
 {
 	VRNativeApplicationAdvanced::onPreRender(xrPredictedDisplayTime, predictedDisplayTime);
