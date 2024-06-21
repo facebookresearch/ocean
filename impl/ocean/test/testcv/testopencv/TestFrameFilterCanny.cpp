@@ -15,8 +15,6 @@
 #include "ocean/cv/FrameFilterCanny.h"
 #include "ocean/cv/OpenCVUtilities.h"
 
-#include "ocean/test/testcv/TestFrameFilterLaplace.h"
-
 #include <opencv2/imgproc.hpp>
 
 namespace Ocean
@@ -80,7 +78,6 @@ void TestFrameFilterCanny::filterCannySobel(const unsigned int width, const unsi
 
 	HighPerformanceStatistic performanceOcean;
 	HighPerformanceStatistic performanceOpenCV;
-	HighPerformanceStatistic performanceAML;
 
 	unsigned int iterations = 0u;
 	const Timestamp startTimestamp(true);

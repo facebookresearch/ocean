@@ -11,7 +11,6 @@
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/String.h"
 #include "ocean/base/Timestamp.h"
-#include "ocean/base/WorkerPool.h"
 
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameFilterGaussian.h"
@@ -66,6 +65,8 @@ bool TestHistogram::testCLAHE(const double testDuration)
 	Log::info() << "CLAHE test:";
 	Log::info() << " ";
 
+	RandomGenerator randomGenerator;
+
 	const FrameType::DataType dataType = FrameType::DT_UNSIGNED_INTEGER_8;
 	const unsigned int channels = 1u;
 
@@ -114,10 +115,10 @@ bool TestHistogram::testCLAHE(const double testDuration)
 		{
 			// Generate random test images, value range: [0, 255] as in the original
 			Frame sourceImage = Frame(FrameType(performanceSourceImageWidth, performanceSourceImageHeight, FrameType::genericPixelFormat(dataType, channels), FrameType::ORIGIN_UPPER_LEFT));
-			CV::CVUtilities::randomizeFrame(sourceImage);
+			CV::CVUtilities::randomizeFrame(sourceImage, /* skipPaddingArea */ true, &randomGenerator);
 
 			Frame oceanResult(sourceImage.frameType());
-			CV::CVUtilities::randomizeFrame(oceanResult);
+			CV::CVUtilities::randomizeFrame(oceanResult, /* skipPaddingArea */ true, &randomGenerator);
 
 			if (totalIteration % minIterations == 0u)
 			{
@@ -194,14 +195,14 @@ bool TestHistogram::testCLAHE(const double testDuration)
 
 			// Generate random test images
 			Frame randomImage = Frame(FrameType(sourceImageWidth, sourceImageHeight, FrameType::genericPixelFormat(dataType, channels), FrameType::ORIGIN_UPPER_LEFT));
-			CV::CVUtilities::randomizeFrame(randomImage);
+			CV::CVUtilities::randomizeFrame(randomImage, /* skipPaddingArea */ true, &randomGenerator);
 
 			Frame sourceImage(randomImage.frameType());
 			ocean_assert(sourceImage.isContinuous() && randomImage.isContinuous());
 			CV::FrameFilterGaussian::filter<uint8_t, uint32_t>(randomImage.constdata<uint8_t>(), sourceImage.data<uint8_t>(), randomImage.width(), randomImage.height(), 1u, randomImage.paddingElements(), sourceImage.paddingElements(), 3u, 3u, -1.0f, &worker);
 
 			Frame oceanResult(sourceImage.frameType());
-			CV::CVUtilities::randomizeFrame(oceanResult);
+			CV::CVUtilities::randomizeFrame(oceanResult, /* skipPaddingArea */ true, &randomGenerator);
 
 			CV::ContrastLimitedAdaptiveHistogram::equalization8BitPerChannel(sourceImage.constdata<uint8_t>(), sourceImage.width(), sourceImage.height(), oceanResult.data<uint8_t>(), clipLimit, horizontalTiles, verticalTiles, sourceImage.paddingElements(), oceanResult.paddingElements(), nullptr /* worker */);
 
@@ -221,8 +222,8 @@ bool TestHistogram::testCLAHE(const double testDuration)
 			for (unsigned int i = 0u; i < count; ++i)
 			{
 				const double valueOcean = (double)oceanResult.constdata<unsigned char>()[i];
-				const double valueAML = (double)((unsigned char*)cvOpenCVResult.data)[i];
-				const double error = std::abs(valueOcean - valueAML);
+				const double valueOpenCV = (double)((unsigned char*)cvOpenCVResult.data)[i];
+				const double error = std::abs(valueOcean - valueOpenCV);
 
 				maxMeasuredError = std::max(error, maxMeasuredError);
 
