@@ -53,12 +53,6 @@ class OCEAN_TEST_CV_OPENCV_EXPORT TestFrameInterpolatorNearestPixel
 		static void testAffine(const double testDuration);
 
 		/**
-		 * Benchmarks the interpolation function based on affine transformations against the one of the AML Facetracker.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 */
-		static void testAffineAMLFacetracker(const double testDuration);
-
-		/**
 		 * Benchmarks the homography-based interpolation for a specific frame type.
 		 * @param width The width of the frame in pixel, with range [1, infinity)
 		 * @param height The height of the frame in pixel, with range [1, infinity)
