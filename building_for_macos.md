@@ -13,10 +13,10 @@ This document describes the process to build Ocean for macOS. It covers:
 
 ## 2 Building the third-party libraries
 
-The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_linuxunix.sh`](build/cmake/build_thirdparty_linuxunix.sh). By default, this will build all third-party libraries in both debug and release configurations. Each of these will be built with static as well as dynamic linking. To build a specific configuration, use the parameters `--config BUILD_TYPE` and `--link LINKING_TYPE`. For example to build only the shared debug configurations, run:
+The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_linuxunix.sh`](build/cmake/build_thirdparty_linuxunix.sh). By default, this will build all third-party libraries in both debug and release configurations. Each of these will be built with static as well as dynamic linking. To build a specific configuration, use the parameters `--config BUILD_TYPE` and `--link LINKING_TYPE`. For example to build only the static debug configurations, run:
 
 ```
-./build/cmake/build_thirdparty_linuxunix.sh --config debug --link shared
+./build/cmake/build_thirdparty_linuxunix.sh --config debug --link static
 ```
 
 The default installation location will be shown in the logs of the build script and similar to `/tmp/ocean/install/macos`. A custom location for the installation can specified as follows:
@@ -41,3 +41,11 @@ Otherwise the code will be built in `/tmp/ocean/build/macos`.
 Within the installation and build directories, there will be one subdirectory per build config.
 
 ## 3 Building Ocean
+
+The provided build script ['build/cmake/build_ocean_linuxunix.sh'](build/cmake/build_ocean_linuxunix.sh) will build all Ocean libraries and apps, building and installing in the same directories as used by the third-party build. It supports the same command-line configuration options as the third-party library build script.
+
+For example to build only the static debug configurations, run:
+
+```
+./build/cmake/build_ocean_linuxunix.sh --config debug --link static
+```
