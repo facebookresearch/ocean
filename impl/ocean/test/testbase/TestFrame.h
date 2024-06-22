@@ -224,6 +224,13 @@ class OCEAN_TEST_BASE_EXPORT TestFrame
 		static bool testHaveIntersectingMemory(const double testDuration);
 
 		/**
+		 * Tests the update memory functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testUpdateMemory(const double testDuration);
+
+		/**
 		 * Tests the formatIsPacked() function.
 		 * @return True, if succeeded
 		 */

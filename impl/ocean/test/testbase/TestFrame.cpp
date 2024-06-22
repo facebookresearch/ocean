@@ -195,6 +195,18 @@ bool TestFrame::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testUpdateMemory(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testFormatIsPacked() && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testTranslateDataType() && allSucceeded;
 
 	Log::info() << " ";
@@ -354,6 +366,11 @@ TEST(TestFrame, HaveIntersectingMemory)
 	EXPECT_TRUE(TestFrame::testHaveIntersectingMemory(GTEST_TEST_DURATION));
 }
 
+TEST(TestFrame, FormatIsPacked)
+{
+	EXPECT_TRUE(TestFrame::testFormatIsPacked());
+}
+
 TEST(TestFrame, TranslatePixelFormat)
 {
 	EXPECT_TRUE(TestFrame::testTranslatePixelFormat());
@@ -362,6 +379,11 @@ TEST(TestFrame, TranslatePixelFormat)
 TEST(TestFrame, TranslateDataType)
 {
 	EXPECT_TRUE(TestFrame::testTranslateDataType());
+}
+
+TEST(TestFrame, UpdateMemory)
+{
+	EXPECT_TRUE(TestFrame::testUpdateMemory(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -5067,6 +5089,478 @@ bool TestFrame::testHaveIntersectingMemory(const double testDuration)
 	}
 
 	return allSucceeded;
+}
+
+bool TestFrame::testUpdateMemory(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Update memory:";
+
+	const FrameType::PixelFormats genericPixelFormats =
+	{
+		FrameType::genericPixelFormat<uint8_t, 1u>(),
+		FrameType::genericPixelFormat<uint8_t, 3u>(),
+		FrameType::genericPixelFormat<int16_t, 2u>(),
+		FrameType::genericPixelFormat<float, 4u>(),
+		FrameType::genericPixelFormat<uint32_t, 3u, 2u>(),
+	};
+
+	const FrameType::PixelFormats pixelFormats = definedPixelFormats(genericPixelFormats);
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// writable frame
+
+			Frame sourceFrame(randomizedFrameType(pixelFormats, &randomGenerator));
+
+			const unsigned int numberPlanes = sourceFrame.numberPlanes();
+
+			Frame notOwnerFrame(sourceFrame, Frame::ACM_USE_KEEP_LAYOUT);
+
+			for (unsigned int planeIndex = 0u; planeIndex < numberPlanes; ++planeIndex)
+			{
+				if (notOwnerFrame.data<void>(planeIndex) != sourceFrame.data<void>(planeIndex))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (notOwnerFrame.constdata<void>(planeIndex) != sourceFrame.constdata<void>(planeIndex))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (notOwnerFrame.isPlaneOwner(planeIndex))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+
+			const unsigned int updatedPlaneIndex = RandomI::random(randomGenerator, numberPlanes - 1u);
+
+			Memory newExternalMemory(1024);
+
+			if (sourceFrame.bytesPerDataType() == 2u)
+			{
+				// we add a check for an explicit data type (just one out of all candidates)
+
+				if (notOwnerFrame.updateMemory(newExternalMemory.data<uint16_t>(), updatedPlaneIndex))
+				{
+					for (unsigned int planeIndex = 0u; planeIndex < numberPlanes; ++planeIndex)
+					{
+						if (planeIndex == updatedPlaneIndex)
+						{
+							if (notOwnerFrame.data<uint16_t>(planeIndex) != newExternalMemory.data())
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+
+							if (notOwnerFrame.constdata<uint16_t>(planeIndex) != newExternalMemory.data())
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+						}
+						else
+						{
+							if (notOwnerFrame.data<uint16_t>(planeIndex) != sourceFrame.data<uint16_t>(planeIndex))
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+
+							if (notOwnerFrame.constdata<uint16_t>(planeIndex) != sourceFrame.constdata<uint16_t>(planeIndex))
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+						}
+
+						if (notOwnerFrame.isPlaneOwner(planeIndex))
+						{
+							OCEAN_SET_FAILED(validation);
+						}
+					}
+				}
+				else
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+			else
+			{
+				if (notOwnerFrame.updateMemory(newExternalMemory.data(), updatedPlaneIndex))
+				{
+					for (unsigned int planeIndex = 0u; planeIndex < numberPlanes; ++planeIndex)
+					{
+						if (planeIndex == updatedPlaneIndex)
+						{
+							if (notOwnerFrame.data<void>(planeIndex) != newExternalMemory.data())
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+
+							if (notOwnerFrame.constdata<void>(planeIndex) != newExternalMemory.data())
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+						}
+						else
+						{
+							if (notOwnerFrame.data<void>(planeIndex) != sourceFrame.data<void>(planeIndex))
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+
+							if (notOwnerFrame.constdata<void>(planeIndex) != sourceFrame.constdata<void>(planeIndex))
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+						}
+
+						if (notOwnerFrame.isPlaneOwner(planeIndex))
+						{
+							OCEAN_SET_FAILED(validation);
+						}
+					}
+				}
+				else
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+		}
+
+		{
+			// read-only frame
+
+			const Frame sourceFrame(randomizedFrameType(pixelFormats, &randomGenerator));
+
+			const unsigned int numberPlanes = sourceFrame.numberPlanes();
+
+			Frame notOwnerFrame(sourceFrame, Frame::ACM_USE_KEEP_LAYOUT);
+
+			for (unsigned int planeIndex = 0u; planeIndex < numberPlanes; ++planeIndex)
+			{
+				if (notOwnerFrame.constdata<void>(planeIndex) != sourceFrame.constdata<void>(planeIndex))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (notOwnerFrame.isPlaneOwner(planeIndex))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+
+			const unsigned int updatedPlaneIndex = RandomI::random(randomGenerator, numberPlanes - 1u);
+
+			Memory newExternalMemory(1024);
+
+			if (sourceFrame.bytesPerDataType() == 2u)
+			{
+				// we add a check for an explicit data type (just one out of all candidates)
+
+				if (notOwnerFrame.updateMemory(newExternalMemory.constdata<uint16_t>(), updatedPlaneIndex))
+				{
+					for (unsigned int planeIndex = 0u; planeIndex < numberPlanes; ++planeIndex)
+					{
+						if (planeIndex == updatedPlaneIndex)
+						{
+							if (notOwnerFrame.data<uint16_t>(planeIndex) != nullptr)
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+
+							if (notOwnerFrame.constdata<uint16_t>(planeIndex) != newExternalMemory.data<const uint16_t>())
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+						}
+						else
+						{
+							if (notOwnerFrame.constdata<uint16_t>(planeIndex) != sourceFrame.constdata<uint16_t>(planeIndex))
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+						}
+
+						if (notOwnerFrame.isPlaneOwner(planeIndex))
+						{
+							OCEAN_SET_FAILED(validation);
+						}
+					}
+				}
+				else
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+			else
+			{
+				if (notOwnerFrame.updateMemory(newExternalMemory.constdata(), updatedPlaneIndex))
+				{
+					for (unsigned int planeIndex = 0u; planeIndex < numberPlanes; ++planeIndex)
+					{
+						if (planeIndex == updatedPlaneIndex)
+						{
+							if (notOwnerFrame.data<void>(planeIndex) != nullptr)
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+
+							if (notOwnerFrame.constdata<void>(planeIndex) != newExternalMemory.data())
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+						}
+						else
+						{
+							if (notOwnerFrame.constdata<void>(planeIndex) != sourceFrame.constdata<void>(planeIndex))
+							{
+								OCEAN_SET_FAILED(validation);
+							}
+						}
+
+						if (notOwnerFrame.isPlaneOwner(planeIndex))
+						{
+							OCEAN_SET_FAILED(validation);
+						}
+					}
+				}
+				else
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+		}
+
+		{
+			// updating several planes at the same time, writable
+
+			Frame sourceFrame(randomizedFrameType(pixelFormats, &randomGenerator));
+
+			const unsigned int numberPlanes = sourceFrame.numberPlanes();
+
+			Frame notOwnerFrame(sourceFrame, Frame::ACM_USE_KEEP_LAYOUT);
+
+			std::vector<Memory> memories;
+			memories.reserve(numberPlanes);
+
+			for (unsigned int n = 0u; n < numberPlanes; ++n)
+			{
+				memories.emplace_back(1024);
+			}
+
+			switch (numberPlanes)
+			{
+				case 1u:
+				{
+					if (!notOwnerFrame.updateMemory({memories[0].data()}))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+
+					break;
+				}
+
+				case 2u:
+				{
+					if (!notOwnerFrame.updateMemory({memories[0].data(), memories[1].data()}))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+
+					break;
+				}
+
+				case 3u:
+				{
+					if (!notOwnerFrame.updateMemory({memories[0].data(), memories[1].data(), memories[2].data()}))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+
+					break;
+				}
+
+				case 4u:
+				{
+					if (!notOwnerFrame.updateMemory({memories[0].data(), memories[1].data(), memories[2].data(), memories[3].data()}))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+
+					break;
+				}
+			}
+
+			for (unsigned int planeIndex = 0u; planeIndex < numberPlanes; ++planeIndex)
+			{
+				if (notOwnerFrame.data<void>(planeIndex) != memories[planeIndex].data())
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (notOwnerFrame.constdata<void>(planeIndex) != memories[planeIndex].constdata())
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+		}
+
+		{
+			// updating several planes at the same time, read-only
+
+			const Frame sourceFrame(randomizedFrameType(pixelFormats, &randomGenerator));
+
+			const unsigned int numberPlanes = sourceFrame.numberPlanes();
+
+			Frame notOwnerFrame(sourceFrame, Frame::ACM_USE_KEEP_LAYOUT);
+
+			std::vector<Memory> memories;
+			memories.reserve(numberPlanes);
+
+			for (unsigned int n = 0u; n < numberPlanes; ++n)
+			{
+				memories.emplace_back(1024);
+			}
+
+			switch (numberPlanes)
+			{
+				case 1u:
+				{
+					if (!notOwnerFrame.updateMemory({memories[0].constdata()}))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+
+					break;
+				}
+
+				case 2u:
+				{
+					if (!notOwnerFrame.updateMemory({memories[0].constdata(), memories[1].constdata()}))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+
+					break;
+				}
+
+				case 3u:
+				{
+					if (!notOwnerFrame.updateMemory({memories[0].constdata(), memories[1].constdata(), memories[2].constdata()}))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+
+					break;
+				}
+
+				case 4u:
+				{
+					if (!notOwnerFrame.updateMemory({memories[0].constdata(), memories[1].constdata(), memories[2].constdata(), memories[3].constdata()}))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+
+					break;
+				}
+
+				default:
+				{
+					ocean_assert(false && "This should never happen!");
+					OCEAN_SET_FAILED(validation);
+
+					break;
+				}
+			}
+
+			for (unsigned int planeIndex = 0u; planeIndex < numberPlanes; ++planeIndex)
+			{
+				if (notOwnerFrame.data<void>(planeIndex) != nullptr)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (notOwnerFrame.constdata<void>(planeIndex) != memories[planeIndex].constdata())
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+		}
+
+#ifndef OCEAN_DEBUG
+
+		// a couple of test in release builds, otherwise asserts would fire inside Frame
+
+		{
+			Frame ownerFrame(randomizedFrameType(pixelFormats, &randomGenerator));
+
+			const unsigned int numberPlanes = ownerFrame.numberPlanes();
+
+			const unsigned int planeIndex = RandomI::random(randomGenerator, numberPlanes - 1u);
+
+			Memory newExternalMemory(1024);
+
+			void* const originalData = ownerFrame.data<void>(planeIndex);
+
+			if (ownerFrame.updateMemory<void>(newExternalMemory.data(), planeIndex))
+			{
+				// a frame owning the memory cannot be updated
+
+				OCEAN_SET_FAILED(validation);
+			}
+
+			if (ownerFrame.data<void>(planeIndex) != originalData)
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+
+		{
+			Frame ownerFrame(randomizedFrameType(pixelFormats, &randomGenerator));
+
+			const unsigned int numberPlanes = ownerFrame.numberPlanes();
+
+			const unsigned int planeIndex = RandomI::random(randomGenerator, numberPlanes, 1000u);
+
+			Memory newExternalMemory(1024);
+
+			if (ownerFrame.updateMemory<void>(newExternalMemory.data(), planeIndex))
+			{
+				// the plane does not exist
+
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+
+		{
+			Frame ownerFrame(randomizedFrameType(pixelFormats, &randomGenerator));
+
+			const unsigned int numberPlanes = ownerFrame.numberPlanes();
+
+			const unsigned int planeIndex = RandomI::random(randomGenerator, numberPlanes - 1u);
+
+			if (ownerFrame.updateMemory<void>(nullptr, planeIndex))
+			{
+				// the memory must always be valid
+
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+#endif
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestFrame::testFormatIsPacked()

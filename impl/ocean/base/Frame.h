@@ -2447,6 +2447,48 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		bool set(const FrameType& frameType, const bool forceOwner, const bool forceWritable = false, const Indices32& planePaddingElements = Indices32(), const Timestamp& timestamp = Timestamp(false), bool* reallocated = nullptr);
 
 		/**
+		 * Updates the memory pointer for a specific plane of the frame to a new read-only memory location.
+ 		 * This function should only be used if the specified plane does not own its memory to ensure that the frame's ownership behavior remains consistent.
+		 * @param data The new read-only memory pointer to be set, must be valid
+		 * @param planeIndex The index of the frame's plane for which the memory will be updated, with range [0, numberPlanes())
+		 * @return True, if succeeded; False, if e.g., the plane to update owned the memory
+		 * @see isPlaneOwner().
+		 */
+		template <typename T>
+		bool updateMemory(const T* data, const unsigned int planeIndex = 0u);
+
+		/**
+		 * Updates the memory pointer for a specific plane of the frame to a new writable memory location.
+		 * This function should only be used if the specified plane does not own its memory to ensure that the frame's ownership behavior remains consistent.
+		 * @param data The new writable memory pointer to be set, must be valid
+		 * @param planeIndex The index of the frame's plane for which the memory will be updated, with range [0, numberPlanes())
+		 * @return True, if succeeded; False, if e.g., the plane to update owned the memory
+		 * @see isPlaneOwner().
+		 */
+		template <typename T>
+		bool updateMemory(T* data, const unsigned int planeIndex = 0u);
+
+		/**
+		 * Updates the memory pointers for all or some of the planes of the frame to new read-only memory locations.
+ 		 * This function should be used only when the planes do not own their memory, to maintain consistent ownership behavior across the frame.
+		 * @param planeDatas The new read-only memory pointers to be set, the number of pointers provided should be at least one and at most equal to numberPlanes().
+		 * @return True, if succeeded; False, if e.g., a plane to update owned the memory
+		 * @see isPlaneOwner().
+		 */
+		template <typename T>
+		bool updateMemory(const std::initializer_list<const T*>& planeDatas);
+
+		/**
+		 * Updates the memory pointers for all or some of the planes of the frame to new writable memory locations.
+ 		 * This function should be used only when the planes do not own their memory, to maintain consistent ownership behavior across the frame.
+		 * @param planeDatas The new writable memory pointers to be set, the number of pointers provided should be at least one and at most equal to numberPlanes().
+		 * @return True, if succeeded; False, if e.g., the plane to update owned the memory
+		 * @see isPlaneOwner().
+		 */
+		template <typename T>
+		bool updateMemory(const std::initializer_list<T*>& planeDatas);
+
+		/**
 		 * Makes the memory of this frame continuous.
 		 * If the memory is already continuous, nothing happens.<br>
 		 * If the memory is not continuous, a new continuous memory block will be allocated and the memory is copied into the new memory block (for each plane individually), the frame will be owner of the memory.
@@ -3733,6 +3775,104 @@ inline const FrameType& Frame::frameType() const
 inline const Frame::Planes& Frame::planes() const
 {
 	return planes_;
+}
+
+template <typename T>
+bool Frame::updateMemory(const T* data, const unsigned int planeIndex)
+{
+	ocean_assert(data != nullptr);
+	if (data != nullptr)
+	{
+		ocean_assert(planeIndex < planes_.size());
+		if (planeIndex < planes_.size())
+		{
+			Plane& plane = planes_[planeIndex];
+
+			ocean_assert((std::is_same<T, void>::value) || sizeOfType<T>() == plane.elementTypeSize());
+
+			ocean_assert(plane.allocatedData_ == nullptr);
+			if (plane.allocatedData_ == nullptr)
+			{
+				plane.constData_ = data;
+				plane.data_ = nullptr;
+
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+template <typename T>
+bool Frame::updateMemory(T* data, const unsigned int planeIndex)
+{
+	ocean_assert(data != nullptr);
+	if (data != nullptr)
+	{
+		ocean_assert(planeIndex < planes_.size());
+		if (planeIndex < planes_.size())
+		{
+			Plane& plane = planes_[planeIndex];
+
+			ocean_assert((std::is_same<T, void>::value) || sizeOfType<T>() == plane.elementTypeSize());
+
+			ocean_assert(plane.allocatedData_ == nullptr);
+			if (plane.allocatedData_ == nullptr)
+			{
+				plane.data_ = data;
+				plane.constData_ = (const T*)(data);
+
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+template <typename T>
+bool Frame::updateMemory(const std::initializer_list<const T*>& planeDatas)
+{
+	ocean_assert(planeDatas.size() != 0);
+	ocean_assert(planeDatas.size() <= planes_.size());
+
+	if (planeDatas.size() == 0 || planeDatas.size() > planes_.size())
+	{
+		return false;
+	}
+
+	for (unsigned int planeIndex = 0u; planeIndex < planeDatas.size(); ++planeIndex)
+	{
+		if (!updateMemory(planeDatas.begin()[planeIndex], planeIndex))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+template <typename T>
+bool Frame::updateMemory(const std::initializer_list<T*>& planeDatas)
+{
+	ocean_assert(planeDatas.size() != 0);
+	ocean_assert(planeDatas.size() <= planes_.size());
+
+	if (planeDatas.size() == 0 || planeDatas.size() > planes_.size())
+	{
+		return false;
+	}
+
+	for (unsigned int planeIndex = 0u; planeIndex < planeDatas.size(); ++planeIndex)
+	{
+		if (!updateMemory(planeDatas.begin()[planeIndex], planeIndex))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 template <typename T, const unsigned int tPlaneChannels>
