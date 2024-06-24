@@ -26,7 +26,7 @@ OTP_VALID_ANDROID_ABIS="arm64-v8a,armeabi-v7a,x86_64,x86"
 OTP_ANDROID_ABIS="arm64-v8a"
 
 OTP_VALID_BUILD_CONFIGS="debug,release"
-OTP_BUILD_CONFIG="debug,release"
+OTP_BUILD_CONFIGS="debug,release"
 
 OTP_VALID_LINKING_TYPES="static,shared"
 OTP_LINKING_TYPES="static"
@@ -44,16 +44,18 @@ display_help()
     echo "Script to build the third-party libraries required by Ocean (${OCEAN_PLATFORM}):"
     echo ""
     echo "  $(basename "$0") [-h|--help] [-i|--install INSTALL_DIR] [-b|--build BUILD_DIR] [-c|--config BUILD_CONFIG]"
-    echo "                   [-l|--link LINKING_TYPE] [-a | --archive ARCHIVE]"
+    echo "                   [-l|--link LINKING_TYPE] [-a | --archive ARCHIVE] [-p|--abi ABI_LIST]"
+    echo "                   [-s|--sdk ANDROID_SDK]"
     echo ""
     echo "Arguments:"
     echo ""
-    echo "  --android_abi ABI_LIST : A list of Android ABIs as build target platforms; valid values are:"
+    echo "  -p | --abi ABI_LIST : A list of Android ABIs as build target platforms; valid values are:"
     for abi in $(echo "${OTP_VALID_ANDROID_ABIS}" | tr ',' '\n'); do
         echo "                  ${abi}"
     done
+    echo "                The default is: ${OTP_ANDROID_ABIS}"
     echo ""
-    echo "  --android_sdk ANDROID_SDK : name of Android SDK version for builds. Default: ${OTP_ANDROID_SDK}"
+    echo "  -s | --sdk ANDROID_SDK : name of Android SDK version for builds. Default: ${OTP_ANDROID_SDK}"
     echo ""
     echo "  -i | -install INSTALL_DIR : The optional location where the third-party libraries of Ocean will"
     echo "                be installed. Otherwise builds will be installed to: ${OTP_INSTALL_DIR}"
@@ -66,7 +68,7 @@ display_help()
         echo "                  ${type}"
     done
     echo "                Multiple values must be separated by commas. Default value if nothing is"
-    echo "                specified: \"${OTP_BUILD_CONFIG}\""
+    echo "                specified: \"${OTP_BUILD_CONFIGS}\""
     echo ""
     echo "  -l | -link LINKING_TYPE : The optional linking type for which will be built; valid values are:"
     for type in $(echo "${OTP_VALID_LINKING_TYPES}" | tr ',' '\n'); do
@@ -157,12 +159,12 @@ while [[ $# -gt 0 ]]; do
         display_help
         exit 0
         ;;
-        --android_abi)
+        -p|--abi)
         OTP_ANDROID_ABIS="$2"
         shift
         shift
         ;;
-        --android_sdk)
+        -s|--sdk)
         OTP_ANDROID_SDK="$2"
         shift
         shift
@@ -178,7 +180,7 @@ while [[ $# -gt 0 ]]; do
         shift # past value
         ;;
         -c|--config)
-        OTP_BUILD_CONFIG="$2"
+        OTP_BUILD_CONFIGS="$2"
         shift # past argument
         shift # past value
         ;;
@@ -202,16 +204,15 @@ done
 echo "Building the third-party libraries required for Ocean (${OCEAN_PLATFORM}) ...:"
 echo ""
 
-if [ "${OTP_BUILD_CONFIG}" == "" ]; then
+if [ "${OTP_BUILD_CONFIGS}" == "" ]; then
     echo "ERROR: At least one build type has to be specified." >&2
     exit 1
 fi
 
-# Remove duplicate values
-OTP_BUILD_CONFIG=$(echo "${OTP_BUILD_CONFIG}" | tr ',' '\n' | sort -u)
+# Build configs: remove duplicate values and only allow valid values
+OTP_BUILD_CONFIGS=$(echo "${OTP_BUILD_CONFIGS}" | tr ',' '\n' | sort -u)
 
-# Only allow valid values
-for type in ${OTP_BUILD_CONFIG}; do
+for type in ${OTP_BUILD_CONFIGS}; do
     if ! echo "${OTP_VALID_BUILD_CONFIGS}" | grep -w "$type" > /dev/null; then
         echo "Error: Unknown build type \"${type}\"" >&2
         exit 1
@@ -223,10 +224,9 @@ if [ "${OTP_ANDROID_ABIS}" == "" ]; then
     exit 1
 fi
 
-# Remove duplicate values
+# Android ABIs: remove duplicate values and only allow valid values
 OTP_ANDROID_ABIS=$(echo "${OTP_ANDROID_ABIS}" | tr ',' '\n' | sort -u)
 
-# Only allow valid values
 for type in ${OTP_ANDROID_ABIS}; do
     if ! echo "${OTP_VALID_ANDROID_ABIS}" | grep -w "$type" > /dev/null; then
         echo "Error: Unknown Android ABI \"${type}\"" >&2
@@ -239,10 +239,9 @@ if [ "${OTP_LINKING_TYPES}" == "" ]; then
     exit 1
 fi
 
-# Remove duplicate values
+# Linking types: remove duplicate values and only allow valid values
 OTP_LINKING_TYPES=$(echo "$OTP_LINKING_TYPES" | tr ',' '\n' | sort -u)
 
-# Only allow valid values
 for type in ${OTP_LINKING_TYPES}; do
     if ! echo "${OTP_VALID_LINKING_TYPES}" | grep -w "$type" > /dev/null; then
         echo "Error: Unknown build type \"${type}\"" >&2
@@ -250,9 +249,9 @@ for type in ${OTP_LINKING_TYPES}; do
     fi
 done
 
-echo "The third-party libraries will be build for the following combinations:"
+echo "The third-party libraries will be built for the following combinations:"
 for abi in ${OTP_ANDROID_ABIS}; do
-    for build_config in ${OTP_BUILD_CONFIG}; do
+    for build_config in ${OTP_BUILD_CONFIGS}; do
         for link_type in ${OTP_LINKING_TYPES}; do
             echo " * ${abi} + ${build_config} + ${link_type}"
         done
@@ -269,7 +268,7 @@ echo ""
 
 # Build
 for abi in ${OTP_ANDROID_ABIS}; do
-    for build_config in ${OTP_BUILD_CONFIG}; do
+    for build_config in ${OTP_BUILD_CONFIGS}; do
         for link_type in ${OTP_LINKING_TYPES}; do
             run_build "${build_config}" "${link_type}" "${abi}" "${OTP_ANDROID_SDK}"
         done
