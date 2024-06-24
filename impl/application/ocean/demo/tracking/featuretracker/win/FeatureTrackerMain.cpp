@@ -9,12 +9,15 @@
 #include "FeatureTrackerMainWindow.h"
 
 #include "ocean/base/Build.h"
+#include "ocean/base/Messenger.h"
 #include "ocean/base/RandomI.h"
 
 #include "ocean/platform/Utilities.h"
 
 int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpCmdLine, int /*nCmdShow*/)
 {
+	Messenger::get().setOutputType(Messenger::OUTPUT_DEBUG_WINDOW);
+
 	RandomI::initialize();
 
 	try

@@ -15,11 +15,8 @@
 
 #include "ocean/geometry/Geometry.h"
 
-#include "ocean/math/PinholeCamera.h"
+#include "ocean/math/AnyCamera.h"
 #include "ocean/math/Quaternion.h"
-
-#include <set>
-#include <vector>
 
 namespace Ocean
 {

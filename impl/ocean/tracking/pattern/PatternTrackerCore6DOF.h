@@ -24,13 +24,12 @@
 #include "ocean/io/Bitstream.h"
 
 #include "ocean/math/HomogenousMatrix4.h"
-#include "ocean/math/PinholeCamera.h"
+#include "ocean/math/AnyCamera.h"
 
 #include "ocean/tracking/VisualTracker.h"
 
 #include "ocean/tracking/blob/Blob.h"
 #include "ocean/tracking/blob/FeatureMap.h"
-#include "metaonly/ocean/tracking/uvtexturemapping/UVTextureMapping.h"
 
 namespace Ocean
 {
@@ -56,39 +55,27 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		/**
 		 * Set of configurable parameters for the tracker.
 		 */
-		class Options
+		class OCEAN_TRACKING_PATTERN_EXPORT Options
 		{
 			public:
 
 				/**
 				 * Creates a new options object.
 				 */
-				inline Options() noexcept;
+				Options();
 
 			public:
 
-				/// The maximal number of patterns that can be visible concurrently, with range [1, infinity).
-				/// If equal to zero, then no limit will be used.
+				/// The maximal number of patterns that can be visible concurrently, with range [1, infinity). 0 to allow as many as possible
 				unsigned int maxConcurrentlyVisiblePattern = 1u;
 
-				/// Maximum number of features to extract from a given input frame during recognition.
-				/// If equal to zero, then no limit will be used.
-				unsigned int maxNumberFeatures = 0u;
-
-				/// The maximal time used for pattern recognition for each frame in seconds, with range (0, infinity).
-				/// If the provided value is <= 0 when the tracker is created, then a default value will be selected.
+				/// The maximal time used for pattern recognition for each frame in seconds, with range (0, infinity). 0 to use a default value
 				double maxRecognitionTime = 0.0;
 
-				/// Optional random seed to use internally for, e.g., RANSAC.
-				/// If unset when the tracker is created, a time-based seed is used.
-				const unsigned int* randomSeed = nullptr;
-
 				/// Time in seconds to wait between recognition attempts when at least one pattern is currently being tracked.
-				/// If the value is <= 0, a default value will be chosen.
 				double recognitionCadenceWithTrackedPatterns = 0.5;
 
 				/// Time in seconds to wait between recognition attempts when no patterns are currently being tracked.
-				/// If the provided value is < 0, it is ignored and set to zero.
 				double recognitionCadenceWithoutTrackedPatterns = 0.0;
 
 				/// The number of iterations to run RANSAC when attempting to verify a newly recognized target.
@@ -147,30 +134,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 				 * @param worker Optional worker object to distribute the computation
 				 */
 				Pattern(const uint8_t* yFrame, const unsigned int width, unsigned int height, const unsigned int yFramePaddingElements, CV::Detector::Blob::BlobFeatures&& representativeFeatures, const Vector2& dimension, Worker* worker = nullptr);
-
-				/**
-				 * Creates a new cylinder-type tracking pattern (an image of a flattened cylinder).
-				 * For more information, see FeatureMap::CylinderUVTextureMapping.
-				 * @param yFrame The 8 bit grayscale frame (with Y8 pixel format, and pixel origin in the upper left corner) specifying the tracking pattern, must be valid
-				 * @param width The width of the given grayscale frame in pixel, with range [1, infinity)
-				 * @param height The height of the given grayscale frame in pixel, with range [1, infinity)
-				 * @param yFramePaddingElements The number of padding elements at the end of each row, in elements, with range [0, infinity)
-				 * @param cylinderUVTextureMapping The mapping from the provided image into 3D coordinates
-				 * @param worker Optional worker object to distribute the computation
-				 */
-				Pattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const UVTextureMapping::CylinderUVTextureMapping& cylinderUVTextureMapping, Worker* worker = nullptr);
-
-				/**
-				 * Creates a new cone-type tracking pattern (an image of a flattened cone).
-				 * For more information, see FeatureMap::ConeUVTextureMapping.
-				 * @param yFrame The 8 bit grayscale frame (with Y8 pixel format, and pixel origin in the upper left corner) specifying the tracking pattern, must be valid
-				 * @param width The width of the given grayscale frame in pixel, with range [1, infinity)
-				 * @param height The height of the given grayscale frame in pixel, with range [1, infinity)
-				 * @param yFramePaddingElements The number of padding elements at the end of each row, in elements, with range [0, infinity)
-				 * @param coneUVTextureMapping The mapping from the provided image into 3D coordinates
-				 * @param worker Optional worker object to distribute the computation
-				 */
-				Pattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const UVTextureMapping::ConeUVTextureMapping& coneUVTextureMapping, Worker* worker = nullptr);
 
 				/**
 				 * Returns the Blob feature map of this pattern.
@@ -344,18 +307,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 				inline bool isPlanar() const;
 
 				/**
-				 * Returns whether the underlying shape for this pattern is a cylinder.
-				 * @return True, if so
-				 */
-				inline bool isCylindrical() const;
-
-				/**
-				 * Returns whether the underlying shape for this pattern is a cone.
-				 * @return True, if so
-				 */
-				inline bool isConical() const;
-
-				/**
 				 * Resets the internal recognition states of this pattern while the actual feature map is untouched.
 				 */
 				void reset();
@@ -397,7 +348,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 
 				/// The timestamp of the rough camera pose.
 				Timestamp patternPoseGuessTimestamp;
-
 		};
 
 		/**
@@ -445,32 +395,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		 * @see removePattern(), numberPattern(), setMaxConcurrentlyVisiblePattern().
 		 */
 		unsigned int addPattern(const std::string& filename, const Vector2& dimension, Worker* worker = nullptr);
-
-		/**
-		 * Adds a new cylinder-type tracking pattern (an image of a flattened cylinder) to the tracker.
-		 * For more information, see FeatureMap::CylinderUVTextureMapping.
-		 * @param yFrame The 8 bit grayscale frame (with Y8 pixel format, and pixel origin in the upper left corner) specifying the tracking pattern, must be valid
-		 * @param width The width of the given grayscale frame in pixel, with range [1, infinity)
-		 * @param height The height of the given grayscale frame in pixel, with range [1, infinity)
-		 * @param yFramePaddingElements The number of padding elements at the end of each row, in elements, with range [0, infinity)
-		 * @param cylinderUVTextureMapping The mapping from the provided image into 3D coordinates
-		 * @param worker Optional worker object to distribute the computation
-		 * @return The id of the tracking pattern, -1 if the pattern could not be added
-		 */
-		unsigned int addCylinderPattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const UVTextureMapping::CylinderUVTextureMapping& cylinderUVTextureMapping, Worker* worker = nullptr);
-
-		/**
-		 * Adds a new cone-type tracking pattern (an image of a flattened cone) to the tracker.
-		 * For more information, see FeatureMap::ConeUVTextureMapping.
-		 * @param yFrame The 8 bit grayscale frame (with Y8 pixel format, and pixel origin in the upper left corner) specifying the tracking pattern, must be valid
-		 * @param width The width of the given grayscale frame in pixel, with range [1, infinity)
-		 * @param height The height of the given grayscale frame in pixel, with range [1, infinity)
-		 * @param yFramePaddingElements The number of padding elements at the end of each row, in elements, with range [0, infinity)
-		 * @param coneUVTextureMapping The mapping from the provided image into 3D coordinates
-		 * @param worker Optional worker object to distribute the computation
-		 * @return The id of the tracking pattern, -1 if the pattern could not be added
-		 */
-		unsigned int addConePattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const UVTextureMapping::ConeUVTextureMapping& coneUVTextureMapping, Worker* worker = nullptr);
 
 		/**
 		 * Removes a pattern from this tracker.
@@ -558,17 +482,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		static bool convertPoseForCamera(const PinholeCamera& newCamera, const PinholeCamera& referenceCamera, const HomogenousMatrix4& referencePose, HomogenousMatrix4& newPose);
 
 		/**
-		 * Writes "Version 4" quantized blob features to a bitstream.
-		 * V4 is suitable for geometric verification, where we only need (x, y) observation points; all other values, such as a scale, are not serialized.
-		 * All descriptor elements are quantized from floating point with range [-1,1] to the range [0,256] and then rounded down to an 8-bit integer (note that 1 also maps to 255).
-		 * All descriptors must have the same number of elements.
-		 * @param features The feature to be written, not more than 64 million
-		 * @param bitstream The output bitstream to which the information will be written
-		 * @return True, if succeeded
-		 */
-		static bool writeQuantizedFeaturesForGeometricVerification(const CV::Detector::Blob::BlobFeatures& features, IO::OutputBitstream& bitstream);
-
-		/**
 		 * Writes blob features to a bitstream.
 		 * @param features The feature to be written, not more than 64 million
 		 * @param bitstream The output bitstream to which the information will be written
@@ -602,19 +515,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		 * @return True, if succeeded
 		 */
 		static bool readFeatureMap(const std::string& filename, Frame& pattern, CV::Detector::Blob::BlobFeatures& representativeFeatures);
-
-		/**
-		 * Returns the 2D image points of this pattern which have been used in the previous (or current) tracking iteration.
-		 * @return 2D image points, each point corresponds with one object point
-		 * @see objectPoints().
-		 */
-		const Vectors2* trackedImagePoints(unsigned int patternId) const;
-
-		/**
-			* Returns the 3D object points of this pattern which have been used in the previous (or current) tracking iteration.
-			* @return 3D object points, each point corresponds with one tracked image point
-			*/
-		const Vectors3* trackedObjectPoints(unsigned int patternId) const;
 
 	protected:
 
@@ -789,15 +689,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		static bool readFeatures_V3(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features);
 
 		/**
-		 * Reads blob features from a bitstream using format version 4.
-		 * Version 4 stores 36 floating point values with 8 bit precision and otherwise only stores feature (x, y) observations.
-		 * @param bitstream The input bitstream from which the information will be read
-		 * @param features The resulting features received from the bitstream
-		 * @return True, if succeeded
-		 */
-		static bool readFeatures_V4(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features);
-
-		/**
 		 * @return The unique tag for the features.
 		 */
 		static const IO::Tag& trackerTagFeatures();
@@ -845,11 +736,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		/// The id of the pattern that has been tried to recognized last.
 		unsigned int trackerLastRecognitionPatternId;
 };
-
-inline PatternTrackerCore6DOF::Options::Options() noexcept
-{
-	// nothing to do here
-}
 
 inline PatternTrackerCore6DOF::Pattern::Pattern() :
 	patternDimension(0, 0),
@@ -927,30 +813,6 @@ inline Triangles2 PatternTrackerCore6DOF::Pattern::triangles2(const PinholeCamer
 			pinholeCamera.projectToImage<true>(pose, Triangle3(corner0(), corner1(), corner2()), pinholeCamera.hasDistortionParameters()),
 			pinholeCamera.projectToImage<true>(pose, Triangle3(corner0(), corner2(), corner3()), pinholeCamera.hasDistortionParameters())
 		};
-	}
-	else if (isCylindrical() || isConical())
-	{
-		ocean_assert(patternFeatureMap.cylinder().isValid() || patternFeatureMap.cone().isValid());
-
-		// Project an approximation of the cone's surface that has been precomputed in the feature map.
-		const Triangles3& triangles3D = patternFeatureMap.triangles3();
-		triangles.reserve(triangles3D.size() / 2 + 1);
-
-		for (const Triangle3& triangle3D : triangles3D)
-		{
-			const Triangle2 triangle2D = pinholeCamera.projectToImage<true>(pose, triangle3D, pinholeCamera.hasDistortionParameters());
-
-			// Check that the triangle is front-facing: Assuming the triangle's normal faces outward from
-			// the surface of the object, a visible triangle will have a normal that points towards the
-			// camera. After projection, this still holds -- if we take the cross product n of the two
-			// triangle legs in the z=0 plane, a visible triangle will have n.z < 0.
-			const Vector2 segment10 = triangle2D.point0() - triangle2D.point1();
-			const Vector2 segment12 = triangle2D.point2() - triangle2D.point1();
-			if (segment12.x() * segment10.y() - segment12.y() * segment10.x() < Scalar(0.))
-			{
-				triangles.push_back(triangle2D);
-			}
-		}
 	}
 	else
 	{
@@ -1043,16 +905,6 @@ inline bool PatternTrackerCore6DOF::Pattern::isValid() const
 inline bool PatternTrackerCore6DOF::Pattern::isPlanar() const
 {
 	return patternFeatureMap.isPlanar();
-}
-
-inline bool PatternTrackerCore6DOF::Pattern::isCylindrical() const
-{
-	return patternFeatureMap.isCylindrical();
-}
-
-inline bool PatternTrackerCore6DOF::Pattern::isConical() const
-{
-	return patternFeatureMap.isConical();
 }
 
 inline PatternTrackerCore6DOF::Pattern::operator bool() const

@@ -33,9 +33,6 @@
 
 #include "ocean/tracking/orb/FeatureTracker6DOF.h"
 
-#include "metaonly/ocean/tracking/uvtexturemapping/ConeUVTextureMapping.h"
-#include "metaonly/ocean/tracking/uvtexturemapping/CylinderUVTextureMapping.h"
-
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)
 		#include "ocean/media/directshow/DirectShow.h"
@@ -53,45 +50,6 @@
 		#include "ocean/media/openimagelibraries/OpenImageLibraries.h"
 	#endif
 #endif
-
-#include <array>
-
-namespace
-{
-
-// Load a fixed number of parameters (e.g., for a cylinder or a cone pattern) either from a file or simply as a space-delimited string.
-// @param parameterString Either a filename or a space-delimited string of parameters
-// @parameters Fixed-size array of shape parameters that will be filled based on the input
-// @return False if not all parameters could be loaded, true otherwise
-template <size_t numParameters>
-bool loadParametersFromStringOrFile(std::string parameterString, std::array<Scalar, numParameters>& parameters)
-{
-	const IO::File file(parameterString);
-
-	if (file.exists())
-	{
-		std::ifstream input(file());
-		if (input)
-		{
-			parameterString.assign(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
-		}
-	}
-
-	std::istringstream iss(parameterString);
-
-	for (Scalar& parameter : parameters)
-	{
-		if (!(iss >> parameter))
-		{
-			Platform::Utilities::showMessageBox("Error", "Not all parameters were specified, or the input file could not be read.\nGot parameters:\n\"" + parameterString + "\"");
-			return false;
-		}
-	}
-
-	return true;
-}
-
-} // namespace
 
 FeatureTrackerWrapper::FeatureTrackerWrapper()
 {
@@ -113,12 +71,6 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 	commandArguments.registerParameter("resolution", "r", "Optional: the resolution of the input, e.g. \"1280x720\"");
 	commandArguments.registerParameter("tracker", "t", "Optional: the name of the tracker that will be used, e.g. \"Pattern 6DOF Tracker [for {cones, cylinders}]\", \"ORB Feature Based 6DOF Tracker\", or \"Blob Feature Based 6DOF Tracker [for {cones, cylinders, cubes, meshes}]\"; ");
 	commandArguments.registerParameter("calibration", "c", "Optional: the filename of the camera calibration file containing the calibration for the input source (*.occ)");
-
-	// Special parameters that must be specified only for cone-, cylinder-, and mesh-trackers
-
-	commandArguments.registerParameter("cone", "cone", "A single string comprising a list of space-separated parameters required for \"... 6DOF Tracker for cones\": [0] coneHeight, [1] largerDiameter, [2] smallerDiameter, [3] largerArcEnd.x(), [4] largerArcEnd.y(), [5] smallerArcEnd.x(), [6] smallerArcEnd.y(), [7] yAxisIntersection.x(), [8] yAxisIntersection.y(), [9] originOnSurface as 0 or 1");
-	commandArguments.registerParameter("cylinder", "cylinder", "A single string comprising a list of space-separated parameters required for \"... 6DOF Tracker for cylinders\": [0] patternCropWidth, [1] cylinderMetricHeight, [2] xAxisOffset, [3] yAxisIntersection.x(), [4] yAxisIntersection.y()");
-	commandArguments.registerParameter("mesh", "mesh", "A single string comprising a list of space-separated parameters required for \"... 6DOF Tracker for meshes\": The input must be an OBJ filepath. Only \"v\", \"vt\", and \"f\" OBJ entries are used. Texture coordinates are assumed to be relative to the bottom left of the texture image and specified in normalized [0,1]x[0,1] coordinates. Face winding order should be specified so that the surface normal points outward.");
 
 	commandArguments.parse(separatedCommandArguments);
 
@@ -196,6 +148,33 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 			Log::error() << "Invalid recording input";
 			return;
 		}
+	}
+
+	// we check whether an explicit camera calibration file has been provided
+
+	IO::File cameraCalibrationFile;
+
+	Value calibrationValue;
+	if (commandArguments.hasValue("calibration", &calibrationValue, false, 0u) && calibrationValue.isString())
+	{
+		const IO::File file(calibrationValue.stringValue());
+
+		if (file.exists())
+		{
+			cameraCalibrationFile = file;
+		}
+	}
+
+	if (cameraCalibrationFile.isNull())
+	{
+		const IO::File relativeFile("res/application/ocean/demo/tracking/featuretracker/cameracalibration.occ");
+
+		cameraCalibrationFile = IO::Directory(frameworkPath) + relativeFile;
+	}
+
+	if (cameraCalibrationFile.exists())
+	{
+		IO::CameraCalibrationManager::get().registerCalibrationFile(cameraCalibrationFile());
 	}
 
 	if (inputMedium_.isNull())
@@ -362,239 +341,6 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 		}
 	}
 
-	if (visualTracker_.isNull() && (trackerName == std::string("Blob Feature Based 6DOF Tracker for cylinders") || trackerName == std::string("Pattern 6DOF Tracker for cylinders")))
-	{
-		Value cylinderValue;
-		if (!commandArguments.hasValue("cylinder", &cylinderValue, false, 0u) || !cylinderValue.isString())
-		{
-			Platform::Utilities::showMessageBox("Error", "Cylinder parameters must be specified in a file or as a string.");
-			return;
-		}
-
-		Frame yFrame;
-		if (CV::FrameConverter::Comfort::convert(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, false, WorkerPool::get().scopedWorker()()))
-		{
-			// Cylinder parameters: [0] patternCropWidth, [1] cylinderMetricHeight, [2] xAxisOffset,
-			// [3] yAxisIntersection.x(), [4] yAxisIntersection.y()
-			std::array<Scalar, 5u> parameters;
-			if (!loadParametersFromStringOrFile(String::toAString(cylinderValue.stringValue()), parameters))
-			{
-				return;
-			}
-
-			// Create the cylinder UV mapping.
-			Tracking::UVTextureMapping::CylinderUVTextureMapping cylinderUVTextureMapping(parameters[0], Scalar(yFrame.height()), parameters[1], parameters[2], Vector2(parameters[3], parameters[4]), true);
-
-			if (cylinderUVTextureMapping.isValid())
-			{
-				// In both cases, we'll create a feature map to compute the object bounding box and obtain
-				// the canonical cylinder shape with a coordinate frame. The feature map is only used
-				// further for Blob tracking.
-				constexpr unsigned int kMaxFeatures = 0u;
-				constexpr Scalar kDetectionThreshold = Scalar(15);
-				Tracking::Blob::FeatureMap featureMap(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), cylinderUVTextureMapping, kDetectionThreshold, kMaxFeatures, WorkerPool::get().scopedWorker()());
-
-				objectDimension_ = featureMap.boundingBox();
-				objectCylinder_ = featureMap.cylinder();
-
-				if (trackerName == std::string("Blob Feature Based 6DOF Tracker for cylinders"))
-				{
-					visualTracker_ = Tracking::VisualTrackerRef(new Tracking::Blob::BlobTracker6DOF());
-					visualTracker_.force<Tracking::Blob::BlobTracker6DOF>().setFeatureMap(featureMap);
-				}
-				else // pattern-based tracking
-				{
-					visualTracker_ = Tracking::VisualTrackerRef(new Tracking::Pattern::PatternTracker6DOF());
-					visualTracker_.force<Tracking::Pattern::PatternTracker6DOF>().addCylinderPattern(patternFrame, cylinderUVTextureMapping, WorkerPool::get().scopedWorker()());
-				}
-			}
-			else
-			{
-				Platform::Utilities::showMessageBox("Error", "The provided cylinder map cannot be interpreted.");
-				return;
-			}
-		}
-		else
-		{
-			Platform::Utilities::showMessageBox("Error", "The provided cylinder map cannot be interpreted.");
-			return;
-		}
-	}
-
-	if (visualTracker_.isNull() && (trackerName == std::string("Blob Feature Based 6DOF Tracker for cones") || trackerName == std::string("Pattern 6DOF Tracker for cones")))
-	{
-		Value coneValue;
-		if (!commandArguments.hasValue("cone", &coneValue, false, 0u) || !coneValue.isString())
-		{
-			Platform::Utilities::showMessageBox("Error", "Cone parameters must be specified in a file or as a string.");
-			return;
-		}
-
-		// We want to track a (possibly truncated) cone.
-		Frame yFrame;
-		if (CV::FrameConverter::Comfort::convert(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, false, WorkerPool::get().scopedWorker()()))
-		{
-			// Cone parameters: [0] coneHeight, [1] largerDiameter, [2] smallerDiameter,
-			// [3] largerArcEnd.x(), [4] largerArcEnd.y(), [5] smallerArcEnd.x(), [6] smallerArcEnd.y(),
-			// [7] yAxisIntersection.x(), [8] yAxisIntersection.y(), [9] originOnSurface as 0 or 1
-
-			std::array<Scalar, 10u> parameters;
-			if (!loadParametersFromStringOrFile<10u>(String::toAString(coneValue.stringValue()), parameters))
-			{
-				Log::error() << "Failed to load the cone parameters";
-				return;
-			}
-
-			Tracking::UVTextureMapping::ConeUVTextureMapping coneUVTextureMapping(
-				parameters[0],
-				parameters[1],
-				parameters[2],
-				Vector2(parameters[3], parameters[4]),
-				Vector2(parameters[5], parameters[6]),
-				Vector2(parameters[7], parameters[8]),
-				static_cast<bool>(parameters[9]));
-
-			if (coneUVTextureMapping.isValid())
-			{
-				// In both cases, we'll create a feature map to compute the object bounding box and obtain
-				// the canonical cone shape with a coordinate frame. The feature map is only used further
-				// for Blob tracking.
-				constexpr unsigned int kMaxFeatures = 0u;
-				constexpr Scalar kDetectionThreshold = Scalar(15);
-				Tracking::Blob::FeatureMap featureMap(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), coneUVTextureMapping, kDetectionThreshold, kMaxFeatures, WorkerPool::get().scopedWorker()());
-
-				objectDimension_ = featureMap.boundingBox();
-				objectCone_ = featureMap.cone();
-
-				if (trackerName == std::string("Blob Feature Based 6DOF Tracker for cones"))
-				{
-					visualTracker_ = Tracking::VisualTrackerRef(new Tracking::Blob::BlobTracker6DOF());
-					visualTracker_.force<Tracking::Blob::BlobTracker6DOF>().setFeatureMap(featureMap);
-				}
-				else // pattern-based tracking
-				{
-					visualTracker_ = Tracking::VisualTrackerRef(new Tracking::Pattern::PatternTracker6DOF());
-					visualTracker_.force<Tracking::Pattern::PatternTracker6DOF>().addConePattern(patternFrame, coneUVTextureMapping, WorkerPool::get().scopedWorker()());
-				}
-			}
-			else
-			{
-				Platform::Utilities::showMessageBox("Error", "The provided cone map cannot be interpreted.");
-				return;
-			}
-		}
-		else
-		{
-			Platform::Utilities::showMessageBox("Error", "The provided cone map cannot be interpreted.");
-			return;
-		}
-	}
-
-	if (visualTracker_.isNull() && trackerName == std::string("Blob Feature Based 6DOF Tracker for meshes"))
-	{
-		Frame yFrame;
-		if (CV::FrameConverter::Comfort::convert(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, false, WorkerPool::get().scopedWorker()()))
-		{
-			Value meshValue;
-			if (!commandArguments.hasValue("mesh", &meshValue, false, 0u) || !meshValue.isString())
-			{
-				Platform::Utilities::showMessageBox("Error", "Mesh-based tracking requires an OBJ file.");
-				return;
-			}
-
-			std::ifstream meshFile(String::toAString(meshValue.stringValue()));
-
-			Vectors3 vertices;
-			Vectors2 textureCoordinates;
-			Tracking::UVTextureMapping::MeshUVTextureMapping::TriangleFaces vertexTriangles;
-			Tracking::UVTextureMapping::MeshUVTextureMapping::TriangleFaces textureTriangles;
-
-			while (meshFile)
-			{
-				std::string type;
-				meshFile >> type;
-				if (type == "vt")
-				{
-					Scalar u, v;
-					meshFile >> u >> v;
-					textureCoordinates.emplace_back(u * patternFrame.width(), (Scalar(1.) - v) * patternFrame.height());
-				}
-				else if (type == "v")
-				{
-					Scalar x, y, z;
-					meshFile >> x >> y >> z;
-					vertices.emplace_back(x, y, z);
-				}
-				else if (type == "f")
-				{
-					// Face entries have three vertices, each with the format "<vertex index>/<texture index>[/<normal index>]".
-					Tracking::UVTextureMapping::MeshUVTextureMapping::TriangleFace vertexTriangle;
-					Tracking::UVTextureMapping::MeshUVTextureMapping::TriangleFace textureTriangle;
-					for (size_t i = 0u; i < 3u; ++i)
-					{
-						std::string tmp;
-						meshFile >> tmp;
-
-						const size_t offset = tmp.find("/");
-						int index = 0;
-						bool valid = String::isInteger32(tmp.substr(0u, offset), &index);
-						if (!valid || index <= 0)
-						{
-							Platform::Utilities::showMessageBox("Error", "Invalid OBJ vertex index at face " + String::toAString(vertexTriangles.size()) + ", vertex " + String::toAString(i));
-							return;
-						}
-						vertexTriangle[i] = index - 1;
-
-						// Ignore the part of the entry containing the vertex normal, if present.
-						const size_t offset2 = tmp.rfind("/");
-						index = 0;
-						valid = String::isInteger32(tmp.substr(offset + 1u, (offset2 > offset) ? offset2 : tmp.size()), &index);
-						if (!valid || index <= 0)
-						{
-							Platform::Utilities::showMessageBox("Error", "Invalid OBJ texture coordinate index at face " + String::toAString(vertexTriangles.size()) + ", vertex " + String::toAString(i));
-							return;
-						}
-						textureTriangle[i] = index - 1;
-					}
-
-					vertexTriangles.push_back(vertexTriangle);
-					textureTriangles.push_back(textureTriangle);
-				}
-				else
-				{
-					std::string tmp;
-					meshFile >> tmp;
-				}
-			}
-
-			Tracking::UVTextureMapping::MeshUVTextureMappingRef meshUVTextureMapping(
-				new Tracking::UVTextureMapping::MeshUVTextureMapping(vertices, textureCoordinates, vertexTriangles, textureTriangles));
-
-			if (meshUVTextureMapping->isValid())
-			{
-				constexpr unsigned int kMaxFeatures = 0u;
-				constexpr Scalar kDetectionThreshold = Scalar(15);
-				Tracking::Blob::FeatureMap featureMap(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), meshUVTextureMapping, kDetectionThreshold, kMaxFeatures, WorkerPool::get().scopedWorker()());
-
-				visualTracker_ = Tracking::VisualTrackerRef(new Tracking::Blob::BlobTracker6DOF());
-				visualTracker_.force<Tracking::Blob::BlobTracker6DOF>().setFeatureMap(featureMap);
-
-				objectDimension_ = featureMap.boundingBox();
-				objectTriangles_ = meshUVTextureMapping->triangles3();
-			}
-			else
-			{
-				Platform::Utilities::showMessageBox("Error", "The provided mesh cannot be interpreted.");
-				return;
-			}
-		}
-		else
-		{
-			Platform::Utilities::showMessageBox("Error", "The provided image for the mesh cannot be loaded.");
-			return;
-		}
-	}
-
 	if (visualTracker_.isNull() && trackerName == std::string("ORB Feature Based 6DOF Tracker"))
 	{
 		visualTracker_ = Tracking::VisualTrackerRef(new Tracking::ORB::FeatureTracker6DOF());
@@ -617,34 +363,6 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 
 		// we could not create a valid tracker
 		return;
-	}
-
-
-	// finally, we check whether an explicit camera calibration file has been provided
-
-	IO::File cameraCalibrationFile;
-
-	Value calibrationValue;
-	if (commandArguments.hasValue("calibration", &calibrationValue, false, 0u) && calibrationValue.isString())
-	{
-		const IO::File file(calibrationValue.stringValue());
-
-		if (file.exists())
-		{
-			cameraCalibrationFile = file;
-		}
-	}
-
-	if (cameraCalibrationFile.isNull())
-	{
-		const IO::File relativeFile("res/application/ocean/demo/tracking/featuretracker/cameracalibration.occ");
-
-		cameraCalibrationFile = IO::Directory(frameworkPath) + relativeFile;
-	}
-
-	if (cameraCalibrationFile.exists())
-	{
-		IO::CameraCalibrationManager::get().registerCalibrationFile(cameraCalibrationFile());
 	}
 
 	// we start the medium so that medium will deliver frames
@@ -806,38 +524,6 @@ bool FeatureTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 
 		Tracking::Utilities::paintBoundingBoxIF(rgbFrame, resultingPoseIF, *anyCamera_, objectDimension_, white, black);
 		Tracking::Utilities::paintCoordinateSystemIF(rgbFrame, resultingPoseIF, *anyCamera_, HomogenousMatrix4(true), objectDimension_.diagonal() * Scalar(0.1));
-
-		if (objectCone_.isValid() || objectCylinder_.isValid() || objectTriangles_.size() > 0u)
-		{
-			// **TODO** Add support for AnyCamera for the visualization functions below.
-
-			if (anyCamera_->anyCameraType() == AnyCameraType::PINHOLE)
-			{
-				std::shared_ptr<AnyCameraPinhole> anyCameraPinhole = std::dynamic_pointer_cast<AnyCameraPinhole>(anyCamera_);
-				ocean_assert(anyCameraPinhole != nullptr);
-
-				// If a cone or cylinder is being tracked, draw a gridded representation of it.
-				if (objectCone_.isValid())
-				{
-					Tracking::Utilities::paintWireframeConeIF(rgbFrame, resultingPoseIF, anyCameraPinhole->actualCamera(), objectCone_, true, WorkerPool::get().scopedWorker()());
-				}
-
-				if (objectCylinder_.isValid())
-				{
-					Tracking::Utilities::paintWireframeCylinderIF(rgbFrame, resultingPoseIF, anyCameraPinhole->actualCamera(), objectCylinder_, true, WorkerPool::get().scopedWorker()());
-				}
-
-				// If a mesh is being tracked, draw its triangles.
-				if (objectTriangles_.size() > 0u)
-				{
-					Tracking::Utilities::paintTrianglesIF(rgbFrame, resultingPoseIF, *anyCameraPinhole, objectTriangles_.data(), objectTriangles_.size(), CV::Canvas::yellow());
-				}
-			}
-			else
-			{
-				Log::error() << "The visualization for cones, cylinders, and meshes currently only supports pinhole cameras, however, the current camera is \"" << anyCamera_->name() << "\"";
-			}
-		}
 	}
 	else
 	{

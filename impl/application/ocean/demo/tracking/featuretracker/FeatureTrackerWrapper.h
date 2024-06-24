@@ -109,15 +109,6 @@ class FeatureTrackerWrapper
 		/// The bounding box  of the tracking pattern defined in the world coordinate system, with range (0, infinity)x(0, infinity)
 		Box3 objectDimension_;
 
-		/// The tracked cone being used, if any.
-		Cone3 objectCone_;
-
-		/// The tracked cylinder being used, if any.
-		Cylinder3 objectCylinder_;
-
-		/// The tracked mesh being used, if any.
-		Triangles3 objectTriangles_;
-
 		/// The actual tracker to be used for feature tracking.
 		Tracking::VisualTrackerRef visualTracker_;
 
@@ -155,9 +146,6 @@ inline FeatureTrackerWrapper& FeatureTrackerWrapper::operator=(FeatureTrackerWra
 
 		inputMedium_ = std::move(featureTrackerWrapper.inputMedium_);
 		objectDimension_ = std::move(featureTrackerWrapper.objectDimension_);
-		objectCone_ = std::move(featureTrackerWrapper.objectCone_);
-		objectCylinder_ = std::move(featureTrackerWrapper.objectCylinder_);
-		objectTriangles_ = std::move(featureTrackerWrapper.objectTriangles_);
 
 		visualTracker_ = std::move(featureTrackerWrapper.visualTracker_);
 		anyCamera_ = std::move(featureTrackerWrapper.anyCamera_);

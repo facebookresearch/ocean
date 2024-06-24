@@ -50,38 +50,6 @@ unsigned int PatternTracker6DOF::addPattern(const std::string& filename, const V
 	return PatternTrackerCore6DOF::addPattern(filename, dimension, worker);
 }
 
-unsigned int PatternTracker6DOF::addCylinderPattern(const Frame& frame, const UVTextureMapping::CylinderUVTextureMapping& cylinderUVTextureMapping, Worker* worker)
-{
-	if (!frame.isValid() || !cylinderUVTextureMapping.isValid())
-	{
-		return (unsigned int)(-1);
-	}
-
-	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
-	{
-		return (unsigned int)(-1);
-	}
-
-	return PatternTrackerCore6DOF::addCylinderPattern(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), cylinderUVTextureMapping, worker);
-}
-
-unsigned int PatternTracker6DOF::addConePattern(const Frame& frame, const UVTextureMapping::ConeUVTextureMapping& coneUVTextureMapping, Worker* worker)
-{
-	if (!frame.isValid() || !coneUVTextureMapping.isValid())
-	{
-		return (unsigned int)(-1);
-	}
-
-	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
-	{
-		return (unsigned int)(-1);
-	}
-
-	return PatternTrackerCore6DOF::addConePattern(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), coneUVTextureMapping, worker);
-}
-
 bool PatternTracker6DOF::removePattern(const unsigned int patternId)
 {
 	return PatternTrackerCore6DOF::removePattern(patternId);

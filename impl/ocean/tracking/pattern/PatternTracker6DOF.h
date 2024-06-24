@@ -68,26 +68,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTracker6DOF :
 		unsigned int addPattern(const std::string& filename, const Vector2& dimension, Worker* worker = nullptr);
 
 		/**
-		 * Adds a new cylinder-type tracking pattern (an image of a flattened cylinder) to the tracker.
-		 * For more information, see FeatureMap::CylinderUVTextureMapping.
-		 * @param frame The frame specifying the tracking pattern, this frame will be converted internally if the pixel format is not FORMAT_Y8, must be valid
-		 * @param cylinderUVTextureMapping The mapping from the provided image into 3D coordinates
-		 * @param worker Optional worker object to distribute the computation
-		 * @return The id of the tracking pattern, -1 if the pattern could not be added
-		 */
-		unsigned int addCylinderPattern(const Frame& frame, const UVTextureMapping::CylinderUVTextureMapping& cylinderUVTextureMapping, Worker* worker = nullptr);
-
-		/**
-		 * Adds a new cone-type tracking pattern (an image of a flattened cone) to the tracker.
-		 * For more information, see FeatureMap::ConeUVTextureMapping.
-		 * @param frame The frame specifying the tracking pattern, this frame will be converted internally if the pixel format is not FORMAT_Y8, must be valid
-		 * @param coneUVTextureMapping The mapping from the provided image into 3D coordinates
-		 * @param worker Optional worker object to distribute the computation
-		 * @return The id of the tracking pattern, -1 if the pattern could not be added
-		 */
-		unsigned int addConePattern(const Frame& frame, const UVTextureMapping::ConeUVTextureMapping& coneUVTextureMapping, Worker* worker = nullptr);
-
-		/**
 		 * Removes a pattern from this tracker.
 		 * @param patternId The id of the pattern to be removed
 		 * @return True, if succeeded
