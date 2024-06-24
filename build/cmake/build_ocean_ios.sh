@@ -13,7 +13,7 @@ OCEAN_PLATFORM="ios"
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-OCEAN_SOURCE_DIR=$( cd ${SCRIPT_DIR} && cd ../.. && pwd )
+OCEAN_SOURCE_DIR=$( cd "${SCRIPT_DIR}" && cd ../.. && pwd )
 
 OCEAN_BUILD_DIR="/tmp/ocean/build/${OCEAN_PLATFORM}"
 OCEAN_INSTALL_DIR="/tmp/ocean/install/${OCEAN_PLATFORM}"
