@@ -8,7 +8,7 @@ import TabItem from '@theme/TabItem';
 
 ## Description
 
-The ["External Camera"](https://github.com/facebookresearch/ocean/blob/5d3d3df5bf4cda0cc8e9828e19b4a46d3653f2b3/impl/application/ocean/demo/media/externalcamera/quest/ExternalCameraApplication.cpp) app expands the functionality of Meta's Quest headsets by allowing users to connect and access external USB cameras. When the app is launched, it displays a straightforward menu [listing all connected USB cameras](https://github.com/facebookresearch/ocean/blob/5d3d3df5bf4cda0cc8e9828e19b4a46d3653f2b3/impl/application/ocean/demo/media/externalcamera/quest/ExternalCameraApplication.cpp#L293), enabling easy identification and selection of the desired device.
+The [External Camera](https://github.com/facebookresearch/ocean/blob/5d3d3df5bf4cda0cc8e9828e19b4a46d3653f2b3/impl/application/ocean/demo/media/externalcamera/quest/ExternalCameraApplication.cpp) app expands the functionality of Meta's Quest headsets by allowing users to connect and access external USB cameras. When the app is launched, it displays a straightforward menu [listing all connected USB cameras](https://github.com/facebookresearch/ocean/blob/5d3d3df5bf4cda0cc8e9828e19b4a46d3653f2b3/impl/application/ocean/demo/media/externalcamera/quest/ExternalCameraApplication.cpp#L293), enabling easy identification and selection of the desired device.
 
 Following the selection of a camera, the app seeks permission to access the external USB device, ensuring security and user consent. After permission is granted, users are presented with a menu to select their preferred stream configuration for the video feed, allowing customization based on specific requirements or preferences.
 
