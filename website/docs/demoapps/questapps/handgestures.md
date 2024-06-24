@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 ## Description
 
-HandGestures is a lightweight app that utilizes hand tracking and individual hand gestures for interaction, providing a simple yet powerful example of interactive VR.
+[HandGestures](https://github.com/facebookresearch/ocean/blob/bd9406c9a318ca1b259dded4f2fba89602b2039c/impl/application/ocean/demo/platform/meta/quest/openxr/handgestures/quest/HandGestures.cpp#L16) is a lightweight app that utilizes hand tracking and individual hand gestures for interaction, providing a simple yet powerful example of interactive VR.
 
 <img src={require('@site/static/img/docs/demoapps/questapps/handgestures.jpg').default} alt="Image: Screenshot of the Hand Gestures Quest app" width="600" className="center-image"/>
 

@@ -1,5 +1,5 @@
 ---
-title: The Frame class
+title: Images in Ocean
 sidebar_position: 1
 ---
 

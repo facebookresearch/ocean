@@ -8,7 +8,7 @@ import TabItem from '@theme/TabItem';
 
 ## Description
 
-The Quest Graph Visualizer is a sophisticated VR application designed to render interactive 3D graphs, offering a dynamic and immersive way to explore mathematical functions and partial derivatives. This app is particularly useful for users interested in visualizing complex mathematical landscapes.
+The Quest [Graph Visualizer](https://github.com/facebookresearch/ocean/blob/bd9406c9a318ca1b259dded4f2fba89602b2039c/impl/application/ocean/demo/platform/meta/quest/openxr/graphs/quest/GraphsApplication.cpp#L20) is a sophisticated VR application designed to render interactive 3D graphs, offering a dynamic and immersive way to explore mathematical functions and partial derivatives. This app is particularly useful for users interested in visualizing complex mathematical landscapes.
 
 <img src={require('@site/static/img/docs/demoapps/questapps/graphs.jpg').default} alt="Image: Screenshot of the Graphs Quest app" width="600" className="center-image"/>
 

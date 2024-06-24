@@ -8,7 +8,7 @@ import TabItem from '@theme/TabItem';
 
 ## Description
 
-The PanoramaViewer demo app demonstrates how a 360-degree image can be utilized to create a teleportation experience in VR. This app introduces the use of visual assets like pictures and offers insights into adjusting properties within the rendering engine.
+The [PanoramaViewer](https://github.com/facebookresearch/ocean/blob/bd9406c9a318ca1b259dded4f2fba89602b2039c/impl/application/ocean/demo/platform/meta/quest/openxr/panoramaviewer/quest/PanoramaViewer.cpp#L20) demo app demonstrates how a 360-degree image can be utilized to create a teleportation experience in VR. This app introduces the use of visual assets like pictures and offers insights into adjusting properties within the rendering engine.
 
 <img src={require('@site/static/img/docs/demoapps/questapps/panoramaviewer.jpg').default} alt="Image: Screenshot of Panorama Viewer Quest app" width="600" className="center-image"/>
 

@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 ## Description
 
-FingerDistance, based on [VRNativeApplicationAdvanced](vrnativeapplicationadvanced.md), measures the distance between both index fingers and visualizes this distance in VR. This app is an excellent introduction to hand interaction and the visualization of simple 3D objects.
+[FingerDistance](https://github.com/facebookresearch/ocean/blob/5d3d3df5bf4cda0cc8e9828e19b4a46d3653f2b3/impl/application/ocean/demo/platform/meta/quest/openxr/fingerdistance/quest/FingerDistance.cpp), based on [VRNativeApplicationAdvanced](vrnativeapplicationadvanced.md), measures the distance between both index fingers and visualizes this distance in VR. This app is an excellent introduction to hand interaction and the visualization of simple 3D objects.
 
 <img src={require('@site/static/img/docs/demoapps/questapps/fingerdistance.png').default} alt="Image: Screenshot of the Finger Distance app" width="600" className="center-image"/>
 

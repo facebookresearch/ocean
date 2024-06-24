@@ -8,7 +8,7 @@ import TabItem from '@theme/TabItem';
 
 ## Description
 
-The SolarSystem app transports users into a beautifully rendered VR representation of our solar system. Using X3D for scene description, this app creates a rich, educational experience where users can explore animated planets and listen to an informative audio guide.
+The [SolarSystem](https://github.com/facebookresearch/ocean/blob/bd9406c9a318ca1b259dded4f2fba89602b2039c/impl/application/ocean/demo/platform/meta/quest/openxr/solarsystem/quest/SolarSystem.cpp#L15) app transports users into a beautifully rendered VR representation of our solar system. Using X3D for scene description, this app creates a rich, educational experience where users can explore animated planets and listen to an informative audio guide.
 
 <img src={require('@site/static/img/docs/demoapps/questapps/solarsystem.jpg').default} alt="Image: Screenshot of the Solar System Quest app" width="600" className="center-image"/>
 

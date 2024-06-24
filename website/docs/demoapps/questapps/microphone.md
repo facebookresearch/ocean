@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 ## Description
 
-The Microphone app provides a practical example of how to access the Quest's microphone and handle Android permissions. It processes live microphone samples in real-time and converts them into an audio spectrum.
+The [Microphone](https://github.com/facebookresearch/ocean/blob/bd9406c9a318ca1b259dded4f2fba89602b2039c/impl/application/ocean/demo/platform/meta/quest/openxr/microphone/quest/MicrophoneApplication.cpp#L22) app provides a practical example of how to access the Quest's microphone and handle Android permissions. It processes live microphone samples in real-time and converts them into an audio spectrum.
 
 <img src={require('@site/static/img/docs/demoapps/questapps/microphone.png').default} alt="Image: Screenshot Finger Distance app" width="600" className="center-image"/>
 

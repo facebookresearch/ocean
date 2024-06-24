@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 ## Description
 
-The Renderer app extends the [VRNativeApplication](vrnativeapplication.md) by demonstrating how to render a simple coordinate system into VR. This visual representation helps in understanding spatial orientation in VR environments.
+The [Renderer](https://github.com/facebookresearch/ocean/blob/bd9406c9a318ca1b259dded4f2fba89602b2039c/impl/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/OpenXRRendererApplication.cpp#L13) app extends the [VRNativeApplication](vrnativeapplication.md) by demonstrating how to render a simple coordinate system into VR. This visual representation helps in understanding spatial orientation in VR environments.
 
 <img src={require('@site/static/img/docs/demoapps/questapps/rendererapplication.png').default} alt="Image: Hierarchy of Ocean's Quest environments" width="600" className="center-image"/>
 

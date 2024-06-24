@@ -72,18 +72,18 @@ The most common pixel formats are highlighted for easy reference.
 |              | FORMAT_Y10                             | uint16_t         |       | Grayscale image, 10 bits, 6 bits unused                          |
 |              | FORMAT_Y10_PACKED                      | uint8_t          |       | Packed Bayer, 10 bits per pixel                                  |
 |              |                                        |                  |       |                                                                  |
-| Color (YUV)  | FORMAT_YUV24                           | uint8_t          |       | Luminance (Y), Chrominance Blue (U, V)                           |
+| Color (YUV)  | **FORMAT_YUV24**                       | uint8_t          |       | Luminance (Y), Chrominance Blue (U, V)                           |
 |              | FORMAT_YVU24                           | uint8_t          |       | Flipped chrominance channels                                     |
 |              | FORMAT_YUVA32                          | uint8_t          | Yes   |                                                                  |
 |              | FORMAT_YUVT32                          | uint8_t          |       | Contains a custom *texture* channel                              |
 |              | FORMAT_YUYV16                          | uint8_t          |       | 16 bits per pixel, U/V every second pixel, aka YUY2              |
 |              | FORMAT_UYVY16                          | uint8_t          |       | Known as UYVY                                                    |
-|              | FORMAT_Y_UV12                          | uint8_t          |       | One gray, one chrominance plane, aka NV12                        |
+|              | **FORMAT_Y_UV12**                      | uint8_t          |       | One gray, one chrominance plane, aka NV12                        |
 |              | FORMAT_Y_VU12                          | uint8_t          |       | Known as NV21                                                    |
 |              | FORMAT_Y_U_V24                         | uint8_t          |       | Known as I444                                                    |
 |              | FORMAT_Y_U_V12                         | uint8_t          |       | Known as I420                                                    |
 |              | FORMAT_Y_V_U12                         | uint8_t          |       | Known as YV12                                                    |
-|              | FORMAT_F32                             | float            |       | Floats with 32 bit precision, e.g., for depth                    |
+|              | F**ORMAT_F32**                         | float            |       | Floats with 32 bit precision, e.g., for depth                    |
 |              | FORMAT_F64                             | double           |       | Floats with 64 bit precision                                     |
 
 ## Custom pixel formats
