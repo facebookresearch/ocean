@@ -15,7 +15,6 @@ add_subdirectory(pattern)
 add_subdirectory(point)
 add_subdirectory(qrcodes)
 add_subdirectory(rmv)
-add_subdirectory(uvtexturemapping)
 
 if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
 

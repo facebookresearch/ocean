@@ -38,7 +38,6 @@ if (APPLE OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_math
             ocean_media
             ocean_tracking
-            ocean_tracking_uvtexturemapping
     )
 
     # Installation

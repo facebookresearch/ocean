@@ -34,7 +34,6 @@ if (ANDROID OR IOS OR MACOS)
             ocean_tracking_blob
             ocean_tracking_orb
             ocean_tracking_pattern
-            ocean_tracking_uvtexturemapping
     )
 
     if (MACOS OR IOS)
@@ -296,7 +295,6 @@ if (IOS)
             ocean_tracking_blob
             ocean_tracking_orb
             ocean_tracking_pattern
-            ocean_tracking_uvtexturemapping
             ${UIKIT_LIB}
     )
 endif()
