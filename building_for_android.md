@@ -1,6 +1,6 @@
 # Building for Android
 
-This document describes the process to build Ocean for Android. It covers:
+This document describes the process to build Ocean for Android on Linux or macOS. It covers:
 
 1. General requirements
 2. Building required third-party libraries
@@ -10,7 +10,7 @@ This document describes the process to build Ocean for Android. It covers:
 ## 1 Prerequisites
 
 * [General prerequisites listed on the main page](README.md)
-* Install an Android SDK (Android API 34).  Other versions may work but have not been tested.
+* Install an Android SDK (Android API 32, 33, or 34).  Other versions may work but have not been tested.
   * Optionally, use [Android Studio](https://developer.android.com/studio) to install
     * Open Android Studio's Settings window.  Then navigate to "Languages & Frameworks" and "Android SDK" subsection.  Then from the "SDK Platforms" tab, select the SDK with the appropriate API level.  "Apply" the change.
 * Install Android NDK (latest available stable version)
@@ -30,36 +30,32 @@ This document describes the process to build Ocean for Android. It covers:
 The easiest way to build the third-party libraries is by using the provided build scripts, [`build/cmake/build_thirdparty_android.sh`](build/cmake/build_thirdparty_android.sh) (on Windows: [`build/cmake/build_thirdparty_android.bat`](build/cmake/build_thirdparty_android.bat)). Simply comment out all build configurations that are not required for your project.  See below for an example configuration that is sufficient for building debug and release build of Android packages if targeting 64-bit ("arm64-v8a" ABI) and 32-bit ("armeabi-v7a" ABI) ARM hardware:
 
 ```
-run_build_for_android armeabi-v7a android-32 Debug static
-run_build_for_android arm64-v8a   android-32 Debug static
-# run_build_for_android x86         android-32 Debug static
-# run_build_for_android x86_64      android-32 Debug static
+cd ${OCEAN_DEVELOPMENT_PATH}
 
-# run_build_for_android armeabi-v7a android-32 Debug shared
-# run_build_for_android arm64-v8a   android-32 Debug shared
-# run_build_for_android x86         android-32 Debug shared
-# run_build_for_android x86_64      android-32 Debug shared
-
-run_build_for_android armeabi-v7a android-32 Release static
-run_build_for_android arm64-v8a   android-32 Release static
-# run_build_for_android x86         android-32 Release static
-# run_build_for_android x86_64      android-32 Release static
-
-# run_build_for_android armeabi-v7a android-32 Release shared
-# run_build_for_android arm64-v8a   android-32 Release shared
-# run_build_for_android x86         android-32 Release shared
-# run_build_for_android x86_64      android-32 Release shared
+./build/cmake/build_ocean_android.sh -c debug,release -l static -b "${HOME}/build_ocean_android" -i "${HOME}/install_ocean_android" -t "${HOME}/install_ocean_thirdparty_android" --abi arm64-v8a
 ```
 
-Once the script completes, all binaries and include files of the third-party libraries will have been installed into `/tmp/ocean/install/android/${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_TYPE}`. On a Windows build host, they will be installed into that directory under drive C: with "android" abbreviated to "and" due to path name length considerations.
+Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Once the build is complete, the compiled binaries can be found in `${HOME}/install_ocean_thirdparty_android/static_Debug` and `.../static_Release`.
+
 
 ## 3 Using Ocean in external Android projects
 
-This section provides an example of how to build the Ocean libraries so that they can be integrated into an existing Android project.
+This section provides an example of how to build the Ocean libraries so that they can be integrated into an existing Android project. This assumes that the third-party libraries have been built as described above for the required Android ABIs.
 
-First, build the required third-party libraries as described above for the required Android ABIs.
+After that you have following options:
 
-An external project that use Gradle as their main build system can take advantage of `externalNativeBuild` to build Ocean directly by adding something similar to the following to their configuration:
+If you already have a complete setup for an Android project and just need the header files and compiles libraries of Ocean, you
+can build it as follows:
+
+```
+cd ${OCEAN_DEVELOPMENT_PATH}
+
+./build/cmake/build_ocean_android.sh -c debug,release -l static -b "${HOME}/build_ocean_android" -i "${HOME}/install_ocean_android" -t "${HOME}/install_ocean_thirdparty_android" --abi arm64-v8a
+```
+
+Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Make sure that the parameter specifying the location of the third-party libraries is the same as installation path from the previous section. Once the build is complete, the compiled binaries can be found in `${HOME}/build_ocean_android/static_Debug` and `.../static_Release`.
+
+For projects that use Gradle as their main build system, they can take advantage of `externalNativeBuild` to build Ocean directly by adding something similar to the following to their configuration:
 
 ```
 externalNativeBuild {
@@ -82,19 +78,25 @@ First, build the required third-party libraries as described above for the requi
 
 The APK (Android Package Kit) files generated by Ocean's test/demo Gradle configuration files can support four different Android ABIs (armeabi-v7a, arm64-v8a, x86, x86_64), allowing the Android package to run on devices with corresponding CPU architectures.  But depending on the project, it may be desirable to limit the set of ABIs supported.  Doing so reduces APK file size, reduces resources necessary for building third-party libraries, and reduces resources spent on building the Android package.
 
-To limit the set of ABIs supported , edit the Gradle configuration file and comment out or remove the unused ABIs from Android NDK configuration.  See below for an example configuration that builds APK for "arm64-v8a" and "armeabi-v7a" while omitting "x86" and "x86_64".
+By default, the Gradle configs only enable the Android ABI `arm64-v8a`. The is support for `armeabi-v7a`, `x86`, and `x86_64` as
+well, but those ABIs need to be enabled explicitly. To do that check the files `.../apps/build.gradle.kts` for the following
+lines and change them as required.
 
 ```
-ndk { abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a" /*, "x86", "x86_64"*/ )) }
+# ndk { abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64" )) }
+ndk { abiFilters.addAll(listOf("arm64-v8a")) }
 ```
 
 To build the APK, run "gradlew" from the directory in the manner examplified below.
 
 ```
+# Adjust this to your location of the third-party libraries
+export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty_android
+
 cd ${OCEAN_DEVELOPMENT_PATH}/build/gradle/application/ocean/demo/base/console/android
 
 # Build the APK of the application
-./gradlew build -PoceanThirdPartyPath=/tmp/ocean/install/android
+./gradlew build
 
 # Install debug build of the app
 adb install app/build/outputs/apk/debug/app-debug.apk
