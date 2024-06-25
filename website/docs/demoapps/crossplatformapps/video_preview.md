@@ -14,7 +14,7 @@ This app provides a simple example of how to access a camera and how to visualiz
   <img src={require('@site/static/img/docs/demoapps/video_preview_ios.jpg').default} alt="Image: Screenshot of the video preview app on iOS" height="400" className="center-image"/>
 </div>
 
-n Ocean, any image-based media is handled by the library [`ocean_media`](https://github.com/facebookresearch/ocean/blob/a73e97bfeb5c4b4a3f7f7a174fc2a6dcc3170787/impl/ocean/media). It is a collection of abstract classes that allow for the processing and querying of inputs like live video streams, image sequences, video files, and more. Platform-specific implementations can be found in the sub-directories of `ocean_media`. For example, for iOS and macOS, this would be handled by `ocean_media_avfoundation`, which interacts with AVFoundation; for Android, there is ocean_media_android, which is a frontend to the Android NDK, and so forth. When an application starts, it will need to register those libraries that it supports (and when the application stops, all registered libraries will have to be unregistered again, in reverse order). This mechanism is similar to the loading and unloading of plugins and allows for platform-independent querying of features as will be explained below.
+In Ocean, any image-based media is handled by the library [`ocean_media`](https://github.com/facebookresearch/ocean/blob/a73e97bfeb5c4b4a3f7f7a174fc2a6dcc3170787/impl/ocean/media). It is a collection of abstract classes that allow for the processing and querying of inputs like live video streams, image sequences, video files, and more. Platform-specific implementations can be found in the sub-directories of `ocean_media`. For example, for iOS and macOS, this would be handled by `ocean_media_avfoundation`, which interacts with AVFoundation; for Android, there is ocean_media_android, which is a frontend to the Android NDK, and so forth. When an application starts, it will need to register those libraries that it supports (and when the application stops, all registered libraries will have to be unregistered again, in reverse order). This mechanism is similar to the loading and unloading of plugins and allows for platform-independent querying of features as will be explained below.
 In the case of live videos from cameras, the video sources are represented by [`FrameMedium`](https://github.com/facebookresearch/ocean/blob/a73e97bfeb5c4b4a3f7f7a174fc2a6dcc3170787/impl/ocean/media/FrameMedium.h#L52). This is a wrapper for a variety of platform-dependent video sources. Querying a camera that provides a live stream can be achieved as follows:
 ```cpp
 Media::FrameMediumRef medium = Media::Manager::get().newMedium("LiveVideoId:1");
@@ -84,7 +84,6 @@ The demo app is available for both desktop and mobile devices. The code is locat
 
     Alternatively, [generate a XCode project for Ocean](https://github.com/facebookresearch/ocean/blob/main/building_for_macos.md#4-building-the-ocean-ios-demotest-apps) and search for `application_ocean_demo_media_videopreview_osx` in the schemes at the top. Then hit `CMD-R` to build and run the app.
   </TabItem>
-
 
   <TabItem value="win" label="Windows">
     TODO
