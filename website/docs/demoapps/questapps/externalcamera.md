@@ -28,6 +28,10 @@ Additional functionalities include: After a stream has been selected, users can 
     TODO
   </TabItem>
 
+  <TabItem value="android" label="Android">
+    TODO
+  </TabItem>
+
 </Tabs>
 
 ## Features
@@ -42,7 +46,9 @@ Additional functionalities include: After a stream has been selected, users can 
 
 ## Tested Cameras
 
-The following is a list of webcams that have been confirmed to work with the Quest devices. This list represents a random sample of webcams available on the market and is **not** intended as a recommendation of any specific brand or model. The webcams listed support at least one of the required stream types: Uncompressed ([FORMAT_YUYV16](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/ocean/base/Frame.h#L560C4-L560C17) aka YUV2), Motion JPEG, or Frame-based (H.264).
+The following is a list of webcams that have been confirmed to work with the Quest devices.
+This list represents a random sample of webcams available on the market and is **not** intended as a recommendation of any specific brand or model.
+The webcams support at least one of the required stream types: Uncompressed ([FORMAT_YUYV16](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/ocean/base/Frame.h#L560C4-L560C17) aka YUV2), Motion JPEG, or Frame-based (H.264).
 
   - Ailipu, HD USB Camera
   - Anker, PowerConf C200
