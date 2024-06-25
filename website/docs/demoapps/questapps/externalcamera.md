@@ -10,6 +10,8 @@ import TabItem from '@theme/TabItem';
 
 The [External Camera](https://github.com/facebookresearch/ocean/blob/5d3d3df5bf4cda0cc8e9828e19b4a46d3653f2b3/impl/application/ocean/demo/media/externalcamera/quest/ExternalCameraApplication.cpp) app expands the functionality of Meta's Quest headsets by allowing users to connect and access external USB cameras. When the app is launched, it displays a straightforward menu [listing all connected USB cameras](https://github.com/facebookresearch/ocean/blob/5d3d3df5bf4cda0cc8e9828e19b4a46d3653f2b3/impl/application/ocean/demo/media/externalcamera/quest/ExternalCameraApplication.cpp#L293), enabling easy identification and selection of the desired device.
 
+<img src={require('@site/static/img/docs/demoapps/questapps/externalcamera.jpg').default} alt="Image: Screenshot of the External Camera app" width="600" className="center-image"/>
+
 Following the selection of a camera, the app seeks permission to access the external USB device, ensuring security and user consent. After permission is granted, users are presented with a menu to select their preferred stream configuration for the video feed, allowing customization based on specific requirements or preferences.
 
 The final step in the setup process is the real-time display of the live camera stream within the Quest environment. This feature not only broadens the capabilities of the Quest headset but also offers numerous possibilities for integrating real-world visuals into VR experiences for monitoring, broadcasting, or interactive purposes.
@@ -40,7 +42,7 @@ Additional functionalities include: After a stream has been selected, users can 
 
 ## Tested Cameras
 
-The following is a list of webcams that have been confirmed to work with the Quest devices. This list represents a random sample of webcams available on the market and is **not** intended as a recommendation of any specific brand or model. The webcams listed support at least one of the required stream types: Uncompressed (FORMAT_YUYV16 aka YUV2), Mjpeg, or Frame-based (H.264).
+The following is a list of webcams that have been confirmed to work with the Quest devices. This list represents a random sample of webcams available on the market and is **not** intended as a recommendation of any specific brand or model. The webcams listed support at least one of the required stream types: Uncompressed ([FORMAT_YUYV16](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/ocean/base/Frame.h#L560C4-L560C17) aka YUV2), Motion JPEG, or Frame-based (H.264).
 
   - Ailipu, HD USB Camera
   - Anker, PowerConf C200
@@ -51,3 +53,4 @@ The following is a list of webcams that have been confirmed to work with the Que
   - Sonix, USB 2.0 Camera
 
 Please note that while these models have been tested, performance can vary based on specific setups and usage conditions.
+Further, Compatibility may change at any time due to updates or changes in software or hardware.

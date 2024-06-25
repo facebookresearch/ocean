@@ -36,4 +36,28 @@ We encourage developers to engage with each demo app, starting from where it mak
 | [Theremin](theremin.md)                                      | Theremin Simulation, Real-Time Sound Generation, Passthrough Activation                        | Musical VR experiences                  | <img src={require('@site/static/img/docs/demoapps/questapps/theremin.jpg').default} width="200" className="center-image" />                      |
 | [SolarSystem](soloarsystem.md)                               | Rich VR Experience, Scene Description with X3D, Educational Audio Playback                     | Educational VR experiences              | <img src={require('@site/static/img/docs/demoapps/questapps/solarsystem.jpg').default} width="200" className="center-image" />                   |
 | [Graphs](graphs.md)                                          | Selectable 3D graphs, adjustable rendering modes, Gradient Descent visualization               | 3D graph exploration and algorithms     | <img src={require('@site/static/img/docs/demoapps/questapps/graphs.jpg').default} width="200" className="center-image" />                        |
-| [External Camera](externalcamera.md)                         | Supports external USB cameras, customizable settings, real-time display                        | Custom Computer Vision experimentation  |                                                                                                                                           |
+| [External Camera](externalcamera.md)                         | Supports external USB cameras, customizable settings, real-time display                        | Custom Computer Vision experimentation  | <img src={require('@site/static/img/docs/demoapps/questapps/externalcamera.jpg').default} width="200" className="center-image" />                |
+
+## Debugging Native Quest Apps
+
+Debugging native apps on Android platforms, including Quest, can present some challenges. To facilitate this process, you can utilize the Ocean log mechanism for basic debugging and verification tasks.
+To access the logs from a connected Quest device, use logcat by entering the following command for unfiltered logs:
+
+```
+adb logcat
+```
+
+If the log output is overwhelming, you can filter it to show only Ocean-specific logs to make it more manageable by using:
+
+```
+adb logcat -s Ocean
+```
+
+Note that Ocean's debug logs are only available when you run an Ocean app in debug mode. Please refer to Ocean's build instructions to learn how to build debug or release binaries.
+
+For debugging crashes that might involve issues between the Java and native components, it's useful to examine the broader Android runtime logs:
+
+```
+adb logcat -s AndroidRuntime
+```
+This approach can provide valuable insights into the underlying issues. Happy debugging!
