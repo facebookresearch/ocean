@@ -2185,13 +2185,13 @@ Frame::Frame(const Frame& frame, const AdvancedCopyMode advancedCopyMode) noexce
 
 		ocean_assert(frame.planes_.size() >= 1);
 
-		planes_.reserve(frame.planes_.size());
+		planes_.setCapacity(frame.planes_.size());
 
 		for (size_t n = 0; n < frame.planes_.size(); ++n)
 		{
 			const Plane& sourcePlane = frame.planes_[n];
 
-			planes_.emplace_back(sourcePlane, advancedCopyMode);
+			planes_.emplaceBack(sourcePlane, advancedCopyMode);
 
 			if (!planes_.back().isValid())
 			{
@@ -2223,7 +2223,7 @@ Frame::Frame(const FrameType& frameType, const PlaneInitializer<void>* planeInit
 
 	const unsigned int bytesPerElement = frameType.bytesPerDataType();
 
-	planes_.reserve(frameType.numberPlanes());
+	planes_.setCapacity(frameType.numberPlanes());
 
 	for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 	{
@@ -2243,7 +2243,7 @@ Frame::Frame(const FrameType& frameType, const PlaneInitializer<void>* planeInit
 
 				if (planeInitializer.data_ == nullptr && planeInitializer.constdata_ == nullptr)
 				{
-					planes_.push_back(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.paddingElements_));
+					planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.paddingElements_));
 				}
 				else
 				{
@@ -2251,12 +2251,12 @@ Frame::Frame(const FrameType& frameType, const PlaneInitializer<void>* planeInit
 					{
 						if (planeInitializer.data_ != nullptr)
 						{
-							planes_.push_back(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.data_, planeInitializer.paddingElements_));
+							planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.data_, planeInitializer.paddingElements_));
 						}
 						else
 						{
 							ocean_assert(planeInitializer.constdata_ != nullptr);
-							planes_.push_back(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.constdata_, planeInitializer.paddingElements_));
+							planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.constdata_, planeInitializer.paddingElements_));
 						}
 					}
 					else
@@ -2264,14 +2264,14 @@ Frame::Frame(const FrameType& frameType, const PlaneInitializer<void>* planeInit
 						const void* const data = planeInitializer.constdata_ ? planeInitializer.constdata_ : planeInitializer.data_;
 						ocean_assert(data != nullptr);
 
-						planes_.push_back(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, data, planeInitializer.paddingElements_, planeInitializer.copyMode_));
+						planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, data, planeInitializer.paddingElements_, planeInitializer.copyMode_));
 					}
 				}
 			}
 			else
 			{
 				constexpr unsigned int paddingElements = 0u;
-				planes_.push_back(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, paddingElements));
+				planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, paddingElements));
 			}
 		}
 		else
@@ -2333,7 +2333,7 @@ bool Frame::copy(const Frame& source, const bool copyTimestamp)
 		}
 		else
 		{
-			planes_.emplace_back(sourcePlanes[n], ACM_COPY_REMOVE_PADDING_LAYOUT);
+			planes_.emplaceBack(sourcePlanes[n], ACM_COPY_REMOVE_PADDING_LAYOUT);
 		}
 	}
 
@@ -2547,7 +2547,7 @@ bool Frame::set(const FrameType& frameType, const bool forceOwner, const bool fo
 		const unsigned int numberPlanes = frameType.numberPlanes();
 
 		planes_.clear();
-		planes_.reserve(numberPlanes);
+		planes_.setCapacity(numberPlanes);
 
 		FrameType::operator=(frameType);
 
@@ -2567,7 +2567,7 @@ bool Frame::set(const FrameType& frameType, const bool forceOwner, const bool fo
 
 				const unsigned int paddingElements = planeIndex < planePaddingElements.size() ? planePaddingElements[planeIndex] : 0u;
 
-				planes_.emplace_back(planeWidth, planeHeight, planeChannels, bytesPerElement, paddingElements);
+				planes_.emplaceBack(planeWidth, planeHeight, planeChannels, bytesPerElement, paddingElements);
 			}
 			else
 			{
@@ -2805,7 +2805,7 @@ Frame& Frame::operator=(const Frame& right) noexcept
 		}
 		else
 		{
-			planes_.emplace_back(sourcePlanes[n], ACM_USE_OR_COPY);
+			planes_.emplaceBack(sourcePlanes[n], ACM_USE_OR_COPY);
 		}
 	}
 

@@ -11,6 +11,7 @@
 #include "ocean/base/Base.h"
 #include "ocean/base/DataType.h"
 #include "ocean/base/ObjectRef.h"
+#include "ocean/base/StackHeapVector.h"
 #include "ocean/base/Timestamp.h"
 
 namespace Ocean
@@ -63,7 +64,7 @@ class OCEAN_BASE_EXPORT FrameType
 		/**
 		 * Definition of a vector holding data types.
 		 */
-		typedef std::vector<DataType> DataTypes;
+		using DataTypes = std::vector<DataType>;
 
 	protected:
 
@@ -1002,7 +1003,7 @@ class OCEAN_BASE_EXPORT FrameType
 		/**
 		 * Definition of a vector holding pixel formats.
 		 */
-		typedef std::vector<PixelFormat> PixelFormats;
+		using PixelFormats = std::vector<PixelFormat>;
 
 		/**
 		 * Defines different types of frame origin positions.
@@ -1726,19 +1727,19 @@ class Frame;
  * @see Frame.
  * @ingroup base
  */
-typedef std::vector<Frame> Frames;
+using Frames = std::vector<Frame>;
 
 /**
  * Definition of an object reference for frame objects.
  * @ingroup base
  */
-typedef ObjectRef<Frame> FrameRef;
+using FrameRef = ObjectRef<Frame>;
 
 /**
  * Definition of a vector holding frame references.
  * @ingroup base
  */
-typedef std::vector<FrameRef> FrameRefs;
+using FrameRefs = std::vector<FrameRef>;
 
 /**
  * This class implements Ocean's image class.
@@ -2209,7 +2210,7 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		/**
 		 * Definition of a vector storing planes.
 		 */
-		typedef std::vector<Plane> Planes;
+		using Planes = StackHeapVector<Plane, 4>;
 
 		/**
 		 * This class implements a helper class which can be used to initialize a multi-plane frame in the constructor.
@@ -4464,7 +4465,7 @@ inline bool Frame::isValid() const
 			}
 		}
 
-		const bool debugIsValid = !planes_.empty() && debugValidPlanes == planes_.size();
+		const bool debugIsValid = !planes_.isEmpty() && debugValidPlanes == planes_.size();
 
 		ocean_assert(debugIsValid == frameTypeIsValid);
 	}
