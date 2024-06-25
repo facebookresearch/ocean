@@ -5,6 +5,7 @@ This document describes the process to build Ocean for macOS. It covers:
 1. General requirements
 2. Building required third-party libraries
 3. Building Ocean
+4. Using XCode to build the macOS apps that come with Ocean
 
 ## 1 Prerequisites
 
@@ -31,3 +32,50 @@ cd ${OCEAN_DEVELOPMENT_PATH}
 ```
 
 Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Make sure that the parameter specifying the location of the third-party libraries is the same as installation path from the previous section. Once the build is complete, the compiled binaries can be found in `${HOME}/install_ocean/static_Debug` and `.../static_Release`.
+
+## 4 Building the Ocean macOS demo/test apps
+
+First, build the required third-party libraries as described above with (targets should be available as static libraries as debug and/or release builds).
+
+To configure the CMake project of Ocean as a debug build, use:
+
+```
+# Debug
+cd ${OCEAN_DEVELOPMENT_PATH}
+cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
+    -B"${HOME}/build_ocean_macos_debug" \
+    -DCMAKE_BUILD_TYPE="Debug" \
+    -G Xcode \
+    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/macos_static_Debug" \
+    -DBUILD_SHARED_LIBS="OFF"
+```
+
+and for release builds, use:
+
+```
+# Release
+cd ${OCEAN_DEVELOPMENT_PATH}
+cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
+    -B"${HOME}/build_ocean_macos_release" \
+    -DCMAKE_BUILD_TYPE="Release" \
+    -G Xcode \
+    -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/macos_static_Release" \
+    -DBUILD_SHARED_LIBS="OFF"
+```
+Once the configuration is complete, open the generated the XCode project:
+
+```
+# Debug
+open ${HOME}/build_ocean_macos_debug/ocean.xcodeproj
+```
+
+or
+
+```
+# Release
+open ${HOME}/build_ocean_macos_release/ocean.xcodeproj
+```
+
+If XCode asks whether schemes should be created automatically or manually, select automatically.
+
+Then search for the demo/test apps at the top of the XCode window. The Ocean targets for demos and tests follow the naming scheme `application_ocean_(test|demo)_..._osx`. Select an app and build and install as normal. For inspiration checkout the list of available demos on the [project website](https://facebookresearch.github.io/ocean/docs/introduction/).
