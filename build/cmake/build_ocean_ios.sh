@@ -15,8 +15,8 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 OCEAN_SOURCE_DIR=$( cd "${SCRIPT_DIR}" && cd ../.. && pwd )
 
-OCEAN_BUILD_DIR="/tmp/ocean/build/${OCEAN_PLATFORM}"
-OCEAN_INSTALL_DIR="/tmp/ocean/install/${OCEAN_PLATFORM}"
+OCEAN_BUILD_DIR="${PWD}/ocean_build"
+OCEAN_INSTALL_DIR="${PWD}/ocean_install"
 
 OCEAN_VALID_BUILD_CONFIGS="debug,release"
 OCEAN_BUILD_CONFIGS="release"
@@ -53,10 +53,12 @@ display_help()
     echo "Arguments:"
     echo ""
     echo "  -i | -install INSTALL_DIR : The optional location where the third-party libraries of Ocean will"
-    echo "                be installed. Otherwise builds will be installed to: ${OCEAN_INSTALL_DIR}"
+    echo "                be installed. Default installation directory:"
+    echo "                ${OCEAN_INSTALL_DIR}"
     echo ""
     echo "  -b | -build BUILD_DIR : The optional location where the third-party libraries of Ocean will"
-    echo "                be built. Otherwise builds will be installed to: ${OCEAN_BUILD_DIR}"
+    echo "                be built. Default build directory:"
+    echo "                ${OCEAN_BUILD_DIR}"
     echo ""
     echo "  -c | --config BUILD_CONFIG : The optional build configs(s) to be built; valid values are:"
     for type in $(echo "${OCEAN_VALID_BUILD_CONFIGS}" | tr ',' '\n'); do
@@ -109,47 +111,45 @@ function run_build {
         exit 1
     fi
 
-    OCEAN_BUILD_DIRECTORY="${OCEAN_BUILD_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
-    OCEAN_INSTALL_DIRECTORY="${OCEAN_INSTALL_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
-
-    OCEAN_THIRD_PARTY_DIRECTORY="${OCEAN_THIRD_PARTY_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
+    BUILD_DIR="${OCEAN_BUILD_DIR}/${OCEAN_PLATFORM}_${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
+    INSTALL_DIR="${OCEAN_INSTALL_DIR}/${OCEAN_PLATFORM}_${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
 
     echo " "
     echo "BUILD_CONFIG: ${BUILD_CONFIG}"
     echo "LINKING_TYPE: ${LINKING_TYPE}"
     echo " "
-    echo "OCEAN_BUILD_DIRECTORY: ${OCEAN_BUILD_DIRECTORY}"
-    echo "OCEAN_INSTALL_DIRECTORY: ${OCEAN_INSTALL_DIRECTORY}"
+    echo "BUILD_DIR: ${BUILD_DIR}"
+    echo "INSTALL_DIR: ${INSTALL_DIR}"
 
     CMAKE_CONFIGURE_COMMAND="cmake -S\"${OCEAN_SOURCE_DIR}\" \\
-    -B\"${OCEAN_BUILD_DIRECTORY}\" \\
+    -B\"${BUILD_DIR}\" \\
     -DCMAKE_BUILD_TYPE=\"${BUILD_CONFIG}\" \\
     -G Xcode \\
     -DCMAKE_TOOLCHAIN_FILE=\"${IOS_CMAKE_TOOLCHAIN_FILE}\" \\
     -DPLATFORM=\"${IOS_CMAKE_TOOLCHAIN_PLATFORM}\" \\
     -DDEPLOYMENT_TARGET=15 \\
-    -DCMAKE_INSTALL_PREFIX=\"${OCEAN_INSTALL_DIRECTORY}\" \\
+    -DCMAKE_INSTALL_PREFIX=\"${INSTALL_DIR}\" \\
     -DBUILD_SHARED_LIBS=\"${ENABLE_BUILD_SHARED_LIBS}\" \\
     -DCMAKE_XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER:STRING=org.ocean \\
     -DOCEAN_BUILD_DEMOS=FALSE \\
     -DOCEAN_BUILD_TESTS=FALSE"
 
     if [ -n "${OCEAN_THIRD_PARTY_DIR}" ]; then
-        OCEAN_THIRD_PARTY_DIRECTORY="${OCEAN_THIRD_PARTY_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
+        # This must match the INSTALL_DIR from ./build_thirdparty_ios.sh
+        THIRD_PARTY_DIR="${OCEAN_THIRD_PARTY_DIR}/${OCEAN_PLATFORM}_${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
 
-        echo "OCEAN_THIRD_PARTY_DIRECTORY: ${OCEAN_THIRD_PARTY_DIRECTORY}"
+        echo "THIRD_PARTY_DIR: ${THIRD_PARTY_DIR}"
         echo " "
 
         CMAKE_CONFIGURE_COMMAND+="  \\
-    -DCMAKE_PREFIX_PATH=\"${OCEAN_THIRD_PARTY_DIRECTORY}\" \\
-    -DCMAKE_MODULE_PATH=\"${OCEAN_THIRD_PARTY_DIRECTORY}\""
-    # -DCMAKE_FIND_ROOT_PATH=\"${OCEAN_THIRD_PARTY_DIRECTORY}\""
+    -DCMAKE_PREFIX_PATH=\"${THIRD_PARTY_DIR}\" \\
+    -DCMAKE_MODULE_PATH=\"${THIRD_PARTY_DIR}\""
     fi
 
     echo "CMAKE_CONFIGURE_COMMAND = ${CMAKE_CONFIGURE_COMMAND}"
     eval "${CMAKE_CONFIGURE_COMMAND}"
 
-    cmake --build "${OCEAN_BUILD_DIRECTORY}" --target install -- CODE_SIGNING_ALLOWED=NO -parallelizeTargets -jobs 16
+    cmake --build "${BUILD_DIR}" --target install -- CODE_SIGNING_ALLOWED=NO -parallelizeTargets -jobs 16
 
     build_exit_code=$?
 

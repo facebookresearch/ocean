@@ -11,13 +11,17 @@ fi
 
 OCEAN_PLATFORM="ios"
 
+# The flag indicating the platform that will be built for, cf. ios.toolchain.cmake for details
+# OS64 - build for iOS (arm64 only)
+IOS_CMAKE_TOOLCHAIN_PLATFORM="OS64"
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # OTP = OCEAN_THIRD_PARTY
 OTP_SOURCE_DIR=$( cd "${SCRIPT_DIR}/third-party" && pwd )
 
-OTP_BUILD_DIR="/tmp/ocean/build/${OCEAN_PLATFORM}"
-OTP_INSTALL_DIR="/tmp/ocean/install/${OCEAN_PLATFORM}"
+OTP_BUILD_DIR="${PWD}/ocean_build_thirdparty"
+OTP_INSTALL_DIR="${PWD}/ocean_install_thirdparty"
 
 OTP_VALID_BUILD_CONFIGS="debug,release"
 OTP_BUILD_CONFIG="release"
@@ -43,10 +47,12 @@ display_help()
     echo "Arguments:"
     echo ""
     echo "  -i | --install INSTALL_DIR : The optional location where the third-party libraries of Ocean will"
-    echo "                be installed. Otherwise builds will be installed to: ${OTP_INSTALL_DIR}"
+    echo "                be installed. Default installation directory:"
+    echo "                ${OTP_INSTALL_DIR}"
     echo ""
     echo "  -b | --build BUILD_DIR : The optional location where the third-party libraries of Ocean will"
-    echo "                be built. Otherwise builds will be installed to: ${OTP_BUILD_DIR}"
+    echo "                be built. Default build directory:"
+    echo "                ${OTP_BUILD_DIR}"
     echo ""
     echo "  -c | --config BUILD_CONFIG : The optional build configs(s) to be built; valid values are:"
     for type in $(echo "${OTP_VALID_BUILD_CONFIGS}" | tr ',' '\n'); do
@@ -128,8 +134,8 @@ function run_build {
     fi
 
     # Specific build and installation directory for the current build config
-    BUILD_DIR="${OTP_BUILD_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
-    INSTALL_DIR="${OTP_INSTALL_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
+    BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}_${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
+    INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}_${IOS_CMAKE_TOOLCHAIN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
 
     echo ""
     echo ""
@@ -142,10 +148,6 @@ function run_build {
     echo ""
     echo ""
     echo ""
-
-    # The flag indicating the platform that will be built for, cf. ios.toolchain.cmake for details
-    # OS64 - build for iOS (arm64 only)
-    IOS_CMAKE_TOOLCHAIN_PLATFORM="OS64"
 
     BUILD_COMMAND="\"${OTP_SOURCE_DIR}/build_deps.sh\" ios \"${OTP_SOURCE_DIR}\" \"${BUILD_DIR}\" \"-parallelizeTargets -jobs $(sysctl -n hw.ncpu) CODE_SIGNING_ALLOWED=NO\" \
         \"-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}\" \
