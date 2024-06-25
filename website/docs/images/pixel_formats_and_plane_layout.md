@@ -83,7 +83,8 @@ The most common pixel formats are highlighted for easy reference.
 |              | FORMAT_Y_U_V24                         | uint8_t          |       | Known as I444                                                    |
 |              | FORMAT_Y_U_V12                         | uint8_t          |       | Known as I420                                                    |
 |              | FORMAT_Y_V_U12                         | uint8_t          |       | Known as YV12                                                    |
-|              | F**ORMAT_F32**                         | float            |       | Floats with 32 bit precision, e.g., for depth                    |
+|              |                                        |                  |       |                                                                  |
+| Depth        | **FORMAT_F32**                         | float            |       | Floats with 32 bit precision, e.g., for depth                    |
 |              | FORMAT_F64                             | double           |       | Floats with 64 bit precision                                     |
 
 ## Custom pixel formats
