@@ -19,8 +19,8 @@ OCEAN_PLATFORM="android"
 # OTP = OCEAN_THIRD_PARTY
 OTP_SOURCE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd third-party && pwd )
 
-OTP_BUILD_DIR="/tmp/ocean/build/${OCEAN_PLATFORM}"
-OTP_INSTALL_DIR="/tmp/ocean/install/${OCEAN_PLATFORM}"
+OTP_BUILD_DIR="${PWD}/ocean_build_thirdparty"
+OTP_INSTALL_DIR="${PWD}/ocean_install_thirdparty"
 
 OTP_VALID_ANDROID_ABIS="arm64-v8a,armeabi-v7a,x86_64,x86"
 OTP_ANDROID_ABIS="arm64-v8a"
@@ -57,11 +57,13 @@ display_help()
     echo ""
     echo "  -s | --sdk ANDROID_SDK : name of Android SDK version for builds. Default: ${OTP_ANDROID_SDK}"
     echo ""
-    echo "  -i | -install INSTALL_DIR : The optional location where the third-party libraries of Ocean will"
-    echo "                be installed. Otherwise builds will be installed to: ${OTP_INSTALL_DIR}"
+    echo "  -i | --install INSTALL_DIR : The optional location where the third-party libraries of Ocean will"
+    echo "                be installed. Default installation directory:"
+    echo "                ${OTP_INSTALL_DIR}"
     echo ""
-    echo "  -b | -build BUILD_DIR : The optional location where the third-party libraries of Ocean will"
-    echo "                be built. Otherwise builds will be installed to: ${OTP_BUILD_DIR}"
+    echo "  -b | --build BUILD_DIR : The optional location where the third-party libraries of Ocean will"
+    echo "                be built. Default build directory:"
+    echo "                ${OTP_BUILD_DIR}"
     echo ""
     echo "  -c | --config BUILD_CONFIG : The optional build configs(s) to be built; valid values are:"
     for type in $(echo "${OTP_VALID_BUILD_CONFIGS}" | tr ',' '\n'); do
@@ -70,7 +72,7 @@ display_help()
     echo "                Multiple values must be separated by commas. Default value if nothing is"
     echo "                specified: \"${OTP_BUILD_CONFIGS}\""
     echo ""
-    echo "  -l | -link LINKING_TYPE : The optional linking type for which will be built; valid values are:"
+    echo "  -l | --link LINKING_TYPE : The optional linking type for which will be built; valid values are:"
     for type in $(echo "${OTP_VALID_LINKING_TYPES}" | tr ',' '\n'); do
         echo "                  ${type}"
     done
@@ -119,8 +121,8 @@ function run_build {
 
     ANDROID_SDK_VERSION=$4
 
-    OTP_BUILD_DIRECTORY="${OTP_BUILD_DIR}/third-party/${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_CONFIG}"
-    OTP_INSTALL_DIRECTORY="${OTP_INSTALL_DIR}/${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_CONFIG}"
+    BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}_${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_CONFIG}"
+    INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}_${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_CONFIG}"
 
     echo ""
     echo ""
@@ -128,20 +130,20 @@ function run_build {
     echo "Build type: ${BUILD_CONFIG}"
     echo "Linking type: ${LINKING_TYPE}"
     echo ""
-    echo "Build directory: ${OTP_BUILD_DIRECTORY}"
-    echo "Install directory: ${OTP_INSTALL_DIRECTORY}"
+    echo "Build directory: ${BUILD_DIR}"
+    echo "Install directory: ${INSTALL_DIR}"
     echo ""
     echo ""
     echo ""
 
-    eval "${OTP_SOURCE_DIR}/build_deps.sh" ${OCEAN_PLATFORM} "${OTP_SOURCE_DIR}" "${OTP_BUILD_DIRECTORY}" -j16 \
+    eval "${OTP_SOURCE_DIR}/build_deps.sh" ${OCEAN_PLATFORM} "${OTP_SOURCE_DIR}" "${BUILD_DIR}" -j16 \
         "-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}" \
         "-DANDROID_ABI=${ANDROID_ABI}" \
         "-DANDROID_PLATFORM=${ANDROID_SDK_VERSION}" \
         "-DCMAKE_ANDROID_STL_TYPE=c++_static" \
         "-DCMAKE_ANDROID_NDK=${ANDROID_NDK}" \
         "-DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake" \
-        "-DCMAKE_INSTALL_PREFIX=${OTP_INSTALL_DIRECTORY}" \
+        "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}" \
         "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}"
     if [ "$?" != 0 ]; then
         OTP_FAILED_BUILDS+=("${ANDROID_ABI} + ${LINKING_TYPE} + ${BUILD_CONFIG}")
