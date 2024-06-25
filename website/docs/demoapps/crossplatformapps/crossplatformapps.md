@@ -1,5 +1,5 @@
 ---
-title: Introduction
+title: Cross-Platform Apps
 sidebar_position: 1
 ---
 
@@ -12,7 +12,7 @@ Below, a selected subset of Ocean's demo applications is presented. Most applica
 
 ### Console
 
-The [*Console*](./console.md) demo app is a straightforward application designed to demonstrate the creation of a multi-platform app with console/text output, compatible with Windows, Linux, macOS, iOS, and Android.
+The [*Console*](console.md) demo app is a straightforward application designed to demonstrate the creation of a multi-platform app with console/text output, compatible with Windows, Linux, macOS, iOS, and Android.
 
 <div class="icon-container">
     <img src={require('@site/static/img/docs/icon_windows.png').default} alt="Windows" class="center-icon"/>
