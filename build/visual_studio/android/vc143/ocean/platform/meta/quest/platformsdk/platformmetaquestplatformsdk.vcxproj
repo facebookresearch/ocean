@@ -72,25 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Application.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\DistributedStates.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Manager.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\MessageHandler.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Microphone.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Multiplayer.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Network.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Room.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Application.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\DistributedStates.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Manager.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\MessageHandler.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Microphone.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Multiplayer.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Network.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\PlatformSDK.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Room.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Utilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

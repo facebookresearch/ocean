@@ -15,19 +15,10 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Multiplayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Network.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Room.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Application.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\DistributedStates.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Manager.cpp">
@@ -38,9 +29,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\DistributedStates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -53,13 +41,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Multiplayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Network.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\PlatformSDK.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Room.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\platform\meta\quest\platformsdk\Utilities.h">

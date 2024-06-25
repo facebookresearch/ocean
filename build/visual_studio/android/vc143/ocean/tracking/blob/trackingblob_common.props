@@ -16,6 +16,5 @@
     <Import Condition="'$(ocean_geometry_use_imported)' != 'True'" Project="..\..\geometry\geometry_use.props"/>
     <Import Condition="'$(ocean_math_use_imported)' != 'True'" Project="..\..\math\math_use.props"/>
     <Import Condition="'$(ocean_tracking_use_imported)' != 'True'" Project="..\..\tracking\tracking_use.props"/>
-    <Import Condition="'$(ocean_trackinguvtexturemapping_use_imported)' != 'True'" Project="..\..\tracking\uvtexturemapping\trackinguvtexturemapping_use.props"/>
   </ImportGroup>
 </Project>
