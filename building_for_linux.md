@@ -20,10 +20,10 @@ To build the required third-party libraries for Ocean, run the following:
 
 ```
 cd ${OCEAN_DEVELOPMENT_PATH}
-./build/cmake/build_thirdparty_linuxunix.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty_linux" -i "${HOME}/install_ocean_thirdparty_linux"
+./build/cmake/build_thirdparty_linuxunix.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty"
 ```
 
-Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Once the build is complete, the compiled binaries can be found in `${HOME}/install_ocean_thirdparty_linux/static_Debug` and `.../static_Release`.
+Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Once the build is complete, the compiled binaries can be found in `${HOME}/install_ocean_thirdparty/static_Debug` and `.../static_Release`.
 
 
 ## 3 Building Ocean
@@ -32,7 +32,7 @@ The easiest way to build the third-party libraries is by using the provided buil
 
 ```
 cd ${OCEAN_DEVELOPMENT_PATH}
-./build/cmake/build_ocean_linuxunix.sh -c debug,release -l static -b "${HOME}/build_ocean_linux" -t "${HOME}/install_ocean_thirdparty_linux"
+./build/cmake/build_ocean_linuxunix.sh -c debug,release -l static -b "${HOME}/build_ocean" -t "${HOME}/install_ocean_thirdparty"
 ```
 
-Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Make sure that the parameter specifying the location of the third-party libraries is the same as installation path from the previous section. Once the build is complete, the compiled binaries can be found in `${HOME}/install_ocean_linux/static_Debug` and `.../static_Release`.
+Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Make sure that the parameter specifying the location of the third-party libraries is the same as installation path from the previous section. Once the build is complete, the compiled binaries can be found in `${HOME}/install_ocean/static_Debug` and `.../static_Release`.
