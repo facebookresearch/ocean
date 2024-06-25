@@ -28,6 +28,7 @@
 #include "ocean/test/testbase/TestScopedObject.h"
 #include "ocean/test/testbase/TestSegmentUnion.h"
 #include "ocean/test/testbase/TestSingleton.h"
+#include "ocean/test/testbase/TestStackHeapVector.h"
 #include "ocean/test/testbase/TestStaticBuffer.h"
 #include "ocean/test/testbase/TestStaticVector.h"
 #include "ocean/test/testbase/TestSTL.h"
@@ -404,6 +405,15 @@ bool testBase(const double testDuration, Worker& worker, const std::string& test
 		Log::info() << " ";
 		Log::info() << " ";
 		allSucceeded = TestStaticVector::test(testDuration) && allSucceeded;
+	}
+
+	if (testSet.empty() || testSet.find("stackheapvector") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		allSucceeded = TestStackHeapVector::test(testDuration) && allSucceeded;
 	}
 
 	Log::info() << " ";

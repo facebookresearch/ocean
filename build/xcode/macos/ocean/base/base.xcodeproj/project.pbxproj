@@ -367,6 +367,10 @@
 		934D207B2BE31E2E00AEFA1E /* DataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 934D20792BE31E2E00AEFA1E /* DataType.cpp */; };
 		934D207C2BE31E2E00AEFA1E /* DataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 934D20792BE31E2E00AEFA1E /* DataType.cpp */; };
 		934D207D2BE31E2E00AEFA1E /* DataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 934D20792BE31E2E00AEFA1E /* DataType.cpp */; };
+		9353AF872C2787D6000146CC /* StackHeapVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF862C2787D6000146CC /* StackHeapVector.h */; };
+		9353AF882C2787D6000146CC /* StackHeapVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF862C2787D6000146CC /* StackHeapVector.h */; };
+		9353AF892C2787D6000146CC /* StackHeapVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF862C2787D6000146CC /* StackHeapVector.h */; };
+		9353AF8A2C2787D6000146CC /* StackHeapVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF862C2787D6000146CC /* StackHeapVector.h */; };
 		9359D69A296DF6EB005285B3 /* ScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9359D699296DF6EB005285B3 /* ScopedFunction.h */; };
 		9359D69B296DF6EB005285B3 /* ScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9359D699296DF6EB005285B3 /* ScopedFunction.h */; };
 		9359D69C296DF6EB005285B3 /* ScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9359D699296DF6EB005285B3 /* ScopedFunction.h */; };
@@ -480,6 +484,7 @@
 		933387942152F2710002B6D6 /* SegmentUnion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SegmentUnion.h; path = ../../../../../impl/ocean/base/SegmentUnion.h; sourceTree = "<group>"; };
 		9336134827671D750068E556 /* ScopedSubscription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScopedSubscription.h; path = ../../../../../impl/ocean/base/ScopedSubscription.h; sourceTree = "<group>"; };
 		934D20792BE31E2E00AEFA1E /* DataType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataType.cpp; path = ../../../../../impl/ocean/base/DataType.cpp; sourceTree = "<group>"; };
+		9353AF862C2787D6000146CC /* StackHeapVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StackHeapVector.h; path = ../../../../../impl/ocean/base/StackHeapVector.h; sourceTree = "<group>"; };
 		9359D699296DF6EB005285B3 /* ScopedFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScopedFunction.h; path = ../../../../../impl/ocean/base/ScopedFunction.h; sourceTree = "<group>"; };
 		936BA65923E8F166001E200F /* DebugElements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DebugElements.cpp; path = ../../../../../impl/ocean/base/DebugElements.cpp; sourceTree = "<group>"; };
 		936BA65E23E8F173001E200F /* DebugElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DebugElements.h; path = ../../../../../impl/ocean/base/DebugElements.h; sourceTree = "<group>"; };
@@ -585,6 +590,7 @@
 				5DFD7C1C1B91027300ABF245 /* Signal.h */,
 				5DFD7C1D1B91027300ABF245 /* Singleton.h */,
 				5DFD7C0A1B9100E900ABF245 /* SmartObjectRef.h */,
+				9353AF862C2787D6000146CC /* StackHeapVector.h */,
 				5DFD7C0B1B9100E900ABF245 /* StaticBuffer.h */,
 				5DFD7C0C1B9100E900ABF245 /* StaticVector.h */,
 				5D4A5FBE1DB67D7700CCC755 /* StringApple.h */,
@@ -668,6 +674,7 @@
 				5DFD7BC21B91003F00ABF245 /* Build.h in Headers */,
 				5DFD7C141B9100E900ABF245 /* SmartObjectRef.h in Headers */,
 				5DFD7BFF1B9100C900ABF245 /* Processor.h in Headers */,
+				9353AF872C2787D6000146CC /* StackHeapVector.h in Headers */,
 				5DFD7BFD1B9100C900ABF245 /* OceanManager.h in Headers */,
 				5DFD7C2E1B91029100ABF245 /* Thread.h in Headers */,
 				5D4A5FBF1DB67D7700CCC755 /* StringApple.h in Headers */,
@@ -732,6 +739,7 @@
 				5D2229E91BB1684300298788 /* Build.h in Headers */,
 				5D2229EA1BB1684300298788 /* SmartObjectRef.h in Headers */,
 				5D2229EB1BB1684300298788 /* Processor.h in Headers */,
+				9353AF882C2787D6000146CC /* StackHeapVector.h in Headers */,
 				5D2229EC1BB1684300298788 /* OceanManager.h in Headers */,
 				5D2229ED1BB1684300298788 /* Thread.h in Headers */,
 				5D4A5FC01DB67D7700CCC755 /* StringApple.h in Headers */,
@@ -796,6 +804,7 @@
 				5D8380DB1D8F366700939AD7 /* Build.h in Headers */,
 				5D8380DC1D8F366700939AD7 /* SmartObjectRef.h in Headers */,
 				5D8380DD1D8F366700939AD7 /* Processor.h in Headers */,
+				9353AF8A2C2787D6000146CC /* StackHeapVector.h in Headers */,
 				5D8380DE1D8F366700939AD7 /* OceanManager.h in Headers */,
 				5D8380DF1D8F366700939AD7 /* Thread.h in Headers */,
 				5D4A5FC21DB67D7700CCC755 /* StringApple.h in Headers */,
@@ -860,6 +869,7 @@
 				5D9CA2C41D8B23140020FD83 /* Build.h in Headers */,
 				5D9CA2C51D8B23140020FD83 /* SmartObjectRef.h in Headers */,
 				5D9CA2C61D8B23140020FD83 /* Processor.h in Headers */,
+				9353AF892C2787D6000146CC /* StackHeapVector.h in Headers */,
 				5D9CA2C71D8B23140020FD83 /* OceanManager.h in Headers */,
 				5D9CA2C81D8B23140020FD83 /* Thread.h in Headers */,
 				5D4A5FC11DB67D7700CCC755 /* StringApple.h in Headers */,

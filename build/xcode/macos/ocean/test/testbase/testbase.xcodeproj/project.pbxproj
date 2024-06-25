@@ -183,6 +183,14 @@
 		933387A02152F29C0002B6D6 /* TestSegmentUnion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9333879E2152F29B0002B6D6 /* TestSegmentUnion.cpp */; };
 		933387A12152F29C0002B6D6 /* TestSegmentUnion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9333879E2152F29B0002B6D6 /* TestSegmentUnion.cpp */; };
 		933387A22152F29C0002B6D6 /* TestSegmentUnion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9333879E2152F29B0002B6D6 /* TestSegmentUnion.cpp */; };
+		9353AF8C2C29E672000146CC /* TestStackHeapVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF8B2C29E672000146CC /* TestStackHeapVector.h */; };
+		9353AF8D2C29E672000146CC /* TestStackHeapVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF8B2C29E672000146CC /* TestStackHeapVector.h */; };
+		9353AF8E2C29E672000146CC /* TestStackHeapVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF8B2C29E672000146CC /* TestStackHeapVector.h */; };
+		9353AF8F2C29E672000146CC /* TestStackHeapVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF8B2C29E672000146CC /* TestStackHeapVector.h */; };
+		9353AF912C29E67B000146CC /* TestStackHeapVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF902C29E67B000146CC /* TestStackHeapVector.cpp */; };
+		9353AF922C29E67B000146CC /* TestStackHeapVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF902C29E67B000146CC /* TestStackHeapVector.cpp */; };
+		9353AF932C29E67B000146CC /* TestStackHeapVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF902C29E67B000146CC /* TestStackHeapVector.cpp */; };
+		9353AF942C29E67B000146CC /* TestStackHeapVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF902C29E67B000146CC /* TestStackHeapVector.cpp */; };
 		936481DE27FCEBDF00483217 /* TestValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 936481DD27FCEBDF00483217 /* TestValue.h */; };
 		936481DF27FCEBDF00483217 /* TestValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 936481DD27FCEBDF00483217 /* TestValue.h */; };
 		936481E027FCEBDF00483217 /* TestValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 936481DD27FCEBDF00483217 /* TestValue.h */; };
@@ -349,6 +357,8 @@
 		9329B9E92B51E85B000F4068 /* TestThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestThreadPool.cpp; path = ../../../../../../impl/ocean/test/testbase/TestThreadPool.cpp; sourceTree = "<group>"; };
 		933387992152F28B0002B6D6 /* TestSegmentUnion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSegmentUnion.h; path = ../../../../../../impl/ocean/test/testbase/TestSegmentUnion.h; sourceTree = "<group>"; };
 		9333879E2152F29B0002B6D6 /* TestSegmentUnion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSegmentUnion.cpp; path = ../../../../../../impl/ocean/test/testbase/TestSegmentUnion.cpp; sourceTree = "<group>"; };
+		9353AF8B2C29E672000146CC /* TestStackHeapVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestStackHeapVector.h; path = ../../../../../../impl/ocean/test/testbase/TestStackHeapVector.h; sourceTree = "<group>"; };
+		9353AF902C29E67B000146CC /* TestStackHeapVector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestStackHeapVector.cpp; path = ../../../../../../impl/ocean/test/testbase/TestStackHeapVector.cpp; sourceTree = "<group>"; };
 		936481DD27FCEBDF00483217 /* TestValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestValue.h; path = ../../../../../../impl/ocean/test/testbase/TestValue.h; sourceTree = "<group>"; };
 		936481E227FCEBF700483217 /* TestValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestValue.cpp; path = ../../../../../../impl/ocean/test/testbase/TestValue.cpp; sourceTree = "<group>"; };
 		9365F0052BACF15E00C10866 /* TestStaticVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestStaticVector.h; path = ../../../../../../impl/ocean/test/testbase/TestStaticVector.h; sourceTree = "<group>"; };
@@ -446,6 +456,7 @@
 				9333879E2152F29B0002B6D6 /* TestSegmentUnion.cpp */,
 				5D9C33761B91D58500D6B89A /* TestSignal.cpp */,
 				5D9C33771B91D58500D6B89A /* TestSingleton.cpp */,
+				9353AF902C29E67B000146CC /* TestStackHeapVector.cpp */,
 				93BB07CF2B9BD667007CD359 /* TestStaticBuffer.cpp */,
 				9365F00A2BACF16500C10866 /* TestStaticVector.cpp */,
 				5D9C33781B91D58500D6B89A /* TestSTL.cpp */,
@@ -488,6 +499,7 @@
 				933387992152F28B0002B6D6 /* TestSegmentUnion.h */,
 				5D936E991BC555270046ACD4 /* TestSignal.h */,
 				5D936E9A1BC555270046ACD4 /* TestSingleton.h */,
+				9353AF8B2C29E672000146CC /* TestStackHeapVector.h */,
 				93BB07D42B9BD670007CD359 /* TestStaticBuffer.h */,
 				9365F0052BACF15E00C10866 /* TestStaticVector.h */,
 				5D936E9B1BC555270046ACD4 /* TestSTL.h */,
@@ -524,6 +536,7 @@
 				9333879A2152F28B0002B6D6 /* TestSegmentUnion.h in Headers */,
 				5D936EA01BC555270046ACD4 /* TestBase.h in Headers */,
 				930630C4225BC1E0007CA1F0 /* TestMoveBehavior.h in Headers */,
+				9353AF8C2C29E672000146CC /* TestStackHeapVector.h in Headers */,
 				5D936EAC1BC555270046ACD4 /* TestMedian.h in Headers */,
 				5D936EA71BC555270046ACD4 /* TestHashSet.h in Headers */,
 				5D936EB61BC555270046ACD4 /* TestWorker.h in Headers */,
@@ -566,6 +579,7 @@
 				9333879B2152F28B0002B6D6 /* TestSegmentUnion.h in Headers */,
 				5D936FCA1BC6C8620046ACD4 /* TestBase.h in Headers */,
 				930630C5225BC1E0007CA1F0 /* TestMoveBehavior.h in Headers */,
+				9353AF8D2C29E672000146CC /* TestStackHeapVector.h in Headers */,
 				5D936FCB1BC6C8620046ACD4 /* TestMedian.h in Headers */,
 				5D936FCC1BC6C8620046ACD4 /* TestHashSet.h in Headers */,
 				5D936FCD1BC6C8620046ACD4 /* TestWorker.h in Headers */,
@@ -608,6 +622,7 @@
 				9333879C2152F28B0002B6D6 /* TestSegmentUnion.h in Headers */,
 				5DF4B8951D941D5C00284665 /* TestBase.h in Headers */,
 				930630C6225BC1E0007CA1F0 /* TestMoveBehavior.h in Headers */,
+				9353AF8E2C29E672000146CC /* TestStackHeapVector.h in Headers */,
 				5DF4B8961D941D5C00284665 /* TestMedian.h in Headers */,
 				5DF4B8971D941D5C00284665 /* TestHashSet.h in Headers */,
 				5DF4B8981D941D5C00284665 /* TestWorker.h in Headers */,
@@ -650,6 +665,7 @@
 				9333879D2152F28B0002B6D6 /* TestSegmentUnion.h in Headers */,
 				C0E9B02C1DACE98D00895C4B /* TestBase.h in Headers */,
 				930630C7225BC1E0007CA1F0 /* TestMoveBehavior.h in Headers */,
+				9353AF8F2C29E672000146CC /* TestStackHeapVector.h in Headers */,
 				C0E9B02D1DACE98D00895C4B /* TestMedian.h in Headers */,
 				C0E9B02E1DACE98D00895C4B /* TestHashSet.h in Headers */,
 				C0E9B02F1DACE98D00895C4B /* TestWorker.h in Headers */,
@@ -861,6 +877,7 @@
 				5D9C338E1B91D58500D6B89A /* TestSingleton.cpp in Sources */,
 				93DA329729676673001B3ADC /* TestScopedObject.cpp in Sources */,
 				5D9C338C1B91D58500D6B89A /* TestRingMap.cpp in Sources */,
+				9353AF912C29E67B000146CC /* TestStackHeapVector.cpp in Sources */,
 				5D9C33851B91D58500D6B89A /* TestHighPerformanceTimer.cpp in Sources */,
 				5D9C33911B91D58500D6B89A /* TestTimestamp.cpp in Sources */,
 				93152E152441ACC3009F76E0 /* TestCommandArguments.cpp in Sources */,
@@ -903,6 +920,7 @@
 				5D936FBC1BC6C8620046ACD4 /* TestSingleton.cpp in Sources */,
 				93DA329829676673001B3ADC /* TestScopedObject.cpp in Sources */,
 				5D936FBD1BC6C8620046ACD4 /* TestRingMap.cpp in Sources */,
+				9353AF922C29E67B000146CC /* TestStackHeapVector.cpp in Sources */,
 				5D936FBE1BC6C8620046ACD4 /* TestHighPerformanceTimer.cpp in Sources */,
 				5D936FBF1BC6C8620046ACD4 /* TestTimestamp.cpp in Sources */,
 				93152E162441ACC3009F76E0 /* TestCommandArguments.cpp in Sources */,
@@ -945,6 +963,7 @@
 				5DF4B8861D941D5C00284665 /* TestSingleton.cpp in Sources */,
 				93DA329929676673001B3ADC /* TestScopedObject.cpp in Sources */,
 				5DF4B8871D941D5C00284665 /* TestRingMap.cpp in Sources */,
+				9353AF932C29E67B000146CC /* TestStackHeapVector.cpp in Sources */,
 				5DF4B8881D941D5C00284665 /* TestHighPerformanceTimer.cpp in Sources */,
 				5DF4B8891D941D5C00284665 /* TestTimestamp.cpp in Sources */,
 				93152E172441ACC3009F76E0 /* TestCommandArguments.cpp in Sources */,
@@ -987,6 +1006,7 @@
 				C0E9B01D1DACE98D00895C4B /* TestSingleton.cpp in Sources */,
 				93DA329A29676673001B3ADC /* TestScopedObject.cpp in Sources */,
 				C0E9B01E1DACE98D00895C4B /* TestRingMap.cpp in Sources */,
+				9353AF942C29E67B000146CC /* TestStackHeapVector.cpp in Sources */,
 				C0E9B01F1DACE98D00895C4B /* TestHighPerformanceTimer.cpp in Sources */,
 				C0E9B0201DACE98D00895C4B /* TestTimestamp.cpp in Sources */,
 				93152E182441ACC3009F76E0 /* TestCommandArguments.cpp in Sources */,

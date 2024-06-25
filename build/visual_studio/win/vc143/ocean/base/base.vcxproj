@@ -261,6 +261,7 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\Signal.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\Singleton.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\SmartObjectRef.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\StackHeapVector.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\StaticBuffer.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\StaticVector.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\base\String.h" />
