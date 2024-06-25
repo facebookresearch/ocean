@@ -70,20 +70,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5D0A010F1BC2C4AB0008C798"
-               BuildableName = "libOceanCompositing.a"
-               BlueprintName = "compositing x64 (Static)"
-               ReferencedContainer = "container:ocean/compositing/compositing.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5D188D0E1B90C39A00FA7DD7"
                BuildableName = "libOceanCV.a"
                BlueprintName = "cv x64 (Static)"
@@ -588,20 +574,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5DE84D351BAAFC32009C920C"
-               BuildableName = "libOceanTrackingUVTextureMapping.a"
-               BlueprintName = "trackinguvtexturemapping x64 (Static)"
-               ReferencedContainer = "container:ocean/tracking/uvtexturemapping/trackinguvtexturemapping.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5D12BC9B1BF264E300A56828"
                BuildableName = "libOceanDevicesBlob.a"
                BlueprintName = "devicesblob x64 (Static)"
@@ -938,20 +910,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5DB732A21BAAD6C600360EA0"
-               BuildableName = "democonsole"
-               BlueprintName = "democonsole x64 (Static)"
-               ReferencedContainer = "container:application/ocean/demo/console/macos/democonsole.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5D936F7F1BC6BA840046ACD4"
                BuildableName = "demobasesharedmemoryclient"
                BlueprintName = "demobasesharedmemoryclient x64 (Static)"
@@ -1173,6 +1131,7 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES"
+      askForAppToLaunch = "Yes"
       launchAutomaticallySubstyle = "2">
       <MacroExpansion>
          <BuildableReference

@@ -337,20 +337,6 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5D0A019A1BC2D2ED0008C798"
-               BuildableName = "OceanMediaOpenIL.plugin"
-               BlueprintName = "mediaopenil x64 (Shared)"
-               ReferencedContainer = "container:ocean/media/openil/mediaopenil.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5D0A019A1BC2D2ED0008C798"
                BuildableName = "OceanMediaSpecial.plugin"
                BlueprintName = "mediaspecial x64 (Shared)"
                ReferencedContainer = "container:ocean/media/special/mediaspecial.xcodeproj">
@@ -476,20 +462,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5D0A015E1BC2C7EC0008C798"
-               BuildableName = "libOceanCompositing.dylib"
-               BlueprintName = "compositing x64 (Shared)"
-               ReferencedContainer = "container:ocean/compositing/compositing.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5D936EDD1BC6A5DE0046ACD4"
                BuildableName = "libOceanTracking.dylib"
                BlueprintName = "tracking x64 (Shared)"
@@ -578,20 +550,6 @@
                BuildableName = "libOceanTrackingRMV.dylib"
                BlueprintName = "trackingrmv x64 (Shared)"
                ReferencedContainer = "container:ocean/tracking/rmv/trackingrmv.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5D936F051BC6A6990046ACD4"
-               BuildableName = "libOceanTrackingUVTextureMapping.dylib"
-               BlueprintName = "trackinguvtexturemapping x64 (Shared)"
-               ReferencedContainer = "container:ocean/tracking/uvtexturemapping/trackinguvtexturemapping.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -837,6 +795,7 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES"
+      askForAppToLaunch = "Yes"
       launchAutomaticallySubstyle = "2">
       <MacroExpansion>
          <BuildableReference

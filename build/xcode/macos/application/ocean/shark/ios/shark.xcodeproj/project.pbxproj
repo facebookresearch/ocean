@@ -188,8 +188,6 @@
 						CreatedOnToolsVersion = 6.4;
 						ProvisioningStyle = Manual;
 					};
-					C0E9B1811DAD3B8600895C4B = {
-					};
 				};
 			};
 			buildConfigurationList = 5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "shark" */;
@@ -480,7 +478,6 @@
 					"-lOceanTrackingD",
 					"-lOceanTrackingBlobD",
 					"-lOceanTrackingPatternD",
-					"-lOceanTrackingUVTextureMappingD",
 					"-ltinyxml",
 					"-lfreetype",
 					"-lpng",
@@ -508,7 +505,7 @@
 					"-framework",
 					CoreLocation,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.shark.ios";
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.shark.ios;
 				PRODUCT_MODULE_NAME = shark;
 				PRODUCT_NAME = shark;
 				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
@@ -597,7 +594,6 @@
 					"-lOceanTracking",
 					"-lOceanTrackingBlob",
 					"-lOceanTrackingPattern",
-					"-lOceanTrackingUVTextureMapping",
 					"-ltinyxml",
 					"-lfreetype",
 					"-lpng",
@@ -625,7 +621,7 @@
 					"-framework",
 					CoreLocation,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.shark.ios";
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.shark.ios;
 				PRODUCT_MODULE_NAME = shark;
 				PRODUCT_NAME = shark;
 				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
@@ -692,7 +688,6 @@
 					"-lOceanTrackingD",
 					"-lOceanTrackingBlobD",
 					"-lOceanTrackingPatternD",
-					"-lOceanTrackingUVTextureMappingD",
 					"-framework",
 					GLKit,
 					"-framework",
@@ -704,7 +699,7 @@
 					"-framework",
 					UIKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.shark.ios";
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.shark.ios;
 				PRODUCT_MODULE_NAME = shark;
 				PRODUCT_NAME = shark;
 				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
@@ -770,7 +765,6 @@
 					"-lOceanTracking",
 					"-lOceanTrackingBlob",
 					"-lOceanTrackingPattern",
-					"-lOceanTrackingUVTextureMapping",
 					"-framework",
 					GLKit,
 					"-framework",
@@ -782,7 +776,7 @@
 					"-framework",
 					UIKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.shark.ios";
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.shark.ios;
 				PRODUCT_MODULE_NAME = shark;
 				PRODUCT_NAME = shark;
 				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";

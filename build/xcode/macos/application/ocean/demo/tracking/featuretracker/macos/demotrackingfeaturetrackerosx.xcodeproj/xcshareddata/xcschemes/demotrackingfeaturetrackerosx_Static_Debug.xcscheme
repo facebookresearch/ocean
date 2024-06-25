@@ -294,20 +294,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5DE84D351BAAFC32009C920C"
-               BuildableName = "libOceanTrackingUVTextureMapping.a"
-               BlueprintName = "trackinguvtexturemapping x64 (Static)"
-               ReferencedContainer = "container:../../../../../../ocean/tracking/uvtexturemapping/trackinguvtexturemapping.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
                BuildableName = "demotrackingfeaturetrackerosx.app"
                BlueprintName = "demotrackingfeaturetrackerosx x64 (Static)"

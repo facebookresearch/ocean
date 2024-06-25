@@ -132,12 +132,6 @@
                <FileRef
                   location = "group:application/ocean/demo/tracking/pointtracker/macos/demotrackingpointtrackerosx.xcodeproj">
                </FileRef>
-               <FileRef
-                  location = "group:application/ocean/demo/tracking/uvtexturemapping/ios/demotrackinguvtexturemappingios.xcodeproj">
-               </FileRef>
-               <FileRef
-                  location = "group:application/ocean/demo/tracking/uvtexturemapping/macos/demotrackinguvtexturemappingosx.xcodeproj">
-               </FileRef>
             </Group>
          </Group>
          <Group
@@ -435,9 +429,6 @@
       </FileRef>
       <FileRef
          location = "group:ocean/tracking/rmv/trackingrmv.xcodeproj">
-      </FileRef>
-      <FileRef
-         location = "group:ocean/tracking/uvtexturemapping/trackinguvtexturemapping.xcodeproj">
       </FileRef>
    </Group>
 </Workspace>
