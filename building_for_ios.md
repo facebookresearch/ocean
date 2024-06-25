@@ -64,7 +64,7 @@ cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
     -B"${HOME}/build_ocean_ios_debug" \
     -DCMAKE_BUILD_TYPE="Debug" \
     -G Xcode \
-    -DCMAKE_TOOLCHAIN_FILE="${OCEAN_DEVELOPMENT_PATH}/ocean/build/cmake/ios-cmake/ios.toolchain.cmake" \
+    -DCMAKE_TOOLCHAIN_FILE="${OCEAN_DEVELOPMENT_PATH}/build/cmake/ios-cmake/ios.toolchain.cmake" \
     -DPLATFORM="OS64" \
     -DDEPLOYMENT_TARGET="15.0" \
     -DCMAKE_INSTALL_PREFIX="${HOME}/install_ocean_thirdparty/ios_OS64_static_Debug" \
