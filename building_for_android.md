@@ -32,7 +32,7 @@ The easiest way to build the third-party libraries is by using the provided buil
 ```
 cd ${OCEAN_DEVELOPMENT_PATH}
 
-./build/cmake/build_ocean_android.sh -c debug,release -l static -b "${HOME}/build_ocean_android" -i "${HOME}/install_ocean_android" -t "${HOME}/install_ocean_thirdparty_android" --abi arm64-v8a
+./build/cmake/build_thirdparty_android.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty" --abi arm64-v8a
 ```
 
 Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Once the build is complete, the compiled binaries can be found in `${HOME}/install_ocean_thirdparty_android/static_Debug` and `.../static_Release`.
@@ -50,10 +50,10 @@ can build it as follows:
 ```
 cd ${OCEAN_DEVELOPMENT_PATH}
 
-./build/cmake/build_ocean_android.sh -c debug,release -l static -b "${HOME}/build_ocean_android" -i "${HOME}/install_ocean_android" -t "${HOME}/install_ocean_thirdparty_android" --abi arm64-v8a
+./build/cmake/build_ocean_android.sh -c debug,release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty" --abi arm64-v8a
 ```
 
-Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Make sure that the parameter specifying the location of the third-party libraries is the same as installation path from the previous section. Once the build is complete, the compiled binaries can be found in `${HOME}/build_ocean_android/static_Debug` and `.../static_Release`.
+Change the values for the build config (`-c`), the build directory (`-b`), and the installation directory (`-i`) as required. Make sure that the parameter specifying the location of the third-party libraries is the same as installation path from the previous section. Also as before, we're only building for the Android ABI, `arm64-v8a`. Change this as required. Once the build is complete, the compiled binaries can be found in `${HOME}/build_ocean_android/static_Debug` and `.../static_Release`.
 
 For projects that use Gradle as their main build system, they can take advantage of `externalNativeBuild` to build Ocean directly by adding something similar to the following to their configuration:
 
