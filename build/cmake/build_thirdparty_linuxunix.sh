@@ -16,8 +16,8 @@ fi
 # OTP = OCEAN_THIRD_PARTY
 OTP_SOURCE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd third-party && pwd )
 
-OTP_BUILD_DIR="/tmp/ocean/build/${OCEAN_PLATFORM}"
-OTP_INSTALL_DIR="/tmp/ocean/install/${OCEAN_PLATFORM}"
+OTP_BUILD_DIR="${PWD}/ocean_build_thirdparty"
+OTP_INSTALL_DIR="${PWD}/ocean_install_thirdparty"
 
 OTP_VALID_BUILD_CONFIGS="debug,release"
 OTP_BUILD_CONFIG="release"
@@ -41,10 +41,12 @@ display_help()
     echo "Arguments:"
     echo ""
     echo "  -i | --install INSTALL_DIR : The optional location where the third-party libraries of Ocean will"
-    echo "                be installed. Otherwise builds will be installed to: ${OTP_INSTALL_DIR}"
+    echo "                be installed. Default installation directory:"
+    echo "                ${OTP_INSTALL_DIR}"
     echo ""
     echo "  -b | --build BUILD_DIR : The optional location where the third-party libraries of Ocean will"
-    echo "                be built. Otherwise builds will be installed to: ${OTP_BUILD_DIR}"
+    echo "                be built. Default build directory:"
+    echo "                ${OTP_BUILD_DIR}"
     echo ""
     echo "  -c | --config BUILD_CONFIG : The optional build configs(s) to be built; valid values are:"
     for type in $(echo "${OTP_VALID_BUILD_CONFIGS}" | tr ',' '\n'); do
@@ -94,8 +96,8 @@ function run_build {
         exit 1
     fi
 
-    OTP_BUILD_DIRECTORY="${OTP_BUILD_DIR}/third-party/${LINKING_TYPE}_${BUILD_CONFIG}"
-    OTP_INSTALL_DIRECTORY="${OTP_INSTALL_DIR}/${LINKING_TYPE}_${BUILD_CONFIG}"
+    BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
+    INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
 
     echo ""
     echo ""
@@ -103,14 +105,14 @@ function run_build {
     echo "Build type: ${BUILD_CONFIG}"
     echo "Linking type: ${LINKING_TYPE}"
     echo ""
-    echo "Build directory: ${OTP_BUILD_DIRECTORY}"
-    echo "Install directory: ${OTP_INSTALL_DIRECTORY}"
+    echo "Build directory: ${BUILD_DIR}"
+    echo "Install directory: ${INSTALL_DIR}"
     echo ""
     echo ""
     echo ""
 
-    eval "${OTP_SOURCE_DIR}/build_deps.sh" ${OCEAN_PLATFORM} "${OTP_SOURCE_DIR}" "${OTP_BUILD_DIRECTORY}" -j16 \
-          "-DCMAKE_INSTALL_PREFIX=${OTP_INSTALL_DIRECTORY}" \
+    eval "${OTP_SOURCE_DIR}/build_deps.sh" ${OCEAN_PLATFORM} "${OTP_SOURCE_DIR}" "${BUILD_DIR}" -j16 \
+          "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}" \
           "-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}" \
           "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}"
     if [ "$?" != 0 ]; then

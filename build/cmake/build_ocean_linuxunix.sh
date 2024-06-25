@@ -18,8 +18,8 @@ echo " "
 
 OCEAN_SOURCE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && cd ../.. && pwd )
 
-OCEAN_BUILD_DIR="/tmp/ocean/build/${OCEAN_PLATFORM}"
-OCEAN_INSTALL_DIR="/tmp/ocean/install/${OCEAN_PLATFORM}"
+OCEAN_BUILD_DIR="${PWD}/ocean_build"
+OCEAN_INSTALL_DIR="${PWD}/ocean_install"
 
 OCEAN_VALID_BUILD_CONFIGS="debug,release"
 OCEAN_BUILD_CONFIGS="release"
@@ -64,20 +64,18 @@ display_help()
     echo "                Multiple values must be separated by commas. Default value if nothing is"
     echo "                specified: \"${OCEAN_LINKING_TYPES}\""
     echo ""
-    echo "  -t | --third-party : The location where the third-party libraries of Ocean are located, if they"
-    echo "                were built manually. Otherwise standard CMake locations will be search for"
+    echo "  -t | --third-party : The base location where the third-party libraries of Ocean are located, if"
+    echo "                they were built manually. Otherwise standard CMake locations will be search for"
     echo "                compatible third-party libraries."
     echo ""
     echo "  -h | --help : This summary"
-    echo ""
-    echo "  -h | --help                : This summary"
     echo ""
 }
 
 # Builds Ocean (Linux & macOS)
 #
 # BUILD_CONFIG: The build type to be used, valid values: Debug, Release
-# LIBRARY_TYPE: The type of libraries to be built, valid values: static, shared
+# LINKING_TYPE: The linking type of libraries to be built, valid values: static, shared
 function run_build {
     BUILD_CONFIG=$1
 
@@ -91,53 +89,54 @@ function run_build {
         exit 1
     fi
 
-    LIBRARY_TYPE=$2
-    if [[ ${LIBRARY_TYPE} == "static" ]]; then
+    LINKING_TYPE=$2
+    if [[ ${LINKING_TYPE} == "static" ]]; then
         ENABLE_BUILD_SHARED_LIBS="OFF"
-    elif [[ ${LIBRARY_TYPE} == "shared" ]]; then
+    elif [[ ${LINKING_TYPE} == "shared" ]]; then
         ENABLE_BUILD_SHARED_LIBS="ON"
     else
-        echo "ERROR: Invalid value: LIBRARY_TYPE=${LIBRARY_TYPE}"
+        echo "ERROR: Invalid value: LINKING_TYPE=${LINKING_TYPE}"
         exit 1
     fi
 
-    OCEAN_BUILD_DIRECTORY="${OCEAN_BUILD_DIR}/${LIBRARY_TYPE}_${BUILD_CONFIG}"
-    OCEAN_INSTALL_DIRECTORY="${OCEAN_INSTALL_DIR}/${LIBRARY_TYPE}_${BUILD_CONFIG}"
-
-    OCEAN_THIRD_PARTY_DIRECTORY="${OCEAN_THIRD_PARTY_DIR}/${LIBRARY_TYPE}_${BUILD_CONFIG}"
+    BUILD_DIR="${OCEAN_BUILD_DIR}/${OCEAN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
+    INSTALL_DIR="${OCEAN_INSTALL_DIR}/${OCEAN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
 
     echo " "
     echo "BUILD_CONFIG: ${BUILD_CONFIG}"
-    echo "LIBRARY_TYPE: ${LIBRARY_TYPE}"
+    echo "LINKING_TYPE: ${LINKING_TYPE}"
     echo " "
-    echo "OCEAN_BUILD_DIRECTORY: ${OCEAN_BUILD_DIRECTORY}"
-    echo "OCEAN_INSTALL_DIRECTORY: ${OCEAN_INSTALL_DIRECTORY}"
+    echo "BUILD_DIR: ${BUILD_DIR}"
+    echo "INSTALL_DIR: ${INSTALL_DIR}"
 
     CMAKE_CONFIGURE_COMMAND="cmake \\
     -S \"${OCEAN_SOURCE_DIR}\" \\
-    -B \"${OCEAN_BUILD_DIRECTORY}\" \\
-    -DCMAKE_INSTALL_PREFIX=\"${OCEAN_INSTALL_DIRECTORY}\" \\
+    -B \"${BUILD_DIR}\" \\
+    -DCMAKE_INSTALL_PREFIX=\"${INSTALL_DIR}\" \\
     -DCMAKE_BUILD_TYPE=\"${BUILD_CONFIG}\" \\
     -DBUILD_SHARED_LIBS=\"${ENABLE_BUILD_SHARED_LIBS}\""
 
-    if [ -n "${OCEAN_THIRD_PARTY_DIRECTORY}" ]; then
+    if [ -n "${OCEAN_THIRD_PARTY_DIR}" ]; then
+        # This must match the INSTALL_DIR from ./build_thirdparty_linuxunix.sh
+        THIRD_PARTY_DIR="${OCEAN_THIRD_PARTY_DIR}/${OCEAN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
+
         echo " "
-        echo "OCEAN_THIRD_PARTY_DIRECTORY: ${OCEAN_THIRD_PARTY_DIRECTORY}"
+        echo "THIRD_PARTY_DIR: ${THIRD_PARTY_DIR}"
         echo " "
 
         CMAKE_CONFIGURE_COMMAND+="  \\
-    -DCMAKE_PREFIX_PATH=\"${OCEAN_THIRD_PARTY_DIRECTORY}\""
+    -DCMAKE_PREFIX_PATH=\"${THIRD_PARTY_DIR}\""
     fi
 
     echo "CMAKE_CONFIGURE_COMMAND = ${CMAKE_CONFIGURE_COMMAND}"
     eval "${CMAKE_CONFIGURE_COMMAND}"
 
-    cmake --build "${OCEAN_BUILD_DIRECTORY}" --target install -- -j16
+    cmake --build "${BUILD_DIR}" --target install -- -j16
 
     build_exit_code=$?
 
     if [ "$build_exit_code" -ne 0 ]; then
-        OCEAN_FAILED_BUILDS+=("${LIBRARY_TYPE}_${BUILD_CONFIG}")
+        OCEAN_FAILED_BUILDS+=("${LINKING_TYPE}_${BUILD_CONFIG}")
     fi
 
     echo " "
