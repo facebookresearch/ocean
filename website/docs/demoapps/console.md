@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 ## Description
 
-This demo app provides a basic example of how to set up simple console applications using Ocean, designed to run across multiple platforms. In this context, "console" implies the absence of complex UI elements, focusing instead on displaying Ocean's log messages.
+This demo app offers a basic example of setting up simple console applications using Ocean, designed to operate across multiple platforms. In this context, "console" refers to the absence of complex UI elements, focusing instead on displaying Ocean's log messages.
 
 <div class="center-images">
   <img src={require('@site/static/img/docs/demoapps/console_ios.jpg').default} alt="Image: Screenshot of console app on iOS" height="400" className="center-image"/>
@@ -19,7 +19,7 @@ This demo app provides a basic example of how to set up simple console applicati
 
 The app is available on all platforms and represents Ocean's simplest demonstration application. Despite its simplicity, it serves as an excellent starting point for quick debugging and prototyping.
 
-The code for desktop platforms code can be found in [`Console.cpp`](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/application/ocean/demo/base/console/Console.cpp#L17-L54). Platform-dependent code is located in sub-directories that match the name of the corresponding platform.
+The code for desktop platforms can be found in [`Console.cpp`](https://github.com/facebookresearch/ocean/blob/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/application/ocean/demo/base/console/Console.cpp#L17-L54). Platform-dependent code is located in sub-directories that match the name of the corresponding platform.
 
 ## Building
 
@@ -30,60 +30,74 @@ The code for desktop platforms code can be found in [`Console.cpp`](https://gith
   </TabItem>
 
   <TabItem value="linux" label="Linux">
-    This is Linux.
-  </TabItem>
-
-  <TabItem value="macos" label="macOS">
-    This is macOS.
-  </TabItem>
-
-  <TabItem value="ios" label="iOS">
-    Ensure that the third-party libraries have been built for iOS (static), cf. [build instructions](https://github.com/facebookresearch/ocean/blob/main/building_for_ios.md).
-
-    ```
-    cmake -S"${OCEAN_DEVELOPMENT_PATH}" \
-        -B"/tmp/ocean/build/ios/static_Debug" \
-        -DCMAKE_BUILD_TYPE="Debug" \
-        -G Xcode \
-        -DCMAKE_TOOLCHAIN_FILE="${OCEAN_DEVELOPMENT_PATH}/build/cmake/ios-cmake/ios.toolchain.cmake" \
-        -DPLATFORM="OS64" \
-        -DDEPLOYMENT_TARGET="13.0" \
-        -DCMAKE_INSTALL_PREFIX="/tmp/ocean/install/ios/static_Debug" \
-        -DCMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM=XXXXXXXXXX \
-        -DBUILD_SHARED_LIBS="OFF"
-    ```
-
-    Where `XXXXXXXXXX` needs to be replaced with the value from the field *Organizational Unit* from your Apple Developer certificate. Without it, code signing will fail.
-
-    Then open the generated XCode project that is located inside the build directory:
-
-    ```
-    cd /tmp/ocean/build/ios/static_Debug
-    open ocean.xcodeproj
-    ```
-
-    In XCode, select `application_ocean_demo_base_console_ios` from the list of targets and press `CMD-R` to build, install, and run the app on your device.
-  </TabItem>
-
-  <TabItem value="android" label="Android" default>
-    Ensure that the third-party libraries have been built for Android, cf. [build instructions](https://github.com/facebookresearch/ocean/blob/main/building_for_android.md).
+    Ensure the [third-party libraries have been built](https://github.com/facebookresearch/ocean/blob/main/building_for_linux.md#2-building-the-third-party-libraries). Then follow the [instructions to build the Ocean code base](https://github.com/facebookresearch/ocean/blob/main/building_for_linux.md#3-building-ocean). Let's assume you're building Ocean with the release build config:
 
     ```bash
     cd ${OCEAN_DEVELOPMENT_PATH}
-    cd build/gradle/application/ocean/demo/base/console/android
 
-    ./gradlew assembleDebug -PoceanThirdPartyPath=/tmp/ocean/install/android
-    adb install app/build/outputs/apk/debug/app-debug.apk
+    # Build the third-party libraries
+    ./build/cmake/build_thirdparty_linuxunix.sh -c release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty"
+
+    # Build and install Ocean
+    ./build/cmake/build_ocean_linuxunix.sh -c release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
+
+    # Execute the demo app
+    cd ${HOME}/install_ocean/linux_static_Release/bin
+    ./application_ocean_demo_base_console
+    ```
+  </TabItem>
+
+  <TabItem value="macos" label="macOS">
+    Ensure the [third-party libraries have been built for macOS](https://github.com/facebookresearch/ocean/blob/main/building_for_macos.md#2-building-the-third-party-libraries). Then follow the instructions to build the Ocean code base. Let's assume you're building Ocean with the release build config:
+
+    ```bash
+    cd ${OCEAN_DEVELOPMENT_PATH}
+
+    # Build the third-party libraries
+    ./build/cmake/build_thirdparty_linuxunix.sh -c release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty"
+
+    # Build and install Ocean
+    ./build/cmake/build_ocean_linuxunix.sh -c release -l static -b "${HOME}/build_ocean" -i "${HOME}/install_ocean" -t "${HOME}/install_ocean_thirdparty"
+
+    # Execute the demo app
+    cd ${HOME}/install_ocean/macos_static_Release/bin
+    ./application_ocean_demo_base_console
     ```
 
-    By default, the log output will be displayed on the the screen of the phone as well as in the Android logs, which can be displayed using:
+    Alternatively, [generate a XCode project for Ocean](https://github.com/facebookresearch/ocean/blob/main/building_for_macos.md#4-building-the-ocean-ios-demotest-apps) and search for `application_ocean_demo_base_console` in the schemes at the top. Then hit `CMD-R` to build and run the app.
+  </TabItem>
+
+  <TabItem value="ios" label="iOS">
+    Ensure the [third-party libraries have been built for iOS](https://github.com/facebookresearch/ocean/blob/main/building_for_ios.md#2-building-the-third-party-libraries). Then follow the general [setup for building iOS apps using XCode](https://github.com/facebookresearch/ocean/blob/main/building_for_ios.md#4-building-the-ocean-ios-demotest-apps). Once the generation of the XCode project is complete, open it and search for `application_ocean_demo_base_console_ios` in the scheme at the top. Then hit `CMD-R` to build, install, and run the app and follow the instructions.
+  </TabItem>
+
+  <TabItem value="android" label="Android" default>
+    Ensure the [third-party libraries have been built for Android](https://github.com/facebookresearch/ocean/blob/main/building_for_android.md#2-building-the-third-party-libraries) for all of the required Android ABIs. Let's assume the base location for third-party libraries is `${HOME}/install_ocean_thirdparty`, i.e., the Android versions will be located in `${HOME}/install_ocean_thirdparty/android_${ANDROID_ABI}...`.
+
+    ```bash
+    # Define this so that Gradle (and CMake) can find the third-party libraries.
+    export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty"
+
+    # Change into the directory with the Gradle config of this project
+    cd ${OCEAN_DEVELOPMENT_PATH}/build/gradle/application/ocean/demo/base/console/android
+
+    # In ./app/build.gradle.kts, ensure that only those Android ABIs are enabled for which the corresponding third-party libraries have been built. Otherwise, your build will fail, cf. the [general build instructions](https://github.com/facebookresearch/ocean/blob/main/building_for_android.md#4-building-the-ocean-android-demotest-apps).
+
+    # Build the debug and release APK of this
+    ./gradlew assemble
+
+    # Install the desired APK
+    adb install app/build/outputs/apk/debug/app-debug.apk
+    adb install app/build/outputs/apk/release/app-release.apk
+    ```
+
+    By default, the log output will be displayed on the screen of the phone as well as in the Android logs, which can be displayed using:
 
     ```bash
     adb logcat -s Ocean
     ```
 
     The logging behavior can be changed in [`application/ocean/demo/base/console/android/DemoConsoleActivity.java`](https://github.com/facebookresearch/ocean/blob/main/impl/application/ocean/demo/base/console/android/DemoConsoleActivity.java#L42-L46).
-
   </TabItem>
 
 </Tabs>
