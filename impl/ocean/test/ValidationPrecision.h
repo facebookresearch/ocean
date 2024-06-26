@@ -115,7 +115,7 @@ class ValidationPrecision
 		 * @param accurate True, if the iteration was precise enough; False, if the iteration was not precise enough
 		 * @see ScopedIteration.
 		 */
-		inline void addIteration(const bool accureate);
+		inline void addIteration(const bool accurate);
 
 		/**
 		 * Explicitly adds new iterations for which the amount of accurate iterations is known.

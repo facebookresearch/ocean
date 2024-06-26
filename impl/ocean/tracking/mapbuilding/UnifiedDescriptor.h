@@ -287,9 +287,9 @@ class UnifiedDescriptor
 
 		/**
 		 * Returns a float descriptor type.
-		 * @param tMultiLevel True, if the descriptor is a multi level descriptor; False, if the descriptor is a single level descriptor
-		 * @param tMultiView True, if the descriptor is a multi view descriptor; False, if the descriptor is a single view descriptor
-		 * @param tNumberElements The number of elements the float descriptor has, with range [1, infinity)
+		 * @tparam tMultiLevel True, if the descriptor is a multi level descriptor; False, if the descriptor is a single level descriptor
+		 * @tparam tMultiView True, if the descriptor is a multi view descriptor; False, if the descriptor is a single view descriptor
+		 * @tparam tNumberElements The number of elements the float descriptor has, with range [1, infinity)
 		 * @return The descriptor type of the specified descriptor
 		 */
 		template <bool tMultiLevel, bool tMultiView, uint16_t tNumberElements>

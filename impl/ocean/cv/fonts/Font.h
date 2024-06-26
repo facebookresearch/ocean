@@ -122,7 +122,7 @@ class OCEAN_CV_FONTS_EXPORT Font
 
 				/**
 				 * Returns the horizontal distance between this character and the next character (between the origins of both characters).
-				 * @param The character's horizontal distance, in pixels, with range [0, infinity)
+				 * @return The character's horizontal distance, in pixels, with range [0, infinity)
 				 */
 				inline unsigned int advanceX() const;
 

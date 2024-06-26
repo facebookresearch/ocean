@@ -50,7 +50,7 @@ class OCEAN_SYSTEM_USB_EXPORT Descriptor
 		 * @param value4 The last 6 bytes of the GUID, with range [0, 2^48-1]
 		 * @return The defined GUID
 		 */
-		static constexpr std::array<uint8_t, 16u> createGUID(const uint32_t valu0, const uint16_t value1, const uint16_t value2, const uint16_t value3, const uint64_t value4);
+		static constexpr std::array<uint8_t, 16u> createGUID(const uint32_t value0, const uint16_t value1, const uint16_t value2, const uint16_t value3, const uint64_t value4);
 
 		/**
 		 * Returns a string representation of the given GUID.

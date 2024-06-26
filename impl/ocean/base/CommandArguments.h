@@ -76,7 +76,7 @@ class OCEAN_BASE_EXPORT CommandArguments
 
 				/**
 				 * Returns the number of command arguments of the application.
-				 * @param The application's number of command arguments, 0 if arguments have not been set via setArguments().
+				 * @return The application's number of command arguments, 0 if arguments have not been set via setArguments().
 				 * @see setArguments().
 				 */
 				size_t size() const;

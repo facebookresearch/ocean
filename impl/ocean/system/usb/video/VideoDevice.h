@@ -110,7 +110,7 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 
 				/**
 				 * Returns the buffer of this sample.
-				 * @retun The sample's buffer
+				 * @return The sample's buffer
 				 */
 				inline const void* data() const;
 
@@ -579,7 +579,6 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 				 * @param bRequest The request parameter
 				 * @param wValue The value parameter
 				 * @param wIndex The index parameter
-				 * @param commit True, to perform a commit request; False, to perform a probe request
 				 * @param buffer The control buffer, must be valid
 				 * @param size The size of the control buffer, in bytes, either 26 or 34
 				 * @return True, if succeeded

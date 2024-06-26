@@ -56,7 +56,7 @@ class OCEAN_CV_EXPORT FrameFilter
 		 *  int64_t: [-9223372036854775808 + tNormalizationDenominator/2, 9223372036854775807 - tNormalizationDenominator/2]
 		 * uint64_t: [0, 18446744073709551615 - tNormalizationDenominator/2]
 		 * </pre>
-		 * @value The value to be normalized
+		 * @param value The value to be normalized
 		 * @return The normalized value 'value / tNormalization'
 		 * @tparam T The data type of the value to normalize, either an integer value or a floating point value
 		 * @tparam tNormalizationDenominator The normalization factor to be applied, with range [1, infinity)
@@ -69,7 +69,7 @@ class OCEAN_CV_EXPORT FrameFilter
 		/**
 		 * Normalizes a given value with a template-based normalization factor.
 		 * This function does not provide wrong normalization results for extremely large 32bit and 64bit integers if 'tRoundedNormalization == true', but is also slower.
-		 * @value The value to be normalized
+		 * @param value The value to be normalized
 		 * @return The normalized value 'value / tNormalization'
 		 * @tparam T The data type of the value to normalize, either an integer value or a floating point value
 		 * @tparam tNormalizationDenominator The normalization factor to be applied, with range [1, infinity)

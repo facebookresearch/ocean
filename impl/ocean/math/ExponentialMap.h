@@ -117,7 +117,7 @@ class ExponentialMapT
 		 * @tparam U The element data type of the exponential map
 		 */
 		template <typename U>
-		inline explicit ExponentialMapT(const ExponentialMapT<U>& expontentialMap) noexcept;
+		inline explicit ExponentialMapT(const ExponentialMapT<U>& exponentialMap) noexcept;
 
 		/**
 		 * Returns the (non-normalized) axis of this rotation object.

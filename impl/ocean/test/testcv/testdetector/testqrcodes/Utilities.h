@@ -62,7 +62,7 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * Generates random string consisting of decimal digit characters ('0' to '9' only)
 		 * @param randomGenerator The random generator that will be used to generate the random data
 		 * @param size The size of string that will be generated in number of characters, range: [1, infinity)
-		 * @return The generated randon numeric string
+		 * @return The generated random numeric string
 		 */
 		static std::string generateRandomNumericString(RandomGenerator& randomGenerator, const unsigned int size);
 
@@ -70,9 +70,9 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * Generates random string consisting of characters in alphanumeric character set defined by the QR code standard
 		 * @param randomGenerator The random generator that will be used to generate the random data
 		 * @param size The size of string that will be generated in number of characters, range: [1, infinity)
-		 * @return The generated randon alphanumeric string
+		 * @return The generated random alphanumeric string
 		 */
-		static std::string generateRandomAlphanumericString(RandomGenerator& randomGenerator, const unsigned int sizeInBytes);
+		static std::string generateRandomAlphanumericString(RandomGenerator& randomGenerator, const unsigned int size);
 
 		/**
 		 * Generates a random data that consists of bytes (value range: 0-255)

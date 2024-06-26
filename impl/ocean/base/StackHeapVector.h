@@ -212,7 +212,7 @@ class StackHeapVector
 
 		/**
 		 * Returns whether this vector is empty.
-		 * @retur True, if so
+		 * @return True, if so
 		 */
 		inline bool isEmpty() const;
 

@@ -458,7 +458,7 @@ class AnyCameraT : public CameraT<T>
 
 		/**
 		 * Protected copy constructor.
-		 * @anyCamera The object to copy
+		 * @param anyCamera The object to copy
 		 */
 		AnyCameraT(const AnyCameraT<T>& anyCamera) = default;
 

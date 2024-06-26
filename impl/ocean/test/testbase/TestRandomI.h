@@ -139,7 +139,6 @@ class OCEAN_TEST_BASE_EXPORT TestRandomI
 		/**
 		 * Tests extreme value ranges.
 		 * @param randomGenerator Random randomGenerator object
-		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testExtremeValueRange(RandomGenerator& randomGenerator);

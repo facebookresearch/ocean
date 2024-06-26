@@ -134,12 +134,12 @@ class VideoDecoder
 		 * The presentation time is mainly intended to allow associating the provided encoded media sample with the resulting decoded frame when calling popFrame().<br>
 		 * However, it's recommended to define a reasonable presentation time for each sample (e.g., let the first sample start at 0 and increment the time by 1^6/fps for each following sample.
 		 * @param data The data of the encoded media sample, must be valid
-		 * @apram size The size of the encoded media sample, in bytes, with range [1, infinity)
+		 * @param size The size of the encoded media sample, in bytes, with range [1, infinity)
 		 * @param presentationTime The presentation time of the sample, in microseconds, with range [0, infinity)
 		 * @return True, if succeeded
 		 * @see start(), isInitialized(), isStarted().
 		 */
-		bool pushSample(const void* data, const size_t siz, const uint64_t presentationTime);
+		bool pushSample(const void* data, const size_t size, const uint64_t presentationTime);
 
 		/**
 		 * Optional the frame's presentation time will be returned, this is the presentation time which was used when the corresponding sample was provided in decodedSample().

@@ -101,7 +101,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT Passthrough final
 
 		/**
 		 * Returns the OpenXR passthrough layer.
-		 * @param the passthrough's layer
+		 * @return The passthrough's layer
 		 */
 		inline XrPassthroughLayerFB xrPassthroughLayerFB() const;
 

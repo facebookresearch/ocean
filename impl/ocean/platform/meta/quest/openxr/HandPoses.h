@@ -78,13 +78,13 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 
 				/**
 				 * Returns the vertices of the hand mesh.
-				 * @param The hand mesh's vertices
+				 * @return The hand mesh's vertices
 				 */
 				Vectors3 vertices() const;
 
 				/**
 				 * Returns the normals of the hand mesh.
-				 * @param The hand mesh's per-vertex normals
+				 * @return The hand mesh's per-vertex normals
 				 */
 				Vectors3 normals() const;
 

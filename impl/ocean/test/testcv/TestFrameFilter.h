@@ -56,7 +56,6 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilter
 		/**
 		 * Tests the normalize value function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param randomGenerator The random generator to be used
 		 * @return True, if succeeded
 		 * @tparam T The data type to be used
 		 */

@@ -53,7 +53,7 @@ namespace USB
  * @param libusbTransfer The transfer to be release
  * @ingroup systemusb
  */
-OCEAN_SYSTEM_USB_EXPORT void releaseTransfer(libusb_transfer* libusbTranser);
+OCEAN_SYSTEM_USB_EXPORT void releaseTransfer(libusb_transfer* libusbTransfer);
 
 /**
  * Definition of a scoped libusb transfer object.

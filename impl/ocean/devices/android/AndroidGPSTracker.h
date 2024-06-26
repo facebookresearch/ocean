@@ -37,14 +37,12 @@ class OCEAN_DEVICES_EXPORT AndroidGPSTracker :
 
 		/**
 		 * Returns the name of this tracker.
-		 * @param sensorType The type of the tracker (the subtype of the device)
 		 * @return The sensor's name
 		 */
 		static inline std::string deviceNameAndroidGPSTracker();
 
 		/**
 		 * Returns the device type of this tracker.
-		 * @param sensorType The type of the sensor (the subtype of the device)
 		 * @return The sensor's device type
 		 */
 		static inline DeviceType deviceTypeAndroidGPSTracker();

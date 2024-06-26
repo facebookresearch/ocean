@@ -228,6 +228,7 @@ class OCEAN_TEST_CV_SYNTHESIS_EXPORT TestMappingF1 : protected CV::Synthesis::Ma
 		 * Determines the appearance cost with a reference frame.
 		 * @param frame The frame for which the cost will be determined, must be valid
 		 * @param mask The mask associated with the frame, defining valid and invalid frame pixels, must be valid
+		 * @param reference The reference frame to be used, must be valid
 		 * @param source The source location within the frame, with range [2, frame.width()-3)x[2, frame.height()-3)
 		 * @param target The target location within the frame, with range [0, frame.width()-1]x[0, frame.height()-1]
 		 * @param patchSize The size of the image patch, in pixels, with range [1, infinity), must be odd

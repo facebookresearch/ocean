@@ -64,8 +64,7 @@ class OCEAN_TEST_IO_MAPS_EXPORT TestBasemap
 		/**
 		 * Gets the url for a specific tile.
 		 * @param level The detail level, with range [1, 22]
-		 * @param latitudeIndex The latitude index, with range [0, numberTiles(level) - 1]
-		 * @param longitudeIndex The longitude index, with range [0, numberTiles(level) - 1]
+		 * @param tileIndexPair The pair with tile indices, must be valid
 		 * @param url The resulting url
 		 */
 		static bool getTileUrl(unsigned int level, const IO::Maps::Basemap::TileIndexPair& tileIndexPair, std::string& url);

@@ -184,7 +184,7 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		 * Sets the preferred stream configuration.
 		 * Using this function will forward some settings to the underlying FrameMedium object via setPreferredFrameDimension(), setPreferredFramePixelFormat(), and setPreferredFrameFrequency().
 		 * There is no guarantee that the device will use this stream type.
-		 * @param streamType The preferred stream type to be set, must be valid
+		 * @param streamConfiguration The preferred stream configuration to be set, must be valid
 		 * @return True, if succeeded
 		 * @see setPreferredStreamType(), FrameMedium::setPreferredFrameDimension(), FrameMedium::setPreferredFramePixelFormat(), and FrameMedium::setPreferredFrameFrequency()
 		 */

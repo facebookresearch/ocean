@@ -44,7 +44,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilterGaussian
 		static bool testFilterSizeSigmaConversion();
 
 		/**
-		 * Tests the calculation of filter factors..
+		 * Tests the calculation of filter factors.
 		 * @return True, if succeeded
 		 */
 		static bool testFilterFactors();
@@ -113,7 +113,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameFilterGaussian
 		/**
 		 * Tests the in-place Gaussian blur filter.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
+		 * @param worker The worker object
 		 * @return True, if succeeded
 		 * @tparam T The data type of each pixel channel, e.g., 'unsigned char', or 'float'
 		 * @tparam TFilter The data type of each filter value, e.g., 'unsigned int', or 'float'

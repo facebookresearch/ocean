@@ -91,7 +91,7 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 
 				/**
 				 * Returns the graph's function as text.
-				 * @retun String containing the function
+				 * @return String containing the function
 				 */
 				inline const std::string& functionText() const;
 
@@ -121,7 +121,7 @@ class GraphsApplication : public Platform::Meta::Quest::OpenXR::Application::VRN
 				/**
 				 * Determines the gradient descent path for a specific point on the graph.
 				 * @param x The x location of the point, defined in the domain of the graph
-				 * @param y The y locatino of the point, defined in the domain of the graph
+				 * @param z The z location of the point, defined in the domain of the graph
 				 * @return The resulting 3D points of the gradient descent path, defined in the domain of the graph, empty if no path could be calculated
 				 */
 				Vectors3 determineGradientDescentPath(const Scalar x, const Scalar z) const;

@@ -182,7 +182,7 @@ class UnifiedFeatureMapT : public UnifiedFeatureMap
 		/**
 		 * Definition of a function allowing to serialize the features from a descriptor map so that the features can be processed with a vocabulary tree/forest.
 		 * @param descriptorMap The descriptor map containing the features to serialize
-		 * @parma objectPoints The resulting 3D object points
+		 * @param objectPoints The resulting 3D object points
 		 * @param objectPointIds The resulting ids of all 3D object points
 		 * @param objectPointIndices The resulting indices of 3D object points, allowing to map extracted vocabulary descriptors to object points (e.g., because the given object point descriptor may be multi-level or/and multi-view descriptors
 		 * @param vocabularyDescriptors The resulting descriptors for the vocabulary tree, must be single-view, single-level descriptors

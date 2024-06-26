@@ -50,7 +50,7 @@ class ImageAnalyzerMainWindow :
 
 		/**
 		 * Event function to repaint the window.
-		 * @param Window::onPaint().
+		 * @see Window::onPaint().
 		 */
 		void onPaint() override;
 
