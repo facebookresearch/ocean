@@ -68,20 +68,20 @@ class HomographyImageAligner
 
 		/**
 		 * Checks if the medium holds a new frame and if so applies the alignment for the frame.
-         * Additionally, this function can return all point correspondences that have been determined between both frames,<br>
-         * or only those point correspondences that have been verified by a homography-based RANSAC.<br>
-         * Beware: Provide a valid 'validPointIndices' parameter and you will receive any point correspondences (stored in 'previousPoints' and 'currentPoints').<br>
-         * Instead, setting the 'validPointIndices' parameter to nullptr will return RANSAC-verified point correspondences only (stored in 'previousPoints' and 'currentPoints').<br>
-         * Ensure that 'previousPoints' and 'currentPoints' are defined if 'validPointIndices' is defined.
+		 * Additionally, this function can return all point correspondences that have been determined between both frames,<br>
+		 * or only those point correspondences that have been verified by a homography-based RANSAC.<br>
+		 * Beware: Provide a valid 'validPointIndices' parameter and you will receive any point correspondences (stored in 'previousPoints' and 'currentPoints').<br>
+		 * Instead, setting the 'validPointIndices' parameter to nullptr will return RANSAC-verified point correspondences only (stored in 'previousPoints' and 'currentPoints').<br>
+		 * Ensure that 'previousPoints' and 'currentPoints' are defined if 'validPointIndices' is defined.
 		 * @param frame The resulting frame showing the blending between the current video frame and the previous frame, may be invalid if the tracker fails
 		 * @param time The time the aligner needed to process the frame, averaged over 20 iterations, in seconds, with range [0, infinity)
 		 * @param currentHomographyPrevious Optional resulting homography that has been determined, transforming points defined in the previous frame to points defined in the current frame (currentPoint = currentHomographyPrevious * previousPoint), nullptr if not of interest
-         * @param previousPoints Optional resulting image points located in the previous frame that have been either tracked and/or used for homography determination, the behavior depends whether 'validPointIndices' is defined or not, nullptr if not of interest
-         * @param currentPoints Optional resulting image points located in the current frame that have been either tracked and/or used for homograph determination, one for each point in the previous frame, nullptr if not of interest
-         * @param validPointIndices Optional resulting indices of all point correspondences that have been verified by a homography-based RANSAC, nullptr if not of interest
+		 * @param previousPoints Optional resulting image points located in the previous frame that have been either tracked and/or used for homography determination, the behavior depends whether 'validPointIndices' is defined or not, nullptr if not of interest
+		 * @param currentPoints Optional resulting image points located in the current frame that have been either tracked and/or used for homograph determination, one for each point in the previous frame, nullptr if not of interest
+		 * @param validPointIndices Optional resulting indices of all point correspondences that have been verified by a homography-based RANSAC, nullptr if not of interest
 		 * @param lastFrameReached Optional resulting state whether the last frame (of the input medium) has been reached, nullptr if not of interest
 		 * @return True, if a new frame was available
-         * @see Subset::subset(), Subset::indices2statements().
+     * @see Subset::subset(), Subset::indices2statements().
 		 */
 		bool alignNewFrame(Frame& frame, double& time, SquareMatrix3* currentHomographyPrevious = nullptr, Vectors2* previousPoints = nullptr, Vectors2* currentPoints = nullptr, Indices32* validPointIndices = nullptr, bool* lastFrameReached = nullptr);
 
