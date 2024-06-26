@@ -3,6 +3,8 @@
 @REM This source code is licensed under the MIT license found in the
 @REM LICENSE file in the root directory of this source tree.
 
+set OCEAN_PLATFORM=windows
+
 @echo off
 setlocal enableDelayedExpansion
 
@@ -11,13 +13,7 @@ set OCEAN_SOURCE_DIR=%~dp0..\..
 set OCEAN_BUILD_ROOT_DIRECTORY=C:\tmp\ocean\build\win
 set THIRD_PARTY_ROOT_DIRECTORY=C:\tmp\ocean\install\win
 
-if "%OCEAN_INSTALL_PATH%" == "" (
-  set INSTALL_PATH=C:\tmp\ocean\install\win
-) else (
-  set INSTALL_PATH=%OCEAN_INSTALL_PATH%
-)
-
-set "options=-install:!INSTALL_PATH! -build:%OCEAN_BUILD_ROOT_DIRECTORY% -config:"debug release" -link:"static shared" -archive:NULL -h:"
+set "options=-install:%cd%\ocean_install -build:%cd%\ocean_build -config:"debug release" -link:"static shared" -third-party:NULL -archive:NULL -h:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -69,6 +65,10 @@ if !-h!==1 (
     echo                 Multiple values must be separated by spaces (inside double quotes^).
     echo                 Default value if nothing is specified: !-link!
     echo(
+    echo   -third-party TP_DIR : The base location where Ocean's third-party dependencies are installed,
+    echo                 if they were built manually. If not, CMake will search standard system locations
+    echo                 for compatible third-party libraries.
+    echo(
     echo   -archive ARCHIVE : If specified, this will copy the contents of INSTALL_DIR after the build
     echo                 into a ZIP archive; the path to this archive must exist.
     echo(
@@ -76,7 +76,6 @@ if !-h!==1 (
     echo(
     exit /b
 )
-
 
 set BUILD_FAILURES=
 
@@ -94,10 +93,10 @@ for %%c in (!-config!) do (
   for %%l in (!-link!) do (
     if /I %%l==static (
       set BUILD_SHARED_LIBS=OFF
-      set bibase=static_!BUILD_TYPE!
+      set bibase=%OCEAN_PLATFORM%_static_!BUILD_TYPE!
     ) else if /I %%l==shared (
       set BUILD_SHARED_LIBS=ON
-      set bibase=shared_!BUILD_TYPE!
+      set bibase=%OCEAN_PLATFORM%_shared_!BUILD_TYPE!
     ) else (
       echo Invalid link mode %%l
       exit /b
@@ -105,6 +104,12 @@ for %%c in (!-config!) do (
 
     set BUILD_DIRECTORY=!-build!\!bibase!
     set INSTALL_DIRECTORY=!-install!\!bibase!
+
+    set TPSPEC=
+    if NOT !-third-party! == NULL (
+        set TPDIR=!-third-party!\!bibase!
+        set TPSPEC="-DCMAKE_PREFIX_PATH=!TPDIR!"
+    )
 
     echo BUILD_TYPE           !BUILD_TYPE!
     echo BUILD_SHARED_LIBS    !BUILD_SHARED_LIBS!
@@ -134,7 +139,7 @@ if "%BUILD_FAILURES%" == "" (
 )
 
 :run_build
-cmake -S %OCEAN_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS%
+cmake -S %OCEAN_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% !TPSPEC!
 cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
 
 if %errorlevel% neq 0 (

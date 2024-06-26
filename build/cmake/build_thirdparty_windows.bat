@@ -8,16 +8,12 @@ echo off
 @REM Determine the location of the source directory from the location of this script
 set OCEAN_THIRD_PARTY_SOURCE_DIR=%~dp0..\..\build\cmake\third-party
 
+set OCEAN_PLATFORM=windows
+
 @echo off
 setlocal enableDelayedExpansion
 
-if "%OCEAN_INSTALL_PATH%" == "" (
-  set INSTALL_PATH=C:\tmp\ocean\install\win
-) else (
-  set INSTALL_PATH=%OCEAN_INSTALL_PATH%
-)
-
-set "options=-install:!INSTALL_PATH! -build:C:\tmp\ocean\build\win -config:"debug release" -link:"static shared" -archive:NULL -h:"
+set "options=-install:%cd%\ocean_install_thirdparty -build:%cd%\ocean_build_thirdparty -config:"debug release" -link:"static shared" -archive:NULL -h:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -93,10 +89,10 @@ for %%c in (!-config!) do (
   for %%l in (!-link!) do (
     if /I %%l==static (
       set BUILD_SHARED_LIBS=OFF
-      set bibase=static_!BUILD_TYPE!
+      set bibase=%OCEAN_PLATFORM%_static_!BUILD_TYPE!
     ) else if /I %%l==shared (
       set BUILD_SHARED_LIBS=ON
-      set bibase=shared_!BUILD_TYPE!
+      set bibase=%OCEAN_PLATFORM%_shared_!BUILD_TYPE!
     ) else (
       echo Invalid link mode %%l
       exit /b
