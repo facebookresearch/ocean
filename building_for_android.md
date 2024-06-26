@@ -9,21 +9,65 @@ This document describes the process to build Ocean for Android on Linux or macOS
 
 ## 1 Prerequisites
 
-* [General prerequisites listed on the main page](README.md)
-* Install an Android SDK (Android API 32, 33, or 34).  Other versions may work but have not been tested.
-  * Optionally, use [Android Studio](https://developer.android.com/studio) to install
-    * Open Android Studio's Settings window.  Then navigate to "Languages & Frameworks" and "Android SDK" subsection.  Then from the "SDK Platforms" tab, select the SDK with the appropriate API level.  "Apply" the change.
-* Install Android NDK (latest available stable version)
-  * Use Android Studio to install "NDK (Side by side)".  Installing Android NDK by other meand may work, but that has not been tested with Ocean build configuration.
-    * Open Android Studio's Settings window.  Then navigate to "Languages & Frameworks" and "Android SDK" subsection.  Then from the "SDK Tools" tab, select "NDK (Side by side)".  "Apply" the change.
-* Install the ninja build tool and ensure its executable is present within the directory tree pointed to by the `ANDROID_HOME` environment variable (see below). An easy way to do this is to install the CMake component available under the "SDK Tools" tab on the "Android SDK" page of Android Studio's Settings facility.
-* Install a Java Development Kit (JDK), for example [OpenJDK 22](https://jdk.java.net/22/).
-* Define the following environment variables:
-  * `ANDROID_HOME` - points to the location of the Android SDK, for example: `${HOME}/Library/Android/sdk` (on macOS)
-  * `ANDROID_NDK` - points to the location of the Android NDK, for example: `${HOME}/Library/Android/sdk/ndk/26.2.11394342` (on macOS)
-  * `ANDROID_NDK_VERSION` - Android NDK version number, for example: `26.2.11394342`
-    * May be part of `ANDROID_NDK` path or found as "Pkg.BaseRevision" property listed in `${ANDROID_NDK}/source.properties`
-  * `JAVA_HOME` - points to the location of the JDK, for example: `/Library/Java/JavaVirtualMachines/openjdk-22.0.1.jdk/Contents/Home` (on macOS)
+To build the project, you need to satisfy the following prerequisites:
+
+### General build prerequisites
+
+Please refer to the [main page](README.md) for general build prerequisites.
+
+### Android Setup
+
+**Install an Android SDK**
+
+* Suggested Android API level: 32, 33, or 34. Other versions may work but have not been tested.
+* Recommended installation via [Android Studio](https://developer.android.com/studio)
+  1. Open Android Studio settings
+  2. Navigate to "Languages & Frameworks" > "Android SDK" > "SDK Platforms"
+  3. Select the desired SDK and press "Apply" to start the installation
+
+**Install an Android NDK**
+
+* Latest available stable version recommended.
+* Installation via Android Studio:
+  1. Open Android Studio settings
+  2. Navigate to "Languages & Frameworks" > "Android SDK" > "SDK Tools"
+  3. Select "NDK (Side by side)" and press "Apply" to start the installation
+
+### Additional tools
+
+**Ninja build tool (Windows only)**
+
+* Install via Android Studio's CMake component (see Android NDK installation).
+* Alternatively, ensure the Ninja executable is present in the directory tree pointed to by the `ANDROID_HOME` environment variable.
+
+**Java Development Kit (JDK)**
+
+* Recommended: [OpenJDK 22](https://jdk.java.net/22/)
+
+### Environment Variables
+
+Define the following environment variables:
+* `ANDROID_HOME`: points to the Android SDK location (e.g., `${HOME}/Library/Android/sdk` on macOS).
+* `ANDROID_NDK`: points to the Android NDK location (e.g., `${HOME}/Library/Android/sdk/ndk/26.2.11394342` on macOS).
+* `ANDROID_NDK_VERSION`: the Android NDK version number (e.g., 26.2.11394342).
+* `JAVA_HOME`: points to the JDK location (e.g., `/Library/Java/JavaVirtualMachines/openjdk-22.0.1.jdk/Contents/Home` on macOS).
+
+**Setting Environment Variables**
+
+On Linux, macOS (and other Unixes) add the following lines to your terminal config file (e.g., `.zshrc`, `.bashrc`, `.profile`) or copy-and-paste them directly into the current terminal (each time):
+
+```bash
+export ANDROID_HOME="${HOME}/Library/Android/sdk"
+export ANDROID_NDK="${HOME}/Library/Android/sdk/ndk/26.2.11394342"
+export ANDROID_NDK_VERSION="26.2.11394342"
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/openjdk-22.0.1.jdk/Contents/Home"
+```
+
+On Windows, define them manually:
+* Press `WINDOWS + R`, type `sysdm.pl`, and click `OK`.
+* Switch to the "Advanced" tab and select "Environment variables".
+* Add the variables as "System variables" and ensure correct paths for your system.
+* A restart may be required.
 
 ## 2 Building the third-party libraries
 
@@ -103,4 +147,10 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 
 # Install release build of the app
 adb install app/build/outputs/apk/release/app-release.apk
+```
+
+Log messages can be displayed using:
+
+```
+adb logcat -s Ocean
 ```
