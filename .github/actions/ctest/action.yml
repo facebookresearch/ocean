@@ -26,6 +26,7 @@ runs:
       with:
         name: ocean-build
         path: inputs.build-path
+      shell: bash
 
     - name: Run tests
       run: |
@@ -36,3 +37,4 @@ runs:
         INSTALL_PATH: ${{ inputs.install-path }}
         TEST_PATH: ${{ inputs.build-path }}/${{ inputs.test-directory }}
         CTEST_ARGS: ${{ inputs.ctest-args }}
+      shell: bash
