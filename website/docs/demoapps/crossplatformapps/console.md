@@ -12,9 +12,9 @@ import TabItem from '@theme/TabItem';
 This demo app offers a basic example of setting up simple console applications using Ocean, designed to operate across multiple platforms. In this context, "console" refers to the absence of complex UI elements, focusing instead on displaying Ocean's log messages.
 
 <div class="center-images">
-  <img src={require('@site/static/img/docs/demoapps/console_ios.jpg').default} alt="Image: Screenshot of console app on iOS" height="400" className="center-image"/>
-  <img src={require('@site/static/img/docs/demoapps/console_android.jpg').default} alt="Image: Screenshot of console app on Android" height="390" className="center-image"/>
-  <img src={require('@site/static/img/docs/demoapps/console_windows_mac.jpg').default} alt="Image: Screenshot of console app on Desktop" height="400" className="center-image"/>
+  <img src={require('@site/static/img/docs/demoapps/crossplatformapps/console_ios.jpg').default} alt="Image: Screenshot of console app on iOS" height="400" className="center-image"/>
+  <img src={require('@site/static/img/docs/demoapps/crossplatformapps/console_android.jpg').default} alt="Image: Screenshot of console app on Android" height="390" className="center-image"/>
+  <img src={require('@site/static/img/docs/demoapps/crossplatformapps/console_windows_mac.jpg').default} alt="Image: Screenshot of console app on Desktop" height="400" className="center-image"/>
 </div>
 
 The app is available on all platforms and represents Ocean's simplest demonstration application. Despite its simplicity, it serves as an excellent starting point for quick debugging and prototyping.

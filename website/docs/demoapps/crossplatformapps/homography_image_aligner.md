@@ -13,7 +13,7 @@ Image Aligner Demo Application
 This demo application features a simple image aligner designed for successive frames, such as those from a movie, live camera, or image sequence. The alignment process relies on a homography, which is calculated by tracking sparse feature points between consecutive frames.
 
 <div class="center-images">
-  <img src={require('@site/static/img/docs/demoapps/homography_image_aligner_android.jpg').default} alt="Image: The homography image alignment app on Android" height="600" className="center-image"/>
+  <img src={require('@site/static/img/docs/demoapps/crossplatformapps/homography_image_aligner_android.jpg').default} alt="Image: The homography image alignment app on Android" height="600" className="center-image"/>
 </div>
 
 ### Platform-Independent Implementation

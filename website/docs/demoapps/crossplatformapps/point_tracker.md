@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 This app demonstrates the use of a tracker for sparse 2D feature points.
 
 <div class="center-images">
-  <img src={require('@site/static/img/docs/demoapps/point_tracker_android.jpg').default} alt="Image: Screenshot of the point tracker app on android" height="400" className="center-image"/>
+  <img src={require('@site/static/img/docs/demoapps/crossplatformapps/point_tracker_android.jpg').default} alt="Image: Screenshot of the point tracker app on android" height="400" className="center-image"/>
 </div>
 
 ### Feature Point Tracking

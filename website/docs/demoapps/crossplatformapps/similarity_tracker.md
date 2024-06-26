@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 The similarity tracker demo application implements a tracker that determines a similarity transformation between consecutive video frames. This transformation is based on sparse feature points tracked between frames. Users can define a region of interest (bounding box) by selecting an area within the video frame. The tracker will then detect and track sparse feature points only within this region. The region's location, scale, and orientation are updated in each new video frame.
 
 <div class="center-images">
-  <img src={require('@site/static/img/docs/demoapps/similarity_tracker_android.jpg').default} alt="Image: The homography image alignment app on Android" height="600" className="center-image"/>
+  <img src={require('@site/static/img/docs/demoapps/crossplatformapps/similarity_tracker_android.jpg').default} alt="Image: The homography image alignment app on Android" height="600" className="center-image"/>
 </div>
 
 

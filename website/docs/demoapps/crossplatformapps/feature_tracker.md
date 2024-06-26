@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 The Feature Tracker demo application showcases Ocean's capabilities in tracking planar patterns, such as posters or images. The application offers flexibility in its input source, allowing users to select either a webcam or a video/movie file. Additionally, a simple image can be designated as the tracking pattern.
 
 <div class="center-images">
-  <img src={require('@site/static/img/docs/demoapps/feature_tracker_android.jpg').default} alt="Image: The feature tracker app on android" height="600" className="center-image"/>
+  <img src={require('@site/static/img/docs/demoapps/crossplatformapps/feature_tracker_android.jpg').default} alt="Image: The feature tracker app on android" height="600" className="center-image"/>
 </div>
 
 The renowned SIFT image features are used to extract salient points on the tracking pattern (the image). The tracker detects and tracks these points reliably. The area of the tracking pattern is marked by a virtual bounding box that is aligned with the printout. Note the small coordinate system in one corner of the visualization. The red, green, and blue axes represent the `x`, `y`, and `z` axes, respectively. The performance of the tracker is displayed in the upper left corner, measured in milliseconds.
