@@ -19,9 +19,6 @@
 namespace Ocean
 {
 
-// Forward declaration for test library.
-namespace Test { namespace TestCV { namespace TestDetector { class TestBlobFeatureDetector; } } }
-
 namespace CV
 {
 
@@ -54,8 +51,6 @@ namespace Blob
  */
 class OCEAN_CV_DETECTOR_BLOB_EXPORT BlobDescriptor
 {
-	friend class Ocean::Test::TestCV::TestDetector::TestBlobFeatureDetector;
-
 	public:
 
 #ifdef OCEAN_CV_DETECTOR_BLOB_USE_INTEGER_DESCRIPTOR

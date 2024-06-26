@@ -10,6 +10,7 @@
 
 #include "ocean/test/testcv/testdetector/TestCVDetector.h"
 
+#include "ocean/cv/detector/blob/BlobFeatureDescriptor.h"
 #include "ocean/cv/detector/blob/BlobFeatureDetector.h"
 
 namespace Ocean
@@ -28,7 +29,7 @@ namespace TestDetector
  * This class implements a Blob feature detector test.
  * @ingroup testcvdetector
  */
-class OCEAN_TEST_CV_DETECTOR_EXPORT TestBlobFeatureDetector
+class OCEAN_TEST_CV_DETECTOR_EXPORT TestBlobFeatureDetector : protected CV::Detector::Blob::BlobDescriptor
 {
 	protected:
 

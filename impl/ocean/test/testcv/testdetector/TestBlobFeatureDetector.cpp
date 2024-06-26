@@ -17,8 +17,6 @@
 #include "ocean/cv/FrameInterpolatorNearestPixel.h"
 #include "ocean/cv/IntegralImage.h"
 
-#include "ocean/cv/detector/blob/BlobFeatureDescriptor.h"
-
 #include "ocean/math/Random.h"
 #include "ocean/math/SquareMatrix3.h"
 
