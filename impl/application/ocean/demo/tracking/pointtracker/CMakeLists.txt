@@ -197,7 +197,7 @@ endif()
 
 if (IOS)
 
-    set(OCEAN_TARGET_NAME "application_ocean_tracking_pointtracker_ios")
+    set(OCEAN_TARGET_NAME "application_ocean_demo_tracking_pointtracker_ios")
 
     find_library(UIKIT_LIB UiKit)
 

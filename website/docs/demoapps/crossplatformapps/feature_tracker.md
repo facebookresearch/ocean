@@ -51,7 +51,7 @@ To try this you'll need to print or display the pattern image used above. A copy
   </TabItem>
 
   <TabItem value="ios" label="iOS">
-    Ensure the [third-party libraries have been built for iOS](https://github.com/facebookresearch/ocean/blob/main/building_for_ios.md#2-building-the-third-party-libraries). Then follow the general [setup for building iOS apps using XCode](https://github.com/facebookresearch/ocean/blob/main/building_for_ios.md#4-building-the-ocean-ios-demotest-apps). Once the generation of the XCode project is complete, open it and search for `application_ocean_tracking_featuretracker` in the scheme at the top. Then hit `CMD-R` to build, install, and run the app and follow the instructions.
+    Ensure the [third-party libraries have been built for iOS](https://github.com/facebookresearch/ocean/blob/main/building_for_ios.md#2-building-the-third-party-libraries). Then follow the general [setup for building iOS apps using XCode](https://github.com/facebookresearch/ocean/blob/main/building_for_ios.md#4-building-the-ocean-ios-demotest-apps). Once the generation of the XCode project is complete, open it and search for `application_ocean_demo_tracking_featuretracker_ios` in the scheme at the top. Then hit `CMD-R` to build, install, and run the app and follow the instructions.
   </TabItem>
 
   <TabItem value="macos" label="macOS">

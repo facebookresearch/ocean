@@ -12,11 +12,9 @@ Image Aligner Demo Application
 
 This demo application features a simple image aligner designed for successive frames, such as those from a movie, live camera, or image sequence. The alignment process relies on a homography, which is calculated by tracking sparse feature points between consecutive frames.
 
-
 <div class="center-images">
   <img src={require('@site/static/img/docs/demoapps/homography_image_aligner_android.jpg').default} alt="Image: The homography image alignment app on Android" height="600" className="center-image"/>
 </div>
-
 
 ### Platform-Independent Implementation
 The majority of the code is platform-independent and implemented in the HomographyImageAligner class, which is shared across all platforms. However, a few platform-specific files are used for GUI-related purposes. The application generates visual results for each successive image pair from any input medium, creating a seamless alignment experience.
@@ -58,7 +56,7 @@ The application produces blended images for each successive frame pair, providin
   </TabItem>
 
   <TabItem value="ios" label="iOS">
-    Ensure the [third-party libraries have been built for iOS](https://github.com/facebookresearch/ocean/blob/main/building_for_ios.md#2-building-the-third-party-libraries). Then follow the general [setup for building iOS apps using XCode](https://github.com/facebookresearch/ocean/blob/main/building_for_ios.md#4-building-the-ocean-ios-demotest-apps). Once the generation of the XCode project is complete, open it and search for `application_ocean_tracking_homographyimagealigner` in the scheme at the top. Then hit `CMD-R` to build, install, and run the app and follow the instructions.
+    Ensure the [third-party libraries have been built for iOS](https://github.com/facebookresearch/ocean/blob/main/building_for_ios.md#2-building-the-third-party-libraries). Then follow the general [setup for building iOS apps using XCode](https://github.com/facebookresearch/ocean/blob/main/building_for_ios.md#4-building-the-ocean-ios-demotest-apps). Once the generation of the XCode project is complete, open it and search for `application_ocean_demo_tracking_homographyimagealigner_ios` in the scheme at the top. Then hit `CMD-R` to build, install, and run the app and follow the instructions.
   </TabItem>
 
   <TabItem value="macos" label="macOS">

@@ -177,7 +177,7 @@ endif()
 
 if (IOS)
 
-    set(OCEAN_TARGET_NAME "application_ocean_cv_detector_qrcodes_detector2d_ios")
+    set(OCEAN_TARGET_NAME "application_ocean_demo_cv_detector_qrcodes_detector2d_ios")
 
     find_library(UIKIT_LIB UiKit)
 

@@ -199,7 +199,7 @@ endif()
 
 if (IOS)
 
-    set(OCEAN_TARGET_NAME "application_ocean_tracking_homographytracker_ios")
+    set(OCEAN_TARGET_NAME "application_ocean_demo_tracking_homographytracker_ios")
 
     find_library(UIKIT_LIB UiKit)
 

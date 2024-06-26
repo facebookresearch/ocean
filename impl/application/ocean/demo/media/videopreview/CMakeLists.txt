@@ -139,7 +139,7 @@ endif()
 
 if (IOS)
 
-    set(OCEAN_TARGET_NAME "application_ocean_media_videopreview_ios")
+    set(OCEAN_TARGET_NAME "application_ocean_demo_media_videopreview_ios")
 
     find_library(UIKIT_LIB UiKit)
 
