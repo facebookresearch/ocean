@@ -4,94 +4,83 @@ This document describes the process to build Ocean projects for Meta Quest devic
 
 1. General requirements
 2. Building required third-party libraries
-3. Using Ocean in external Quest projects
-4. Building Quest demo apps that come with Ocean
+3. Building Quest demo apps that come with Ocean
 
 ## 1 Prerequisites
 
-* [General prerequisites listed on the main page](README.md)
-* [Android build prerequisites](building_for_android.md#1-prerequisites)
-* (Optional) Download and set up Oculus (OVR) Platform SDK
-  * Note: while the SDK is optional, some of Ocean's Meta Quest projects (e.g. Microphone demo for Quest devices) require this setup.
-  * [Download Oculus Platform SDK](https://developer.oculus.com/downloads/package/oculus-platform-sdk/)
-  * Unzip the downloaded file (e.g. "ovr_platform_sdk_65.0.zip") to a directory
-  * Define the following environment variable:
-    * `OVRPlatformSDK_ROOT` - points to root directory of unzipped Oculus Platform SDK files, e.g. `${HOME}/Downloads/ovr_platform_sdk_65.0`
-      * When setup properly, following files should exist in the directory structure located at `${OVRPlatformSDK_ROOT}`:
-        * `${OVRPlatformSDK_ROOT}/Android/libs/arm64-v8a/libovrplatformloader.so`
-        * `${OVRPlatformSDK_ROOT}/Include/OVR_Platform.h` (and other header files in the same directory)
+To build the project, you need to satisfy the following prerequisites:
+
+### General build prerequisites
+
+Please refer to the [main page](README.md) for general build prerequisites.
+
+### Android Setup
+
+Please refer to the [instructions to build Ocean of Android](building_for_android.md#1-prerequisites) for the Android setup.
+
+### Quest setup
+
+**Oculus (OVR) Platform SDK (Optional)**
+
+While this SDK is optional some of the Ocean demo apps for Quest require this setup, for example Microphone demo for Quest devices.
+* Download the most recent SDK: [Oculus Platform SDK](https://developer.oculus.com/downloads/package/oculus-platform-sdk/)
+* Uncompress the archive and move the uncompressed directory to its destination folder
+* Define the following environment variable:
+    * `OVRPlatformSDK_ROOT` - points to root directory of unzipped Oculus Platform SDK files, e.g. `${HOME}/Downloads/ovr_platform_sdk_XX.Y` where `XX.Y` needs to be replaced with the version that was downloaded.
+* When setup properly, following files should exist in the directory structure located at `${OVRPlatformSDK_ROOT}`:
+    * `${OVRPlatformSDK_ROOT}/Android/libs/arm64-v8a/libovrplatformloader.so`
+    * `${OVRPlatformSDK_ROOT}/Include/OVR_Platform.h` (and other header files in the same directory)
 
 ## 2 Building the third-party libraries
 
-The easiest way to build the third-party libraries is by using the provided build script, [`build/cmake/build_thirdparty_android.sh`](build/cmake/build_thirdparty_android.sh). Simply comment out all build configurations that are not required for your project.  Currently, Quest demo applications only build with "arm64-v8a" static library builds of Ocean.  See example below for configuration sufficient to build debug and release builds of Meta Quest apps:
+Please refer to the builds steps in the [instructions for Android](building_for_android.md#2-building-the-third-party-libraries) for details about building the required third-party libraries. For Quest only the following build parameters are required:
+
+* Android ABI: `arm64-v8a`
+* Android SDK: `android-32`
+* Linking type: `static`
+* Build config: `debug` and/or `release`
+
+The following is a possible example build command:
 
 ```
-# run_build_for_android armeabi-v7a android-32 Debug static
-run_build_for_android arm64-v8a   android-32 Debug static
-# run_build_for_android x86         android-32 Debug static
-# run_build_for_android x86_64      android-32 Debug static
+cd ${OCEAN_DEVELOPMENT_PATH}
 
-# run_build_for_android armeabi-v7a android-32 Debug shared
-# run_build_for_android arm64-v8a   android-32 Debug shared
-# run_build_for_android x86         android-32 Debug shared
-# run_build_for_android x86_64      android-32 Debug shared
-
-# run_build_for_android armeabi-v7a android-32 Release static
-run_build_for_android arm64-v8a   android-32 Release static
-# run_build_for_android x86         android-32 Release static
-# run_build_for_android x86_64      android-32 Release static
-
-# run_build_for_android armeabi-v7a android-32 Release shared
-# run_build_for_android arm64-v8a   android-32 Release shared
-# run_build_for_android x86         android-32 Release shared
-# run_build_for_android x86_64      android-32 Release shared
+./build/cmake/build_thirdparty_android.sh -c debug,release -l static -b "${HOME}/build_ocean_thirdparty" -i "${HOME}/install_ocean_thirdparty" --abi arm64-v8a --sdk android-32
 ```
 
-Once the script completes, all binaries and include files of the third-party libraries will have been installed into `/tmp/ocean/install/android/${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_TYPE}`. On a Windows build host, they will be installed into that directory under drive C: with "android" abbreviated to "and" due to path name length considerations.
+Once the script completes, all binaries and include files of the third-party libraries will have been installed into `${HOME}/install_ocean_thirdparty/android_${ANDROID_ABI}_${LINKING_TYPE}_${BUILD_TYPE}`.
 
-## 3 Using Ocean in external Quest projects
+**Note:** on a Windows build host, the binaries and include files the third-party libraries will be installed into `C:\and\...`.  This is required due to Windows imposing a maximum path length. Exceeding this limit will result in build errors, for example errors about missing files.
+## 3 Building Quest demo apps that come with Ocean
 
-This section provides an example of how to build the Ocean libraries so that they can be integrated into an existing Meta Quest project.
+Please refer to the builds steps in the [instructions for Android](building_for_android.md#4-building-the-ocean-android-demo-test-apps) for details about building Ocean Android apps with Gradle.
 
-First, build the required third-party libraries as described above.
+The Gradle build configurations for Quest demo apps can be found under the directory structure at [`build/gradle/application/ocean/demo/platform/meta/quest/openxr/`](build/gradle/application/ocean/demo/platform/meta/quest/openxr/).
 
-An external project that uses Gradle as their main build system can take advantage of `externalNativeBuild` to build Ocean directly by adding something similar to the following to their configuration:
+To build Quest demo apps, first build the required third-party libraries as described above. Then find the Gradle configuration of a Quest app that you want to build, for example [`build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/app/build.gradle.kts`](build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/app/build.gradle.kts).
 
-```
-externalNativeBuild {
-  cmake {
-    arguments += "-DBUILD_SHARED_LIBS=OFF"
-    arguments +=
-        "-DOCEAN_THIRD_PARTY_ROOT_FROM_GRADLE=${project.properties["oceanThirdPartyPath"]}"
-    targets += "application_ocean_demo_platform_meta_quest_openxr_renderer_quest_native"
-  }
-}
-```
-
-For a full example, please take a look at the Gradle configuration of the Ocean Meta Quest apps.  For example, [`build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/app/build.gradle.kts`](build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/app/build.gradle.kts).
-
-For projects using build systems other than Gradle, the precise details of the integration of Ocean are beyond the scope of this document and are left to the reader.
-
-## 4 Building Quest demo apps that come with Ocean
-
-Gradle build configurations for Quest demo apps can be found under the directory structure at [`build/gradle/application/ocean/demo/platform/meta/quest/openxr/`](build/gradle/application/ocean/demo/platform/meta/quest/openxr/).
-
-To build Quest demo atts, first build the required third-party libraries as described [above](#2-building-the-third-party-libraries). Then find the Gradle configuration of a Quest app that you want to build, for example [`build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/app/build.gradle.kts`](build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest/app/build.gradle.kts).
-
-To build the APK, run "gradlew" from the project's `quest/` subdirectory in the manner examplified below.
+To build the APK, run "gradlew" from the directory in the manner examplified below.
 
 ```
-# Traverse to project's 'quest' subdirectory
-cd ${OCEAN_DEVELOPMENT_PATH}/build/gradle/application/ocean/demo/platform/meta/quest/openxr/renderer/quest
+# Adjust this to your location of the third-party libraries
+export OCEAN_THIRDPARTY_PATH="${HOME}/install_ocean_thirdparty_android
+
+cd ${OCEAN_DEVELOPMENT_PATH}/build/gradle/application/ocean/demo/platform/meta/quest/openxr/fingerdistance/quest
 
 # Build the APK of the application
-./gradlew build -PoceanThirdPartyPath=/tmp/ocean/install/android
+./gradlew build
 
 # Install debug build of the app
 adb install app/build/outputs/apk/debug/app-debug.apk
 
 # Install release build of the app
 adb install app/build/outputs/apk/release/app-release.apk
+```
+
+The don the device and start the app from the menu. Log messages can be displayed using:
+
+```
+adb logcat -s Ocean
 ```
 
 ## Additional Notes
