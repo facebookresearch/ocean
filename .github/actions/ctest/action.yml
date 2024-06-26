@@ -20,17 +20,37 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get upgrade -y
+        sudo apt-get install -y -o Acquire::Retries=5 \
+          git ninja-build zip libx11-dev libgtk-3-dev \
+          liblzma-dev libgl1-mesa-dev libxcb-glx0-dev \
+          libdeflate-dev libudev-dev zlib1g-dev
+
+    - name: Install a newer CMake
+      run: |
+        sudo apt purge --auto-remove cmake
+        wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
+        sudo apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ jammy main'
+        sudo apt update
+        sudo apt install -y cmake
+
     - name: Download build artifacts
       id: download-build-artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v3
       with:
         name: ocean-build
-        path: inputs.build-path
+
+    - name: Unzip build artifacts
+      run: |
+        tar -xvf ocean-build.tar -C /
       shell: bash
 
     - name: Run tests
       run: |
-        mkdir $INSTALL_PATH
+        mkdir -p $INSTALL_PATH/bin
         cd $TEST_PATH
         ctest $CTEST_ARGS
       env:
