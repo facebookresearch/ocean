@@ -1,0 +1,38 @@
+name: 'Ocean CTest'
+description: 'Downloads ocean build output and runs ctest in given subdirectory'
+
+inputs:
+  build-path:
+    description: 'The build path used during the build step'
+    required: true
+  install-path:
+    description: 'The install path used during the build step'
+    required: true
+  test-directory:
+    description: 'The subdirectory within build path to be tested'
+    required: true
+    default: ''
+  ctest-args:
+    description: 'Any arguments to be passed to ctest'
+    required: false
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    - name: Download build artifacts
+      id: download-build-artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: ocean-build
+        path: inputs.build-path
+
+    - name: Run tests
+      run: |
+        mkdir $INSTALL_PATH
+        cd $TEST_PATH
+        ctest $CTEST_ARGS
+      env:
+        INSTALL_PATH: ${{ inputs.install-path }}
+        TEST_PATH: ${{ inputs.build-path }}/${{ inputs.test-directory }}
+        CTEST_ARGS: ${{ inputs.ctest-args }}
