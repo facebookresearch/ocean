@@ -49,8 +49,6 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 
-#include <array>
-
 namespace Ocean
 {
 
@@ -60,21 +58,21 @@ namespace CV
 namespace Detector
 {
 
-/// Forward-declaration of the descriptor class for typedef's
+/// Forward-declaration of the descriptor class.
 template <size_t tSize>
 class FREAKDescriptorT;
 
 /// Typedef for the 32-bytes long FREAK descriptor
-typedef FREAKDescriptorT<32> FREAKDescriptor32;
+using FREAKDescriptor32 = FREAKDescriptorT<32>;
 
 /// Vector of 32-bytes long FREAK descriptors
-typedef std::vector<FREAKDescriptor32> FREAKDescriptors32;
+using FREAKDescriptors32 = std::vector<FREAKDescriptor32>;
 
 /// Typedef for the 64-bytes long FREAK descriptor
-typedef FREAKDescriptorT<64> FREAKDescriptor64;
+using FREAKDescriptor64 = FREAKDescriptorT<64>;
 
 /// Vector of 64-bytes long FREAK descriptors
-typedef std::vector<FREAKDescriptor64> FREAKDescriptors64;
+using FREAKDescriptors64 = std::vector<FREAKDescriptor64>;
 
 /**
  * Implementation of the Fast Retina Keypoint descriptors (FREAK).
@@ -84,19 +82,21 @@ typedef std::vector<FREAKDescriptor64> FREAKDescriptors64;
 template <size_t tSize>
 class FREAKDescriptorT
 {
+	static_assert(tSize == 32 || tSize == 64, "Invalid size!");
+
 	public:
 
 		/// Typedef for the selected pixel type. This might be turned into a template parameter at some point.
-		typedef std::uint8_t PixelType;
+		using PixelType = std::uint8_t;
 
 		/// The Jacobian of the projection matrix at a specific 3D location (ray from projection center to pixel in image plane)
-		typedef Eigen::Matrix<float, 2, 3> PointJacobianMatrix2x3;
+		using PointJacobianMatrix2x3 = Eigen::Matrix<float, 2, 3>;
 
 		/// Single-level FREAK descriptor.
-		typedef std::array<PixelType, tSize> SinglelevelDescriptorData;
+		using SinglelevelDescriptorData = std::array<PixelType, tSize>;
 
 		/// Multi-level FREAK descriptor data; if possible, this implementation computes the descriptor at three different scales: 1.0, 1.2599, and 1.5874, cf. `descriptorLevels()`
-		typedef std::array<SinglelevelDescriptorData, 3> MultilevelDescriptorData;
+		using MultilevelDescriptorData = std::array<SinglelevelDescriptorData, 3>;
 
 		/**
 		 * The camera data that is required to compute the FREAK descriptor of a image point
@@ -226,12 +226,12 @@ class FREAKDescriptorT
 		/**
 		 * Creates a new and invalid FREAK descriptor object
 		 */
-		inline FREAKDescriptorT() noexcept;
+		FREAKDescriptorT() = default;
 
 		/**
 		 * Creates a new FREAK descriptor object by copying from an existing one
 		 */
-		inline FREAKDescriptorT(const FREAKDescriptorT<tSize>& other) noexcept;
+		FREAKDescriptorT(const FREAKDescriptorT<tSize>&) = default;
 
 		/**
 		 * Creates a new FREAK descriptor object that will be initialized to all zeros
@@ -240,11 +240,6 @@ class FREAKDescriptorT
 		 * @param orientation The orientation of the descriptor in Radian, range: (-pi, pi]
 		 */
 		inline FREAKDescriptorT(MultilevelDescriptorData&& data, const unsigned int levels, const float orientation) noexcept;
-
-		/**
-		 * Copy assignment operator, needs to be defined since there is a custom copy constructor.
-		 */
-		inline FREAKDescriptorT& operator=(const FREAKDescriptorT<tSize>& other) noexcept = default;
 
 		/**
 		 * Returns the orientation of the descriptor in Radian
@@ -283,6 +278,18 @@ class FREAKDescriptorT
 		 * @return True if this is a valid descriptor, otherwise false
 		 */
 		inline bool isValid() const;
+
+		/**
+		 * Returns the length of this descriptor in bytes.
+		 * @reutrn The descriptor's length in bytes
+		 */
+		static constexpr size_t size();
+
+		/**
+		 * Copy assignment operator, needs to be defined since there is a custom copy constructor.
+		 * @return Reference to this object
+		 */
+		inline FREAKDescriptorT& operator=(const FREAKDescriptorT<tSize>&) noexcept = default;
 
 		/**
 		 * Compute a FREAK descriptor for a single point
@@ -479,13 +486,13 @@ class FREAKDescriptorT
 	protected:
 
 		/// The orientation of this descriptor in radian, range: [-pi, pi]
-		float orientation_;
+		float orientation_ = 0.0f;
 
 		/// The actual FREAK descriptor data
 		MultilevelDescriptorData data_;
 
 		/// Number of valid levels in the multi-level descriptor data above, range: [0, 3]
-		unsigned int dataLevels_;
+		unsigned int dataLevels_ = 0u;
 };
 
 template <size_t tSize>
@@ -613,23 +620,6 @@ typename FREAKDescriptorT<tSize>::CameraDerivativeData FREAKDescriptorT<tSize>::
 }
 
 template <size_t tSize>
-inline FREAKDescriptorT<tSize>::FREAKDescriptorT() noexcept :
-	orientation_(0),
-	dataLevels_(0u)
-{
-	static_assert(tSize == 32 || tSize == 64, "The length of the FREAK descriptors must be 32 or 64 bytes.");
-}
-
-template <size_t tSize>
-inline FREAKDescriptorT<tSize>::FREAKDescriptorT(const FREAKDescriptorT<tSize>& other) noexcept :
-	orientation_(other.orientation_),
-	data_(other.data_),
-	dataLevels_(other.dataLevels_)
-{
-	// Nothing else to do.
-}
-
-template <size_t tSize>
 FREAKDescriptorT<tSize>::FREAKDescriptorT(MultilevelDescriptorData&& data, const unsigned int levels, const float orientation) noexcept :
 	orientation_(orientation),
 	data_(std::move(data)),
@@ -698,6 +688,12 @@ template <size_t tSize>
 inline bool FREAKDescriptorT<tSize>::isValid() const
 {
 	return descriptorLevels() >= 1u && descriptorLevels() <= 3u && NumericF::isInsideRange(-NumericF::pi(), orientation_, NumericF::pi());
+}
+
+template <size_t tSize>
+constexpr size_t FREAKDescriptorT<tSize>::size()
+{
+	return tSize;
 }
 
 template <size_t tSize>
