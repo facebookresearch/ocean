@@ -32,7 +32,7 @@ set ANDROID_SDK_VERSION=android-34
 
 setlocal enableDelayedExpansion
 
-set "options=-android_abi:"arm64-v8a" -install:%cd%\ocean_install -build:%cd%\ocean_build -config:"debug release" -link:"static" -third-party:NULL -archive:NULL -h:"
+set "options=-android_abi:"arm64-v8a" -install:%cd%\ocean_install -build:%cd%\ocean_build -config:"debug release" -link:"static" -third-party:NULL -archive:NULL -h: -sdk:%ANDROID_SDK_VERSION% -quest:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -93,12 +93,21 @@ if !-h!==1 (
     echo                 if they were built manually. If not, CMake will search standard system locations
     echo                 for compatible third-party libraries.
     echo(
+    echo   -sdk ANDROID_SDK_VERSION : Default value is %ANDROID_SDK_VERSION%
+    echo(
+    echo   -quest : If specified, builds will be specialized for Quest apps. Otherwise generic Android is assumed.
+    echo(
     echo   -archive ARCHIVE : If specified, this will copy the contents of INSTALL_DIR after the build
     echo                 into a ZIP archive; the path to this archive must exist.
     echo(
     echo   -h : This summary
     echo(
     exit /b
+)
+
+set ENABLE_QUEST=
+if !-quest! == 1 (
+  set ENABLE_QUEST=-DOCEAN_ENABLE_QUEST=TRUE
 )
 
 set BUILD_FAILURES=
@@ -174,13 +183,14 @@ cmake -G"Ninja" ^
       -DCMAKE_BUILD_TYPE=!BUILD_TYPE! ^
       -DBUILD_SHARED_LIBS=!BUILD_SHARED_LIBS! ^
       -DANDROID_ABI=!ANDROID_ABI! ^
-      -DANDROID_PLATFORM=%ANDROID_SDK_VERSION% ^
+      -DANDROID_PLATFORM=!-sdk! ^
       -DCMAKE_ANDROID_ARCH_ABI=!ANDROID_ABI! ^
       -DCMAKE_ANDROID_STL_TYPE=c++_static ^
       -DCMAKE_ANDROID_NDK=%ANDROID_NDK% ^
       -DCMAKE_SYSTEM_NAME=Android ^
       -DCMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%\build\cmake\android.toolchain.cmake ^
-      !TPSPEC!
+      !TPSPEC! ^
+      !ENABLE_QUEST!
 
 cmake --build !BUILD_DIRECTORY! --config !BUILD_TYPE! --target install
 
