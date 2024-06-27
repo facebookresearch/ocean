@@ -21,6 +21,7 @@ if not "%~1"=="" (
   set "test=!options:*%~1:=! "
   if "!test!"=="!options! " (
       echo Error: Invalid option %~1
+      set -h=1
   ) else if "!test:~0,1!"==" " (
       set "%~1=1"
   ) else (

@@ -8,6 +8,8 @@ echo off
 @REM Determine the location of the source directory from the location of this script
 set OCEAN_THIRD_PARTY_SOURCE_DIR=%~dp0..\..\build\cmake\third-party
 
+set OCEAN_PLATFORM=android
+
 if "%ANDROID_HOME%" == "" (
     echo "ERROR: Set ANDROID_HOME to the location of your Android SDK installation."
     exit /b 1
@@ -28,13 +30,7 @@ set ANDROID_SDK_VERSION=android-34
 @echo off
 setlocal enableDelayedExpansion
 
-if "%OCEAN_INSTALL_PATH%" == "" (
-  set INSTALL_PATH=C:\tmp\ocean\install\and
-) else (
-  set INSTALL_PATH=%OCEAN_INSTALL_PATH%
-)
-
-set "options=-android_abi:"arm64-v8a armeabi-v7a x86_64 x86" -install:!INSTALL_PATH! -build:C:\tmp\ocean\build\and -config:"debug release" -link:"static" -archive:NULL -h:"
+set "options=-android_abi:"arm64-v8a" -install:%cd%\ocean_install_thirdparty -build:%cd%\ocean_build_thirdparty -config:"debug release" -link:"static" -archive:NULL -h:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -42,6 +38,7 @@ if not "%~1"=="" (
   set "test=!options:*%~1:=! "
   if "!test!"=="!options! " (
       echo Error: Invalid option %~1
+      set -h=1
   ) else if "!test:~0,1!"==" " (
       set "%~1=1"
   ) else (
@@ -74,6 +71,7 @@ if !-h!==1 (
     echo(
     echo   -android_abi ABI_LIST : A list of Android ABI's as build target platforms.
     echo                 Default value: !-android_abi!
+    echo                 Valid values:  arm64-v8a armeabi-v7a x86_64 x86
     echo(
     echo   -install INSTALL_DIR : The optional location where the third-party libraries of Ocean will
     echo                 be installed. Otherwise builds will be installed to: !-install!
@@ -115,10 +113,10 @@ for %%a in (!-android_abi!) do (
     for %%l in (!-link!) do (
       if /I %%l==static (
         set BUILD_SHARED_LIBS=OFF
-        set bibase=!ANDROID_ABI!_static_!BUILD_TYPE!
+        set bibase=%OCEAN_PLATFORM%_!ANDROID_ABI!_static_!BUILD_TYPE!
       ) else if /I %%l==shared (
         set BUILD_SHARED_LIBS=ON
-        set bibase=!ANDROID_ABI!_shared_!BUILD_TYPE!
+        set bibase=%OCEAN_PLATFORM%_!ANDROID_ABI!_shared_!BUILD_TYPE!
       ) else (
         echo Invalid link mode %%l
         exit /b

@@ -3,10 +3,10 @@
 @REM This source code is licensed under the MIT license found in the
 @REM LICENSE file in the root directory of this source tree.
 
-set OCEAN_PLATFORM=windows
-
 @echo off
 setlocal enableDelayedExpansion
+
+set OCEAN_PLATFORM=windows
 
 @REM Determine the location of the source directory from the location of this script
 set OCEAN_SOURCE_DIR=%~dp0..\..
@@ -20,6 +20,7 @@ if not "%~1"=="" (
   set "test=!options:*%~1:=! "
   if "!test!"=="!options! " (
       echo Error: Invalid option %~1
+      set -h=1
   ) else if "!test:~0,1!"==" " (
       set "%~1=1"
   ) else (

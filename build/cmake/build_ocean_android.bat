@@ -8,7 +8,8 @@ echo off
 @REM Determine the location of the source directory from the location of this script
 set OCEAN_THIRD_PARTY_SOURCE_DIR=%~dp0..\..\build\cmake\third-party
 set OCEAN_SOURCE_DIR=%~dp0..\..
-set OCEAN_BUILD_ROOT_DIRECTORY=C:\tmp\ocean\build\and
+
+set OCEAN_PLATFORM=android
 
 if "%ANDROID_HOME%" == "" (
     echo "ERROR: Set ANDROID_HOME to the location of your Android SDK installation."
@@ -29,15 +30,9 @@ set ANDROID_SDK_VERSION=android-34
 
 @echo off
 
-if "%OCEAN_INSTALL_PATH%" == "" (
-  set INSTALL_PATH=C:\tmp\ocean\install\and
-) else (
-  set INSTALL_PATH=%OCEAN_INSTALL_PATH%
-)
-
 setlocal enableDelayedExpansion
 
-set "options=-android_abi:"arm64-v8a armeabi-v7a x86_64 x86" -install:!INSTALL_PATH! -build:%OCEAN_BUILD_ROOT_DIRECTORY% -config:"debug release" -link:"static" -archive:NULL -h:"
+set "options=-android_abi:"arm64-v8a" -install:%cd%\ocean_install -build:%cd%\ocean_build -config:"debug release" -link:"static" -third-party:NULL -archive:NULL -h:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -45,6 +40,7 @@ if not "%~1"=="" (
   set "test=!options:*%~1:=! "
   if "!test!"=="!options! " (
       echo Error: Invalid option %~1
+      set -h=1
   ) else if "!test:~0,1!"==" " (
       set "%~1=1"
   ) else (
@@ -66,7 +62,7 @@ exit /b
 :endArgs
 
 if !-h!==1 (
-    echo Script to build the third-party libraries required by Ocean :
+    echo Script to build Ocean for %OCEAN_PLATFORM% :
     echo(
     echo  %~n0  [-h] [-android_abi ABI_LIST] [-install INSTALL_DIR] [-build BUILD_DIR]
     echo                    [-config BUILD_CONFIG] [-link LINKING_TYPE] [-archive ARCHIVE]
@@ -77,6 +73,7 @@ if !-h!==1 (
     echo(
     echo   -android_abi ABI_LIST : A list of Android ABI's as build target platforms.
     echo                 Default value: !-android_abi!
+    echo                 Valid values:  arm64-v8a armeabi-v7a x86_64 x86
     echo(
     echo   -install INSTALL_DIR : The optional location where the third-party libraries of Ocean will
     echo                 be installed. Otherwise builds will be installed to: !-install!
@@ -91,6 +88,10 @@ if !-h!==1 (
     echo   -link LINKING_TYPE : The optional linking type for which will be built; valid values are:
     echo                 Multiple values must be separated by spaces (inside double quotes^).
     echo                 Default value if nothing is specified: !-link!
+    echo(
+    echo   -third-party TP_DIR : The base location where Ocean's third-party dependencies are installed,
+    echo                 if they were built manually. If not, CMake will search standard system locations
+    echo                 for compatible third-party libraries.
     echo(
     echo   -archive ARCHIVE : If specified, this will copy the contents of INSTALL_DIR after the build
     echo                 into a ZIP archive; the path to this archive must exist.
@@ -118,10 +119,10 @@ for %%a in (!-android_abi!) do (
     for %%l in (!-link!) do (
       if /I %%l==static (
         set BUILD_SHARED_LIBS=OFF
-        set bibase=!ANDROID_ABI!_static_!BUILD_TYPE!
+        set bibase=%OCEAN_PLATFORM%_!ANDROID_ABI!_static_!BUILD_TYPE!
       ) else if /I %%l==shared (
         set BUILD_SHARED_LIBS=ON
-        set bibase=!ANDROID_ABI!_shared_!BUILD_TYPE!
+        set bibase=%OCEAN_PLATFORM%_!ANDROID_ABI!_shared_!BUILD_TYPE!
       ) else (
         echo Invalid link mode %%l
         exit /b
@@ -129,6 +130,13 @@ for %%a in (!-android_abi!) do (
 
       set BUILD_DIRECTORY=!-build!\!bibase!
       set INSTALL_DIRECTORY=!-install!\!bibase!
+
+      set TPSPEC=
+      if NOT !-third-party! == NULL (
+          set TPFWD=!-third-party:\=/!
+          set TPDIR=!TPFWD!/!bibase!
+          set TPSPEC=-DCMAKE_PREFIX_PATH="!TPDIR!" -DCMAKE_MODULE_PATH="!TPDIR!" -DCMAKE_FIND_ROOT_PATH="!TPDIR!"
+      )
 
       echo BUILD_TYPE           !BUILD_TYPE!
       echo BUILD_SHARED_LIBS    !BUILD_SHARED_LIBS!
@@ -165,14 +173,14 @@ cmake -G"Ninja" ^
       -DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY! ^
       -DCMAKE_BUILD_TYPE=!BUILD_TYPE! ^
       -DBUILD_SHARED_LIBS=!BUILD_SHARED_LIBS! ^
-      -DOCEAN_THIRD_PARTY_ROOT_FROM_GRADLE=%OCEAN_THIRD_PARTY_DIRECTORY% ^
       -DANDROID_ABI=!ANDROID_ABI! ^
       -DANDROID_PLATFORM=%ANDROID_SDK_VERSION% ^
       -DCMAKE_ANDROID_ARCH_ABI=!ANDROID_ABI! ^
       -DCMAKE_ANDROID_STL_TYPE=c++_static ^
       -DCMAKE_ANDROID_NDK=%ANDROID_NDK% ^
       -DCMAKE_SYSTEM_NAME=Android ^
-      -DCMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%\build\cmake\android.toolchain.cmake
+      -DCMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%\build\cmake\android.toolchain.cmake ^
+      !TPSPEC!
 
 cmake --build !BUILD_DIRECTORY! --config !BUILD_TYPE! --target install
 
