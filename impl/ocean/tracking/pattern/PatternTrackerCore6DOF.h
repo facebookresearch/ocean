@@ -19,15 +19,14 @@
 #include "ocean/cv/FramePyramid.h"
 #include "ocean/cv/SubRegion.h"
 
+#include "ocean/cv/detector/FREAKDescriptor.h"
+
 #include "ocean/geometry/SpatialDistribution.h"
 
 #include "ocean/math/HomogenousMatrix4.h"
 #include "ocean/math/AnyCamera.h"
 
 #include "ocean/tracking/VisualTracker.h"
-
-#include "ocean/tracking/blob/Blob.h"
-#include "ocean/tracking/blob/FeatureMap.h"
 
 namespace Ocean
 {
@@ -92,6 +91,63 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 	protected:
 
 		/**
+		 * Definition of the descriptor to be used.
+		 */
+		using Descriptor = CV::Detector::FREAKDescriptor32;
+
+		/**
+		 * Definition of the descriptors to be used.
+		 */
+		using Descriptors = CV::Detector::FREAKDescriptors32;
+
+		/// The maximal distance between two descriptors to be considered as similar.
+		static constexpr unsigned int maximalDescriptorDistance_ = (unsigned int)(Descriptor::size() * 8) * 25u / 100u; // 25% of the descriptor bits
+
+		/**
+		 * Definition of a lightweight 3D feature map holding 3D object points and descriptors for all features in the map.
+		 */
+		class FeatureMap
+		{
+			public:
+
+				/**
+				 * Default constructor.
+				 */
+				FeatureMap() = default;
+
+				/**
+				 * Creates a new feature map for a planar 3D object (an image placed in the x-z plane).
+				 * @param yFrame The image for which the feature map will be created, with pixel format FORMAT_Y8, must be valid
+				 * @param width The width of the image in pixel, with range [1, infinity)
+				 * @param height The height of the image in pixel, with range [1, infinity)
+				 * @param yFramePaddingElements The number of padding elements at the end of each image row, in elements, with range [0, infinity)
+				 * @param dimension The dimension of the feature map (of the image), with range (0, infinity)x[0, infinity), if the y-value is 0 the image's aspect ratio is used to determine the size of the y-dimension
+				 * @param worker Optional worker object to distribute the computation
+				 */
+				FeatureMap(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const Vector2& dimension, Worker* worker = nullptr);
+
+				/**
+				 * Returns the 3D object points of all map features.
+				 * @return The map's object points
+				 */
+				inline const Vectors3& objectPoints() const;
+
+				/**
+				 * Returns the descriptor associated with the 3D object points of this map.
+				 * @return The map's feature descriptors, one for each 3D object point
+				 */
+				inline const Descriptors& descriptors() const;
+
+			protected:
+
+				/// The 3D locations of all features in this map.
+				Vectors3 objectPoints_;
+
+				/// The descriptors of all features, one for each 3D object point location.
+				Descriptors descriptors_;
+		};
+
+		/**
 		 * This class stores the information necessary for one tracking pattern.
 		 */
 		class Pattern
@@ -122,10 +178,10 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 				Pattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const Vector2& dimension, Worker* worker = nullptr);
 
 				/**
-				 * Returns the Blob feature map of this pattern.
-				 * @return Blob feature map
+				 * Returns the feature map of this pattern.
+				 * @return The pattern's feature map
 				 */
-				inline const Blob::FeatureMap& featureMap() const;
+				inline const FeatureMap& featureMap() const;
 
 				/**
 				 * Returns the frame pyramid of the image defining the tracking pattern.
@@ -281,8 +337,8 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 
 			protected:
 
-				/// The Blob feature map of this pattern.
-				Blob::FeatureMap featureMap_;
+				/// The feature map of this pattern.
+				FeatureMap featureMap_;
 
 				/// The frame pyramid of the image specifying the pattern.
 				CV::FramePyramid patternPyramid_;
@@ -466,13 +522,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		bool determinePosesWithoutKnowledge(const PinholeCamera& pinholeCamera, const Frame& yFrame, const CV::FramePyramid& currentFramePyramid, const Quaternion& previousCamera_R_camera = Quaternion(false), Worker* worker = nullptr);
 
 		/**
-		 * Creates the integral image of the given frame.
-		 * @param yFrame The 8 bit grayscale frame (with Y8 pixel format) from which the integral frame will be created, must be valid
-		 * @return Pointer to the integral image data
-		 */
-		const unsigned int* createIntegralImage(const Frame& yFrame);
-
-		/**
 		 * Counts the number of currently visible pattern.
 		 * @return The number of visible pattern
 		 */
@@ -569,6 +618,25 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		 */
 		static CV::SubRegion triangles2subRegion(const Triangles2& triangles, const unsigned int backupWidth, const unsigned int backupHeight);
 
+		/**
+		 * Determines and describes feature points in an image.
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param yFrame The frame in which the feature points will be detected, with pixel format FORMAT_Y8, must be valid
+		 * @param imagePoints The resulting 2D image points located in the image
+		 * @param imagePointDescriptors The resulting descriptors, one for each image point
+		 * @param harrisCornerThreshold The minimal strength value of a Harris corner to be used as feature point, with range [0, infinity)
+		 * @param worker Optional worker object to distribute the computation
+		 */
+		static bool detectAndDescribeFeatures(const SharedAnyCamera& camera, const Frame& yFrame, Vectors2& imagePoints, Descriptors& imagePointDescriptors, const unsigned int harrisCornerThreshold = 20u, Worker* worker = nullptr);
+
+		/**
+		 * Simple helper function to determine the distance between two feature descriptors.
+		 * @param descriptorA The first descriptor
+		 * @param descriptorB The second descriptor
+		 * @return The distance between both descriptors
+		 */
+		static OCEAN_FORCE_INLINE unsigned int determineDescriptorDistance(const Descriptor& descriptorA, const Descriptor& descriptorB);
+
 	protected:
 
 		/// Set of options for this tracker.
@@ -595,9 +663,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		/// Tracker lock object.
 		mutable Lock lock_;
 
-		/// Integral image for the most recent frame (used to avoid frame buffer re-allocations).
-		Frame integralImage_;
-
 		/// The timestamp of the previous frame.
 		Timestamp timestampPreviousFrame_;
 
@@ -608,7 +673,17 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		unsigned int lastRecognitionPatternId_ = 0u;
 };
 
-inline const Blob::FeatureMap& PatternTrackerCore6DOF::Pattern::featureMap() const
+inline const Vectors3& PatternTrackerCore6DOF::FeatureMap::objectPoints() const
+{
+	return objectPoints_;
+}
+
+inline const PatternTrackerCore6DOF::Descriptors& PatternTrackerCore6DOF::FeatureMap::descriptors() const
+{
+	return descriptors_;
+}
+
+inline const PatternTrackerCore6DOF::FeatureMap& PatternTrackerCore6DOF::Pattern::featureMap() const
 {
 	return featureMap_;
 }
@@ -809,6 +884,11 @@ inline unsigned int PatternTrackerCore6DOF::internalMaxConcurrentlyVisiblePatter
 	{
 		return min(options_.maxConcurrentlyVisiblePattern_, (unsigned int)(patternMap_.size()));
 	}
+}
+
+OCEAN_FORCE_INLINE unsigned int PatternTrackerCore6DOF::determineDescriptorDistance(const Descriptor& descriptorA, const Descriptor& descriptorB)
+{
+	return descriptorA.distance(descriptorB);
 }
 
 }

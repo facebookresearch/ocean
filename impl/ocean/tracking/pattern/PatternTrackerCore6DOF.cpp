@@ -17,9 +17,6 @@
 
 #include "ocean/cv/detector/FeatureDetector.h"
 
-#include "ocean/cv/detector/blob/BlobFeatureDescriptor.h"
-#include "ocean/cv/detector/blob/BlobFeatureDetector.h"
-
 #include "ocean/geometry/Error.h"
 #include "ocean/geometry/NonLinearOptimizationPose.h"
 #include "ocean/geometry/RANSAC.h"
@@ -29,8 +26,7 @@
 
 #include "ocean/media/Utilities.h"
 
-#include "ocean/tracking/blob/BlobTracker6DOF.h"
-#include "ocean/tracking/blob/UnidirectionalCorrespondences.h"
+#include "ocean/tracking/UnidirectionalCorrespondences.h"
 
 namespace Ocean
 {
@@ -46,8 +42,37 @@ PatternTrackerCore6DOF::Options::Options()
 	// nothing to do here
 }
 
+PatternTrackerCore6DOF::FeatureMap::FeatureMap(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const Vector2& dimension, Worker* worker)
+{
+	const Frame patternFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, Frame::CM_USE_KEEP_LAYOUT, yFramePaddingElements);
+
+	const SharedAnyCamera camera = std::make_shared<AnyCameraPinhole>(PinholeCamera(width, height, Numeric::deg2rad(60)));
+
+	Vectors2 imagePoints;
+	if (!detectAndDescribeFeatures(camera, patternFrame, imagePoints, descriptors_, 20u, worker))
+	{
+		descriptors_.clear();
+		objectPoints_.clear();
+
+		return;
+	}
+
+	ocean_assert(imagePoints.size() == descriptors_.size());
+
+	objectPoints_.reserve(imagePoints.size());
+
+	ocean_assert(width >= 1u && height >= 1u);
+	const Scalar factorX = dimension.x() / Scalar(width);
+	const Scalar factorY = dimension.y() > 0 ? dimension.y() / Scalar(height) : factorX;
+
+	for (const Vector2& imagePoint : imagePoints)
+	{
+		objectPoints_.emplace_back(imagePoint.x() * factorX, Scalar(0), imagePoint.y() * factorY);
+	}
+}
+
 PatternTrackerCore6DOF::Pattern::Pattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const Vector2& dimension, Worker* worker) :
-	featureMap_(yFrame, width, height, yFramePaddingElements, Vector2(dimension.x(), dimension.y()), Scalar(6.5), true, 0u, worker),
+	featureMap_(yFrame, width, height, yFramePaddingElements, Vector2(dimension.x(), dimension.y()), worker),
 	patternPyramid_(yFrame, width, height, 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(width, height, 15u, 15u), yFramePaddingElements, true /*copyFirstLayer*/, worker),
 	dimension_(dimension),
 	world_T_previousCamera_(false),
@@ -1106,19 +1131,14 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 	ocean_assert(pinholeCamera.isValid() && yFrame.isValid());
 	ocean_assert(pinholeCamera.width() == yFrame.width() && pinholeCamera.height() == yFrame.height());
 
-	const unsigned int* integralImage = createIntegralImage(yFrame);
-	ocean_assert(integralImage);
+	Vectors2 imagePoints;
+	Descriptors imagePointDescriptors;
+	if (!detectAndDescribeFeatures(std::make_shared<AnyCameraPinhole>(pinholeCamera), yFrame, imagePoints, imagePointDescriptors, 20u, worker))
+	{
+		return false;
+	}
 
-	// although we may have downsampled the original input image,
-	// we still have the simple possibility to selected the sampling density for the Blob detector
-	// Thus, as we do not downsample 1280x720 input images, we simply reduce the sampling density instead;
-	// (for images having more pixels than 640x480)
-	const CV::Detector::Blob::BlobFeatureDetector::SamplingDense samplingDense = yFrame.pixels() > 640u * 480u ? CV::Detector::Blob::BlobFeatureDetector::SAMPLING_SPARSE : CV::Detector::Blob::BlobFeatureDetector::SAMPLING_NORMAL;
-
-	CV::Detector::Blob::BlobFeatures features;
-	CV::Detector::Blob::BlobFeatureDetector::detectFeatures(integralImage, yFrame.width(), yFrame.height(), samplingDense, 10, true, features, worker);
-
-	if (features.size() < 10)
+	if (imagePoints.size() < 10)
 	{
 		return false;
 	}
@@ -1136,28 +1156,26 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 		}
 	}
 
+	ocean_assert(imagePoints.size() == imagePointDescriptors.size());
+
 	// remove all feature points lying inside a pattern
 	if (!projectedTriangles.empty())
 	{
 		const CV::SubRegion subRegion(projectedTriangles);
 
-		CV::Detector::Blob::BlobFeatures subsetFeatures;
-		subsetFeatures.reserve(features.size());
-
-		for (CV::Detector::Blob::BlobFeatures::const_iterator i = features.begin(); i != features.end(); ++i)
+		for (size_t n = 0; n < imagePoints.size(); ++n)
 		{
-			if (!subRegion.isInside(i->observation()))
+			if (subRegion.isInside(imagePoints[n]))
 			{
-				subsetFeatures.push_back(*i);
+				imagePoints[n] = imagePoints.back();
+				imagePoints.pop_back();
+
+				imagePointDescriptors[n] = imagePointDescriptors.back();
+				imagePointDescriptors.pop_back();
 			}
 		}
-
-		features = std::move(subsetFeatures);
 	}
 
-	CV::Detector::Blob::BlobFeatureDescriptor::calculateOrientationsAndDescriptors(integralImage, yFrame.width(), yFrame.height(), FrameType::ORIGIN_UPPER_LEFT, CV::Detector::Blob::BlobFeature::ORIENTATION_SLIDING_WINDOW, features, (unsigned int)(features.size()), false, worker);
-
-	CV::Detector::Blob::BlobFeatures subsetFeatures;
 	Vectors2 strongHarrisCorners;
 
 	// Run detection in a round-robin manner.
@@ -1172,9 +1190,15 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 
 	ocean_assert(iPattern != patternMap_.end());
 
+	Vectors2 guessImagePoints;
+	Descriptors guessImagePointDescriptors;
+
+	Vectors2 subsetImagePoints;
+	Vectors3 subsetObjectPoints;
+
 	for (size_t index = 0; index < patternMap_.size(); ++index, ++iPattern)
 	{
-		if (double(Timestamp(true) - recognitionStartTimestamp) > options_.maxRecognitionTime_)
+		if (index > 0 && recognitionStartTimestamp.hasTimePassed(options_.maxRecognitionTime_))
 		{
 			return true;
 		}
@@ -1199,71 +1223,79 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 			poseGuess *= previousCamera_R_camera_OrIdentity;
 		}
 
-		CV::Detector::Blob::BlobFeatures* featureCandidates = &features;
+		const Vectors2* imagePointCandidates = &imagePoints;
+		const Descriptors* imagePointDescriptorCandidates = &imagePointDescriptors;
 
 		if (poseGuess.isValid())
 		{
-			subsetFeatures.clear();
-			subsetFeatures.reserve(features.size());
+			// in case we have a rough pose, we explicitly select all image features which are visible in the projected area of the pattern when applying the rough pose
+
+			guessImagePoints.clear();
+			guessImagePointDescriptors.clear();
+
+			guessImagePoints.reserve(imagePoints.size());
+			guessImagePointDescriptors.reserve(imagePoints.size());
 
 			const Triangles2 triangles(pattern.triangles2(pinholeCamera, poseGuess));
 
 			const CV::SubRegion subRegion(triangles2subRegion(triangles, pinholeCamera.width(), pinholeCamera.height()));
 
-			for (CV::Detector::Blob::BlobFeatures::const_iterator i = features.begin(); i != features.end(); ++i)
+			for (size_t n = 0; n < imagePoints.size(); ++n)
 			{
-				if (subRegion.isInside(i->observation()))
+				if (subRegion.isInside(imagePoints[n]))
 				{
-					subsetFeatures.push_back(*i);
+					guessImagePoints.push_back(imagePoints[n]);
+					guessImagePointDescriptors.push_back(imagePointDescriptors[n]);
 				}
 			}
 
-			featureCandidates = &subsetFeatures;
+			imagePointCandidates = &guessImagePoints;
+			imagePointDescriptorCandidates = &guessImagePointDescriptors;
 		}
 
 		// we apply a brute-force feature matching to determine candidates
 
-		Blob::Correspondences::CorrespondencePairs correspondenceCandidates(Blob::UnidirectionalCorrespondences::determineFeatureCorrespondencesWithQualityEarlyReject(*featureCandidates, pattern.featureMap().features(), featureCandidates->size(), Scalar(0.1), Scalar(0.7), worker));
+		UnidirectionalCorrespondences::CorrespondencePairs correspondenceCandidates = UnidirectionalCorrespondences::determineCorrespondingDescriptors<Descriptor, unsigned int, determineDescriptorDistance>(imagePointDescriptorCandidates->data(), imagePointDescriptorCandidates->size(), pattern.featureMap().descriptors().data(), pattern.featureMap().descriptors().size(), maximalDescriptorDistance_, worker);
 
 		if (correspondenceCandidates.size() < 12)
 		{
 			continue;
 		}
 
-		Geometry::ImagePoints imagePoints;
-		Geometry::ObjectPoints objectPoints;
-		Blob::Correspondences::extractCorrespondingPoints(*featureCandidates, pattern.featureMap().features(), correspondenceCandidates, imagePoints, objectPoints);
-		ocean_assert(objectPoints.size() == imagePoints.size());
+		subsetImagePoints.clear();
+		subsetObjectPoints.clear();
+		UnidirectionalCorrespondences::extractCorrespondenceElements(correspondenceCandidates, imagePointCandidates->data(), imagePointCandidates->size(), pattern.featureMap().objectPoints().data(), pattern.featureMap().objectPoints().size(), subsetImagePoints, subsetObjectPoints);
+		ocean_assert(subsetImagePoints.size() == subsetObjectPoints.size());
 
-		HomogenousMatrix4 pose;
-
-		if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator_, pose, 10u, true, options_.recognitionRansacIterations_, Scalar(5 * 5)))
+		HomogenousMatrix4 pattern_T_camera;
+			Indices32 toto;
+		if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(subsetObjectPoints), ConstArrayAccessor<Vector2>(subsetImagePoints), randomGenerator_, pattern_T_camera, 10u, true, options_.recognitionRansacIterations_, Scalar(5 * 5), &toto))
 		{
 			continue;
 		}
 
 		// let's apply another iteration of feature matching, now guided with the known pose - this will increase the number of feature correspondences significantly
 
-		correspondenceCandidates = Blob::UnidirectionalCorrespondences::determineFeatureCorrespondencesWithPose(AnyCameraPinhole(pinholeCamera), pose, *featureCandidates, pattern.featureMap().features(), featureCandidates->size(), Scalar(10), Scalar(0.1), Scalar(0.7));
+		correspondenceCandidates = UnidirectionalCorrespondences::determineCorrespondingFeatures<Descriptor, unsigned int, determineDescriptorDistance>(AnyCameraPinhole(pinholeCamera), pattern_T_camera, pattern.featureMap().objectPoints().data(), pattern.featureMap().descriptors().data(), pattern.featureMap().objectPoints().size(), imagePointCandidates->data(), imagePointDescriptorCandidates->data(), imagePointCandidates->size(), maximalDescriptorDistance_, Scalar(10));
 
-		imagePoints.clear();
-		objectPoints.clear();
-		Blob::Correspondences::extractCorrespondingPoints(*featureCandidates, pattern.featureMap().features(), correspondenceCandidates, imagePoints, objectPoints);
-		ocean_assert(objectPoints.size() == imagePoints.size());
+		subsetImagePoints.clear();
+		subsetObjectPoints.clear();
+		UnidirectionalCorrespondences::extractCorrespondenceElements(correspondenceCandidates, imagePointCandidates->data(), imagePointCandidates->size(), pattern.featureMap().objectPoints().data(), pattern.featureMap().objectPoints().size(), subsetImagePoints, subsetObjectPoints);
+		ocean_assert(subsetImagePoints.size() == subsetObjectPoints.size());
 
 		Indices32 resultingValidCorrespondences;
-		if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator_, pose, 10u, true, options_.recognitionRansacIterations_, Scalar(5 * 5), &resultingValidCorrespondences))
+		if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(subsetObjectPoints), ConstArrayAccessor<Vector2>(subsetImagePoints), randomGenerator_, pattern_T_camera, 10u, true, options_.recognitionRansacIterations_, Scalar(3.5 * 3.5), &resultingValidCorrespondences))
 		{
 			continue;
 		}
 
-		if (resultingValidCorrespondences.size() < 10)
+		if (resultingValidCorrespondences.size() < 30)
 		{
 			continue;
 		}
 
-		ocean_assert(pose.isValid());
-		pattern.previousPose() = pose;
+		ocean_assert(pattern_T_camera.isValid());
+		pattern.previousPose() = pattern_T_camera;
 
 		Geometry::SpatialDistribution::OccupancyArray occupancyArray;
 		optimizePoseByRectification(pinholeCamera, currentFramePyramid, HomogenousMatrix4(pattern.previousPose()), pattern, pattern.previousPose(), worker, &occupancyArray);
@@ -1300,20 +1332,22 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 
 			pattern.objectPoints() = Geometry::Utilities::backProjectImagePoints(pinholeCamera, pattern.previousPose(), Plane3(Vector3(0, 0, 0), Vector3(0, 1, 0)), pattern.imagePoints().data(), pattern.imagePoints().size(), pinholeCamera.hasDistortionParameters());
 
-			// now we remove all Blob features lying in the current subset
-
-			subsetFeatures.clear();
-			subsetFeatures.reserve(features.size());
-
-			for (CV::Detector::Blob::BlobFeatures::const_iterator i = features.begin(); i != features.end(); ++i)
+			if (patternMap_.size() >= 2)
 			{
-				if (!subRegion.isInside(i->observation()))
+				// now we remove all Blob features lying in the current subset
+
+				for (size_t n = 0; n < imagePoints.size(); ++n)
 				{
-					subsetFeatures.push_back(*i);
+					if (subRegion.isInside(imagePoints[n]))
+					{
+						imagePoints[n] = imagePoints.back();
+						imagePointDescriptors[n] = imagePointDescriptors.back();
+
+						imagePoints.pop_back();
+						imagePointDescriptors.pop_back();
+					}
 				}
 			}
-
-			features = std::move(subsetFeatures);
 		}
 
 		if (internalNumberVisiblePattern() >= internalMaxConcurrentlyVisiblePattern())
@@ -1323,24 +1357,6 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 	}
 
 	return true;
-}
-
-const unsigned int* PatternTrackerCore6DOF::createIntegralImage(const Frame& yFrame)
-{
-	ocean_assert(yFrame && FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
-
-	if (!integralImage_.set(FrameType(yFrame.width() + 1u, yFrame.height() + 1u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), /* forceOwner */ true))
-	{
-		ocean_assert(false && "This should never happen!");
-		return nullptr;
-	}
-
-	ocean_assert(integralImage_);
-	ocean_assert(integralImage_.isContinuous() && "The output of this function is assumed to be continuous.");
-
-	CV::IntegralImage::createLinedImage<uint8_t, unsigned int, 1u>(yFrame.constdata<uint8_t>(), integralImage_.data<unsigned int>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), integralImage_.paddingElements());
-
-	return integralImage_.constdata<unsigned int>();
 }
 
 CV::SubRegion PatternTrackerCore6DOF::triangles2subRegion(const Triangles2& triangles, const unsigned int backupWidth, const unsigned int backupHeight)
@@ -1360,6 +1376,58 @@ CV::SubRegion PatternTrackerCore6DOF::triangles2subRegion(const Triangles2& tria
 	}
 
 	return CV::SubRegion(triangles);
+}
+
+bool PatternTrackerCore6DOF::detectAndDescribeFeatures(const SharedAnyCamera& camera, const Frame& yFrame, Vectors2& imagePoints, Descriptors& imagePointDescriptors, const unsigned int harrisCornerThreshold, Worker* worker)
+{
+	ocean_assert(camera && yFrame.isValid());
+	ocean_assert(camera->width() == yFrame.width() && camera->height() == yFrame.height());
+	ocean_assert(yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+
+	const unsigned int maxFrameArea = yFrame.pixels();
+	const unsigned int minFrameArea = std::max(40u * 40u, maxFrameArea / 64u);
+
+	constexpr unsigned int expectedHarrisCorners640x480 = 1000u;
+	constexpr Scalar harrisCornersReductionScale = Scalar(0.4);
+
+	const float inverseFocalLength = float(camera->inverseFocalLengthX());
+
+	const CV::Detector::FREAKDescriptor32::AnyCameraDerivativeFunctor cameraFunctor(camera, 8u); // **TODO** avoid fixed layer number
+
+	CV::Detector::HarrisCorners harrisCorners;
+	Indices32 cornerPyramidLevels;
+
+	constexpr bool removeInvalid = true;
+	constexpr Scalar border = Scalar(20);
+	constexpr bool determineExactHarrisCornerPositions = true;
+	const bool yFrameIsUndistorted = false;
+
+	imagePointDescriptors.clear();
+
+	if (!CV::Detector::FREAKDescriptor32::extractHarrisCornersAndComputeDescriptors(yFrame, maxFrameArea, minFrameArea, expectedHarrisCorners640x480, harrisCornersReductionScale, harrisCornerThreshold, inverseFocalLength, cameraFunctor, harrisCorners, cornerPyramidLevels, imagePointDescriptors, removeInvalid, border, determineExactHarrisCornerPositions, yFrameIsUndistorted, worker))
+	{
+		return false;
+	}
+
+	ocean_assert(harrisCorners.size() == imagePointDescriptors.size());
+	ocean_assert(harrisCorners.size() == cornerPyramidLevels.size());
+
+	imagePoints.clear();
+	imagePoints.reserve(harrisCorners.size());
+
+	for (size_t nFeature = 0; nFeature < harrisCorners.size(); ++nFeature)
+	{
+		CV::Detector::HarrisCorner& harrisCorner = harrisCorners[nFeature];
+
+		const Scalar levelFactor = Scalar(1u << cornerPyramidLevels[nFeature]);
+
+		const Vector2 imagePoint = harrisCorner.observation() * levelFactor;
+		ocean_assert(camera->isInside(imagePoint));
+
+		imagePoints.push_back(imagePoint);
+	}
+
+	return true;
 }
 
 }
