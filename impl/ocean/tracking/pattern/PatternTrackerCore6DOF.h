@@ -21,8 +21,6 @@
 
 #include "ocean/geometry/SpatialDistribution.h"
 
-#include "ocean/io/Bitstream.h"
-
 #include "ocean/math/HomogenousMatrix4.h"
 #include "ocean/math/AnyCamera.h"
 
@@ -67,27 +65,27 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 			public:
 
 				/// The maximal number of patterns that can be visible concurrently, with range [1, infinity). 0 to allow as many as possible
-				unsigned int maxConcurrentlyVisiblePattern = 1u;
+				unsigned int maxConcurrentlyVisiblePattern_ = 1u;
 
 				/// The maximal time used for pattern recognition for each frame in seconds, with range (0, infinity). 0 to use a default value
-				double maxRecognitionTime = 0.0;
+				double maxRecognitionTime_ = 0.0;
 
 				/// Time in seconds to wait between recognition attempts when at least one pattern is currently being tracked.
-				double recognitionCadenceWithTrackedPatterns = 0.5;
+				double recognitionCadenceWithTrackedPatterns_ = 0.5;
 
 				/// Time in seconds to wait between recognition attempts when no patterns are currently being tracked.
-				double recognitionCadenceWithoutTrackedPatterns = 0.0;
+				double recognitionCadenceWithoutTrackedPatterns_ = 0.0;
 
 				/// The number of iterations to run RANSAC when attempting to verify a newly recognized target.
-				unsigned int recognitionRansacIterations = 50u;
+				unsigned int recognitionRansacIterations_ = 50u;
 
 				/// True, to skip frame-to-frame tracking and to apply a full re-detection for every frame.
-				bool noFrameToFrameTracking = false;
+				bool noFrameToFrameTracking_ = false;
 
 #ifdef OCEAN_PLATFORM_BUILD_ANDROID
 
 				/// True, to apply a downsampling on Android devices to improve performance on low end devices.
-				bool downsampleInputImageOnAndroid = true;
+				bool downsampleInputImageOnAndroid_ = true;
 #endif
 		};
 
@@ -110,7 +108,7 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 				/**
 				 * Creates a new invalid pattern object.
 				 */
-				inline Pattern();
+				Pattern() = default;
 
 				/**
 				 * Creates a new pattern object by a given frame and pattern dimension.
@@ -122,18 +120,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 				 * @param worker Optional worker object to distribute the computation
 				 */
 				Pattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const Vector2& dimension, Worker* worker = nullptr);
-
-				/**
-				 * Creates a new pattern object by a given frame and pattern dimension.
-				 * @param yFrame The 8 bit grayscale frame (with Y8 pixel format, and pixel origin in the upper left corner) specifying the tracking pattern, must be valid
-				 * @param width The width of the given grayscale frame in pixel, with range [1, infinity)
-				 * @param height The height of the given grayscale frame in pixel, with range [1, infinity)
-				 * @param yFramePaddingElements The number of padding elements at the end of each row, in elements, with range [0, infinity)
-				 * @param representativeFeatures Representative features that should be used for an initial pattern recognition instead of all features from the entire pattern, must be at least 7
-				 * @param dimension The dimension of the tracking pattern, with range (0, infinity)x(0, infinity)
-				 * @param worker Optional worker object to distribute the computation
-				 */
-				Pattern(const uint8_t* yFrame, const unsigned int width, unsigned int height, const unsigned int yFramePaddingElements, CV::Detector::Blob::BlobFeatures&& representativeFeatures, const Vector2& dimension, Worker* worker = nullptr);
 
 				/**
 				 * Returns the Blob feature map of this pattern.
@@ -255,13 +241,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 				inline unsigned int layers() const;
 
 				/**
-				 * Returns whether this pattern holds representative feature points.
-				 * Representative feature points are a subset of all possible feature points but with high reliability and proven to be good recognizable.
-				 * @return True, if so
-				 */
-				inline bool hasRepresentativeFeatures() const;
-
-				/**
 				 * Returns whether this pattern holds a valid/useful rough guess of the camera pose.
 				 * @param poseGuess The resulting rough pose guess, if existing
 				 * @param maximalAge The maximal age of the rough pose guess in seconds, with range [0, 2]
@@ -284,27 +263,10 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 				inline void setPoseGuess(const HomogenousMatrix4& pose, const Timestamp& timestamp);
 
 				/**
-				 * Tries to recognize this pattern based on a set of live camera features.
-				 * @param pinholeCamera The pinhole camera profile defining the projection, must be valid
-				 * @param features The live camera features used to recognize this pattern, at least 7
-				 * @param randomGenerator Random number generator
-				 * @param recognitionPose The resulting 6-DOF camera pose if the pattern could be recognized, will not be very accurate
-				 * @param worker Optional worker to distribute the computation
-				 * @return True, if the pattern could be recognized
-				 */
-				bool recognizePattern(const PinholeCamera& pinholeCamera, const CV::Detector::Blob::BlobFeatures& features, RandomGenerator& randomGenerator, HomogenousMatrix4& recognitionPose, Worker* worker);
-
-				/**
 				 * Returns whether this tracking pattern object is valid.
 				 * @return True, if so
 				 */
 				inline bool isValid() const;
-
-				/**
-				 * Returns whether the underlying shape for this pattern is a plane.
-				 * @return True, if so
-				 */
-				inline bool isPlanar() const;
 
 				/**
 				 * Resets the internal recognition states of this pattern while the actual feature map is untouched.
@@ -320,34 +282,31 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 			protected:
 
 				/// The Blob feature map of this pattern.
-				Blob::FeatureMap patternFeatureMap;
-
-				/// Optional representative feature points.
-				CV::Detector::Blob::BlobFeatures patternRepresentativeFeatures;
+				Blob::FeatureMap featureMap_;
 
 				/// The frame pyramid of the image specifying the pattern.
-				CV::FramePyramid patternPyramid;
+				CV::FramePyramid patternPyramid_;
 
 				/// The dimension of the tracking pattern defined in the tracker coordinate system as (x-axis, z-axis).
-				Vector2 patternDimension;
+				Vector2 dimension_ = Vector2(0, 0);
 
 				/// The previous camera pose for this tacking pattern, if any
-				HomogenousMatrix4 patternPreviousPose;
+				HomogenousMatrix4 world_T_previousCamera_ = HomogenousMatrix4(false);
 
 				/// The 3D object points which have been used in the previous (or current) tracking iteration.
-				Vectors3 patternObjectPoints;
+				Vectors3 objectPoints_;
 
 				/// The 2D image points which have been used in the previous (or current) tracking iteration.
-				Vectors2 patternImagePoints;
+				Vectors2 imagePoints_;
 
 				/// The point pyramid of the pattern image storing reference feature points for individual pattern resolutions.
-				PointLayers patternPyramidReferencePoints;
+				PointLayers pyramidReferencePoints_;
 
 				/// A rough guess of the camera pose for this pattern, if any.
-				HomogenousMatrix4 patternPoseGuess;
+				HomogenousMatrix4 world_T_guessCamera_ = HomogenousMatrix4(false);
 
 				/// The timestamp of the rough camera pose.
-				Timestamp patternPoseGuessTimestamp;
+				Timestamp poseGuessTimestamp_;
 		};
 
 		/**
@@ -424,23 +383,7 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		 * @param worker Optional worker object
 		 * @return True, if succeeded
 		 */
-		inline bool determinePoses(const uint8_t* yFrame, const PinholeCamera& pinholeCamera, const unsigned int yFramePaddingElements, const bool frameIsUndistorted, const Timestamp& timestamp, VisualTracker::TransformationSamples& transformations, const Quaternion& world_R_camera = Quaternion(false), Worker* worker = nullptr);
-
-		/**
-		 * Executes the 6DOF tracking for a given frame and optionally skips recognition.
-		 * Beware: The frame type of the input image must not change between successive calls, reset the tracker in case the image resolution changes.
-		 * @param allowRecognition If false, skip feature extraction and matching for this frame
-		 * @param yFrame The 8 bit grayscale frame (with Y8 pixel format, and pixel origin in the upper left corner) to be used for tracking (the frame's width and hight will be extracted from the camera profile), must be valid
-		 * @param pinholeCamera The pinhole camera object defining the project, with same dimension as the given frame, must be valid
-		 * @param yFramePaddingElements The number of padding elements at the end of each row, in elements, with range [0, infinity)
-		 * @param frameIsUndistorted True, if the original input frame is undistorted and thus feature must not be undistorted explicitly
-		 * @param timestamp The timestamp of the given frame, must be valid
-		 * @param transformations Resulting 6DOF poses combined with the tracking ids
-		 * @param world_R_camera Optional absolute orientation of the camera in the moment the frame was taken, defined in a coordinate system not related with the tracking objects, an invalid object otherwise
-		 * @param worker Optional worker object
-		 * @return True, if succeeded
-		 */
-		bool determinePoses(const bool allowRecognition, const uint8_t* yFrame, const PinholeCamera& pinholeCamera, const unsigned int yFramePaddingElements, const bool frameIsUndistorted, const Timestamp& timestamp, VisualTracker::TransformationSamples& transformations, const Quaternion& world_R_camera = Quaternion(false), Worker* worker = nullptr);
+		bool determinePoses(const uint8_t* yFrame, const PinholeCamera& pinholeCamera, const unsigned int yFramePaddingElements, const bool frameIsUndistorted, const Timestamp& timestamp, VisualTracker::TransformationSamples& transformations, const Quaternion& world_R_camera = Quaternion(false), Worker* worker = nullptr);
 
 		/**
 		 * Returns the number of registered/added pattern.
@@ -480,24 +423,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		 * @return True, if succeeded
 		 */
 		static bool convertPoseForCamera(const PinholeCamera& newCamera, const PinholeCamera& referenceCamera, const HomogenousMatrix4& referencePose, HomogenousMatrix4& newPose);
-
-		/**
-		 * Writes a file containing a feature map of a 2D image pattern and optional including a subset of feature points providing a compact representation of the pattern.
-		 * @param filename The name of the resulting feature map file, must be valid
-		 * @param pattern The 2D image pattern for which the feature map will be written, must be valid
-		 * @param representativeFeatures Optional set of features providing a good representation of the pattern, with positions defined in the pixel domain of the pattern
-		 * @return True, if succeeded
-		 */
-		static bool writeFeatureMap(const std::string& filename, const Frame& pattern, const CV::Detector::Blob::BlobFeatures& representativeFeatures);
-
-		/**
-		 * Reads a feature map of a 2D image pattern from a file while the file may also include a subset of feature points providing a compact representation of the 2D pattern.
-		 * @param filename The name of the file providing the feature map
-		 * @param pattern The resulting 2D image pattern encapsulated in the file
-		 * @param representativeFeatures Optional resulting set of features providing a good representation of the pattern, with positions defined in the pixel domain of the pattern
-		 * @return True, if succeeded
-		 */
-		static bool readFeatureMap(const std::string& filename, Frame& pattern, CV::Detector::Blob::BlobFeatures& representativeFeatures);
 
 	protected:
 
@@ -650,60 +575,52 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		Options options_;
 
 		/// Frame pyramid of the current tracking frame.
-		CV::FramePyramid trackerCurrentFramePyramid;
+		CV::FramePyramid currentFramePyramid_;
 
 		/// Frame pyramid of the previous tracking frame.
-		CV::FramePyramid trackerPreviousFramePyramid;
+		CV::FramePyramid previousFramePyramid_;
 
 		/// The map holding all registered pattern object.
-		PatternMap trackerPatternMap;
+		PatternMap patternMap_;
 
 		/// Optional absolute orientation for the previous camera frame (as provided from outside this tracker, e.g., via an IMU sensor).
-		Quaternion world_R_previousCamera;
+		Quaternion world_R_previousCamera_ = Quaternion(false);
 
 		/// Random generator object.
-		RandomGenerator trackerRandomGenerator;
+		RandomGenerator randomGenerator_;
 
 		/// A counter providing unique pattern ids.
-		unsigned int trackerPatternMapIdCounter;
+		unsigned int patternMapIdCounter_ = 0u;
 
 		/// Tracker lock object.
-		mutable Lock trackerLock;
+		mutable Lock lock_;
 
 		/// Integral image for the most recent frame (used to avoid frame buffer re-allocations).
-		Frame trackerIntegralImage;
+		Frame integralImage_;
 
 		/// The timestamp of the previous frame.
-		Timestamp trackerTimestampPreviousFrame;
+		Timestamp timestampPreviousFrame_;
 
 		/// The last timestamp at which we started an attempt to recognize a new pattern (this timestamp is prior to feature extraction).
 		Timestamp lastRecognitionAttemptTimestamp_;
 
 		/// The id of the pattern that has been tried to recognized last.
-		unsigned int trackerLastRecognitionPatternId;
+		unsigned int lastRecognitionPatternId_ = 0u;
 };
-
-inline PatternTrackerCore6DOF::Pattern::Pattern() :
-	patternDimension(0, 0),
-	patternPreviousPose(false),
-	patternPoseGuess(false)
-{
-	// nothing to do here
-}
 
 inline const Blob::FeatureMap& PatternTrackerCore6DOF::Pattern::featureMap() const
 {
-	return patternFeatureMap;
+	return featureMap_;
 }
 
 inline const CV::FramePyramid& PatternTrackerCore6DOF::Pattern::pyramid() const
 {
-	return patternPyramid;
+	return patternPyramid_;
 }
 
 inline const Vector2& PatternTrackerCore6DOF::Pattern::dimension() const
 {
-	return patternDimension;
+	return dimension_;
 }
 
 inline Vector3 PatternTrackerCore6DOF::Pattern::corner0() const
@@ -715,19 +632,19 @@ inline Vector3 PatternTrackerCore6DOF::Pattern::corner0() const
 inline Vector3 PatternTrackerCore6DOF::Pattern::corner1() const
 {
 	ocean_assert(isValid());
-	return Vector3(0, 0, patternDimension.y());
+	return Vector3(0, 0, dimension_.y());
 }
 
 inline Vector3 PatternTrackerCore6DOF::Pattern::corner2() const
 {
 	ocean_assert(isValid());
-	return Vector3(patternDimension.x(), 0, patternDimension.y());
+	return Vector3(dimension_.x(), 0, dimension_.y());
 }
 
 inline Vector3 PatternTrackerCore6DOF::Pattern::corner3() const
 {
 	ocean_assert(isValid());
-	return Vector3(patternDimension.x(), 0, 0);
+	return Vector3(dimension_.x(), 0, 0);
 }
 
 inline Triangles3 PatternTrackerCore6DOF::Pattern::triangles3() const
@@ -741,9 +658,9 @@ inline Triangles3 PatternTrackerCore6DOF::Pattern::triangles3() const
 
 inline Triangles2 PatternTrackerCore6DOF::Pattern::triangles2(const PinholeCamera& pinholeCamera) const
 {
-	ocean_assert(patternPreviousPose.isValid());
+	ocean_assert(world_T_previousCamera_.isValid());
 
-	return triangles2(pinholeCamera, patternPreviousPose);
+	return triangles2(pinholeCamera, world_T_previousCamera_);
 }
 
 inline Triangles2 PatternTrackerCore6DOF::Pattern::triangles2(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose) const
@@ -752,75 +669,63 @@ inline Triangles2 PatternTrackerCore6DOF::Pattern::triangles2(const PinholeCamer
 
 	Triangles2 triangles;
 
-	if (isPlanar())
+	triangles =
 	{
-		triangles =
-		{
-			pinholeCamera.projectToImage<true>(pose, Triangle3(corner0(), corner1(), corner2()), pinholeCamera.hasDistortionParameters()),
-			pinholeCamera.projectToImage<true>(pose, Triangle3(corner0(), corner2(), corner3()), pinholeCamera.hasDistortionParameters())
-		};
-	}
-	else
-	{
-		ocean_assert(false && "Not supported!");
-	}
+		pinholeCamera.projectToImage<true>(pose, Triangle3(corner0(), corner1(), corner2()), pinholeCamera.hasDistortionParameters()),
+		pinholeCamera.projectToImage<true>(pose, Triangle3(corner0(), corner2(), corner3()), pinholeCamera.hasDistortionParameters())
+	};
 
 	return triangles;
 }
 
 inline const HomogenousMatrix4& PatternTrackerCore6DOF::Pattern::previousPose() const
 {
-	return patternPreviousPose;
+	return world_T_previousCamera_;
 }
 
 inline HomogenousMatrix4& PatternTrackerCore6DOF::Pattern::previousPose()
 {
-	return patternPreviousPose;
+	return world_T_previousCamera_;
 }
 
 inline const Vectors3& PatternTrackerCore6DOF::Pattern::objectPoints() const
 {
-	return patternObjectPoints;
+	return objectPoints_;
 }
 
 inline Vectors3& PatternTrackerCore6DOF::Pattern::objectPoints()
 {
-	return patternObjectPoints;
+	return objectPoints_;
 }
 
 inline const Vectors2& PatternTrackerCore6DOF::Pattern::imagePoints() const
 {
-	return patternImagePoints;
+	return imagePoints_;
 }
 
 inline Vectors2& PatternTrackerCore6DOF::Pattern::imagePoints()
 {
-	return patternImagePoints;
+	return imagePoints_;
 }
 
 inline const Vectors2& PatternTrackerCore6DOF::Pattern::referencePoints(const unsigned int layer) const
 {
-	ocean_assert(layer < patternPyramid.layers() && layer < patternPyramidReferencePoints.size());
-	return patternPyramidReferencePoints[layer];
+	ocean_assert(layer < patternPyramid_.layers() && layer < pyramidReferencePoints_.size());
+	return pyramidReferencePoints_[layer];
 }
 
 inline unsigned int PatternTrackerCore6DOF::Pattern::layers() const
 {
-	return (unsigned int)patternPyramidReferencePoints.size();
-}
-
-inline bool PatternTrackerCore6DOF::Pattern::hasRepresentativeFeatures() const
-{
-	return patternRepresentativeFeatures.size() >= 7;
+	return (unsigned int)(pyramidReferencePoints_.size());
 }
 
 inline bool PatternTrackerCore6DOF::Pattern::hasPoseGuess(HomogenousMatrix4& poseGuess, const double maximalAge)
 {
 	ocean_assert(maximalAge >= 0.0 && maximalAge <= 2.0);
 
-	if (patternPoseGuess.isValid() && NumericD::abs(double(Timestamp(true) - patternPoseGuessTimestamp)) <= maximalAge)
+	if (world_T_guessCamera_.isValid() && NumericD::abs(double(Timestamp(true) - poseGuessTimestamp_)) <= maximalAge)
 	{
-		poseGuess = patternPoseGuess;
+		poseGuess = world_T_guessCamera_;
 		return true;
 	}
 
@@ -831,26 +736,21 @@ inline const HomogenousMatrix4& PatternTrackerCore6DOF::Pattern::poseGuess(Times
 {
 	if (timestamp)
 	{
-		*timestamp = patternPoseGuessTimestamp;
+		*timestamp = poseGuessTimestamp_;
 	}
 
-	return patternPoseGuess;
+	return world_T_guessCamera_;
 }
 
 inline void PatternTrackerCore6DOF::Pattern::setPoseGuess(const HomogenousMatrix4& pose, const Timestamp& timestamp)
 {
-	patternPoseGuess = pose;
-	patternPoseGuessTimestamp = timestamp;
+	world_T_guessCamera_ = pose;
+	poseGuessTimestamp_ = timestamp;
 }
 
 inline bool PatternTrackerCore6DOF::Pattern::isValid() const
 {
-	return patternPyramid.isValid();
-}
-
-inline bool PatternTrackerCore6DOF::Pattern::isPlanar() const
-{
-	return patternFeatureMap.isPlanar();
+	return patternPyramid_.isValid();
 }
 
 inline PatternTrackerCore6DOF::Pattern::operator bool() const
@@ -858,42 +758,37 @@ inline PatternTrackerCore6DOF::Pattern::operator bool() const
 	return isValid();
 }
 
-inline bool PatternTrackerCore6DOF::determinePoses(const uint8_t* yFrame, const PinholeCamera& pinholeCamera, const unsigned int yFramePaddingElements, const bool frameIsUndistorted, const Timestamp& timestamp, VisualTracker::TransformationSamples& transformations, const Quaternion& world_R_camera, Worker* worker)
-{
-	return determinePoses(/* allowRecognition */ true, yFrame, pinholeCamera, yFramePaddingElements, frameIsUndistorted, timestamp, transformations, world_R_camera, worker);
-}
-
 inline unsigned int PatternTrackerCore6DOF::numberPattern() const
 {
-	const ScopedLock scopedLock(trackerLock);
+	const ScopedLock scopedLock(lock_);
 
-	return (unsigned int)(trackerPatternMap.size());
+	return (unsigned int)(patternMap_.size());
 }
 
 inline unsigned int PatternTrackerCore6DOF::maxConcurrentlyVisiblePattern() const
 {
-	const ScopedLock scopedLock(trackerLock);
+	const ScopedLock scopedLock(lock_);
 
-	return options_.maxConcurrentlyVisiblePattern;
+	return options_.maxConcurrentlyVisiblePattern_;
 }
 
 inline void PatternTrackerCore6DOF::setMaxConcurrentlyVisiblePattern(const unsigned int maxConcurrentlyVisiblePattern)
 {
-	const ScopedLock scopedLock(trackerLock);
+	const ScopedLock scopedLock(lock_);
 
-	options_.maxConcurrentlyVisiblePattern = maxConcurrentlyVisiblePattern;
+	options_.maxConcurrentlyVisiblePattern_ = maxConcurrentlyVisiblePattern;
 }
 
 inline double PatternTrackerCore6DOF::maximumDurationBetweenRecognitionAttempts() const
 {
-	return (internalNumberVisiblePattern() == 0) ? options_.recognitionCadenceWithoutTrackedPatterns : options_.recognitionCadenceWithTrackedPatterns;
+	return (internalNumberVisiblePattern() == 0) ? options_.recognitionCadenceWithoutTrackedPatterns_ : options_.recognitionCadenceWithTrackedPatterns_;
 }
 
 inline unsigned int PatternTrackerCore6DOF::internalNumberVisiblePattern() const
 {
 	unsigned int number = 0u;
 
-	for (PatternMap::const_iterator i = trackerPatternMap.begin(); i != trackerPatternMap.end(); ++i)
+	for (PatternMap::const_iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
 	{
 		if (i->second.previousPose().isValid())
 		{
@@ -906,13 +801,13 @@ inline unsigned int PatternTrackerCore6DOF::internalNumberVisiblePattern() const
 
 inline unsigned int PatternTrackerCore6DOF::internalMaxConcurrentlyVisiblePattern() const
 {
-	if (options_.maxConcurrentlyVisiblePattern == 0u)
+	if (options_.maxConcurrentlyVisiblePattern_ == 0u)
 	{
-		return (unsigned int)trackerPatternMap.size();
+		return (unsigned int)patternMap_.size();
 	}
 	else
 	{
-		return min(options_.maxConcurrentlyVisiblePattern, (unsigned int)trackerPatternMap.size());
+		return min(options_.maxConcurrentlyVisiblePattern_, (unsigned int)(patternMap_.size()));
 	}
 }
 

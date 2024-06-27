@@ -25,8 +25,6 @@
 #include "ocean/geometry/RANSAC.h"
 #include "ocean/geometry/Utilities.h"
 
-#include "ocean/io/Bitstream.h"
-
 #include "ocean/math/SuccessionSubset.h"
 
 #include "ocean/media/Utilities.h"
@@ -49,114 +47,55 @@ PatternTrackerCore6DOF::Options::Options()
 }
 
 PatternTrackerCore6DOF::Pattern::Pattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const Vector2& dimension, Worker* worker) :
-	patternFeatureMap(yFrame, width, height, yFramePaddingElements, Vector2(dimension.x(), dimension.y()), Scalar(6.5), true, 0u, worker),
-	patternPyramid(yFrame, width, height, 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(width, height, 15u, 15u), yFramePaddingElements, true /*copyFirstLayer*/, worker),
-	patternDimension(dimension),
-	patternPreviousPose(false),
-	patternPoseGuess(false)
+	featureMap_(yFrame, width, height, yFramePaddingElements, Vector2(dimension.x(), dimension.y()), Scalar(6.5), true, 0u, worker),
+	patternPyramid_(yFrame, width, height, 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(width, height, 15u, 15u), yFramePaddingElements, true /*copyFirstLayer*/, worker),
+	dimension_(dimension),
+	world_T_previousCamera_(false),
+	world_T_guessCamera_(false)
 {
-	ocean_assert(patternDimension.x() > 0 && patternDimension.y() > 0);
+	ocean_assert(dimension_.x() > 0 && dimension_.y() > 0);
 
-	patternPyramidReferencePoints.resize(patternPyramid.layers());
+	pyramidReferencePoints_.resize(patternPyramid_.layers());
 
-	for (unsigned int n = 0; n < patternPyramid.layers(); ++n)
+	for (unsigned int n = 0; n < patternPyramid_.layers(); ++n)
 	{
-		patternPyramidReferencePoints[n] = CV::Detector::FeatureDetector::determineHarrisPoints(patternPyramid[n].constdata<uint8_t>(), patternPyramid[n].width(), patternPyramid[n].height(), patternPyramid[n].paddingElements(), CV::SubRegion(), 0u, 0u, 25u, worker);
+		pyramidReferencePoints_[n] = CV::Detector::FeatureDetector::determineHarrisPoints(patternPyramid_[n].constdata<uint8_t>(), patternPyramid_[n].width(), patternPyramid_[n].height(), patternPyramid_[n].paddingElements(), CV::SubRegion(), 0u, 0u, 25u, worker);
 	}
-}
-
-PatternTrackerCore6DOF::Pattern::Pattern(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, CV::Detector::Blob::BlobFeatures&& representativeFeatures, const Vector2& dimension, Worker* worker) :
-	patternFeatureMap(Frame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, Frame::CM_USE_KEEP_LAYOUT, yFramePaddingElements), Vector2(dimension.x(), dimension.y()), Scalar(6.5), true, 0u, worker),
-	patternRepresentativeFeatures(std::move(representativeFeatures)),
-	patternPyramid(yFrame, width, height, 1u, FrameType::ORIGIN_UPPER_LEFT, CV::FramePyramid::idealLayers(width, height, 15u, 15u), yFramePaddingElements, true /*copyFirstLayer*/, worker),
-	patternDimension(dimension),
-	patternPreviousPose(false),
-	patternPoseGuess(false)
-{
-	ocean_assert(patternDimension.x() > 0 && patternDimension.y() > 0);
-	ocean_assert(patternRepresentativeFeatures.size() >= 7);
-
-	patternPyramidReferencePoints.resize(patternPyramid.layers());
-
-	for (unsigned int n = 0; n < patternPyramid.layers(); ++n)
-	{
-		patternPyramidReferencePoints[n] = CV::Detector::FeatureDetector::determineHarrisPoints(patternPyramid[n].constdata<uint8_t>(), patternPyramid[n].width(), patternPyramid[n].height(), patternPyramid[n].paddingElements(), CV::SubRegion(), 0u, 0u, 25u, worker);
-	}
-}
-
-bool PatternTrackerCore6DOF::Pattern::recognizePattern(const PinholeCamera& pinholeCamera, const CV::Detector::Blob::BlobFeatures& features, RandomGenerator& randomGenerator, HomogenousMatrix4& recognitionPose, Worker* worker)
-{
-	ocean_assert(pinholeCamera.isValid());
-	ocean_assert(features.size() >= 7);
-
-	// we take the representative feature points if existing, otherwise we have to take the entire feature map of this pattern
-	const CV::Detector::Blob::BlobFeatures& patternFeatures = patternRepresentativeFeatures.size() >= 7 ? patternRepresentativeFeatures : patternFeatureMap.features();
-
-	const Blob::Correspondences::CorrespondencePairs correspondenceCandidates(Blob::UnidirectionalCorrespondences::determineFeatureCorrespondencesWithQualityEarlyReject(features, patternFeatures, features.size(), Scalar(0.1), Scalar(0.9), worker));
-
-	if (correspondenceCandidates.size() < 7)
-	{
-		return false;
-	}
-
-	Vectors2 imagePoints;
-	Vectors3 objectPoints;
-	Blob::UnidirectionalCorrespondences::extractCorrespondingPoints(features, patternFeatures, correspondenceCandidates, imagePoints, objectPoints);
-
-	const unsigned int ransacIterations = imagePoints.size() <= 50 ? 30u : 50u;
-
-	Indices32 usedIndices;
-	if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, recognitionPose, 5u, true, ransacIterations, Scalar(15 * 15), &usedIndices))
-	{
-		return false;
-	}
-
-	if (usedIndices.size() < 7)
-	{
-		return false;
-	}
-
-	return true;
 }
 
 void PatternTrackerCore6DOF::Pattern::reset()
 {
-	patternPreviousPose.toNull();
-	patternObjectPoints.clear();
-	patternImagePoints.clear();
-	patternPoseGuess.toNull();
-	patternPoseGuessTimestamp.toInvalid();
+	world_T_previousCamera_.toNull();
+	objectPoints_.clear();
+	imagePoints_.clear();
+	world_T_guessCamera_.toNull();
+	poseGuessTimestamp_.toInvalid();
 }
 
 PatternTrackerCore6DOF::PatternTrackerCore6DOF(const Options& options) :
-	options_(options),
-	world_R_previousCamera(false),
-	trackerPatternMapIdCounter(0u),
-	trackerTimestampPreviousFrame(false),
-	lastRecognitionAttemptTimestamp_(false),
-	trackerLastRecognitionPatternId(0u)
+	options_(options)
 {
 	// If any overriding values are provided, use them and set any missing values.
-	if (options_.maxRecognitionTime <= 0.0)
+	if (options_.maxRecognitionTime_ <= 0.0)
 	{
 #ifdef OCEAN_DEBUG
-		options_.maxRecognitionTime = 0.5;
+		options_.maxRecognitionTime_ = 0.5;
 #else
-		options_.maxRecognitionTime = 0.075;
+		options_.maxRecognitionTime_ = 0.075;
 #endif
 	}
 
-	if (options_.recognitionCadenceWithTrackedPatterns <= 0.0)
+	if (options_.recognitionCadenceWithTrackedPatterns_ <= 0.0)
 	{
-		options_.recognitionCadenceWithTrackedPatterns = 0.5;
+		options_.recognitionCadenceWithTrackedPatterns_ = 0.5;
 	}
 
-	options_.recognitionCadenceWithoutTrackedPatterns = std::max(options_.recognitionCadenceWithoutTrackedPatterns, 0.0);
+	options_.recognitionCadenceWithoutTrackedPatterns_ = std::max(options_.recognitionCadenceWithoutTrackedPatterns_, 0.0);
 
-	ocean_assert(options_.maxRecognitionTime > 0.0);
-	ocean_assert(options_.recognitionCadenceWithTrackedPatterns >= 0.0);
-	ocean_assert(options_.recognitionCadenceWithoutTrackedPatterns >= 0.0);
-	ocean_assert(options_.recognitionRansacIterations > 0);
+	ocean_assert(options_.maxRecognitionTime_ > 0.0);
+	ocean_assert(options_.recognitionCadenceWithTrackedPatterns_ >= 0.0);
+	ocean_assert(options_.recognitionCadenceWithoutTrackedPatterns_ >= 0.0);
+	ocean_assert(options_.recognitionRansacIterations_ > 0);
 }
 
 PatternTrackerCore6DOF::~PatternTrackerCore6DOF()
@@ -174,9 +113,9 @@ unsigned int PatternTrackerCore6DOF::addPattern(const uint8_t* yFrame, const uns
 		return (unsigned int)(-1);
 	}
 
-	const ScopedLock scopedLock(trackerLock);
+	const ScopedLock scopedLock(lock_);
 
-	ocean_assert(trackerPatternMap.find(trackerPatternMapIdCounter) == trackerPatternMap.end());
+	ocean_assert(patternMap_.find(patternMapIdCounter_) == patternMap_.end());
 
 	Vector2 patternDimension(dimension);
 	if (patternDimension.y() <= 0)
@@ -184,10 +123,10 @@ unsigned int PatternTrackerCore6DOF::addPattern(const uint8_t* yFrame, const uns
 		patternDimension.y() = patternDimension.x() * Scalar(height) / Scalar(width);
 	}
 
-	const unsigned int patternId = trackerPatternMapIdCounter++;
-	trackerPatternMap[patternId] = Pattern(yFrame, width, height, yFramePaddingElements, patternDimension, worker);
+	const unsigned int patternId = patternMapIdCounter_++;
+	patternMap_[patternId] = Pattern(yFrame, width, height, yFramePaddingElements, patternDimension, worker);
 
-	trackerLastRecognitionPatternId = patternId;
+	lastRecognitionPatternId_ = patternId;
 
 	return patternId;
 }
@@ -199,35 +138,12 @@ unsigned int PatternTrackerCore6DOF::addPattern(const std::string& filename, con
 		return (unsigned int)(-1);
 	}
 
-	const std::string fileExtension = filename.substr(filename.rfind('.'));
+	const Frame patternFrame = Media::Utilities::loadImage(filename);
 
-	if (String::toLower(fileExtension) != ".opfm")
+	if (!patternFrame.isValid())
 	{
-		const Frame patternFrame = Media::Utilities::loadImage(filename);
-
-		if (!patternFrame.isValid())
-		{
-			return (unsigned int)(-1);
-		}
-
-		Frame yFrame;
-		if (!CV::FrameConverter::Comfort::convert(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
-		{
-			return (unsigned int)(-1);
-		}
-
-		return addPattern(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), dimension, worker);
+		return (unsigned int)(-1);
 	}
-
-	Frame patternFrame;
-	CV::Detector::Blob::BlobFeatures representativeFeatures;
-
-	if (!readFeatureMap(filename, patternFrame, representativeFeatures))
-	{
-		return false;
-	}
-
-	ocean_assert(patternFrame.isValid());
 
 	Frame yFrame;
 	if (!CV::FrameConverter::Comfort::convert(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
@@ -235,73 +151,36 @@ unsigned int PatternTrackerCore6DOF::addPattern(const std::string& filename, con
 		return (unsigned int)(-1);
 	}
 
-	// we need to adjust the positions of the representative features so that they match with the provided dimension
-	// as currently, the points are defined in the pixel domain of the pattern
-
-	ocean_assert(yFrame.isValid());
-
-	Vector2 patternDimension(dimension);
-	if (patternDimension.y() <= 0)
-	{
-		patternDimension.y() = patternDimension.x() * Scalar(patternFrame.height()) / Scalar(patternFrame.width());
-	}
-
-	const Scalar xFactor = patternDimension.x() / Scalar(yFrame.width());
-	const Scalar zFactor = patternDimension.y() / Scalar(yFrame.height());
-
-	for (CV::Detector::Blob::BlobFeatures::iterator i = representativeFeatures.begin(); i != representativeFeatures.end(); ++i)
-	{
-		ocean_assert(Numeric::isEqualEps(i->position().y()));
-		i->setPosition(Vector3(i->position().x() * xFactor, i->position().y(), i->position().z() * zFactor));
-	}
-
-	const ScopedLock scopedLock(trackerLock);
-
-	ocean_assert(trackerPatternMap.find(trackerPatternMapIdCounter) == trackerPatternMap.end());
-
-	const unsigned int patternId = trackerPatternMapIdCounter++;
-
-	if (representativeFeatures.empty())
-	{
-		trackerPatternMap[patternId] = Pattern(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), patternDimension, worker);
-	}
-	else
-	{
-		trackerPatternMap[patternId] = Pattern(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), std::move(representativeFeatures), patternDimension, worker);
-	}
-
-	trackerLastRecognitionPatternId = patternId;
-
-	return patternId;
+	return addPattern(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), dimension, worker);
 }
 
 bool PatternTrackerCore6DOF::removePattern(const unsigned int patternId)
 {
 	ocean_assert(patternId != (unsigned int)(-1));
 
-	const ScopedLock scopedLock(trackerLock);
+	const ScopedLock scopedLock(lock_);
 
-	if (patternId >= trackerPatternMapIdCounter)
+	if (patternId >= patternMapIdCounter_)
 	{
 		ocean_assert(false && "This id is invalid and has never been used in this tracker!");
 		return false;
 	}
 
-	ocean_assert(trackerPatternMap.find(patternId) != trackerPatternMap.end());
+	ocean_assert(patternMap_.find(patternId) != patternMap_.end());
 
-	return trackerPatternMap.erase(patternId) == 1;
+	return patternMap_.erase(patternId) == 1;
 }
 
 bool PatternTrackerCore6DOF::removePatterns()
 {
-	const ScopedLock scopedLock(trackerLock);
+	const ScopedLock scopedLock(lock_);
 
-	trackerPatternMap.clear();
+	patternMap_.clear();
 
 	return true;
 }
 
-bool PatternTrackerCore6DOF::determinePoses(const bool allowRecognition, const uint8_t* yFrame, const PinholeCamera& pinholeCamera, const unsigned yFramePaddingElements, const bool frameIsUndistorted, const Timestamp& timestamp, VisualTracker::TransformationSamples& transformations, const Quaternion& world_R_camera, Worker* worker)
+bool PatternTrackerCore6DOF::determinePoses(const uint8_t* yFrame, const PinholeCamera& pinholeCamera, const unsigned int yFramePaddingElements, const bool frameIsUndistorted, const Timestamp& timestamp, VisualTracker::TransformationSamples& transformations, const Quaternion& world_R_camera, Worker* worker)
 {
 	ocean_assert(yFrame && pinholeCamera);
 	if (yFrame == nullptr || !pinholeCamera.isValid())
@@ -314,18 +193,18 @@ bool PatternTrackerCore6DOF::determinePoses(const bool allowRecognition, const u
 	// for now we keep the interface as it is
 	ocean_assert_and_suppress_unused(frameIsUndistorted == false || pinholeCamera.hasDistortionParameters() == false, frameIsUndistorted);
 
-	const ScopedLock scopedLock(trackerLock);
+	const ScopedLock scopedLock(lock_);
 
-	if (trackerPatternMap.empty())
+	if (patternMap_.empty())
 	{
 		return false;
 	}
 
-	if (options_.noFrameToFrameTracking)
+	if (options_.noFrameToFrameTracking_)
 	{
-		trackerTimestampPreviousFrame.toInvalid();
+		timestampPreviousFrame_.toInvalid();
 
-		for (PatternMap::iterator i = trackerPatternMap.begin(); i != trackerPatternMap.end(); ++i)
+		for (PatternMap::iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
 		{
 			Pattern& pattern = i->second;
 
@@ -339,18 +218,18 @@ bool PatternTrackerCore6DOF::determinePoses(const bool allowRecognition, const u
 	transformations.clear();
 
 	Quaternion previousCamera_R_camera(false);
-	if (world_R_previousCamera.isValid() && world_R_camera.isValid())
+	if (world_R_previousCamera_.isValid() && world_R_camera.isValid())
 	{
-		previousCamera_R_camera = world_R_previousCamera.inverted() * world_R_camera;
+		previousCamera_R_camera = world_R_previousCamera_.inverted() * world_R_camera;
 	}
 
 	ocean_assert(timestamp.isValid());
 
 	const Frame frame(FrameType(pinholeCamera.width(), pinholeCamera.height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), yFrame, Frame::CM_USE_KEEP_LAYOUT, yFramePaddingElements, timestamp);
 
-	if (determinePoses(allowRecognition, frame, pinholeCamera, previousCamera_R_camera, worker))
+	if (determinePoses(true /*allowRecognition*/, frame, pinholeCamera, previousCamera_R_camera, worker))
 	{
-		for (PatternMap::iterator i = trackerPatternMap.begin(); i != trackerPatternMap.end(); ++i)
+		for (PatternMap::iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
 		{
 			if (i->second.previousPose().isValid()) // previousPose as we are done with the current frame already
 			{
@@ -359,32 +238,32 @@ bool PatternTrackerCore6DOF::determinePoses(const bool allowRecognition, const u
 		}
 	}
 
-	world_R_previousCamera = world_R_camera;
+	world_R_previousCamera_ = world_R_camera;
 
-	trackerTimestampPreviousFrame = timestamp;
+	timestampPreviousFrame_ = timestamp;
 
 	return true;
 }
 
 void PatternTrackerCore6DOF::reset()
 {
-	const ScopedLock scopedLock(trackerLock);
+	const ScopedLock scopedLock(lock_);
 
-	trackerCurrentFramePyramid.clear();
-	trackerPreviousFramePyramid.clear();
+	currentFramePyramid_.clear();
+	previousFramePyramid_.clear();
 
-	for (PatternMap::iterator i = trackerPatternMap.begin(); i != trackerPatternMap.end(); ++i)
+	for (PatternMap::iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
 	{
 		i->second.reset();
 	}
 
-	world_R_previousCamera = Quaternion(false);
+	world_R_previousCamera_ = Quaternion(false);
 
-	trackerTimestampPreviousFrame.toInvalid();
+	timestampPreviousFrame_.toInvalid();
 
 	lastRecognitionAttemptTimestamp_.toInvalid();
 
-	// trackerLastRecognitionPatternId, we keep the value
+	// lastRecognitionPatternId_, we keep the value
 }
 
 bool PatternTrackerCore6DOF::convertPoseForCamera(const PinholeCamera& newCamera, const PinholeCamera& referenceCamera, const HomogenousMatrix4& referencePose, HomogenousMatrix4& newPose)
@@ -442,114 +321,6 @@ bool PatternTrackerCore6DOF::convertPoseForCamera(const PinholeCamera& newCamera
 	return Geometry::NonLinearOptimizationPose::optimizePose(newCamera, referencePose, ConstArrayAccessor<Vector3>(objectPoints, numberPoints), ConstArrayAccessor<Vector2>(distortedImagePoints, numberPoints), true, newPose);
 }
 
-bool PatternTrackerCore6DOF::writeFeatureMap(const std::string& filename, const Frame& pattern, const CV::Detector::Blob::BlobFeatures& representativeFeatures)
-{
-	ocean_assert(!filename.empty() && pattern);
-
-	Media::Utilities::Buffer patternBuffer;
-	if (!Media::Utilities::saveImage(pattern, "png", patternBuffer) || patternBuffer.empty())
-	{
-		return false;
-	}
-
-	std::ofstream stream;
-	stream.open(filename, std::ios::binary);
-	if (!stream.good())
-	{
-		return false;
-	}
-
-	IO::OutputBitstream bitstream(stream);
-
-	// write the tag for identification
-	if (!IO::Tag::writeTag(bitstream, Blob::BlobTracker6DOF::trackerTagFeatureMap()))
-	{
-		return false;
-	}
-
-	// write version 1
-	if (!bitstream.write<unsigned long long>(1ull))
-	{
-		return false;
-	}
-
-	if (!bitstream.write<unsigned int>((unsigned int)patternBuffer.size()))
-	{
-		return false;
-	}
-
-	if (!bitstream.write(patternBuffer.data(), patternBuffer.size()))
-	{
-		return false;
-	}
-
-	if (!Blob::BlobTracker6DOF::writeFeatures(representativeFeatures, bitstream))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool PatternTrackerCore6DOF::readFeatureMap(const std::string& filename, Frame& pattern, CV::Detector::Blob::BlobFeatures& representativeFeatures)
-{
-	ocean_assert(!filename.empty());
-	ocean_assert(!pattern.isValid() && representativeFeatures.empty());
-
-	std::ifstream stream;
-	stream.open(filename, std::ios::binary);
-	if (!stream.good())
-	{
-		return false;
-	}
-
-	IO::InputBitstream bitstream(stream);
-
-	// check for the correct tag
-	if (!IO::Tag::readAndCheckTag(bitstream, Blob::BlobTracker6DOF::trackerTagFeatureMap()))
-	{
-		return false;
-	}
-
-	unsigned long long version = 0ull;
-	if (!bitstream.read<unsigned long long>(version))
-	{
-		return false;
-	}
-
-	if (version != 1ull)
-	{
-		return false;
-	}
-
-	unsigned int patternBufferSize = 0u;
-	if (!bitstream.read<unsigned int>(patternBufferSize) || patternBufferSize > 32u * 1024u * 1024u)
-	{
-		return false;
-	}
-
-	Media::Utilities::Buffer patternBuffer(patternBufferSize);
-
-	if (!bitstream.read(patternBuffer.data(), patternBuffer.size()))
-	{
-		return false;
-	}
-
-	pattern = Media::Utilities::loadImage(patternBuffer.data(), patternBuffer.size());
-
-	if (!pattern.isValid())
-	{
-		return false;
-	}
-
-	if (!Blob::BlobTracker6DOF::readFeatures(bitstream, representativeFeatures))
-	{
-		return false;
-	}
-
-	return true;
-}
-
 bool PatternTrackerCore6DOF::determinePoses(const bool allowRecognition, const Frame& yFrame, const PinholeCamera& pinholeCamera, const Quaternion& previousCamera_R_camera, Worker* worker)
 {
 	ocean_assert(yFrame && FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
@@ -559,7 +330,7 @@ bool PatternTrackerCore6DOF::determinePoses(const bool allowRecognition, const F
 
 #ifdef OCEAN_PLATFORM_BUILD_ANDROID
 
-	if (options_.downsampleInputImageOnAndroid)
+	if (options_.downsampleInputImageOnAndroid_)
 	{
 		const unsigned int desiredOperationSize = 360u;
 
@@ -639,7 +410,7 @@ bool PatternTrackerCore6DOF::determinePosesWithDownsampledResolution(const bool 
 	ocean_assert(yFrame && FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
 	ocean_assert(yFrame.width() == pinholeCamera.width() && yFrame.height() == pinholeCamera.height());
 
-	const unsigned int pyramidLayers = trackerPreviousFramePyramid.isValid() ? trackerPreviousFramePyramid.layers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 15u, 15u);
+	const unsigned int pyramidLayers = previousFramePyramid_.isValid() ? previousFramePyramid_.layers() : CV::FramePyramid::idealLayers(yFrame.width(), yFrame.height(), 15u, 15u);
 
 	ocean_assert(pyramidLayers >= 1u);
 	if (pyramidLayers == 0u)
@@ -647,9 +418,9 @@ bool PatternTrackerCore6DOF::determinePosesWithDownsampledResolution(const bool 
 		return false;
 	}
 
-	trackerCurrentFramePyramid.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.channels(), yFrame.pixelOrigin(), pyramidLayers,  yFrame.paddingElements(), true /*copyFirstLayer*/, worker, yFrame.pixelFormat(), yFrame.timestamp());
+	currentFramePyramid_.replace8BitPerChannel11(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.channels(), yFrame.pixelOrigin(), pyramidLayers,  yFrame.paddingElements(), true /*copyFirstLayer*/, worker, yFrame.pixelFormat(), yFrame.timestamp());
 
-	for (PatternMap::iterator i = trackerPatternMap.begin(); i != trackerPatternMap.end(); ++i)
+	for (PatternMap::iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
 	{
 		Pattern& pattern = i->second;
 
@@ -659,18 +430,18 @@ bool PatternTrackerCore6DOF::determinePosesWithDownsampledResolution(const bool 
 			ocean_assert(pattern.previousPose().isValid());
 
 			// try to determine the current pose by application of the previous correspondences
-			if (!determinePoseWithPreviousCorrespondences(pinholeCamera, trackerPreviousFramePyramid, trackerCurrentFramePyramid, pattern, previousCamera_R_camera, worker))
+			if (!determinePoseWithPreviousCorrespondences(pinholeCamera, previousFramePyramid_, currentFramePyramid_, pattern, previousCamera_R_camera, worker))
 			{
 				pattern.objectPoints().clear();
 				pattern.imagePoints().clear();
 				pattern.previousPose().toNull();
 			}
 
-			// check whether we should try to add new correspondences / reset the old ones - this is better than an entire brute-force retracking
+			// check whether we should try to add new correspondences / reset the old ones - this is better than an entire brute-force re-tracking
 			if (pattern.previousPose().isValid() && pattern.objectPoints().size() <= 20)
 			{
 				Geometry::SpatialDistribution::OccupancyArray occupancyArray;
-				optimizePoseByRectification(pinholeCamera, trackerCurrentFramePyramid, HomogenousMatrix4(pattern.previousPose()), pattern, pattern.previousPose(), worker, &occupancyArray);
+				optimizePoseByRectification(pinholeCamera, currentFramePyramid_, HomogenousMatrix4(pattern.previousPose()), pattern, pattern.previousPose(), worker, &occupancyArray);
 
 				ocean_assert(pattern.previousPose().isValid());
 				const Triangles2 triangles(pattern.triangles2(pinholeCamera));
@@ -699,14 +470,7 @@ bool PatternTrackerCore6DOF::determinePosesWithDownsampledResolution(const bool 
 				{
 					pattern.imagePoints() = Geometry::SpatialDistribution::distributeAndFilter(validPoints.data(), validPoints.size(), subRegion.boundingBox().left(), subRegion.boundingBox().top(), subRegion.boundingBox().width(), subRegion.boundingBox().height(), 15u, 15u);
 
-					if (pattern.isPlanar())
-					{
-						pattern.objectPoints() = Geometry::Utilities::backProjectImagePoints(pinholeCamera, pattern.previousPose(), Plane3(Vector3(0, 0, 0), Vector3(0, 1, 0)), pattern.imagePoints().data(), pattern.imagePoints().size(), pinholeCamera.hasDistortionParameters());
-					}
-					else
-					{
-						ocean_assert(false && "General pattern types are not currently supported!");
-					}
+					pattern.objectPoints() = Geometry::Utilities::backProjectImagePoints(pinholeCamera, pattern.previousPose(), Plane3(Vector3(0, 0, 0), Vector3(0, 1, 0)), pattern.imagePoints().data(), pattern.imagePoints().size(), pinholeCamera.hasDistortionParameters());
 				}
 			}
 		}
@@ -720,10 +484,10 @@ bool PatternTrackerCore6DOF::determinePosesWithDownsampledResolution(const bool 
 
 	unsigned int currentlyVisiblePattern = internalNumberVisiblePattern();
 
-	// For patterns that lost tracking since the last frame, attempt to relocalize with a more robust procedure.
-	if (trackerTimestampPreviousFrame.isValid() && (currentlyVisiblePattern == 0u || currentlyVisiblePattern < internalMaxConcurrentlyVisiblePattern()))
+	// For patterns that lost tracking since the last frame, attempt to re-localize with a more robust procedure.
+	if (timestampPreviousFrame_.isValid() && (currentlyVisiblePattern == 0u || currentlyVisiblePattern < internalMaxConcurrentlyVisiblePattern()))
 	{
-		for (PatternMap::iterator iP = trackerPatternMap.begin(); iP != trackerPatternMap.end(); ++iP)
+		for (PatternMap::iterator iP = patternMap_.begin(); iP != patternMap_.end(); ++iP)
 		{
 			Pattern& pattern = iP->second;
 
@@ -732,9 +496,9 @@ bool PatternTrackerCore6DOF::determinePosesWithDownsampledResolution(const bool 
 				Timestamp poseGuessTimestamp;
 				const HomogenousMatrix4& poseGuess = pattern.poseGuess(&poseGuessTimestamp);
 
-				if (poseGuess.isValid() && poseGuessTimestamp == trackerTimestampPreviousFrame)
+				if (poseGuess.isValid() && poseGuessTimestamp == timestampPreviousFrame_)
 				{
-					determinePoseWithDriftErrors(pinholeCamera, trackerPreviousFramePyramid, trackerCurrentFramePyramid, pattern, previousCamera_R_camera, worker);
+					determinePoseWithDriftErrors(pinholeCamera, previousFramePyramid_, currentFramePyramid_, pattern, previousCamera_R_camera, worker);
 				}
 			}
 		}
@@ -745,15 +509,15 @@ bool PatternTrackerCore6DOF::determinePosesWithDownsampledResolution(const bool 
 	// Attempt to track new patterns.
 	if (allowRecognition && (currentlyVisiblePattern == 0u || currentlyVisiblePattern < internalMaxConcurrentlyVisiblePattern()) && (!lastRecognitionAttemptTimestamp_.isValid() || yFrame.timestamp() > lastRecognitionAttemptTimestamp_ + maximumDurationBetweenRecognitionAttempts()))
 	{
-		determinePosesWithoutKnowledge(pinholeCamera, yFrame, trackerCurrentFramePyramid, previousCamera_R_camera, worker);
+		determinePosesWithoutKnowledge(pinholeCamera, yFrame, currentFramePyramid_, previousCamera_R_camera, worker);
 		lastRecognitionAttemptTimestamp_ = yFrame.timestamp();
 	}
 
 	// we use the current frame pyramid as previous frame pyramid in the next tracking iteration
-	std::swap(trackerPreviousFramePyramid, trackerCurrentFramePyramid);
+	std::swap(previousFramePyramid_, currentFramePyramid_);
 
 	// at this moment the previous pose is also the pose for the current frame
-	for (PatternMap::iterator i = trackerPatternMap.begin(); i != trackerPatternMap.end(); ++i)
+	for (PatternMap::iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
 	{
 		if (i->second.previousPose().isValid())
 		{
@@ -825,15 +589,7 @@ bool PatternTrackerCore6DOF::determinePoseWithDriftErrors(const PinholeCamera& p
 		{
 			ocean_assert(currentFeaturePoints.size() == previousFeaturePoints.size());
 
-			Vectors3 objectPoints;
-			if (pattern.isPlanar())
-			{
-				objectPoints = Geometry::Utilities::backProjectImagePoints(hierarchyCamera, poseGuess, Plane3(Vector3(0, 0, 0), Vector3(0, 1, 0)), previousFeaturePoints.data(), previousFeaturePoints.size(), hierarchyCamera.hasDistortionParameters());
-			}
-			else
-			{
-				ocean_assert(false && "General pattern types are not currently supported!");
-			}
+			const Vectors3 objectPoints = Geometry::Utilities::backProjectImagePoints(hierarchyCamera, poseGuess, Plane3(Vector3(0, 0, 0), Vector3(0, 1, 0)), previousFeaturePoints.data(), previousFeaturePoints.size(), hierarchyCamera.hasDistortionParameters());
 
 			ocean_assert(objectPoints.size() == currentFeaturePoints.size());
 
@@ -1169,62 +925,53 @@ bool PatternTrackerCore6DOF::optimizePoseByRectification(const PinholeCamera& pi
 	ocean_assert(FrameType::formatIsGeneric(pattern.pyramid().frameType().pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
 	ocean_assert(currentFramePyramid.frameType().pixelOrigin() == pattern.pyramid().frameType().pixelOrigin());
 
-	ocean_assert(pattern.isPlanar());
-
 	const HomogenousMatrix4 roughPoseIF(PinholeCamera::standard2InvertedFlipped(roughPose));
 
 	// Find the pattern layer best matching with the size of the rectified image.
 	unsigned int patternPyramidLayer = static_cast<unsigned int>(-1);
 
-	if (pattern.isPlanar())
+	const Vector2 corner0(pinholeCamera.projectToImageIF<true>(roughPoseIF, pattern.corner0(), pinholeCamera.hasDistortionParameters()));
+	const Vector2 corner1(pinholeCamera.projectToImageIF<true>(roughPoseIF, pattern.corner1(), pinholeCamera.hasDistortionParameters()));
+	const Vector2 corner2(pinholeCamera.projectToImageIF<true>(roughPoseIF, pattern.corner2(), pinholeCamera.hasDistortionParameters()));
+	const Vector2 corner3(pinholeCamera.projectToImageIF<true>(roughPoseIF, pattern.corner3(), pinholeCamera.hasDistortionParameters()));
+
+	const unsigned int currentSize = min(currentFramePyramid.finestWidth(), currentFramePyramid.finestHeight());
+	const unsigned int patternSize = min(pattern.pyramid().finestWidth(), pattern.pyramid().finestHeight());
+
+	const unsigned int maximalSize = max(50u, min(currentSize, patternSize));
+
+	const Scalar maxHorizontal(max(corner0.distance(corner3), corner1.distance(corner2)));
+	const Scalar maxVertical(max(corner0.distance(corner1), corner2.distance(corner3)));
+
+	if (maxHorizontal > maxVertical)
 	{
-		const Vector2 corner0(pinholeCamera.projectToImageIF<true>(roughPoseIF, pattern.corner0(), pinholeCamera.hasDistortionParameters()));
-		const Vector2 corner1(pinholeCamera.projectToImageIF<true>(roughPoseIF, pattern.corner1(), pinholeCamera.hasDistortionParameters()));
-		const Vector2 corner2(pinholeCamera.projectToImageIF<true>(roughPoseIF, pattern.corner2(), pinholeCamera.hasDistortionParameters()));
-		const Vector2 corner3(pinholeCamera.projectToImageIF<true>(roughPoseIF, pattern.corner3(), pinholeCamera.hasDistortionParameters()));
+		// find the pattern pyramid layer best matching to the given horizontal size
 
-		const unsigned int currentSize = min(currentFramePyramid.finestWidth(), currentFramePyramid.finestHeight());
-		const unsigned int patternSize = min(pattern.pyramid().finestWidth(), pattern.pyramid().finestHeight());
+		const unsigned int horizontal = minmax(50u, (unsigned int)Numeric::ceil(maxHorizontal), maximalSize);
 
-		const unsigned int maximalSize = max(50u, min(currentSize, patternSize));
-
-		const Scalar maxHorizontal(max(corner0.distance(corner3), corner1.distance(corner2)));
-		const Scalar maxVertical(max(corner0.distance(corner1), corner2.distance(corner3)));
-
-		if (maxHorizontal > maxVertical)
+		for (unsigned int n = 0u; n < pattern.pyramid().layers(); ++n)
 		{
-			// find the pattern pyramid layer best matching to the given horizontal size
-
-			const unsigned int horizontal = minmax(50u, (unsigned int)Numeric::ceil(maxHorizontal), maximalSize);
-
-			for (unsigned int n = 0u; n < pattern.pyramid().layers(); ++n)
+			if (horizontal >= pattern.pyramid().width(n) && horizontal <= pattern.pyramid().width(n) * 2u)
 			{
-				if (horizontal >= pattern.pyramid().width(n) && horizontal <= pattern.pyramid().width(n) * 2u)
-				{
-					patternPyramidLayer = n;
-					break;
-				}
-			}
-		}
-		else
-		{
-			// find the pattern pyramid layer best matching to the given vertical size
-
-			const unsigned int vertical = minmax(50u, (unsigned int)Numeric::ceil(maxVertical), maximalSize);
-
-			for (unsigned int n = 0u; n < pattern.pyramid().layers(); ++n)
-			{
-				if (vertical >= pattern.pyramid().height(n) && vertical <= pattern.pyramid().height(n) * 2u)
-				{
-					patternPyramidLayer = n;
-					break;
-				}
+				patternPyramidLayer = n;
+				break;
 			}
 		}
 	}
 	else
 	{
-		return false; // not supported!
+		// find the pattern pyramid layer best matching to the given vertical size
+
+		const unsigned int vertical = minmax(50u, (unsigned int)Numeric::ceil(maxVertical), maximalSize);
+
+		for (unsigned int n = 0u; n < pattern.pyramid().layers(); ++n)
+		{
+			if (vertical >= pattern.pyramid().height(n) && vertical <= pattern.pyramid().height(n) * 2u)
+			{
+				patternPyramidLayer = n;
+				break;
+			}
+		}
 	}
 
 	ocean_assert(patternPyramidLayer != static_cast<unsigned int>(-1));
@@ -1246,13 +993,10 @@ bool PatternTrackerCore6DOF::optimizePoseByRectification(const PinholeCamera& pi
 	ocean_assert(rectifiedFrame.isContinuous());
 	ocean_assert(rectifiedFrameMask.isContinuous());
 
-	if (pattern.isPlanar())
-	{
-		const Frame& pyramidLayer = currentFramePyramid.finestLayer();
+	const Frame& pyramidLayer = currentFramePyramid.finestLayer();
 
-		// Perform a planar rectification with a lookup table.
-		CV::Advanced::FrameRectification::planarRectangleObjectMaskIF8BitPerChannel<1u>(pyramidLayer.constdata<uint8_t>(), pyramidLayer.paddingElements(), pyramidLayer.pixelOrigin(), AnyCameraPinhole(pinholeCamera), roughPoseIF, pattern.corner0(), pattern.corner3(), pattern.corner1(), rectifiedFrame.data<uint8_t>(), rectifiedFrameMask.data<uint8_t>(), rectifiedFrame.width(), rectifiedFrame.height(), rectifiedFrame.paddingElements(), rectifiedFrameMask.paddingElements(), worker, 0xFF, 50u);
-	}
+	// Perform a planar rectification with a lookup table.
+	CV::Advanced::FrameRectification::planarRectangleObjectMaskIF8BitPerChannel<1u>(pyramidLayer.constdata<uint8_t>(), pyramidLayer.paddingElements(), pyramidLayer.pixelOrigin(), AnyCameraPinhole(pinholeCamera), roughPoseIF, pattern.corner0(), pattern.corner3(), pattern.corner1(), rectifiedFrame.data<uint8_t>(), rectifiedFrameMask.data<uint8_t>(), rectifiedFrame.width(), rectifiedFrame.height(), rectifiedFrame.paddingElements(), rectifiedFrameMask.paddingElements(), worker, 0xFF, 50u);
 
 	const CV::FramePyramid rectifiedPyramid(rectifiedFrame, 3u /*layers*/, false /*copyFirstLayer*/, worker);
 
@@ -1284,25 +1028,23 @@ bool PatternTrackerCore6DOF::optimizePoseByRectification(const PinholeCamera& pi
 		imagePoints.reserve(rectifiedPoints.size());
 
 		// Compute the associated 3D object points for both the pattern and the rectified image.
-		if (pattern.isPlanar())
+
+		const unsigned int patternLayerWidth = pattern.pyramid()[patternPyramidLayer].width();
+		const unsigned int patternLayerHeight = pattern.pyramid()[patternPyramidLayer].height();
+
+		ocean_assert(patternLayerWidth != 0u && patternLayerHeight != 0u);
+
+		const Scalar invPatternLayerWidth = Scalar(1) / Scalar(patternLayerWidth);
+		const Scalar invPatternLayerHeight = Scalar(1) / Scalar(patternLayerHeight);
+
+		for (Vectors2::const_iterator i = patternPoints.begin(); i != patternPoints.end(); ++i)
 		{
-			const unsigned int patternLayerWidth = pattern.pyramid()[patternPyramidLayer].width();
-			const unsigned int patternLayerHeight = pattern.pyramid()[patternPyramidLayer].height();
+			objectPoints.push_back(Vector3(i->x() * pattern.dimension().x() * invPatternLayerWidth, 0, i->y() * pattern.dimension().y() * invPatternLayerHeight));
+		}
 
-			ocean_assert(patternLayerWidth != 0u && patternLayerHeight != 0u);
-
-			const Scalar invPatternLayerWidth = Scalar(1) / Scalar(patternLayerWidth);
-			const Scalar invPatternLayerHeight = Scalar(1) / Scalar(patternLayerHeight);
-
-			for (Vectors2::const_iterator i = patternPoints.begin(); i != patternPoints.end(); ++i)
-			{
-				objectPoints.push_back(Vector3(i->x() * pattern.dimension().x() * invPatternLayerWidth, 0, i->y() * pattern.dimension().y() * invPatternLayerHeight));
-			}
-
-			for (Vectors2::const_iterator i = rectifiedPoints.begin(); i != rectifiedPoints.end(); ++i)
-			{
-				imagePoints.push_back(CV::Advanced::FrameRectification::planarRectangleObjectRectifiedPosition2cameraPositionIF<true>(AnyCameraPinhole(pinholeCamera), roughPoseIF, pattern.corner0(), pattern.corner3(), pattern.corner1(), rectifiedFrame.width(), rectifiedFrame.height(), *i));
-			}
+		for (Vectors2::const_iterator i = rectifiedPoints.begin(); i != rectifiedPoints.end(); ++i)
+		{
+			imagePoints.push_back(CV::Advanced::FrameRectification::planarRectangleObjectRectifiedPosition2cameraPositionIF<true>(AnyCameraPinhole(pinholeCamera), roughPoseIF, pattern.corner0(), pattern.corner3(), pattern.corner1(), rectifiedFrame.width(), rectifiedFrame.height(), *i));
 		}
 
 		// Optimize the given rough pose by application of the new 2D/3D correspondences.
@@ -1320,12 +1062,10 @@ bool PatternTrackerCore6DOF::optimizePoseByRectification(const PinholeCamera& pi
 
 					// Invalidate the bins for invalid points.
 					const HomogenousMatrix4 optimizedPoseIF(PinholeCamera::standard2InvertedFlipped(optimizedPose));
-					if (pattern.isPlanar())
+
+					for (ImagePoints::const_iterator i = invalidPatternPoints.begin(); i != invalidPatternPoints.end(); ++i)
 					{
-						for (ImagePoints::const_iterator i = invalidPatternPoints.begin(); i != invalidPatternPoints.end(); ++i)
-						{
-							tmpArray.removePoint(CV::Advanced::FrameRectification::planarRectangleObjectRectifiedPosition2cameraPositionIF<true>(AnyCameraPinhole(pinholeCamera), optimizedPoseIF, pattern.corner0(), pattern.corner3(), pattern.corner1(), rectifiedFrame.width(), rectifiedFrame.height(), *i));
-						}
+						tmpArray.removePoint(CV::Advanced::FrameRectification::planarRectangleObjectRectifiedPosition2cameraPositionIF<true>(AnyCameraPinhole(pinholeCamera), optimizedPoseIF, pattern.corner0(), pattern.corner3(), pattern.corner1(), rectifiedFrame.width(), rectifiedFrame.height(), *i));
 					}
 
 					// Re-validate the bins for valid points.
@@ -1387,7 +1127,7 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 
 	Triangles2 projectedTriangles;
 
-	for (PatternMap::const_iterator i = trackerPatternMap.begin(); i != trackerPatternMap.end(); ++i)
+	for (PatternMap::const_iterator i = patternMap_.begin(); i != patternMap_.end(); ++i)
 	{
 		if (i->second.previousPose().isValid())
 		{
@@ -1423,28 +1163,28 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 	// Run detection in a round-robin manner.
 	// If detection time exceeds 'options_.maxRecognitionTime', then we'll stop recognition early.
 
-	PatternMap::iterator iPattern = trackerPatternMap.upper_bound(trackerLastRecognitionPatternId);
+	PatternMap::iterator iPattern = patternMap_.upper_bound(lastRecognitionPatternId_);
 
-	if (iPattern == trackerPatternMap.end())
+	if (iPattern == patternMap_.end())
 	{
-		iPattern = trackerPatternMap.begin();
+		iPattern = patternMap_.begin();
 	}
 
-	ocean_assert(iPattern != trackerPatternMap.end());
+	ocean_assert(iPattern != patternMap_.end());
 
-	for (size_t index = 0; index < trackerPatternMap.size(); ++index, ++iPattern)
+	for (size_t index = 0; index < patternMap_.size(); ++index, ++iPattern)
 	{
-		if (double(Timestamp(true) - recognitionStartTimestamp) > options_.maxRecognitionTime)
+		if (double(Timestamp(true) - recognitionStartTimestamp) > options_.maxRecognitionTime_)
 		{
 			return true;
 		}
 
-		if (iPattern == trackerPatternMap.end())
+		if (iPattern == patternMap_.end())
 		{
-			iPattern = trackerPatternMap.begin();
+			iPattern = patternMap_.begin();
 		}
 
-		trackerLastRecognitionPatternId = iPattern->first;
+		lastRecognitionPatternId_ = iPattern->first;
 
 		if (iPattern->second.previousPose().isValid())
 		{
@@ -1457,14 +1197,6 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 		if (pattern.hasPoseGuess(poseGuess, 0.05))
 		{
 			poseGuess *= previousCamera_R_camera_OrIdentity;
-		}
-
-		if (!poseGuess.isValid() && pattern.hasRepresentativeFeatures())
-		{
-			if (!pattern.recognizePattern(pinholeCamera, features, trackerRandomGenerator, poseGuess, worker))
-			{
-				continue;
-			}
 		}
 
 		CV::Detector::Blob::BlobFeatures* featureCandidates = &features;
@@ -1505,7 +1237,7 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 
 		HomogenousMatrix4 pose;
 
-		if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), trackerRandomGenerator, pose, 10u, true, options_.recognitionRansacIterations, Scalar(5 * 5)))
+		if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator_, pose, 10u, true, options_.recognitionRansacIterations_, Scalar(5 * 5)))
 		{
 			continue;
 		}
@@ -1520,7 +1252,7 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 		ocean_assert(objectPoints.size() == imagePoints.size());
 
 		Indices32 resultingValidCorrespondences;
-		if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), trackerRandomGenerator, pose, 10u, true, options_.recognitionRansacIterations, Scalar(5 * 5), &resultingValidCorrespondences))
+		if (!Geometry::RANSAC::p3p(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator_, pose, 10u, true, options_.recognitionRansacIterations_, Scalar(5 * 5), &resultingValidCorrespondences))
 		{
 			continue;
 		}
@@ -1566,14 +1298,7 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 
 			pattern.imagePoints() = Geometry::SpatialDistribution::distributeAndFilter(validPoints.data(), validPoints.size(), subRegion.boundingBox().left(), subRegion.boundingBox().top(), subRegion.boundingBox().width(), subRegion.boundingBox().height(), 15u, 15u);
 
-			if (pattern.isPlanar())
-			{
-				pattern.objectPoints() = Geometry::Utilities::backProjectImagePoints(pinholeCamera, pattern.previousPose(), Plane3(Vector3(0, 0, 0), Vector3(0, 1, 0)), pattern.imagePoints().data(), pattern.imagePoints().size(), pinholeCamera.hasDistortionParameters());
-			}
-			else
-			{
-				ocean_assert(false && "General pattern types are not currently supported!");
-			}
+			pattern.objectPoints() = Geometry::Utilities::backProjectImagePoints(pinholeCamera, pattern.previousPose(), Plane3(Vector3(0, 0, 0), Vector3(0, 1, 0)), pattern.imagePoints().data(), pattern.imagePoints().size(), pinholeCamera.hasDistortionParameters());
 
 			// now we remove all Blob features lying in the current subset
 
@@ -1604,18 +1329,18 @@ const unsigned int* PatternTrackerCore6DOF::createIntegralImage(const Frame& yFr
 {
 	ocean_assert(yFrame && FrameType::formatIsGeneric(yFrame.pixelFormat(), FrameType::DT_UNSIGNED_INTEGER_8, 1u));
 
-	if (!trackerIntegralImage.set(FrameType(yFrame.width() + 1u, yFrame.height() + 1u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), /* forceOwner */ true))
+	if (!integralImage_.set(FrameType(yFrame.width() + 1u, yFrame.height() + 1u, FrameType::FORMAT_Y32, FrameType::ORIGIN_UPPER_LEFT), /* forceOwner */ true))
 	{
 		ocean_assert(false && "This should never happen!");
 		return nullptr;
 	}
 
-	ocean_assert(trackerIntegralImage);
-	ocean_assert(trackerIntegralImage.isContinuous() && "The output of this function is assumed to be continuous.");
+	ocean_assert(integralImage_);
+	ocean_assert(integralImage_.isContinuous() && "The output of this function is assumed to be continuous.");
 
-	CV::IntegralImage::createLinedImage<uint8_t, unsigned int, 1u>(yFrame.constdata<uint8_t>(), trackerIntegralImage.data<unsigned int>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), trackerIntegralImage.paddingElements());
+	CV::IntegralImage::createLinedImage<uint8_t, unsigned int, 1u>(yFrame.constdata<uint8_t>(), integralImage_.data<unsigned int>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), integralImage_.paddingElements());
 
-	return trackerIntegralImage.constdata<unsigned int>();
+	return integralImage_.constdata<unsigned int>();
 }
 
 CV::SubRegion PatternTrackerCore6DOF::triangles2subRegion(const Triangles2& triangles, const unsigned int backupWidth, const unsigned int backupHeight)

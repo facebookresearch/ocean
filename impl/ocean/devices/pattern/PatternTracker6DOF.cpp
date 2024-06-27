@@ -229,10 +229,10 @@ void PatternTracker6DOF::ensureTrackerExists()
 	{
 		Tracking::Pattern::PatternTracker6DOF::Options options;
 
-		options.noFrameToFrameTracking = noFrameToFrameTracking_;
+		options.noFrameToFrameTracking_ = noFrameToFrameTracking_;
 
 #ifdef OCEAN_PLATFORM_BUILD_ANDROID
-		options.downsampleInputImageOnAndroid = !noDownsamplingOnAndroid_;
+		options.downsampleInputImageOnAndroid_ = !noDownsamplingOnAndroid_;
 #endif
 
 		visualTracker_ = Tracking::VisualTrackerRef(new Tracking::Pattern::PatternTracker6DOF(options));
