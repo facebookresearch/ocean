@@ -17,8 +17,6 @@
 #include "ocean/devices/OrientationTracker3DOF.h"
 #include "ocean/devices/DevicePlayer.h"
 
-#include "ocean/math/Cone3.h"
-#include "ocean/math/Cylinder3.h"
 #include "ocean/math/PinholeCamera.h"
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/Vector2.h"
@@ -31,11 +29,10 @@
  * @ingroup applicationdemotracking
  * @defgroup applicationdemotrackingfeaturetracker Feature Tracker
  * @{
- * The demo application demonstrates the usage of the "Blob Feature Based 6DOF Tracker", "ORB Feature Based 6DOF Tracker", or "Pattern 6DOF Tracker" tracker.<br>
+ * The demo application demonstrates the usage of the "Pattern 6DOF Tracker" or "ORB Feature Based 6DOF Tracker" tracker.
  * The user has the possibility to define the video input source (with preferred frame dimension), the pattern, and the used tracker via the commando line parameter.<br>
  * The application will visualize a bounding box and a coordinate system in every input frame for which a valid camera pose could be determined.<br>
- * Additionally, the Blob tracker can be used to track cubes by specifying "Blob Feature Based 6DOF Tracker for cubes" as tracker to be used.<br>
- * The implementation of the basic featuer tracker functionality is platform independent, thus is can be used on any platform.
+ * The implementation of the basic feature tracker functionality is platform independent, thus is can be used on any platform.
  *
  * The following Dex page provides more details about the demo application:<br>
  * https://our.intern.facebook.com/intern/dex/ocean-framework/demoapplications-featuretracker/

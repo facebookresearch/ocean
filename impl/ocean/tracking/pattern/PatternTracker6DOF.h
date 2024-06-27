@@ -49,7 +49,7 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTracker6DOF :
 		 * The origin of the pattern will be located in the upper left corner of the given frame.<br>
 		 * The pattern lies inside the x-z-plane with y-axis as up-vector.
 		 * @param frame The frame specifying the tracking pattern, this frame will be converted internally if the pixel format is not FORMAT_Y8, must be valid
-		 * @param dimension The dimension of the tracking pattern in the tracker coordinate system, with range (0, infinity)x(-infinit, infinity)
+		 * @param dimension The dimension of the tracking pattern in the tracker coordinate system, with range (0, infinity)x[0, infinity)
 		 * @param worker Optional worker object to distribute the computation
 		 * @return The id of the tracking pattern, -1 if the pattern could not be added
 		 */
@@ -61,7 +61,7 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTracker6DOF :
 		 * The pattern lies inside the x-z-plane with y-axis as up-vector.<br>
 		 * This function takes a file in which the pattern is defined, the file can be a simple image or a feature map storing an additional hierarchy of feature points.
 		 * @param filename The filename of the file storing the pattern information, must be valid
-		 * @param dimension The dimension of the tracking pattern in the tracker coordinate system, with range (0, infinity)x(-infinit, infinity)
+		 * @param dimension The dimension of the tracking pattern in the tracker coordinate system, with range (0, infinity)x[0, infinity)
 		 * @param worker Optional worker object to distribute the computation
 		 * @return The id of the tracking pattern, -1 if the pattern could not be added
 		 */

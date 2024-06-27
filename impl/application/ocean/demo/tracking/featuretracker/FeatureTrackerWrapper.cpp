@@ -27,8 +27,6 @@
 
 #include "ocean/tracking/Utilities.h"
 
-#include "ocean/tracking/blob/BlobTracker6DOF.h"
-
 #include "ocean/tracking/pattern/PatternTracker6DOF.h"
 
 #include "ocean/tracking/orb/FeatureTracker6DOF.h"
@@ -69,7 +67,7 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 	commandArguments.registerParameter("input", "i", "Input to be used for tracking, e.g. an image sequence");
 	commandArguments.registerParameter("pattern", "p", "Optional: the filename of the tracking pattern that will be used for tracking.");
 	commandArguments.registerParameter("resolution", "r", "Optional: the resolution of the input, e.g. \"1280x720\"");
-	commandArguments.registerParameter("tracker", "t", "Optional: the name of the tracker that will be used, e.g. \"Pattern 6DOF Tracker [for {cones, cylinders}]\", \"ORB Feature Based 6DOF Tracker\", or \"Blob Feature Based 6DOF Tracker [for {cones, cylinders, cubes, meshes}]\"; ");
+	commandArguments.registerParameter("tracker", "t", "Optional: the name of the tracker that will be used, e.g. \"Pattern 6DOF Tracker\", or \"ORB Feature Based 6DOF Tracker\"");
 	commandArguments.registerParameter("calibration", "c", "Optional: the filename of the camera calibration file containing the calibration for the input source (*.occ)");
 
 	commandArguments.parse(separatedCommandArguments);
@@ -306,40 +304,6 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 
 	ocean_assert(patternFrame.width() != 0u);
 	const Vector2 patternDimension = Vector2(patternWidth, patternWidth * Scalar(patternFrame.height()) / Scalar(patternFrame.width()));
-
-	if (trackerName == std::string("Blob Feature Based 6DOF Tracker"))
-	{
-		// we want to track a simple pattern image
-		visualTracker_ = Tracking::VisualTrackerRef(new Tracking::Blob::BlobTracker6DOF());
-		visualTracker_.force<Tracking::Blob::BlobTracker6DOF>().setFeatureMap(Tracking::Blob::FeatureMap(patternFrame, patternDimension, Scalar(6), true, 0, WorkerPool::get().scopedWorker()()));
-
-		objectDimension_ = Box3(Vector3(0, 0, 0), Vector3(patternDimension.x(), patternDimension.length() * Scalar(0.2), patternDimension.y()));
-	}
-
-	if (visualTracker_.isNull() && trackerName == std::string("Blob Feature Based 6DOF Tracker for cubes"))
-	{
-		// we want to track a textured cube
-		if (patternFrame.width() % 3u == 0u && patternFrame.height() % 4u == 0u && patternFrame.width() * 4u == patternFrame.height() * 3u)
-		{
-			Frame cubeFrameY;
-			if (CV::FrameConverter::Comfort::convert(patternFrame, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT, cubeFrameY, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
-			{
-				CV::Detector::Blob::BlobFeatures cubeMapFeatures;
-				if (Tracking::Blob::FeatureMap::createCubeFeatureMap(cubeFrameY.constdata<uint8_t>(), cubeFrameY.width(), cubeFrameY.height(), cubeFrameY.paddingElements(), Scalar(1), cubeMapFeatures, Scalar(15), 0u, WorkerPool::get().scopedWorker()()))
-				{
-					visualTracker_ = Tracking::VisualTrackerRef(new Tracking::Blob::BlobTracker6DOF());
-					visualTracker_.force<Tracking::Blob::BlobTracker6DOF>().setFeatureMap(Tracking::Blob::FeatureMap(cubeMapFeatures));
-
-					objectDimension_ = Box3(Vector3(-1, -1, -1), Vector3(1, 1, 1)) * Scalar(0.5);
-				}
-			}
-		}
-		else
-		{
-			Platform::Utilities::showMessageBox("Error", "The provided cube map cannot be interpreted.");
-			return;
-		}
-	}
 
 	if (visualTracker_.isNull() && trackerName == std::string("ORB Feature Based 6DOF Tracker"))
 	{
