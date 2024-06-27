@@ -10,10 +10,9 @@ setlocal enableDelayedExpansion
 
 @REM Determine the location of the source directory from the location of this script
 set OCEAN_SOURCE_DIR=%~dp0..\..
-set OCEAN_BUILD_ROOT_DIRECTORY=C:\tmp\ocean\build\win
-set THIRD_PARTY_ROOT_DIRECTORY=C:\tmp\ocean\install\win
+set DEFAULT_INSTALL_PATH=%cd%\ocean_install
 
-set "options=-install:%cd%\ocean_install -build:%cd%\ocean_build -config:"debug release" -link:"static shared" -third-party:NULL -archive:NULL -h:"
+set "options=-install:%DEFAULT_INSTALL_PATH% -build:%cd%\ocean_build -config:"debug release" -link:"static shared" -third-party:%cd%\ocean_install_thirdparty -archive:NULL -h:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
