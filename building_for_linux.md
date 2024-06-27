@@ -1,4 +1,4 @@
-# Building for macOS
+# Building for Linux
 
 This document describes the process to build Ocean on Linux.
 
