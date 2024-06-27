@@ -97,6 +97,14 @@
 		5DF886D71BAAF64800E9F349 /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C81BAAF64800E9F349 /* Tracker.cpp */; };
 		5DF886D91BAAF64800E9F349 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886CA1BAAF64800E9F349 /* Utilities.cpp */; };
 		5DF886DA1BAAF64800E9F349 /* VisualTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886CB1BAAF64800E9F349 /* VisualTracker.cpp */; };
+		9353AF962C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF952C2CE885000146CC /* UnidirectionalCorrespondences.cpp */; };
+		9353AF972C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF952C2CE885000146CC /* UnidirectionalCorrespondences.cpp */; };
+		9353AF982C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF952C2CE885000146CC /* UnidirectionalCorrespondences.cpp */; };
+		9353AF992C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF952C2CE885000146CC /* UnidirectionalCorrespondences.cpp */; };
+		9353AF9B2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF9A2C2CE88D000146CC /* UnidirectionalCorrespondences.h */; };
+		9353AF9C2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF9A2C2CE88D000146CC /* UnidirectionalCorrespondences.h */; };
+		9353AF9D2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF9A2C2CE88D000146CC /* UnidirectionalCorrespondences.h */; };
+		9353AF9E2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF9A2C2CE88D000146CC /* UnidirectionalCorrespondences.h */; };
 		9377C277267C038E00CB2431 /* SmoothedTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 9377C276267C038E00CB2431 /* SmoothedTransformation.h */; };
 		9377C278267C038E00CB2431 /* SmoothedTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 9377C276267C038E00CB2431 /* SmoothedTransformation.h */; };
 		9377C279267C038E00CB2431 /* SmoothedTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 9377C276267C038E00CB2431 /* SmoothedTransformation.h */; };
@@ -177,6 +185,8 @@
 		5DF886C81BAAF64800E9F349 /* Tracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Tracker.cpp; path = ../../../../../impl/ocean/tracking/Tracker.cpp; sourceTree = "<group>"; };
 		5DF886CA1BAAF64800E9F349 /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../impl/ocean/tracking/Utilities.cpp; sourceTree = "<group>"; };
 		5DF886CB1BAAF64800E9F349 /* VisualTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VisualTracker.cpp; path = ../../../../../impl/ocean/tracking/VisualTracker.cpp; sourceTree = "<group>"; };
+		9353AF952C2CE885000146CC /* UnidirectionalCorrespondences.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnidirectionalCorrespondences.cpp; path = ../../../../../impl/ocean/tracking/UnidirectionalCorrespondences.cpp; sourceTree = "<group>"; };
+		9353AF9A2C2CE88D000146CC /* UnidirectionalCorrespondences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnidirectionalCorrespondences.h; path = ../../../../../impl/ocean/tracking/UnidirectionalCorrespondences.h; sourceTree = "<group>"; };
 		9377C276267C038E00CB2431 /* SmoothedTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmoothedTransformation.h; path = ../../../../../impl/ocean/tracking/SmoothedTransformation.h; sourceTree = "<group>"; };
 		9377C27B267C03A400CB2431 /* SmoothedTransformation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SmoothedTransformation.cpp; path = ../../../../../impl/ocean/tracking/SmoothedTransformation.cpp; sourceTree = "<group>"; };
 		939F45EC26F8401A00941A9E /* VocabularyTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VocabularyTree.h; path = ../../../../../impl/ocean/tracking/VocabularyTree.h; sourceTree = "<group>"; };
@@ -236,6 +246,7 @@
 				5DF886A81BAAF63400E9F349 /* SphericalEnvironment.h */,
 				5DF886A91BAAF63400E9F349 /* Tracker.h */,
 				5DF886AA1BAAF63400E9F349 /* Tracking.h */,
+				9353AF9A2C2CE88D000146CC /* UnidirectionalCorrespondences.h */,
 				5DF886AB1BAAF63400E9F349 /* Utilities.h */,
 				5DF886AC1BAAF63400E9F349 /* VisualTracker.h */,
 				939F45EC26F8401A00941A9E /* VocabularyTree.h */,
@@ -280,6 +291,7 @@
 				5DF886C61BAAF64800E9F349 /* Solver3.cpp */,
 				5DF886C71BAAF64800E9F349 /* SphericalEnvironment.cpp */,
 				5DF886C81BAAF64800E9F349 /* Tracker.cpp */,
+				9353AF952C2CE885000146CC /* UnidirectionalCorrespondences.cpp */,
 				5DF886CA1BAAF64800E9F349 /* Utilities.cpp */,
 				5DF886CB1BAAF64800E9F349 /* VisualTracker.cpp */,
 			);
@@ -307,6 +319,7 @@
 				5DCC2BD61D3F82A500032841 /* HomographyImageAlignmentDense.h in Headers */,
 				5D936EFA1BC6A5DE0046ACD4 /* Utilities.h in Headers */,
 				5D936EFB1BC6A5DE0046ACD4 /* PoseProjection.h in Headers */,
+				9353AF9C2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */,
 				5D936EFC1BC6A5DE0046ACD4 /* MultiViewPlaneFinder.h in Headers */,
 				5D936EFD1BC6A5DE0046ACD4 /* Tracking.h in Headers */,
 				939F45EE26F8401A00941A9E /* VocabularyTree.h in Headers */,
@@ -332,6 +345,7 @@
 				5D98640E1D8B628E00DEDB00 /* HomographyImageAlignmentDense.h in Headers */,
 				5D98640F1D8B628E00DEDB00 /* Utilities.h in Headers */,
 				5D9864101D8B628E00DEDB00 /* PoseProjection.h in Headers */,
+				9353AF9D2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */,
 				5D9864111D8B628E00DEDB00 /* MultiViewPlaneFinder.h in Headers */,
 				5D9864121D8B628E00DEDB00 /* Tracking.h in Headers */,
 				939F45EF26F8401A00941A9E /* VocabularyTree.h in Headers */,
@@ -343,6 +357,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9353AF9B2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */,
 				5DF886AD1BAAF63400E9F349 /* CorrespondenceSet.h in Headers */,
 				5DD2BA231D61B9D30062D5BF /* HomographyImageAlignmentSparse.h in Headers */,
 				5DF886B11BAAF63400E9F349 /* MotionModel.h in Headers */,
@@ -383,6 +398,7 @@
 				C041EED01DABFA5E00BF5D76 /* HomographyImageAlignmentDense.h in Headers */,
 				C041EED11DABFA5E00BF5D76 /* Utilities.h in Headers */,
 				C041EED21DABFA5E00BF5D76 /* PoseProjection.h in Headers */,
+				9353AF9E2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */,
 				C041EED31DABFA5E00BF5D76 /* MultiViewPlaneFinder.h in Headers */,
 				C041EED41DABFA5E00BF5D76 /* Tracking.h in Headers */,
 				939F45F026F8401A00941A9E /* VocabularyTree.h in Headers */,
@@ -557,6 +573,7 @@
 				5D936EE61BC6A5DE0046ACD4 /* Utilities.cpp in Sources */,
 				5D936EE81BC6A5DE0046ACD4 /* Database.cpp in Sources */,
 				5D936EEA1BC6A5DE0046ACD4 /* Tracker.cpp in Sources */,
+				9353AF972C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */,
 				5D936EEB1BC6A5DE0046ACD4 /* MotionModel.cpp in Sources */,
 				5D936EEC1BC6A5DE0046ACD4 /* MultiViewPlaneFinder.cpp in Sources */,
 				5D936EED1BC6A5DE0046ACD4 /* PoseProjection.cpp in Sources */,
@@ -579,6 +596,7 @@
 				5D9863F81D8B628E00DEDB00 /* Utilities.cpp in Sources */,
 				5D9863FA1D8B628E00DEDB00 /* Database.cpp in Sources */,
 				5D9863FC1D8B628E00DEDB00 /* Tracker.cpp in Sources */,
+				9353AF982C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */,
 				5D9863FD1D8B628E00DEDB00 /* MotionModel.cpp in Sources */,
 				5D9863FE1D8B628E00DEDB00 /* MultiViewPlaneFinder.cpp in Sources */,
 				5D9863FF1D8B628E00DEDB00 /* PoseProjection.cpp in Sources */,
@@ -605,6 +623,7 @@
 				5DF886D01BAAF64800E9F349 /* MultiViewPlaneFinder.cpp in Sources */,
 				5DF886D31BAAF64800E9F349 /* PoseProjection.cpp in Sources */,
 				C01187361E60684C002FD71E /* HomographyTracker.cpp in Sources */,
+				9353AF962C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */,
 				5DD2BA261D61B9E20062D5BF /* HomographyImageAlignmentSparse.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -624,6 +643,7 @@
 				C041EEBA1DABFA5E00BF5D76 /* Utilities.cpp in Sources */,
 				C041EEBC1DABFA5E00BF5D76 /* Database.cpp in Sources */,
 				C041EEBE1DABFA5E00BF5D76 /* Tracker.cpp in Sources */,
+				9353AF992C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */,
 				C041EEBF1DABFA5E00BF5D76 /* MotionModel.cpp in Sources */,
 				C041EEC01DABFA5E00BF5D76 /* MultiViewPlaneFinder.cpp in Sources */,
 				C041EEC11DABFA5E00BF5D76 /* PoseProjection.cpp in Sources */,

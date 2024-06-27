@@ -59,6 +59,9 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\SmoothedTransformation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\UnidirectionalCorrespondences.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\MotionModel.h">
@@ -116,6 +119,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\VocabularyTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\UnidirectionalCorrespondences.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -195,6 +195,7 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\Solver3.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\SphericalEnvironment.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\Tracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\UnidirectionalCorrespondences.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\Utilities.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\VisualTracker.cpp" />
   </ItemGroup>
@@ -215,6 +216,7 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\SphericalEnvironment.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\Tracker.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\Tracking.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\UnidirectionalCorrespondences.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\Utilities.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\VisualTracker.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\VocabularyTree.h" />
