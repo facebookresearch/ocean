@@ -246,6 +246,265 @@ bool BlobTracker6DOF::determinePose(const Frame& yFrame, const AnyCamera& camera
 	return true;
 }
 
+bool BlobTracker6DOF::writeFeatures(const CV::Detector::Blob::BlobFeatures& features, IO::OutputBitstream& bitstream)
+{
+	if (features.size() > 1000 * 1000 * 64)
+	{
+		return false;
+	}
+
+	// write the tag for identification
+	if (!IO::Tag::writeTag(bitstream, trackerTagFeatures()))
+	{
+		return false;
+	}
+
+#if 1
+
+	// write version 3
+	if (!bitstream.write<unsigned long long>(3ull))
+	{
+		return false;
+	}
+
+	if (!bitstream.write<unsigned int>((unsigned int)features.size()))
+	{
+		return false;
+	}
+
+	for (size_t n = 0; n < features.size(); ++n)
+	{
+		const CV::Detector::Blob::BlobFeature& feature = features[n];
+
+		if (!bitstream.write<float>(float(feature.strength())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<bool>(feature.laplace()))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<float>(float(feature.scale())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<int>(int(feature.orientationType()))) // new in version 2
+		{
+			return false;
+		}
+
+		if (!bitstream.write<float>(float(feature.orientation())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<float>(float(feature.position().x())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<float>(float(feature.position().y())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<float>(float(feature.position().z())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<float>(float(feature.observation().x())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<float>(float(feature.observation().y())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<int>(int(feature.distortionState())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<int>(int(feature.descriptorType())))
+		{
+			return false;
+		}
+
+		const CV::Detector::Blob::BlobDescriptor& descriptor = feature.descriptor();
+
+		ocean_assert(descriptor.elements() <= 4096u);
+		if (descriptor.elements() > 4096u)
+		{
+			return false;
+		}
+
+		if (!bitstream.write<unsigned int>(descriptor.elements()))
+		{
+			return false;
+		}
+
+		for (unsigned int i = 0u; i < descriptor.elements(); ++i)
+		{
+			if (!bitstream.write<float>(float(descriptor[i])))
+			{
+				return false;
+			}
+		}
+	}
+
+#else
+
+	// this is the code of Version 1 (using 64 bit floating point values)
+
+	// write version 1
+	if (!bitstream.write<unsigned long long>(1ull))
+	{
+		return false;
+	}
+
+	if (!bitstream.write<unsigned int>((unsigned int)features.size()))
+	{
+		return false;
+	}
+
+	for (size_t n = 0; n < features.size(); ++n)
+	{
+		const CV::Detector::Blob::BlobFeature& feature = features[n];
+
+		if (!bitstream.write<double>(double(feature.strength())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<bool>(feature.laplace()))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<double>(double(feature.scale())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<double>(double(feature.orientation())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<double>(double(feature.position().x())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<double>(double(feature.position().y())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<double>(double(feature.position().z())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<double>(double(feature.observation().x())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<double>(double(feature.observation().y())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<int>(int(feature.distortionState())))
+		{
+			return false;
+		}
+
+		if (!bitstream.write<int>(int(feature.descriptorType())))
+		{
+			return false;
+		}
+
+		const CV::Detector::Blob::BlobDescriptor& descriptor = feature.descriptor();
+
+		ocean_assert(descriptor.elements() <= 4096u);
+		if (descriptor.elements() > 4096u)
+		{
+			return false;
+		}
+
+		if (!bitstream.write<unsigned int>(descriptor.elements()))
+		{
+			return false;
+		}
+
+		for (unsigned int i = 0u; i < descriptor.elements(); ++i)
+		{
+			if (!bitstream.write<double>(double(descriptor[i])))
+			{
+				return false;
+			}
+		}
+	}
+
+#endif
+
+	return true;
+}
+
+bool BlobTracker6DOF::readFeatures(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features, uint64_t* version)
+{
+	// check for the correct tag
+	if (!IO::Tag::readAndCheckTag(bitstream, trackerTagFeatures()))
+	{
+		return false;
+	}
+
+	unsigned long long bitstream_version = 0ull;
+	if (!bitstream.look<unsigned long long>(bitstream_version))
+	{
+		return false;
+	}
+
+	if (version != nullptr)
+	{
+		*version = bitstream_version;
+	}
+
+	switch (bitstream_version)
+	{
+		case 1ull:
+			return readFeatures_V1(bitstream, features);
+
+		case 2ull:
+			return readFeatures_V2(bitstream, features);
+
+		case 3ull:
+			return readFeatures_V3(bitstream, features);
+	}
+
+	return false;
+}
+
+const IO::Tag& BlobTracker6DOF::trackerTagFeatures()
+{
+	static const IO::Tag trackerTagFeatures = IO::Tag("_patfes_");
+	return trackerTagFeatures;
+}
+
+const IO::Tag& BlobTracker6DOF::trackerTagFeatureMap()
+{
+	static const IO::Tag trackerTagFeatureMap = IO::Tag("_patfem_");
+	return trackerTagFeatureMap;
+}
+
 bool BlobTracker6DOF::determinePose(const Frame& frame, const uint32_t* integralImage, const PinholeCamera& pinholeCamera, const bool frameIsUndistorted, HomogenousMatrix4& pose, Worker* worker)
 {
 	ocean_assert(frame && integralImage != nullptr);
@@ -807,6 +1066,443 @@ const uint32_t* BlobTracker6DOF::createIntegralImage(const Frame& frame, Worker*
 	IntegralImage::createLinedImage<uint8_t, uint32_t, 1u>(yFrame_.constdata<uint8_t>(), integralImage_.data<uint32_t>(), frame.width(), frame.height(), yFrame_.paddingElements(), integralImage_.paddingElements());
 
 	return integralImage_.data<uint32_t>();
+}
+
+bool BlobTracker6DOF::readFeatures_V1(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features)
+{
+	unsigned long long version = 0ull;
+	if (!bitstream.read<unsigned long long>(version))
+	{
+		return false;
+	}
+
+	ocean_assert(version == 1ull);
+	if (version != 1ull)
+	{
+		return false;
+	}
+
+	ocean_assert(features.empty());
+	features.clear();
+
+	unsigned int numberFeatures = 0u;
+	if (!bitstream.read<unsigned int>(numberFeatures))
+	{
+		return false;
+	}
+
+	if (numberFeatures > 1000u * 1000u * 64u)
+	{
+		return false;
+	}
+
+	features.reserve(numberFeatures);
+
+	for (unsigned int n = 0u; n < numberFeatures; ++n)
+	{
+		double strength = NumericD::minValue();
+		if (!bitstream.read<double>(strength))
+		{
+			return false;
+		}
+
+		bool laplace = false;
+		if (!bitstream.read<bool>(laplace))
+		{
+			return false;
+		}
+
+		double scale = NumericD::minValue();
+		if (!bitstream.read<double>(scale))
+		{
+			return false;
+		}
+
+		double orientation = NumericD::minValue();
+		if (!bitstream.read<double>(orientation))
+		{
+			return false;
+		}
+
+		double positionX = NumericD::minValue();
+		if (!bitstream.read<double>(positionX))
+		{
+			return false;
+		}
+
+		double positionY = NumericD::minValue();
+		if (!bitstream.read<double>(positionY))
+		{
+			return false;
+		}
+
+		double positionZ = NumericD::minValue();
+		if (!bitstream.read<double>(positionZ))
+		{
+			return false;
+		}
+
+		double observationX = NumericD::minValue();
+		if (!bitstream.read<double>(observationX))
+		{
+			return false;
+		}
+
+		double observationY = NumericD::minValue();
+		if (!bitstream.read<double>(observationY))
+		{
+			return false;
+		}
+
+		int distortionState = -1;
+		if (!bitstream.read<int>(distortionState))
+		{
+			return false;
+		}
+
+		int descriptorType = -1;
+		if (!bitstream.read<int>(descriptorType))
+		{
+			return false;
+		}
+
+		unsigned int descriptorElements = 0u;
+		if (!bitstream.read<unsigned int>(descriptorElements))
+		{
+			return false;
+		}
+
+		if (descriptorElements > 4096u)
+		{
+			return false;
+		}
+
+		CV::Detector::Blob::BlobFeature blobFeature(Vector2(0, 0), CV::Detector::PointFeature::DS_UNKNOWN, Scalar(scale), Scalar(strength), laplace);
+		blobFeature.setObservation(Vector2(Scalar(observationX), Scalar(observationY)), CV::Detector::Blob::BlobFeature::DistortionState(distortionState));
+		blobFeature.setOrientation(Scalar(orientation));
+		blobFeature.setPosition(Vector3(Scalar(positionX), Scalar(positionY), Scalar(positionZ)));
+		blobFeature.setDescriptorType(CV::Detector::Blob::BlobFeature::DescriptorType(descriptorType));
+
+		CV::Detector::Blob::BlobDescriptor& descriptor = blobFeature.descriptor();
+
+		ocean_assert(descriptor.elements() == descriptorElements);
+		if (descriptor.elements() != descriptorElements)
+		{
+			return false;
+		}
+
+		for (unsigned int i = 0u; i < descriptorElements; ++i)
+		{
+			double element = NumericD::minValue();
+
+			if (!bitstream.read<double>(element))
+			{
+				return false;
+			}
+
+			descriptor[i] = CV::Detector::Blob::BlobDescriptor::DescriptorElement(element);
+		}
+
+		features.push_back(blobFeature);
+	}
+
+	return true;
+}
+
+bool BlobTracker6DOF::readFeatures_V2(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features)
+{
+	unsigned long long version = 0ull;
+	if (!bitstream.read<unsigned long long>(version))
+	{
+		return false;
+	}
+
+	ocean_assert(version == 2ull);
+	if (version != 2ull)
+	{
+		return false;
+	}
+
+	ocean_assert(features.empty());
+	features.clear();
+
+	unsigned int numberFeatures = 0u;
+	if (!bitstream.read<unsigned int>(numberFeatures))
+	{
+		return false;
+	}
+
+	if (numberFeatures > 1000u * 1000u * 64u)
+	{
+		return false;
+	}
+
+	features.reserve(numberFeatures);
+
+	for (unsigned int n = 0u; n < numberFeatures; ++n)
+	{
+		float strength = NumericF::minValue();
+		if (!bitstream.read<float>(strength))
+		{
+			return false;
+		}
+
+		bool laplace = false;
+		if (!bitstream.read<bool>(laplace))
+		{
+			return false;
+		}
+
+		float scale = NumericF::minValue();
+		if (!bitstream.read<float>(scale))
+		{
+			return false;
+		}
+
+		int orientationType = -1;
+		if (!bitstream.read<int>(orientationType))
+		{
+			return false;
+		}
+
+		float orientation = NumericF::minValue();
+		if (!bitstream.read<float>(orientation))
+		{
+			return false;
+		}
+
+		float positionX = NumericF::minValue();
+		if (!bitstream.read<float>(positionX))
+		{
+			return false;
+		}
+
+		float positionY = NumericF::minValue();
+		if (!bitstream.read<float>(positionY))
+		{
+			return false;
+		}
+
+		float positionZ = NumericF::minValue();
+		if (!bitstream.read<float>(positionZ))
+		{
+			return false;
+		}
+
+		float observationX = NumericF::minValue();
+		if (!bitstream.read<float>(observationX))
+		{
+			return false;
+		}
+
+		float observationY = NumericF::minValue();
+		if (!bitstream.read<float>(observationY))
+		{
+			return false;
+		}
+
+		int distortionState = -1;
+		if (!bitstream.read<int>(distortionState))
+		{
+			return false;
+		}
+
+		int descriptorType = -1;
+		if (!bitstream.read<int>(descriptorType))
+		{
+			return false;
+		}
+
+		unsigned int descriptorElements = 0u;
+		if (!bitstream.read<unsigned int>(descriptorElements))
+		{
+			return false;
+		}
+
+		if (descriptorElements > 4096u)
+		{
+			return false;
+		}
+
+		CV::Detector::Blob::BlobFeature blobFeature(Vector2(0, 0), CV::Detector::PointFeature::DS_UNKNOWN, Scalar(scale), Scalar(strength), laplace);
+		blobFeature.setObservation(Vector2(Scalar(observationX), Scalar(observationY)), CV::Detector::Blob::BlobFeature::DistortionState(distortionState));
+		blobFeature.setOrientationType(CV::Detector::Blob::BlobFeature::OrientationType(orientationType));
+		blobFeature.setOrientation(Scalar(orientation));
+		blobFeature.setPosition(Vector3(Scalar(positionX), Scalar(positionY), Scalar(positionZ)));
+		blobFeature.setDescriptorType(CV::Detector::Blob::BlobFeature::DescriptorType(descriptorType));
+
+		CV::Detector::Blob::BlobDescriptor& descriptor = blobFeature.descriptor();
+
+		ocean_assert(descriptor.elements() == descriptorElements);
+		if (descriptor.elements() != descriptorElements)
+		{
+			return false;
+		}
+
+		for (unsigned int i = 0u; i < descriptorElements; ++i)
+		{
+			float element = NumericF::minValue();
+
+			if (!bitstream.read<float>(element))
+			{
+				return false;
+			}
+
+			descriptor[i] = CV::Detector::Blob::BlobDescriptor::DescriptorElement(element);
+		}
+
+		features.push_back(blobFeature);
+	}
+
+	return true;
+}
+
+bool BlobTracker6DOF::readFeatures_V3(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features)
+{
+	unsigned long long version = 0ull;
+	if (!bitstream.read<unsigned long long>(version))
+	{
+		return false;
+	}
+
+	ocean_assert(version == 3ull);
+	if (version != 3ull)
+	{
+		return false;
+	}
+
+	ocean_assert(features.empty());
+	features.clear();
+
+	unsigned int numberFeatures = 0u;
+	if (!bitstream.read<unsigned int>(numberFeatures))
+	{
+		return false;
+	}
+
+	if (numberFeatures > 1000u * 1000u * 64u)
+	{
+		return false;
+	}
+
+	features.reserve(numberFeatures);
+
+	for (unsigned int n = 0u; n < numberFeatures; ++n)
+	{
+		float strength = NumericF::minValue();
+		if (!bitstream.read<float>(strength))
+		{
+			return false;
+		}
+
+		bool laplace = false;
+		if (!bitstream.read<bool>(laplace))
+		{
+			return false;
+		}
+
+		float scale = NumericF::minValue();
+		if (!bitstream.read<float>(scale))
+		{
+			return false;
+		}
+
+		int orientationType = -1;
+		if (!bitstream.read<int>(orientationType))
+		{
+			return false;
+		}
+
+		float orientation = NumericF::minValue();
+		if (!bitstream.read<float>(orientation))
+		{
+			return false;
+		}
+
+		float positionX = NumericF::minValue();
+		if (!bitstream.read<float>(positionX))
+		{
+			return false;
+		}
+
+		float positionY = NumericF::minValue();
+		if (!bitstream.read<float>(positionY))
+		{
+			return false;
+		}
+
+		float positionZ = NumericF::minValue();
+		if (!bitstream.read<float>(positionZ))
+		{
+			return false;
+		}
+
+		float observationX = NumericF::minValue();
+		if (!bitstream.read<float>(observationX))
+		{
+			return false;
+		}
+
+		float observationY = NumericF::minValue();
+		if (!bitstream.read<float>(observationY))
+		{
+			return false;
+		}
+
+		int distortionState = -1;
+		if (!bitstream.read<int>(distortionState))
+		{
+			return false;
+		}
+
+		int descriptorType = -1;
+		if (!bitstream.read<int>(descriptorType))
+		{
+			return false;
+		}
+
+		unsigned int descriptorElements = 0u;
+		if (!bitstream.read<unsigned int>(descriptorElements))
+		{
+			return false;
+		}
+
+		if (descriptorElements > 4096u)
+		{
+			return false;
+		}
+
+		CV::Detector::Blob::BlobFeature blobFeature(Vector2(0, 0), CV::Detector::PointFeature::DS_UNKNOWN, Scalar(scale), Scalar(strength), laplace);
+		blobFeature.setObservation(Vector2(Scalar(observationX), Scalar(observationY)), CV::Detector::Blob::BlobFeature::DistortionState(distortionState));
+		blobFeature.setOrientationType(CV::Detector::Blob::BlobFeature::OrientationType(orientationType));
+		blobFeature.setOrientation(Scalar(orientation));
+		blobFeature.setPosition(Vector3(Scalar(positionX), Scalar(positionY), Scalar(positionZ)));
+		blobFeature.setDescriptorType(CV::Detector::Blob::BlobFeature::DescriptorType(descriptorType));
+
+		CV::Detector::Blob::BlobDescriptor& descriptor = blobFeature.descriptor();
+
+		ocean_assert(descriptor.elements() == descriptorElements);
+		if (descriptor.elements() != descriptorElements)
+		{
+			return false;
+		}
+
+		for (unsigned int i = 0u; i < descriptorElements; ++i)
+		{
+			float element = NumericF::minValue();
+
+			if (!bitstream.read<float>(element))
+			{
+				return false;
+			}
+
+			descriptor[i] = CV::Detector::Blob::BlobDescriptor::DescriptorElement(element);
+		}
+
+		features.push_back(blobFeature);
+	}
+
+	return true;
 }
 
 }

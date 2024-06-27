@@ -482,23 +482,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		static bool convertPoseForCamera(const PinholeCamera& newCamera, const PinholeCamera& referenceCamera, const HomogenousMatrix4& referencePose, HomogenousMatrix4& newPose);
 
 		/**
-		 * Writes blob features to a bitstream.
-		 * @param features The feature to be written, not more than 64 million
-		 * @param bitstream The output bitstream to which the information will be written
-		 * @return True, if succeeded
-		 */
-		static bool writeFeatures(const CV::Detector::Blob::BlobFeatures& features, IO::OutputBitstream& bitstream);
-
-		/**
-		 * Reads blob features from a bitstream.
-		 * @param bitstream The input bitstream from which the information will be read
-		 * @param features The resulting features received from the bitstream
-		 * @param version Optional out parameter to return the version parsed out of the bitstream
-		 * @return True, if succeeded
-		 */
-		static bool readFeatures(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features, uint64_t* version = nullptr);
-
-		/**
 		 * Writes a file containing a feature map of a 2D image pattern and optional including a subset of feature points providing a compact representation of the pattern.
 		 * @param filename The name of the resulting feature map file, must be valid
 		 * @param pattern The 2D image pattern for which the feature map will be written, must be valid
@@ -660,43 +643,6 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		 * @return The resulting sub region
 		 */
 		static CV::SubRegion triangles2subRegion(const Triangles2& triangles, const unsigned int backupWidth, const unsigned int backupHeight);
-
-		/**
-		 * Reads blob features from a bitstream using format version 1.
-		 * Version 1 stores 64 floating point values with 64 bit precision.
-		 * @param bitstream The input bitstream from which the information will be read
-		 * @param features The resulting features received from the bitstream
-		 * @return True, if succeeded
-		 */
-		static bool readFeatures_V1(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features);
-
-		/**
-		 * Reads blob features from a bitstream using format version 2.
-		 * Version 2 stores 64 floating point values with 32 bit precision and now also stores the orientation type.
-		 * @param bitstream The input bitstream from which the information will be read
-		 * @param features The resulting features received from the bitstream
-		 * @return True, if succeeded
-		 */
-		static bool readFeatures_V2(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features);
-
-		/**
-		 * Reads blob features from a bitstream using format version 3.
-		 * Version 3 stores 36 floating point values with 32 bit precision and stores the orientation type.
-		 * @param bitstream The input bitstream from which the information will be read
-		 * @param features The resulting features received from the bitstream
-		 * @return True, if succeeded
-		 */
-		static bool readFeatures_V3(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features);
-
-		/**
-		 * @return The unique tag for the features.
-		 */
-		static const IO::Tag& trackerTagFeatures();
-
-		/**
-		 * @return The unique tag for the feature maps.
-		 */
-		static const IO::Tag& trackerTagFeatureMap();
 
 	protected:
 

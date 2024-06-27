@@ -18,6 +18,8 @@
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/Worker.h"
 
+#include "ocean/io/Bitstream.h"
+
 #include "ocean/math/HomogenousMatrix4.h"
 #include "ocean/math/PinholeCamera.h"
 
@@ -151,6 +153,33 @@ class OCEAN_TRACKING_BLOB_EXPORT BlobTracker6DOF : virtual public VisualTracker
 		 */
 		static inline bool determinePose(const Frame& yFrame, const PinholeCamera& pinholeCamera, HomogenousMatrix4& model_T_camera, CV::Detector::Blob::BlobFeatures& modelFeatures, const size_t minimalCorrespondences, size_t* correspondences = nullptr, Worker* worker = nullptr, const Scalar faultyRate = Scalar(0.2), Vectors3* usedObjectPoints = nullptr, Vectors2* usedImagePoints = nullptr, const HomogenousMatrix4& model_T_roughCamera = HomogenousMatrix4(false));
 
+		/**
+		 * Writes blob features to a bitstream.
+		 * @param features The feature to be written, not more than 64 million
+		 * @param bitstream The output bitstream to which the information will be written
+		 * @return True, if succeeded
+		 */
+		static bool writeFeatures(const CV::Detector::Blob::BlobFeatures& features, IO::OutputBitstream& bitstream);
+
+		/**
+		 * Reads blob features from a bitstream.
+		 * @param bitstream The input bitstream from which the information will be read
+		 * @param features The resulting features received from the bitstream
+		 * @param version Optional out parameter to return the version parsed out of the bitstream
+		 * @return True, if succeeded
+		 */
+		static bool readFeatures(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features, uint64_t* version = nullptr);
+
+		/**
+		 * @return The unique tag for the features.
+		 */
+		static const IO::Tag& trackerTagFeatures();
+
+		/**
+		 * @return The unique tag for the feature maps.
+		 */
+		static const IO::Tag& trackerTagFeatureMap();
+
 	protected:
 
 		/**
@@ -218,6 +247,33 @@ class OCEAN_TRACKING_BLOB_EXPORT BlobTracker6DOF : virtual public VisualTracker
 		 * @return Resulting 2D feature position
 		 */
 		static inline const Vector2& feature2Vector(const CV::Detector::Blob::BlobFeature& feature);
+
+		/**
+		 * Reads blob features from a bitstream using format version 1.
+		 * Version 1 stores 64 floating point values with 64 bit precision.
+		 * @param bitstream The input bitstream from which the information will be read
+		 * @param features The resulting features received from the bitstream
+		 * @return True, if succeeded
+		 */
+		static bool readFeatures_V1(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features);
+
+		/**
+		 * Reads blob features from a bitstream using format version 2.
+		 * Version 2 stores 64 floating point values with 32 bit precision and now also stores the orientation type.
+		 * @param bitstream The input bitstream from which the information will be read
+		 * @param features The resulting features received from the bitstream
+		 * @return True, if succeeded
+		 */
+		static bool readFeatures_V2(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features);
+
+		/**
+		 * Reads blob features from a bitstream using format version 3.
+		 * Version 3 stores 36 floating point values with 32 bit precision and stores the orientation type.
+		 * @param bitstream The input bitstream from which the information will be read
+		 * @param features The resulting features received from the bitstream
+		 * @return True, if succeeded
+		 */
+		static bool readFeatures_V3(IO::InputBitstream& bitstream, CV::Detector::Blob::BlobFeatures& features);
 
 	protected:
 
