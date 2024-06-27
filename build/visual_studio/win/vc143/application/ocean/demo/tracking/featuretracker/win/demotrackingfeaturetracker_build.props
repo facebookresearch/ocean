@@ -22,4 +22,11 @@
     <Import Condition="'$(ocean_trackingorb_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\tracking\orb\trackingorb_use.props" />
     <Import Condition="'$(ocean_trackingpattern_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\tracking\pattern\trackingpattern_use.props" />
   </ImportGroup>
+  
+  <ItemDefinitionGroup>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\impl\application\ocean\demo\tracking\featuretracker\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+
 </Project>

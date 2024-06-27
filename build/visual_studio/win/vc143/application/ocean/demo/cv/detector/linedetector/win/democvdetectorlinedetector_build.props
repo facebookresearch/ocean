@@ -21,7 +21,7 @@
   </ImportGroup>
   
   <ItemDefinitionGroup>
-   <ResourceCompile>
+    <ResourceCompile>
       <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\impl\application\ocean\demo\cv\detector\linedetector\win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>

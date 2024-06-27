@@ -5,6 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include "application/ocean/demo/tracking/featuretracker/win/FeatureTrackerMainWindow.h"
+#include "application/ocean/demo/tracking/featuretracker/win/Resource.h"
+
 #include "FeatureTrackerMainWindow.h"
 
 #include "ocean/platform/win/Utilities.h"
@@ -15,7 +18,8 @@ FeatureTrackerMainWindow::FeatureTrackerMainWindow(HINSTANCE instance, const std
 	ApplicationWindow(instance, name),
 	featureTrackerWrapper_(commandArguments)
 {
-	initialize();
+	initialize(instance, IDI_ICON);
+
 	start();
 }
 

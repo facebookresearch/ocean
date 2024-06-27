@@ -1334,7 +1334,7 @@ bool PatternTrackerCore6DOF::determinePosesWithoutKnowledge(const PinholeCamera&
 
 			if (patternMap_.size() >= 2)
 			{
-				// now we remove all Blob features lying in the current subset
+				// now we remove all features lying in the current subset
 
 				for (size_t n = 0; n < imagePoints.size(); ++n)
 				{

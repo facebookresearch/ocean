@@ -31,5 +31,11 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\tracking\featuretracker\FeatureTrackerWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\..\impl\application\ocean\demo\tracking\featuretracker\win\Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\..\..\..\..\..\..\..\res\application\ocean\demo\tracking\featuretracker\win\win\demotrackingfeaturetracker.rc" />
   </ItemGroup>
 </Project>
